@@ -16,5 +16,5 @@ DEBUG;TRACE
 18-1294017022
 App.xaml;Gui\AuthWindow.xaml;Gui\ConsoleWindow.xaml;Gui\ImageContainerPage.xaml;Gui\MainWindow.xaml;Gui\ModpackSettingsPage.xaml;Gui\ModsListPage.xaml;Gui\OverviewPage.xaml;Gui\RegisterWindow.xaml;Gui\SettingsWindow.xaml;Gui\VersionPage.xaml;Gui\StylesDictionary.xaml;
 
-True
+False
 
