@@ -53,8 +53,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>nw.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -199,7 +198,7 @@
     <Resource Include="Assets\images\background\authBG.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Logic\NewtonsoftJson.dll" />
+    <EmbeddedResource Include="Logic\dll\NewtonsoftJson.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -233,6 +232,9 @@
     <Resource Include="Assets\images\icons\profile.png" />
     <Resource Include="Assets\images\icons\settings.png" />
     <Resource Include="Assets\images\icons\settings1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="nw.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
