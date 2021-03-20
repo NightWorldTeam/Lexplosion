@@ -53,7 +53,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>nw.ico</ApplicationIcon>
+    <ApplicationIcon>Assets/images/icons/nw.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -228,13 +228,8 @@
     <Resource Include="Assets\images\icons\leave.png" />
     <Resource Include="Assets\images\icons\network.png" />
     <Resource Include="Assets\images\icons\nw.ico" />
-    <Resource Include="Assets\images\icons\nw1.ico" />
     <Resource Include="Assets\images\icons\profile.png" />
     <Resource Include="Assets\images\icons\settings.png" />
-    <Resource Include="Assets\images\icons\settings1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="nw.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
