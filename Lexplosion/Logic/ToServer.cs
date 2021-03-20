@@ -12,7 +12,6 @@ namespace Lexplosion.Logic
 
     static class ToServer
     {
-        /* <-- Основные функции класса --> */
         static public bool CheckLauncherUpdates()
         {
             try

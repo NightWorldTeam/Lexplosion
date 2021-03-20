@@ -539,7 +539,7 @@ namespace Lexplosion.Logic
             if (Updates.minecraftJar)
             {
                 if (filesList.version.minecraftJar.url == null)
-                    addr = LaunсherSettings.serverUrl + "upload/versions/" + modpack + "/" + filesList.version.minecraftJar.name;
+                    addr = LaunсherSettings.serverUrl + "upload/versions/" + filesList.version.minecraftJar.name;
                 else
                     addr = filesList.version.minecraftJar.url;
 
