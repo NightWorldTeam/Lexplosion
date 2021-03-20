@@ -8,7 +8,7 @@ using Lexplosion.Objects;
 
 namespace Lexplosion.Gui
 {
-    
+
     /// <summary>
     /// Логика взаимодействия для AuthWindow.xaml
     /// </summary>
@@ -17,23 +17,22 @@ namespace Lexplosion.Gui
         private string login = "";
         private string password = "";
 
-        // WaterMark Variables //
+        // Переменные для хранения значения водных знаков
         private const string Login_WaterMark = "Логин";
         private const string Password_WaterMark = "Пароль";
-        // WaterMark Variables //
 
         public AuthWindow()
-        {  
+        {
             InitializeComponent();
 
-            MouseDown += delegate { try { DragMove(); } catch {} };
+            MouseDown += delegate { try { DragMove(); } catch { } };
 
-            // Set WaterMarks //
-            if (TBLogin.Text == string.Empty && TBPassword.Password == string.Empty) { 
+            // Установка водного знака для поля
+            if (TBLogin.Text == string.Empty && TBPassword.Password == string.Empty)
+            {
                 TBLogin.Text = Login_WaterMark;
                 TBPassword.Password = Password_WaterMark;
             }
-            // Set WaterMarks //
 
             if (UserData.settings != null && UserData.settings.ContainsKey("login") && UserData.settings.ContainsKey("password"))
             {
@@ -61,8 +60,8 @@ namespace Lexplosion.Gui
 
             login = TBLogin.Text.ToString();
 
-            if (TBPassword.Password .ToString() != "" && TBPassword.Password .ToString() != null && TBPassword.Password .ToString().Trim() != string.Empty)
-                password = TBPassword.Password .ToString();
+            if (TBPassword.Password.ToString() != "" && TBPassword.Password.ToString() != null && TBPassword.Password.ToString().Trim() != string.Empty)
+                password = TBPassword.Password.ToString();
 
             if (password == Password_WaterMark || password == null || password.Trim() == string.Empty || login == Login_WaterMark || login == null || login.Trim() == string.Empty)
             {
@@ -102,7 +101,8 @@ namespace Lexplosion.Gui
             }
         }
 
-        void ChangeTestWindow() {
+        void ChangeTestWindow()
+        {
             MainWindow mainWindow = new MainWindow
             {
                 Left = this.Left,
@@ -146,13 +146,12 @@ namespace Lexplosion.Gui
             }
         }
 
-        // WaterMarks Functions //
-        // WaterMark Function --> GotFocus //
-
+        // Функционал для водных знаков --> GotFocus (Получения фокуса с элемента интерфейса)
         private void Login_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            if (textbox.Text == Login_WaterMark) { 
+            if (textbox.Text == Login_WaterMark)
+            {
                 textbox.Text = string.Empty;
                 textbox.GotFocus -= Login_GotFocus;
             }
@@ -161,14 +160,15 @@ namespace Lexplosion.Gui
         private void Password_GotFocus(object sender, RoutedEventArgs e)
         {
             PasswordBox passwordBox = (PasswordBox)sender;
-            if (passwordBox.Password == string.Empty) {
+            if (passwordBox.Password == string.Empty)
+            {
                 passwordBox.Password = string.Empty;
                 PasswordBoxWaterMark.Visibility = Visibility.Collapsed;
                 passwordBox.GotFocus -= Password_GotFocus;
             }
         }
 
-        // WaterMark Function --> LostFocus //
+        // Функционал для водных знаков --> GotFocus (Потеря фокуса с элемента интерфейса)
 
         private void Login_LostFocus(object sender, RoutedEventArgs e)
         {
