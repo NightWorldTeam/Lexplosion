@@ -17,7 +17,7 @@ namespace Lexplosion.Gui
         private string login = "";
         private string password = "";
 
-        // Переменные для хранения значения водных знаков
+        // Переменные водных знаков
         private const string Login_WaterMark = "Логин";
         private const string Password_WaterMark = "Пароль";
 
