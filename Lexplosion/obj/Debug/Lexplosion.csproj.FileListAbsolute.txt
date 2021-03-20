@@ -74,3 +74,41 @@ D:\Programs\c#\NWLauncher\Lexplosion\obj\Debug\Lexplosion.csproj.CoreCompileInpu
 D:\Programs\c#\NWLauncher\Lexplosion\obj\Debug\Lexplosion.csproj.CopyComplete
 D:\Programs\c#\NWLauncher\Lexplosion\obj\Debug\NightWorld-Lexplosion.exe
 D:\Programs\c#\NWLauncher\Lexplosion\obj\Debug\NightWorld-Lexplosion.pdb
+D:\programming\main projects\Lexplosion\Lexplosion\bin\Debug\NightWorld-Lexplosion.exe.config
+D:\programming\main projects\Lexplosion\Lexplosion\bin\Debug\NightWorld-Lexplosion.exe
+D:\programming\main projects\Lexplosion\Lexplosion\bin\Debug\NightWorld-Lexplosion.pdb
+D:\programming\main projects\Lexplosion\Lexplosion\bin\Debug\Newtonsoft.Json.dll
+D:\programming\main projects\Lexplosion\Lexplosion\bin\Debug\Newtonsoft.Json.xml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Lexplosion.csprojAssemblyReference.cache
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\MainWindow.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\RegisterWindow.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\App.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\AuthWindow.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\ConsoleWindow.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\ImageContainerPage.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\MainWindow.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\ModpackSettingsPage.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\ModsListPage.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\OverviewPage.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\RegisterWindow.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\SettingsWindow.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\VersionPage.g.cs
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\NightWorld-Lexplosion_MarkupCompile.cache
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\NightWorld-Lexplosion_MarkupCompile.lref
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\App.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\AuthWindow.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\ConsoleWindow.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\ImageContainerPage.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\ModpackSettingsPage.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\ModsListPage.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\OverviewPage.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\SettingsWindow.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\VersionPage.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Gui\StylesDictionary.baml
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\NightWorld-Lexplosion.g.resources
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Lexplosion.Properties.Resources.resources
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Lexplosion.csproj.GenerateResource.cache
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Lexplosion.csproj.CoreCompileInputs.cache
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\Lexplosion.csproj.CopyComplete
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\NightWorld-Lexplosion.exe
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\NightWorld-Lexplosion.pdb

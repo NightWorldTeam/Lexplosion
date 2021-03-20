@@ -4,7 +4,7 @@
 winexe
 C#
 .cs
-D:\Programs\c#\NWLauncher\Lexplosion\obj\Debug\
+D:\programming\main projects\Lexplosion\Lexplosion\obj\Debug\
 Lexplosion
 none
 false
@@ -13,7 +13,7 @@ DEBUG;TRACE
 12-405209547
 
 201147547780
-18-398519667
+18-1294017022
 App.xaml;Gui\AuthWindow.xaml;Gui\ConsoleWindow.xaml;Gui\ImageContainerPage.xaml;Gui\MainWindow.xaml;Gui\ModpackSettingsPage.xaml;Gui\ModsListPage.xaml;Gui\OverviewPage.xaml;Gui\RegisterWindow.xaml;Gui\SettingsWindow.xaml;Gui\VersionPage.xaml;Gui\StylesDictionary.xaml;
 
 False
