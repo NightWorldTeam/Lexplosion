@@ -32,7 +32,7 @@ namespace Lexplosion
             }
             
 
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve; //Встраивание Newtonosoft.Json в exe
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve; // Встраивание Newtonosoft.Json в exe
             App app = new App();
 
             //инициализация
