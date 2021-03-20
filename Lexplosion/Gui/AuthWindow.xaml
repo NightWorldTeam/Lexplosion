@@ -39,7 +39,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Border" CornerRadius="5" BorderThickness="0" Background="#1c91a6" BorderBrush="#1c91a6">
+                        <Border x:Name="Border" CornerRadius="5" BorderThickness="0" Background="#2c99c2" BorderBrush="#1c91a6">
                             <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
                         </Border>
                         <ControlTemplate.Triggers>
