@@ -80,34 +80,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
-    <Compile Include="Gui\AuthWindow.xaml.cs">
+    <Compile Include="Gui\windows\AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\ConsoleWindow.xaml.cs">
+    <Compile Include="Gui\windows\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\ImageContainerPage.xaml.cs">
+    <Compile Include="Gui\pages\ImageContainerPage.xaml.cs">
       <DependentUpon>ImageContainerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\MainWindow.xaml.cs">
+    <Compile Include="Gui\windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\ModpackSettingsPage.xaml.cs">
+    <Compile Include="Gui\pages\ModpackSettingsPage.xaml.cs">
       <DependentUpon>ModpackSettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\ModsListPage.xaml.cs">
+    <Compile Include="Gui\pages\ModsListPage.xaml.cs">
       <DependentUpon>ModsListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\OverviewPage.xaml.cs">
+    <Compile Include="Gui\pages\OverviewPage.xaml.cs">
       <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\RegisterWindow.xaml.cs">
+    <Compile Include="Gui\windows\RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\SettingsWindow.xaml.cs">
+    <Compile Include="Gui\windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\VersionPage.xaml.cs">
+    <Compile Include="Gui\pages\VersionPage.xaml.cs">
       <DependentUpon>VersionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logic\Aes.cs" />
@@ -120,47 +120,47 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Gui\AuthWindow.xaml">
+    <Page Include="Gui\windows\AuthWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\ConsoleWindow.xaml">
+    <Page Include="Gui\windows\ConsoleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\ImageContainerPage.xaml">
+    <Page Include="Gui\pages\ImageContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\MainWindow.xaml">
+    <Page Include="Gui\windows\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\ModpackSettingsPage.xaml">
+    <Page Include="Gui\pages\ModpackSettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\ModsListPage.xaml">
+    <Page Include="Gui\pages\ModsListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\OverviewPage.xaml">
+    <Page Include="Gui\pages\OverviewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\RegisterWindow.xaml">
+    <Page Include="Gui\windows\RegisterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\SettingsWindow.xaml">
+    <Page Include="Gui\windows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\VersionPage.xaml">
+    <Page Include="Gui\pages\VersionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\StylesDictionary.xaml">
+    <Page Include="Gui\styles\StylesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
