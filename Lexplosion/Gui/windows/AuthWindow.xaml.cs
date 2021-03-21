@@ -6,7 +6,7 @@ using System.Windows.Media;
 using Lexplosion.Logic;
 using Lexplosion.Objects;
 
-namespace Lexplosion.Gui
+namespace Lexplosion.Gui.Windows
 {
 
     /// <summary>
@@ -126,9 +126,9 @@ namespace Lexplosion.Gui
             mainWindow.Show(); mainWindow.Activate();
             this.Close();
 
-            mainWindow.NameBlock.Text = UserData.login;
-            if (status == 0)
-                mainWindow.StatusBlock.Fill = Brushes.Red;
+            // mainWindow.NameBlock.Text = UserData.login;
+            // if (status == 0)
+            //    mainWindow.StatusBlock.Fill = Brushes.Red;
         }
 
         private void PlayOffline(object sender, RoutedEventArgs e)

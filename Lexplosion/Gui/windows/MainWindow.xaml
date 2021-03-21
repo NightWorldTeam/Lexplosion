@@ -1,4 +1,4 @@
-﻿<Window x:Class="Lexplosion.Gui.MainWindow"
+﻿<Window x:Class="Lexplosion.Gui.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -79,136 +79,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- Start Button Style -->
-        <Style x:Key="CBS" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-            <Setter Property="FontFamily" Value="pack://application:,,,/assets/fonts/#Casper Bold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="Border" CornerRadius="2" BorderThickness="1" Background="#1c91a6" BorderBrush="#2c99c2">
-                            <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
-                                <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="False">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
-                                <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Switcher Style -->
-        <Style x:Key="MWCBS" TargetType="{x:Type ToggleButton}">
-            <!-- <Setter Property="" Value=""/> #4cb2d6-->
-            <Setter Property="Width" Value="120"/>
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="25"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border x:Name="Border" Background="Transparent" BorderBrush="#18191b"  BorderThickness="0,0,0,3" Width="140"  HorizontalAlignment="Center">
-                            <ContentPresenter Margin="5,0,5,0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                RecognizesAccessKey="True" />
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="BorderBrush" TargetName="Border" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Switcher Style -->
-        <Style x:Key="MWCBS1" TargetType="{x:Type ToggleButton}">
-            <!-- <Setter Property="" Value=""/> #4cb2d6-->
-            <Setter Property="Width" Value="244"/>
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="22"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border x:Name="Border" Background="Transparent" BorderBrush="Transparent"  BorderThickness="10,0,0,0" Width="244"  HorizontalAlignment="Left">
-                            <ContentPresenter Margin="25,0,25,0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                RecognizesAccessKey="True" />
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="BorderBrush" TargetName="Border" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Setting Button Style 1-->
-        <Style x:Key="TSB" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border x:Name="Border" CornerRadius="2" BorderThickness="0"   Background="Transparent">
-                            <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        
-        <!-- #167FFC -->
-        <Style x:Key="CDDMS" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Grid Background="Transparent">
-                            <Path x:Name="Arrow"
-                                Stretch="Fill"
-                                Width="16" 
-                                Height="16"                                
-                                Stroke="#fff"
-                                StrokeThickness="1" 
-                                RenderTransformOrigin="0.5,0.5">
-                            </Path>
-                            <ContentPresenter/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Arrow" Property="Data" Value="M 10.5 15.188 v 5.625 A 1.687 1.687 0 0 1 8.812 22.5 H 1.688 A 1.687 1.687 0 0 1 0 20.813 V 15.188 A 1.687 1.687 0 0 1 1.688 13.5 H 8.812 A 1.687 1.687 0 0 1 10.5 15.188 Z M 0 26.438 v 5.625 A 1.687 1.687 0 0 0 1.688 33.75 H 8.812 A 1.687 1.687 0 0 0 10.5 32.063 V 26.438 A 1.687 1.687 0 0 0 8.812 24.75 H 1.688 A 1.687 1.687 0 0 0 0 26.438 Z M 8.812 2.25 H 1.688 A 1.687 1.687 0 0 0 0 3.938 V 9.563 A 1.687 1.687 0 0 0 1.688 11.25 H 8.812 A 1.687 1.687 0 0 0 10.5 9.563 V 3.938 A 1.687 1.687 0 0 0 8.812 2.25 Z m 5.625 31.5 H 34.313 A 1.687 1.687 0 0 0 36 32.063 V 26.438 a 1.687 1.687 0 0 0 -1.687 -1.687 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 33.75 Z M 12.75 3.938 V 9.563 a 1.687 1.687 0 0 0 1.688 1.688 H 34.313 A 1.687 1.687 0 0 0 36 9.563 V 3.938 A 1.687 1.687 0 0 0 34.313 2.25 H 14.437 A 1.687 1.687 0 0 0 12.75 3.938 Z M 14.437 22.5 H 34.313 A 1.687 1.687 0 0 0 36 20.813 V 15.188 A 1.687 1.687 0 0 0 34.313 13.5 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 22.5 Z"/>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="False">
-                                <Setter TargetName="Arrow" Property="Data" Value="M 10.5 15.188 v 5.625 A 1.687 1.687 0 0 1 8.812 22.5 H 1.688 A 1.687 1.687 0 0 1 0 20.813 V 15.188 A 1.687 1.687 0 0 1 1.688 13.5 H 8.812 A 1.687 1.687 0 0 1 10.5 15.188 Z M 0 26.438 v 5.625 A 1.687 1.687 0 0 0 1.688 33.75 H 8.812 A 1.687 1.687 0 0 0 10.5 32.063 V 26.438 A 1.687 1.687 0 0 0 8.812 24.75 H 1.688 A 1.687 1.687 0 0 0 0 26.438 Z M 8.812 2.25 H 1.688 A 1.687 1.687 0 0 0 0 3.938 V 9.563 A 1.687 1.687 0 0 0 1.688 11.25 H 8.812 A 1.687 1.687 0 0 0 10.5 9.563 V 3.938 A 1.687 1.687 0 0 0 8.812 2.25 Z m 5.625 31.5 H 34.313 A 1.687 1.687 0 0 0 36 32.063 V 26.438 a 1.687 1.687 0 0 0 -1.687 -1.687 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 33.75 Z M 12.75 3.938 V 9.563 a 1.687 1.687 0 0 0 1.688 1.688 H 34.313 A 1.687 1.687 0 0 0 36 9.563 V 3.938 A 1.687 1.687 0 0 0 34.313 2.25 H 14.437 A 1.687 1.687 0 0 0 12.75 3.938 Z M 14.437 22.5 H 34.313 A 1.687 1.687 0 0 0 36 20.813 V 15.188 A 1.687 1.687 0 0 0 34.313 13.5 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 22.5 Z"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
 
     <Window.Triggers>
@@ -245,128 +115,17 @@
                 </Button>
             </Canvas>
         </Grid>
-
-
-        <Grid Grid.Row="1" ShowGridLines="False">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="244*"/>
                 <ColumnDefinition Width="700*"/>
             </Grid.ColumnDefinitions>
-
             <Grid Grid.Column="0">
-                <Canvas Background="#18191b"/>
-                <StackPanel x:Name="MP_TB_StackPanel" Margin="0,20,0,0"/>
-                <Canvas Margin="0,470,0,0" Visibility="Hidden"/>
-                <Canvas x:Name="DropDownMenu" Background="#151719" Width="244" Height="214" Margin="0,466,0,0">
-                    <Canvas Width="244" Height="34" Background="#151719">
-                        <Canvas Background="#151719" Width="242" Height="32" Canvas.Left="1" Canvas.Top="1" Canvas.Bottom="1" Canvas.Right="1">
-                            <Ellipse x:Name="StatusBlock" Width="12" Height="12" Fill="Green" HorizontalAlignment="Left" Canvas.Left="10" Canvas.Top="9"/>
-                            <ToggleButton Style="{StaticResource CDDMS}" x:Name="MenuSwitcher" IsChecked="true" Click="MenuArrow" FontSize="20" Foreground="White" Height="20" Width="20" Canvas.Left="214" Canvas.Top="6"/>
-
-                            <TextBlock x:Name="NameBlock" 
-                                   FontWeight="Bold" 
-                                   Text="Player"
-                                   Foreground="#ffffff" 
-                                   FontSize="18" 
-                                   TextAlignment="Center" 
-                                   Width="120" 
-                                   Height="23" Canvas.Top="3" Canvas.Bottom="8" Canvas.Left="60"/>
-                        </Canvas>
-                    </Canvas>
-                    <Canvas Canvas.Top="34" Width="244" Height="180">
-                        <Button Style="{StaticResource TSB}" Click="UserProfile" Width="175" Height="30" FontSize="16" Canvas.Left="27" Canvas.Top="18">
-                            <StackPanel Orientation="Horizontal"  Width="172">
-                                <Image Margin="6,0,0,0"  Source="pack://application:,,,/Assets/images/icons/profile.png" Width="25"/>
-                                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text=" Профиль" Width="138"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Style="{StaticResource TSB}" Click="AddCustomModpack" Width="175" Height="30" FontSize="16" Canvas.Left="24" Canvas.Top="58">
-                            <StackPanel Orientation="Horizontal"  Width="172">
-                                <Image Margin="6,0,0,0" Source="pack://application:,,,/Assets/images/icons/addModpack.png" Width="25"/>
-                                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text=" Добавить сборку" Width="138"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Style="{StaticResource TSB}" Click="LauncherSettings" Width="175" Height="30" FontSize="16" Canvas.Left="25" Canvas.Top="128">
-                            <StackPanel Orientation="Horizontal" Width="172">
-                                <Image Margin="5,0,0,0" Source="pack://application:,,,/Assets/images/icons/settings1.png" Width="25"/>
-                                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Foreground="White" Text= " Настройки" Width="138"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Style="{StaticResource TSB}" Click="Network" Width="175" Height="30" FontSize="16" Canvas.Left="24" Canvas.Top="93">
-                            <StackPanel Orientation="Horizontal" Width="175">
-                                <Image Source="pack://application:,,,/Assets/images/icons/network.png" Width="25" Margin="6,0,0,0"/>
-                                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Foreground="White" Text=" Сетевая игра" Width="138"/>
-                            </StackPanel>
-                        </Button>
-                    </Canvas>
-                </Canvas>
+                <Frame x:Name="LeftSideFrame"/>
             </Grid>
-
             <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="58*"/>
-                    <RowDefinition Height="400"/>
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0">
-                    <Canvas Background="#1b1c1f" Margin="0,0,0,10" Opacity="0.85"/>
-                    <Border BorderBrush="#18191b" BorderThickness="0,0,0,3" Margin="0,-10,0,10"/>
-                    <ToggleButton x:Name="OverviewTB" Style="{StaticResource MWCBS}" Content="Overview" Margin="10,52,570,10" Click="OverviewClick" IsChecked="true" Height="Auto" />
-                    <ToggleButton x:Name="VersionTB" Style="{StaticResource MWCBS}" Content="Version" Margin="130,52,450,10" Click="VersionClick" IsChecked="false"/>
-                    <ToggleButton x:Name="ModsListTB" Style="{StaticResource MWCBS}" Content="Modslist" Margin="255,52,325,10" Click="ModsListClick" IsChecked="false"/>
-
-                    <Button x:Name="ClientManagement" Click="СlientManager" Style="{StaticResource CBS}" Content="Загрузки" FontSize="16" FontWeight="Bold" Width="120" Height="30" Margin="535,52,45,18"/>
-                    <Button Style="{StaticResource TSB}" Click="OpenedModPackSettings" FontSize="16" FontWeight="Bold" Width="30" Height="30" Margin="660,52,10,18">
-                        <Image Source="pack://application:,,,/Assets/images/icons/settings.png"/>
-                    </Button>
-                </Grid>
-                <Grid Grid.Row="1" Width="700" Height="400">
-                    <Canvas Background="#1b1c1f" Opacity="0.74" Margin="0,-10,0,0"/>
-                    <Frame x:Name="MenuFrame" NavigationUIVisibility="Hidden" Margin="0,-6,0,6"/>
-                </Grid>
+                <Frame x:Name="RightSideFrame"/>
             </Grid>
         </Grid>
-
-        <!-- Progress Bar -->
-        <Canvas x:Name="GridLoadingWindow" Margin="0,28,0,0" Visibility="Collapsed" >
-            <Grid x:Name="ShadowBackground" Width="944" Height="528" Background="#000000" Opacity="0.7"/>
-            <Canvas x:Name="LoadingWindow" Width="500" Height="202" Canvas.Left="222" Canvas.Top="166" Background="#18191b" Opacity="1">
-                <!-- -->
-                <Grid Width="500" Canvas.Top="37">
-                    <TextBlock Text="Скачивание клиента..." HorizontalAlignment="Center" Foreground="#fff" FontSize="28" FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"/>
-                </Grid>
-                <!-- -->
-                <Grid Width="426" Height="44" Canvas.Left="37" Canvas.Top="132">
-                    <Border Canvas.Left="10" Canvas.Top="132" BorderBrush="#000" BorderThickness="1">
-                        <ProgressBar Style="{StaticResource ProgressBar-sterling}" x:Name="ProgressBar" Minimum="0" Maximum="100"  Background="#18191b"/>
-                    </Border>
-                    <TextBlock x:Name="ProgressCount" Text="0%" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#fff" FontFamily="pack://application:,,,/assets/fonts/#Casper Bold" FontSize="20"/>
-                </Grid>
-            </Canvas>
-        </Canvas>
-
-        <!-- Infinite Progress Bar -->
-        <Canvas x:Name="InitProgressBar" Margin="0,28,0,0" Visibility="Collapsed">
-            <Grid Width="944" Height="528" Background="#000000" Opacity="0.7"/>
-            <Canvas Width="500" Height="202" Canvas.Left="222" Canvas.Top="166" Background="#18191b" Opacity="1">
-                <Grid Width="500" Canvas.Top="37">
-                    <TextBlock x:Name="ProcessText" HorizontalAlignment="Center" Foreground="#fff" FontSize="28" FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"/>
-                </Grid>
-                <Grid Width="426" Height="44" Canvas.Left="37" Canvas.Top="132">
-                    <Border Canvas.Left="10" Canvas.Top="132" BorderBrush="#000" BorderThickness="1">
-                        <ProgressBar Style="{StaticResource ProgressBar-sterling}" IsIndeterminate="True" Background="#18191b"/>
-                    </Border>
-                </Grid>
-            </Canvas>
-        </Canvas>
-
-        <!-- Message Box -->
-        <Canvas x:Name="GridMessageBox" Margin="0,28,0,0" Visibility="Collapsed">
-            <Grid x:Name="MBShadowBackground" Width="944" Height="500" Background="#000000" Opacity="0.9" />
-            <TextBlock x:Name="MessageTitle" Width="338" Height="36" Canvas.Left="303" Canvas.Top="112" Foreground="White" FontSize="25" TextWrapping="Wrap" TextAlignment="Center"/>
-            <TextBox x:Name="TextMarker" Width="398" Height="210" Canvas.Left="273" Canvas.Top="150" BorderThickness="0" Foreground="White" FontSize="20" TextWrapping="Wrap" TextAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Hidden" Background="Transparent"/>
-            <Button Style="{StaticResource CBS}" Click="Okey" Width="150" Height="44" Content="OK" Canvas.Left="397" Canvas.Top="420" FontSize="18" FontWeight="Bold"/>
-        </Canvas>
     </Grid>
 </Window>

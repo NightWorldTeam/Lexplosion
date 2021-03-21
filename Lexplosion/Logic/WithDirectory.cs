@@ -7,9 +7,8 @@ using System.Security.Cryptography;
 using System.IO.Compression;
 using Newtonsoft.Json;
 using Lexplosion.Objects;
-using Lexplosion.Gui;
-using System.Windows;
 using System.Threading;
+using Lexplosion.Gui.Windows;
 
 namespace Lexplosion.Logic
 {
@@ -379,8 +378,8 @@ namespace Lexplosion.Logic
                 count *= 100;
                 window.Dispatcher.Invoke(delegate
                 {
-                    window.ProgressBar.Value = (int) count;
-                    window.ProgressCount.Text = ((int)count).ToString() + "%";
+                    //window.ProgressBar.Value = (int) count;
+                    //window.ProgressCount.Text = ((int)count).ToString() + "%";
                 });
             }
 
@@ -935,7 +934,7 @@ namespace Lexplosion.Logic
 
             MainWindow.window.Dispatcher.Invoke(delegate
             {
-                MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
+                //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
             });
         }
 

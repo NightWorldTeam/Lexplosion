@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Lexplosion.Gui.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для ModsListPage.xaml
+    /// Interaction logic for ProfilesContainerPage.xaml
     /// </summary>
-    public partial class ModsListPage : Page
+    public partial class ProfilesContainerPage : Page
     {
-        public ModsListPage()
+        public ProfilesContainerPage()
         {
             InitializeComponent();
         }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace Lexplosion.Gui
+namespace Lexplosion.Gui.Windows
 {
     /// <summary>
     /// Логика взаимодействия для SettingsWindow.xaml

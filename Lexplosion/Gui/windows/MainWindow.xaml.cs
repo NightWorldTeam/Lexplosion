@@ -9,8 +9,9 @@ using Lexplosion.Logic;
 using System.Windows.Controls.Primitives;
 using System.Threading;
 using System.Windows.Media.Animation;
+using Lexplosion.Gui.Pages;
 
-namespace Lexplosion.Gui
+namespace Lexplosion.Gui.Windows
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow2.xaml
@@ -24,11 +25,15 @@ namespace Lexplosion.Gui
         private Dictionary<string, bool> IsInstalled = new Dictionary<string, bool>();
         public string launchedModpack = "";
 
-        //заранее создаем переменные ссылками, чтобы потом не срать в память новыми экземплярами
-        private Uri overviewPage = new Uri("pack://application:,,,/Gui/pages/OverviewPage.xaml");
-        private Uri versionPage = new Uri("pack://application:,,,/Gui/pages/VersionPage.xaml");
-        private Uri modsListPage = new Uri("pack://application:,,,/Gui/pages/ModsListPage.xaml");
-        private Uri modpackSettingsPage = new Uri("pack://application:,,,/Gui/windows/SettingsWindow.xaml");
+        // заранее создаем переменные ссылками, чтобы потом не срать в память новыми экземплярами
+        // Windows
+        private Uri modpackSettingsPage = new Uri("pack://application:,,,/Gui/Windows/SettingsWindow.xaml");
+        // Pages
+        private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages/OverviewPage.xaml");
+        private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/VersionPage.xaml");
+        private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/ModsListPage.xaml");
+        private Uri leftSideMenuPage = new Uri("pack://application:,,,/Gui/Pages/LeftSideMenuPage.xaml");
+        private Uri profilesContainerPage = new Uri("pack://application:,,,/Gui/Pages/ProfilesContainerPage.xaml");
 
         public MainWindow()
         {
@@ -44,8 +49,9 @@ namespace Lexplosion.Gui
                     UserData.PacksList = WithDirectory.GetModpaksList();
             }
 
-            updatePacks(MP_TB_StackPanel); //вызываем метод отрисовывающий все модпаки
-            MenuFrame.Source = overviewPage; //это страница по умолчанию
+            // updatePacks(MP_TB_StackPanel); //вызываем метод отрисовывающий все модпаки
+            LeftSideFrame.Source = leftSideMenuPage; //это страница по умолчанию
+            RightSideFrame.Source = profilesContainerPage; //это страница по умолчанию
         }
 
         private void СlientManager(object sender, RoutedEventArgs e)
@@ -92,7 +98,7 @@ namespace Lexplosion.Gui
                         {
                             this.Dispatcher.Invoke(delegate {
                                 SetMessageBox("Не удалось определить путь до Java!", "Ошибка 940");
-                                InitProgressBar.Visibility = Visibility.Collapsed;
+                                //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
                             return;
 
@@ -101,7 +107,7 @@ namespace Lexplosion.Gui
                         {
                             this.Dispatcher.Invoke(delegate {
                                 SetMessageBox("Ошибка при определении игровой директории!", "Ошибка 950");
-                                InitProgressBar.Visibility = Visibility.Collapsed;
+                                //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
                             return;
 
@@ -110,7 +116,7 @@ namespace Lexplosion.Gui
                         { //если лаунчер запущен в оффлайн режиме и выбранный модпак поставлен на обновление
                             this.Dispatcher.Invoke(delegate {
                                 SetMessageBox("Клиент поставлен на обновление, но лаунчер запущен в оффлайн режиме! Войдите в онлайн режим.", "Ошибка 980");
-                                InitProgressBar.Visibility = Visibility.Collapsed;
+                                //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
                             return;
 
@@ -119,7 +125,7 @@ namespace Lexplosion.Gui
                         { //если  data.files равно null при вылюченных обновлениях или при оффлайн игре. При том модпак не стоит на обновлении
                             this.Dispatcher.Invoke(delegate {
                                 SetMessageBox("Вы должны хотя бы 1 раз запустить клиент в онлайн режиме и с включенными обновлениями!", "Ошибка 970");
-                                InitProgressBar.Visibility = Visibility.Collapsed;
+                                //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
                             return;
 
@@ -128,7 +134,7 @@ namespace Lexplosion.Gui
                         {
                             this.Dispatcher.Invoke(delegate {
                                 SetMessageBox("Не удалось запустить игру!", "Ошибка 930");
-                                InitProgressBar.Visibility = Visibility.Collapsed;
+                                //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
                             return;
                         }
@@ -146,7 +152,7 @@ namespace Lexplosion.Gui
                             this.Dispatcher.Invoke(delegate {
                                 launchedModpack = selectedModpack;
                                 IsInstalled[selectedModpack] = true;
-                                ClientManagement.Content = "Остановить";
+                                //ClientManagement.Content = "Остановить";
                             });
 
                         }
@@ -154,7 +160,7 @@ namespace Lexplosion.Gui
                         {
                             this.Dispatcher.Invoke(delegate {
                                 SetMessageBox("Не удалось загрузить следующие файлы:" + errorsText, "Ошибка 960");
-                                InitProgressBar.Visibility = Visibility.Collapsed;
+                                //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
                         }
 
@@ -165,7 +171,7 @@ namespace Lexplosion.Gui
                     {
                         this.Dispatcher.Invoke(delegate {
                             SetMessageBox("Не удалось запустить игру!", "Ошибка 930");
-                            InitProgressBar.Visibility = Visibility.Collapsed;
+                            //InitProgressBar.Visibility = Visibility.Collapsed;
                         });
                     }
 
@@ -176,6 +182,7 @@ namespace Lexplosion.Gui
 
         public void updatePacks(StackPanel stackPanel)
         {
+            /*
             foreach (string pack in UserData.PacksList.Keys) //отрисовываем кнопки в цикле
             {
                 ToggleButton mp_togglebutton = new ToggleButton();
@@ -228,15 +235,15 @@ namespace Lexplosion.Gui
                 ToggleButton buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);
                 buttonActive.IsChecked = true;
             }
-
+            /*
             if (IsInstalled[selectedModpack]) { 
                 ClientManagement.Content = "Играть";
-            }
-
+            }*/
         }
 
         private void ModpackButtonClick(object sender, RoutedEventArgs e) //обработчик клика по модпаку
-        {      
+        {
+            /*
             ToggleButton toggleButton = (ToggleButton)sender;
             if (toggleButton.Name.ToString() != selectedModpack)
             {
@@ -299,7 +306,7 @@ namespace Lexplosion.Gui
                 //фикс border Tbutton
                 toggleButton.IsChecked = true; 
             }
-
+            */
         }
 
         /* Алгоритм таков: при клике на одну из кнопок (ну сверху которые) мы берем экземпляр класса OverviewPage из 
@@ -316,12 +323,12 @@ namespace Lexplosion.Gui
             // нужно чтобы при повторном клике на эту же кнопку всё не отрисовывалось второй раз
             if (selectedSection != 0) 
             {
-                OverviewTB.IsChecked = true;
-                VersionTB.IsChecked = false;
-                ModsListTB.IsChecked = false;
+                // OverviewTB.IsChecked = true;
+                // VersionTB.IsChecked = false;
+                // ModsListTB.IsChecked = false;
 
                 selectedSection = 0;
-                MenuFrame.Source = overviewPage;
+                // MenuFrame.Source = overviewPage;
                 //проверяем на нул, ведь при срабатывании этого метода конструктор класса OverviewPage возможно еще не сработал
                 if (OverviewPage.instance != null) 
                 {
@@ -331,7 +338,7 @@ namespace Lexplosion.Gui
             }
             else
             {
-                OverviewTB.IsChecked = true;
+                // OverviewTB.IsChecked = true;
             }
 
         }
@@ -340,16 +347,16 @@ namespace Lexplosion.Gui
         {
             if (selectedSection != 1)
             {
-                OverviewTB.IsChecked = false;
-                VersionTB.IsChecked = true;
-                ModsListTB.IsChecked = false;
+                // OverviewTB.IsChecked = false;
+                // VersionTB.IsChecked = true;
+                // ModsListTB.IsChecked = false;
 
                 selectedSection = 1;
-                MenuFrame.Source = versionPage;
+                // MenuFrame.Source = versionPage;
             }
             else
             {
-                VersionTB.IsChecked = true;
+                // VersionTB.IsChecked = true;
             }
         }
 
@@ -357,81 +364,43 @@ namespace Lexplosion.Gui
         {
             if (selectedSection != 2)
             {
-                OverviewTB.IsChecked = false;
-                VersionTB.IsChecked = false;
-                ModsListTB.IsChecked = true;
+                // OverviewTB.IsChecked = false;
+                //VersionTB.IsChecked = false;
+                //ModsListTB.IsChecked = true;
 
                 selectedSection = 2;
-                MenuFrame.Source = modsListPage;
+               // MenuFrame.Source = modsListPage;
             }
             else
             {
-                ModsListTB.IsChecked = true;
+                //ModsListTB.IsChecked = true;
             }
 
         }
 
         public void SetProcessBar(string title)
         {
-            InitProgressBar.Visibility = Visibility.Visible;
-            ProcessText.Text = title;
+            //InitProgressBar.Visibility = Visibility.Visible;
+            //ProcessText.Text = title;
         }
 
         private void SetProgress(int procent)
         {
-            this.GridLoadingWindow.Visibility = Visibility.Visible;
-            this.ProgressBar.Value = procent;
+            //this.GridLoadingWindow.Visibility = Visibility.Visible;
+            //this.ProgressBar.Value = procent;
         }
 
         /* <-- Функционал MessageBox --> */
         private void Okey(object sender, RoutedEventArgs e)
         {
-            this.GridMessageBox.Visibility = Visibility.Collapsed;
+            //this.GridMessageBox.Visibility = Visibility.Collapsed;
         }
 
         public void SetMessageBox(string message, string title = "Ошибка")
         {
-            this.GridMessageBox.Visibility = Visibility.Visible;
-            this.TextMarker.Text = message;
-            this.MessageTitle.Text = title;
-        }
-
-        private void MenuArrow(object sender, RoutedEventArgs e)
-        {
-            // при клике по стрелке
-            // проверяем Margin нашего меню если 320(закрыто)
-            if (DropDownMenu.Margin == new Thickness(0, 286, 0, 0))
-            {
-                // открываем с анимицией
-                MenuSwitcher.IsChecked = true;
-                // забыл как эта штука называется
-                ThicknessAnimation animation = new ThicknessAnimation(); 
-                // изменяемое свойство
-                animation.From = DropDownMenu.Margin;
-                // на что изменяем с анимацией
-                animation.To = new Thickness(0, 466, 0, 0); 
-                // время анимации
-                animation.Duration = TimeSpan.FromSeconds(0.7); 
-                // старт анимиции
-                DropDownMenu.BeginAnimation(Canvas.MarginProperty, animation); 
-            }
-            // проверяем Margin нашего меню если 470(открыто)
-            else if (DropDownMenu.Margin == new Thickness(0, 466, 0, 0)) 
-            {
-                // открываем с анимицией
-                // делаем кнопку активной
-                MenuSwitcher.IsChecked = false; 
-                // забыл как эта штука называется
-                ThicknessAnimation animation = new ThicknessAnimation(); 
-                // изменяемое свойство
-                animation.From = DropDownMenu.Margin; 
-                // на что изменяем с анимацией
-                animation.To = new Thickness(0, 286, 0, 0); 
-                //время анимации
-                animation.Duration = TimeSpan.FromSeconds(0.5);  
-                //старт анимиции
-                DropDownMenu.BeginAnimation(Canvas.MarginProperty, animation); 
-            }
+            //this.GridMessageBox.Visibility = Visibility.Visible;
+            //this.TextMarker.Text = message;
+            //this.MessageTitle.Text = title;
         }
 
         private void OpenedModPackSettings(object sender, RoutedEventArgs e) {
@@ -445,22 +414,6 @@ namespace Lexplosion.Gui
             window.Activate();
         }
 
-        private void UserProfile(object sender, RoutedEventArgs e)
-        {
-            
-        }
-        private void AddCustomModpack(object sender, RoutedEventArgs e)
-        {
-            
-        }
-        private void LauncherSettings(object sender, RoutedEventArgs e)
-        {
-
-        }
-        private void Network(object sender, RoutedEventArgs e)
-        {
-            
-        }
         /* <-- Функционал кастомного меню --> */
         private void CloseWindow(object sender, RoutedEventArgs e) => Process.GetCurrentProcess().Kill();
         private void HideWindow(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;

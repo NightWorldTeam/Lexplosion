@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Lexplosion.Gui
+namespace Lexplosion.Gui.Pages
 {
     /// <summary>
     /// Логика взаимодействия для ModpackSettingPage.xaml

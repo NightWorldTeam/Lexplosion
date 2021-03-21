@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Windows;
 using System;
 using System.Windows.Media.Imaging;
+using Lexplosion.Gui.Windows;
 
-namespace Lexplosion.Gui
+namespace Lexplosion.Gui.Pages
 {
     /// <summary>
     /// Логика взаимодействия для OverviewPage.xaml

@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 
-namespace Lexplosion.Gui
+namespace Lexplosion.Gui.Windows
 {
     /// <summary>
     /// Логика взаимодействия для RegisterWindow.xaml

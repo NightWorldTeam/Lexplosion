@@ -9,6 +9,7 @@ using Lexplosion.Logic;
 using Lexplosion.Properties;
 using Lexplosion.Objects;
 using System.Threading;
+using Lexplosion.Gui.Windows;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -23,34 +24,37 @@ namespace Lexplosion
         [STAThread]
         static void Main()
         {
-            int processesCount = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length; //получем количество процессов с таким же именем
+            // получем количество процессов с таким же именем
+            int processesCount = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length; 
 
             if(processesCount > 1)
             {
                 MessageBox.Show("Лаунчер уже запущен!");
                 Process.GetCurrentProcess().Kill(); //стопаем процесс
             }
-            
 
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve; // Встраивание Newtonosoft.Json в exe
+            // Встраивание Newtonosoft.Json в exe
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve; 
             App app = new App();
 
-            //инициализация
+            // инициализация
             UserData.settings = WithDirectory.GetSettings();
             LaunchGame.SetDefaultSettings();
             WithDirectory.Create(UserData.settings["gamePath"]);
 
-            if (ToServer.CheckLauncherUpdates()) //при отсуствии коннекта с сервером тут лаунчер повиснет на секунд 30
+            if (ToServer.CheckLauncherUpdates()) 
             {
+                // TODO: при отсуствии коннекта с сервером тут лаунчер повиснет на секунд 30
                 LauncherUpdate();
             }
 
             new Thread(delegate () {
-                WithDirectory.CheckLauncherAssets(); //допилить. При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
+                // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
+                WithDirectory.CheckLauncherAssets(); 
                 UserData.profilesAssets = WithDirectory.GetModpacksAssets();
             }).Start();
 
-            Application.Current.Resources = new ResourceDictionary() { Source = new Uri("pack://application:,,,/Gui/styles/StylesDictionary.xaml") };
+            Application.Current.Resources = new ResourceDictionary() { Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml") };
             app.Run(new AuthWindow());
         }
 
@@ -62,7 +66,7 @@ namespace Lexplosion
             {
                 int upgradeToolVersion = Int32.Parse(ToServer.HttpPost("windows/upgradeToolVersion.html"));
 
-                //скачивание и проверка версии UpgradeTool.exe
+                // скачивание и проверка версии UpgradeTool.exe
                 WebClient wc = new WebClient();
                 if (WithDirectory.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
                 {
@@ -76,7 +80,7 @@ namespace Lexplosion
                     WithDirectory.SetUpgradeToolVersion(upgradeToolVersion);
                 }
 
-                //запуск UpgradeTool.exe
+                // запуск UpgradeTool.exe
                 Process proc = new Process();
                 proc.StartInfo.FileName = UserData.settings["gamePath"] + "/UpgradeTool.exe";
                 proc.StartInfo.Arguments = Assembly.GetExecutingAssembly().Location + " " + LaunсherSettings.serverUrl + "windows/NightWorld.exe" + " " + Process.GetCurrentProcess().ProcessName;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using Lexplosion.Gui;
 using Microsoft.Win32;
 using Lexplosion.Objects;
+using Lexplosion.Gui.Windows;
 
 namespace Lexplosion.Logic
 {
@@ -88,7 +88,7 @@ namespace Lexplosion.Logic
 
                 MainWindow.window.Dispatcher.Invoke(delegate
                 {
-                    MainWindow.window.InitProgressBar.Visibility = Visibility.Visible;
+                    //MainWindow.window.InitProgressBar.Visibility = Visibility.Visible;
                 });
 
                 process.StartInfo.FileName = UserData.settings["javaPath"];
@@ -109,7 +109,7 @@ namespace Lexplosion.Logic
                         {
                             MainWindow.window.Dispatcher.Invoke(delegate
                             {
-                                MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
+                                //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
                             });
 
                             if (UserData.settings["hiddenMode"] == "true")
@@ -154,7 +154,7 @@ namespace Lexplosion.Logic
                     {
                         MainWindow.window.Dispatcher.Invoke(delegate
                         {
-                            MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
+                            //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
                             MainWindow.window.SetMessageBox("Возникла ошибка при запуске игры.");
 
                             if (!ConsoleWindow.isShow)
@@ -175,9 +175,9 @@ namespace Lexplosion.Logic
 
                     MainWindow.window.Dispatcher.Invoke(delegate
                     {
-                        MainWindow.window.ClientManagement.Content = "Играть";
-                        MainWindow.window.launchedModpack = "";
-                        MainWindow.window.ClientManagement.IsEnabled = true;
+                        //MainWindow.window.ClientManagement.Content = "Играть";
+                        //MainWindow.window.launchedModpack = "";
+                        //MainWindow.window.ClientManagement.IsEnabled = true;
                     });
 
                     isRunning = false;
@@ -241,8 +241,8 @@ namespace Lexplosion.Logic
                     if (WithDirectory.countFiles > 0)
                     {
                         MainWindow.window.Dispatcher.Invoke(delegate{
-                            MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
-                            MainWindow.window.GridLoadingWindow.Visibility = Visibility.Visible;
+                            //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
+                            //MainWindow.window.GridLoadingWindow.Visibility = Visibility.Visible;
                         });
 
                         errors = WithDirectory.Update(files, modpack, MainWindow.window);
@@ -253,7 +253,7 @@ namespace Lexplosion.Logic
                     files.natives = null;
 
                     WithDirectory.SaveFilesList(modpack, files);
-                    MainWindow.window.Dispatcher.Invoke(delegate { MainWindow.window.GridLoadingWindow.Visibility = Visibility.Collapsed; });
+                    //MainWindow.window.Dispatcher.Invoke(delegate { MainWindow.window.GridLoadingWindow.Visibility = Visibility.Collapsed; });
 
                     if (updateModpack)
                     {

@@ -80,34 +80,40 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
-    <Compile Include="Gui\windows\AuthWindow.xaml.cs">
+    <Compile Include="Gui\Pages\LeftSideMenuPage.xaml.cs">
+      <DependentUpon>LeftSideMenuPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Pages\ProfilesContainerPage.xaml.cs">
+      <DependentUpon>ProfilesContainerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Windows\AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\windows\ConsoleWindow.xaml.cs">
+    <Compile Include="Gui\Windows\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\pages\ImageContainerPage.xaml.cs">
+    <Compile Include="Gui\Pages\ImageContainerPage.xaml.cs">
       <DependentUpon>ImageContainerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\windows\MainWindow.xaml.cs">
+    <Compile Include="Gui\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\pages\ModpackSettingsPage.xaml.cs">
+    <Compile Include="Gui\Pages\ModpackSettingsPage.xaml.cs">
       <DependentUpon>ModpackSettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\pages\ModsListPage.xaml.cs">
+    <Compile Include="Gui\Pages\ModsListPage.xaml.cs">
       <DependentUpon>ModsListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\pages\OverviewPage.xaml.cs">
+    <Compile Include="Gui\Pages\OverviewPage.xaml.cs">
       <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\windows\RegisterWindow.xaml.cs">
+    <Compile Include="Gui\Windows\RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\windows\SettingsWindow.xaml.cs">
+    <Compile Include="Gui\Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\pages\VersionPage.xaml.cs">
+    <Compile Include="Gui\Pages\VersionPage.xaml.cs">
       <DependentUpon>VersionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logic\Aes.cs" />
@@ -120,47 +126,55 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Gui\windows\AuthWindow.xaml">
+    <Page Include="Gui\Pages\LeftSideMenuPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\windows\ConsoleWindow.xaml">
+    <Page Include="Gui\Pages\ProfilesContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\pages\ImageContainerPage.xaml">
+    <Page Include="Gui\Windows\AuthWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\windows\MainWindow.xaml">
+    <Page Include="Gui\Windows\ConsoleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\pages\ModpackSettingsPage.xaml">
+    <Page Include="Gui\Pages\ImageContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\pages\ModsListPage.xaml">
+    <Page Include="Gui\Windows\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\pages\OverviewPage.xaml">
+    <Page Include="Gui\Pages\ModpackSettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\windows\RegisterWindow.xaml">
+    <Page Include="Gui\Pages\ModsListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\windows\SettingsWindow.xaml">
+    <Page Include="Gui\Pages\OverviewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\pages\VersionPage.xaml">
+    <Page Include="Gui\Windows\RegisterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\styles\StylesDictionary.xaml">
+    <Page Include="Gui\Windows\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Pages\VersionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Styles\StylesDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Lexplosion.Gui
+namespace Lexplosion.Gui.Windows
 {
     /// <summary>
     /// Логика взаимодействия для ConsoleWindow.xaml
