@@ -4,6 +4,8 @@ using System.Collections.Generic;
 namespace Lexplosion.Objects
 {
 
+    //Дохера всяких служебных классов
+
     static class UserData
     {
         public static string login = "";
