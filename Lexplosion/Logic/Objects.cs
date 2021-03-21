@@ -31,16 +31,6 @@ namespace Lexplosion.Objects
         public string xms;
     }
 
-    class AuthResponse // TODO: в лист строк
-    {
-        public string status;
-        public string login;
-        public string UUID;
-        public string accesToken;
-        public string code;
-        public string str;
-    }
-
     class ModpackFiles
     {
         public Dictionary<string, WithFolder> data;

@@ -6,6 +6,7 @@ using System.Text;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Lexplosion.Objects;
+using System.Collections;
 
 namespace Lexplosion.Logic
 {
@@ -157,16 +158,16 @@ namespace Lexplosion.Logic
                 } else {
 
                     answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
-                    AuthResponse userData = JsonConvert.DeserializeObject<AuthResponse>(answer);
+                    Dictionary<string,string> userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
 
-                    if (userData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(userData.str + ":" + LaunсherSettings.secretWord))))
+                    if (userData["code"] == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(userData["str"] + ":" + LaunсherSettings.secretWord))))
                     {
-                        if (userData.login != null && userData.UUID != null && userData.accesToken != null)
+                        if (userData.ContainsKey("login") && userData.ContainsKey("UUID") && userData.ContainsKey("accesToken"))
                         {
                             response.Add("status", "OK");
-                            response.Add("login", userData.login);
-                            response.Add("UUID", userData.UUID);
-                            response.Add("accesToken", userData.accesToken);
+                            response.Add("login", userData["login"]);
+                            response.Add("UUID", userData["UUID"]);
+                            response.Add("accesToken", userData["accesToken"]);
 
                             return response;
 
