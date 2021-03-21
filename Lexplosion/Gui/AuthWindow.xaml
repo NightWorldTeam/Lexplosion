@@ -269,7 +269,6 @@
                 <TextBlock x:Name="PasswordBoxWaterMark" Height="30" Margin="86,277,86,193" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#b9b7b7" FontSize="15"/>
                 <PasswordBox Style="{StaticResource CPB}" x:Name="TBPassword" Height="30" Margin="86,277,86,193" GotFocus="Password_GotFocus" LostFocus="Password_LostFocus"/>
 
-
                 <CheckBox Style="{StaticResource CCBS}" x:Name="SaveMe" Margin="92,338,92,141" Content="Запомнить меня" Height="Auto"/>
                 <Button Style="{StaticResource CLB}" Click="Auth" Content="Войти" Width="166" Height="40" Margin="77,381,74,79" FontSize="20"/>
                 <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" BorderThickness="0" Click="Register" Width="30" Height="30" Margin="10,460,277,10" >

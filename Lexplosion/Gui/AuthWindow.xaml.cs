@@ -17,7 +17,7 @@ namespace Lexplosion.Gui
         private string login = "";
         private string password = "";
 
-        // Переменные водных знаков
+        // Переменные для хранения значения водных знаков
         private const string Login_WaterMark = "Логин";
         private const string Password_WaterMark = "Пароль";
 
@@ -30,8 +30,9 @@ namespace Lexplosion.Gui
             // Установка водного знака для поля
             if (TBLogin.Text == string.Empty && TBPassword.Password == string.Empty)
             {
+                // Устанавливаем водяные знаки для полей Логин и Пароль
                 TBLogin.Text = Login_WaterMark;
-                TBPassword.Password = Password_WaterMark;
+                PasswordBoxWaterMark.Text = Password_WaterMark;
             }
 
             if (UserData.settings != null && UserData.settings.ContainsKey("login") && UserData.settings.ContainsKey("password"))
