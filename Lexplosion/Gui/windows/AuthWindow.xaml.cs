@@ -39,6 +39,7 @@ namespace Lexplosion.Gui
             {
                 TBLogin.Text = UserData.settings["login"];
                 TBPassword.Password = UserData.settings["password"];
+                PasswordBoxWaterMark.Text = "";
                 SaveMe.IsChecked = true;
             }
         }
