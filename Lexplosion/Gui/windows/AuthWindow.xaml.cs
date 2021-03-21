@@ -88,7 +88,8 @@ namespace Lexplosion.Gui.Windows
 
                         WithDirectory.SaveSettings(UserData.settings);
                     }
-                    ChangeTestWindow();
+
+                    ChangeWindow(1);
 
                 }
                 else
@@ -103,20 +104,10 @@ namespace Lexplosion.Gui.Windows
             }
         }
 
-        void ChangeTestWindow()
-        {
-            MainWindow mainWindow = new MainWindow
-            {
-                Left = this.Left,
-                Top = this.Top,
-                WindowState = WindowState.Normal
-            };
-            mainWindow.Show(); mainWindow.Activate();
-            this.Close();
-        }
-
         void ChangeWindow(sbyte status)
         {
+            ManageLogic.DefineListInstances();
+
             MainWindow mainWindow = new MainWindow
             {
                 Left = this.Left,

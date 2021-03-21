@@ -27,7 +27,7 @@ namespace Lexplosion.Gui.Pages
 
         public void SetAssets()
         {
-            string modpack = MainWindow.window.selectedModpack;
+            string modpack = MainWindow.Obj.selectedModpack;
 
             if (UserData.profilesAssets != null && UserData.profilesAssets.ContainsKey(modpack))
             {
@@ -44,7 +44,7 @@ namespace Lexplosion.Gui.Pages
 
         private void Arrow_Right_Button(object sender, RoutedEventArgs e)
         {
-            string modpack = MainWindow.window.selectedModpack;
+            string modpack = MainWindow.Obj.selectedModpack;
 
             if(UserData.profilesAssets != null)
             {
@@ -62,7 +62,7 @@ namespace Lexplosion.Gui.Pages
 
         private void Arrow_Left_Button(object sender, RoutedEventArgs e)
         {
-            string modpack = MainWindow.window.selectedModpack;
+            string modpack = MainWindow.Obj.selectedModpack;
 
             if(UserData.profilesAssets != null)
             {

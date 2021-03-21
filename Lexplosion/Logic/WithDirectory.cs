@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Lexplosion.Objects;
 using System.Threading;
 using Lexplosion.Gui.Windows;
+using System.Runtime.CompilerServices;
 
 namespace Lexplosion.Logic
 {
@@ -16,6 +17,25 @@ namespace Lexplosion.Logic
     {
         public static string directory;
         public static int countFiles;
+
+        private static class Updates //класс, хранящий всё, что нужно обновить. Метод Check в него кладет, а метод Update - достает 
+        {
+            static public Dictionary<string, List<string>> data = new Dictionary<string, List<string>>();
+            static public List<string> natives = new List<string>();
+            static public List<string> libraries = new List<string>();
+            static public bool minecraftJar = false;
+            static public bool assetsObjects = false;
+            static public bool assetsIndexes = false;
+            static public bool assetsVirtual = false;
+            static public List<string> oldFiles = new List<string>();
+        }
+
+        private class LauncherAssets //этот класс нужен для декодирования json
+        {
+            public int version = 0;
+            public Dictionary<string, InstanceAssets> data;
+
+        }
 
         public static void Create(string path)
         {
@@ -706,7 +726,7 @@ namespace Lexplosion.Logic
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
-                file = path + "/profileSettings.json";
+                file = path + "/instanceSettings.json";
             }
 
             try
@@ -738,16 +758,16 @@ namespace Lexplosion.Logic
             } catch {}
         }
 
-        public static Dictionary<string, string> GetSettings(string profileName = "")
+        public static Dictionary<string, string> GetSettings(string instanceId = "")
         {
             string file;
-            if (profileName == "")
+            if (instanceId == "")
             {
                 file = Environment.ExpandEnvironmentVariables("%appdata%") + "/night-world/settings.json";
             }
             else
             {
-                file = directory + "/instances/" + profileName + "/profileSettings.json";
+                file = directory + "/instances/" + instanceId + "/instanceSettings.json";
 
             }
 
@@ -926,13 +946,13 @@ namespace Lexplosion.Logic
             }
             catch
             {
-                MainWindow.window.Dispatcher.Invoke(delegate
+                MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
-                    MainWindow.window.SetMessageBox("Произошла ошибка при удалении.");
+                    MainWindow.Obj.SetMessageBox("Произошла ошибка при удалении.");
                 });
             }
 
-            MainWindow.window.Dispatcher.Invoke(delegate
+            MainWindow.Obj.Dispatcher.Invoke(delegate
             {
                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
             });

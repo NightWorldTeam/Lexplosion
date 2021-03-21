@@ -27,12 +27,12 @@ namespace Lexplosion.Gui.Pages
 
         public void UpdatePacks(StackPanel stackPanel)
         {
-            foreach (string pack in UserData.PacksList.Keys) //отрисовываем кнопки в цикле
+            foreach (string pack in UserData.InstancesList.Keys) //отрисовываем кнопки в цикле
             {
                 ToggleButton mp_togglebutton = new ToggleButton();
                 mp_togglebutton.Width = 242;
                 mp_togglebutton.Height = 60;
-                mp_togglebutton.Content = UserData.PacksList[pack];
+                mp_togglebutton.Content = UserData.InstancesList[pack];
                 mp_togglebutton.Style = (Style)Application.Current.FindResource("MWCBS1");
                 mp_togglebutton.BorderThickness = new Thickness(10, 0, 0, 0);
                 mp_togglebutton.Name = pack;
@@ -55,7 +55,7 @@ namespace Lexplosion.Gui.Pages
 
                     if (buttonActive == null)
                     {
-                        var first = UserData.PacksList.First();
+                        var first = UserData.InstancesList.First();
                         selectedModpack = first.Key;
                         buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);
                     }
@@ -64,7 +64,7 @@ namespace Lexplosion.Gui.Pages
                 }
                 catch
                 {
-                    var first = UserData.PacksList.First();
+                    var first = UserData.InstancesList.First();
                     selectedModpack = first.Key;
 
                     ToggleButton buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);
@@ -73,7 +73,7 @@ namespace Lexplosion.Gui.Pages
             }
             else
             {
-                var first = UserData.PacksList.First();
+                var first = UserData.InstancesList.First();
                 selectedModpack = first.Key;
 
                 ToggleButton buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);

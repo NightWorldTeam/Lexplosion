@@ -12,15 +12,8 @@ namespace Lexplosion.Objects
         public static bool offline = false;
         public static bool noUpdate = false;
         public static Dictionary<string, string> settings; //общие настройки
-        public static Dictionary<string, string> PacksList;
-        public static Dictionary<string, InstanceAssets> profilesAssets;
-    }
-
-    class LauncherAssets
-    {
-        public int version = 0;
-        public Dictionary<string, InstanceAssets> data;
-
+        public static Dictionary<string, string> InstancesList; // все профили
+        public static Dictionary<string, InstanceAssets> profilesAssets; // TODO: переименовать эту переменную
     }
 
     public class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
@@ -37,12 +30,6 @@ namespace Lexplosion.Objects
         public VersionInfo version;
         public Dictionary<string, string> libraries;
         public Dictionary<string, string> natives;
-    }
-
-    class FilesList : InstanceFiles
-    {
-        public string code;
-        public string str;
     }
 
     class VersionInfo
@@ -76,18 +63,6 @@ namespace Lexplosion.Objects
         public bool security;
         public int folderVersion;
 
-    }
-
-    static class Updates
-    {
-        static public Dictionary<string, List<string>> data = new Dictionary<string, List<string>>();
-        static public List<string> natives = new List<string>();
-        static public List<string> libraries = new List<string>();
-        static public bool minecraftJar = false;
-        static public bool assetsObjects = false;
-        static public bool assetsIndexes = false;
-        static public bool assetsVirtual = false;
-        static public List<string> oldFiles = new List<string>();
     }
 
     class InitData

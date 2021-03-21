@@ -21,8 +21,8 @@ namespace Lexplosion.Gui.Windows
 
         public string selectedModpack = "";
         private byte selectedSection = 0; // 0 - overviem, 1 - version, 2 - mods list
-        public static MainWindow window = null;
-        private Dictionary<string, bool> IsInstalled = new Dictionary<string, bool>();
+        public static MainWindow Obj = null; // хранит объект этого окна
+        public Dictionary<string, bool> IsInstalled = new Dictionary<string, bool>();
         public string launchedModpack = "";
 
         // заранее создаем переменные ссылками, чтобы потом не срать в память новыми экземплярами
@@ -39,21 +39,13 @@ namespace Lexplosion.Gui.Windows
         {
             InitializeComponent();
             MouseDown += delegate { try { DragMove(); } catch { } };
-            MainWindow.window = this;
-
-            if (UserData.PacksList == null)
-            {
-                if (!UserData.offline)
-                    UserData.PacksList = ToServer.GetModpaksList();
-                else
-                    UserData.PacksList = WithDirectory.GetModpaksList();
-            }
+            MainWindow.Obj = this;
 
             // updatePacks(MP_TB_StackPanel); //вызываем метод отрисовывающий все модпаки
             LeftSideFrame.Source = leftSideMenuPage; //это страница по умолчанию
             RightSideFrame.Source = profilesContainerPage; //это страница по умолчанию
 
-            //selectedModpack = "lt";
+            //selectedModpack = "test";
             //СlientManager(null, null);
         }
 
@@ -61,126 +53,6 @@ namespace Lexplosion.Gui.Windows
         {
             if (launchedModpack != "" && selectedModpack != launchedModpack)
                 return;
-
-            if (LaunchGame.isRunning)
-            {
-                LaunchGame.KillProcess();
-                return;
-            }
-
-            SetProcessBar("Выполняется запуск игры");
-
-            if (UserData.PacksList.ContainsKey(selectedModpack))
-            {
-                Dictionary<string, string> xmx = new Dictionary<string, string>();
-                xmx["eos"] = "2700";
-                xmx["tn"] = "2048";
-                xmx["oth"] = "2048";
-                xmx["lt"] = "512";
-
-                int k = 0;
-                int c = 0;
-                if (xmx.ContainsKey(selectedModpack) && int.TryParse(xmx[selectedModpack], out k) && int.TryParse(UserData.settings["xmx"], out c))
-                {
-                    if (c < k)
-                        SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[selectedModpack] + "МБ", "Предупреждение");
-                }
-
-                new Thread(delegate () {
-                    Run(selectedModpack);
-                }).Start();
-
-                void Run(string initModPack)
-                {
-                    Dictionary<string, string> profileSettings = WithDirectory.GetSettings(initModPack);
-                    InitData data = LaunchGame.Initialization(initModPack, profileSettings);
-
-                    if (data != null)
-                    {
-                        if (data.errors.Contains("javaPathError"))
-                        {
-                            this.Dispatcher.Invoke(delegate {
-                                SetMessageBox("Не удалось определить путь до Java!", "Ошибка 940");
-                                //InitProgressBar.Visibility = Visibility.Collapsed;
-                            });
-                            return;
-
-                        }
-                        else if (data.errors.Contains("gamePathError"))
-                        {
-                            this.Dispatcher.Invoke(delegate {
-                                SetMessageBox("Ошибка при определении игровой директории!", "Ошибка 950");
-                                //InitProgressBar.Visibility = Visibility.Collapsed;
-                            });
-                            return;
-
-                        }
-                        else if (UserData.offline && (UserData.settings.ContainsKey(selectedModpack + "-update") && UserData.settings[selectedModpack + "-update"] == "true"))
-                        { //если лаунчер запущен в оффлайн режиме и выбранный модпак поставлен на обновление
-                            this.Dispatcher.Invoke(delegate {
-                                SetMessageBox("Клиент поставлен на обновление, но лаунчер запущен в оффлайн режиме! Войдите в онлайн режим.", "Ошибка 980");
-                                //InitProgressBar.Visibility = Visibility.Collapsed;
-                            });
-                            return;
-
-                        }
-                        else if ((data.files == null && (UserData.offline || UserData.settings["noUpdate"] == "true")) && !(UserData.settings.ContainsKey(selectedModpack + "-update") && UserData.settings[selectedModpack + "-update"] == "true"))
-                        { //если  data.files равно null при вылюченных обновлениях или при оффлайн игре. При том модпак не стоит на обновлении
-                            this.Dispatcher.Invoke(delegate {
-                                SetMessageBox("Вы должны хотя бы 1 раз запустить клиент в онлайн режиме и с включенными обновлениями!", "Ошибка 970");
-                                //InitProgressBar.Visibility = Visibility.Collapsed;
-                            });
-                            return;
-
-                        }
-                        else if (data.files == null)
-                        {
-                            this.Dispatcher.Invoke(delegate {
-                                SetMessageBox("Не удалось запустить игру!", "Ошибка 930");
-                                //InitProgressBar.Visibility = Visibility.Collapsed;
-                            });
-                            return;
-                        }
-
-                        string errorsText = "\n\n";
-                        foreach (string error in data.errors)
-                            errorsText += error + "\n";
-
-                        if (errorsText == "\n\n")
-                        {
-                            string command = LaunchGame.FormCommand(initModPack, data.files.version, data.files.version.minecraftJar.name, data.files.libraries, profileSettings);
-                            LaunchGame.Run(command, initModPack);
-                            WithDirectory.SaveSettings(UserData.settings);
-
-                            this.Dispatcher.Invoke(delegate {
-                                launchedModpack = selectedModpack;
-                                IsInstalled[selectedModpack] = true;
-                                //ClientManagement.Content = "Остановить";
-                            });
-
-                        }
-                        else
-                        {
-                            this.Dispatcher.Invoke(delegate {
-                                SetMessageBox("Не удалось загрузить следующие файлы:" + errorsText, "Ошибка 960");
-                                //InitProgressBar.Visibility = Visibility.Collapsed;
-                            });
-                        }
-
-                        data = null;
-
-                    }
-                    else
-                    {
-                        this.Dispatcher.Invoke(delegate {
-                            SetMessageBox("Не удалось запустить игру!", "Ошибка 930");
-                            //InitProgressBar.Visibility = Visibility.Collapsed;
-                        });
-                    }
-
-                }
-
-            }
         }
 
         public void updatePacks(StackPanel stackPanel)

@@ -13,6 +13,12 @@ namespace Lexplosion.Logic
 
     static class ToServer
     {
+        private class FilesList : InstanceFiles //этот класс нужен для декодирования json
+        {
+            public string code;
+            public string str;
+        }
+
         static public bool CheckLauncherUpdates()
         {
             try
@@ -35,7 +41,7 @@ namespace Lexplosion.Logic
                 string answer = HttpPost("filesList/modpacksList.json");
 
                 Dictionary<string, string> list = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
-                WithDirectory.SaveModpaksList(list);
+
                 return list;
 
             } catch {

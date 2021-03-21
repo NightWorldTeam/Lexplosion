@@ -15,27 +15,27 @@ namespace Lexplosion.Logic
         private static Process process = new Process();
         public static bool isRunning = false;
 
-        public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, Dictionary<string, string> libraries, Dictionary<string, string> profileSettings)
+        public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, Dictionary<string, string> libraries, Dictionary<string, string> instanceSettings)
         {
             int number;
-            if (!profileSettings.ContainsKey("xmx") || !Int32.TryParse(profileSettings["xmx"], out number))
+            if (!instanceSettings.ContainsKey("xmx") || !Int32.TryParse(instanceSettings["xmx"], out number))
             {
-                profileSettings["xmx"] = UserData.settings["xmx"];
+                instanceSettings["xmx"] = UserData.settings["xmx"];
             }
 
-            if (!profileSettings.ContainsKey("xms") || !Int32.TryParse(profileSettings["xms"], out number))
+            if (!instanceSettings.ContainsKey("xms") || !Int32.TryParse(instanceSettings["xms"], out number))
             {
-                profileSettings["xms"] = UserData.settings["xms"];
+                instanceSettings["xms"] = UserData.settings["xms"];
             }
 
             string command;
             string versionPath = UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/" + versionFile;
 
-            if (!profileSettings.ContainsKey("gameArgs"))
-                profileSettings["gameArgs"] = UserData.settings["gameArgs"];
+            if (!instanceSettings.ContainsKey("gameArgs"))
+                instanceSettings["gameArgs"] = UserData.settings["gameArgs"];
 
-            if (profileSettings["gameArgs"].Length > 0 && profileSettings["gameArgs"][profileSettings["gameArgs"].Length - 1] != ' ')
-                profileSettings["gameArgs"] += " ";
+            if (instanceSettings["gameArgs"].Length > 0 && instanceSettings["gameArgs"][instanceSettings["gameArgs"].Length - 1] != ' ')
+                instanceSettings["gameArgs"] += " ";
 
             command = @" -Djava.library.path=" + UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/natives -cp ";
 
@@ -48,7 +48,7 @@ namespace Lexplosion.Logic
             }
 
             command += versionPath + @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
-            command += " -Xmx" + profileSettings["xmx"] + "M -Xms" + profileSettings["xms"] + "M " + profileSettings["gameArgs"];
+            command += " -Xmx" + instanceSettings["xmx"] + "M -Xms" + instanceSettings["xms"] + "M " + instanceSettings["gameArgs"];
             command += versionInfo.mainClass + " --username " + UserData.login + " --version " + versionInfo.gameVersion;
             command += " --gameDir " + UserData.settings["gamePath"] + "/instances/" + instanceId;
             command += " --assetsDir " + UserData.settings["gamePath"] + "/assets";
@@ -65,7 +65,7 @@ namespace Lexplosion.Logic
         {
             if (UserData.settings["showConsole"] == "true")
             {
-                MainWindow.window.Dispatcher.Invoke(delegate
+                MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
                     if (!ConsoleWindow.isShow)
                     {
@@ -86,7 +86,7 @@ namespace Lexplosion.Logic
             try
             {
 
-                MainWindow.window.Dispatcher.Invoke(delegate
+                MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
                     //MainWindow.window.InitProgressBar.Visibility = Visibility.Visible;
                 });
@@ -107,14 +107,14 @@ namespace Lexplosion.Logic
 
                         if (words.Length > 1 && words[words.Length - 2] == " LWJGL Version")
                         {
-                            MainWindow.window.Dispatcher.Invoke(delegate
+                            MainWindow.Obj.Dispatcher.Invoke(delegate
                             {
                                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
                             });
 
                             if (UserData.settings["hiddenMode"] == "true")
                             {
-                                MainWindow.window.Dispatcher.Invoke(delegate { MainWindow.window.Hide(); });
+                                MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
                                 launcherVisible = false;
                             }
 
@@ -131,7 +131,7 @@ namespace Lexplosion.Logic
                 {
                     if (ConsoleWindow.isShow)
                     {
-                        MainWindow.window.Dispatcher.Invoke(delegate
+                        MainWindow.Obj.Dispatcher.Invoke(delegate
                         {
                             ConsoleWindow.Window.Update(e.Data);
                         });
@@ -152,10 +152,10 @@ namespace Lexplosion.Logic
                 {
                     if (!gameVisible)
                     {
-                        MainWindow.window.Dispatcher.Invoke(delegate
+                        MainWindow.Obj.Dispatcher.Invoke(delegate
                         {
                             //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
-                            MainWindow.window.SetMessageBox("Возникла ошибка при запуске игры.");
+                            MainWindow.Obj.SetMessageBox("Возникла ошибка при запуске игры.");
 
                             if (!ConsoleWindow.isShow)
                             {
@@ -170,10 +170,10 @@ namespace Lexplosion.Logic
 
                     if (!launcherVisible)
                     {
-                        MainWindow.window.Dispatcher.Invoke(delegate { MainWindow.window.Show(); });
+                        MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Show(); });
                     }
 
-                    MainWindow.window.Dispatcher.Invoke(delegate
+                    MainWindow.Obj.Dispatcher.Invoke(delegate
                     {
                         //MainWindow.window.ClientManagement.Content = "Играть";
                         //MainWindow.window.launchedModpack = "";
@@ -191,16 +191,16 @@ namespace Lexplosion.Logic
                 return true;
 
             } catch {
-                MainWindow.window.Dispatcher.Invoke(delegate
+                MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
-                    MainWindow.window.SetMessageBox("Сбой запуска! Не удалось запустить процесс.");
+                    MainWindow.Obj.SetMessageBox("Сбой запуска! Не удалось запустить процесс.");
                 });
                 return false;
             }
 
         }
 
-        public static InitData Initialization(string instanceId, Dictionary<string, string> profileSettings)
+        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings)
         {
             InitData Error(string error)
             {
@@ -225,8 +225,19 @@ namespace Lexplosion.Logic
                 if (!UserData.settings.ContainsKey("gamePath") || !Directory.Exists(UserData.settings["gamePath"]) || !UserData.settings["gamePath"].Contains(":"))
                     return Error("gamePathError");
 
-                bool updateInstance = profileSettings.ContainsKey("update") && profileSettings["update"] == "true";
-                bool noUpdate = UserData.settings["noUpdate"] == "false" || (profileSettings.ContainsKey("noUpdate") && profileSettings["noUpdate"] == "false");
+                if(instanceSettings.ContainsKey("isCustom") && instanceSettings["isCustom"] == "true") // профил является пользовательским. В обновлениях он не нуждается, сразу возвращаем необходимы для запуска данные
+                {
+                    files = WithDirectory.GetFilesList(instanceId);
+
+                    return new InitData
+                    {
+                        errors = errors,
+                        files = files
+                    };
+                }
+
+                bool updateInstance = instanceSettings.ContainsKey("update") && instanceSettings["update"] == "true";
+                bool noUpdate = UserData.settings["noUpdate"] == "false" || (instanceSettings.ContainsKey("noUpdate") && instanceSettings["noUpdate"] == "false");
 
                 if (updateInstance)
                     WithDirectory.DeleteLastUpdates(instanceId);
@@ -240,12 +251,12 @@ namespace Lexplosion.Logic
 
                     if (WithDirectory.countFiles > 0)
                     {
-                        MainWindow.window.Dispatcher.Invoke(delegate{
+                        MainWindow.Obj.Dispatcher.Invoke(delegate{
                             //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
                             //MainWindow.window.GridLoadingWindow.Visibility = Visibility.Visible;
                         });
 
-                        errors = WithDirectory.Update(files, instanceId, MainWindow.window);
+                        errors = WithDirectory.Update(files, instanceId, MainWindow.Obj);
                         WithDirectory.countFiles = 0;
                     }
 
@@ -255,14 +266,16 @@ namespace Lexplosion.Logic
                     WithDirectory.SaveFilesList(instanceId, files);
                     //MainWindow.window.Dispatcher.Invoke(delegate { MainWindow.window.GridLoadingWindow.Visibility = Visibility.Collapsed; });
 
-                    if (updateInstance)
-                    {
-                        profileSettings["update"] = "false";
-                        WithDirectory.SaveSettings(profileSettings, instanceId);
-                    }
-
-                } else {
+                } 
+                else 
+                {
                     files = WithDirectory.GetFilesList(instanceId);
+                }
+
+                if (updateInstance)
+                {
+                    instanceSettings["update"] = "false";
+                    WithDirectory.SaveSettings(instanceSettings, instanceId);
                 }
 
                 return new InitData

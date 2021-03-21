@@ -118,6 +118,7 @@
     </Compile>
     <Compile Include="Logic\Aes.cs" />
     <Compile Include="Logic\LaunchGame.cs" />
+    <Compile Include="Logic\ManageLogic.cs" />
     <Compile Include="Logic\Objects.cs" />
     <Compile Include="Logic\ToServer.cs" />
     <Compile Include="Logic\WithDirectory.cs" />
