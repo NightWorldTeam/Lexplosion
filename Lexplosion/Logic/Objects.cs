@@ -31,7 +31,7 @@ namespace Lexplosion.Objects
         public string xms;
     }
 
-    class AuthResponse
+    class AuthResponse // TODO: в лист строк
     {
         public string status;
         public string login;
