@@ -50,7 +50,7 @@ namespace Lexplosion
                 UserData.profilesAssets = WithDirectory.GetModpacksAssets();
             }).Start();
 
-            Application.Current.Resources = new ResourceDictionary() { Source = new Uri("pack://application:,,,/Gui/StylesDictionary.xaml") };
+            Application.Current.Resources = new ResourceDictionary() { Source = new Uri("pack://application:,,,/Gui/styles/StylesDictionary.xaml") };
             app.Run(new AuthWindow());
         }
 

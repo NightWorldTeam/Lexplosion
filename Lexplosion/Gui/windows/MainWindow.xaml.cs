@@ -25,10 +25,10 @@ namespace Lexplosion.Gui
         public string launchedModpack = "";
 
         //заранее создаем переменные ссылками, чтобы потом не срать в память новыми экземплярами
-        private Uri overviewPage = new Uri("pack://application:,,,/Gui/OverviewPage.xaml");
-        private Uri versionPage = new Uri("pack://application:,,,/Gui/VersionPage.xaml");
-        private Uri modsListPage = new Uri("pack://application:,,,/Gui/ModsListPage.xaml");
-        private Uri modpackSettingsPage = new Uri("pack://application:,,,/Gui/SettingsWindow.xaml");
+        private Uri overviewPage = new Uri("pack://application:,,,/Gui/pages/OverviewPage.xaml");
+        private Uri versionPage = new Uri("pack://application:,,,/Gui/pages/VersionPage.xaml");
+        private Uri modsListPage = new Uri("pack://application:,,,/Gui/pages/ModsListPage.xaml");
+        private Uri modpackSettingsPage = new Uri("pack://application:,,,/Gui/windows/SettingsWindow.xaml");
 
         public MainWindow()
         {
