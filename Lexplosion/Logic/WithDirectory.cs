@@ -45,22 +45,22 @@ namespace Lexplosion.Logic
 
         }
 
-        public static bool Check(ModpackFiles filesInfo, string modpack)
+        public static bool Check(InstanceFiles filesInfo, string instanceId)
         {
             Dictionary<string, int> updates = new Dictionary<string, int>();
 
-            if (!File.Exists(directory + "/modpacks/" + modpack + "/" + "lastUpdates.json"))
+            if (!File.Exists(directory + "/instances/" + instanceId + "/" + "lastUpdates.json"))
             {
-                if (!Directory.Exists(directory + "/modpacks/" + modpack))
-                    Directory.CreateDirectory(directory + "/modpacks/" + modpack); //создаем папку с модпаком, если её нет
+                if (!Directory.Exists(directory + "/instances/" + instanceId))
+                    Directory.CreateDirectory(directory + "/instances/" + instanceId); //создаем папку с модпаком, если её нет
 
-                File.Create(directory + "/modpacks/" + modpack + "/" + "lastUpdates.json").Close(); // создание файла со списком последних обновлений
+                File.Create(directory + "/instances/" + instanceId + "/" + "lastUpdates.json").Close(); // создание файла со списком последних обновлений
 
             } else {
 
                 try
                 {
-                    using (FileStream fstream = File.OpenRead(directory + "/modpacks/" + modpack + "/" + "lastUpdates.json")) //открываем файл с последними обновлениями
+                    using (FileStream fstream = File.OpenRead(directory + "/instances/" + instanceId + "/" + "lastUpdates.json")) //открываем файл с последними обновлениями
                     {
                         byte[] fileBytes = new byte[fstream.Length];
                         fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -72,7 +72,7 @@ namespace Lexplosion.Logic
                                 updates = JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes));
 
                         } catch {
-                            File.Delete(directory + "/modpacks/" + modpack + "/" + "lastUpdates.json");
+                            File.Delete(directory + "/instances/" + instanceId + "/" + "lastUpdates.json");
                         }
 
                     }
@@ -80,10 +80,10 @@ namespace Lexplosion.Logic
                 } catch { }
             }
 
-            //Проходимся по списку папок(data) из класса ModpackFiles
+            //Проходимся по списку папок(data) из класса instanceFiles
             foreach (string dir in filesInfo.data.Keys)
             {
-                string folder = directory + "/modpacks/" + modpack + "/" + dir;
+                string folder = directory + "/instances/" + instanceId + "/" + dir;
 
                 try
                 {
@@ -96,7 +96,7 @@ namespace Lexplosion.Logic
                         updates[dir] = filesInfo.data[dir].folderVersion;
                     }
 
-                    using (FileStream fstream = new FileStream(directory + "/modpacks/" + modpack + "/" + "lastUpdates.json", FileMode.OpenOrCreate))
+                    using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/" + "lastUpdates.json", FileMode.OpenOrCreate))
                     {
                         byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
                         fstream.Write(bytes, 0, bytes.Length);
@@ -195,7 +195,7 @@ namespace Lexplosion.Logic
                 {
                     try
                     {
-                        if (File.Exists(directory + "/modpacks/" + modpack + "/" + folder + "/" + file))
+                        if (File.Exists(directory + "/instances/" + instanceId + "/" + folder + "/" + file))
                         {
                             Updates.oldFiles.Add(folder + "/" + file);
                             countFiles++;
@@ -206,15 +206,15 @@ namespace Lexplosion.Logic
             }
 
             //проверяем файл версии
-            if (!Directory.Exists(directory + "/modpacks/" + modpack + "/version"))
+            if (!Directory.Exists(directory + "/instances/" + instanceId + "/version"))
             {
-                Directory.CreateDirectory(directory + "/modpacks/" + modpack + "/version"); //создаем папку versions если её нет
+                Directory.CreateDirectory(directory + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
                 Updates.minecraftJar = true; //сразу же добавляем minecraftJar в обновления
                 countFiles++;
 
             } else {
 
-                string minecraftJarFile = directory + "/modpacks/" + modpack + "/version/" + filesInfo.version.minecraftJar.name;
+                string minecraftJarFile = directory + "/instances/" + instanceId + "/version/" + filesInfo.version.minecraftJar.name;
                 if (updates.ContainsKey("version") && File.Exists(minecraftJarFile) && filesInfo.version.minecraftJar.lastUpdate == updates["version"]) //проверяем его наличие и версию
                 {
                     if (filesInfo.version.security) //если включена защита файла версии, то проверяем его 
@@ -250,7 +250,7 @@ namespace Lexplosion.Logic
             }
 
             //проверяем natives
-            if (!Directory.Exists(directory + "/modpacks/" + modpack + "/version/natives/"))
+            if (!Directory.Exists(directory + "/instances/" + instanceId + "/version/natives/"))
             {
                 foreach (string key in filesInfo.natives.Keys) //добавляем natives в обновления
                 {
@@ -279,7 +279,7 @@ namespace Lexplosion.Logic
                     {
                         if (filesInfo.natives[n] == "windows" || filesInfo.natives[n] == "all")
                         {
-                            if (!File.Exists(directory + "/modpacks/" + modpack + "/version/natives/" + n))
+                            if (!File.Exists(directory + "/instances/" + instanceId + "/version/natives/" + n))
                             {
                                 Updates.natives.Add(n);
                                 countFiles++;
@@ -353,7 +353,7 @@ namespace Lexplosion.Logic
             return true;
         }
 
-        public static List<string> Update(ModpackFiles filesList, string modpack, MainWindow window)
+        public static List<string> Update(InstanceFiles filesList, string instanceId, MainWindow window)
         {
             WebClient wc = new WebClient();
             Dictionary<string, int> updates = new Dictionary<string, int>();
@@ -480,7 +480,7 @@ namespace Lexplosion.Logic
             //пытаемся открыть файл с последними обновлениями
             try
             {
-                using (FileStream fstream = File.OpenRead(directory + "/modpacks/" + modpack + "/" + "lastUpdates.json"))
+                using (FileStream fstream = File.OpenRead(directory + "/instances/" + instanceId + "/" + "lastUpdates.json"))
                 {
                     byte[] fileBytes = new byte[fstream.Length];
                     fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -505,13 +505,13 @@ namespace Lexplosion.Logic
                     folders = file.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (filesList.data[dir].objects[file].url == null)
-                        addr = LaunсherSettings.serverUrl + "upload/modpacks/" + modpack + "/" + dir + "/" + file;
+                        addr = LaunсherSettings.serverUrl + "upload/modpacks/" + instanceId + "/" + dir + "/" + file;
 
                     else
                         addr = filesList.data[dir].objects[file].url;
 
 
-                    if (!DownloadFile(addr, folders[folders.Length - 1], directory + "/modpacks/" + modpack + "/" + dir + "/" + file, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size))
+                    if (!DownloadFile(addr, folders[folders.Length - 1], directory + "/instances/" + instanceId + "/" + dir + "/" + file, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size))
                     {
                         errors.Add(dir + "/" + file);
 
@@ -525,9 +525,9 @@ namespace Lexplosion.Logic
             //удаляем старые файлы
             foreach (string file in Updates.oldFiles)
             {
-                if (File.Exists(directory + "/modpacks/" + modpack + "/" + file))
+                if (File.Exists(directory + "/instances/" + instanceId + "/" + file))
                 {
-                    File.Delete(directory + "/modpacks/" + modpack + "/" + file);
+                    File.Delete(directory + "/instances/" + instanceId + "/" + file);
                     if (updates.ContainsKey(file))
                         updates.Remove(file);
                     UpdateProgressBar();
@@ -543,7 +543,7 @@ namespace Lexplosion.Logic
                     addr = filesList.version.minecraftJar.url;
 
 
-                if (!DownloadFile(addr, filesList.version.minecraftJar.name, directory + "/modpacks/" + modpack + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size))
+                if (!DownloadFile(addr, filesList.version.minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size))
                 {
                     errors.Add("version/" + filesList.version.minecraftJar.name);
 
@@ -563,11 +563,11 @@ namespace Lexplosion.Logic
             foreach (string native in Updates.natives)
             {
 
-                if (!DownloadApplicationFiles(addr + native, directory + "/modpacks/" + modpack + "/version/natives/", native))
+                if (!DownloadApplicationFiles(addr + native, directory + "/instances/" + instanceId + "/version/natives/", native))
                 {
                     //скачивание не удалось
                     errors.Add("natives/" + native);
-                    DelFile(directory + "/modpacks/" + modpack + "/version/natives/" + native);
+                    DelFile(directory + "/instances/" + instanceId + "/version/natives/" + native);
 
                 } else {
                     UpdateProgressBar();
@@ -666,7 +666,7 @@ namespace Lexplosion.Logic
             //сохраняем файл с последними обновлениями 
             try
             {
-                using (FileStream fstream = new FileStream(directory + "/modpacks/" + modpack + "/" + "lastUpdates.json", FileMode.OpenOrCreate))
+                using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/" + "lastUpdates.json", FileMode.OpenOrCreate))
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
                     fstream.Write(bytes, 0, bytes.Length);
@@ -688,11 +688,11 @@ namespace Lexplosion.Logic
 
         }
 
-        public static void SaveSettings(Dictionary<string, string> data, string modpack = "")
+        public static void SaveSettings(Dictionary<string, string> data, string instanceId = "")
         {
             string file;
 
-            if (modpack == "")
+            if (instanceId == "")
             {
                 string path = Environment.ExpandEnvironmentVariables("%appdata%") + "/night-world";
                 if (!Directory.Exists(path))
@@ -702,7 +702,7 @@ namespace Lexplosion.Logic
             }
             else
             {
-                string path = directory + "/modpacks/" + modpack;
+                string path = directory + "/instances/" + instanceId;
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
@@ -711,7 +711,7 @@ namespace Lexplosion.Logic
 
             try
             {
-                Dictionary<string, string> settings = GetSettings(modpack);
+                Dictionary<string, string> settings = GetSettings(instanceId);
                 if (settings != null)
                 {
                     foreach (string key in data.Keys)
@@ -747,7 +747,7 @@ namespace Lexplosion.Logic
             }
             else
             {
-                file = directory + "/modpacks/" + profileName + "/profileSettings.json";
+                file = directory + "/instances/" + profileName + "/profileSettings.json";
 
             }
 
@@ -811,26 +811,26 @@ namespace Lexplosion.Logic
 
         }
 
-        public static void SaveFilesList(string modpack, ModpackFiles files)
+        public static void SaveFilesList(string instanceId, InstanceFiles files)
         {
-            SaveFile(directory + "/modpacks/" + modpack + "/" + "filesList.json", JsonConvert.SerializeObject(files));
+            SaveFile(directory + "/instances/" + instanceId + "/" + "filesList.json", JsonConvert.SerializeObject(files));
         }
 
-        public static ModpackFiles GetFilesList(string modpack)
+        public static InstanceFiles GetFilesList(string instanceId)
         {
-            return GetFile<ModpackFiles>(directory + "/modpacks/" + modpack + "/" + "filesList.json");
+            return GetFile<InstanceFiles>(directory + "/instances/" + instanceId + "/" + "filesList.json");
         }
 
         public static Dictionary<string, string> GetModpaksList()
         {
-            Dictionary<string, string> baseList = GetFile<Dictionary<string, string>>(directory + "/modpackList.json");
+            Dictionary<string, string> baseList = GetFile<Dictionary<string, string>>(directory + "/instanesList.json");
             Dictionary<string, string> list = new Dictionary<string, string>();
 
             if (baseList != null)
             {
                 foreach (string key in baseList.Keys)
                 {
-                    if (Directory.Exists(directory + "/modpacks/" + key))
+                    if (Directory.Exists(directory + "/instances/" + key))
                     {
                         list[key] = baseList[key];
                     }
@@ -843,7 +843,7 @@ namespace Lexplosion.Logic
 
         public static void SaveModpaksList(Dictionary<string, string> content)
         {
-            SaveFile(directory + "/modpackList.json", JsonConvert.SerializeObject(content));
+            SaveFile(directory + "/instanesList.json", JsonConvert.SerializeObject(content));
         }
 
         public static bool DownloadUpgradeTool()
@@ -898,13 +898,13 @@ namespace Lexplosion.Logic
 
         }
 
-        public static bool DeleteLastUpdates(string modpack) //Эта функция удаляет файл lastUpdates.json
+        public static bool DeleteLastUpdates(string instanceId) //Эта функция удаляет файл lastUpdates.json
         {
             try
             {
-                if(File.Exists(directory + "/modpacks/" + modpack + "/lastUpdates.json"))
+                if(File.Exists(directory + "/instances/" + instanceId + "/lastUpdates.json"))
                 {
-                    File.Delete(directory + "/modpacks/" + modpack + "/lastUpdates.json");
+                    File.Delete(directory + "/instances/" + instanceId + "/lastUpdates.json");
                 }
 
                 return true;
@@ -912,13 +912,13 @@ namespace Lexplosion.Logic
             } catch { return false; }
         }
 
-        public static void RemoveModpackDirecory(string modpack)
+        public static void RemoveInstanceDirecory(string instanceId)
         {
             try
             {
-                if (Directory.Exists(directory + "/modpacks/" + modpack))
+                if (Directory.Exists(directory + "/instances/" + instanceId))
                 {
-                    Directory.Delete(directory + "/modpacks/" + modpack, true);
+                    Directory.Delete(directory + "/instances/" + instanceId, true);
                 }
 
                 Thread.Sleep(1000);
@@ -969,9 +969,9 @@ namespace Lexplosion.Logic
                     }
                     else
                     {
-                        foreach (ModpackAssets modpack in data.data.Values)
+                        foreach (InstanceAssets instance in data.data.Values)
                         {
-                            foreach (string file in modpack.images)
+                            foreach (string file in instance.images)
                             {
                                 if (!File.Exists(directory + "/launcherAssets/" + file))
                                 {
@@ -1026,29 +1026,22 @@ namespace Lexplosion.Logic
 
         }
 
-        public static Dictionary<string, ModpackAssets> GetModpacksAssets()
+        public static Dictionary<string, InstanceAssets> GetInstanceAssets()
         {
             try
             {
-                var data = GetFile<Dictionary<string, ModpackAssets>>(directory + "/launcherAssets.json");
+                var data = GetFile<Dictionary<string, InstanceAssets>>(directory + "/launcherAssets.json");
 
                 return data;
                 
-            } catch { return new Dictionary<string, ModpackAssets>(); }
+            } catch { return new Dictionary<string, InstanceAssets>(); }
         }
 
-        public static bool ModpackIsInstalled(string modpack)
+        public static bool InstanceIsInstalled(string instanceId)
         {
             try
             {
-                if (Directory.Exists(directory + "/modpacks/" + modpack))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return Directory.Exists(directory + "/instances/" + instanceId);
             }
             catch
             {
@@ -1056,7 +1049,7 @@ namespace Lexplosion.Logic
             }
         }
 
-        public static bool ExportProfile(string modpack, List<string> folders, string path)
+        public static bool ExportProfile(string instanceId, List<string> folders, string path)
         {
             return true;
         }

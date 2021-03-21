@@ -52,6 +52,9 @@ namespace Lexplosion.Gui.Windows
             // updatePacks(MP_TB_StackPanel); //вызываем метод отрисовывающий все модпаки
             LeftSideFrame.Source = leftSideMenuPage; //это страница по умолчанию
             RightSideFrame.Source = profilesContainerPage; //это страница по умолчанию
+
+            //selectedModpack = "lt";
+            //СlientManager(null, null);
         }
 
         private void СlientManager(object sender, RoutedEventArgs e)

@@ -13,17 +13,17 @@ namespace Lexplosion.Objects
         public static bool noUpdate = false;
         public static Dictionary<string, string> settings; //общие настройки
         public static Dictionary<string, string> PacksList;
-        public static Dictionary<string, ModpackAssets> profilesAssets;
+        public static Dictionary<string, InstanceAssets> profilesAssets;
     }
 
     class LauncherAssets
     {
         public int version = 0;
-        public Dictionary<string, ModpackAssets> data;
+        public Dictionary<string, InstanceAssets> data;
 
     }
 
-    public class ModpackAssets //Асесты модпака на главной странице (описание, картинки)
+    public class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
     {
         public string description;
         public List<string> images;
@@ -31,7 +31,7 @@ namespace Lexplosion.Objects
         public string xms;
     }
 
-    class ModpackFiles
+    class InstanceFiles
     {
         public Dictionary<string, WithFolder> data;
         public VersionInfo version;
@@ -39,7 +39,7 @@ namespace Lexplosion.Objects
         public Dictionary<string, string> natives;
     }
 
-    class FilesList : ModpackFiles
+    class FilesList : InstanceFiles
     {
         public string code;
         public string str;
@@ -92,7 +92,7 @@ namespace Lexplosion.Objects
 
     class InitData
     {
-        public ModpackFiles files;
+        public InstanceFiles files;
         public List<string> errors;
     }
 

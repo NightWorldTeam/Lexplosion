@@ -44,7 +44,7 @@ namespace Lexplosion.Logic
 
         }
 
-        static public ModpackFiles GetFilesList(string modpack)
+        static public InstanceFiles GetFilesList(string instanceId)
         {
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
@@ -75,7 +75,7 @@ namespace Lexplosion.Logic
 
             try
             {
-                answer = HttpPost("directoryFiles.php?modpack=" + WebUtility.UrlEncode(modpack), data);
+                answer = HttpPost("directoryFiles.php?modpack=" + WebUtility.UrlEncode(instanceId), data);
 
                 if (answer != null)
                 {
@@ -84,7 +84,7 @@ namespace Lexplosion.Logic
 
                     if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                     {
-                        ModpackFiles ret = new ModpackFiles
+                        InstanceFiles ret = new InstanceFiles
                         {
                             data = filesData.data,
                             version = filesData.version,

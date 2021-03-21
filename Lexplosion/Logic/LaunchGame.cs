@@ -15,7 +15,7 @@ namespace Lexplosion.Logic
         private static Process process = new Process();
         public static bool isRunning = false;
 
-        public static string FormCommand(string modpack, VersionInfo versionInfo, string versionFile, Dictionary<string, string> libraries, Dictionary<string, string> profileSettings)
+        public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, Dictionary<string, string> libraries, Dictionary<string, string> profileSettings)
         {
             int number;
             if (!profileSettings.ContainsKey("xmx") || !Int32.TryParse(profileSettings["xmx"], out number))
@@ -29,7 +29,7 @@ namespace Lexplosion.Logic
             }
 
             string command;
-            string versionPath = UserData.settings["gamePath"] + "/modpacks/" + modpack + "/version/" + versionFile;
+            string versionPath = UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/" + versionFile;
 
             if (!profileSettings.ContainsKey("gameArgs"))
                 profileSettings["gameArgs"] = UserData.settings["gameArgs"];
@@ -37,7 +37,7 @@ namespace Lexplosion.Logic
             if (profileSettings["gameArgs"].Length > 0 && profileSettings["gameArgs"][profileSettings["gameArgs"].Length - 1] != ' ')
                 profileSettings["gameArgs"] += " ";
 
-            command = @" -Djava.library.path=" + UserData.settings["gamePath"] + "/modpacks/" + modpack + "/version/natives -cp ";
+            command = @" -Djava.library.path=" + UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/natives -cp ";
 
             foreach (string lib in libraries.Keys)
             {
@@ -50,7 +50,7 @@ namespace Lexplosion.Logic
             command += versionPath + @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Xmx" + profileSettings["xmx"] + "M -Xms" + profileSettings["xms"] + "M " + profileSettings["gameArgs"];
             command += versionInfo.mainClass + " --username " + UserData.login + " --version " + versionInfo.gameVersion;
-            command += " --gameDir " + UserData.settings["gamePath"] + "/modpacks/" + modpack;
+            command += " --gameDir " + UserData.settings["gamePath"] + "/instances/" + instanceId;
             command += " --assetsDir " + UserData.settings["gamePath"] + "/assets";
             command += " --assetIndex " + versionInfo.assetsVersion;
             command += " --uuid " + UserData.UUID + " --accessToken " + UserData.accessToken + " --userProperties [] --userType legacy ";
@@ -61,7 +61,7 @@ namespace Lexplosion.Logic
         }
 
 
-        public static bool Run(string command, string modpack)
+        public static bool Run(string command, string instanceId)
         {
             if (UserData.settings["showConsole"] == "true")
             {
@@ -92,7 +92,7 @@ namespace Lexplosion.Logic
                 });
 
                 process.StartInfo.FileName = UserData.settings["javaPath"];
-                process.StartInfo.WorkingDirectory = UserData.settings["gamePath"] + "/modpacks/" + modpack;
+                process.StartInfo.WorkingDirectory = UserData.settings["gamePath"] + "/instances/" + instanceId;
                 process.StartInfo.Arguments = command;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.UseShellExecute = false;
@@ -200,7 +200,7 @@ namespace Lexplosion.Logic
 
         }
 
-        public static InitData Initialization(string modpack, Dictionary<string, string> profileSettings)
+        public static InitData Initialization(string instanceId, Dictionary<string, string> profileSettings)
         {
             InitData Error(string error)
             {
@@ -220,22 +220,22 @@ namespace Lexplosion.Logic
 
                 WithDirectory.Create(UserData.settings["gamePath"]);
                 List<string> errors = new List<string>();
-                ModpackFiles files = null;
+                InstanceFiles files = null;
 
                 if (!UserData.settings.ContainsKey("gamePath") || !Directory.Exists(UserData.settings["gamePath"]) || !UserData.settings["gamePath"].Contains(":"))
                     return Error("gamePathError");
 
-                bool updateModpack = profileSettings.ContainsKey("update") && profileSettings["update"] == "true";
+                bool updateInstance = profileSettings.ContainsKey("update") && profileSettings["update"] == "true";
                 bool noUpdate = UserData.settings["noUpdate"] == "false" || (profileSettings.ContainsKey("noUpdate") && profileSettings["noUpdate"] == "false");
 
-                if (updateModpack)
-                    WithDirectory.DeleteLastUpdates(modpack);
+                if (updateInstance)
+                    WithDirectory.DeleteLastUpdates(instanceId);
 
-                if (!UserData.offline && (updateModpack || noUpdate))
+                if (!UserData.offline && (updateInstance || noUpdate))
                 {
-                    files = ToServer.GetFilesList(modpack);
+                    files = ToServer.GetFilesList(instanceId);
 
-                    if (files == null || !WithDirectory.Check(files, modpack))
+                    if (files == null || !WithDirectory.Check(files, instanceId))
                         return null;
 
                     if (WithDirectory.countFiles > 0)
@@ -245,24 +245,24 @@ namespace Lexplosion.Logic
                             //MainWindow.window.GridLoadingWindow.Visibility = Visibility.Visible;
                         });
 
-                        errors = WithDirectory.Update(files, modpack, MainWindow.window);
+                        errors = WithDirectory.Update(files, instanceId, MainWindow.window);
                         WithDirectory.countFiles = 0;
                     }
 
                     files.data = null;
                     files.natives = null;
 
-                    WithDirectory.SaveFilesList(modpack, files);
+                    WithDirectory.SaveFilesList(instanceId, files);
                     //MainWindow.window.Dispatcher.Invoke(delegate { MainWindow.window.GridLoadingWindow.Visibility = Visibility.Collapsed; });
 
-                    if (updateModpack)
+                    if (updateInstance)
                     {
                         profileSettings["update"] = "false";
-                        WithDirectory.SaveSettings(profileSettings, modpack);
+                        WithDirectory.SaveSettings(profileSettings, instanceId);
                     }
 
                 } else {
-                    files = WithDirectory.GetFilesList(modpack);
+                    files = WithDirectory.GetFilesList(instanceId);
                 }
 
                 return new InitData

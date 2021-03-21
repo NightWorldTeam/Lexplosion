@@ -41,7 +41,7 @@ namespace Lexplosion.Gui.Pages
                 stackPanel.Children.Add(mp_togglebutton);
 
                 //помещаем в список информацию о том установлен модпак или нет
-                IsInstalled[pack] = WithDirectory.ModpackIsInstalled(pack);
+                IsInstalled[pack] = WithDirectory.InstanceIsInstalled(pack);
 
             }
 

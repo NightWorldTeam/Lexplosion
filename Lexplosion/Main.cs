@@ -51,7 +51,7 @@ namespace Lexplosion
             new Thread(delegate () {
                 // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
                 WithDirectory.CheckLauncherAssets(); 
-                UserData.profilesAssets = WithDirectory.GetModpacksAssets();
+                UserData.profilesAssets = WithDirectory.GetInstanceAssets();
             }).Start();
 
             Application.Current.Resources = new ResourceDictionary() { Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml") };
