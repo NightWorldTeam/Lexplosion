@@ -10,6 +10,7 @@ using Lexplosion.Objects;
 using System.Threading;
 using Lexplosion.Gui.Windows;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Lexplosion.Logic
 {
@@ -769,6 +770,10 @@ namespace Lexplosion.Logic
             {
                 file = directory + "/instances/" + instanceId + "/instanceSettings.json";
 
+                if (!File.Exists(file))
+                {
+                    return new Dictionary<string, string>();
+                }
             }
 
             try
@@ -793,7 +798,7 @@ namespace Lexplosion.Logic
 
         }       
 
-        static private void SaveFile(string name, string content)
+        static private bool SaveFile(string name, string content)
         {
             try
             {
@@ -807,7 +812,13 @@ namespace Lexplosion.Logic
                     fstream.Close();
                 }
 
-            } catch { }
+                return true;
+
+            } 
+            catch
+            {
+                return false;
+            }
 
         }
 
@@ -826,7 +837,7 @@ namespace Lexplosion.Logic
                 }
 
             } catch {
-                return default(T);
+                return default;
             }
 
         }
@@ -1069,9 +1080,125 @@ namespace Lexplosion.Logic
             }
         }
 
-        public static bool ExportProfile(string instanceId, List<string> folders, string path)
+        public static bool ExportInstance(string instanceId, List<string> directoryList, string exportPath, string description)
         {
+
+            string targetDir = directory + "/temp/" + instanceId + "-export";
+            string srcDir = directory + "/instances/" + instanceId;
+
+            if (Directory.Exists(targetDir))
+            {
+                Directory.Delete(targetDir, true);
+            }
+
+            foreach (string dirUnit_ in directoryList)
+            {
+                string dirUnit = dirUnit_.Replace(@"\", "/");
+                string target = dirUnit.Replace(srcDir, targetDir + "/files");
+                string finalPath = target.Substring(0, target.LastIndexOf("/"));
+
+                if (!Directory.Exists(finalPath))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(finalPath);
+                    }
+                    catch
+                    {
+                       return false;
+                    }
+                }
+
+                if (File.Exists(dirUnit))
+                {
+                    try
+                    {
+                        if (File.Exists(target))
+                        {
+                            File.Delete(target);
+                        }
+
+                        File.Copy(dirUnit, target);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+
+            InstanceFiles instanceFile = GetFilesList(instanceId);
+
+            Dictionary<string, string> data = new Dictionary<string, string>
+            {
+                ["gameVersion"] = instanceFile.version.gameVersion,
+                ["description"] = description,
+                ["id"] = instanceId,
+                ["name"] = UserData.InstancesList[instanceId]
+            };
+
+            string jsonData = JsonConvert.SerializeObject(data);
+            if(!SaveFile(targetDir + "/instanceInfo.json", jsonData))
+            {
+                try
+                {
+                    Directory.Delete(targetDir, true);
+                } 
+                catch { }
+
+                return false;
+            }
+
+
+            try
+            {
+                ZipFile.CreateFromDirectory(targetDir, exportPath + "/" + instanceId + ".zip");
+                Directory.Delete(targetDir, true);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+
+            }
+
+        }
+
+        public static bool ImportInstance(string zipFile)
+        {
+            string dir = directory + "/temp/import";
+
+            if (!Directory.Exists(dir))
+            {
+                try
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            ZipFile.ExtractToDirectory(zipFile, dir);
+
+            Dictionary<string, string> instanceInfo = GetFile<Dictionary<string, string>>(dir + "instanceInfo.json");
+
+            if(instanceInfo == null)
+            {
+                return false;
+            }
+
             return true;
         }
+
     }
+
 }

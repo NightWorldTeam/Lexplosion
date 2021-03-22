@@ -225,17 +225,7 @@ namespace Lexplosion.Logic
                 if (!UserData.settings.ContainsKey("gamePath") || !Directory.Exists(UserData.settings["gamePath"]) || !UserData.settings["gamePath"].Contains(":"))
                     return Error("gamePathError");
 
-                if(instanceSettings.ContainsKey("isCustom") && instanceSettings["isCustom"] == "true") // профил является пользовательским. В обновлениях он не нуждается, сразу возвращаем необходимы для запуска данные
-                {
-                    files = WithDirectory.GetFilesList(instanceId);
-
-                    return new InitData
-                    {
-                        errors = errors,
-                        files = files
-                    };
-                }
-
+                bool isLocal = instanceSettings.ContainsKey("isLocal") && instanceSettings["isLocal"] == "true";
                 bool updateInstance = instanceSettings.ContainsKey("update") && instanceSettings["update"] == "true";
                 bool noUpdate = UserData.settings["noUpdate"] == "false" || (instanceSettings.ContainsKey("noUpdate") && instanceSettings["noUpdate"] == "false");
 
@@ -244,10 +234,20 @@ namespace Lexplosion.Logic
 
                 if (!UserData.offline && (updateInstance || noUpdate))
                 {
-                    files = ToServer.GetFilesList(instanceId);
+                    //если модпак локальный, то получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
+                    if (!isLocal) 
+                    {
+                        files = ToServer.GetFilesList(instanceId, isLocal);
+                    }
+                    else
+                    {
+                        files = WithDirectory.GetFilesList(instanceId);
+                        files = ToServer.GetFilesList(files.version.gameVersion, isLocal);
+                    }
 
                     if (files == null || !WithDirectory.Check(files, instanceId))
                         return null;
+
 
                     if (WithDirectory.countFiles > 0)
                     {

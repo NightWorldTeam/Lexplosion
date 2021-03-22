@@ -45,8 +45,16 @@ namespace Lexplosion.Gui.Windows
             LeftSideFrame.Source = leftSideMenuPage; //это страница по умолчанию
             RightSideFrame.Source = profilesContainerPage; //это страница по умолчанию
 
-            //selectedModpack = "test";
-            //СlientManager(null, null);
+            var test = new List<string>();
+            test.Add(@"C:\Games\night-world\instances\lt\mods\AdvancedSolarPanel-1.7.10-3.5.1.jar");
+            test.Add(@"C:\Games\night-world\instances\lt\mods\BetterFps-1.0.1.jar");
+            test.Add(@"C:\Games\night-world\instances\lt\config\AdvancedSolarPanel_MTRecipes.cfg");
+
+
+            //MessageBox.Show(WithDirectory.ExportInstance("lt", test, @"C:\Users\Putin\Desktop\struct", "Пиздец какой-то").ToString());
+
+            //selectedModpack = "lt";
+            //ManageLogic.СlientManager();
         }
 
         private void СlientManager(object sender, RoutedEventArgs e)

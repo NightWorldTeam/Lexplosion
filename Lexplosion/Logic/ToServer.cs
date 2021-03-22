@@ -50,7 +50,7 @@ namespace Lexplosion.Logic
 
         }
 
-        static public InstanceFiles GetFilesList(string instanceId)
+        static public InstanceFiles GetFilesList(string instanceId, bool isLocal = false)
         {
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
@@ -77,11 +77,9 @@ namespace Lexplosion.Logic
             data.Add(new List<string>() { "str2", str2 });
             data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
 
-            string answer = "";
-
             try
             {
-                answer = HttpPost("directoryFiles.php?modpack=" + WebUtility.UrlEncode(instanceId), data);
+                string answer = HttpPost("directoryFiles.php?modpack=" + WebUtility.UrlEncode(instanceId) + "&isLocal=" + isLocal.ToString(), data);
 
                 if (answer != null)
                 {

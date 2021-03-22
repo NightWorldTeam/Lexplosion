@@ -26,7 +26,7 @@ namespace Lexplosion.Objects
 
     class InstanceFiles
     {
-        public Dictionary<string, WithFolder> data;
+        public Dictionary<string, WithFolder> data = new Dictionary<string, WithFolder>();
         public VersionInfo version;
         public Dictionary<string, string> libraries;
         public Dictionary<string, string> natives;
