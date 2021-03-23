@@ -122,18 +122,36 @@ namespace Lexplosion.Gui.Pages
             }
         }
 
+        private void Search(object sender, RoutedEventArgs e) 
+        {
+            
+        }
+
+        private void Favorites(object sender, RoutedEventArgs e) 
+        {
+
+        }
+
+        private void Settings(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void UserProfile(object sender, RoutedEventArgs e)
         {
 
         }
+
         private void AddCustomModpack(object sender, RoutedEventArgs e)
         {
 
         }
+
         private void LauncherSettings(object sender, RoutedEventArgs e)
         {
 
         }
+
         private void Network(object sender, RoutedEventArgs e)
         {
 
