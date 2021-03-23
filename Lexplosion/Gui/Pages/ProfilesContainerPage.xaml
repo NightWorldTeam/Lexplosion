@@ -9,92 +9,118 @@
       Title="ProfilesContainerPage">
 
     <Page.Resources>
-        <!-- Start Button Style -->
-        <Style x:Key="CBS" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-            <Setter Property="FontFamily" Value="pack://application:,,,/assets/fonts/#Casper Bold"/>
+        <Style x:Key="ModpackButton" TargetType="Button">
+            <Setter Property="Width" Value="120" />
+            <Setter Property="Height" Value="120" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/eos.png" Stretch="Fill" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#FFFAFAFA" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="Border" CornerRadius="2" BorderThickness="1" Background="#1c91a6" BorderBrush="#2c99c2">
-                            <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                        </Border>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Canvas>
+                                    <!-- Modpack Icon -->
+                                </Canvas>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="25"/>
+                                    </Grid.RowDefinitions>
 
-                        <ControlTemplate.Triggers>
+                                    <Canvas Grid.Row="1" Background="LightGray" Opacity="0.1">
+                                        <Canvas.Effect>
+                                            <BlurEffect />
+                                        </Canvas.Effect>
+                                    </Canvas>
+                                    <Border Grid.Row="1">
+                                        <ContentPresenter Margin="6,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" RecognizesAccessKey="True" />
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <!-- ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
-                                <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="False">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
-                                <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Switcher Style -->
-        <Style x:Key="MWCBS" TargetType="{x:Type ToggleButton}">
-            <!-- <Setter Property="" Value=""/> #4cb2d6-->
-            <Setter Property="Width" Value="120"/>
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="25"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border x:Name="Border" Background="Transparent" BorderBrush="#18191b"  BorderThickness="0,0,0,3" Width="140"  HorizontalAlignment="Center">
-                            <ContentPresenter Margin="5,0,5,0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                RecognizesAccessKey="True" />
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="BorderBrush" TargetName="Border" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Switcher Style -->
-        <Style x:Key="MWCBS1" TargetType="{x:Type ToggleButton}">
-            <!-- <Setter Property="" Value=""/> #4cb2d6-->
-            <Setter Property="Width" Value="244"/>
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="22"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border x:Name="Border" Background="Transparent" BorderBrush="Transparent"  BorderThickness="10,0,0,0" Width="244"  HorizontalAlignment="Left">
-                            <ContentPresenter Margin="25,0,25,0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                RecognizesAccessKey="True" />
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="BorderBrush" TargetName="Border" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
+                                <Setter Property="Background" Value="#00aeff" />
+                            </Trigger  -->
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
     </Page.Resources>
 
-    <Grid Background="Black">
+    <Grid ShowGridLines="False">
+        <!-- Grid Border Padding-->
+        <Grid.Resources>
+            <Style TargetType="Border">
+                <Setter Property="Padding" Value="5" />
+            </Style>
+        </Grid.Resources>
+        
+        <!-- Grid Field Markup -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="175"/>
+            <ColumnDefinition Width="175"/>
+            <ColumnDefinition Width="175"/>
+            <ColumnDefinition Width="175"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Modpack Cells -->
+        <!-- 0 -->
+        <Border Grid.Column="0" Grid.Row="0">
+            <Button Style="{StaticResource ModpackButton}" Content="Energy of Space" Foreground="#FFF" />
+        </Border>
+        <Border Grid.Column="1" Grid.Row="0">
+            <Button Style="{StaticResource ModpackButton}" Content="Long Tech" />
+        </Border>
+        <Border Grid.Column="2" Grid.Row="0" >
+            <Button Style="{StaticResource ModpackButton}" Content="Transport Network" />
+        </Border>
+        <Border Grid.Column="3" Grid.Row="0" >
+            <Button Style="{StaticResource ModpackButton}" Content="Infinity Space" />
+        </Border>
+
+        <!-- 1 -->
+        
+        <Border Grid.Column="0" Grid.Row="1">
+            <Button Style="{StaticResource ModpackButton}"  Content="Energy of Space"/>
+        </Border>
+        <Border Grid.Column="1" Grid.Row="1">
+            <Button Style="{StaticResource ModpackButton}" Content="Long Tech" />
+        </Border>
+        <Border Grid.Column="2" Grid.Row="1" >
+            <Button Style="{StaticResource ModpackButton}" Content="Transport Network" />
+        </Border>
+        <Border Grid.Column="3" Grid.Row="1" >
+            <Button Style="{StaticResource ModpackButton}" Content="Infinity Space" />
+        </Border>
+
+        <!-- 2 -->
+        
+        <Border Grid.Column="0" Grid.Row="2">
+            <Button Style="{StaticResource ModpackButton}"  Content="Energy of Space"/>
+        </Border>
+        <Border Grid.Column="1" Grid.Row="2">
+            <Button Style="{StaticResource ModpackButton}" Content="Long Tech" />
+        </Border>
+        <Border Grid.Column="2" Grid.Row="2" >
+            <Button Style="{StaticResource ModpackButton}" Content="Transport Network" />
+        </Border>
+        <Border Grid.Column="3" Grid.Row="2" >
+            <Button Style="{StaticResource ModpackButton}" Content="Infinity Space" />
+        </Border>
+
     </Grid>
 </Page>

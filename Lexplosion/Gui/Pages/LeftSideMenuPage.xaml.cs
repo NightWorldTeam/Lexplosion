@@ -124,7 +124,7 @@ namespace Lexplosion.Gui.Pages
 
         private void Search(object sender, RoutedEventArgs e) 
         {
-            
+
         }
 
         private void Favorites(object sender, RoutedEventArgs e) 

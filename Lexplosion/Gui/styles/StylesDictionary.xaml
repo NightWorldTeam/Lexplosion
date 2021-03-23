@@ -37,4 +37,62 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- Start Button Style -->
+    <Style x:Key="CBS" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+        <Setter Property="FontFamily" Value="pack://application:,,,/assets/fonts/#Casper Bold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Border" CornerRadius="2" BorderThickness="1" Background="#1c91a6" BorderBrush="#2c99c2">
+                        <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
+                            <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
+                            <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Switcher Style -->
+    <Style x:Key="MWCBS" TargetType="{x:Type ToggleButton}">
+        <!-- <Setter Property="" Value=""/> #4cb2d6-->
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Height" Value="38"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border" Background="Transparent" BorderBrush="#18191b"  BorderThickness="0,0,0,3" Width="140"  HorizontalAlignment="Center">
+                        <ContentPresenter Margin="5,0,5,0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                RecognizesAccessKey="True" />
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="BorderBrush" TargetName="Border" Value="#2c99c2"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Switcher Style -->
 </ResourceDictionary>

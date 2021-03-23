@@ -246,5 +246,11 @@
     <Resource Include="Assets\images\icons\profile.png" />
     <Resource Include="Assets\images\icons\settings.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\eos.png" />
+    <Resource Include="Assets\images\icons\lt.png" />
+    <Resource Include="Assets\images\icons\oth.png" />
+    <Resource Include="Assets\images\icons\tn.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
