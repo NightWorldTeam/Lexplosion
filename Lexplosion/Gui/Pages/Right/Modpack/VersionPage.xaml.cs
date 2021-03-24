@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Lexplosion.Gui.Pages
+namespace Lexplosion.Gui.Pages.Right.Modpack
 {
     /// <summary>
     /// Логика взаимодействия для VersionPage.xaml

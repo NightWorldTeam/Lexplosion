@@ -121,10 +121,10 @@
                 <ColumnDefinition Width="700*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
-                <Frame x:Name="LeftSideFrame"/>
+                <Frame x:Name="LeftSideFrame" NavigationUIVisibility="Hidden"/>
             </Grid>
             <Grid Grid.Column="1">
-                <Frame x:Name="RightSideFrame"/>
+                <Frame x:Name="RightSideFrame" NavigationUIVisibility="Hidden"/>
             </Grid>
         </Grid>
     </Grid>

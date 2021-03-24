@@ -73,14 +73,17 @@
 
     <Grid>
         <Canvas Background="#18191b"/>
-        <StackPanel x:Name="LeftSideMenu" Margin="0,20,0,0">
-            <ToggleButton x:Name="SearchProfile" Click="Search" Style="{StaticResource MWCBS1}" FontSize="24">
+        <StackPanel x:Name="LeftSideMenu" Margin="0,10,0,0" Visibility="Visible">
+            <ToggleButton x:Name="SearchProfile" Click="Search" Style="{StaticResource MWCBS1}">
                 Сборки
             </ToggleButton>
-            <ToggleButton x:Name="FavoritesProfile" Click="Favorites" Style="{StaticResource MWCBS1}" FontSize="24">
+            <ToggleButton x:Name="ServersProfile" Click="Servers" Style="{StaticResource MWCBS1}">
+                Сервера
+            </ToggleButton>
+            <ToggleButton x:Name="FavoritesProfile" Click="Favorites" Style="{StaticResource MWCBS1}">
                 Избранное
             </ToggleButton>
-            <ToggleButton x:Name="SettingsLauncher" Click="Settings" Style="{StaticResource MWCBS1}" FontSize="24">
+            <ToggleButton x:Name="SettingsLauncher" Click="Settings" Style="{StaticResource MWCBS1}">
                 Настройки
             </ToggleButton>
         </StackPanel>

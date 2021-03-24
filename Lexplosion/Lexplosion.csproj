@@ -80,11 +80,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
-    <Compile Include="Gui\Pages\LeftSideMenuPage.xaml.cs">
+    <Compile Include="Gui\Pages\Left\LeftSideMenuPage.xaml.cs">
       <DependentUpon>LeftSideMenuPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\ProfilesContainerPage.xaml.cs">
-      <DependentUpon>ProfilesContainerPage.xaml</DependentUpon>
+    <Compile Include="Gui\Pages\Right\Menu\FavoritesContainerPage.xaml.cs">
+      <DependentUpon>FavoritesContainerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Pages\Right\Menu\ModpacksContainerPage.xaml.cs">
+      <DependentUpon>ModpacksContainerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Pages\Right\Menu\ServersContainerPage.xaml.cs">
+      <DependentUpon>ServersContainerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Windows\AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
@@ -101,10 +107,10 @@
     <Compile Include="Gui\Pages\ModpackSettingsPage.xaml.cs">
       <DependentUpon>ModpackSettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\ModsListPage.xaml.cs">
+    <Compile Include="Gui\Pages\Right\Modpack\ModsListPage.xaml.cs">
       <DependentUpon>ModsListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\OverviewPage.xaml.cs">
+    <Compile Include="Gui\Pages\Right\Modpack\OverviewPage.xaml.cs">
       <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Windows\RegisterWindow.xaml.cs">
@@ -113,7 +119,7 @@
     <Compile Include="Gui\Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\VersionPage.xaml.cs">
+    <Compile Include="Gui\Pages\Right\Modpack\VersionPage.xaml.cs">
       <DependentUpon>VersionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logic\Aes.cs" />
@@ -127,11 +133,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Gui\Pages\LeftSideMenuPage.xaml">
+    <Page Include="Gui\Pages\Left\LeftSideMenuPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\ProfilesContainerPage.xaml">
+    <Page Include="Gui\Pages\Right\Menu\FavoritesContainerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Pages\Right\Menu\ModpacksContainerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Pages\Right\Menu\ServersContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -155,11 +169,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\ModsListPage.xaml">
+    <Page Include="Gui\Pages\Right\Modpack\ModsListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\OverviewPage.xaml">
+    <Page Include="Gui\Pages\Right\Modpack\OverviewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -171,7 +185,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\VersionPage.xaml">
+    <Page Include="Gui\Pages\Right\Modpack\VersionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -251,6 +265,9 @@
     <Resource Include="Assets\images\icons\lt.png" />
     <Resource Include="Assets\images\icons\oth.png" />
     <Resource Include="Assets\images\icons\tn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\non_image.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

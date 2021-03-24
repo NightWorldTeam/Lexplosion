@@ -9,7 +9,7 @@ using Lexplosion.Logic;
 using System.Windows.Controls.Primitives;
 using System.Threading;
 using System.Windows.Media.Animation;
-using Lexplosion.Gui.Pages;
+using Lexplosion.Gui.Pages.Right.Modpack;
 
 namespace Lexplosion.Gui.Windows
 {
@@ -29,21 +29,24 @@ namespace Lexplosion.Gui.Windows
         // Windows
         private Uri modpackSettingsPage = new Uri("pack://application:,,,/Gui/Windows/SettingsWindow.xaml");
         // Pages
-        private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages/OverviewPage.xaml");
-        private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/VersionPage.xaml");
-        private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/ModsListPage.xaml");
-        private Uri leftSideMenuPage = new Uri("pack://application:,,,/Gui/Pages/LeftSideMenuPage.xaml");
-        private Uri profilesContainerPage = new Uri("pack://application:,,,/Gui/Pages/ProfilesContainerPage.xaml");
+        private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages.Right/Modpack/OverviewPage.xaml");
+        private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/VersionPage.xaml");
+        private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/ModsListPage.xaml");
+        private Uri leftSideMenuPage = new Uri("pack://application:,,,/Gui/Pages/Left/LeftSideMenuPage.xaml");
+        private Uri modpacksContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ModpacksContainerPage.xaml");
+
+        public static MainWindow instance = null;
 
         public MainWindow()
         {
             InitializeComponent();
             MouseDown += delegate { try { DragMove(); } catch { } };
             MainWindow.Obj = this;
+            instance = this;
 
             // updatePacks(MP_TB_StackPanel); //вызываем метод отрисовывающий все модпаки
             LeftSideFrame.Source = leftSideMenuPage; //это страница по умолчанию
-            RightSideFrame.Source = profilesContainerPage; //это страница по умолчанию
+            RightSideFrame.Source = modpacksContainerPage; //это страница по умолчанию
 
             var test = new List<string>();
             test.Add(@"C:\Games\night-world\instances\lt\mods\AdvancedSolarPanel-1.7.10-3.5.1.jar");

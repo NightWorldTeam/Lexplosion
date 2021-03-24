@@ -17,7 +17,6 @@
                 <ResourceDictionary Source="/Gui/Styles/StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        
     </Application.Resources>
 </Application>
     

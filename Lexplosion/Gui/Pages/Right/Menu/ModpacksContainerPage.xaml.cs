@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Lexplosion.Gui.Pages
+namespace Lexplosion.Gui.Pages.Right.Menu
 {
     /// <summary>
-    /// Логика взаимодействия для ModsListPage.xaml
+    /// Interaction logic for ProfilesContainerPage.xaml
     /// </summary>
-    public partial class ModsListPage : Page
+    public partial class ModpacksContainerPage : Page
     {
-        public ModsListPage()
+        public ModpacksContainerPage()
         {
             InitializeComponent();
         }

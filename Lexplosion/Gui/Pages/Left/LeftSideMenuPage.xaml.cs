@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic;
+﻿using Lexplosion.Gui.Windows;
+using Lexplosion.Logic;
 using Lexplosion.Objects;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,25 @@ namespace Lexplosion.Gui.Pages
     /// </summary>
     public partial class LeftSideMenuPage : Page
     {
-        public static LeftSideMenuPage instance = null;
+        //public static LeftSideMenuPage instance = null;
         public string selectedModpack = "";
         private Dictionary<string, bool> IsInstalled = new Dictionary<string, bool>();
         public LeftSideMenuPage()
         {
+            // instance = this;
             InitializeComponent();
-            instance = this;
-            UpdatePacks(MP_TB_StackPanel);
+            //UpdatePacks(MP_TB_StackPanel);
         }
 
+
+        private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages.Right/Modpack/OverviewPage.xaml");
+        private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/VersionPage.xaml");
+        private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/ModsListPage.xaml");
+
+        private Uri modpacksContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ModpacksContainerPage.xaml");
+        private Uri favoritesContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/FavoritesContainerPage.xaml");
+        private Uri serversContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ServersContainerPage.xaml");
+        /*
         public void UpdatePacks(StackPanel stackPanel)
         {
             foreach (string pack in UserData.InstancesList.Keys) //отрисовываем кнопки в цикле
@@ -79,11 +89,11 @@ namespace Lexplosion.Gui.Pages
                 ToggleButton buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);
                 buttonActive.IsChecked = true;
             }
-            /*
+            
             if (IsInstalled[selectedModpack]) { 
                 ClientManagement.Content = "Играть";
-            }*/
-        }
+            }
+        }*/
 
         private void MenuArrow(object sender, RoutedEventArgs e)
         {
@@ -124,12 +134,17 @@ namespace Lexplosion.Gui.Pages
 
         private void Search(object sender, RoutedEventArgs e) 
         {
-
+            MainWindow.instance.RightSideFrame.Source = modpacksContainerPage;
+        }
+        
+        private void Servers(object sender, RoutedEventArgs e) 
+        {
+            MainWindow.instance.RightSideFrame.Source = serversContainerPage;
         }
 
         private void Favorites(object sender, RoutedEventArgs e) 
         {
-
+            MainWindow.instance.RightSideFrame.Source = favoritesContainerPage;
         }
 
         private void Settings(object sender, RoutedEventArgs e)

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Lexplosion.Gui.Pages.Right
+namespace Lexplosion.Gui.Pages.Right.Menu
 {
     /// <summary>
-    /// Логика взаимодействия для ModpackSettingPage.xaml
+    /// Interaction logic for ServersContainerPage.xaml
     /// </summary>
-    public partial class ModpackSettingPage : Page
+    public partial class ServersContainerPage : Page
     {
-        public ModpackSettingPage()
+        public ServersContainerPage()
         {
             InitializeComponent();
         }
