@@ -107,10 +107,10 @@
     <Compile Include="Gui\Pages\ModpackSettingsPage.xaml.cs">
       <DependentUpon>ModpackSettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Modpack\ModsListPage.xaml.cs">
+    <Compile Include="Gui\Pages\Right\Instance\ModsListPage.xaml.cs">
       <DependentUpon>ModsListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Modpack\OverviewPage.xaml.cs">
+    <Compile Include="Gui\Pages\Right\Instance\OverviewPage.xaml.cs">
       <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Windows\RegisterWindow.xaml.cs">
@@ -119,7 +119,7 @@
     <Compile Include="Gui\Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Modpack\VersionPage.xaml.cs">
+    <Compile Include="Gui\Pages\Right\Instance\VersionPage.xaml.cs">
       <DependentUpon>VersionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logic\Aes.cs" />
@@ -169,11 +169,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Modpack\ModsListPage.xaml">
+    <Page Include="Gui\Pages\Right\Instance\ModsListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Modpack\OverviewPage.xaml">
+    <Page Include="Gui\Pages\Right\Instance\OverviewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -185,7 +185,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Modpack\VersionPage.xaml">
+    <Page Include="Gui\Pages\Right\Instance\VersionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

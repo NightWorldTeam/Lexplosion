@@ -6,7 +6,7 @@ using System;
 using System.Windows.Media.Imaging;
 using Lexplosion.Gui.Windows;
 
-namespace Lexplosion.Gui.Pages.Right.Modpack
+namespace Lexplosion.Gui.Pages.Right.Instance
 {
     /// <summary>
     /// Логика взаимодействия для OverviewPage.xaml

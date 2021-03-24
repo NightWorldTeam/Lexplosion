@@ -9,7 +9,7 @@ using Lexplosion.Logic;
 using System.Windows.Controls.Primitives;
 using System.Threading;
 using System.Windows.Media.Animation;
-using Lexplosion.Gui.Pages.Right.Modpack;
+using Lexplosion.Gui.Pages.Right.Instance;
 
 namespace Lexplosion.Gui.Windows
 {
@@ -29,9 +29,9 @@ namespace Lexplosion.Gui.Windows
         // Windows
         private Uri modpackSettingsPage = new Uri("pack://application:,,,/Gui/Windows/SettingsWindow.xaml");
         // Pages
-        private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages.Right/Modpack/OverviewPage.xaml");
-        private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/VersionPage.xaml");
-        private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/ModsListPage.xaml");
+        private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/OverviewPage.xaml");
+        private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/VersionPage.xaml");
+        private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/ModsListPage.xaml");
         private Uri leftSideMenuPage = new Uri("pack://application:,,,/Gui/Pages/Left/LeftSideMenuPage.xaml");
         private Uri modpacksContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ModpacksContainerPage.xaml");
 
