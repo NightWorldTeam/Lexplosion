@@ -33,7 +33,7 @@ namespace Lexplosion.Gui.Windows
         private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/VersionPage.xaml");
         private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/ModsListPage.xaml");
         private Uri leftSideMenuPage = new Uri("pack://application:,,,/Gui/Pages/Left/LeftSideMenuPage.xaml");
-        private Uri modpacksContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ModpacksContainerPage.xaml");
+        private Uri modpacksContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/TestModpacksContainerPage.xaml");
 
         public static MainWindow instance = null;
 

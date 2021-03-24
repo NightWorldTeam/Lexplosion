@@ -1,0 +1,165 @@
+﻿<Page x:Class="Lexplosion.Gui.Pages.Right.Menu.TestModpacksContainerPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Right.Menu"
+      mc:Ignorable="d" 
+      d:DesignHeight="499" d:DesignWidth="700"
+      Title="TestModpacksContainerPage">
+
+    <Page.Resources>
+        <!-- Instance Block Action-->
+        <Style x:Key="InstanceBlockAction" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border>
+                            <Path
+                              Stretch="Fill"
+                              Fill="White"
+                              Stroke="White"
+                              Width="18"
+                              Height="18"
+                              Data="M 7.594 0 h 2.813 a 0.842 0.842 0 0 1 0.844 0.844 V 6.75 h 3.083 a 0.7 0.7 0 0 1 0.5 1.2 L 9.482 13.3 a 0.681 0.681 0 0 1 -0.96 0 L 3.168 7.949 a 0.7 0.7 0 0 1 0.5 -1.2 H 6.75 V 0.844 A 0.842 0.842 0 0 1 7.594 0 Z M 18 13.219 v 3.938 a 0.842 0.842 0 0 1 -0.844 0.844 H 0.844 A 0.842 0.842 0 0 1 0 17.156 V 13.219 a 0.842 0.842 0 0 1 0.844 -0.844 H 6 L 7.724 14.1 a 1.8 1.8 0 0 0 2.552 0 L 12 12.375 h 5.157 A 0.842 0.842 0 0 1 18 13.219 Z m -4.359 3.094 a 0.7 0.7 0 1 0 -0.7 0.7 A 0.705 0.705 0 0 0 13.641 16.313 Z m 2.25 0 a 0.7 0.7 0 1 0 -0.7 0.7 A 0.705 0.705 0 0 0 15.891 16.313 Z"                              />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Tags -->
+        <Style x:Key="Tags" TargetType="Button">
+            <Setter Property="Height" Value="25" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="2,0,2,0" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="#5a5c61" CornerRadius="4" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" RecognizesAccessKey="True" Margin="10,0,10,0"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer>
+        <Grid ShowGridLines="False">
+            <Grid.Background>
+                <SolidColorBrush Color="#131313" Opacity="0.8"/>
+            </Grid.Background>
+            <!-- Grid Border Padding-->
+            <Grid.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="Padding" Value="10" />
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="150"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="175"/>
+            </Grid.ColumnDefinitions>
+
+            <Canvas Grid.Row="0" Height="120" Width="600" Margin="40,0,0,0" Background="#131313">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="420"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="120"/>
+                    </Grid.RowDefinitions>
+                    <!-- Instance Image -->
+                    <Border x:Name="image" Grid.Column="0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/non_image.png" />
+                        </Border.Background>
+                    </Border>
+                    <!-- Text Content-->
+                    <Border x:Name="text_content" Grid.Column="1">
+                        <Grid ShowGridLines="False">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border x:Name="Title" Padding="0">
+                                <Grid ShowGridLines="False" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="80" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Instance Name -->
+                                    <Border Grid.Column="0" Padding="0" x:Name="instance_name">
+                                        <TextBlock Text="Energy of Space" Foreground="White" FontSize="22" />
+                                    </Border>
+
+                                    <!-- Author -->
+                                    <Border Grid.Column="1" Padding="0" x:Name="Author">
+                                        <TextBlock Text="by NightWorld" VerticalAlignment="Center" Foreground="White"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="Overview_content" Grid.Row="1" Padding="0,5,0,0">
+                                <Grid ShowGridLines="False" Grid.IsSharedSizeScope="True">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="35"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Overview -->
+                                    <Border Grid.Row="0" Grid.Column="0" Padding="0">
+                                        <TextBlock Text="Our offical testing launcher modpack..." HorizontalAlignment="Left" Foreground="White" FontSize="16" />
+                                    </Border>
+
+                                    <!-- Tags -->
+                                    <Border Grid.Row="1" Padding="1" HorizontalAlignment="Left">
+                                        <WrapPanel Orientation="Horizontal">
+                                            <Button Style="{StaticResource Tags}" Content="1.10.2" />
+                                            <Button Style="{StaticResource Tags}" Content="Tech" />
+                                            <Button Style="{StaticResource Tags}" Content="Magic" />
+                                            <Button Style="{StaticResource Tags}" Content="Logic" />
+                                            <Button Style="{StaticResource Tags}" Content="Mods" />
+                                            <Button Style="{StaticResource Tags}" Content="I don't Know" />
+                                        </WrapPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <!-- Buttons -->
+                    <Border x:Name="button" Grid.Column="2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Padding="0">
+                                <Button x:Name="Download" Style="{StaticResource InstanceBlockAction}"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Padding="0">
+                                <Button x:Name="More" Style="{StaticResource InstanceBlockAction}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Canvas>
+        </Grid>
+    </ScrollViewer>
+</Page>

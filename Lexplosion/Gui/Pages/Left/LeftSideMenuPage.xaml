@@ -78,7 +78,7 @@
                 Сборки
             </ToggleButton>
             <ToggleButton x:Name="ServersProfile" Click="Servers" Style="{StaticResource MWCBS1}">
-                Сервера
+                Сетевая игра
             </ToggleButton>
             <ToggleButton x:Name="FavoritesProfile" Click="Favorites" Style="{StaticResource MWCBS1}">
                 Избранное

@@ -92,6 +92,9 @@
     <Compile Include="Gui\Pages\Right\Menu\ServersContainerPage.xaml.cs">
       <DependentUpon>ServersContainerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\Pages\Right\Menu\TestModpacksContainerPage.xaml.cs">
+      <DependentUpon>TestModpacksContainerPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\Windows\AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
@@ -146,6 +149,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Pages\Right\Menu\ServersContainerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Pages\Right\Menu\TestModpacksContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
