@@ -6,41 +6,66 @@
       xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Right.Menu"
       mc:Ignorable="d" 
       d:DesignHeight="499" d:DesignWidth="700"
-      Title="TestModpacksContainerPage">
+      Title="ProfilesContainerPage">
 
     <Page.Resources>
-        <!-- Instance Block Action-->
-        <Style x:Key="InstanceBlockAction" TargetType="{x:Type Button}">
-            <Setter Property="Template">
+        <Style x:Key="ModpackButton" TargetType="Button">
+            <Setter Property="Width" Value="120" />
+            <Setter Property="Height" Value="120" />
+            <Setter Property="Background" Value="#131313" />
+            <!--             
+            <Setter Property="Background">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border>
-                            <Path
-                              Stretch="Fill"
-                              Fill="White"
-                              Stroke="White"
-                              Width="18"
-                              Height="18"
-                              Data="M 7.594 0 h 2.813 a 0.842 0.842 0 0 1 0.844 0.844 V 6.75 h 3.083 a 0.7 0.7 0 0 1 0.5 1.2 L 9.482 13.3 a 0.681 0.681 0 0 1 -0.96 0 L 3.168 7.949 a 0.7 0.7 0 0 1 0.5 -1.2 H 6.75 V 0.844 A 0.842 0.842 0 0 1 7.594 0 Z M 18 13.219 v 3.938 a 0.842 0.842 0 0 1 -0.844 0.844 H 0.844 A 0.842 0.842 0 0 1 0 17.156 V 13.219 a 0.842 0.842 0 0 1 0.844 -0.844 H 6 L 7.724 14.1 a 1.8 1.8 0 0 0 2.552 0 L 12 12.375 h 5.157 A 0.842 0.842 0 0 1 18 13.219 Z m -4.359 3.094 a 0.7 0.7 0 1 0 -0.7 0.7 A 0.705 0.705 0 0 0 13.641 16.313 Z m 2.25 0 a 0.7 0.7 0 1 0 -0.7 0.7 A 0.705 0.705 0 0 0 15.891 16.313 Z"                              />
-                        </Border>
-                    </ControlTemplate>
+                    <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/non_image.png" Stretch="Fill" />
                 </Setter.Value>
             </Setter>
-        </Style>
-        
-        <!-- Tags -->
-        <Style x:Key="Tags" TargetType="Button">
-            <Setter Property="Height" Value="25" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Margin" Value="2,0,2,0" />
-            <Setter Property="FontWeight" Value="Bold" />
+            -->
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#FFFAFAFA" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="#5a5c61" CornerRadius="4" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent">
-                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" RecognizesAccessKey="True" Margin="10,0,10,0"/>
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0.4,0.4,0.2,0.4">
+                            <Grid>
+                                <Canvas>
+                                    <!-- Modpack Icon -->
+                                </Canvas>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="25"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Border Grid.Row="0">
+                                        <Grid x:Name="non_image">
+                                            <TextBlock Margin="5" Text="Lexplosion" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="pack://application:,,,/assets/fonts/#Casper Bold" />
+                                            <Path 
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Bottom"
+                                                Fill="#1D647F"
+                                                Stroke="#1D647F"
+                                                Data="M58.46 82.2L59.7 82.51C58.93 96.62 57.38 104.83 54.74 107.31C50.25 114.13 40.95 112.43 42.65 103.28C34.9 106.54 31.03 101.58 33.66 94.91C36.45 89.8 45.13 85.15 56.91 80.65L57.69 81.43L54.74 85.3C54.74 86.08 55.05 86.39 55.83 86.08L58.46 82.2ZM55.36 89.18C55.36 87.78 54.28 86.7 53.04 86.7C51.8 86.7 50.71 87.78 50.71 89.18C50.71 90.42 51.8 91.5 53.04 91.5C54.28 91.5 55.36 90.42 55.36 89.18ZM56.6 77.86L56.6 79.1C42.96 82.82 34.75 83.75 31.65 82.2C23.59 79.88 22.35 70.58 31.49 69.34C26.07 62.98 29.63 57.71 36.92 58.18C42.5 59.42 49.63 66.08 57.53 76L57.07 76.93L52.42 75.23C51.64 75.54 51.49 76 51.95 76.62L56.6 77.86ZM49.01 77.09C50.25 76.62 51.02 75.38 50.56 74.14C50.09 72.9 48.85 72.13 47.61 72.59C46.37 73.06 45.6 74.3 46.06 75.54C46.37 76.78 47.77 77.55 49.01 77.09ZM60.01 74.76L58.93 75.23C51.18 63.29 47.77 55.85 48.23 52.29C47.92 43.92 56.45 40.04 60.48 48.26C64.82 41.13 70.86 42.83 72.72 49.81C73.34 55.7 69.16 64.53 62.18 75.07L61.25 74.92L61.25 69.96C60.79 69.34 60.32 69.18 59.86 69.96L60.01 74.76ZM58.46 67.32C59.24 68.41 60.79 68.56 61.87 67.79C62.8 67.01 63.11 65.62 62.34 64.53C61.56 63.45 60.01 63.14 58.93 63.91C58 64.69 57.69 66.24 58.46 67.32ZM64.2 77.09L63.42 76.16C72.26 65.15 78.3 59.42 81.87 58.95C89.62 56.01 96.13 62.83 89.46 69.18C97.52 71.2 97.83 77.4 91.63 81.27C86.36 83.75 76.75 82.51 64.51 79.1L64.35 78.17L69 76.62C69.47 76 69.47 75.69 68.54 75.38L64.2 77.09ZM70.71 73.21C69.93 74.3 70.24 75.85 71.33 76.62C72.26 77.4 73.81 77.09 74.58 76C75.36 74.92 75.05 73.52 74.12 72.75C73.03 71.97 71.48 72.13 70.71 73.21ZM63.27 81.58L63.89 80.65C77.06 85.61 84.35 89.64 85.9 92.9C91.17 99.41 86.67 107.62 78.46 103.28C79.08 111.65 73.34 113.82 67.61 109.17C63.73 104.99 61.87 95.38 61.25 82.67L62.18 82.2L65.13 86.23C65.75 86.54 66.21 86.23 66.21 85.3L63.27 81.58ZM68.85 86.7C67.61 86.39 66.21 87.01 65.9 88.25C65.44 89.49 66.21 90.88 67.45 91.19C68.69 91.66 69.93 91.04 70.4 89.8C70.86 88.4 70.09 87.16 68.85 86.7Z">
+                                            </Path>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <Canvas Grid.Row="1" Background="AliceBlue" Opacity="0.02">
+                                        <Canvas.Effect>
+                                            <BlurEffect />
+                                        </Canvas.Effect>
+                                    </Canvas>
+                                    <Border Grid.Row="1">
+                                        <ContentPresenter Margin="6,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" RecognizesAccessKey="True" />
+                                    </Border>
+                                </Grid>
+                            </Grid>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#00aeff" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -55,9 +80,10 @@
             <!-- Grid Border Padding-->
             <Grid.Resources>
                 <Style TargetType="Border">
-                    <Setter Property="Padding" Value="10" />
+                    <Setter Property="Padding" Value="5" />
                 </Style>
             </Grid.Resources>
+            <!-- Grid Field Markup -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="150"/>
                 <RowDefinition Height="150"/>
@@ -66,100 +92,69 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="175"/>
+                <ColumnDefinition Width="175"/>
+                <ColumnDefinition Width="175"/>
+                <ColumnDefinition Width="175"/>
             </Grid.ColumnDefinitions>
 
-            <Canvas Grid.Row="0" Height="120" Width="600" Margin="40,0,0,0" Background="#131313">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="420"/>
-                        <ColumnDefinition Width="60"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="120"/>
-                    </Grid.RowDefinitions>
-                    <!-- Instance Image -->
-                    <Border x:Name="image" Grid.Column="0">
-                        <Border.Background>
-                            <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/non_image.png" />
-                        </Border.Background>
-                    </Border>
-                    <!-- Text Content-->
-                    <Border x:Name="text_content" Grid.Column="1">
-                        <Grid ShowGridLines="False">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+            <!-- Modpack Cells -->
+            <!-- 0 -->
+            <Border Grid.Column="0" Grid.Row="0">
+                <!-- Max 14 chars-->
+                <Button Style="{StaticResource ModpackButton}" Content="Energy of Spacess" Foreground="#FFF" />
+            </Border>
+            <Border Grid.Column="1" Grid.Row="0">
+                <Button Style="{StaticResource ModpackButton}" Content="Long Tech" />
+            </Border>
+            <Border Grid.Column="2" Grid.Row="0" >
+                <Button Style="{StaticResource ModpackButton}" Content="Transport Network" />
+            </Border>
+            <Border Grid.Column="3" Grid.Row="0" >
+                <Button Style="{StaticResource ModpackButton}" Content="Infinity Space" />
+            </Border>
 
-                            <Border x:Name="Title" Padding="0">
-                                <Grid ShowGridLines="False" >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="80" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="30" />
-                                    </Grid.RowDefinitions>
+            <!-- 1 -->
 
-                                    <!-- Instance Name -->
-                                    <Border Grid.Column="0" Padding="0" x:Name="instance_name">
-                                        <TextBlock Text="Energy of Space" Foreground="White" FontSize="22" />
-                                    </Border>
+            <Border Grid.Column="0" Grid.Row="1">
+                <Button Style="{StaticResource ModpackButton}"  Content="Energy of Space"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="1">
+                <Button Style="{StaticResource ModpackButton}" Content="Long Tech" />
+            </Border>
+            <Border Grid.Column="2" Grid.Row="1" >
+                <Button Style="{StaticResource ModpackButton}" Content="Transport Network" />
+            </Border>
+            <Border Grid.Column="3" Grid.Row="1" >
+                <Button Style="{StaticResource ModpackButton}" Content="Infinity Space" />
+            </Border>
 
-                                    <!-- Author -->
-                                    <Border Grid.Column="1" Padding="0" x:Name="Author">
-                                        <TextBlock Text="by NightWorld" VerticalAlignment="Center" Foreground="White"/>
-                                    </Border>
-                                </Grid>
-                            </Border>
+            <!-- 2 -->
 
-                            <Border x:Name="Overview_content" Grid.Row="1" Padding="0,5,0,0">
-                                <Grid ShowGridLines="False" Grid.IsSharedSizeScope="True">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="35"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
+            <Border Grid.Column="0" Grid.Row="2">
+                <Button Style="{StaticResource ModpackButton}"  Content="Energy of Space"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="2">
+                <Button Style="{StaticResource ModpackButton}" Content="Long Tech" />
+            </Border>
+            <Border Grid.Column="2" Grid.Row="2" >
+                <Button Style="{StaticResource ModpackButton}" Content="Transport Network" />
+            </Border>
+            <Border Grid.Column="3" Grid.Row="2" >
+                <Button Style="{StaticResource ModpackButton}" Content="Infinity Space" />
+            </Border>
 
-                                    <!-- Overview -->
-                                    <Border Grid.Row="0" Grid.Column="0" Padding="0">
-                                        <TextBlock Text="Our offical testing launcher modpack..." HorizontalAlignment="Left" Foreground="White" FontSize="16" />
-                                    </Border>
-
-                                    <!-- Tags -->
-                                    <Border Grid.Row="1" Padding="1" HorizontalAlignment="Left">
-                                        <WrapPanel Orientation="Horizontal">
-                                            <Button Style="{StaticResource Tags}" Content="1.10.2" />
-                                            <Button Style="{StaticResource Tags}" Content="Tech" />
-                                            <Button Style="{StaticResource Tags}" Content="Magic" />
-                                            <Button Style="{StaticResource Tags}" Content="Logic" />
-                                            <Button Style="{StaticResource Tags}" Content="Mods" />
-                                            <Button Style="{StaticResource Tags}" Content="I don't Know" />
-                                        </WrapPanel>
-                                    </Border>
-                                </Grid>
-                            </Border>
-                        </Grid>
-                    </Border>
-                    <!-- Buttons -->
-                    <Border x:Name="button" Grid.Column="2">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="50" />
-                                <RowDefinition Height="50" />
-                            </Grid.RowDefinitions>
-
-                            <Border Grid.Row="0" Padding="0">
-                                <Button x:Name="Download" Style="{StaticResource InstanceBlockAction}"/>
-                            </Border>
-
-                            <Border Grid.Row="1" Padding="0">
-                                <Button x:Name="More" Style="{StaticResource InstanceBlockAction}" />
-                            </Border>
-                        </Grid>
-                    </Border>
-                </Grid>
-            </Canvas>
+            <Border Grid.Column="0" Grid.Row="3">
+                <Button Style="{StaticResource ModpackButton}"  Content="Energy of Space"/>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="3">
+                <Button Style="{StaticResource ModpackButton}" Content="Long Tech" />
+            </Border>
+            <Border Grid.Column="2" Grid.Row="3" >
+                <Button Style="{StaticResource ModpackButton}" Content="Transport Network" />
+            </Border>
+            <Border Grid.Column="3" Grid.Row="3" >
+                <Button Style="{StaticResource ModpackButton}" Content="Infinity Space" />
+            </Border>
         </Grid>
     </ScrollViewer>
 </Page>

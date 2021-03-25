@@ -75,7 +75,7 @@
         <Canvas Background="#18191b"/>
         <StackPanel x:Name="LeftSideMenu" Margin="0,10,0,0" Visibility="Visible">
             <ToggleButton x:Name="SearchProfile" Click="Search" Style="{StaticResource MWCBS1}">
-                Сборки
+               Клиенты
             </ToggleButton>
             <ToggleButton x:Name="ServersProfile" Click="Servers" Style="{StaticResource MWCBS1}">
                 Сетевая игра

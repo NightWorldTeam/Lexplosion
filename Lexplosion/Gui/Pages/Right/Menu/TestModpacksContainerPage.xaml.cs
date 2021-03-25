@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace Lexplosion.Gui.Pages.Right.Menu
 {
     /// <summary>
-    /// Interaction logic for TestModpacksContainerPage.xaml
+    /// Interaction logic for ProfilesContainerPage.xaml
     /// </summary>
     public partial class TestModpacksContainerPage : Page
     {
