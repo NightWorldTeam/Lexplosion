@@ -26,7 +26,6 @@ namespace Lexplosion.Logic
                         if (!UserData.InstancesList.ContainsKey(key))
                         {
                             UserData.InstancesList[key] = temp[key];
-
                         }
 
                     }

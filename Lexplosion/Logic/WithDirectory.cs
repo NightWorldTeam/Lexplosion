@@ -1143,6 +1143,7 @@ namespace Lexplosion.Logic
                 ["name"] = UserData.InstancesList[instanceId]
             };
 
+
             string jsonData = JsonConvert.SerializeObject(data);
             if(!SaveFile(targetDir + "/instanceInfo.json", jsonData))
             {
@@ -1165,6 +1166,8 @@ namespace Lexplosion.Logic
             }
             catch
             {
+                Directory.Delete(targetDir, true);
+
                 return false;
 
             }
@@ -1173,7 +1176,7 @@ namespace Lexplosion.Logic
 
         public static bool ImportInstance(string zipFile)
         {
-            string dir = directory + "/temp/import";
+            string dir = directory + "/temp/import/";
 
             if (!Directory.Exists(dir))
             {
@@ -1186,15 +1189,50 @@ namespace Lexplosion.Logic
                     return false;
                 }
             }
+            else
+            {
+                Directory.Delete(dir, true);
+            }
 
             ZipFile.ExtractToDirectory(zipFile, dir);
 
             Dictionary<string, string> instanceInfo = GetFile<Dictionary<string, string>>(dir + "instanceInfo.json");
 
-            if(instanceInfo == null)
+            if (instanceInfo == null)
             {
                 return false;
             }
+
+            // TODO: проверить есть ли все значения и try добавить
+
+            string addr = dir + "files/";
+            string targetDir = directory + "/instances/" + instanceInfo["id"] + "/";
+
+            IEnumerable<string> allFiles = Directory.EnumerateFiles(addr, "*", SearchOption.AllDirectories);
+            foreach (string fileName in allFiles)
+            {
+                string targetFileName = fileName.Replace(addr, targetDir);
+                string dirName = Path.GetDirectoryName(targetFileName);
+                if (!Directory.Exists(dirName))
+                {
+                    Directory.CreateDirectory(dirName);
+                }
+
+                File.Copy(fileName, targetFileName);
+            }
+
+            InstanceFiles files = ToServer.GetFilesList(instanceInfo["gameVersion"], true); // TODO: коннекта к серверу может не быть или игра запущена локально
+            Check(files, instanceInfo["id"]);
+            Update(files, instanceInfo["id"], MainWindow.Obj);
+            countFiles = 0;
+            SaveFilesList(instanceInfo["id"], files);
+
+            UserData.InstancesList[instanceInfo["id"]] = instanceInfo["name"];
+            SaveModpaksList(UserData.InstancesList);
+
+            Directory.Delete(dir, true);
+
+
 
             return true;
         }

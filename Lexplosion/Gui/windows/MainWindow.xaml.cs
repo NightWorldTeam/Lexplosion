@@ -54,7 +54,9 @@ namespace Lexplosion.Gui.Windows
             test.Add(@"C:\Games\night-world\instances\lt\config\AdvancedSolarPanel_MTRecipes.cfg");
 
 
-            //MessageBox.Show(WithDirectory.ExportInstance("lt", test, @"C:\Users\Putin\Desktop\struct", "Пиздец какой-то").ToString());
+            //MessageBox.Show(WithDirectory.ExportInstance("lt", test, @"C:\Users\Слава\Desktop\struct", "Пиздец какой-то").ToString());
+
+            //MessageBox.Show(WithDirectory.ImportInstance(@"C:\Users\Putin\Desktop\struct\lt.zip").ToString());
 
             //selectedModpack = "lt";
             //ManageLogic.СlientManager();
