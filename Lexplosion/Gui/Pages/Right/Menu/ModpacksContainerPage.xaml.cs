@@ -173,7 +173,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			Grid.SetRow(exportButton, 1);
 
 			// Добавление объектов в форму.
-			// Добавление дочерних элементов
+			// Добавление дочерних элементов /
 			instanceButtonGrid.Children.Add(exportButton);
 			instanceButtonGrid.Children.Add(downloadButton);
 			overviewGrid.Children.Add(tagsWrapPanel);
