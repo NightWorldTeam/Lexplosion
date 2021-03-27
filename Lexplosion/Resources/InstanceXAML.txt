@@ -1,0 +1,3 @@
+<DockPanel xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <Button Name="Btn1" Margin="40">Кликни меня!</Button>
+</DockPanel>

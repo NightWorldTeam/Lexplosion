@@ -231,5 +231,40 @@
         </Setter>
     </Style>
 
-    <!-- Switcher Style -->
+    <!-- Tags -->
+    <Style x:Key="TagStyle" TargetType="Button">
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Margin" Value="2,0,2,0" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="#5a5c61" CornerRadius="4" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent">
+                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" RecognizesAccessKey="True" Margin="10,0,10,0"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Instance Block Action-->
+    <Style x:Key="InstanceBlockAction" TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border>
+                        <Path
+                              Stretch="Fill"
+                              Fill="White"
+                              Stroke="White"
+                              Width="18"
+                              Height="18"
+                              Data="M 7.594 0 h 2.813 a 0.842 0.842 0 0 1 0.844 0.844 V 6.75 h 3.083 a 0.7 0.7 0 0 1 0.5 1.2 L 9.482 13.3 a 0.681 0.681 0 0 1 -0.96 0 L 3.168 7.949 a 0.7 0.7 0 0 1 0.5 -1.2 H 6.75 V 0.844 A 0.842 0.842 0 0 1 7.594 0 Z M 18 13.219 v 3.938 a 0.842 0.842 0 0 1 -0.844 0.844 H 0.844 A 0.842 0.842 0 0 1 0 17.156 V 13.219 a 0.842 0.842 0 0 1 0.844 -0.844 H 6 L 7.724 14.1 a 1.8 1.8 0 0 0 2.552 0 L 12 12.375 h 5.157 A 0.842 0.842 0 0 1 18 13.219 Z m -4.359 3.094 a 0.7 0.7 0 1 0 -0.7 0.7 A 0.705 0.705 0 0 0 13.641 16.313 Z m 2.25 0 a 0.7 0.7 0 1 0 -0.7 0.7 A 0.705 0.705 0 0 0 15.891 16.313 Z"                              />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
