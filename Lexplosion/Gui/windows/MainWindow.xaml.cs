@@ -60,8 +60,8 @@ namespace Lexplosion.Gui.Windows
 
             //MessageBox.Show(WithDirectory.ImportInstance(@"C:\Users\Putin\Desktop\struct\lt.zip", out errors).ToString());
 
-            //selectedModpack = "lt";
-            //ManageLogic.СlientManager();
+            selectedModpack = "lt";
+            ManageLogic.СlientManager();
         }
 
         private void СlientManager(object sender, RoutedEventArgs e)

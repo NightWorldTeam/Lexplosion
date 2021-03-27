@@ -24,23 +24,33 @@ namespace Lexplosion.Objects
         public string xms;
     }
 
+    class InstanceLocalFiles
+    {
+        public LocalVersionInfo version;
+    }
+
     class InstanceFiles
     {
         public Dictionary<string, WithFolder> data = new Dictionary<string, WithFolder>();
         public VersionInfo version;
-        public Dictionary<string, string> libraries;
         public Dictionary<string, string> natives;
+        public List<string> libraries;
     }
 
-    class VersionInfo
+    class LocalVersionInfo
     {
         public FileInfo minecraftJar;
         public string arguments;
         public string gameVersion;
         public string assetsVersion;
         public string assetsIndexes;
-        public bool security;
         public string mainClass;
+
+    }
+
+    class VersionInfo: LocalVersionInfo
+    {
+        public bool security;
         public string librariesUrl;
         public int librariesLastUpdate;
         public string nativesUrl;

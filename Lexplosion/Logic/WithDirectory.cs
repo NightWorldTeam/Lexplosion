@@ -58,7 +58,9 @@ namespace Lexplosion.Logic
 
                     Directory.CreateDirectory(directory + "/temp");
 
-                } else if (!Directory.Exists(directory + "/temp")) { 
+                } 
+                else if (!Directory.Exists(directory + "/temp")) 
+                { 
                     Directory.CreateDirectory(directory + "/temp");
                 }
 
@@ -72,6 +74,7 @@ namespace Lexplosion.Logic
 
             if (!File.Exists(directory + "/instances/" + instanceId + "/" + "lastUpdates.json"))
             {
+
                 if (!Directory.Exists(directory + "/instances/" + instanceId))
                     Directory.CreateDirectory(directory + "/instances/" + instanceId); //создаем папку с модпаком, если её нет
 
@@ -81,7 +84,7 @@ namespace Lexplosion.Logic
 
                 try
                 {
-                    using (FileStream fstream = File.OpenRead(directory + "/instances/" + instanceId + "/" + "lastUpdates.json")) //открываем файл с последними обновлениями
+                    using (FileStream fstream = File.OpenRead(directory + "/instances/" + instanceId + "/lastUpdates.json")) //открываем файл с последними обновлениями
                     {
                         byte[] fileBytes = new byte[fstream.Length];
                         fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -93,12 +96,34 @@ namespace Lexplosion.Logic
                                 updates = JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes));
 
                         } catch {
-                            File.Delete(directory + "/instances/" + instanceId + "/" + "lastUpdates.json");
+                            File.Delete(directory + "/instances/" + instanceId + "/lastUpdates.json");
                         }
 
                     }
 
-                } catch { }
+                } 
+                catch { }
+
+            }
+
+            if (File.Exists(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver"))
+            {
+                using (FileStream fstream = File.OpenRead(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver")) //открываем файл с версией libraries
+                {
+                    byte[] fileBytes = new byte[fstream.Length];
+                    fstream.Read(fileBytes, 0, fileBytes.Length);
+                    fstream.Close();
+
+                    int ver = 0;
+                    Int32.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
+                    updates["libraries"] = ver;
+
+                }
+
+            }
+            else
+            {
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver", "0");
             }
 
             //Проходимся по списку папок(data) из класса instanceFiles
@@ -110,21 +135,24 @@ namespace Lexplosion.Logic
                 {
                     if (!updates.ContainsKey(dir) || updates[dir] < filesInfo.data[dir].folderVersion) //проверяем версию папки. если она старая - очищаем
                     {
-                        DirectoryInfo dirInfo = new DirectoryInfo(folder);
-                        foreach (var file in dirInfo.GetFiles())
-                            file.Delete();
+                        if (Directory.Exists(folder))
+                        {
+                            Directory.Delete(folder, true);
+                            Directory.CreateDirectory(folder);
+                        }
 
                         updates[dir] = filesInfo.data[dir].folderVersion;
                     }
 
-                    using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/" + "lastUpdates.json", FileMode.OpenOrCreate))
+                    using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Truncate))
                     {
                         byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
                         fstream.Write(bytes, 0, bytes.Length);
                         fstream.Close();
                     }
 
-                } catch { }
+                } 
+                catch { }
 
                 if (Directory.Exists(folder))
                 {
@@ -177,13 +205,17 @@ namespace Lexplosion.Logic
                             if (!updates.ContainsKey(dir + "/" + fileName) || updates[dir + "/" + fileName] != filesInfo.data[dir].objects[fileName].lastUpdate)
                             {
                                 if (!Updates.data.ContainsKey(dir)) //если директория отсутствует в Updates.data, то добавляем её 
+                                {
                                     Updates.data.Add(dir, new List<string>());
+                                } 
+                                   
 
                                 if (!Updates.data[dir].Contains(fileName))
                                 {
                                     Updates.data[dir].Add(fileName);
                                     countFiles++;
                                 }
+                                
                             }
                         }
                     }
@@ -207,6 +239,7 @@ namespace Lexplosion.Logic
 
                     }
                 }
+
             }
 
             //ищем старые файлы
@@ -314,9 +347,9 @@ namespace Lexplosion.Logic
             //проверяем папку libraries
             if (!Directory.Exists(directory + "/libraries"))
             {
-                foreach (string key in filesInfo.libraries.Keys)
+                foreach (string lib in filesInfo.libraries)
                 {
-                    Updates.libraries.Add(key);
+                    Updates.libraries.Add(lib);
                     countFiles++;
                 }
 
@@ -324,29 +357,20 @@ namespace Lexplosion.Logic
 
                 if (!updates.ContainsKey("libraries") || filesInfo.version.librariesLastUpdate != updates["libraries"]) //если версия libraries старая, тот отправляем на обновления
                 {
-
-                    foreach (string key in filesInfo.libraries.Keys)
+                    foreach (string lib in filesInfo.libraries)
                     {
-                        if (filesInfo.libraries[key] == "windows" || filesInfo.libraries[key] == "all")
-                        {
-                            Updates.libraries.Add(key);
-                            countFiles++;
-                        }
-
+                        Updates.libraries.Add(lib);
+                        countFiles++;
                     }
 
                 } else {
 
-                    foreach (string lib in filesInfo.libraries.Keys) //ищем недостающие файлы
+                    foreach (string lib in filesInfo.libraries) //ищем недостающие файлы
                     {
-                        if (filesInfo.libraries[lib] == "windows" || filesInfo.libraries[lib] == "all")
+                        if (!File.Exists(directory + "/libraries/" + lib))
                         {
-                            if (!File.Exists(directory + "/libraries/" + lib))
-                            {
-                                Updates.libraries.Add(lib);
-                                countFiles++;
-                            }
-
+                            Updates.libraries.Add(lib);
+                            countFiles++;
                         }
                     }
                 }
@@ -687,7 +711,9 @@ namespace Lexplosion.Logic
             //сохраняем файл с последними обновлениями 
             try
             {
-                using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/" + "lastUpdates.json", FileMode.OpenOrCreate))
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesList.version.gameVersion + ".lver", filesList.version.librariesLastUpdate.ToString());
+
+                using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Truncate))
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
                     fstream.Write(bytes, 0, bytes.Length);
@@ -802,6 +828,12 @@ namespace Lexplosion.Logic
         {
             try
             {
+                string dirName = Path.GetDirectoryName(name);
+                if (!Directory.Exists(dirName))
+                {
+                    Directory.CreateDirectory(dirName);
+                }
+
                 if (!File.Exists(name))
                     File.Create(name).Close();
 
@@ -836,20 +868,57 @@ namespace Lexplosion.Logic
 
                 }
 
-            } catch {
+            } 
+            catch 
+            {
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
+
                 return default;
             }
 
         }
 
-        public static void SaveFilesList(string instanceId, InstanceFiles files)
+        public static void SaveFilesList(string instanceId, InstanceFiles data)
         {
-            SaveFile(directory + "/instances/" + instanceId + "/" + "filesList.json", JsonConvert.SerializeObject(files));
+            InstanceLocalFiles dataLocal = new InstanceLocalFiles
+            {
+                version = new LocalVersionInfo() 
+                {
+                    minecraftJar = data.version.minecraftJar,
+                    arguments = data.version.arguments,
+                    gameVersion = data.version.gameVersion,
+                    assetsVersion = data.version.assetsVersion,
+                    assetsIndexes = data.version.assetsIndexes,
+                    mainClass = data.version.mainClass
+
+                }
+            };
+
+            SaveFile(directory + "/instances/" + instanceId + "/" + "filesList.json", JsonConvert.SerializeObject(dataLocal));
+            SaveFile(directory + "/versions/libraries/" + data.version.gameVersion + ".json", JsonConvert.SerializeObject(data.libraries));
         }
 
         public static InstanceFiles GetFilesList(string instanceId)
         {
-            return GetFile<InstanceFiles>(directory + "/instances/" + instanceId + "/" + "filesList.json");
+            InstanceFiles data = GetFile<InstanceFiles>(directory + "/instances/" + instanceId + "/" + "filesList.json");
+            if (data == null)
+            {
+                return null;
+            }
+
+            List<string> librariesData = GetFile<List<string>>(directory + "/versions/libraries/" + data.version.gameVersion + ".json");
+            if (librariesData == null)
+            {
+                return null;
+            }
+
+            data.libraries = librariesData;
+
+            return data;
+
         }
 
         public static Dictionary<string, string> GetModpaksList()

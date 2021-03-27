@@ -17,6 +17,7 @@ namespace Lexplosion.Logic
         {
             public string code;
             public string str;
+            public new Dictionary<string, string> libraries;
         }
 
         static public bool CheckLauncherUpdates()
@@ -88,11 +89,20 @@ namespace Lexplosion.Logic
 
                     if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                     {
+                        List<string> libraries = new List<string>();
+                        foreach (string lib in filesData.libraries.Keys)
+                        {
+                            if (filesData.libraries[lib] == "all" || filesData.libraries[lib] == "windows")
+                            {
+                                libraries.Add(lib);
+                            }
+                        }
+
                         InstanceFiles ret = new InstanceFiles
                         {
                             data = filesData.data,
                             version = filesData.version,
-                            libraries = filesData.libraries,
+                            libraries = libraries,
                             natives = filesData.natives
                         };
 

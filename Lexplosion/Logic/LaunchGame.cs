@@ -15,7 +15,7 @@ namespace Lexplosion.Logic
         private static Process process = new Process();
         public static bool isRunning = false;
 
-        public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, Dictionary<string, string> libraries, Dictionary<string, string> instanceSettings)
+        public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, List<string> libraries, Dictionary<string, string> instanceSettings)
         {
             int number;
             if (!instanceSettings.ContainsKey("xmx") || !Int32.TryParse(instanceSettings["xmx"], out number))
@@ -39,12 +39,9 @@ namespace Lexplosion.Logic
 
             command = @" -Djava.library.path=" + UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/natives -cp ";
 
-            foreach (string lib in libraries.Keys)
+            foreach (string lib in libraries)
             {
-                if (libraries[lib] == "all" || libraries[lib] == "windows")
-                {
-                    command += UserData.settings["gamePath"] + "/libraries/" + lib + ";";
-                }
+                command += UserData.settings["gamePath"] + "/libraries/" + lib + ";";
             }
 
             command += versionPath + @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
@@ -202,6 +199,7 @@ namespace Lexplosion.Logic
 
         public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings)
         {
+
             InitData Error(string error)
             {
                 return new InitData
