@@ -887,7 +887,10 @@ namespace Lexplosion.Logic
             {
                 version = new LocalVersionInfo() 
                 {
-                    minecraftJar = data.version.minecraftJar,
+                    minecraftJar = new Dictionary<string, string> 
+                    { 
+                        ["name"] = data.version.minecraftJar.name
+                    },
                     arguments = data.version.arguments,
                     gameVersion = data.version.gameVersion,
                     assetsVersion = data.version.assetsVersion,

@@ -27,12 +27,14 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		public ModpacksContainerPage()
         {
             InitializeComponent();
-			BuildInstanceForm("EOF", 0, logo_path, "Energy of Space", "by NightWorld", "Our offical testing launcher modpack...", instance_tags);
+			BuildInstanceForm("EOF", 0, logo_path, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags);
         }
 
 
         private void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<String> tags) 
         {
+			author = "by " + author;
+
 			var canvas = new Canvas();
 			canvas.Height = 120;
 			canvas.Width = 600;

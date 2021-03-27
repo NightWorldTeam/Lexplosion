@@ -39,7 +39,7 @@ namespace Lexplosion.Objects
 
     class LocalVersionInfo
     {
-        public FileInfo minecraftJar;
+        public Dictionary<string, string> minecraftJar;
         public string arguments;
         public string gameVersion;
         public string assetsVersion;
@@ -50,6 +50,7 @@ namespace Lexplosion.Objects
 
     class VersionInfo: LocalVersionInfo
     {
+        public new FileInfo minecraftJar;
         public bool security;
         public string librariesUrl;
         public int librariesLastUpdate;
