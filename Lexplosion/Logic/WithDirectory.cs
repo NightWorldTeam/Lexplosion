@@ -1139,7 +1139,6 @@ namespace Lexplosion.Logic
             {
                 ["gameVersion"] = instanceFile.version.gameVersion,
                 ["description"] = description,
-                ["id"] = instanceId,
                 ["name"] = UserData.InstancesList[instanceId]
             };
 
@@ -1174,9 +1173,11 @@ namespace Lexplosion.Logic
 
         }
 
-        public static bool ImportInstance(string zipFile)
+        public static byte ImportInstance(string zipFile, out List<string> errors)
         {
             string dir = directory + "/temp/import/";
+
+            errors = new List<string>();
 
             if (!Directory.Exists(dir))
             {
@@ -1186,7 +1187,7 @@ namespace Lexplosion.Logic
                 }
                 catch
                 {
-                    return false;
+                    return 255;
                 }
             }
             else
@@ -1194,47 +1195,94 @@ namespace Lexplosion.Logic
                 Directory.Delete(dir, true);
             }
 
-            ZipFile.ExtractToDirectory(zipFile, dir);
+            try
+            {
+                ZipFile.ExtractToDirectory(zipFile, dir);
+            }
+            catch
+            {
+                Directory.Delete(dir, true);
+                return 1;
+            }
 
             Dictionary<string, string> instanceInfo = GetFile<Dictionary<string, string>>(dir + "instanceInfo.json");
 
             if (instanceInfo == null)
             {
-                return false;
+                Directory.Delete(dir, true);
+                return 1;
             }
 
-            // TODO: проверить есть ли все значения и try добавить
+            if (!instanceInfo.ContainsKey("gameVersion") || !instanceInfo.ContainsKey("name"))
+            {
+                Directory.Delete(dir, true);
+                return 1;
+            }
+
+            SHA1 sha = new SHA1Managed();
+            Random rnd = new Random();
+
+            string instanceId;
+            do
+            {
+                instanceId = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(instanceInfo["name"] + ":" + rnd.Next(0, 9999))));
+                instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
+                instanceId = instanceId.ToLower();
+            }
+            while (UserData.InstancesList.ContainsKey(instanceId));
 
             string addr = dir + "files/";
-            string targetDir = directory + "/instances/" + instanceInfo["id"] + "/";
+            string targetDir = directory + "/instances/" + instanceId + "/";
 
-            IEnumerable<string> allFiles = Directory.EnumerateFiles(addr, "*", SearchOption.AllDirectories);
-            foreach (string fileName in allFiles)
+            try
             {
-                string targetFileName = fileName.Replace(addr, targetDir);
-                string dirName = Path.GetDirectoryName(targetFileName);
-                if (!Directory.Exists(dirName))
+                IEnumerable<string> allFiles = Directory.EnumerateFiles(addr, "*", SearchOption.AllDirectories);
+                foreach (string fileName in allFiles)
                 {
-                    Directory.CreateDirectory(dirName);
-                }
+                    string targetFileName = fileName.Replace(addr, targetDir);
+                    string dirName = Path.GetDirectoryName(targetFileName);
+                    if (!Directory.Exists(dirName))
+                    {
+                        Directory.CreateDirectory(dirName);
+                    }
 
-                File.Copy(fileName, targetFileName);
+                    File.Copy(fileName, targetFileName);
+                }
+            }
+            catch
+            {
+                Directory.Delete(dir, true);
+                return 2;
             }
 
-            InstanceFiles files = ToServer.GetFilesList(instanceInfo["gameVersion"], true); // TODO: коннекта к серверу может не быть или игра запущена локально
-            Check(files, instanceInfo["id"]);
-            Update(files, instanceInfo["id"], MainWindow.Obj);
-            countFiles = 0;
-            SaveFilesList(instanceInfo["id"], files);
+            if (UserData.offline)
+            {
+                Directory.Delete(dir, true);
+                return 3;
+            }
 
-            UserData.InstancesList[instanceInfo["id"]] = instanceInfo["name"];
+            InstanceFiles files = ToServer.GetFilesList(instanceInfo["gameVersion"], true);
+            if(files == null)
+            {
+                return 4;
+            }
+
+            Check(files, instanceId);
+            
+            if(countFiles > 0)
+            {
+                errors = Update(files, instanceId, MainWindow.Obj);
+                countFiles = 0;
+            }
+
+            SaveFilesList(instanceId, files);
+
+            UserData.InstancesList[instanceId] = instanceInfo["name"];
             SaveModpaksList(UserData.InstancesList);
 
             Directory.Delete(dir, true);
 
-
-
-            return true;
+            return 0;
         }
 
     }
