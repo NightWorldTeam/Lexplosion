@@ -48,11 +48,9 @@ namespace Lexplosion
                 LauncherUpdate();
             }
 
-            new Thread(delegate () {
-                // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
-                WithDirectory.CheckLauncherAssets(); 
-                UserData.profilesAssets = WithDirectory.GetInstanceAssets();
-            }).Start();
+            // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
+            WithDirectory.CheckLauncherAssets();
+            UserData.instancesAssets = WithDirectory.GetLauncherAssets();
 
             Application.Current.Resources = new ResourceDictionary() { Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml") };
             app.Run(new AuthWindow());

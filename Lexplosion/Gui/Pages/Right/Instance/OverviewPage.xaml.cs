@@ -29,12 +29,12 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         {
             string modpack = MainWindow.Obj.selectedModpack;
 
-            if (UserData.profilesAssets != null && UserData.profilesAssets.ContainsKey(modpack))
+            if (UserData.instancesAssets != null && UserData.instancesAssets.ContainsKey(modpack))
             {
 
-                Description.Text = UserData.profilesAssets[modpack].description;
-                images_count = UserData.profilesAssets[modpack].images.Count-1;
-                SetImages(UserData.profilesAssets[modpack].images);
+                Description.Text = UserData.instancesAssets[modpack].description;
+                images_count = UserData.instancesAssets[modpack].images.Count-1;
+                SetImages(UserData.instancesAssets[modpack].images);
             }
             else
             {
@@ -46,7 +46,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         {
             string modpack = MainWindow.Obj.selectedModpack;
 
-            if(UserData.profilesAssets != null)
+            if(UserData.instancesAssets != null)
             {
                 if (lastIndex < images_count)
                 {
@@ -56,7 +56,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
                 {
                     lastIndex = 0;
                 }
-                SetImages(UserData.profilesAssets[modpack].images);
+                SetImages(UserData.instancesAssets[modpack].images);
             }
         }
 
@@ -64,7 +64,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         {
             string modpack = MainWindow.Obj.selectedModpack;
 
-            if(UserData.profilesAssets != null)
+            if(UserData.instancesAssets != null)
             {
                 if (lastIndex - 1 != -1)
                 {
@@ -74,7 +74,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
                 {
                     lastIndex = images_count;
                 }
-                SetImages(UserData.profilesAssets[modpack].images);
+                SetImages(UserData.instancesAssets[modpack].images);
             }
 
         }

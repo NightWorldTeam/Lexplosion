@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Objects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,25 +24,61 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// </summary>
     public partial class ModpacksContainerPage : Page
     {
-		private Uri logo_path1 = new Uri("pack://application:,,,/assets/images/icons/eos.png");
+		/*private Uri logo_path1 = new Uri("pack://application:,,,/assets/images/icons/eos.png");
 		private Uri logo_path2 = new Uri("pack://application:,,,/assets/images/icons/lt.png");
 		private Uri logo_path3 = new Uri("pack://application:,,,/assets/images/icons/tn.png");
 		private Uri logo_path4 = new Uri("pack://application:,,,/assets/images/icons/oth.png");
 		private Uri logo_path5 = new Uri("pack://application:,,,/assets/images/icons/tm.png");
 		private List<String> instance_tags1 = new List<String>() {"1.10.2", "Mods", "NightWorld"};
 		private List<String> instance_tags2 = new List<String>() {"1.7.10", "Mods", "NightWorld" };
-		private List<String> instance_tags3 = new List<String>() {"1.12.2", "Mods", "Magic"};
+		private List<String> instance_tags3 = new List<String>() {"1.12.2", "Mods", "Magic"};*/
 
 		public ModpacksContainerPage()
         {
             InitializeComponent();
 
 			// row - колонка должна быть от нуля до количества сборок - 1.
-			BuildInstanceForm("EOF", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1);
+			/*BuildInstanceForm("EOF", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1);
 			BuildInstanceForm("LT", 1, logo_path2, "Long Tech", "NightWorld", "Our offical testing launcher modpack...", instance_tags2);
 			BuildInstanceForm("TN", 2, logo_path3, "Transport Network", "NightWorld", "Our offical testing launcher modpack...", instance_tags1);
 			BuildInstanceForm("OTH", 3, logo_path4, "Over the Horizont", "NightWorld", "Our offical testing launcher modpack...", instance_tags2);
-			BuildInstanceForm("TM", 3, logo_path5, "ThauMine", "Gornak40", "С этой сборкой вы с легкостью сможете погрузиться...", instance_tags3);
+			BuildInstanceForm("TM", 3, logo_path5, "ThauMine", "Gornak40", "С этой сборкой вы с легкостью сможете погрузиться...", instance_tags3);*/
+
+			int i = 0;
+			foreach(string instanceId in UserData.InstancesList.Keys)
+            {
+				List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
+
+				Uri logoPath = null;
+				string dir = UserData.settings["gamePath"] + "/launcherAssets/" + UserData.instancesAssets[instanceId].mainImage;
+
+				if (File.Exists(dir))
+                {
+					logoPath = new Uri(dir);
+				}
+                else
+                {
+					logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+				}
+
+				string desc;
+
+				if(UserData.instancesAssets[instanceId].description.Length > 36)
+                {
+					desc = UserData.instancesAssets[instanceId].description.Substring(0, 36);
+
+				}
+                else
+                {
+					desc = UserData.instancesAssets[instanceId].description;
+
+				}
+
+				BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId], "NightWorld", desc + "...", instance_tags1);
+
+				i++;
+
+			}
 		}
 
 

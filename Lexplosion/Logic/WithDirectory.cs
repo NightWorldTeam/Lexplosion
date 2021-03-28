@@ -1083,6 +1083,12 @@ namespace Lexplosion.Logic
                                 }
 
                             }
+
+                            if (!File.Exists(directory + "/launcherAssets/" + instance.mainImage))
+                            {
+                                update = true;
+                                goto DownloadAssets;
+                            }
                         }
 
                     }
@@ -1129,7 +1135,7 @@ namespace Lexplosion.Logic
 
         }
 
-        public static Dictionary<string, InstanceAssets> GetInstanceAssets()
+        public static Dictionary<string, InstanceAssets> GetLauncherAssets()
         {
             try
             {
