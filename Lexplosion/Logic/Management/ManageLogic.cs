@@ -8,8 +8,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Lexplosion.Logic.FileSystem;
 
-namespace Lexplosion.Logic
+
+namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
     {
@@ -19,9 +21,9 @@ namespace Lexplosion.Logic
             {
                 if (!UserData.offline)
                 {
-                    UserData.InstancesList = ToServer.GetModpaksList();
+                    UserData.InstancesList = Network.ToServer.GetModpaksList();
 
-                    Dictionary<string, string> temp = WithDirectory.GetModpaksList();
+                    Dictionary<string, string> temp = DataFilesManager.GetModpaksList();
                     foreach(string key in temp.Keys)
                     {
                         if (!UserData.InstancesList.ContainsKey(key))
@@ -32,13 +34,13 @@ namespace Lexplosion.Logic
                     }
 
                     new Thread(delegate () {
-                        WithDirectory.SaveModpaksList(UserData.InstancesList);
+                        DataFilesManager.SaveModpaksList(UserData.InstancesList);
                     }).Start();
 
                 }
                 else
                 {
-                    UserData.InstancesList = WithDirectory.GetModpaksList();
+                    UserData.InstancesList = DataFilesManager.GetModpaksList();
 
                 }
 
@@ -78,7 +80,7 @@ namespace Lexplosion.Logic
 
                 void Run(string initModPack)
                 {
-                    Dictionary<string, string> instanceSettings = WithDirectory.GetSettings(initModPack);
+                    Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
                     InitData data = LaunchGame.Initialization(initModPack, instanceSettings);
 
                     if (data != null)
@@ -137,7 +139,7 @@ namespace Lexplosion.Logic
                         {
                             string command = LaunchGame.FormCommand(initModPack, data.files.version, data.files.version.minecraftJar.name, data.files.libraries, instanceSettings);
                             LaunchGame.Run(command, initModPack);
-                            WithDirectory.SaveSettings(UserData.settings);
+                            DataFilesManager.SaveSettings(UserData.settings);
 
                             MainWindow.Obj.Dispatcher.Invoke(delegate {
                                 MainWindow.Obj.launchedModpack = MainWindow.Obj.selectedModpack;

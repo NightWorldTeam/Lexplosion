@@ -9,7 +9,7 @@ using Lexplosion.Logic.Objects;
 using System.Collections;
 using Lexplosion.Global;
 
-namespace Lexplosion.Logic
+namespace Lexplosion.Logic.Network
 {
 
     static class ToServer

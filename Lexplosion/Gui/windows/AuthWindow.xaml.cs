@@ -6,6 +6,8 @@ using System.Windows.Media;
 using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network;
 
 namespace Lexplosion.Gui.Windows
 {
@@ -87,7 +89,7 @@ namespace Lexplosion.Gui.Windows
                         UserData.settings["login"] = login;
                         UserData.settings["password"] = password;
 
-                        WithDirectory.SaveSettings(UserData.settings);
+                        DataFilesManager.SaveSettings(UserData.settings);
                     }
 
                     ChangeWindow(1);
@@ -107,7 +109,7 @@ namespace Lexplosion.Gui.Windows
 
         void ChangeWindow(sbyte status)
         {
-            ManageLogic.DefineListInstances();
+            Logic.Management.ManageLogic.DefineListInstances();
 
             MainWindow mainWindow = new MainWindow
             {

@@ -7,8 +7,10 @@ using Microsoft.Win32;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network;
 
-namespace Lexplosion.Logic
+namespace Lexplosion.Logic.Management
 {
 
     static class LaunchGame
@@ -229,7 +231,7 @@ namespace Lexplosion.Logic
                 bool noUpdate = UserData.settings["noUpdate"] == "false" || (instanceSettings.ContainsKey("noUpdate") && instanceSettings["noUpdate"] == "false");
 
                 if (updateInstance)
-                    WithDirectory.DeleteLastUpdates(instanceId);
+                    DataFilesManager.DeleteLastUpdates(instanceId);
 
                 if (!UserData.offline && (updateInstance || noUpdate))
                 {
@@ -240,7 +242,7 @@ namespace Lexplosion.Logic
                     }
                     else
                     {
-                        files = WithDirectory.GetFilesList(instanceId);
+                        files = DataFilesManager.GetFilesList(instanceId);
                         files = ToServer.GetFilesList(files.version.gameVersion, isLocal);
                     }
 
@@ -262,19 +264,19 @@ namespace Lexplosion.Logic
                     files.data = null;
                     files.natives = null;
 
-                    WithDirectory.SaveFilesList(instanceId, files);
+                    DataFilesManager.SaveFilesList(instanceId, files);
                     //MainWindow.window.Dispatcher.Invoke(delegate { MainWindow.window.GridLoadingWindow.Visibility = Visibility.Collapsed; });
 
                 } 
                 else 
                 {
-                    files = WithDirectory.GetFilesList(instanceId);
+                    files = DataFilesManager.GetFilesList(instanceId);
                 }
 
                 if (updateInstance)
                 {
                     instanceSettings["update"] = "false";
-                    WithDirectory.SaveSettings(instanceSettings, instanceId);
+                    DataFilesManager.SaveSettings(instanceSettings, instanceId);
                 }
 
                 return new InitData
