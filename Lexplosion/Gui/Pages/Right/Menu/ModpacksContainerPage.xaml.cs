@@ -1,4 +1,6 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
@@ -210,7 +212,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			Grid.SetRow(tagsWrapPanel, 1);
 
-			// панельс кнопками
+			// панель с кнопками
 			var instanceButtonGrid = new Grid();
 			RowDefinition instanceButtonRowDefinition1 = new RowDefinition();
 			RowDefinition instanceButtonRowDefinition2 = new RowDefinition();
@@ -224,7 +226,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			Grid.SetColumn(instanceButtonGrid, 2);
 
 			var downloadButton = new Button();
-			downloadButton.Click += DownloadInstance;
+			downloadButton.Name = instance_name;
+			downloadButton.Click += LaunchInstance;
 			downloadButton.BorderThickness = new Thickness(2);
 			downloadButton.Style = (Style)Application.Current.FindResource("InstanceDonwloadButton");
 
@@ -282,14 +285,19 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		}
 
-		private void DownloadInstance(object sender, RoutedEventArgs e) 
-		{ 
-		
+		private void LaunchInstance(object sender, RoutedEventArgs e) 
+		{
+			string instanceId = ((Button)sender).Name;
+			MainWindow.Obj.selectedModpack = instanceId;
+			ManageLogic.СlientManager(instanceId);
+
+
 		}
 
 		private void ExportInstance(object sender, RoutedEventArgs e)
 		{
 
 		}
+
 	}
 }

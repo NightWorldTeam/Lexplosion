@@ -47,7 +47,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static void СlientManager()
+        public static void СlientManager(string instanceId)
         {
 
             if (LaunchGame.isRunning)
@@ -68,14 +68,14 @@ namespace Lexplosion.Logic.Management
 
                 int k = 0;
                 int c = 0;
-                if (xmx.ContainsKey(MainWindow.Obj.selectedModpack) && int.TryParse(xmx[MainWindow.Obj.selectedModpack], out k) && int.TryParse(UserData.settings["xmx"], out c))
+                if (xmx.ContainsKey(instanceId) && int.TryParse(xmx[instanceId], out k) && int.TryParse(UserData.settings["xmx"], out c))
                 {
                     if (c < k)
                         MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[MainWindow.Obj.selectedModpack] + "МБ", "Предупреждение");
                 }
 
                 new Thread(delegate () {
-                    Run(MainWindow.Obj.selectedModpack);
+                    Run(instanceId);
                 }).Start();
 
                 void Run(string initModPack)
@@ -85,7 +85,6 @@ namespace Lexplosion.Logic.Management
 
                     if (data != null)
                     {
-
                         if (data.errors.Contains("javaPathError"))
                         {
                             MainWindow.Obj.Dispatcher.Invoke(delegate {
@@ -104,8 +103,8 @@ namespace Lexplosion.Logic.Management
                             return;
 
                         }
-                        else if (UserData.offline && (UserData.settings.ContainsKey(MainWindow.Obj.selectedModpack + "-update") && UserData.settings[MainWindow.Obj.selectedModpack + "-update"] == "true"))
-                        { //если лаунчер запущен в оффлайн режиме и выбранный модпак поставлен на обновление
+                        else if (UserData.offline && (UserData.settings.ContainsKey(instanceId + "-update") && UserData.settings[instanceId + "-update"] == "true")) //если лаунчер запущен в оффлайн режиме и выбранный модпак поставлен на обновление
+                        { 
                             MainWindow.Obj.Dispatcher.Invoke(delegate {
                                 MainWindow.Obj.SetMessageBox("Клиент поставлен на обновление, но лаунчер запущен в оффлайн режиме! Войдите в онлайн режим.", "Ошибка 980");
                                 //InitProgressBar.Visibility = Visibility.Collapsed;
@@ -113,7 +112,7 @@ namespace Lexplosion.Logic.Management
                             return;
 
                         }
-                        else if ((data.files == null && (UserData.offline || UserData.settings["noUpdate"] == "true")) && !(UserData.settings.ContainsKey(MainWindow.Obj.selectedModpack + "-update") && UserData.settings[MainWindow.Obj.selectedModpack + "-update"] == "true"))
+                        else if ((data.files == null && (UserData.offline || UserData.settings["noUpdate"] == "true")) && !(UserData.settings.ContainsKey(instanceId + "-update") && UserData.settings[instanceId + "-update"] == "true"))
                         { //если  data.files равно null при вылюченных обновлениях или при оффлайн игре. При том модпак не стоит на обновлении
                             MainWindow.Obj.Dispatcher.Invoke(delegate {
                                 MainWindow.Obj.SetMessageBox("Вы должны хотя бы 1 раз запустить клиент в онлайн режиме и с включенными обновлениями!", "Ошибка 970");
@@ -141,11 +140,11 @@ namespace Lexplosion.Logic.Management
                             LaunchGame.Run(command, initModPack);
                             DataFilesManager.SaveSettings(UserData.settings);
 
-                            MainWindow.Obj.Dispatcher.Invoke(delegate {
+                            /*MainWindow.Obj.Dispatcher.Invoke(delegate {
                                 MainWindow.Obj.launchedModpack = MainWindow.Obj.selectedModpack;
                                 MainWindow.Obj.IsInstalled[MainWindow.Obj.selectedModpack] = true;
                                 //ClientManagement.Content = "Остановить";
-                            });
+                            });*/
 
                         }
                         else
