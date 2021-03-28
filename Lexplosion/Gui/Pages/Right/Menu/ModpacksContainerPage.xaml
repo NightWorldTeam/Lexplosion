@@ -12,6 +12,9 @@
     </Page.Resources>
 
     <ScrollViewer>
+        <ScrollViewer.Background>
+            <SolidColorBrush Color="#131313" Opacity="0.8"/>
+        </ScrollViewer.Background>
         <Grid ShowGridLines="False" x:Name="InstanceGrid">
             <Grid.Background>
                 <SolidColorBrush Color="#131313" Opacity="0.8"/>
@@ -22,12 +25,6 @@
                     <Setter Property="Padding" Value="10" />
                 </Style>
             </Grid.Resources>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="150"/>
-                <RowDefinition Height="150"/>
-                <RowDefinition Height="150"/>
-                <RowDefinition Height="150"/>
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="175"/>
             </Grid.ColumnDefinitions>

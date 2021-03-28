@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -22,31 +23,46 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// </summary>
     public partial class ModpacksContainerPage : Page
     {
-		private Uri logo_path = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
-		private List<String> instance_tags = new List<String>() {"1.10.2", "Mods"};
+		private Uri logo_path1 = new Uri("pack://application:,,,/assets/images/icons/eos.png");
+		private Uri logo_path2 = new Uri("pack://application:,,,/assets/images/icons/lt.png");
+		private Uri logo_path3 = new Uri("pack://application:,,,/assets/images/icons/tn.png");
+		private Uri logo_path4 = new Uri("pack://application:,,,/assets/images/icons/oth.png");
+		private Uri logo_path5 = new Uri("pack://application:,,,/assets/images/icons/tm.png");
+		private List<String> instance_tags1 = new List<String>() {"1.10.2", "Mods", "NightWorld"};
+		private List<String> instance_tags2 = new List<String>() {"1.7.10", "Mods", "NightWorld" };
+		private List<String> instance_tags3 = new List<String>() {"1.12.2", "Mods", "Magic"};
+
 		public ModpacksContainerPage()
         {
             InitializeComponent();
-			BuildInstanceForm("EOF", 0, logo_path, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags);
-        }
+
+			// row - колонка должна быть от нуля до количества сборок - 1.
+			BuildInstanceForm("EOF", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1);
+			BuildInstanceForm("LT", 1, logo_path2, "Long Tech", "NightWorld", "Our offical testing launcher modpack...", instance_tags2);
+			BuildInstanceForm("TN", 2, logo_path3, "Transport Network", "NightWorld", "Our offical testing launcher modpack...", instance_tags1);
+			BuildInstanceForm("OTH", 3, logo_path4, "Over the Horizont", "NightWorld", "Our offical testing launcher modpack...", instance_tags2);
+			BuildInstanceForm("TM", 3, logo_path5, "ThauMine", "Gornak40", "С этой сборкой вы с легкостью сможете погрузиться...", instance_tags3);
+		}
 
 
-        private void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<String> tags) 
+		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
+
+		private void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<String> tags) 
         {
-			author = "by " + author;
+			// Добавляем строчку размером 150 px для нашего блока со сборкой.
+			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 
 			var canvas = new Canvas();
 			canvas.Height = 120;
 			canvas.Width = 600;
 			canvas.Margin = new Thickness(40, 0, 0, 0);
-			canvas.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719"));
+			canvas.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#131313"));
 			canvas.Name = instance_name;
 
 			// Добавление в Столбики и Колноки в форме.
             Grid.SetRow(canvas, row);
 
 			var grid = new Grid();
-			grid.ShowGridLines = false;
 			// Делаем разметку для элементов.
 			ColumnDefinition columnDefinition1 = new ColumnDefinition();
 			ColumnDefinition columnDefinition2 = new ColumnDefinition();
@@ -67,12 +83,12 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			// Instance Logo
 			var image = new Border();
-            image.Background = new ImageBrush(new BitmapImage(logo_path));
+			image.Background = new ImageBrush(new BitmapImage(logo_path));
 			Grid.SetColumn(image, 0);
 
-			// Title
+			// Titlew
 			var textContentGrid = new Grid();
-			textContentGrid.ShowGridLines = false;
+			textContentGrid.Margin = new Thickness(10, 0, 10, 0);
 			RowDefinition textContentRowDefinition1 = new RowDefinition();
 			RowDefinition textContentRowDefinition2 = new RowDefinition();
 
@@ -86,7 +102,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			// Разметка для заголовков
 			var titleGrid = new Grid();
-			titleGrid.ShowGridLines = false;
 			ColumnDefinition columnDefinitionTitle1 = new ColumnDefinition();
 			ColumnDefinition columnDefinitionTitle2 = new ColumnDefinition();
 			RowDefinition rowDefinitionTitle1 = new RowDefinition();
@@ -112,17 +127,19 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			// Об Авторе
 			var textBlockAuthor = new TextBlock();
-			textBlockAuthor.Text = author;
+			textBlockAuthor.Text = "by " + author;
 			textBlockAuthor.Padding = new Thickness(0);
-			textBlockAuthor.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff"));
+			textBlockAuthor.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#a9b1ba"));
 			textBlockAuthor.VerticalAlignment = VerticalAlignment.Center;
+			textBlockAuthor.FontFamily = new FontFamily(new Uri("pack://application:,,,/assets/fonts/"), "./#Casper Bold");
+			
 
 			Grid.SetColumn(textBlockAuthor, 1);
 
 
-			// Описание - контент
+			// Описание
 			var overviewGrid = new Grid();
-			overviewGrid.ShowGridLines = true;
+			overviewGrid.Margin = new Thickness(0,5,0,0);
 			RowDefinition overviewRowDefinition1 = new RowDefinition();
 			RowDefinition overviewRowDefinition2 = new RowDefinition();
 			overviewRowDefinition1.Height = new GridLength(35, GridUnitType.Pixel);
@@ -135,7 +152,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			
 			var textBlockOverview = new TextBlock();
 			textBlockOverview.Text = overview;
-			textBlockOverview.Padding = new Thickness(0);
 			textBlockOverview.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff"));
 			textBlockOverview.HorizontalAlignment = HorizontalAlignment.Left;
 			textBlockOverview.FontSize = 16;
@@ -143,20 +159,26 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			Grid.SetColumn(textBlockOverview, 0);
 			Grid.SetRow(textBlockOverview, 0);
 
+			// панель с тегами
 			var tagsWrapPanel = new WrapPanel();
+			tagsWrapPanel.Margin = new Thickness(0,1,1,1);
 			tagsWrapPanel.Orientation = Orientation.Horizontal;
-			tagsWrapPanel.VerticalAlignment = VerticalAlignment.Center;
-			tagsWrapPanel.Children.Add(GetTagsButton(tags[0]));
-			tagsWrapPanel.Children.Add(GetTagsButton(tags[1]));
+
+			// добавление тегов
+			foreach (string tag in tags) 
+			{ 
+				tagsWrapPanel.Children.Add(GetTagsButton(tag));
+			}
 
 			Grid.SetRow(tagsWrapPanel, 1);
 
+			// панельс кнопками
 			var instanceButtonGrid = new Grid();
 			RowDefinition instanceButtonRowDefinition1 = new RowDefinition();
 			RowDefinition instanceButtonRowDefinition2 = new RowDefinition();
 
-			instanceButtonRowDefinition1.Height = new GridLength(50, GridUnitType.Pixel);
-			instanceButtonRowDefinition2.Height = new GridLength(50, GridUnitType.Pixel);
+			instanceButtonRowDefinition1.Height = new GridLength(60, GridUnitType.Pixel);
+			instanceButtonRowDefinition2.Height = new GridLength(60, GridUnitType.Pixel);
 
 			instanceButtonGrid.RowDefinitions.Add(instanceButtonRowDefinition1);
 			instanceButtonGrid.RowDefinitions.Add(instanceButtonRowDefinition2);
@@ -165,11 +187,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			var downloadButton = new Button();
 			downloadButton.Click += DownloadInstance;
-			downloadButton.Style = (Style)Application.Current.FindResource("InstanceBlockAction");
+			downloadButton.BorderThickness = new Thickness(2);
+			downloadButton.Style = (Style)Application.Current.FindResource("InstanceDonwloadButton");
 
 			var exportButton = new Button();
 			exportButton.Click += ExportInstance;
-			exportButton.Style = (Style)Application.Current.FindResource("InstanceBlockAction");
+			exportButton.BorderThickness = new Thickness(2);
+			exportButton.Style = (Style)Application.Current.FindResource("InstanceExportButton");
 
 			Grid.SetRow(downloadButton, 0);
 			Grid.SetRow(exportButton, 1);
@@ -189,6 +213,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			grid.Children.Add(image);
 			canvas.Children.Add(grid);
 			InstanceGrid.Children.Add(canvas);
+
+			// TODO: Удачить на релизе.
+			instanceButtonGrid.ShowGridLines = false;
+			overviewGrid.ShowGridLines = false;
+			titleGrid.ShowGridLines = false;
+			textContentGrid.ShowGridLines = false;
+			grid.ShowGridLines = false;
 		}
 
 		private Button GetTagsButton(string content)
@@ -199,6 +230,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			tag.Style = (Style)Application.Current.FindResource("TagStyle");
 			tag.Click += TagButtonClick;
 			return tag;
+		}
+
+		private RowDefinition GetRowDefinition()
+        {
+			RowDefinition rowDefinition = new RowDefinition();
+			rowDefinition.Height = new GridLength(150, GridUnitType.Pixel);
+			return rowDefinition;
 		}
 
 		private void TagButtonClick(object sender, RoutedEventArgs e) 
