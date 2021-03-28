@@ -56,7 +56,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			canvas.Height = 120;
 			canvas.Width = 600;
 			canvas.Margin = new Thickness(40, 0, 0, 0);
-			canvas.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#131313"));
+			canvas.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719"));
 			canvas.Name = instance_name;
 
 			// Добавление в Столбики и Колноки в форме.

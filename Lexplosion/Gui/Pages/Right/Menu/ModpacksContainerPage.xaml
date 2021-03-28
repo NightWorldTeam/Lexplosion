@@ -12,9 +12,6 @@
     </Page.Resources>
 
     <ScrollViewer>
-        <ScrollViewer.Background>
-            <SolidColorBrush Color="#131313" Opacity="0.8"/>
-        </ScrollViewer.Background>
         <Grid ShowGridLines="False" x:Name="InstanceGrid">
             <Grid.Background>
                 <SolidColorBrush Color="#131313" Opacity="0.8"/>
