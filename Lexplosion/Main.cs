@@ -7,9 +7,10 @@ using System.Windows;
 using Lexplosion.Gui;
 using Lexplosion.Logic;
 using Lexplosion.Properties;
-using Lexplosion.Objects;
+using Lexplosion.Logic.Objects;
 using System.Threading;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Global;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.

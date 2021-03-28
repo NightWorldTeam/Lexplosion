@@ -1,6 +1,6 @@
 ﻿using Lexplosion.Gui.Windows;
 using Lexplosion.Logic;
-using Lexplosion.Objects;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

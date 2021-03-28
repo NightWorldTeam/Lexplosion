@@ -1,10 +1,11 @@
-﻿using Lexplosion.Objects;
+﻿using Lexplosion.Logic.Objects;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Windows;
 using System;
 using System.Windows.Media.Imaging;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Global;
 
 namespace Lexplosion.Gui.Pages.Right.Instance
 {

@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Lexplosion.Global;
 using Lexplosion.Logic;
-using Lexplosion.Objects;
+using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Gui.Windows
 {

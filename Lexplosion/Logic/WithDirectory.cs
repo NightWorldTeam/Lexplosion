@@ -6,11 +6,12 @@ using System.Net;
 using System.Security.Cryptography;
 using System.IO.Compression;
 using Newtonsoft.Json;
-using Lexplosion.Objects;
+using Lexplosion.Logic.Objects;
 using System.Threading;
 using Lexplosion.Gui.Windows;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using Lexplosion.Global;
 
 namespace Lexplosion.Logic
 {

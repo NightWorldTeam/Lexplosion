@@ -1,4 +1,5 @@
-﻿using Lexplosion.Objects;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;

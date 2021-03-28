@@ -4,8 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Microsoft.Win32;
-using Lexplosion.Objects;
+using Lexplosion.Logic.Objects;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Global;
 
 namespace Lexplosion.Logic
 {

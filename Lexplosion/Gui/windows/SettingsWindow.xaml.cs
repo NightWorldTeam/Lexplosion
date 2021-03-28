@@ -1,5 +1,5 @@
 ﻿using Lexplosion.Logic;
-using Lexplosion.Objects;
+using Lexplosion.Logic.Objects;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;

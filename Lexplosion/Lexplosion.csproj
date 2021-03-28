@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Gui\Pages\Left\LeftSideMenuPage.xaml.cs">
       <DependentUpon>LeftSideMenuPage.xaml</DependentUpon>
     </Compile>

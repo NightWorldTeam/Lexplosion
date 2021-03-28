@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Lexplosion.Objects;
+using Lexplosion.Logic.Objects;
 using Lexplosion.Logic;
 using System.Windows.Controls.Primitives;
 using System.Threading;
