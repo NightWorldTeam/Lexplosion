@@ -1,5 +1,7 @@
-﻿using Lexplosion.Gui.Windows;
+﻿using Lexplosion.Global;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
@@ -23,77 +25,79 @@ namespace Lexplosion.Gui.Pages
         {
             // instance = this;
             InitializeComponent();
-            //UpdatePacks(MP_TB_StackPanel);
+            foreach (string pack in UserData.InstancesList.Keys) //отрисовываем кнопки в цикле
+            {
+                UpdatePacks(UserData.InstancesList[pack], pack);
+            }
         }
 
-
-        private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages.Right/Modpack/OverviewPage.xaml");
+        private Uri instancePage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/InstancePage.xaml");
+        private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/OverviewPage.xaml");
         private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/VersionPage.xaml");
         private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/Right/Modpack/ModsListPage.xaml");
 
         private Uri modpacksContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ModpacksContainerPage.xaml");
         private Uri favoritesContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/FavoritesContainerPage.xaml");
         private Uri serversContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ServersContainerPage.xaml");
-        /*
-        public void UpdatePacks(StackPanel stackPanel)
+        
+        public void UpdatePacks(string instanceName, string pack)
         {
-            foreach (string pack in UserData.InstancesList.Keys) //отрисовываем кнопки в цикле
-            {
-                ToggleButton mp_togglebutton = new ToggleButton();
-                mp_togglebutton.Width = 242;
-                mp_togglebutton.Height = 60;
-                mp_togglebutton.Content = UserData.InstancesList[pack];
-                mp_togglebutton.Style = (Style)Application.Current.FindResource("MWCBS1");
-                mp_togglebutton.BorderThickness = new Thickness(10, 0, 0, 0);
-                mp_togglebutton.Name = pack;
-                //mp_togglebutton.Click += ModpackButtonClick;
-                stackPanel.RegisterName(pack, mp_togglebutton);
-                stackPanel.Children.Add(mp_togglebutton);
+                ToggleButton instanceButton = new ToggleButton();
+                instanceButton.Width = 242;
+                instanceButton.Height = 60;
+                instanceButton.Content = instanceName;
+                instanceButton.Style = (Style)Application.Current.FindResource("MWCBS1");
+                instanceButton.BorderThickness = new Thickness(10, 0, 0, 0);
+                instanceButton.Name = pack;
+                instanceButton.Click += FavoriteInstanceButtonClick;
+                FavoriteInstancesPanel.Children.Add(instanceButton);
+        }
+        private void FavoriteInstanceButtonClick(object sender, RoutedEventArgs e) {
 
-                //помещаем в список информацию о том установлен модпак или нет
-                IsInstalled[pack] = WithDirectory.InstanceIsInstalled(pack);
+        }
 
-            }
+        private void Search(object sender, RoutedEventArgs e) 
+        {
+            MainWindow.instance.RightSideFrame.Source = modpacksContainerPage;
+        }
+        
+        private void Servers(object sender, RoutedEventArgs e) 
+        {
+            MainWindow.instance.RightSideFrame.Source = serversContainerPage;
+        }
 
-            //эта часть кода устанавливает выбранный модпак. по умолчанию устанавливается первый в списке модпак
-            if (UserData.settings.ContainsKey("selectedModpack") && UserData.settings["selectedModpack"] != null)
-            {
-                try
-                {
-                    selectedModpack = UserData.settings["selectedModpack"];
-                    ToggleButton buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);
+        private void Favorites(object sender, RoutedEventArgs e)
+        {
+       
+            FavoriteInstancesPanel.Visibility = Visibility.Visible;
+            LeftSideMenu.Visibility = Visibility.Hidden;
+            MainWindow.instance.RightSideFrame.Source = instancePage;
+        }
 
-                    if (buttonActive == null)
-                    {
-                        var first = UserData.InstancesList.First();
-                        selectedModpack = first.Key;
-                        buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);
-                    }
+        private void Settings(object sender, RoutedEventArgs e)
+        {
 
-                    buttonActive.IsChecked = true;
-                }
-                catch
-                {
-                    var first = UserData.InstancesList.First();
-                    selectedModpack = first.Key;
+        }
 
-                    ToggleButton buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);
-                    buttonActive.IsChecked = true;
-                }
-            }
-            else
-            {
-                var first = UserData.InstancesList.First();
-                selectedModpack = first.Key;
+        private void UserProfile(object sender, RoutedEventArgs e)
+        {
 
-                ToggleButton buttonActive = (ToggleButton)MP_TB_StackPanel.FindName(selectedModpack);
-                buttonActive.IsChecked = true;
-            }
-            
-            if (IsInstalled[selectedModpack]) { 
-                ClientManagement.Content = "Играть";
-            }
-        }*/
+        }
+
+        private void AddCustomModpack(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void LauncherSettings(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Network(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         private void MenuArrow(object sender, RoutedEventArgs e)
         {
@@ -130,46 +134,6 @@ namespace Lexplosion.Gui.Pages
                 //старт анимиции
                 DropDownMenu.BeginAnimation(Canvas.MarginProperty, animation);
             }
-        }
-
-        private void Search(object sender, RoutedEventArgs e) 
-        {
-            MainWindow.instance.RightSideFrame.Source = modpacksContainerPage;
-        }
-        
-        private void Servers(object sender, RoutedEventArgs e) 
-        {
-            MainWindow.instance.RightSideFrame.Source = serversContainerPage;
-        }
-
-        private void Favorites(object sender, RoutedEventArgs e) 
-        {
-            MainWindow.instance.RightSideFrame.Source = favoritesContainerPage;
-        }
-
-        private void Settings(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void UserProfile(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void AddCustomModpack(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void LauncherSettings(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Network(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

@@ -84,6 +84,9 @@
     <Compile Include="Gui\Pages\Left\LeftSideMenuPage.xaml.cs">
       <DependentUpon>LeftSideMenuPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\Pages\Right\Instance\InstancePage.xaml.cs">
+      <DependentUpon>InstancePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\Pages\Right\Menu\FavoritesContainerPage.xaml.cs">
       <DependentUpon>FavoritesContainerPage.xaml</DependentUpon>
     </Compile>
@@ -139,6 +142,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Gui\Pages\Left\LeftSideMenuPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Pages\Right\Instance\InstancePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
