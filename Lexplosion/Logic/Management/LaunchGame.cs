@@ -17,6 +17,7 @@ namespace Lexplosion.Logic.Management
     {
         private static Process process = new Process();
         public static bool isRunning = false;
+        public static string runnigInstance = "";
 
         public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, List<string> libraries, Dictionary<string, string> instanceSettings)
         {
@@ -63,6 +64,7 @@ namespace Lexplosion.Logic.Management
 
         public static bool Run(string command, string instanceId)
         {
+
             if (UserData.settings["showConsole"] == "true")
             {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
@@ -180,8 +182,10 @@ namespace Lexplosion.Logic.Management
                         //MainWindow.window.ClientManagement.IsEnabled = true;
                     });
 
-                    isRunning = false;
                     process = new Process();
+                    isRunning = false;
+                    runnigInstance = "";
+
                 };
 
                 process.Start();

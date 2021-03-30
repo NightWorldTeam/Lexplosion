@@ -56,9 +56,11 @@ namespace Lexplosion.Logic.Management
                 return;
             }
 
+            LaunchGame.runnigInstance = instanceId;
+
             MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
 
-            if (UserData.InstancesList.ContainsKey(MainWindow.Obj.selectedModpack))
+            if (UserData.InstancesList.ContainsKey(instanceId))
             {
                 Dictionary<string, string> xmx = new Dictionary<string, string>();
                 xmx["eos"] = "2700";
@@ -71,7 +73,7 @@ namespace Lexplosion.Logic.Management
                 if (xmx.ContainsKey(instanceId) && int.TryParse(xmx[instanceId], out k) && int.TryParse(UserData.settings["xmx"], out c))
                 {
                     if (c < k)
-                        MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[MainWindow.Obj.selectedModpack] + "МБ", "Предупреждение");
+                        MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
                 }
 
                 new Thread(delegate () {

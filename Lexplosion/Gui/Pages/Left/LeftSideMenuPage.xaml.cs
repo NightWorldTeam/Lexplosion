@@ -2,6 +2,7 @@
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Lexplosion.Gui.Pages
     public partial class LeftSideMenuPage : Page
     {
         //public static LeftSideMenuPage instance = null;
-        public string selectedModpack = "";
+        public static string selectedInstance = "";
         private Dictionary<string, bool> IsInstalled = new Dictionary<string, bool>();
         public LeftSideMenuPage()
         {
@@ -42,17 +43,23 @@ namespace Lexplosion.Gui.Pages
         
         public void UpdatePacks(string instanceName, string pack)
         {
-                ToggleButton instanceButton = new ToggleButton();
-                instanceButton.Width = 242;
-                instanceButton.Height = 60;
-                instanceButton.Content = instanceName;
-                instanceButton.Style = (Style)Application.Current.FindResource("MWCBS1");
-                instanceButton.BorderThickness = new Thickness(10, 0, 0, 0);
-                instanceButton.Name = pack;
-                instanceButton.Click += FavoriteInstanceButtonClick;
-                FavoriteInstancesPanel.Children.Add(instanceButton);
+            ToggleButton instanceButton = new ToggleButton
+            {
+                Width = 242,
+                Height = 60,
+                Content = instanceName,
+                Style = (Style)Application.Current.FindResource("MWCBS1"),
+                BorderThickness = new Thickness(10, 0, 0, 0),
+                Name = pack
+            };
+
+            instanceButton.Click += FavoriteInstanceButtonClick;
+            FavoriteInstancesPanel.Children.Add(instanceButton);
         }
-        private void FavoriteInstanceButtonClick(object sender, RoutedEventArgs e) {
+        private void FavoriteInstanceButtonClick(object sender, RoutedEventArgs e) 
+        {
+
+            selectedInstance = ((ToggleButton)sender).Name;
 
         }
 

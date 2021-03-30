@@ -288,7 +288,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		private void LaunchInstance(object sender, RoutedEventArgs e) 
 		{
 			string instanceId = ((Button)sender).Name;
-			MainWindow.Obj.selectedModpack = instanceId;
 			ManageLogic.СlientManager(instanceId);
 
 

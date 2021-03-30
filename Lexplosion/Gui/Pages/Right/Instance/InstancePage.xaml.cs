@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Logic.Management;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,6 +43,8 @@ namespace Lexplosion.Gui.Pages.Right.Instance
 
         private void СlientManager(object sender, RoutedEventArgs e)
         {
+            if(LeftSideMenuPage.selectedInstance != "")
+                ManageLogic.СlientManager(LeftSideMenuPage.selectedInstance);
 
         }
     }
