@@ -293,7 +293,8 @@ namespace Lexplosion.Gui.Windows
             //this.MessageTitle.Text = title;
         }
 
-        private void OpenedModPackSettings(object sender, RoutedEventArgs e) {
+        private void OpenedModPackSettings(object sender, RoutedEventArgs e) 
+        {
             SettingsWindow window = new SettingsWindow
             {
                 Left = this.Left + 188,

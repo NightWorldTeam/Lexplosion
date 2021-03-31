@@ -22,13 +22,22 @@ namespace Lexplosion.Gui.Pages
         //public static LeftSideMenuPage instance = null;
         public static string selectedInstance = "";
         private Dictionary<string, bool> IsInstalled = new Dictionary<string, bool>();
+        private ToggleButton selected;
+        private ToggleButton selectedFavoriteInstance;
         public LeftSideMenuPage()
         {
             // instance = this;
             InitializeComponent();
+            selected = this.Instances;
+
             foreach (string pack in UserData.InstancesList.Keys) //отрисовываем кнопки в цикле
             {
                 UpdatePacks(UserData.InstancesList[pack], pack);
+            }
+
+            if (LaunchGame.isRunning)
+            {
+                //selectedInstance
             }
         }
 
@@ -53,36 +62,97 @@ namespace Lexplosion.Gui.Pages
                 Name = pack
             };
 
+            selectedFavoriteInstance = instanceButton;
+
             instanceButton.Click += FavoriteInstanceButtonClick;
             FavoriteInstancesPanel.Children.Add(instanceButton);
         }
         private void FavoriteInstanceButtonClick(object sender, RoutedEventArgs e) 
         {
+            ToggleButton button = (ToggleButton)sender;
+            if (button.Name != selected.Name)
+            {
+                button.IsChecked = true;
+                selected.IsChecked = false;
+                selected = button;
 
-            selectedInstance = ((ToggleButton)sender).Name;
+                selectedInstance = button.Name;
+
+            }
+            else //костыль. Что бы при повтороном клике IsChecked не слетало
+            {
+                button.IsChecked = true;
+            }
 
         }
 
-        private void Search(object sender, RoutedEventArgs e) 
+        private void OpenInstances(object sender, RoutedEventArgs e) 
         {
+            ToggleButton button = (ToggleButton)sender;
+            if (button.Name != selected.Name)
+            {
+                button.IsChecked = true;
+                selected.IsChecked = false;
+                selected = button;
+            }
+            else //костыль. Что бы при повтороном клике IsChecked не слетало
+            {
+                button.IsChecked = true;
+            }
+
             MainWindow.instance.RightSideFrame.Source = modpacksContainerPage;
         }
         
-        private void Servers(object sender, RoutedEventArgs e) 
+        private void OnlineGame(object sender, RoutedEventArgs e) 
         {
+            ToggleButton button = (ToggleButton)sender;
+            if (button.Name != selected.Name)
+            {
+                button.IsChecked = true;
+                selected.IsChecked = false;
+                selected = button;
+            }
+            else //костыль. Что бы при повтороном клике IsChecked не слетало
+            {
+                button.IsChecked = true;
+            }
+
             MainWindow.instance.RightSideFrame.Source = serversContainerPage;
         }
 
         private void Favorites(object sender, RoutedEventArgs e)
         {
-       
             FavoriteInstancesPanel.Visibility = Visibility.Visible;
             LeftSideMenu.Visibility = Visibility.Hidden;
             MainWindow.instance.RightSideFrame.Source = instancePage;
+
+            ToggleButton button = (ToggleButton)sender;
+            if (button.Name != selected.Name)
+            {
+                selectedFavoriteInstance.IsChecked = true;
+                selected = selectedFavoriteInstance;
+
+            }
+            else //костыль. Что бы при повтороном клике IsChecked не слетало
+            {
+                button.IsChecked = true;
+            }
+
         }
 
         private void Settings(object sender, RoutedEventArgs e)
         {
+            ToggleButton button = (ToggleButton)sender;
+            if (button.Name != selected.Name)
+            {
+                button.IsChecked = true;
+                selected.IsChecked = false;
+                selected = button;
+            }
+            else //костыль. Что бы при повтороном клике IsChecked не слетало
+            {
+                button.IsChecked = true;
+            }
 
         }
 
@@ -112,33 +182,28 @@ namespace Lexplosion.Gui.Pages
             // проверяем Margin нашего меню если 320(закрыто)
             if (DropDownMenu.Margin == new Thickness(0, 286, 0, 0))
             {
-                // открываем с анимицией
                 DropDownMenuSwitcher.IsChecked = true;
-                // забыл как эта штука называется
-                ThicknessAnimation animation = new ThicknessAnimation();
-                // изменяемое свойство
-                animation.From = DropDownMenu.Margin;
-                // на что изменяем с анимацией
-                animation.To = new Thickness(0, 466, 0, 0);
-                // время анимации
-                animation.Duration = TimeSpan.FromSeconds(0.7);
-                // старт анимиции
-                DropDownMenu.BeginAnimation(Canvas.MarginProperty, animation);
+
+                ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                {
+                    From = DropDownMenu.Margin,
+                    To = new Thickness(0, 466, 0, 0),
+                    Duration = TimeSpan.FromSeconds(0.7),
+                };
+
+                DropDownMenu.BeginAnimation(Canvas.MarginProperty, thicknessAnimation);
             }
             else if (DropDownMenu.Margin == new Thickness(0, 466, 0, 0))
             {
-                // открываем с анимицией
-                // делаем кнопку активной
                 DropDownMenuSwitcher.IsChecked = false;
-                // забыл как эта штука называется
-                ThicknessAnimation animation = new ThicknessAnimation();
-                // изменяемое свойство
-                animation.From = DropDownMenu.Margin;
-                // на что изменяем с анимацией
-                animation.To = new Thickness(0, 286, 0, 0);
-                //время анимации
-                animation.Duration = TimeSpan.FromSeconds(0.5);
-                //старт анимиции
+
+                ThicknessAnimation animation = new ThicknessAnimation()
+                {
+                    From = DropDownMenu.Margin,
+                    To = new Thickness(0, 286, 0, 0),
+                    Duration = TimeSpan.FromSeconds(0.5)
+                };
+
                 DropDownMenu.BeginAnimation(Canvas.MarginProperty, animation);
             }
         }

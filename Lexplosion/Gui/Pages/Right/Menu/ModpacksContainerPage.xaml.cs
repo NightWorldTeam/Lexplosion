@@ -47,7 +47,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			BuildInstanceForm("OTH", 3, logo_path4, "Over the Horizont", "NightWorld", "Our offical testing launcher modpack...", instance_tags2);
 			BuildInstanceForm("TM", 3, logo_path5, "ThauMine", "Gornak40", "С этой сборкой вы с легкостью сможете погрузиться...", instance_tags3);*/
 
-			int i = 0;
+			var i = 0;
 			foreach(string instanceId in UserData.InstancesList.Keys)
             {
 				List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
@@ -80,129 +80,136 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId], "NightWorld", desc + "...", instance_tags1);
 
 				i++;
-
 			}
 		}
 
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
-		private void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<String> tags) 
-        {
+		private void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<String> tags)
+		{
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 
-			var canvas = new Canvas();
-			canvas.Height = 120;
-			canvas.Width = 600;
-			canvas.Margin = new Thickness(40, 0, 0, 0);
-			canvas.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719"));
-			canvas.Name = instance_name;
-
-			// Добавление в Столбики и Колноки в форме.
-            Grid.SetRow(canvas, row);
+			var canvas = new Canvas() 
+			{
+				Height = 120,
+				Width = 600,
+				Margin = new Thickness(40, 0, 0, 0),
+				Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719")),
+				Name = instance_name,
+			};
 
 			var grid = new Grid();
 			// Делаем разметку для элементов.
-			ColumnDefinition columnDefinition1 = new ColumnDefinition();
-			ColumnDefinition columnDefinition2 = new ColumnDefinition();
-			ColumnDefinition columnDefinition3 = new ColumnDefinition();
-			RowDefinition rowDefinition = new RowDefinition();
+			ColumnDefinition columnDefinition1 = new ColumnDefinition() 
+			{
+				Width = new GridLength(120, GridUnitType.Pixel)
+			};
 
-			// Устанавливаем параметры (Длина, Ширина)
-			columnDefinition1.Width = new GridLength(120, GridUnitType.Pixel);
-			columnDefinition2.Width = new GridLength(420, GridUnitType.Pixel);
-			columnDefinition3.Width = new GridLength(60, GridUnitType.Pixel);
-			rowDefinition.Height = new GridLength(120, GridUnitType.Pixel);
+			ColumnDefinition columnDefinition2 = new ColumnDefinition() 
+			{
+				Width = new GridLength(420, GridUnitType.Pixel)
+			};
 
-			// Устанавливаем разметку для формы
-			grid.ColumnDefinitions.Add(columnDefinition1);
-			grid.ColumnDefinitions.Add(columnDefinition2);
-			grid.ColumnDefinitions.Add(columnDefinition3);
-			grid.RowDefinitions.Add(rowDefinition);
+			ColumnDefinition columnDefinition3 = new ColumnDefinition() 
+			{
+				Width = new GridLength(60, GridUnitType.Pixel)
+			};
+
+			RowDefinition rowDefinition = new RowDefinition() 
+			{
+				Height = new GridLength(120, GridUnitType.Pixel)
+			};
 
 			// Instance Logo
-			var image = new Border();
-			image.Background = new ImageBrush(new BitmapImage(logo_path));
-			Grid.SetColumn(image, 0);
+			var image = new Border()
+			{
+				Background = new ImageBrush(new BitmapImage(logo_path))
+			};
 
 			// Titlew
-			var textContentGrid = new Grid();
-			textContentGrid.Margin = new Thickness(10, 0, 10, 0);
-			RowDefinition textContentRowDefinition1 = new RowDefinition();
-			RowDefinition textContentRowDefinition2 = new RowDefinition();
+			var textContentGrid = new Grid() 
+			{
+				Margin = new Thickness(10, 0, 10, 0)
+			};
 
-			textContentRowDefinition1.Height = new GridLength(30, GridUnitType.Pixel);
-			textContentRowDefinition2.Height = new GridLength(1, GridUnitType.Star);
+			RowDefinition textContentRowDefinition1 = new RowDefinition() 
+			{ 
+				Height = new GridLength(30, GridUnitType.Pixel) 
+			};
 
-			textContentGrid.RowDefinitions.Add(textContentRowDefinition1);
-			textContentGrid.RowDefinitions.Add(textContentRowDefinition2);
-
-			Grid.SetColumn(textContentGrid, 1);
+			RowDefinition textContentRowDefinition2 = new RowDefinition() 
+			{ 
+				Height = new GridLength(1, GridUnitType.Star) 
+			};
 
 			// Разметка для заголовков
 			var titleGrid = new Grid();
-			ColumnDefinition columnDefinitionTitle1 = new ColumnDefinition();
-			ColumnDefinition columnDefinitionTitle2 = new ColumnDefinition();
-			RowDefinition rowDefinitionTitle1 = new RowDefinition();
+			ColumnDefinition columnDefinitionTitle1 = new ColumnDefinition() 
+			{
+				Width = new GridLength(1, GridUnitType.Star)
+			};
 
-			columnDefinitionTitle1.Width = new GridLength(1, GridUnitType.Star);
-			columnDefinitionTitle2.Width = new GridLength(80, GridUnitType.Pixel);
-			rowDefinitionTitle1.Height = new GridLength(30, GridUnitType.Pixel);
+			ColumnDefinition columnDefinitionTitle2 = new ColumnDefinition() 
+			{
+				Width = new GridLength(80, GridUnitType.Pixel)
+			};
 
-			titleGrid.ColumnDefinitions.Add(columnDefinitionTitle1);
-			titleGrid.ColumnDefinitions.Add(columnDefinitionTitle2);
-			titleGrid.RowDefinitions.Add(rowDefinitionTitle1);
-
-			Grid.SetRow(titleGrid, 0);
+			RowDefinition rowDefinitionTitle1 = new RowDefinition()
+			{
+				Height = new GridLength(30, GridUnitType.Pixel)
+			};
 
 			// Заголовок - Название
-			var textBlockTitle = new TextBlock();
-			textBlockTitle.Text = title;
-			textBlockTitle.Padding = new Thickness(0);
-			textBlockTitle.FontSize = 22;
-			textBlockTitle.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff"));
-
-			Grid.SetColumn(textBlockTitle, 0);
+			var textBlockTitle = new TextBlock() 
+			{
+				Text = title,
+				Padding = new Thickness(0),
+				FontSize = 22,
+				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff"))
+			};
 
 			// Об Авторе
-			var textBlockAuthor = new TextBlock();
-			textBlockAuthor.Text = "by " + author;
-			textBlockAuthor.Padding = new Thickness(0);
-			textBlockAuthor.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#a9b1ba"));
-			textBlockAuthor.VerticalAlignment = VerticalAlignment.Center;
-			textBlockAuthor.FontFamily = new FontFamily(new Uri("pack://application:,,,/assets/fonts/"), "./#Casper Bold");
-			
-
-			Grid.SetColumn(textBlockAuthor, 1);
-
+			var textBlockAuthor = new TextBlock() 
+			{
+				Text = "by " + author,
+				Padding = new Thickness(0),
+				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#a9b1ba")),
+				VerticalAlignment = VerticalAlignment.Center,
+				FontFamily = new FontFamily(new Uri("pack://application:,,,/assets/fonts/"), "./#Casper Bold")
+			};
 
 			// Описание
-			var overviewGrid = new Grid();
-			overviewGrid.Margin = new Thickness(0,5,0,0);
-			RowDefinition overviewRowDefinition1 = new RowDefinition();
-			RowDefinition overviewRowDefinition2 = new RowDefinition();
-			overviewRowDefinition1.Height = new GridLength(35, GridUnitType.Pixel);
-			overviewRowDefinition2.Height = new GridLength(1, GridUnitType.Star);
+			var overviewGrid = new Grid()
+			{
+				Margin = new Thickness(0, 5, 0, 0)
+			};
 
-			overviewGrid.RowDefinitions.Add(overviewRowDefinition1);
-			overviewGrid.RowDefinitions.Add(overviewRowDefinition2);
+			RowDefinition overviewRowDefinition1 = new RowDefinition() 
+			{
+				Height = new GridLength(35, GridUnitType.Pixel)
+			};
 
-			Grid.SetRow(overviewGrid, 1);
-			
-			var textBlockOverview = new TextBlock();
-			textBlockOverview.Text = overview;
-			textBlockOverview.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff"));
-			textBlockOverview.HorizontalAlignment = HorizontalAlignment.Left;
-			textBlockOverview.FontSize = 16;
+			RowDefinition overviewRowDefinition2 = new RowDefinition()
+			{ 
+				Height = new GridLength(1, GridUnitType.Star)
+			};
 
-			Grid.SetColumn(textBlockOverview, 0);
-			Grid.SetRow(textBlockOverview, 0);
+			var textBlockOverview = new TextBlock() 
+			{ 
+				Text = overview,
+				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff")),
+				HorizontalAlignment = HorizontalAlignment.Left,
+				FontSize = 16
+			};
 
 			// панель с тегами
-			var tagsWrapPanel = new WrapPanel();
-			tagsWrapPanel.Margin = new Thickness(0,1,1,1);
-			tagsWrapPanel.Orientation = Orientation.Horizontal;
+			var tagsWrapPanel = new WrapPanel() 
+			{ 
+				Margin = new Thickness(0, 1, 1, 1),
+				Orientation = Orientation.Horizontal
+			};
 
 			// добавление тегов
 			foreach (string tag in tags) 
@@ -210,37 +217,65 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				tagsWrapPanel.Children.Add(GetTagsButton(tag));
 			}
 
-			Grid.SetRow(tagsWrapPanel, 1);
-
 			// панель с кнопками
 			var instanceButtonGrid = new Grid();
-			RowDefinition instanceButtonRowDefinition1 = new RowDefinition();
-			RowDefinition instanceButtonRowDefinition2 = new RowDefinition();
+			RowDefinition instanceButtonRowDefinition1 = new RowDefinition() 
+			{
+				Height = new GridLength(60, GridUnitType.Pixel)
+			};
+			RowDefinition instanceButtonRowDefinition2 = new RowDefinition() 
+			{
+				Height = new GridLength(60, GridUnitType.Pixel)
+			};
 
-			instanceButtonRowDefinition1.Height = new GridLength(60, GridUnitType.Pixel);
-			instanceButtonRowDefinition2.Height = new GridLength(60, GridUnitType.Pixel);
+			var downloadButton = new Button() 
+			{ 
+				Name = instance_name,
+				BorderThickness = new Thickness(2),
+				Style = (Style)Application.Current.FindResource("InstanceDonwloadButton")
+			};
+			downloadButton.Click += LaunchInstance;
 
+			var exportButton = new Button() 
+			{
+				
+				BorderThickness = new Thickness(2),
+				Style = (Style)Application.Current.FindResource("InstanceExportButton")
+			};
+			exportButton.Click += ExportInstance;
+
+			// Устанавливаем разметку для формы
+			grid.ColumnDefinitions.Add(columnDefinition1);
+			grid.ColumnDefinitions.Add(columnDefinition2);
+			grid.ColumnDefinitions.Add(columnDefinition3);
+			grid.RowDefinitions.Add(rowDefinition);
+			overviewGrid.RowDefinitions.Add(overviewRowDefinition1);
+			overviewGrid.RowDefinitions.Add(overviewRowDefinition2);
+			titleGrid.ColumnDefinitions.Add(columnDefinitionTitle1);
+			titleGrid.ColumnDefinitions.Add(columnDefinitionTitle2);
+			titleGrid.RowDefinitions.Add(rowDefinitionTitle1);
+			textContentGrid.RowDefinitions.Add(textContentRowDefinition1);
+			textContentGrid.RowDefinitions.Add(textContentRowDefinition2);
 			instanceButtonGrid.RowDefinitions.Add(instanceButtonRowDefinition1);
 			instanceButtonGrid.RowDefinitions.Add(instanceButtonRowDefinition2);
 
+			// Добавление в Столбики и Колноки в форме.
+			Grid.SetRow(canvas, row);
+			Grid.SetColumn(image, 0);
+			Grid.SetColumn(textContentGrid, 1);
+			Grid.SetRow(titleGrid, 0);
+			Grid.SetColumn(textBlockAuthor, 1);
+			Grid.SetRow(overviewGrid, 1);
+			Grid.SetColumn(textBlockTitle, 0);
+			Grid.SetRow(tagsWrapPanel, 1);
+			Grid.SetColumn(textBlockOverview, 0);
+			Grid.SetRow(textBlockOverview, 0);
 			Grid.SetColumn(instanceButtonGrid, 2);
-
-			var downloadButton = new Button();
-			downloadButton.Name = instance_name;
-			downloadButton.Click += LaunchInstance;
-			downloadButton.BorderThickness = new Thickness(2);
-			downloadButton.Style = (Style)Application.Current.FindResource("InstanceDonwloadButton");
-
-			var exportButton = new Button();
-			exportButton.Click += ExportInstance;
-			exportButton.BorderThickness = new Thickness(2);
-			exportButton.Style = (Style)Application.Current.FindResource("InstanceExportButton");
-
 			Grid.SetRow(downloadButton, 0);
 			Grid.SetRow(exportButton, 1);
 
 			// Добавление объектов в форму.
-			// Добавление дочерних элементов /
+			// Добавление дочерних элементов
 			instanceButtonGrid.Children.Add(exportButton);
 			instanceButtonGrid.Children.Add(downloadButton);
 			overviewGrid.Children.Add(tagsWrapPanel);
@@ -265,18 +300,22 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private Button GetTagsButton(string content)
         {
-			var tag = new Button();
-			tag.Name = "tag" + content.Replace('.', '_');
-			tag.Content = content;
-			tag.Style = (Style)Application.Current.FindResource("TagStyle");
+			var tag = new Button() 
+			{ 
+				Name = "tag" + content.Replace('.', '_'),
+				Content = content,
+				Style = (Style)Application.Current.FindResource("TagStyle"),
+			};
 			tag.Click += TagButtonClick;
 			return tag;
 		}
 
 		private RowDefinition GetRowDefinition()
         {
-			RowDefinition rowDefinition = new RowDefinition();
-			rowDefinition.Height = new GridLength(150, GridUnitType.Pixel);
+			RowDefinition rowDefinition = new RowDefinition() 
+			{
+				Height = new GridLength(150, GridUnitType.Pixel)
+			};
 			return rowDefinition;
 		}
 
