@@ -56,7 +56,11 @@ namespace Lexplosion
             WithDirectory.CheckLauncherAssets();
             UserData.instancesAssets = DataFilesManager.GetLauncherAssets();
 
-            Application.Current.Resources = new ResourceDictionary() { Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml") };
+            Application.Current.Resources = new ResourceDictionary() 
+            { 
+                Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml") 
+            };
+
             app.Run(new AuthWindow());
         }
 

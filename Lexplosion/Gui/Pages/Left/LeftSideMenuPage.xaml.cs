@@ -24,6 +24,7 @@ namespace Lexplosion.Gui.Pages
         private Dictionary<string, bool> IsInstalled = new Dictionary<string, bool>();
         private ToggleButton selected;
         private ToggleButton selectedFavoriteInstance;
+
         public LeftSideMenuPage()
         {
             // instance = this;
@@ -32,7 +33,14 @@ namespace Lexplosion.Gui.Pages
 
             foreach (string pack in UserData.InstancesList.Keys) //отрисовываем кнопки в цикле
             {
-                UpdatePacks(UserData.InstancesList[pack], pack);
+                ToggleButton button = UpdatePacks(UserData.InstancesList[pack], pack);
+
+                if(UserData.settings["selectedModpack"] == pack) // если выбранный модпак равен этому модпаку тогда присваиваем ему IsChecked = true
+                {
+                    button.IsChecked = true;
+                    selectedFavoriteInstance = button;
+
+                }
             }
 
             if (LaunchGame.isRunning)
@@ -50,7 +58,7 @@ namespace Lexplosion.Gui.Pages
         private Uri favoritesContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/FavoritesContainerPage.xaml");
         private Uri serversContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ServersContainerPage.xaml");
         
-        public void UpdatePacks(string instanceName, string pack)
+        public ToggleButton UpdatePacks(string instanceName, string pack)
         {
             ToggleButton instanceButton = new ToggleButton
             {
@@ -62,10 +70,11 @@ namespace Lexplosion.Gui.Pages
                 Name = pack
             };
 
-            selectedFavoriteInstance = instanceButton;
-
             instanceButton.Click += FavoriteInstanceButtonClick;
             FavoriteInstancesPanel.Children.Add(instanceButton);
+
+            return instanceButton;
+
         }
         private void FavoriteInstanceButtonClick(object sender, RoutedEventArgs e) 
         {

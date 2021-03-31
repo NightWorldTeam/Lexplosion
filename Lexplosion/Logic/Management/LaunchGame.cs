@@ -360,7 +360,7 @@ namespace Lexplosion.Logic.Management
 
             //выбранный модпак
             if (!UserData.settings.ContainsKey("selectedModpack"))
-                UserData.settings["selectedModpack"] = "0";
+                UserData.settings["selectedModpack"] = "";
         }
     }
 }

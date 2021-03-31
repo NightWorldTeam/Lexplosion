@@ -166,8 +166,8 @@
                             <Setter Property="BorderBrush" TargetName="Border" Value="#167FFC" />
                             <Setter Property="BorderThickness" TargetName="Border" Value="10,0,0,0" />
                             <Setter Property="Foreground" Value="#167FFC" />
-                            <Setter Property="FontWeight" Value="Bold" />
-                            <Setter TargetName="Content" Property="Margin" Value="18, 0, 18, 0" />
+                            <!--Setter Property="FontWeight" Value="Bold" />
+                            <Setter TargetName="Content" Property="Margin" Value="18, 0, 18, 0" /-->
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
