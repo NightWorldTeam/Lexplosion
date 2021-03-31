@@ -72,10 +72,14 @@
     </Page.Resources>
 
     <Grid>
-        <Canvas Background="#18191b"/>
+        <Canvas Background="#18191b">
+            <Canvas.Effect>
+                <DropShadowEffect ShadowDepth="0" Color="#36393f" Opacity="0.5"/>
+            </Canvas.Effect>
+        </Canvas>
         <StackPanel x:Name="LeftSideMenu" Margin="0,10,0,0" Visibility="Visible">
             <ToggleButton x:Name="Instances" IsChecked="True" Click="OpenInstances" Style="{StaticResource MWCBS1}">
-               Клиенты
+                Клиенты
             </ToggleButton>
             <ToggleButton x:Name="ServersProfile" Click="OnlineGame" Style="{StaticResource MWCBS1}">
                 Сетевая игра
@@ -87,17 +91,8 @@
                 Настройки
             </ToggleButton>
         </StackPanel>
-        <!-- mp_togglebutton.Width = 242;
-                mp_togglebutton.Height = 60;
-                mp_togglebutton.Content = UserData.PacksList[pack];
-                mp_togglebutton.Style = (Style)Application.Current.FindResource("MWCBS1");
-                mp_togglebutton.BorderThickness = new Thickness(10, 0, 0, 0);
-                mp_togglebutton.Name = pack;
-                mp_togglebutton.Click += ModpackButtonClick;-->
-
         <StackPanel Visibility="Hidden" x:Name="FavoriteInstancesPanel" Margin="0,10,0,0"/>
         <Canvas Margin="0,470,0,0" Visibility="Hidden"/>
-        
 
 
         <!-- Drop Down Menu -->

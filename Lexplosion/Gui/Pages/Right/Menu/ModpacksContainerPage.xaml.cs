@@ -91,13 +91,18 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 
-			var canvas = new Canvas() 
+			var canvas = new Canvas()
 			{
 				Height = 120,
 				Width = 600,
 				Margin = new Thickness(40, 0, 0, 0),
 				Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719")),
 				Name = instance_name,
+				Effect = new DropShadowEffect() {
+					ShadowDepth = 0,
+                    Color = (Color)ColorConverter.ConvertFromString("#151719"),
+					Opacity = 0.3
+				}
 			};
 
 			var grid = new Grid();
