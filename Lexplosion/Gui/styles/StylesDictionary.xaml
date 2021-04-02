@@ -135,40 +135,49 @@
         </Setter>
     </Style>
     <!-- Scroll Bar-->
-    
+
     <Style x:Key="MWCBS1" TargetType="{x:Type ToggleButton}">
-        <!-- <Setter Property="" Value=""/> #4cb2d6-->
         <Setter Property="Width" Value="244" />
         <Setter Property="Height" Value="60" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="BorderThickness" Value="10,0,0,0" />
-        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontSize" Value="22" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border x:Name="Border" Background="Transparent" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent" Width="244"  HorizontalAlignment="Left">
-                        <ContentPresenter x:Name="Content" Margin="25,0,25,0"
+                        <Grid ShowGridLines="False" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0">
+                                <Canvas x:Name="BorderButton" Width="10" Height="60" Background="Transparent" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Grid.Column="1">
+                                <ContentPresenter x:Name="Content" Margin="25,0,25,0"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Left"
                                 RecognizesAccessKey="True" />
+                            </Border>
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="True">
-                            <!-- 
-                            Colors:
-                            #595BD4 
-                            #167FFC
-                            #FD3259
-                            #23DCF9
-                            -->
-                            <Setter Property="BorderBrush" TargetName="Border" Value="#167FFC" />
-                            <Setter Property="BorderThickness" TargetName="Border" Value="10,0,0,0" />
-                            <Setter Property="Foreground" Value="#167FFC" />
-                            <!--Setter Property="FontWeight" Value="Bold" />
-                            <Setter TargetName="Content" Property="Margin" Value="18, 0, 18, 0" /-->
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="BorderButton" Property="Height" Value="0" />
                         </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Foreground" Value="#167FFC" />
+                            <Setter TargetName="BorderButton" Property="Background" Value="#167FFC" />
+                        </Trigger>
+                        <EventTrigger RoutedEvent="Button.Click">
+                            <BeginStoryboard>
+                                <Storyboard TargetProperty="Height" TargetName="BorderButton">
+                                    <DoubleAnimation From="0" To="60" Duration="0:0:0.34" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -298,8 +307,8 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border>
                         <Grid>
-                            <Border x:Name="BKG" Background="{TemplateBinding Background}"/>
-                            <TextBlock x:Name="Text" Text="More" Foreground="White" FontWeight="Bold" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                            <Border x:Name="BKG" Background="{TemplateBinding Background}" />
+                            <TextBlock x:Name="Text" Text="More" Foreground="White" FontWeight="Bold" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -318,5 +327,8 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="InstanceProgressBar" TargetType="{x:Type ProgressBar}">
     </Style>
 </ResourceDictionary>

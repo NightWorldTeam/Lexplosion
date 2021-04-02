@@ -28,15 +28,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// </summary>
     public partial class ModpacksContainerPage : Page
     {
-		/*private Uri logo_path1 = new Uri("pack://application:,,,/assets/images/icons/eos.png");
-		private Uri logo_path2 = new Uri("pack://application:,,,/assets/images/icons/lt.png");
-		private Uri logo_path3 = new Uri("pack://application:,,,/assets/images/icons/tn.png");
-		private Uri logo_path4 = new Uri("pack://application:,,,/assets/images/icons/oth.png");
-		private Uri logo_path5 = new Uri("pack://application:,,,/assets/images/icons/tm.png");
-		private List<String> instance_tags1 = new List<String>() {"1.10.2", "Mods", "NightWorld"};
-		private List<String> instance_tags2 = new List<String>() {"1.7.10", "Mods", "NightWorld" };
-		private List<String> instance_tags3 = new List<String>() {"1.12.2", "Mods", "Magic"};*/
-
 		public static ModpacksContainerPage obj = null;
 
 		public ModpacksContainerPage()
@@ -44,15 +35,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
             InitializeComponent();
 
 			obj = this;
-
-			// row - колонка должна быть от нуля до количества сборок - 1.
-			/*BuildInstanceForm("EOF", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1);
-			BuildInstanceForm("LT", 1, logo_path2, "Long Tech", "NightWorld", "Our offical testing launcher modpack...", instance_tags2);
-			BuildInstanceForm("TN", 2, logo_path3, "Transport Network", "NightWorld", "Our offical testing launcher modpack...", instance_tags1);
-			BuildInstanceForm("OTH", 3, logo_path4, "Over the Horizont", "NightWorld", "Our offical testing launcher modpack...", instance_tags2);
-			BuildInstanceForm("TM", 3, logo_path5, "ThauMine", "Gornak40", "С этой сборкой вы с легкостью сможете погрузиться...", instance_tags3);*/
-
 			var i = 0;
+
 			foreach(string instanceId in UserData.InstancesList.Keys)
             {
 				List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
@@ -94,7 +78,10 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 					i++;
 				}
-                catch { }
+                catch 
+				{ 
+
+				}
 
 			}
 
@@ -105,6 +92,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		public void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<string> tags)
 		{
+			/// "EOF", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 
@@ -117,7 +105,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Name = instance_name,
 				Effect = new DropShadowEffect() {
 					ShadowDepth = 0,
-                    Color = (Color)ColorConverter.ConvertFromString("#151719"),
+					Color = (Color)ColorConverter.ConvertFromString("#151719"),
 					Opacity = 0.3
 				}
 			};
@@ -270,6 +258,18 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			};
 			exportButton.Click += ExportInstance;
 
+			var progressBar = new ProgressBar()
+			{
+				Minimum = 0,
+				Maximum = 100,
+				Value = 48,
+				Width = 400,
+				Height = 60,
+				Visibility = Visibility.Hidden
+				//Style = (Style)Application.Current.FindResource("InstanceProgressBar")
+			};
+
+
 			// Устанавливаем разметку для формы
 			grid.ColumnDefinitions.Add(columnDefinition1);
 			grid.ColumnDefinitions.Add(columnDefinition2);
@@ -299,7 +299,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			Grid.SetColumn(instanceButtonGrid, 2);
 			Grid.SetRow(downloadButton, 0);
 			Grid.SetRow(exportButton, 1);
-
+			Grid.SetColumn(progressBar, 1);
 			// Добавление объектов в форму.
 			// Добавление дочерних элементов
 			instanceButtonGrid.Children.Add(exportButton);
@@ -313,6 +313,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			grid.Children.Add(instanceButtonGrid);
 			grid.Children.Add(textContentGrid);
 			grid.Children.Add(moreButton);
+			grid.Children.Add(progressBar);
 			canvas.Children.Add(grid);
 			InstanceGrid.Children.Add(canvas);
 
@@ -347,7 +348,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void TagButtonClick(object sender, RoutedEventArgs e) 
 		{
-
+			string tagName = ((Button)sender).Name;
+			MessageBox.Show(tagName);
 		}
 
 		private void LaunchInstance(object sender, RoutedEventArgs e) 

@@ -139,7 +139,7 @@
         </Style>
 
         <!-- Switcher Style -->
-        <Style x:Key="MWCBS1" TargetType="{x:Type ToggleButton}">
+        <Style x:Key="MWCBS2" TargetType="{x:Type ToggleButton}">
             <!-- <Setter Property="" Value=""/> #4cb2d6-->
             <Setter Property="Width" Value="244"/>
             <Setter Property="Height" Value="38"/>
