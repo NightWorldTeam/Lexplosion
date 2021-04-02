@@ -291,4 +291,32 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="InstanceMoreButton" TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border>
+                        <Grid>
+                            <Border x:Name="BKG" Background="{TemplateBinding Background}"/>
+                            <TextBlock x:Name="Text" Text="More" Foreground="White" FontWeight="Bold" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="Text" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="BKG" Property="Effect">
+                                <Setter.Value>
+                                    <BlurEffect />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Text" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

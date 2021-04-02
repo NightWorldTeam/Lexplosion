@@ -144,11 +144,15 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Height = new GridLength(120, GridUnitType.Pixel)
 			};
 
+
 			// Instance Logo
-			var image = new Border()
+			var moreButton = new Button()
 			{
-				Background = new ImageBrush(new BitmapImage(logo_path))
+				Name = instance_name + "More",
+				Background = new ImageBrush(new BitmapImage(logo_path)),
+				Style = (Style)Application.Current.FindResource("InstanceMoreButton")
 			};
+			moreButton.Click += MoreButtonClick;
 
 			// Titlew
 			var textContentGrid = new Grid() 
@@ -252,7 +256,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			var downloadButton = new Button() 
 			{ 
-				Name = instance_name,
+				Name = instance_name + "Download",
 				BorderThickness = new Thickness(2),
 				Style = (Style)Application.Current.FindResource("InstanceDonwloadButton")
 			};
@@ -260,7 +264,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			var exportButton = new Button() 
 			{
-				
+				Name = instance_name + "Export",
 				BorderThickness = new Thickness(2),
 				Style = (Style)Application.Current.FindResource("InstanceExportButton")
 			};
@@ -283,7 +287,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			// Добавление в Столбики и Колноки в форме.
 			Grid.SetRow(canvas, row);
-			Grid.SetColumn(image, 0);
+			Grid.SetColumn(moreButton, 0);
 			Grid.SetColumn(textContentGrid, 1);
 			Grid.SetRow(titleGrid, 0);
 			Grid.SetColumn(textBlockAuthor, 1);
@@ -308,7 +312,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			textContentGrid.Children.Add(titleGrid);
 			grid.Children.Add(instanceButtonGrid);
 			grid.Children.Add(textContentGrid);
-			grid.Children.Add(image);
+			grid.Children.Add(moreButton);
 			canvas.Children.Add(grid);
 			InstanceGrid.Children.Add(canvas);
 
@@ -348,10 +352,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void LaunchInstance(object sender, RoutedEventArgs e) 
 		{
-			string instanceId = ((Button)sender).Name;
+			string instanceId = ((Button)sender).Name.Replace("download", "");
 			ManageLogic.СlientManager(instanceId);
-
-
 		}
 
 		private void ExportInstance(object sender, RoutedEventArgs e)
@@ -359,5 +361,10 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		}
 
+		private void MoreButtonClick(object sender, RoutedEventArgs e) 
+		{
+			string instanceId = ((Button)sender).Name;
+			MessageBox.Show(instanceId);
+		}
 	}
 }
