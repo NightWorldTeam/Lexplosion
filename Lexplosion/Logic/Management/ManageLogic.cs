@@ -26,6 +26,7 @@ namespace Lexplosion.Logic.Management
                     Dictionary<string, string> temp = DataFilesManager.GetModpaksList();
                     foreach(string key in temp.Keys)
                     {
+
                         if (!UserData.InstancesList.ContainsKey(key))
                         {
                             UserData.InstancesList[key] = temp[key];

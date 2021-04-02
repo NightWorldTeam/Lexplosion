@@ -12,6 +12,8 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -1007,17 +1009,30 @@ namespace Lexplosion.Logic.FileSystem
                 return 1;
             }
 
+            if (string.IsNullOrEmpty(instanceInfo["gameVersion"]) || string.IsNullOrEmpty(instanceInfo["name"]))
+            {
+                Directory.Delete(dir, true);
+                return 1;
+            }
+
             SHA1 sha = new SHA1Managed();
             Random rnd = new Random();
 
-            string instanceId;
-            do
+            //генерация id модпака
+            string instanceId = instanceInfo["name"];
+            instanceId = instanceId.Replace(" ", "_");
+
+            if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
             {
-                instanceId = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(instanceInfo["name"] + ":" + rnd.Next(0, 9999))));
-                instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
-                instanceId = instanceId.ToLower();
+                do
+                {
+                    instanceId = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(instanceInfo["name"] + ":" + rnd.Next(0, 9999))));
+                    instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
+                    instanceId = instanceId.ToLower();
+                }
+                while (UserData.InstancesList.ContainsKey(instanceId));
+
             }
-            while (UserData.InstancesList.ContainsKey(instanceId));
 
             string addr = dir + "files/";
             string targetDir = directory + "/instances/" + instanceId + "/";
@@ -1069,6 +1084,12 @@ namespace Lexplosion.Logic.FileSystem
             SaveModpaksList(UserData.InstancesList);
 
             Directory.Delete(dir, true);
+
+            if(Gui.Pages.Right.Menu.ModpacksContainerPage.obj != null)
+            {
+                Uri logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+                Gui.Pages.Right.Menu.ModpacksContainerPage.obj.BuildInstanceForm(instanceId, UserData.InstancesList.Count - 1, logoPath, UserData.InstancesList[instanceId], "NightWorld", "test", new List<string>());
+            }
 
             return 0;
         }

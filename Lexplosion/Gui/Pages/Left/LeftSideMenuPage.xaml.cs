@@ -182,6 +182,7 @@ namespace Lexplosion.Gui.Pages
 
         private void Network(object sender, RoutedEventArgs e)
         {
+            //MessageBox.Show(WithDirectory.ImportInstance(@"C:\Users\Putin\Desktop\struct\lt.zip", out _).ToString());
 
         }
 

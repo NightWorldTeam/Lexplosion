@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using System;
@@ -36,9 +37,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		private List<String> instance_tags2 = new List<String>() {"1.7.10", "Mods", "NightWorld" };
 		private List<String> instance_tags3 = new List<String>() {"1.12.2", "Mods", "Magic"};*/
 
+		public static ModpacksContainerPage obj = null;
+
 		public ModpacksContainerPage()
         {
             InitializeComponent();
+
+			obj = this;
 
 			// row - колонка должна быть от нуля до количества сборок - 1.
 			/*BuildInstanceForm("EOF", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1);
@@ -53,40 +58,52 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
 
 				Uri logoPath = null;
-				string dir = UserData.settings["gamePath"] + "/launcherAssets/" + UserData.instancesAssets[instanceId].mainImage;
+				string desc = "";
 
-				if (File.Exists(dir))
+				if (UserData.instancesAssets.ContainsKey(instanceId))
                 {
-					logoPath = new Uri(dir);
+					string dir = UserData.settings["gamePath"] + "/launcherAssets/" + UserData.instancesAssets[instanceId].mainImage;
+
+					if (File.Exists(dir))
+					{
+						logoPath = new Uri(dir);
+					}
+					else
+					{
+						logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+					}
+
+					if (UserData.instancesAssets[instanceId].description.Length > 36)
+					{
+						desc = UserData.instancesAssets[instanceId].description.Substring(0, 36);
+					}
+					else
+					{
+						desc = UserData.instancesAssets[instanceId].description;
+					}
+
 				}
-                else
-                {
+				else
+				{
 					logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 				}
 
-				string desc;
-
-				if(UserData.instancesAssets[instanceId].description.Length > 36)
+                try
                 {
-					desc = UserData.instancesAssets[instanceId].description.Substring(0, 36);
+					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId], "NightWorld", desc + "...", instance_tags1);
 
+					i++;
 				}
-                else
-                {
-					desc = UserData.instancesAssets[instanceId].description;
+                catch { }
 
-				}
-
-				BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId], "NightWorld", desc + "...", instance_tags1);
-
-				i++;
 			}
+
 		}
 
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
-		private void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<String> tags)
+		public void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<string> tags)
 		{
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
