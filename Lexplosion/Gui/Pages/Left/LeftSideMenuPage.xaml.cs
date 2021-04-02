@@ -31,11 +31,13 @@ namespace Lexplosion.Gui.Pages
             InitializeComponent();
             selected = this.Instances;
 
-            foreach (string pack in UserData.InstancesList.Keys) //отрисовываем кнопки в цикле
+            foreach (string pack in UserData.InstancesList.Keys)
             {
+                //отрисовываем кнопки в цикле
                 ToggleButton button = UpdatePacks(UserData.InstancesList[pack], pack);
 
-                if(UserData.settings["selectedModpack"] == pack) // если выбранный модпак равен этому модпаку тогда присваиваем ему IsChecked = true
+                // если выбранный модпак равен этому модпаку тогда присваиваем ему IsChecked = true
+                if (UserData.settings["selectedModpack"] == pack) 
                 {
                     button.IsChecked = true;
                     selectedFavoriteInstance = button;
@@ -57,6 +59,7 @@ namespace Lexplosion.Gui.Pages
         private Uri modpacksContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ModpacksContainerPage.xaml");
         private Uri favoritesContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/FavoritesContainerPage.xaml");
         private Uri serversContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ServersContainerPage.xaml");
+        private Uri settingsContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/SettingsContainerPage.xaml");
         
         public ToggleButton UpdatePacks(string instanceName, string pack)
         {
@@ -84,15 +87,12 @@ namespace Lexplosion.Gui.Pages
                 button.IsChecked = true;
                 selected.IsChecked = false;
                 selected = button;
-
                 selectedInstance = button.Name;
-
             }
             else //костыль. Что бы при повтороном клике IsChecked не слетало
             {
                 button.IsChecked = true;
             }
-
         }
 
         private void OpenInstances(object sender, RoutedEventArgs e) 
@@ -131,15 +131,12 @@ namespace Lexplosion.Gui.Pages
 
         private void Favorites(object sender, RoutedEventArgs e)
         {
-            FavoriteInstancesPanel.Visibility = Visibility.Visible;
-            LeftSideMenu.Visibility = Visibility.Hidden;
-            MainWindow.instance.RightSideFrame.Source = instancePage;
-
             ToggleButton button = (ToggleButton)sender;
             if (button.Name != selected.Name)
             {
-                selectedFavoriteInstance.IsChecked = true;
-                selected = selectedFavoriteInstance;
+                button.IsChecked = true;
+                selected.IsChecked = false;
+                selected = button;
 
             }
             else //костыль. Что бы при повтороном клике IsChecked не слетало
@@ -147,6 +144,7 @@ namespace Lexplosion.Gui.Pages
                 button.IsChecked = true;
             }
 
+            MainWindow.instance.RightSideFrame.Source = favoritesContainerPage;
         }
 
         private void Settings(object sender, RoutedEventArgs e)
@@ -163,6 +161,7 @@ namespace Lexplosion.Gui.Pages
                 button.IsChecked = true;
             }
 
+            MainWindow.instance.RightSideFrame.Source = settingsContainerPage;
         }
 
         private void UserProfile(object sender, RoutedEventArgs e)
@@ -183,7 +182,6 @@ namespace Lexplosion.Gui.Pages
         private void Network(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show(WithDirectory.ImportInstance(@"C:\Users\Putin\Desktop\struct\lt.zip", out _).ToString());
-
         }
 
         private void MenuArrow(object sender, RoutedEventArgs e)
