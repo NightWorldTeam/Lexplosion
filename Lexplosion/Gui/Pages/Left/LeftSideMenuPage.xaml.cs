@@ -60,16 +60,31 @@ namespace Lexplosion.Gui.Pages
         private Uri favoritesContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/FavoritesContainerPage.xaml");
         private Uri serversContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/ServersContainerPage.xaml");
         private Uri settingsContainerPage = new Uri("pack://application:,,,/Gui/Pages/Right/Menu/SettingsContainerPage.xaml");
-        
+
+        //Надо дописать динамическое добавление кнопок меню.
+        // Или можно уже не добавлять
+        private ToggleButton GetLeftSideMenu()
+        {
+            ToggleButton toggleButton = new ToggleButton()
+            {
+                Width = 242,
+                Height = 60,
+                Content = " ",
+                Style = (Style)Application.Current.FindResource("MWCBS1"),
+                Name = "  "
+            };
+
+            return toggleButton;
+        }
+
         public ToggleButton UpdatePacks(string instanceName, string pack)
         {
-            ToggleButton instanceButton = new ToggleButton
+            ToggleButton instanceButton = new ToggleButton()
             {
                 Width = 242,
                 Height = 60,
                 Content = instanceName,
                 Style = (Style)Application.Current.FindResource("MWCBS1"),
-                BorderThickness = new Thickness(10, 0, 0, 0),
                 Name = pack
             };
 
@@ -77,7 +92,6 @@ namespace Lexplosion.Gui.Pages
             FavoriteInstancesPanel.Children.Add(instanceButton);
 
             return instanceButton;
-
         }
         private void FavoriteInstanceButtonClick(object sender, RoutedEventArgs e) 
         {
@@ -144,6 +158,8 @@ namespace Lexplosion.Gui.Pages
                 button.IsChecked = true;
             }
 
+            LeftSideMenu.Visibility = Visibility.Hidden;
+            FavoriteInstancesPanel.Visibility = Visibility.Visible;
             MainWindow.instance.RightSideFrame.Source = favoritesContainerPage;
         }
 

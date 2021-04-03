@@ -91,7 +91,9 @@
                 Избранное
             </ToggleButton>
         </StackPanel>
-        <StackPanel Visibility="Hidden" x:Name="FavoriteInstancesPanel" Margin="0,10,0,0"/>
+        <StackPanel Visibility="Hidden" x:Name="FavoriteInstancesPanel" Margin="0,10,0,0">
+            <Button HorizontalAlignment="Left" Content=" &#8592;        Избранное        " FontWeight="Bold" Background="#18191b" BorderThickness="0" Foreground="White" FontSize="20" Margin="10,0,0,10"/>
+        </StackPanel>
         <Canvas Margin="0,470,0,0" Visibility="Hidden"/>
 
 
