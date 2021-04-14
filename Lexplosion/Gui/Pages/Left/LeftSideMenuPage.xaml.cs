@@ -1,12 +1,8 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
-using Lexplosion.Logic;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;

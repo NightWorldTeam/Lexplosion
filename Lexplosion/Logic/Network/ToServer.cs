@@ -6,7 +6,6 @@ using System.Text;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
-using System.Collections;
 using Lexplosion.Global;
 
 namespace Lexplosion.Logic.Network

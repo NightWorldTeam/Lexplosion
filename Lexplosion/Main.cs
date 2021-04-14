@@ -4,11 +4,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Windows;
-using Lexplosion.Gui;
-using Lexplosion.Logic;
 using Lexplosion.Properties;
-using Lexplosion.Logic.Objects;
-using System.Threading;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
@@ -18,7 +14,7 @@ using Lexplosion.Logic.Network;
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
  * Последнее обновление в феврале 2021 года
- * Главный исполняемый файл лаунчера
+ * Главный исполняемый файл лаунчера. Здесь людей ебут
  */
 
 namespace Lexplosion

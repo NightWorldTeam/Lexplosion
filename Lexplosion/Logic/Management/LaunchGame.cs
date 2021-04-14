@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows;
 using Microsoft.Win32;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Gui.Windows;

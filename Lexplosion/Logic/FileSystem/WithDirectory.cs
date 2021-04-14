@@ -11,9 +11,8 @@ using System.Threading;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network;
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using System.Text.RegularExpressions;
-using System.Windows;
+using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -22,7 +21,7 @@ namespace Lexplosion.Logic.FileSystem
         public static string directory;
         public static int countFiles;
 
-        private static class Updates //класс, хранящий всё, что нужно обновить. Метод Check в него кладет, а метод Update - достает 
+        private struct Updates //структура, хранящая всё, что нужно обновить. Метод Check в неё кладет, а метод Update - достает 
         {
             static public Dictionary<string, List<string>> data = new Dictionary<string, List<string>>();
             static public List<string> natives = new List<string>();
@@ -746,7 +745,8 @@ namespace Lexplosion.Logic.FileSystem
                 wc.DownloadFile(LaunсherSettings.serverUrl, directory + "/UpgradeTool.exe");
                 return true;
 
-            } catch { return false; }
+            } 
+            catch { return false; }
 
         }   
 

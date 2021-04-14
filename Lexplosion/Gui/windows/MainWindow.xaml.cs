@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic;
-using System.Windows.Controls.Primitives;
-using System.Threading;
-using System.Windows.Media.Animation;
 using Lexplosion.Gui.Pages.Right.Instance;
 
 namespace Lexplosion.Gui.Windows

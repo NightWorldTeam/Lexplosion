@@ -2,10 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Lexplosion.Global;
-using Lexplosion.Logic;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 
