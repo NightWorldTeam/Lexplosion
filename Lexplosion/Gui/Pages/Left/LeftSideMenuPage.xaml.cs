@@ -41,9 +41,10 @@ namespace Lexplosion.Gui.Pages
                 }
             }
 
-            if (LaunchGame.isRunning)
+            if (LaunchGame.runnigInstance != "")
             {
                 //selectedInstance
+                // TODO: тут определить какой модпак запущен и ему кнопку играть заменить на кнопку завершить
             }
         }
 

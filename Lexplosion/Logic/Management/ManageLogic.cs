@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
 
-
 namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
@@ -45,10 +44,11 @@ namespace Lexplosion.Logic.Management
 
         public static void СlientManager(string instanceId)
         {
-
-            if (LaunchGame.isRunning)
+            if (LaunchGame.runnigInstance != "")
             {
                 LaunchGame.KillProcess();
+                Gui.Pages.Right.Menu.ModpacksContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+
                 return;
             }
 
@@ -163,6 +163,8 @@ namespace Lexplosion.Logic.Management
                             //InitProgressBar.Visibility = Visibility.Collapsed;
                         });
                     }
+
+                    Gui.Pages.Right.Menu.ModpacksContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
 
                 }
 

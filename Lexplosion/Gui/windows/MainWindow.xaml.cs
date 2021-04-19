@@ -282,6 +282,7 @@ namespace Lexplosion.Gui.Windows
 
         public void SetMessageBox(string message, string title = "Ошибка")
         {
+            MessageBox.Show(message + " " + title);
             //this.GridMessageBox.Visibility = Visibility.Visible;
             //this.TextMarker.Text = message;
             //this.MessageTitle.Text = title;

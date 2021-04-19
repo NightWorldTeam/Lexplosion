@@ -8,6 +8,7 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using System.Windows;
 
 namespace Lexplosion.Logic.Management
 {
@@ -15,7 +16,6 @@ namespace Lexplosion.Logic.Management
     static class LaunchGame
     {
         private static Process process = new Process();
-        public static bool isRunning = false;
         public static string runnigInstance = "";
 
         public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, List<string> libraries, Dictionary<string, string> instanceSettings)
@@ -183,22 +183,25 @@ namespace Lexplosion.Logic.Management
 
                     process.Dispose();
                     process = new Process();
-                    isRunning = false;
                     runnigInstance = "";
 
                 };
 
                 process.Start();
                 process.BeginOutputReadLine();
-                isRunning = true;
 
                 return true;
 
-            } catch {
+            } 
+            catch 
+            {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
                     MainWindow.Obj.SetMessageBox("Сбой запуска! Не удалось запустить процесс.");
                 });
+
+                runnigInstance = "";
+
                 return false;
             }
 
@@ -297,10 +300,13 @@ namespace Lexplosion.Logic.Management
 
         public static void KillProcess()
         {
-            process.Kill();
-            process.Dispose();
+            try
+            {
+                process.Kill();
+                process.Dispose();
+            } catch { }
+
             process = new Process();
-            isRunning = false;
             runnigInstance = "";
         }
 
