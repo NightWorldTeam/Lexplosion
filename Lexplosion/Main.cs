@@ -69,17 +69,21 @@ namespace Lexplosion
                 int upgradeToolVersion = Int32.Parse(ToServer.HttpPost("windows/upgradeToolVersion.html"));
 
                 // скачивание и проверка версии UpgradeTool.exe
-                WebClient wc = new WebClient();
-                if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
+                using (WebClient wc = new WebClient())
                 {
-                    File.Delete(UserData.settings["gamePath"] + "/UpgradeTool.exe");
-                    wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
-                    DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
+                    if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
+                    {
+                        File.Delete(UserData.settings["gamePath"] + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
+                        DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
 
-                } else if (!File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe")) {
+                    }
+                    else if (!File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
+                    {
+                        wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
+                        DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
+                    }
 
-                    wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
-                    DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
                 }
 
                 // запуск UpgradeTool.exe
@@ -90,7 +94,9 @@ namespace Lexplosion
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();
 
-            } catch {
+            } 
+            catch 
+            {
                 MessageBox.Show("Не удалось обновить лаунчер!");
             }
 
@@ -100,7 +106,10 @@ namespace Lexplosion
         {
 
             if (args.Name.Contains("Newtonsoft.Json"))
+            {
                 return Assembly.Load(Resources.NewtonsoftJson);
+
+            }
 
             return null;
         }

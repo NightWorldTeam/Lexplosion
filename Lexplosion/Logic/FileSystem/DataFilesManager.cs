@@ -38,9 +38,11 @@ namespace Lexplosion.Logic.FileSystem
                 if (settings != null)
                 {
                     foreach (string key in data.Keys)
+                    {
                         settings[key] = data[key];
 
-
+                    }
+                        
                 }
                 else
                 {
@@ -252,6 +254,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         ["name"] = data.version.minecraftJar.name
                     },
+
                     arguments = data.version.arguments,
                     gameVersion = data.version.gameVersion,
                     assetsVersion = data.version.assetsVersion,

@@ -45,7 +45,9 @@ namespace Lexplosion.Logic.Network
 
                 return list;
 
-            } catch {
+            } 
+            catch 
+            {
                 return new Dictionary<string, string>();
             }
 

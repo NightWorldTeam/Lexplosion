@@ -33,11 +33,10 @@ namespace Lexplosion.Logic.FileSystem
             static public List<string> oldFiles = new List<string>();
         }
 
-        private class LauncherAssets //этот класс нужен для декодирования json
+        private struct LauncherAssets //этот класс нужен для декодирования json
         {
-            public int version = 0;
+            public int version;
             public Dictionary<string, InstanceAssets> data;
-
         }
 
         public static void Create(string path)
@@ -710,6 +709,8 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
+            wc.Dispose();
+
             //сохраняем файл с последними обновлениями 
             try
             {
@@ -741,9 +742,12 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                WebClient wc = new WebClient();
-                wc.DownloadFile(LaunсherSettings.serverUrl, directory + "/UpgradeTool.exe");
-                return true;
+                using (WebClient wc = new WebClient())
+                {
+                    wc.DownloadFile(LaunсherSettings.serverUrl, directory + "/UpgradeTool.exe");
+                    return true;
+
+                }            
 
             } 
             catch { return false; }
@@ -844,13 +848,15 @@ namespace Lexplosion.Logic.FileSystem
                             file.Delete();
                     }
 
-                    WebClient wc = new WebClient();
-                    wc.DownloadFile(LaunсherSettings.serverUrl + "/upload/images.zip", directory + "/temp/launcherAssets-Images.zip");
+                    using(WebClient wc = new WebClient())
+                    {
+                        wc.DownloadFile(LaunсherSettings.serverUrl + "/upload/images.zip", directory + "/temp/launcherAssets-Images.zip");
 
-                    ZipFile.ExtractToDirectory(directory + "/temp/launcherAssets-Images.zip", directory + "/launcherAssets");
-                    File.Delete(directory + "/temp/launcherAssets-Images.zip");
+                        ZipFile.ExtractToDirectory(directory + "/temp/launcherAssets-Images.zip", directory + "/launcherAssets");
+                        File.Delete(directory + "/temp/launcherAssets-Images.zip");
 
-                    wc.DownloadFile(LaunсherSettings.serverUrl + "/upload/images.zip", directory + "/temp/launcherAssets-Images.zip");
+                        wc.DownloadFile(LaunсherSettings.serverUrl + "/upload/images.zip", directory + "/temp/launcherAssets-Images.zip");
+                    }
 
                     UserData.settings["launcherAssetsV"] = data.version.ToString();
 

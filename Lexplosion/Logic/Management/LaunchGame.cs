@@ -181,6 +181,7 @@ namespace Lexplosion.Logic.Management
                         //MainWindow.window.ClientManagement.IsEnabled = true;
                     });
 
+                    process.Dispose();
                     process = new Process();
                     isRunning = false;
                     runnigInstance = "";
@@ -297,7 +298,10 @@ namespace Lexplosion.Logic.Management
         public static void KillProcess()
         {
             process.Kill();
+            process.Dispose();
+            process = new Process();
             isRunning = false;
+            runnigInstance = "";
         }
 
         public static void SetDefaultSettings()
