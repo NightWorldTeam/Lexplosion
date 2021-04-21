@@ -27,6 +27,8 @@ namespace Lexplosion.Gui.Pages
             InitializeComponent();
             selected = this.Instances;
 
+            NameBlock.Text = UserData.login;
+
             foreach (string pack in UserData.InstancesList.Keys)
             {
                 //отрисовываем кнопки в цикле

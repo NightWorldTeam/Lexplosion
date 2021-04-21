@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 
 namespace Lexplosion.Gui.Windows
@@ -60,53 +61,42 @@ namespace Lexplosion.Gui.Windows
         private void Auth(object sender, RoutedEventArgs e)
         {
 
-            login = TBLogin.Text.ToString();
-
-            if (TBPassword.Password.ToString() != "" && TBPassword.Password.ToString() != null && TBPassword.Password.ToString().Trim() != string.Empty)
-                password = TBPassword.Password.ToString();
-
-            if (password == Password_WaterMark || password == null || password.Trim() == string.Empty || login == Login_WaterMark || login == null || login.Trim() == string.Empty)
+            if (!UserData.isAuthorized) //на всякий случай проверяем не авторизирован ли пользователь уже
             {
-                SetMessageBox("Заполните все поля!");
-                return;
-            }
+                login = TBLogin.Text.ToString();
 
-            Dictionary<string, string> response = ToServer.Authorization(login, password);
+                if (TBPassword.Password.ToString() != "" && TBPassword.Password.ToString() != null && TBPassword.Password.ToString().Trim() != string.Empty)
+                    password = TBPassword.Password.ToString();
 
-            if (response != null)
-            {
-                if (response["status"] == "OK")
+                if (password == Password_WaterMark || password == null || password.Trim() == string.Empty || login == Login_WaterMark || login == null || login.Trim() == string.Empty)
                 {
-                    UserData.login = response["login"];
-                    UserData.UUID = response["UUID"];
-                    UserData.accessToken = response["accesToken"];
-
-                    if (SaveMe.IsChecked == true)
-                    {
-                        UserData.settings["login"] = login;
-                        UserData.settings["password"] = password;
-
-                        DataFilesManager.SaveSettings(UserData.settings);
-                    }
-
-                    ChangeWindow(1);
-
-                }
-                else
-                {
-                    SetMessageBox("Неверный логин или пароль!");
+                    SetMessageBox("Заполните все поля!");
+                    return;
                 }
 
+                AuthCode code = ManageLogic.Auth(login, password, SaveMe.IsChecked == true);
+
+                switch (code)
+                {
+                    case AuthCode.Successfully:
+                        ChangeWindow(1);
+                        break;
+
+                    case AuthCode.DataError:
+                        SetMessageBox("Неверный логин или пароль!");
+                        break;
+
+                    case AuthCode.NoConnect:
+                        SetMessageBox("Нет соединения с сервером!");
+                        break;
+                }
             }
-            else
-            {
-                SetMessageBox("Нет соединения с сервером!");
-            }
+
         }
 
         void ChangeWindow(sbyte status)
         {
-            Logic.Management.ManageLogic.DefineListInstances();
+            ManageLogic.DefineListInstances();
 
             MainWindow mainWindow = new MainWindow
             {
@@ -130,6 +120,8 @@ namespace Lexplosion.Gui.Windows
             {
                 UserData.offline = true;
                 UserData.login = login;
+                UserData.isAuthorized = true;
+
                 ChangeWindow(0);
 
             }

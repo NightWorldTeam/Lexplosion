@@ -4,18 +4,59 @@ using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network;
 
 namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
     {
+
+        public static AuthCode Auth(string login, string password, bool saveUser)
+        {
+
+            Dictionary<string, string> response = ToServer.Authorization(login, password);
+
+            if (response != null)
+            {
+                if (response["status"] == "OK")
+                {
+                    UserData.login = response["login"];
+                    UserData.UUID = response["UUID"];
+                    UserData.accessToken = response["accesToken"];
+
+                    if (saveUser)
+                    {
+                        UserData.settings["login"] = login;
+                        UserData.settings["password"] = password;
+
+                        DataFilesManager.SaveSettings(UserData.settings);
+                    }
+
+                    UserData.isAuthorized = true;
+
+                    return AuthCode.Successfully;
+
+                }
+                else
+                {
+                    return AuthCode.DataError;
+                }
+
+            }
+            else
+            {
+                return AuthCode.NoConnect;
+            }
+
+        }
+
         public static void DefineListInstances()
         {
             if (UserData.InstancesList == null)
             {
                 if (!UserData.offline)
                 {
-                    UserData.InstancesList = Network.ToServer.GetModpaksList();
+                    UserData.InstancesList = ToServer.GetModpaksList();
 
                     Dictionary<string, string> temp = DataFilesManager.GetModpaksList();
                     foreach(string key in temp.Keys)
@@ -172,4 +213,12 @@ namespace Lexplosion.Logic.Management
         }
 
     }
+
+    public enum AuthCode : byte
+    {
+        Successfully,
+        DataError,
+        NoConnect
+    }
+
 }
