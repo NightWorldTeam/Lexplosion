@@ -301,7 +301,11 @@ namespace Lexplosion.Gui.Windows
         }
 
         /* <-- Функционал кастомного меню --> */
-        private void CloseWindow(object sender, RoutedEventArgs e) => Process.GetCurrentProcess().Kill();
+        private void CloseWindow(object sender, RoutedEventArgs e) 
+        {
+            Run.Exit();
+            
+        }
         private void HideWindow(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;
 
     }

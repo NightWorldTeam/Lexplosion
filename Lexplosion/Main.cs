@@ -7,9 +7,11 @@ using System.Windows;
 using Lexplosion.Properties;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
+using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
+using System.Threading;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -21,6 +23,9 @@ namespace Lexplosion
 {
     static class Run
     {
+        public static StreamList threads = new StreamList();
+        private static bool haveImportantThread = false;
+
         [STAThread]
         static void Main()
         {
@@ -36,6 +41,7 @@ namespace Lexplosion
             // Встраивание Newtonosoft.Json в exe
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve; 
             App app = new App();
+            app.Exit += BeforeExit;
 
             // инициализация
             UserData.settings = DataFilesManager.GetSettings();
@@ -112,6 +118,57 @@ namespace Lexplosion
             }
 
             return null;
+        }
+
+        public static void BeforeExit(object sender, EventArgs e)
+        {
+            // TODO: сохранить все данные
+            if (!haveImportantThread)
+            {
+                threads.StopThreads();
+            }
+
+        }
+
+        public static void Exit()
+        {
+            BeforeExit(null, null);
+            Environment.Exit(0);
+        }
+
+        public static void ThreadRun(ThreadStart ThreadFunc, bool isImportant = false)
+        {
+            MessageBox.Show(threads.Count().ToString());
+
+            haveImportantThread = haveImportantThread || isImportant;
+
+            threads.Wait();
+
+            var threadInfo = new StreamList.ThreadInfo
+            {
+                isImportant = isImportant,
+                thread = null
+            };
+
+            int key = threads.Add(threadInfo);
+
+            var thread = new Thread(delegate () 
+            {
+                ref StreamList threadsList = ref threads;
+                int threadKey = key;
+
+                ThreadFunc();
+
+                threadsList.RemoveAt(threadKey);
+
+            });
+
+            threads[key].thread = thread;
+
+            thread.Start();
+            threads.Release();
+
+
         }
     }
 }

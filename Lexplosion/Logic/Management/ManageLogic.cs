@@ -69,9 +69,10 @@ namespace Lexplosion.Logic.Management
 
                     }
 
-                    new Thread(delegate () {
+                    Run.ThreadRun(delegate ()
+                    {
                         DataFilesManager.SaveModpaksList(UserData.InstancesList);
-                    }).Start();
+                    });
 
                 }
                 else
@@ -113,9 +114,10 @@ namespace Lexplosion.Logic.Management
                         MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
                 }
 
-                new Thread(delegate () {
+                Lexplosion.Run.ThreadRun(delegate ()
+                {
                     Run(instanceId);
-                }).Start();
+                });
 
                 void Run(string initModPack)
                 {

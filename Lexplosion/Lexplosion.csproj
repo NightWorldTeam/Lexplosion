@@ -139,6 +139,7 @@
     <Compile Include="Logic\Objects.cs" />
     <Compile Include="Logic\Network\ToServer.cs" />
     <Compile Include="Logic\FileSystem\WithDirectory.cs" />
+    <Compile Include="Logic\StreamList.cs" />
     <Compile Include="Main.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
