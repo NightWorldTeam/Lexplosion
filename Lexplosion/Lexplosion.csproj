@@ -133,6 +133,7 @@
       <DependentUpon>VersionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logic\Aes.cs" />
+    <Compile Include="Logic\Enums.cs" />
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
     <Compile Include="Logic\Management\ManageLogic.cs" />

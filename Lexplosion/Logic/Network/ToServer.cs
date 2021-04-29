@@ -31,7 +31,8 @@ namespace Lexplosion.Logic.Network
 
                 return false;
 
-            } catch { return false; }
+            }
+            catch { return false; }
 
         }
 
@@ -45,8 +46,8 @@ namespace Lexplosion.Logic.Network
 
                 return list;
 
-            } 
-            catch 
+            }
+            catch
             {
                 return new Dictionary<string, string>();
             }
@@ -110,15 +111,21 @@ namespace Lexplosion.Logic.Network
 
                         return ret;
 
-                    } else {
+                    }
+                    else
+                    {
                         return null;
                     }
 
-                } else {
+                }
+                else
+                {
                     return null;
                 }
 
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
         }
@@ -166,15 +173,19 @@ namespace Lexplosion.Logic.Network
                 {
                     return null;
 
-                } else if(answer == "ERROR:1") {
+                }
+                else if (answer == "ERROR:1")
+                {
 
                     response.Add("status", "ERROR:1");
                     return response;
 
-                } else {
+                }
+                else
+                {
 
                     answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
-                    Dictionary<string,string> userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
+                    Dictionary<string, string> userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
 
                     if (userData["code"] == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(userData["str"] + ":" + LaunсherSettings.secretWord))))
                     {
@@ -187,16 +198,22 @@ namespace Lexplosion.Logic.Network
 
                             return response;
 
-                        } else {
+                        }
+                        else
+                        {
                             return null;
                         }
 
-                    } else {
+                    }
+                    else
+                    {
                         return null;
                     }
                 }
 
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
 
@@ -243,7 +260,9 @@ namespace Lexplosion.Logic.Network
 
                 return line;
 
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
         }

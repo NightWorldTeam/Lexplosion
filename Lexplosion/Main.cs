@@ -123,7 +123,7 @@ namespace Lexplosion
         public static void BeforeExit(object sender, EventArgs e)
         {
             // TODO: сохранить все данные
-            if (!haveImportantThread)
+            if (haveImportantThread)
             {
                 threads.StopThreads();
             }
@@ -138,7 +138,6 @@ namespace Lexplosion
 
         public static void ThreadRun(ThreadStart ThreadFunc, bool isImportant = false)
         {
-            MessageBox.Show(threads.Count().ToString());
 
             haveImportantThread = haveImportantThread || isImportant;
 

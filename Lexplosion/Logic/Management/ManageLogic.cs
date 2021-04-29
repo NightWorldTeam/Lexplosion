@@ -2,7 +2,6 @@
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
-using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 
@@ -214,13 +213,6 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-    }
-
-    public enum AuthCode : byte
-    {
-        Successfully,
-        DataError,
-        NoConnect
     }
 
 }

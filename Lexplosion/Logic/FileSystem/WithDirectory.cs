@@ -6,11 +6,11 @@ using System.Net;
 using System.Security.Cryptography;
 using System.IO.Compression;
 using Newtonsoft.Json;
-using Lexplosion.Logic.Objects;
 using System.Threading;
-using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
 using System.Text.RegularExpressions;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
@@ -33,7 +33,7 @@ namespace Lexplosion.Logic.FileSystem
             static public List<string> oldFiles = new List<string>();
         }
 
-        private struct LauncherAssets //этот класс нужен для декодирования json
+        private class LauncherAssets //этот класс нужен для декодирования json
         {
             public int version;
             public Dictionary<string, InstanceAssets> data;
@@ -615,7 +615,10 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     File.Delete(directory + "/instances/" + instanceId + "/" + file);
                     if (updates.ContainsKey(file))
+                    {
                         updates.Remove(file);
+                    }
+
                     UpdateProgressBar();
                 }
             }
@@ -800,48 +803,6 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static bool DownloadUpgradeTool()
-        {
-            try
-            {
-                using (WebClient wc = new WebClient())
-                {
-                    wc.DownloadFile(LaunсherSettings.serverUrl, directory + "/UpgradeTool.exe");
-                    return true;
-
-                }
-
-            }
-            catch { return false; }
-
-        }
-
-        public static void RemoveInstanceDirecory(string instanceId)
-        {
-            try
-            {
-                if (Directory.Exists(directory + "/instances/" + instanceId))
-                {
-                    Directory.Delete(directory + "/instances/" + instanceId, true);
-                }
-
-                Thread.Sleep(1000);
-
-            }
-            catch
-            {
-                MainWindow.Obj.Dispatcher.Invoke(delegate
-                {
-                    MainWindow.Obj.SetMessageBox("Произошла ошибка при удалении.");
-                });
-            }
-
-            MainWindow.Obj.Dispatcher.Invoke(delegate
-            {
-                //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
-            });
-        }
-
         public static void CheckLauncherAssets()
         {
             bool update = false;
@@ -939,33 +900,41 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static bool ExportInstance(string instanceId, List<string> directoryList, string exportPath, string description)
+        public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportPath, string description)
         {
 
-            string targetDir = directory + "/temp/" + instanceId + "-export";
+            string targetDir = directory + "/temp/" + instanceId + "-export"; //временная папка, куда будем копировать все файлы
             string srcDir = directory + "/instances/" + instanceId;
 
-            if (Directory.Exists(targetDir))
+            try
             {
-                Directory.Delete(targetDir, true);
+                if (Directory.Exists(targetDir))
+                {
+                    Directory.Delete(targetDir, true);
+                }
+            }
+            catch 
+            {
+                return ExportResult.TempPathError;
             }
 
             foreach (string dirUnit_ in directoryList)
             {
-                string dirUnit = dirUnit_.Replace(@"\", "/");
-                string target = dirUnit.Replace(srcDir, targetDir + "/files");
-                string finalPath = target.Substring(0, target.LastIndexOf("/"));
+                string dirUnit = dirUnit_.Replace(@"\", "/"); //адрес исходного файла
+                string target = dirUnit.Replace(srcDir, targetDir + "/files"); //адрес этого файла во временной папке
+                string finalPath = target.Substring(0, target.LastIndexOf("/")); //адрес времееной папки, где будет храниться этот файл
 
-                if (!Directory.Exists(finalPath))
+                try
                 {
-                    try
+                    if (!Directory.Exists(finalPath))
                     {
                         Directory.CreateDirectory(finalPath);
                     }
-                    catch
-                    {
-                        return false;
-                    }
+                    
+                }
+                catch
+                {
+                    return ExportResult.TempPathError;
                 }
 
                 if (File.Exists(dirUnit))
@@ -981,13 +950,13 @@ namespace Lexplosion.Logic.FileSystem
                     }
                     catch
                     {
-                        return false;
+                        return ExportResult.FileCopyError;
                     }
 
                 }
                 else
                 {
-                    return false;
+                    return ExportResult.FileCopyError;
                 }
 
             }
@@ -998,7 +967,8 @@ namespace Lexplosion.Logic.FileSystem
             {
                 ["gameVersion"] = instanceFile.version.gameVersion,
                 ["description"] = description,
-                ["name"] = UserData.InstancesList[instanceId]
+                ["name"] = UserData.InstancesList[instanceId],
+                ["author"] = UserData.login
             };
 
 
@@ -1011,7 +981,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 catch { }
 
-                return false;
+                return ExportResult.InfoFileError;
             }
 
 
@@ -1020,23 +990,30 @@ namespace Lexplosion.Logic.FileSystem
                 ZipFile.CreateFromDirectory(targetDir, exportPath + "/" + instanceId + ".zip");
                 Directory.Delete(targetDir, true);
 
-                return true;
+                return ExportResult.Successful;
             }
             catch
             {
                 Directory.Delete(targetDir, true);
 
-                return false;
+                return ExportResult.ZipFileError;
 
             }
 
         }
 
-        public static byte ImportInstance(string zipFile, out List<string> errors) // TODO: сделать чтобы эта функция возвращала enum
+        public static ImportResult ImportInstance(string zipFile, out List<string> errors)
         {
-            string dir = directory + "/temp/import/";
 
+            string dir = directory + "/temp/import/";
             errors = new List<string>();
+
+            if (UserData.offline)
+            {
+                Directory.Delete(dir, true);
+
+                return ImportResult.IsOfflineMode;
+            }
 
             if (!Directory.Exists(dir))
             {
@@ -1046,7 +1023,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 catch
                 {
-                    return 255;
+                    return ImportResult.DirectoryCreateError;
                 }
             }
             else
@@ -1061,27 +1038,31 @@ namespace Lexplosion.Logic.FileSystem
             catch
             {
                 Directory.Delete(dir, true);
-                return 1;
+
+                return ImportResult.ZipFileError;
             }
 
             Dictionary<string, string> instanceInfo = GetFile<Dictionary<string, string>>(dir + "instanceInfo.json");
 
-            if (instanceInfo == null)
+            if (instanceInfo == null || !instanceInfo.ContainsKey("gameVersion") || string.IsNullOrEmpty(instanceInfo["gameVersion"]))
             {
                 Directory.Delete(dir, true);
-                return 1;
+                return ImportResult.GameVersionError;
             }
 
-            if (!instanceInfo.ContainsKey("gameVersion") || !instanceInfo.ContainsKey("name"))
+            if(!instanceInfo.ContainsKey("name") || string.IsNullOrEmpty(instanceInfo["name"]))
             {
-                Directory.Delete(dir, true);
-                return 1;
+                instanceInfo["name"] = "Unknown Name";
             }
 
-            if (string.IsNullOrEmpty(instanceInfo["gameVersion"]) || string.IsNullOrEmpty(instanceInfo["name"]))
+            if (!instanceInfo.ContainsKey("author") || string.IsNullOrEmpty(instanceInfo["author"]))
             {
-                Directory.Delete(dir, true);
-                return 1;
+                instanceInfo["author"] = "Unknown author";
+            }
+
+            if (!instanceInfo.ContainsKey("description") || string.IsNullOrEmpty(instanceInfo["description"]))
+            {
+                instanceInfo["description"] = "";
             }
 
             SHA1 sha = new SHA1Managed();
@@ -1113,6 +1094,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     string targetFileName = fileName.Replace(addr, targetDir);
                     string dirName = Path.GetDirectoryName(targetFileName);
+
                     if (!Directory.Exists(dirName))
                     {
                         Directory.CreateDirectory(dirName);
@@ -1124,19 +1106,14 @@ namespace Lexplosion.Logic.FileSystem
             catch
             {
                 Directory.Delete(dir, true);
-                return 2;
-            }
 
-            if (UserData.offline)
-            {
-                Directory.Delete(dir, true);
-                return 3;
+                return ImportResult.MovingFilesError;
             }
 
             InstanceFiles files = ToServer.GetFilesList(instanceInfo["gameVersion"], true);
             if (files == null)
             {
-                return 4;
+                return ImportResult.ServerFilesError;
             }
 
             Check(files, instanceId);
@@ -1152,7 +1129,11 @@ namespace Lexplosion.Logic.FileSystem
             UserData.InstancesList[instanceId] = instanceInfo["name"];
             SaveModpaksList(UserData.InstancesList);
 
-            Directory.Delete(dir, true);
+            try
+            {
+                Directory.Delete(dir, true);
+            }
+            catch { }
 
             if (Gui.Pages.Right.Menu.ModpacksContainerPage.obj != null)
             {
@@ -1160,7 +1141,33 @@ namespace Lexplosion.Logic.FileSystem
                 Gui.Pages.Right.Menu.ModpacksContainerPage.obj.BuildInstanceForm(instanceId, UserData.InstancesList.Count - 1, logoPath, UserData.InstancesList[instanceId], "NightWorld", "test", new List<string>());
             }
 
-            return 0;
+            return ImportResult.Successful;
+        }
+
+        public static void RemoveInstanceDirecory(string instanceId)
+        {
+            try
+            {
+                if (Directory.Exists(directory + "/instances/" + instanceId))
+                {
+                    Directory.Delete(directory + "/instances/" + instanceId, true);
+                }
+
+                Thread.Sleep(1000);
+
+            }
+            catch
+            {
+                MainWindow.Obj.Dispatcher.Invoke(delegate
+                {
+                    MainWindow.Obj.SetMessageBox("Произошла ошибка при удалении.");
+                });
+            }
+
+            MainWindow.Obj.Dispatcher.Invoke(delegate
+            {
+                //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
+            });
         }
 
     }
