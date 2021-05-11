@@ -257,7 +257,7 @@ namespace Lexplosion.Logic.Management
                         return null;
 
 
-                    if (WithDirectory.countFiles > 0)
+                    if (WithDirectory.CountFiles > 0)
                     {
                         MainWindow.Obj.Dispatcher.Invoke(delegate{
                             //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
@@ -265,7 +265,7 @@ namespace Lexplosion.Logic.Management
                         });
 
                         errors = WithDirectory.Update(files, instanceId, MainWindow.Obj);
-                        WithDirectory.countFiles = 0;
+                        WithDirectory.CountFiles = 0; // TODO: занести это в update
                     }
 
                     files.data = null;

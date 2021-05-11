@@ -19,7 +19,7 @@ namespace Lexplosion.Logic.FileSystem
     static class WithDirectory
     {
         public static string directory;
-        public static int countFiles;
+        public static int CountFiles;
 
         private struct Updates //структура, хранящая всё, что нужно обновить. Метод Check в неё кладет, а метод Update - достает 
         {
@@ -181,18 +181,21 @@ namespace Lexplosion.Logic.FileSystem
 
                                     if (filesInfo.data[dir].objects.ContainsKey(fileName)) // проверяем есть ли этот файл в списке
                                     {
-                                        SHA1 sha = new SHA1Managed();
-                                        if (Convert.ToBase64String(sha.ComputeHash(bytes)) != filesInfo.data[dir].objects[fileName].sha1 || bytes.Length != filesInfo.data[dir].objects[fileName].size)
+                                        using(SHA1 sha = new SHA1Managed())
                                         {
-                                            File.Delete(file); //удаляем файл, если не сходится хэш или размер
+                                            if (Convert.ToBase64String(sha.ComputeHash(bytes)) != filesInfo.data[dir].objects[fileName].sha1 || bytes.Length != filesInfo.data[dir].objects[fileName].size)
+                                            {
+                                                File.Delete(file); //удаляем файл, если не сходится хэш или размер
 
-                                            if (!Updates.data.ContainsKey(dir)) //если директория отсутствует в Updates.data, то добавляем её 
-                                                Updates.data.Add(dir, new List<string>());
+                                                if (!Updates.data.ContainsKey(dir)) //если директория отсутствует в Updates.data, то добавляем её 
+                                                    Updates.data.Add(dir, new List<string>());
 
-                                            Updates.data[dir].Add(fileName); //добавляем файл в класс, который содержит обновления
-                                            countFiles++;
+                                                Updates.data[dir].Add(fileName); //добавляем файл в класс, который содержит обновления
+                                                CountFiles++;
 
-                                        }
+                                            }
+
+                                        }       
                                     }
                                     else
                                     {
@@ -223,7 +226,7 @@ namespace Lexplosion.Logic.FileSystem
                                 if (!Updates.data[dir].Contains(fileName))
                                 {
                                     Updates.data[dir].Add(fileName);
-                                    countFiles++;
+                                    CountFiles++;
                                 }
 
                             }
@@ -244,7 +247,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (!Updates.data[dir].Contains(file))
                         {
                             Updates.data[dir].Add(file);
-                            countFiles++;
+                            CountFiles++;
                         }
 
                     }
@@ -262,7 +265,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (File.Exists(directory + "/instances/" + instanceId + "/" + folder + "/" + file))
                         {
                             Updates.oldFiles.Add(folder + "/" + file);
-                            countFiles++;
+                            CountFiles++;
                         }
 
                     }
@@ -275,7 +278,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 Directory.CreateDirectory(directory + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
                 Updates.minecraftJar = true; //сразу же добавляем minecraftJar в обновления
-                countFiles++;
+                CountFiles++;
 
             }
             else
@@ -294,12 +297,15 @@ namespace Lexplosion.Logic.FileSystem
                                 fstream.Read(bytes, 0, bytes.Length);
                                 fstream.Close();
 
-                                SHA1 sha = new SHA1Managed();
-                                if (Convert.ToBase64String(sha.ComputeHash(bytes)) != filesInfo.version.minecraftJar.sha1 || bytes.Length != filesInfo.version.minecraftJar.size)
+                                using(SHA1 sha = new SHA1Managed())
                                 {
-                                    File.Delete(minecraftJarFile); //удаляем файл, если не сходится хэш или размер
-                                    Updates.minecraftJar = true;
-                                    countFiles++;
+                                    if (Convert.ToBase64String(sha.ComputeHash(bytes)) != filesInfo.version.minecraftJar.sha1 || bytes.Length != filesInfo.version.minecraftJar.size)
+                                    {
+                                        File.Delete(minecraftJarFile); //удаляем файл, если не сходится хэш или размер
+                                        Updates.minecraftJar = true;
+                                        CountFiles++;
+
+                                    }
 
                                 }
 
@@ -316,7 +322,7 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     Updates.minecraftJar = true;
-                    countFiles++;
+                    CountFiles++;
                 }
             }
 
@@ -326,7 +332,7 @@ namespace Lexplosion.Logic.FileSystem
                 foreach (string key in filesInfo.natives.Keys) //добавляем natives в обновления
                 {
                     Updates.natives.Add(key);
-                    countFiles++;
+                    CountFiles++;
                 }
 
             }
@@ -341,7 +347,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (filesInfo.natives[key] == "windows" || filesInfo.natives[key] == "all")
                         {
                             Updates.natives.Add(key);
-                            countFiles++;
+                            CountFiles++;
                         }
 
                     }
@@ -357,7 +363,7 @@ namespace Lexplosion.Logic.FileSystem
                             if (!File.Exists(directory + "/instances/" + instanceId + "/version/natives/" + n))
                             {
                                 Updates.natives.Add(n);
-                                countFiles++;
+                                CountFiles++;
                             }
 
                         }
@@ -371,7 +377,7 @@ namespace Lexplosion.Logic.FileSystem
                 foreach (string lib in filesInfo.libraries)
                 {
                     Updates.libraries.Add(lib);
-                    countFiles++;
+                    CountFiles++;
                 }
 
             }
@@ -383,7 +389,7 @@ namespace Lexplosion.Logic.FileSystem
                     foreach (string lib in filesInfo.libraries)
                     {
                         Updates.libraries.Add(lib);
-                        countFiles++;
+                        CountFiles++;
                     }
 
                 }
@@ -395,7 +401,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (!File.Exists(directory + "/libraries/" + lib))
                         {
                             Updates.libraries.Add(lib);
-                            countFiles++;
+                            CountFiles++;
                         }
                     }
                 }
@@ -405,19 +411,19 @@ namespace Lexplosion.Logic.FileSystem
             if (!Directory.Exists(directory + "/assets/virtual/" + filesInfo.version.assetsVersion))
             {
                 Updates.assetsVirtual = true;
-                countFiles++;
+                CountFiles++;
             }
 
             if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
             {
                 Updates.assetsIndexes = true;
-                countFiles++;
+                CountFiles++;
             }
 
             if (!Directory.Exists(directory + "/assets/objects"))
             {
                 Updates.assetsObjects = true;
-                countFiles++;
+                CountFiles++;
             }
 
             return true;
@@ -444,7 +450,7 @@ namespace Lexplosion.Logic.FileSystem
             void UpdateProgressBar()
             {
                 completedDownloads++;
-                double count = (double)completedDownloads / countFiles;
+                double count = (double)completedDownloads / CountFiles;
                 count *= 100;
                 window.Dispatcher.Invoke(delegate
                 {
@@ -485,21 +491,25 @@ namespace Lexplosion.Logic.FileSystem
                         fstream.Read(fileBytes, 0, fileBytes.Length);
                         fstream.Close();
 
-                        SHA1 sha = new SHA1Managed();
-                        if (Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 && fileBytes.Length == size)
+                        using(SHA1 sha = new SHA1Managed())
                         {
-                            DelFile(to);
-                            File.Move(temp + file, to);
+                            if (Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 && fileBytes.Length == size)
+                            {
+                                DelFile(to);
+                                File.Move(temp + file, to);
 
-                            return true;
+                                return true;
+
+                            }
+                            else
+                            {
+                                File.Delete(temp + file);
+                                return false;
+
+                            }
 
                         }
-                        else
-                        {
-                            File.Delete(temp + file);
-                            return false;
-
-                        }
+                        
                     }
 
                 }
@@ -1065,24 +1075,29 @@ namespace Lexplosion.Logic.FileSystem
                 instanceInfo["description"] = "";
             }
 
-            SHA1 sha = new SHA1Managed();
             Random rnd = new Random();
 
-            //генерация id модпака
+            //<===генерация id модпака===>
             string instanceId = instanceInfo["name"];
             instanceId = instanceId.Replace(" ", "_");
 
-            if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
+            using (SHA1 sha = new SHA1Managed())
             {
-                do
+
+                if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
                 {
-                    instanceId = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(instanceInfo["name"] + ":" + rnd.Next(0, 9999))));
-                    instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
-                    instanceId = instanceId.ToLower();
+                    do
+                    {
+                        instanceId = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(instanceInfo["name"] + ":" + rnd.Next(0, 9999))));
+                        instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
+                        instanceId = instanceId.ToLower();
+                    }
+                    while (UserData.InstancesList.ContainsKey(instanceId));
+
                 }
-                while (UserData.InstancesList.ContainsKey(instanceId));
 
             }
+            //<======>
 
             string addr = dir + "files/";
             string targetDir = directory + "/instances/" + instanceId + "/";
@@ -1118,10 +1133,10 @@ namespace Lexplosion.Logic.FileSystem
 
             Check(files, instanceId);
 
-            if (countFiles > 0)
+            if (CountFiles > 0)
             {
                 errors = Update(files, instanceId, MainWindow.Obj);
-                countFiles = 0;
+                CountFiles = 0;
             }
 
             SaveFilesList(instanceId, files);

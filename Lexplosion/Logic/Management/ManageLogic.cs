@@ -9,7 +9,6 @@ namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
     {
-
         public static AuthCode Auth(string login, string password, bool saveUser)
         {
 

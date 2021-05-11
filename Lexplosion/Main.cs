@@ -153,7 +153,7 @@ namespace Lexplosion
 
             var thread = new Thread(delegate () 
             {
-                ref StreamList threadsList = ref threads;
+                ref StreamList threadsList = ref threads; // TODO: это не нужно
                 int threadKey = key;
 
                 ThreadFunc();

@@ -1,6 +1,6 @@
 ﻿namespace Lexplosion.Logic
 {
-    enum ImportResult : byte
+    enum ImportResult
     {
         Successful,
         ZipFileError,
@@ -11,17 +11,16 @@
         DirectoryCreateError
     }
 
-    enum ExportResult : byte
+    enum ExportResult
     {
         Successful,
         TempPathError,
         FileCopyError,
         InfoFileError,
         ZipFileError
-
     }
 
-    public enum AuthCode : byte
+    public enum AuthCode
     {
         Successfully,
         DataError,
