@@ -6,7 +6,6 @@ using System.Text;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
-using System.Collections;
 using Lexplosion.Global;
 
 namespace Lexplosion.Logic.Network
@@ -32,7 +31,8 @@ namespace Lexplosion.Logic.Network
 
                 return false;
 
-            } catch { return false; }
+            }
+            catch { return false; }
 
         }
 
@@ -46,7 +46,9 @@ namespace Lexplosion.Logic.Network
 
                 return list;
 
-            } catch {
+            }
+            catch
+            {
                 return new Dictionary<string, string>();
             }
 
@@ -65,61 +67,71 @@ namespace Lexplosion.Logic.Network
                 str2 += chars[rnd.Next(0, chars.Length)];
             }
 
-            SHA1 sha = new SHA1Managed();
-            string key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str2 + ":" + LaunсherSettings.secretWord)));
-
-            int d = 32 - key.Length;
-            for (int i = 0; i < d; i++)
+            using(SHA1 sha = new SHA1Managed())
             {
-                key += str2[i];
-            }
+                string key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str2 + ":" + LaunсherSettings.secretWord)));
 
-            List<List<string>> data = new List<List<string>>() { };
-            data.Add(new List<string>() { "str", str });
-            data.Add(new List<string>() { "str2", str2 });
-            data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
-
-            try
-            {
-                string answer = HttpPost("directoryFiles.php?modpack=" + WebUtility.UrlEncode(instanceId) + "&isLocal=" + isLocal.ToString(), data);
-
-                if (answer != null)
+                int d = 32 - key.Length;
+                for (int i = 0; i < d; i++)
                 {
-                    answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
-                    FilesList filesData = JsonConvert.DeserializeObject<FilesList>(answer);
+                    key += str2[i];
+                }
 
-                    if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
+                List<List<string>> data = new List<List<string>>() { };
+                data.Add(new List<string>() { "str", str });
+                data.Add(new List<string>() { "str2", str2 });
+                data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
+
+                try
+                {
+                    string answer = HttpPost("directoryFiles.php?modpack=" + WebUtility.UrlEncode(instanceId) + "&isLocal=" + isLocal.ToString(), data);
+
+                    if (answer != null)
                     {
-                        List<string> libraries = new List<string>();
-                        foreach (string lib in filesData.libraries.Keys)
+                        answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                        FilesList filesData = JsonConvert.DeserializeObject<FilesList>(answer);
+
+                        if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
-                            if (filesData.libraries[lib] == "all" || filesData.libraries[lib] == "windows")
+                            List<string> libraries = new List<string>();
+                            foreach (string lib in filesData.libraries.Keys)
                             {
-                                libraries.Add(lib);
+                                if (filesData.libraries[lib] == "all" || filesData.libraries[lib] == "windows")
+                                {
+                                    libraries.Add(lib);
+                                }
                             }
+
+                            InstanceFiles ret = new InstanceFiles
+                            {
+                                data = filesData.data,
+                                version = filesData.version,
+                                libraries = libraries,
+                                natives = filesData.natives
+                            };
+
+                            return ret;
+
+                        }
+                        else
+                        {
+                            return null;
                         }
 
-                        InstanceFiles ret = new InstanceFiles
-                        {
-                            data = filesData.data,
-                            version = filesData.version,
-                            libraries = libraries,
-                            natives = filesData.natives
-                        };
-
-                        return ret;
-
-                    } else {
+                    }
+                    else
+                    {
                         return null;
                     }
 
-                } else {
+                }
+                catch
+                {
                     return null;
                 }
 
-            } catch {
-                return null;
             }
+            
         }
 
         static public Dictionary<string, string> Authorization(string login, string password, string email = "")
@@ -137,71 +149,84 @@ namespace Lexplosion.Logic.Network
                 salt += chars[rnd.Next(0, chars.Length)];
             }
 
-            SHA1 sha = new SHA1Managed();
-            string key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str2 + ":" + LaunсherSettings.secretWord)));
-
-            int d = 32 - key.Length;
-            for (int i = 0; i < d; i++)
+            using (SHA1 sha = new SHA1Managed())
             {
-                key += str2[i];
-            }
-            //MessageBox.Show(key);
+                string key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str2 + ":" + LaunсherSettings.secretWord)));
 
-            List<List<string>> data = new List<List<string>>() { };
-            data.Add(new List<string>() { "login", login });
-            data.Add(new List<string>() { "password", Convert.ToBase64String(AesСryp.Encode(Convert.ToBase64String(Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(password)) + ":" + str)) + ":" + salt, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)))) });
-            data.Add(new List<string>() { "str", str });
-            data.Add(new List<string>() { "str2", str2 });
-            data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
-
-            Dictionary<string, string> response = new Dictionary<string, string>();
-            string answer = "";
-
-            try
-            {
-                answer = HttpPost("authorization.php", data);
-
-                if (answer == null)
+                int d = 32 - key.Length;
+                for (int i = 0; i < d; i++)
                 {
-                    return null;
+                    key += str2[i];
+                }
+                //MessageBox.Show(key);
 
-                } else if(answer == "ERROR:1") {
+                List<List<string>> data = new List<List<string>>() { };
+                data.Add(new List<string>() { "login", login });
+                data.Add(new List<string>() { "password", Convert.ToBase64String(AesСryp.Encode(Convert.ToBase64String(Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(password)) + ":" + str)) + ":" + salt, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)))) });
+                data.Add(new List<string>() { "str", str });
+                data.Add(new List<string>() { "str2", str2 });
+                data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
 
-                    response.Add("status", "ERROR:1");
-                    return response;
+                Dictionary<string, string> response = new Dictionary<string, string>();
+                string answer;
 
-                } else {
+                try
+                {
+                    answer = HttpPost("authorization.php", data);
 
-                    answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
-                    Dictionary<string,string> userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
-
-                    if (userData["code"] == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(userData["str"] + ":" + LaunсherSettings.secretWord))))
+                    if (answer == null)
                     {
-                        if (userData.ContainsKey("login") && userData.ContainsKey("UUID") && userData.ContainsKey("accesToken"))
+                        return null;
+
+                    }
+                    else if (answer == "ERROR:1")
+                    {
+
+                        response.Add("status", "ERROR:1");
+                        return response;
+
+                    }
+                    else
+                    {
+
+                        answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                        Dictionary<string, string> userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
+
+                        if (userData["code"] == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(userData["str"] + ":" + LaunсherSettings.secretWord))))
                         {
-                            response.Add("status", "OK");
-                            response.Add("login", userData["login"]);
-                            response.Add("UUID", userData["UUID"]);
-                            response.Add("accesToken", userData["accesToken"]);
+                            if (userData.ContainsKey("login") && userData.ContainsKey("UUID") && userData.ContainsKey("accesToken"))
+                            {
+                                response.Add("status", "OK");
+                                response.Add("login", userData["login"]);
+                                response.Add("UUID", userData["UUID"]);
+                                response.Add("accesToken", userData["accesToken"]);
 
-                            return response;
+                                return response;
 
-                        } else {
+                            }
+                            else
+                            {
+                                return null;
+                            }
+
+                        }
+                        else
+                        {
                             return null;
                         }
-
-                    } else {
-                        return null;
                     }
+
+                }
+                catch
+                {
+                    return null;
                 }
 
-            } catch {
-                return null;
-            }
+            }         
 
         }
 
-        static public string HttpPost(string url, List<List<string>> data = null, bool outside = false)
+        static public string HttpPost(string url, List<List<string>> data = null, bool outside = false) // TODO: List<string> заменить на массив
         {
             if (!outside)
                 url = LaunсherSettings.serverUrl + url;
@@ -230,19 +255,23 @@ namespace Lexplosion.Logic.Network
                 }
 
                 string line;
-                WebResponse response = request.GetResponse();
-                using (Stream stream = response.GetResponseStream())
+                using (WebResponse response = request.GetResponse())
                 {
-                    using (StreamReader reader = new StreamReader(stream))
+                    using (Stream stream = response.GetResponseStream())
                     {
-                        line = reader.ReadToEnd();
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            line = reader.ReadToEnd();
+                        }
                     }
-                }
-                response.Close();
+                    response.Close();
+                }            
 
                 return line;
 
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
         }

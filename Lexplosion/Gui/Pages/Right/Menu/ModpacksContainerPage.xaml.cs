@@ -1,25 +1,13 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Gui.Windows;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Lexplosion.Gui.Pages.Right.Menu
 {
@@ -29,6 +17,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     public partial class ModpacksContainerPage : Page
     {
 		public static ModpacksContainerPage obj = null;
+		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
 
 		public ModpacksContainerPage()
         {
@@ -59,7 +48,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 					if (UserData.instancesAssets[instanceId].description.Length > 36)
 					{
-						desc = UserData.instancesAssets[instanceId].description.Substring(0, 36);
+						desc = UserData.instancesAssets[instanceId].description.Substring(0, 36).Trim() + "...";
 					}
 					else
 					{
@@ -74,7 +63,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
                 try
                 {
-					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId], "NightWorld", desc + "...", instance_tags1);
+					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId], "NightWorld", desc, instance_tags1);
 
 					i++;
 				}
@@ -354,8 +343,19 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void LaunchInstance(object sender, RoutedEventArgs e) 
 		{
-			string instanceId = ((Button)sender).Name.Replace("download", "");
-			ManageLogic.СlientManager(instanceId);
+            if (!LaunchButtonBlock)
+            {
+				string instanceId = ((Button)sender).Name.Replace("Download", "");
+
+				//проиводим действие только если произошел клик по запущенному модпаку, или никакой модпак не запущен
+				if (instanceId == LaunchGame.runnigInstance || LaunchGame.runnigInstance == "") 
+				{
+					LaunchButtonBlock = true;
+					ManageLogic.СlientManager(instanceId);
+				}
+
+			}
+			
 		}
 
 		private void ExportInstance(object sender, RoutedEventArgs e)

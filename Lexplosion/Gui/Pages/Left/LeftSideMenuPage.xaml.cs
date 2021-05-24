@@ -1,12 +1,8 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
-using Lexplosion.Logic;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -31,6 +27,8 @@ namespace Lexplosion.Gui.Pages
             InitializeComponent();
             selected = this.Instances;
 
+            NameBlock.Text = UserData.login;
+
             foreach (string pack in UserData.InstancesList.Keys)
             {
                 //отрисовываем кнопки в цикле
@@ -45,9 +43,10 @@ namespace Lexplosion.Gui.Pages
                 }
             }
 
-            if (LaunchGame.isRunning)
+            if (LaunchGame.runnigInstance != "")
             {
                 //selectedInstance
+                // TODO: тут определить какой модпак запущен и ему кнопку играть заменить на кнопку завершить
             }
         }
 

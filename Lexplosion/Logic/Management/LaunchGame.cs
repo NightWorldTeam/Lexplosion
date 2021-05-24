@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows;
 using Microsoft.Win32;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using System.Windows;
 
 namespace Lexplosion.Logic.Management
 {
@@ -16,7 +16,6 @@ namespace Lexplosion.Logic.Management
     static class LaunchGame
     {
         private static Process process = new Process();
-        public static bool isRunning = false;
         public static string runnigInstance = "";
 
         public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, List<string> libraries, Dictionary<string, string> instanceSettings)
@@ -182,23 +181,27 @@ namespace Lexplosion.Logic.Management
                         //MainWindow.window.ClientManagement.IsEnabled = true;
                     });
 
+                    process.Dispose();
                     process = new Process();
-                    isRunning = false;
                     runnigInstance = "";
 
                 };
 
                 process.Start();
                 process.BeginOutputReadLine();
-                isRunning = true;
 
                 return true;
 
-            } catch {
+            } 
+            catch 
+            {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
                     MainWindow.Obj.SetMessageBox("Сбой запуска! Не удалось запустить процесс.");
                 });
+
+                runnigInstance = "";
+
                 return false;
             }
 
@@ -254,7 +257,7 @@ namespace Lexplosion.Logic.Management
                         return null;
 
 
-                    if (WithDirectory.countFiles > 0)
+                    if (WithDirectory.CountFiles > 0)
                     {
                         MainWindow.Obj.Dispatcher.Invoke(delegate{
                             //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
@@ -262,7 +265,7 @@ namespace Lexplosion.Logic.Management
                         });
 
                         errors = WithDirectory.Update(files, instanceId, MainWindow.Obj);
-                        WithDirectory.countFiles = 0;
+                        WithDirectory.CountFiles = 0; // TODO: занести это в update
                     }
 
                     files.data = null;
@@ -297,8 +300,14 @@ namespace Lexplosion.Logic.Management
 
         public static void KillProcess()
         {
-            process.Kill();
-            isRunning = false;
+            try
+            {
+                process.Kill();
+                process.Dispose();
+            } catch { }
+
+            process = new Process();
+            runnigInstance = "";
         }
 
         public static void SetDefaultSettings()

@@ -1,27 +1,60 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Objects;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using Lexplosion.Logic.FileSystem;
-
+using Lexplosion.Logic.Network;
 
 namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
     {
+        public static AuthCode Auth(string login, string password, bool saveUser)
+        {
+
+            Dictionary<string, string> response = ToServer.Authorization(login, password);
+
+            if (response != null)
+            {
+                if (response["status"] == "OK")
+                {
+                    UserData.login = response["login"];
+                    UserData.UUID = response["UUID"];
+                    UserData.accessToken = response["accesToken"];
+
+                    if (saveUser)
+                    {
+                        UserData.settings["login"] = login;
+                        UserData.settings["password"] = password;
+
+                        DataFilesManager.SaveSettings(UserData.settings);
+                    }
+
+                    UserData.isAuthorized = true;
+
+                    return AuthCode.Successfully;
+
+                }
+                else
+                {
+                    return AuthCode.DataError;
+                }
+
+            }
+            else
+            {
+                return AuthCode.NoConnect;
+            }
+
+        }
+
         public static void DefineListInstances()
         {
             if (UserData.InstancesList == null)
             {
                 if (!UserData.offline)
                 {
-                    UserData.InstancesList = Network.ToServer.GetModpaksList();
+                    UserData.InstancesList = ToServer.GetModpaksList();
 
                     Dictionary<string, string> temp = DataFilesManager.GetModpaksList();
                     foreach(string key in temp.Keys)
@@ -34,9 +67,10 @@ namespace Lexplosion.Logic.Management
 
                     }
 
-                    new Thread(delegate () {
+                    Run.ThreadRun(delegate ()
+                    {
                         DataFilesManager.SaveModpaksList(UserData.InstancesList);
-                    }).Start();
+                    });
 
                 }
                 else
@@ -50,10 +84,11 @@ namespace Lexplosion.Logic.Management
 
         public static void СlientManager(string instanceId)
         {
-
-            if (LaunchGame.isRunning)
+            if (LaunchGame.runnigInstance != "")
             {
                 LaunchGame.KillProcess();
+                Gui.Pages.Right.Menu.ModpacksContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+
                 return;
             }
 
@@ -77,9 +112,10 @@ namespace Lexplosion.Logic.Management
                         MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
                 }
 
-                new Thread(delegate () {
+                Lexplosion.Run.ThreadRun(delegate ()
+                {
                     Run(instanceId);
-                }).Start();
+                });
 
                 void Run(string initModPack)
                 {
@@ -169,10 +205,13 @@ namespace Lexplosion.Logic.Management
                         });
                     }
 
+                    Gui.Pages.Right.Menu.ModpacksContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+
                 }
 
             }
         }
 
     }
+
 }

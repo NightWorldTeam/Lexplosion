@@ -1,9 +1,4 @@
-﻿using Lexplosion.Logic;
-using Lexplosion.Logic.Objects;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Forms;
+﻿using System.Windows;
 
 namespace Lexplosion.Gui.Windows
 {

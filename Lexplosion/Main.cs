@@ -4,27 +4,28 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Windows;
-using Lexplosion.Gui;
-using Lexplosion.Logic;
 using Lexplosion.Properties;
-using Lexplosion.Logic.Objects;
-using System.Threading;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
+using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
+using System.Threading;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
  * Последнее обновление в феврале 2021 года
- * Главный исполняемый файл лаунчера
+ * Главный исполняемый файл лаунчера. Здесь людей ебут
  */
 
 namespace Lexplosion
 {
     static class Run
     {
+        public static StreamList threads = new StreamList();
+        private static bool haveImportantThread = false;
+
         [STAThread]
         static void Main()
         {
@@ -40,6 +41,7 @@ namespace Lexplosion
             // Встраивание Newtonosoft.Json в exe
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve; 
             App app = new App();
+            app.Exit += BeforeExit;
 
             // инициализация
             UserData.settings = DataFilesManager.GetSettings();
@@ -73,17 +75,21 @@ namespace Lexplosion
                 int upgradeToolVersion = Int32.Parse(ToServer.HttpPost("windows/upgradeToolVersion.html"));
 
                 // скачивание и проверка версии UpgradeTool.exe
-                WebClient wc = new WebClient();
-                if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
+                using (WebClient wc = new WebClient())
                 {
-                    File.Delete(UserData.settings["gamePath"] + "/UpgradeTool.exe");
-                    wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
-                    DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
+                    if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
+                    {
+                        File.Delete(UserData.settings["gamePath"] + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
+                        DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
 
-                } else if (!File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe")) {
+                    }
+                    else if (!File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
+                    {
+                        wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
+                        DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
+                    }
 
-                    wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
-                    DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
                 }
 
                 // запуск UpgradeTool.exe
@@ -94,7 +100,9 @@ namespace Lexplosion
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();
 
-            } catch {
+            } 
+            catch 
+            {
                 MessageBox.Show("Не удалось обновить лаунчер!");
             }
 
@@ -104,9 +112,62 @@ namespace Lexplosion
         {
 
             if (args.Name.Contains("Newtonsoft.Json"))
+            {
                 return Assembly.Load(Resources.NewtonsoftJson);
 
+            }
+
             return null;
+        }
+
+        public static void BeforeExit(object sender, EventArgs e)
+        {
+            // TODO: сохранить все данные
+            if (haveImportantThread)
+            {
+                threads.StopThreads();
+            }
+
+        }
+
+        public static void Exit()
+        {
+            BeforeExit(null, null);
+            Environment.Exit(0);
+        }
+
+        public static void ThreadRun(ThreadStart ThreadFunc, bool isImportant = false)
+        {
+
+            haveImportantThread = haveImportantThread || isImportant;
+
+            threads.Wait();
+
+            var threadInfo = new StreamList.ThreadInfo
+            {
+                isImportant = isImportant,
+                thread = null
+            };
+
+            int key = threads.Add(threadInfo);
+
+            var thread = new Thread(delegate () 
+            {
+                ref StreamList threadsList = ref threads; // TODO: это не нужно
+                int threadKey = key;
+
+                ThreadFunc();
+
+                threadsList.RemoveAt(threadKey);
+
+            });
+
+            threads[key].thread = thread;
+
+            thread.Start();
+            threads.Release();
+
+
         }
     }
 }

@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Logic;
-using System.Windows.Controls.Primitives;
-using System.Threading;
-using System.Windows.Media.Animation;
 using Lexplosion.Gui.Pages.Right.Instance;
 
 namespace Lexplosion.Gui.Windows
@@ -288,6 +282,7 @@ namespace Lexplosion.Gui.Windows
 
         public void SetMessageBox(string message, string title = "Ошибка")
         {
+            MessageBox.Show(message + " " + title);
             //this.GridMessageBox.Visibility = Visibility.Visible;
             //this.TextMarker.Text = message;
             //this.MessageTitle.Text = title;
@@ -306,7 +301,11 @@ namespace Lexplosion.Gui.Windows
         }
 
         /* <-- Функционал кастомного меню --> */
-        private void CloseWindow(object sender, RoutedEventArgs e) => Process.GetCurrentProcess().Kill();
+        private void CloseWindow(object sender, RoutedEventArgs e) 
+        {
+            Run.Exit();
+            
+        }
         private void HideWindow(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;
 
     }
