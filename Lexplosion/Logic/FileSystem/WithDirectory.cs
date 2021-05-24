@@ -602,7 +602,6 @@ namespace Lexplosion.Logic.FileSystem
 
                     }
 
-
                     if (!DownloadFile(addr, folders[folders.Length - 1], directory + "/instances/" + instanceId + "/" + dir + "/" + file, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size))
                     {
                         errors.Add(dir + "/" + file);

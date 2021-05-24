@@ -8,17 +8,16 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using System.Windows;
 
 namespace Lexplosion.Logic.Management
 {
 
-    static class LaunchGame
+    static class LaunchGame // TODO: возможно из статично класса перевести в обычный
     {
         private static Process process = new Process();
         public static string runnigInstance = "";
 
-        public static string FormCommand(string instanceId, VersionInfo versionInfo, string versionFile, List<string> libraries, Dictionary<string, string> instanceSettings)
+        public static string CreateCommand(string instanceId, VersionInfo versionInfo, string versionFile, List<string> libraries, Dictionary<string, string> instanceSettings)
         {
             int number;
             if (!instanceSettings.ContainsKey("xmx") || !Int32.TryParse(instanceSettings["xmx"], out number))

@@ -175,7 +175,7 @@ namespace Lexplosion.Logic.Management
 
                         if (errorsText == "\n\n")
                         {
-                            string command = LaunchGame.FormCommand(initModPack, data.files.version, data.files.version.minecraftJar.name, data.files.libraries, instanceSettings);
+                            string command = LaunchGame.CreateCommand(initModPack, data.files.version, data.files.version.minecraftJar.name, data.files.libraries, instanceSettings);
                             LaunchGame.Run(command, initModPack);
                             DataFilesManager.SaveSettings(UserData.settings);
 
