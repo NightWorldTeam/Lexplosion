@@ -30,11 +30,22 @@ namespace Lexplosion.Gui.Windows
             }
         }
 
+        private void ToLoginForm(object sender, RoutedEventArgs e)
+        {
+            AuthWindow authWindow = new AuthWindow
+            {
+                Left = this.Left,
+                Top = this.Top,
+                WindowState = WindowState.Normal
+            };
+            authWindow.Show(); authWindow.Activate();
+            this.Close();
+        }
+
         public bool IsValidEmailAddress(string email)
         {
             return Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
         }
-
 
         private void RegisterAccount(object sender, RoutedEventArgs e) {
             if (TBLogin.Text != null && TBPassword.Password  != null && TBConfirmPassword.Password  != null && TBEmail.Text != null)
@@ -138,7 +149,7 @@ namespace Lexplosion.Gui.Windows
 
 
         /* <-- Custom MessageBox --> */
-        private void Okey(object sender, RoutedEventArgs e)
+        private void Okay(object sender, RoutedEventArgs e)
         {
             this.GridMessageBox.Visibility = Visibility.Collapsed;
         }

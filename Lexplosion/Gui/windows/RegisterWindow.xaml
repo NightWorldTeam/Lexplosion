@@ -168,6 +168,18 @@
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Foreground" Value="#b9b7b7"/>
         </Style>
+
+        <Style TargetType="{x:Type Hyperlink}">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextBlock.TextDecorations" Value="{x:Null}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Window.Background>
@@ -197,32 +209,130 @@
             </Button>
         </Canvas>
 
-        <Grid Grid.Row="1"  ShowGridLines="False">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Canvas Background="Black" Opacity="0.70" Width="329" Height="400" Margin="-1,0,0,0"/>
-                <TextBlock Text="NightWorld" HorizontalAlignment="Center" Foreground="White" FontSize="30" FontFamily="pack://application:,,,/Assets/fonts/#Arkhip" Margin="36,66,36,398"/>
-                <TextBox Style="{StaticResource CTB}" x:Name="TBLogin" Width="125" Height="30" Margin="362,150,362,320" HorizontalContentAlignment="Center" GotFocus="Login_GotFocus" LostFocus="Login_LostFocus"/>
-
-
-                <TextBlock x:Name="PasswordBoxWaterMark" Height="30" Margin="400,201,400,269" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#b9b7b7" FontSize="15"/>
-                <PasswordBox Style="{StaticResource CPB}" x:Name="TBPassword" Height="30" Margin="400,201,400,269" HorizontalContentAlignment="Center" GotFocus="Password_GotFocus" LostFocus="Password_LostFocus"/>
-
-                <TextBlock x:Name="ConfirmPasswordBoxWaterMark" Height="30" Margin="400,252,400,218" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#b9b7b7" FontSize="15"/>
-                <PasswordBox Style="{StaticResource CPB}" x:Name="TBConfirmPassword" Height="30" Margin="400,252,400,218" HorizontalContentAlignment="Center" GotFocus="ConfirmPassword_GotFocus" LostFocus="ConfirmPassword_LostFocus" PreviewMouseDown="ConfirmPassword_MouseDown"/>
-                <TextBox Style="{StaticResource CTB}" x:Name="TBEmail" Width="125" Height="30" Margin="362,300,362,170" HorizontalContentAlignment="Center" GotFocus="Email_GotFocus" LostFocus="Email_LostFocus"/>
-                <Button  Style="{StaticResource CLB}" Click="RegisterAccount" Content="Регистрация" Width="166" Height="40" Margin="77,381,74,79" FontSize="17" FontWeight="Bold"/>
-
-
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" Grid.Column="1" Background="Black" Opacity="0.70"/>
+            <Grid Grid.Row="1" Grid.Column="1" ShowGridLines="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="65"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <TextBlock 
+                        Text="NightWorld" 
+                        HorizontalAlignment="Center" 
+                        Foreground="White" 
+                        FontSize="30" 
+                        FontFamily="pack://application:,,,/Assets/fonts/#Arkhip" 
+                        Width="208"
+                        Height="40"
+                        VerticalAlignment="Center"/>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <TextBox Style="{StaticResource CTB}" 
+                                 x:Name="TBLogin"  
+                                 HorizontalContentAlignment="Center" 
+                                 GotFocus="Login_GotFocus" 
+                                 LostFocus="Login_LostFocus" 
+                                 Width="180" 
+                                 Height="30" VerticalAlignment="Bottom"/>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <TextBlock x:Name="PasswordBoxWaterMark" 
+                                   Height="30"  
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#b9b7b7" 
+                                   FontSize="15" 
+                                   VerticalAlignment="Bottom"/>
+                        <PasswordBox Style="{StaticResource CPB}" 
+                                     x:Name="TBPassword"  
+                                     HorizontalContentAlignment="Center" 
+                                     GotFocus="Password_GotFocus" 
+                                     LostFocus="Password_LostFocus" 
+                                     Width="180" Height="30" VerticalAlignment="Bottom"/>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <TextBlock x:Name="ConfirmPasswordBoxWaterMark" 
+                                   Height="30"  
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#b9b7b7" 
+                                   FontSize="15" 
+                                   VerticalAlignment="Bottom"/>
+                        <PasswordBox Style="{StaticResource CPB}" 
+                                     x:Name="TBConfirmPassword"  
+                                     HorizontalContentAlignment="Center" 
+                                     GotFocus="ConfirmPassword_GotFocus" 
+                                     LostFocus="ConfirmPassword_LostFocus" 
+                                     PreviewMouseDown="ConfirmPassword_MouseDown" 
+                                     Width="180" Height="30" VerticalAlignment="Bottom"/>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <TextBox Style="{StaticResource CTB}" 
+                                 x:Name="TBEmail"  
+                                 HorizontalContentAlignment="Center"
+                                 GotFocus="Email_GotFocus" 
+                                 LostFocus="Email_LostFocus" 
+                                 Width="180" Height="30" VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="2" >
+                    <Button  
+                        Style="{StaticResource CLB}" 
+                        Click="RegisterAccount" 
+                        Content="Продолжить" 
+                        Width="180" 
+                        Height="40"  
+                        FontSize="17" 
+                        FontWeight="Bold" 
+                        VerticalAlignment="Top"/>
+                    <Grid HorizontalAlignment="Center" 
+                          VerticalAlignment="Center"
+                          Height="30" Width="235"
+                          Margin="0, 20, 0 , 0"
+                          >
+                        <TextBlock 
+                            Padding="0, 5, 0, 0"
+                            FontWeight="Bold" 
+                            Text="Есть учётная запись Night World?" 
+                            Foreground="LightGray" 
+                            HorizontalAlignment="Left"/>
+                        <TextBlock
+                            Padding="0, 5, 0, 0"
+                            FontWeight="Bold" 
+                            Foreground="White" 
+                            TextTrimming="CharacterEllipsis" 
+                            TextAlignment="Center"
+                            HorizontalAlignment="Right">
+                            <Hyperlink Click="ToLoginForm">Войти</Hyperlink>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
+        
+        
         <Canvas x:Name="GridMessageBox" Margin="0,28,0,0" Visibility="Collapsed">
             <Grid x:Name="NBShadowBackground" Opacity="0.9" Background="#000000" Width="944" Height="500"/>
             <TextBlock x:Name="MessageTitle" TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="25" Width="338" Height="36" Canvas.Left="303" Canvas.Top="152"/>
             <TextBlock x:Name="TextMarker" TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="25" Width="338" Height="198" Canvas.Left="303" Canvas.Top="193"/>
-            <Button Click="Okey" Width="150" Height="44" Content="OK" Canvas.Left="397" Canvas.Top="420" Style="{StaticResource CLB}" FontFamily="pack://application:,,,/assets/fonts/#Casper Bold" FontWeight="Bold" FontSize="18"/>
+            <Button Click="Okay" Width="150" Height="44" Content="OK" Canvas.Left="397" Canvas.Top="420" Style="{StaticResource CLB}" FontFamily="pack://application:,,,/assets/fonts/#Casper Bold" FontWeight="Bold" FontSize="18"/>
         </Canvas>
     </Grid>
 </Window>
