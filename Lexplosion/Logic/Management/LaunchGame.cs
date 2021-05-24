@@ -12,7 +12,7 @@ using Lexplosion.Logic.Network;
 namespace Lexplosion.Logic.Management
 {
 
-    static class LaunchGame // TODO: возможно из статично класса перевести в обычный
+    static class LaunchGame // TODO: возможно из статично класса перевести в обычный 
     {
         private static Process process = new Process();
         public static string runnigInstance = "";
