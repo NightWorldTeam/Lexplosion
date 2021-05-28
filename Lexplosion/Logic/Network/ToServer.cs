@@ -10,7 +10,6 @@ using Lexplosion.Global;
 
 namespace Lexplosion.Logic.Network
 {
-
     static class ToServer
     {
         private class FilesList : InstanceFiles //этот класс нужен для декодирования json

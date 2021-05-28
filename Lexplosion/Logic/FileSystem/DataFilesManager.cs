@@ -113,7 +113,6 @@ namespace Lexplosion.Logic.FileSystem
                 var data = GetFile<Dictionary<string, InstanceAssets>>(directory + "/launcherAssets.json");
 
                 return data;
-
             }
             catch { return new Dictionary<string, InstanceAssets>(); }
         }
