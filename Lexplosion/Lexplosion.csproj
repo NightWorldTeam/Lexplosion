@@ -96,9 +96,6 @@
     <Compile Include="Gui\Pages\Right\Menu\SettingsContainerPage.xaml.cs">
       <DependentUpon>SettingsContainerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Menu\TestModpacksContainerPage.xaml.cs">
-      <DependentUpon>TestModpacksContainerPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Gui\Pages\Right\Menu\ServersContainerPage.xaml.cs">
       <DependentUpon>ServersContainerPage.xaml</DependentUpon>
     </Compile>
@@ -169,10 +166,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Pages\Right\Menu\SettingsContainerPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Gui\Pages\Right\Menu\TestModpacksContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
