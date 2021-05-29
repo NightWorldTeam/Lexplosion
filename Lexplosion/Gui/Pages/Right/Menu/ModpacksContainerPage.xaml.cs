@@ -1,10 +1,12 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
@@ -18,6 +20,11 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     {
 		public static ModpacksContainerPage obj = null;
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
+
+		private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/OverviewPage.xaml");
+		private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/VersionPage.xaml");
+		private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/ModsListPage.xaml");
+        private Uri leftSideMenuPage = new Uri("pack://application:,,,/Gui/Pages/Left/LeftSideMenuPage.xaml");
 
 		public ModpacksContainerPage()
         {
@@ -64,16 +71,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
                 try
                 {
 					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId], "NightWorld", desc, instance_tags1);
-
 					i++;
 				}
                 catch 
 				{ 
 
 				}
-
 			}
-
 		}
 
 
@@ -343,19 +347,17 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void LaunchInstance(object sender, RoutedEventArgs e) 
 		{
-            if (!LaunchButtonBlock)
-            {
+			if (!LaunchButtonBlock)
+			{
 				string instanceId = ((Button)sender).Name.Replace("Download", "");
 
 				//проиводим действие только если произошел клик по запущенному модпаку, или никакой модпак не запущен
-				if (instanceId == LaunchGame.runnigInstance || LaunchGame.runnigInstance == "") 
+				if (instanceId == LaunchGame.runnigInstance || LaunchGame.runnigInstance == "")
 				{
 					LaunchButtonBlock = true;
 					ManageLogic.СlientManager(instanceId);
 				}
-
-			}
-			
+			}	
 		}
 
 		private void ExportInstance(object sender, RoutedEventArgs e)
@@ -363,10 +365,42 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		}
 
-		private void MoreButtonClick(object sender, RoutedEventArgs e) 
+		private void MoreButtonClick(object sender, RoutedEventArgs e)
+        {
+            string instanceId = ((Button)sender).Name;
+			var lsmp = LeftSideMenuPage.instance;
+
+			string[] ButtonIds = new string[4] { "eos", "export", "setting", "back" };
+			string[] ButtonContents = new string[4] { "Energy of Space", "Экспорт", "Настройки", "Назад" };
+			RoutedEventHandler[] ButtonClicks = new RoutedEventHandler[4] { lsmp.InstanceOverview, lsmp.InstanceExport, lsmp.InstanceSetting, lsmp.BackToMainMenu };
+
+			lsmp.FavoriteInstancesPanel.Visibility = Visibility.Visible;
+			lsmp.LeftSideMenu.Visibility = Visibility.Hidden;
+			
+			for (int i = 0; i < 4; i++)
+            {
+				if (lsmp.FavoriteInstancesPanel.FindName("btn" + "_" + i.ToString()) == null)
+                {
+                    lsmp.FavoriteInstancesPanel.Children.Add(GetToggleButton(ButtonContents[i], ButtonClicks[i], i, ButtonIds[i]));
+                }
+            }
+            GetRightSideFrame().Source = overviewPage;
+        }
+
+		private ToggleButton GetToggleButton(string content, RoutedEventHandler routedEventHandler, int index, string id)
 		{
-			string instanceId = ((Button)sender).Name;
-			MessageBox.Show(instanceId);
+			ToggleButton toggleButton = new ToggleButton()
+			{
+				Content = content,
+				Style = (Style)Application.Current.FindResource("MWCBS1"),
+				Name = "btn" + "_" + index.ToString()
+			};
+			if (index == 0) toggleButton.IsChecked = true;
+			toggleButton.Click += routedEventHandler;
+
+			return toggleButton;
 		}
-	}
+
+		private static Frame GetRightSideFrame() => MainWindow.instance.RightSideFrame;
+    }
 }

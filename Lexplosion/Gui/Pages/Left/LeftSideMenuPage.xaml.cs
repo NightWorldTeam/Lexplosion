@@ -15,7 +15,7 @@ namespace Lexplosion.Gui.Pages
     /// </summary>
     public partial class LeftSideMenuPage : Page
     {
-        //public static LeftSideMenuPage instance = null;
+        public static LeftSideMenuPage instance = null;
         public static string selectedInstance = "";
         private Dictionary<string, bool> IsInstalled = new Dictionary<string, bool>();
         private ToggleButton selected;
@@ -25,7 +25,8 @@ namespace Lexplosion.Gui.Pages
         {
             // instance = this;
             InitializeComponent();
-            selected = this.Instances;
+            instance = this;
+            selected = StoreMenuButton;
 
             NameBlock.Text = UserData.login;
 
@@ -35,11 +36,10 @@ namespace Lexplosion.Gui.Pages
                 ToggleButton button = UpdatePacks(UserData.InstancesList[pack], pack);
 
                 // если выбранный модпак равен этому модпаку тогда присваиваем ему IsChecked = true
-                if (UserData.settings["selectedModpack"] == pack) 
+                if (UserData.settings["selectedModpack"] == pack)
                 {
                     button.IsChecked = true;
                     selectedFavoriteInstance = button;
-
                 }
             }
 
@@ -87,11 +87,12 @@ namespace Lexplosion.Gui.Pages
                 Name = pack
             };
 
-            instanceButton.Click += FavoriteInstanceButtonClick;
-            FavoriteInstancesPanel.Children.Add(instanceButton);
+            //instanceButton.Click += FavoriteInstanceButtonClick;
+            //FavoriteInstancesPanel.Children.Add(instanceButton);
 
             return instanceButton;
         }
+        /*
         private void FavoriteInstanceButtonClick(object sender, RoutedEventArgs e) 
         {
             ToggleButton button = (ToggleButton)sender;
@@ -107,8 +108,8 @@ namespace Lexplosion.Gui.Pages
                 button.IsChecked = true;
             }
         }
-
-        private void OpenInstances(object sender, RoutedEventArgs e) 
+        */
+        private void StoreClicked(object sender, RoutedEventArgs e)
         {
             ToggleButton button = (ToggleButton)sender;
             if (button.Name != selected.Name)
@@ -124,8 +125,8 @@ namespace Lexplosion.Gui.Pages
 
             MainWindow.instance.RightSideFrame.Source = modpacksContainerPage;
         }
-        
-        private void OnlineGame(object sender, RoutedEventArgs e) 
+
+        private void MultiplayerClicked(object sender, RoutedEventArgs e)
         {
             ToggleButton button = (ToggleButton)sender;
             if (button.Name != selected.Name)
@@ -142,7 +143,7 @@ namespace Lexplosion.Gui.Pages
             MainWindow.instance.RightSideFrame.Source = serversContainerPage;
         }
 
-        private void Favorites(object sender, RoutedEventArgs e)
+        private void LibraryClicked(object sender, RoutedEventArgs e)
         {
             ToggleButton button = (ToggleButton)sender;
             if (button.Name != selected.Name)
@@ -162,7 +163,7 @@ namespace Lexplosion.Gui.Pages
             MainWindow.instance.RightSideFrame.Source = favoritesContainerPage;
         }
 
-        private void Settings(object sender, RoutedEventArgs e)
+        private void SettingsClicked(object sender, RoutedEventArgs e)
         {
             ToggleButton button = (ToggleButton)sender;
             if (button.Name != selected.Name)
@@ -179,24 +180,32 @@ namespace Lexplosion.Gui.Pages
             MainWindow.instance.RightSideFrame.Source = settingsContainerPage;
         }
 
-        private void UserProfile(object sender, RoutedEventArgs e)
+        public void InstanceOverview(object sender, RoutedEventArgs e)
         {
 
         }
 
+        public void InstanceExport(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void InstanceSetting(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void BackToMainMenu(object sender, RoutedEventArgs e)
+        {
+            LeftSideMenu.Visibility = Visibility.Visible;
+            FavoriteInstancesPanel.Visibility = Visibility.Hidden;
+            MainWindow.instance.RightSideFrame.Source = modpacksContainerPage;
+        }
+
+        // DropDownMenu
         private void AddCustomModpack(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private void LauncherSettings(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Network(object sender, RoutedEventArgs e)
-        {
-            //MessageBox.Show(WithDirectory.ImportInstance(@"C:\Users\Putin\Desktop\struct\lt.zip", out _).ToString());
         }
 
         private void MenuArrow(object sender, RoutedEventArgs e)

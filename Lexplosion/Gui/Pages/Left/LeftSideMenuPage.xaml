@@ -74,65 +74,54 @@
     <Grid>
         <Canvas Background="#18191b">
             <Canvas.Effect>
-                <DropShadowEffect ShadowDepth="0" Color="#36393f" Opacity="0.5"/>
+                <DropShadowEffect ShadowDepth="0" Color="#36393f" Opacity="0.3"/>
             </Canvas.Effect>
         </Canvas>
         <StackPanel x:Name="LeftSideMenu" Margin="-5,10,0,0" Visibility="Visible">
-            <ToggleButton x:Name="Instances" IsChecked="True" Click="OpenInstances" Style="{StaticResource MWCBS1}">
-                Клиенты
-            </ToggleButton>
-            <ToggleButton x:Name="ServersProfile" Click="OnlineGame" Style="{StaticResource MWCBS1}">
-                Сетевая игра
-            </ToggleButton>
-            <ToggleButton x:Name="SettingsLauncher" Click="Settings" Style="{StaticResource MWCBS1}">
-                Настройки
-            </ToggleButton>
-            <ToggleButton x:Name="FavoritesProfile" Click="Favorites" Style="{StaticResource MWCBS1}">
-                Избранное
-            </ToggleButton>
+            <ToggleButton x:Name="StoreMenuButton" Click="StoreClicked" IsChecked="True" Style="{StaticResource MWCBS1}" Content="Каталог"/>
+            <ToggleButton x:Name="LibraryMenuButton" Click="LibraryClicked" Style="{StaticResource MWCBS1}" Content="Библиотека"/>
+            <ToggleButton x:Name="ServersMenuButton" Click="MultiplayerClicked" Style="{StaticResource MWCBS1}" Content="Сетевая игра"/>
+            <ToggleButton x:Name="SettingsMenuButton" Click="SettingsClicked" Style="{StaticResource MWCBS1}" Content="Настройки"/>
         </StackPanel>
-        <StackPanel Visibility="Hidden" x:Name="FavoriteInstancesPanel" Margin="-5,10,0,0">
-            <Button HorizontalAlignment="Left" Content=" &#8592;        Избранное        " FontWeight="Bold" Background="#18191b" BorderThickness="0" Foreground="White" FontSize="20" Margin="10,0,0,10"/>
-        </StackPanel>
+        <StackPanel Visibility="Hidden" x:Name="FavoriteInstancesPanel" Margin="-5,10,0,0"/>
+
         <Canvas Margin="0,470,0,0" Visibility="Hidden"/>
 
 
         <!-- Drop Down Menu -->
-        <Canvas x:Name="DropDownMenu" Background="#151719" Width="244" Height="214" Margin="0,466,0,0">
-            <Canvas Width="244" Height="34" Background="#151719">
-                <Canvas Background="#151719" Width="242" Height="32" Canvas.Left="1" Canvas.Top="1" Canvas.Bottom="1" Canvas.Right="1">
-                    <Ellipse x:Name="StatusBlock" Width="12" Height="12" Fill="Green" HorizontalAlignment="Left" Canvas.Left="10" Canvas.Top="9"/>
-                    <ToggleButton Style="{StaticResource CDDMS}" x:Name="DropDownMenuSwitcher" IsChecked="true" Click="MenuArrow" FontSize="20" Foreground="White" Height="20" Width="20" Canvas.Left="214" Canvas.Top="6"/>
-                    <TextBlock x:Name="NameBlock" FontWeight="Bold" Text="Player" Foreground="#ffffff" FontSize="18" TextAlignment="Center" Width="120" Height="23" Canvas.Top="3" Canvas.Bottom="8" Canvas.Left="60"/>
-                </Canvas>
-            </Canvas>
-            <Canvas Canvas.Top="34" Width="244" Height="180">
-                <Button Style="{StaticResource TSB}" Click="UserProfile" Width="175" Height="30" FontSize="16" Canvas.Left="27" Canvas.Top="18">
-                    <StackPanel Orientation="Horizontal"  Width="172">
-                        <Image Margin="6,0,0,0"  Source="pack://application:,,,/Assets/images/icons/profile.png" Width="25"/>
-                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text=" Профиль" Width="138"/>
-                    </StackPanel>
+        <Grid x:Name="DropDownMenu" Background="#151719" Width="244" Height="214" Margin="0, 466, 0, 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="34"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" ShowGridLines="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="32"/>
+                </Grid.ColumnDefinitions>
+                <Ellipse Grid.Column="0" x:Name="StatusBlock" Width="12" Height="12" Fill="Green" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" x:Name="NameBlock" FontWeight="Bold" Text="Player" Foreground="#ffffff" FontSize="18" TextAlignment="Center" Width="120" Height="23" />
+                <ToggleButton Grid.Column="2" Style="{StaticResource CDDMS}" x:Name="DropDownMenuSwitcher" IsChecked="true" Click="MenuArrow" FontSize="20" Foreground="White" Height="20" Width="20" HorizontalAlignment="Center"/>
+            </Grid>
+            <Grid Grid.Row="1" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Button Style="{StaticResource TSB}" Click="AddCustomModpack" Width="175" Height="30" FontSize="16">
+                    <Grid Width="172">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="pack://application:,,,/Assets/images/icons/addModpack.png" Width="25"/>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text=" Добавить сборку" Width="138"/>
+                    </Grid>
                 </Button>
-                <Button Style="{StaticResource TSB}" Click="AddCustomModpack" Width="175" Height="30" FontSize="16" Canvas.Left="24" Canvas.Top="58">
-                    <StackPanel Orientation="Horizontal"  Width="172">
-                        <Image Margin="6,0,0,0" Source="pack://application:,,,/Assets/images/icons/addModpack.png" Width="25"/>
-                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text=" Добавить сборку" Width="138"/>
-                    </StackPanel>
-                </Button>
-                <Button Style="{StaticResource TSB}" Click="LauncherSettings" Width="175" Height="30" FontSize="16" Canvas.Left="25" Canvas.Top="128">
-                    <StackPanel Orientation="Horizontal" Width="172">
-                        <Image Margin="5,0,0,0" Source="pack://application:,,,/Assets/images/icons/settings.png" Width="25"/>
-                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Foreground="White" Text= " Настройки" Width="138"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Style="{StaticResource TSB}" Click="Network" Width="175" FontSize="16" Canvas.Left="24" Canvas.Top="93">
-                    <StackPanel Orientation="Horizontal" Width="175">
-                        <Image Source="pack://application:,,,/Assets/images/icons/network.png" Width="25" Margin="6,0,0,0"/>
-                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Foreground="White" Text=" Сетевая игра" Width="138"/>
-                    </StackPanel>
-                </Button>
-            </Canvas>
-        </Canvas>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>
