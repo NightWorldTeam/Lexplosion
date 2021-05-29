@@ -330,20 +330,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			return tag;
 		}
 
-		
-		private ToggleButton GetToggleButton(string content, int index)
-        {
-			ToggleButton toggleButton = new ToggleButton()
-			{
-				Content = content,
-				Style = (Style)Application.Current.FindResource("MWCBS1"),
-
-			};
-			if (index == 0) toggleButton.IsChecked = true;
-
-			return toggleButton;
-        }
-
 		private RowDefinition GetRowDefinition()
         {
 			RowDefinition rowDefinition = new RowDefinition() 
@@ -383,15 +369,37 @@ namespace Lexplosion.Gui.Pages.Right.Menu
         {
             string instanceId = ((Button)sender).Name;
 			var lsmp = LeftSideMenuPage.instance;
+
+			string[] ButtonIds = new string[4] { "eos", "export", "setting", "back" };
+			string[] ButtonContents = new string[4] { "Energy of Space", "Экспорт", "Настройки", "Назад" };
+			RoutedEventHandler[] ButtonClicks = new RoutedEventHandler[4] { lsmp.InstanceOverview, lsmp.InstanceExport, lsmp.InstanceSetting, lsmp.BackToMainMenu };
+
 			lsmp.FavoriteInstancesPanel.Visibility = Visibility.Visible;
 			lsmp.LeftSideMenu.Visibility = Visibility.Hidden;
-			string[] ButtonContents = new string[4] { "Energy of Space", "Экпорт", "Настройки", "Назад" };
+			
 			for (int i = 0; i < 4; i++)
             {
-				lsmp.FavoriteInstancesPanel.Children.Add(GetToggleButton(ButtonContents[i], i));
-			}
+				if (lsmp.FavoriteInstancesPanel.FindName("btn" + "_" + i.ToString()) == null)
+                {
+                    lsmp.FavoriteInstancesPanel.Children.Add(GetToggleButton(ButtonContents[i], ButtonClicks[i], i, ButtonIds[i]));
+                }
+            }
             GetRightSideFrame().Source = overviewPage;
         }
+
+		private ToggleButton GetToggleButton(string content, RoutedEventHandler routedEventHandler, int index, string id)
+		{
+			ToggleButton toggleButton = new ToggleButton()
+			{
+				Content = content,
+				Style = (Style)Application.Current.FindResource("MWCBS1"),
+				Name = "btn" + "_" + index.ToString()
+			};
+			if (index == 0) toggleButton.IsChecked = true;
+			toggleButton.Click += routedEventHandler;
+
+			return toggleButton;
+		}
 
 		private static Frame GetRightSideFrame() => MainWindow.instance.RightSideFrame;
     }
