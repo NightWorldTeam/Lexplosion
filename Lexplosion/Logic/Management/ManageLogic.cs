@@ -4,6 +4,7 @@ using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using System.Windows;
 
 namespace Lexplosion.Logic.Management
 {
@@ -120,7 +121,7 @@ namespace Lexplosion.Logic.Management
                 void Run(string initModPack)
                 {
                     Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
-                    InitData data = LaunchGame.Initialization(initModPack, instanceSettings);
+                    InitData data = LaunchGame.Initialization(initModPack, instanceSettings); // TODO: весь data.files возвращать не надо. Надо только вернуть нужную инфу
 
                     if (data != null)
                     {
@@ -130,7 +131,8 @@ namespace Lexplosion.Logic.Management
                                 MainWindow.Obj.SetMessageBox("Не удалось определить путь до Java!", "Ошибка 940");
                                 //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
-                            return;
+                            //return;
+                            MessageBox.Show("0");
 
                         }
                         else if (data.errors.Contains("gamePathError"))
@@ -139,7 +141,8 @@ namespace Lexplosion.Logic.Management
                                 MainWindow.Obj.SetMessageBox("Ошибка при определении игровой директории!", "Ошибка 950");
                                 //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
-                            return;
+                            //return;
+                            MessageBox.Show("1");
 
                         }
                         else if (UserData.offline && (UserData.settings.ContainsKey(instanceId + "-update") && UserData.settings[instanceId + "-update"] == "true")) //если лаунчер запущен в оффлайн режиме и выбранный модпак поставлен на обновление
@@ -148,7 +151,8 @@ namespace Lexplosion.Logic.Management
                                 MainWindow.Obj.SetMessageBox("Клиент поставлен на обновление, но лаунчер запущен в оффлайн режиме! Войдите в онлайн режим.", "Ошибка 980");
                                 //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
-                            return;
+                            //return;
+                            MessageBox.Show("2");
 
                         }
                         else if ((data.files == null && (UserData.offline || UserData.settings["noUpdate"] == "true")) && !(UserData.settings.ContainsKey(instanceId + "-update") && UserData.settings[instanceId + "-update"] == "true"))
@@ -157,7 +161,8 @@ namespace Lexplosion.Logic.Management
                                 MainWindow.Obj.SetMessageBox("Вы должны хотя бы 1 раз запустить клиент в онлайн режиме и с включенными обновлениями!", "Ошибка 970");
                                 //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
-                            return;
+                            //return;
+                            MessageBox.Show("3");
 
                         }
                         else if (data.files == null)
@@ -166,9 +171,11 @@ namespace Lexplosion.Logic.Management
                                 MainWindow.Obj.SetMessageBox("Не удалось запустить игру!", "Ошибка 930");
                                 //InitProgressBar.Visibility = Visibility.Collapsed;
                             });
-                            return;
+                            //return;
+                            MessageBox.Show("4");
                         }
 
+                        // TODO: это сделать нормально
                         string errorsText = "\n\n";
                         foreach (string error in data.errors)
                             errorsText += error + "\n";

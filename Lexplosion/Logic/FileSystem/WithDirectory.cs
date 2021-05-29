@@ -18,19 +18,23 @@ namespace Lexplosion.Logic.FileSystem
 {
     static class WithDirectory
     {
-        public static string directory;
-        public static int CountFiles;
-
-        private struct Updates //структура, хранящая всё, что нужно обновить. Метод Check в неё кладет, а метод Update - достает 
+        //этот класс возвращает метод CheckVariableFiles
+        public class VariableFilesUpdates
         {
-            static public Dictionary<string, List<string>> data = new Dictionary<string, List<string>>();
-            static public List<string> natives = new List<string>();
-            static public List<string> libraries = new List<string>();
-            static public bool minecraftJar = false;
-            static public bool assetsObjects = false;
-            static public bool assetsIndexes = false;
-            static public bool assetsVirtual = false;
-            static public List<string> oldFiles = new List<string>();
+            public Dictionary<string, List<string>> Data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
+            public List<string> OldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
+            public bool Successful = true; // удачна или неудачна ли проверка
+        }
+
+        // этот класс возвращает метод CheckBaseFiles
+        public class BaseFilesUpdates
+        {
+            public List<string> Natives = new List<string>();
+            public List<string> Libraries = new List<string>();
+            public bool MinecraftJar = false;
+            public bool AssetsObjects = false;
+            public bool AssetsIndexes = false;
+            public bool AssetsVirtual = false;
         }
 
         private class LauncherAssets //этот класс нужен для декодирования json
@@ -38,6 +42,8 @@ namespace Lexplosion.Logic.FileSystem
             public int version;
             public Dictionary<string, InstanceAssets> data;
         }
+
+        public static string directory;
 
         public static void Create(string path)
         {
@@ -69,68 +75,63 @@ namespace Lexplosion.Logic.FileSystem
             catch { }
 
         }
+        public static void DropLastUpdates(string instanceId)
+        {
+            try
+            {
 
-        public static bool Check(InstanceFiles filesInfo, string instanceId)
+                using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
+                {
+                    fstream.Write(new byte[0], 0, 0);
+                    fstream.Close();
+                }
+
+            }
+            catch { }
+        }
+
+        public static Dictionary<string, int> GetLastUpdates(string instanceId)
         {
             Dictionary<string, int> updates = new Dictionary<string, int>();
 
-            if (!File.Exists(directory + "/instances/" + instanceId + "/" + "lastUpdates.json"))
+            try
             {
-
-                if (!Directory.Exists(directory + "/instances/" + instanceId))
-                    Directory.CreateDirectory(directory + "/instances/" + instanceId); //создаем папку с модпаком, если её нет
-
-                File.Create(directory + "/instances/" + instanceId + "/" + "lastUpdates.json").Close(); // создание файла со списком последних обновлений
-
-            }
-            else
-            {
-
-                try
+                if (!File.Exists(directory + "/instances/" + instanceId + "/" + "lastUpdates.json"))
                 {
-                    using (FileStream fstream = File.OpenRead(directory + "/instances/" + instanceId + "/lastUpdates.json")) //открываем файл с последними обновлениями
+                    if (!Directory.Exists(directory + "/instances/" + instanceId))
                     {
-                        byte[] fileBytes = new byte[fstream.Length];
-                        fstream.Read(fileBytes, 0, fileBytes.Length);
-                        fstream.Close();
-
-                        try
-                        {
-                            if (JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes)) != null)
-                                updates = JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes));
-
-                        }
-                        catch
-                        {
-                            File.Delete(directory + "/instances/" + instanceId + "/lastUpdates.json");
-                        }
-
+                        Directory.CreateDirectory(directory + "/instances/" + instanceId); //создаем папку с модпаком, если её нет
                     }
-
                 }
-                catch { }
 
-            }
-
-            if (File.Exists(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver"))
-            {
-                using (FileStream fstream = File.OpenRead(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver")) //открываем файл с версией libraries
+                using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с последними обновлениями
                 {
                     byte[] fileBytes = new byte[fstream.Length];
                     fstream.Read(fileBytes, 0, fileBytes.Length);
                     fstream.Close();
 
-                    int ver = 0;
-                    Int32.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
-                    updates["libraries"] = ver;
+                    try
+                    {
+                        if (JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes)) != null)
+                            updates = JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes));
+
+                    }
+                    catch
+                    {
+                        File.Delete(directory + "/instances/" + instanceId + "/lastUpdates.json");
+                    }
 
                 }
 
             }
-            else
-            {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver", "0");
-            }
+            catch { }
+
+            return updates;
+        }
+
+        public static VariableFilesUpdates CheckVariableFiles(InstanceFiles filesInfo, string instanceId, ref Dictionary<string, int> updates)
+        {
+            VariableFilesUpdates filesUpdates = new VariableFilesUpdates();
 
             //Проходимся по списку папок(data) из класса instanceFiles
             foreach (string dir in filesInfo.data.Keys)
@@ -150,7 +151,10 @@ namespace Lexplosion.Logic.FileSystem
                         updates[dir] = filesInfo.data[dir].folderVersion;
                     }
 
-                    using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Truncate))
+                    // TODO: тут из lastUpdates удалить все файлы из этой папки
+
+                    //отрываем файл с последними обновлениями и записываем туда updates, который уже содержит последнюю версию папки. Папка сейчас будет пустой, поэтому метод Update в любом случае скачает нужные файлы
+                    using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
                     {
                         byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
                         fstream.Write(bytes, 0, bytes.Length);
@@ -173,7 +177,7 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             try
                             {
-                                using (FileStream fstream = File.OpenRead(file)) //открываем файл на чтение
+                                using (FileStream fstream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл на чтение
                                 {
                                     byte[] bytes = new byte[fstream.Length];
                                     fstream.Read(bytes, 0, bytes.Length);
@@ -187,11 +191,10 @@ namespace Lexplosion.Logic.FileSystem
                                             {
                                                 File.Delete(file); //удаляем файл, если не сходится хэш или размер
 
-                                                if (!Updates.data.ContainsKey(dir)) //если директория отсутствует в Updates.data, то добавляем её 
-                                                    Updates.data.Add(dir, new List<string>());
+                                                if (!filesUpdates.Data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
+                                                    filesUpdates.Data.Add(dir, new List<string>());
 
-                                                Updates.data[dir].Add(fileName); //добавляем файл в класс, который содержит обновления
-                                                CountFiles++;
+                                                filesUpdates.Data[dir].Add(fileName); //добавляем файл в список на обновление
 
                                             }
 
@@ -207,7 +210,8 @@ namespace Lexplosion.Logic.FileSystem
                             catch
                             {
                                 //чтение одного из файлов не удалось, стопаем весь процесс
-                                return false;
+                                filesUpdates.Successful = false; // проверка неудачна
+                                return filesUpdates;
                             }
                         }
 
@@ -217,16 +221,15 @@ namespace Lexplosion.Logic.FileSystem
 
                             if (!updates.ContainsKey(dir + "/" + fileName) || updates[dir + "/" + fileName] != filesInfo.data[dir].objects[fileName].lastUpdate)
                             {
-                                if (!Updates.data.ContainsKey(dir)) //если директория отсутствует в Updates.data, то добавляем её 
+                                if (!filesUpdates.Data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
                                 {
-                                    Updates.data.Add(dir, new List<string>());
+                                    filesUpdates.Data.Add(dir, new List<string>());
                                 }
 
 
-                                if (!Updates.data[dir].Contains(fileName))
+                                if (!filesUpdates.Data[dir].Contains(fileName))
                                 {
-                                    Updates.data[dir].Add(fileName);
-                                    CountFiles++;
+                                    filesUpdates.Data[dir].Add(fileName);
                                 }
 
                             }
@@ -241,13 +244,12 @@ namespace Lexplosion.Logic.FileSystem
                     if (!File.Exists(folder + "/" + file))
                     {
 
-                        if (!Updates.data.ContainsKey(dir))
-                            Updates.data.Add(dir, new List<string>());
+                        if (!filesUpdates.Data.ContainsKey(dir))
+                            filesUpdates.Data.Add(dir, new List<string>());
 
-                        if (!Updates.data[dir].Contains(file))
+                        if (!filesUpdates.Data[dir].Contains(file))
                         {
-                            Updates.data[dir].Add(file);
-                            CountFiles++;
+                            filesUpdates.Data[dir].Add(file);
                         }
 
                     }
@@ -264,8 +266,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         if (File.Exists(directory + "/instances/" + instanceId + "/" + folder + "/" + file))
                         {
-                            Updates.oldFiles.Add(folder + "/" + file);
-                            CountFiles++;
+                            filesUpdates.OldFiles.Add(folder + "/" + file);
                         }
 
                     }
@@ -273,13 +274,18 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
+            return filesUpdates;
+        }
+
+        public static BaseFilesUpdates CheckBaseFiles(InstanceFiles filesInfo, string instanceId, ref Dictionary<string, int> updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
+        {
+            BaseFilesUpdates updatesList = new BaseFilesUpdates(); //возвращаемый список обновлений
+
             //проверяем файл версии
             if (!Directory.Exists(directory + "/instances/" + instanceId + "/version"))
             {
                 Directory.CreateDirectory(directory + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
-                Updates.minecraftJar = true; //сразу же добавляем minecraftJar в обновления
-                CountFiles++;
-
+                updatesList.MinecraftJar = true; //сразу же добавляем minecraftJar в обновления
             }
             else
             {
@@ -291,19 +297,18 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         try
                         {
-                            using (FileStream fstream = File.OpenRead(minecraftJarFile))
+                            using (FileStream fstream = new FileStream(minecraftJarFile, FileMode.Open, FileAccess.Read))
                             {
                                 byte[] bytes = new byte[fstream.Length];
                                 fstream.Read(bytes, 0, bytes.Length);
                                 fstream.Close();
 
-                                using(SHA1 sha = new SHA1Managed())
+                                using (SHA1 sha = new SHA1Managed())
                                 {
                                     if (Convert.ToBase64String(sha.ComputeHash(bytes)) != filesInfo.version.minecraftJar.sha1 || bytes.Length != filesInfo.version.minecraftJar.size)
                                     {
                                         File.Delete(minecraftJarFile); //удаляем файл, если не сходится хэш или размер
-                                        Updates.minecraftJar = true;
-                                        CountFiles++;
+                                        updatesList.MinecraftJar = true;
 
                                     }
 
@@ -314,15 +319,76 @@ namespace Lexplosion.Logic.FileSystem
                         }
                         catch
                         {
-                            return false; //чтение файла не удалось, стопаем весь процесс
+                            return null; //чтение файла не удалось, стопаем весь процесс
                         }
                     }
 
                 }
                 else
                 {
-                    Updates.minecraftJar = true;
-                    CountFiles++;
+                    updatesList.MinecraftJar = true;
+                }
+            }
+
+            //получаем версию libraries
+            if (File.Exists(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver"))
+            {
+                try
+                {
+                    using (FileStream fstream = new FileStream(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
+                    {
+                        byte[] fileBytes = new byte[fstream.Length];
+                        fstream.Read(fileBytes, 0, fileBytes.Length);
+                        fstream.Close();
+
+                        int ver = 0;
+                        Int32.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
+                        updates["libraries"] = ver;
+
+                    }
+                }
+                catch
+                {
+                    updates["libraries"] = 0;
+                }
+
+            }
+            else
+            {
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver", "0");
+                updates["libraries"] = 0;
+            }
+
+            //проверяем папку libraries
+            if (!Directory.Exists(directory + "/libraries"))
+            {
+                foreach (string lib in filesInfo.libraries)
+                {
+                    updatesList.Libraries.Add(lib);
+                }
+
+            }
+            else
+            {
+
+                if (filesInfo.version.librariesLastUpdate != updates["libraries"]) //если версия libraries старая, то отправляем на обновления
+                {
+                    foreach (string lib in filesInfo.libraries)
+                    {
+                        updatesList.Libraries.Add(lib);
+                    }
+
+                }
+                else
+                {
+
+                    foreach (string lib in filesInfo.libraries) //ищем недостающие файлы
+                    {
+                        if (!File.Exists(directory + "/libraries/" + lib))
+                        {
+                            updatesList.Libraries.Add(lib);
+                        }
+                    }
                 }
             }
 
@@ -331,8 +397,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 foreach (string key in filesInfo.natives.Keys) //добавляем natives в обновления
                 {
-                    Updates.natives.Add(key);
-                    CountFiles++;
+                    updatesList.Natives.Add(key);
                 }
 
             }
@@ -346,8 +411,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         if (filesInfo.natives[key] == "windows" || filesInfo.natives[key] == "all")
                         {
-                            Updates.natives.Add(key);
-                            CountFiles++;
+                            updatesList.Natives.Add(key);
                         }
 
                     }
@@ -362,46 +426,9 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if (!File.Exists(directory + "/instances/" + instanceId + "/version/natives/" + n))
                             {
-                                Updates.natives.Add(n);
-                                CountFiles++;
+                                updatesList.Natives.Add(n);
                             }
 
-                        }
-                    }
-                }
-            }
-
-            //проверяем папку libraries
-            if (!Directory.Exists(directory + "/libraries"))
-            {
-                foreach (string lib in filesInfo.libraries)
-                {
-                    Updates.libraries.Add(lib);
-                    CountFiles++;
-                }
-
-            }
-            else
-            {
-
-                if (!updates.ContainsKey("libraries") || filesInfo.version.librariesLastUpdate != updates["libraries"]) //если версия libraries старая, тот отправляем на обновления
-                {
-                    foreach (string lib in filesInfo.libraries)
-                    {
-                        Updates.libraries.Add(lib);
-                        CountFiles++;
-                    }
-
-                }
-                else
-                {
-
-                    foreach (string lib in filesInfo.libraries) //ищем недостающие файлы
-                    {
-                        if (!File.Exists(directory + "/libraries/" + lib))
-                        {
-                            Updates.libraries.Add(lib);
-                            CountFiles++;
                         }
                     }
                 }
@@ -410,230 +437,143 @@ namespace Lexplosion.Logic.FileSystem
             //проверяем assets
             if (!Directory.Exists(directory + "/assets/virtual/" + filesInfo.version.assetsVersion))
             {
-                Updates.assetsVirtual = true;
-                CountFiles++;
+                updatesList.AssetsVirtual = true;
             }
 
             if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
             {
-                Updates.assetsIndexes = true;
-                CountFiles++;
+                updatesList.AssetsIndexes = true;
             }
 
             if (!Directory.Exists(directory + "/assets/objects"))
             {
-                Updates.assetsObjects = true;
-                CountFiles++;
+                updatesList.AssetsObjects = true;
             }
 
-            return true;
+            return updatesList;
         }
 
-        public static List<string> Update(InstanceFiles filesList, string instanceId, MainWindow window)
+        //функция для удаления файла при его существовании 
+        private static void DelFile(string file)
         {
-            WebClient wc = new WebClient();
-            Dictionary<string, int> updates = new Dictionary<string, int>();
+            if (File.Exists(file))
+                File.Delete(file);
+        }
 
-            string[] folders;
-            string addr;
-            int completedDownloads = 0;
-            List<string> errors = new List<string>();
+        //функция для скачивания libraries и natives
+        private static bool DownloadApplicationFiles(string url, string to, string file, WebClient wc)
+        {
+            //создаем папки в соответсвии с путем к файлу из списка
+            string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            //функция для удаления файла при его существовании 
-            void DelFile(string file)
+            string path = directory;
+            for (int i = 0; i < foldersPath.Length - 1; i++)
             {
-                if (File.Exists(file))
-                    File.Delete(file);
+                path += "/" + foldersPath[i];
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
             }
 
-            //функция обновления процента в прогресс баре
-            void UpdateProgressBar()
-            {
-                completedDownloads++;
-                double count = (double)completedDownloads / CountFiles;
-                count *= 100;
-                window.Dispatcher.Invoke(delegate
-                {
-                    //window.ProgressBar.Value = (int) count;
-                    //window.ProgressCount.Text = ((int)count).ToString() + "%";
-                });
-            }
+            string temp = directory + "/temp/";
+            string zipFile = file + ".zip";
 
-            //функция для скачивания файлов(кроме libraries и natives)
-            bool DownloadFile(string url, string file, string to, string sha1, int size)
-            {
-
-                string temp = directory + "/temp/";
-                string zipFile = file + ".zip";
-
-                //создаем папки в соответсвии с путем к файлу из списка
-                string[] foldersPath = to.Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-                string path = directory;
-                for (int i = 0; i < foldersPath.Length - 1; i++)
-                {
-                    path += "/" + foldersPath[i];
-                    if (!Directory.Exists(path))
-                        Directory.CreateDirectory(path);
-                }
-
-                try
-                {
-                    wc.DownloadFile(url + ".zip", temp + file + ".zip");
-
-                    DelFile(to + ".zip");
-                    ZipFile.ExtractToDirectory(temp + zipFile, temp);
-                    File.Delete(temp + zipFile);
-
-                    using (FileStream fstream = new FileStream(temp + file, FileMode.OpenOrCreate))
-                    {
-                        byte[] fileBytes = new byte[fstream.Length];
-                        fstream.Read(fileBytes, 0, fileBytes.Length);
-                        fstream.Close();
-
-                        using(SHA1 sha = new SHA1Managed())
-                        {
-                            if (Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 && fileBytes.Length == size)
-                            {
-                                DelFile(to);
-                                File.Move(temp + file, to);
-
-                                return true;
-
-                            }
-                            else
-                            {
-                                File.Delete(temp + file);
-                                return false;
-
-                            }
-
-                        }
-                        
-                    }
-
-                }
-                catch
-                {
-                    DelFile(temp + file);
-                    DelFile(temp + zipFile);
-
-                    return false;
-                }
-            }
-
-            //функция для скачивания libraries и natives
-            bool DownloadApplicationFiles(string url, string to, string file)
-            {
-                //создаем папки в соответсвии с путем к файлу из списка
-                string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-                string path = directory;
-                for (int i = 0; i < foldersPath.Length - 1; i++)
-                {
-                    path += "/" + foldersPath[i];
-                    if (!Directory.Exists(path))
-                        Directory.CreateDirectory(path);
-                }
-
-                string temp = directory + "/temp/";
-                string zipFile = file + ".zip";
-
-                try
-                {
-                    wc.DownloadFile(url + ".zip", temp + zipFile);
-
-                    DelFile(to + zipFile);
-                    ZipFile.ExtractToDirectory(temp + zipFile, temp);
-                    File.Delete(temp + zipFile);
-
-                    DelFile(to + file);
-                    File.Move(temp + file, to + file);
-
-                    return true;
-
-                }
-                catch
-                {
-                    DelFile(temp + file);
-                    DelFile(temp + zipFile);
-
-                    return false;
-                }
-
-            }
-
-            //пытаемся открыть файл с последними обновлениями
             try
             {
-                using (FileStream fstream = File.OpenRead(directory + "/instances/" + instanceId + "/" + "lastUpdates.json"))
+                wc.DownloadFile(url + ".zip", temp + zipFile);
+
+                DelFile(to + zipFile);
+                ZipFile.ExtractToDirectory(temp + zipFile, temp);
+                File.Delete(temp + zipFile);
+
+                DelFile(to + file);
+                File.Move(temp + file, to + file);
+
+                return true;
+
+            }
+            catch
+            {
+                DelFile(temp + file);
+                DelFile(temp + zipFile);
+
+                return false;
+            }
+
+        }
+
+        //функция для скачивания файлов(кроме libraries и natives)
+        private static bool DownloadFile(string url, string file, string to, string sha1, int size, WebClient wc)
+        {
+
+            string temp = directory + "/temp/";
+            string zipFile = file + ".zip";
+
+            //создаем папки в соответсвии с путем к файлу из списка
+            string[] foldersPath = to.Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
+
+            string path = directory;
+            for (int i = 0; i < foldersPath.Length - 1; i++)
+            {
+                path += "/" + foldersPath[i];
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+            }
+
+            try
+            {
+                wc.DownloadFile(url + ".zip", temp + file + ".zip");
+
+                DelFile(to + ".zip");
+                ZipFile.ExtractToDirectory(temp + zipFile, temp);
+                File.Delete(temp + zipFile);
+
+                using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
                 {
                     byte[] fileBytes = new byte[fstream.Length];
                     fstream.Read(fileBytes, 0, fileBytes.Length);
                     fstream.Close();
 
-                    //updates - словарь, в котором будут содержаться версии всех файлов
-
-                    if (JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes)) != null)
+                    using (SHA1 sha = new SHA1Managed())
                     {
-                        updates = JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes));
+                        if (Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 && fileBytes.Length == size)
+                        {
+                            DelFile(to);
+                            File.Move(temp + file, to);
+
+                            return true;
+
+                        }
+                        else
+                        {
+                            File.Delete(temp + file);
+                            return false;
+
+                        }
+
                     }
 
                 }
 
             }
-            catch { }
-
-            //скачивание файлов из списка data
-            foreach (string dir in Updates.data.Keys)
+            catch
             {
-                foreach (string file in Updates.data[dir])
-                {
-                    folders = file.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                DelFile(temp + file);
+                DelFile(temp + zipFile);
 
-                    if (filesList.data[dir].objects[file].url == null)
-                    {
-                        addr = LaunсherSettings.serverUrl + "upload/modpacks/" + instanceId + "/" + dir + "/" + file;
-
-                    }
-                    else
-                    {
-                        addr = filesList.data[dir].objects[file].url;
-
-                    }
-
-                    if (!DownloadFile(addr, folders[folders.Length - 1], directory + "/instances/" + instanceId + "/" + dir + "/" + file, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size))
-                    {
-                        errors.Add(dir + "/" + file);
-
-                    }
-                    else
-                    {
-                        updates[dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
-                        UpdateProgressBar();
-                    }
-
-                    // TODO: где-то тут записывать что файл был обновлен, чтобы если загрузка была первана она началась с того же места
-                }
+                return false;
             }
+        }
 
-            //удаляем старые файлы
-            foreach (string file in Updates.oldFiles)
-            {
-                if (File.Exists(directory + "/instances/" + instanceId + "/" + file))
-                {
-                    File.Delete(directory + "/instances/" + instanceId + "/" + file);
-                    if (updates.ContainsKey(file))
-                    {
-                        updates.Remove(file);
-                    }
+        public static List<string> UpdateBaseFiles(BaseFilesUpdates updateList, InstanceFiles filesList, string instanceId, ref Dictionary<string, int> updates)
+        {
+            string addr;
+            string[] folders;
 
-                    UpdateProgressBar();
-                }
-            }
+            List<string> errors = new List<string>();
+            WebClient wc = new WebClient();
 
             //скачивание файла версии
-            if (Updates.minecraftJar)
+            if (updateList.MinecraftJar)
             {
                 if (filesList.version.minecraftJar.url == null)
                 {
@@ -645,7 +585,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 }
 
-                if (!DownloadFile(addr, filesList.version.minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size))
+                if (!DownloadFile(addr, filesList.version.minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size, wc))
                 {
                     errors.Add("version/" + filesList.version.minecraftJar.name);
 
@@ -653,7 +593,7 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     updates["version"] = filesList.version.minecraftJar.lastUpdate;
-                    UpdateProgressBar();
+                    //UpdateProgressBar();
                 }
             }
 
@@ -668,11 +608,10 @@ namespace Lexplosion.Logic.FileSystem
                 addr = filesList.version.nativesUrl;
             }
 
-
-            foreach (string native in Updates.natives)
+            foreach (string native in updateList.Natives)
             {
 
-                if (!DownloadApplicationFiles(addr + native, directory + "/instances/" + instanceId + "/version/natives/", native))
+                if (!DownloadApplicationFiles(addr + native, directory + "/instances/" + instanceId + "/version/natives/", native, wc))
                 {
                     //скачивание не удалось
                     errors.Add("natives/" + native);
@@ -681,7 +620,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    UpdateProgressBar();
+                    //UpdateProgressBar();
                 }
             }
 
@@ -696,12 +635,12 @@ namespace Lexplosion.Logic.FileSystem
 
             folders = null;
             string ff;
-            foreach (string lib in Updates.libraries)
+            foreach (string lib in updateList.Libraries)
             {
                 folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                 ff = lib.Replace(folders[folders.Length - 1], "");
 
-                if (!DownloadApplicationFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1]))
+                if (!DownloadApplicationFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc))
                 {
                     errors.Add("libraries/" + lib);
                     DelFile(directory + "/libraries/" + lib);
@@ -709,18 +648,21 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    UpdateProgressBar();
+                    //UpdateProgressBar();
                 }
 
             }
 
-            updates["libraries"] = filesList.version.librariesLastUpdate;
+            if (updateList.Libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
+            {
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesList.version.gameVersion + ".lver", filesList.version.librariesLastUpdate.ToString()); 
+            }
 
             //скачиваем assets
             if (!Directory.Exists(directory + "/assets"))
                 Directory.CreateDirectory(directory + "/assets");
 
-            if (Updates.assetsObjects)
+            if (updateList.AssetsObjects)
             {
                 if (!Directory.Exists(directory + "/assets/objects"))
                     Directory.CreateDirectory(directory + "/assets/objects");
@@ -732,7 +674,7 @@ namespace Lexplosion.Logic.FileSystem
                     ZipFile.ExtractToDirectory(directory + "/temp/objects.zip", directory + "/assets/objects");
                     File.Delete(directory + "/temp/objects.zip");
 
-                    UpdateProgressBar();
+                    //UpdateProgressBar();
                 }
                 catch
                 {
@@ -740,7 +682,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            if (Updates.assetsIndexes)
+            if (updateList.AssetsIndexes)
             {
                 if (!Directory.Exists(directory + "/assets/indexes"))
                     Directory.CreateDirectory(directory + "/assets/indexes");
@@ -750,7 +692,7 @@ namespace Lexplosion.Logic.FileSystem
                 try
                 {
                     wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json");
-                    UpdateProgressBar();
+                    //UpdateProgressBar();
                 }
                 catch
                 {
@@ -758,7 +700,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            if (Updates.assetsVirtual)
+            if (updateList.AssetsVirtual)
             {
                 if (!Directory.Exists(directory + "/assets/virtual"))
                     Directory.CreateDirectory(directory + "/assets/virtual");
@@ -773,7 +715,7 @@ namespace Lexplosion.Logic.FileSystem
                     ZipFile.ExtractToDirectory(directory + "/temp/" + filesList.version.assetsVersion + ".zip", directory + "/assets/virtual/" + filesList.version.assetsVersion);
                     File.Delete(directory + "/temp/" + filesList.version.assetsVersion + ".zip");
 
-                    UpdateProgressBar();
+                    //UpdateProgressBar();
 
                 }
                 catch
@@ -784,29 +726,70 @@ namespace Lexplosion.Logic.FileSystem
 
             wc.Dispose();
 
-            //сохраняем файл с последними обновлениями 
-            try
+            //сохраняем lastUpdates
+            SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+
+            return errors;
+
+        }
+
+        public static List<string> UpdateVariableFiles(VariableFilesUpdates updatesList, InstanceFiles filesList, string instanceId, ref Dictionary<string, int> updates)
+        {
+            WebClient wc = new WebClient();
+
+            string[] folders;
+            string addr;
+            List<string> errors = new List<string>();
+
+            //скачивание файлов из списка data
+            foreach (string dir in updatesList.Data.Keys)
             {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesList.version.gameVersion + ".lver", filesList.version.librariesLastUpdate.ToString());
-
-                using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Truncate))
+                foreach (string file in updatesList.Data[dir])
                 {
-                    byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
-                    fstream.Write(bytes, 0, bytes.Length);
-                    fstream.Close();
+                    folders = file.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (filesList.data[dir].objects[file].url == null)
+                    {
+                        addr = LaunсherSettings.serverUrl + "upload/modpacks/" + instanceId + "/" + dir + "/" + file;
+
+                    }
+                    else
+                    {
+                        addr = filesList.data[dir].objects[file].url;
+
+                    }
+
+                    if (!DownloadFile(addr, folders[folders.Length - 1], directory + "/instances/" + instanceId + "/" + dir + "/" + file, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size, wc))
+                    {
+                        errors.Add(dir + "/" + file);
+
+                    }
+                    else
+                    {
+                        updates[dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
+                    }
+
+                    // TODO: где-то тут записывать что файл был обновлен, чтобы если загрузка была первана она началась с того же места
                 }
+            }     
 
+            wc.Dispose();
+
+            //удаляем старые файлы
+            foreach (string file in updatesList.OldFiles)
+            {
+                if (File.Exists(directory + "/instances/" + instanceId + "/" + file))
+                {
+                    File.Delete(directory + "/instances/" + instanceId + "/" + file);
+                    if (updates.ContainsKey(file))
+                    {
+                        updates.Remove(file);
+                    }
+                }
             }
-            catch { }
 
-            Updates.data = new Dictionary<string, List<string>>();
-            Updates.natives = new List<string>();
-            Updates.libraries = new List<string>();
-            Updates.minecraftJar = false;
-            Updates.assetsObjects = false;
-            Updates.assetsIndexes = false;
-            Updates.assetsVirtual = false;
-            Updates.oldFiles = new List<string>();
+            //сохарняем updates
+            SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
 
             return errors;
 
@@ -1130,13 +1113,26 @@ namespace Lexplosion.Logic.FileSystem
                 return ImportResult.ServerFilesError;
             }
 
-            Check(files, instanceId);
+            Dictionary<string, int> updates = GetLastUpdates(instanceId);
 
-            if (CountFiles > 0)
+            BaseFilesUpdates baseFiles = CheckBaseFiles(files, instanceId, ref updates); // проверяем основные файлы клиента на обновление
+            VariableFilesUpdates variableFiles = CheckVariableFiles(files, instanceId, ref updates); // проверяем дополнительные файлы клиента (моды и прочее)
+
+            if(baseFiles != null) 
             {
-                errors = Update(files, instanceId, MainWindow.Obj);
-                CountFiles = 0;
+                errors = UpdateBaseFiles(baseFiles, files, instanceId, ref updates);
+                var errors_ = UpdateVariableFiles(variableFiles, files, instanceId, ref updates); // TODO: тут наверное это не нужно
+
+                foreach(string error in errors_)
+                {
+                    errors.Add(error);
+                }
             }
+            else
+            {
+                // TODO: разобраться че сделать
+            }
+
 
             SaveFilesList(instanceId, files);
 

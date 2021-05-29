@@ -52,10 +52,7 @@ namespace Lexplosion.Logic.FileSystem
                 if (settings.ContainsKey("password"))
                     settings["password"] = Convert.ToBase64String(AesСryp.Encode(settings["password"], Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
 
-                if (!File.Exists(file))
-                    File.Create(file).Close();
-
-                using (FileStream fstream = new FileStream(file, FileMode.Truncate))
+                using (FileStream fstream = new FileStream(file, FileMode.Create))
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(settings));
                     fstream.Write(bytes, 0, bytes.Length);
@@ -174,7 +171,7 @@ namespace Lexplosion.Logic.FileSystem
                 if (!File.Exists(directory + "/up-version.txt"))
                     File.Create(directory + "/up-version.txt").Close();
 
-                using (FileStream fstream = new FileStream(directory + "/up-version.txt", FileMode.Truncate))
+                using (FileStream fstream = new FileStream(directory + "/up-version.txt", FileMode.Create))
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(version.ToString());
                     fstream.Write(bytes, 0, bytes.Length);
@@ -196,10 +193,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(dirName);
                 }
 
-                if (!File.Exists(name))
-                    File.Create(name).Close();
-
-                using (FileStream fstream = new FileStream(name, FileMode.Truncate))
+                using (FileStream fstream = new FileStream(name, FileMode.Create))
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(content);
                     fstream.Write(bytes, 0, bytes.Length);

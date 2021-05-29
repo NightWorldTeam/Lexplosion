@@ -241,37 +241,19 @@ namespace Lexplosion.Logic.Management
 
                 if (!UserData.offline && (updateInstance || noUpdate))
                 {
-                    //если модпак локальный, то получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
+                    IPrototypeInstance instance;
+
                     if (!isLocal) 
                     {
-                        files = ToServer.GetFilesList(instanceId, isLocal);
+                        instance = new NightworldIntance(instanceId);
                     }
                     else
                     {
-                        files = DataFilesManager.GetFilesList(instanceId);
-                        files = ToServer.GetFilesList(files.version.gameVersion, isLocal);
+                        instance = new LocalInstance(instanceId);
                     }
 
-                    if (files == null || !WithDirectory.Check(files, instanceId))
-                        return null;
-
-
-                    if (WithDirectory.CountFiles > 0)
-                    {
-                        MainWindow.Obj.Dispatcher.Invoke(delegate{
-                            //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
-                            //MainWindow.window.GridLoadingWindow.Visibility = Visibility.Visible;
-                        });
-
-                        errors = WithDirectory.Update(files, instanceId, MainWindow.Obj);
-                        WithDirectory.CountFiles = 0; // TODO: занести это в update
-                    }
-
-                    files.data = null;
-                    files.natives = null;
-
-                    DataFilesManager.SaveFilesList(instanceId, files);
-                    //MainWindow.window.Dispatcher.Invoke(delegate { MainWindow.window.GridLoadingWindow.Visibility = Visibility.Collapsed; });
+                    files = instance.Check();
+                    instance.Update();
 
                 } 
                 else 
