@@ -31,8 +31,8 @@ namespace Lexplosion.Gui.Pages.Right.Instance
 
         private void СlientManager(object sender, RoutedEventArgs e)
         {
-            if(LeftSideMenuPage.selectedInstance != "")
-                ManageLogic.СlientManager(LeftSideMenuPage.selectedInstance);
+            if(LeftSideMenuPage.instance.selectedInstance != "")
+                ManageLogic.СlientManager(LeftSideMenuPage.instance.selectedInstance);
 
         }
     }

@@ -28,7 +28,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
 
         public void SetAssets()
         {
-            string modpack = MainWindow.Obj.selectedModpack;
+            string modpack = LeftSideMenuPage.instance.selectedInstance;
 
             if (UserData.instancesAssets != null && UserData.instancesAssets.ContainsKey(modpack))
             {
@@ -45,9 +45,9 @@ namespace Lexplosion.Gui.Pages.Right.Instance
 
         private void Arrow_Right_Button(object sender, RoutedEventArgs e)
         {
-            string modpack = MainWindow.Obj.selectedModpack;
+            string modpack = LeftSideMenuPage.instance.selectedInstance;
 
-            if(UserData.instancesAssets != null)
+            if (UserData.instancesAssets != null)
             {
                 if (lastIndex < images_count)
                 {
@@ -63,9 +63,9 @@ namespace Lexplosion.Gui.Pages.Right.Instance
 
         private void Arrow_Left_Button(object sender, RoutedEventArgs e)
         {
-            string modpack = MainWindow.Obj.selectedModpack;
+            string modpack = LeftSideMenuPage.instance.selectedInstance;
 
-            if(UserData.instancesAssets != null)
+            if (UserData.instancesAssets != null)
             {
                 if (lastIndex - 1 != -1)
                 {

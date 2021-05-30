@@ -21,11 +21,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		public static ModpacksContainerPage obj = null;
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
 
-		private Uri overviewPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/OverviewPage.xaml");
-		private Uri versionPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/VersionPage.xaml");
-		private Uri modsListPage = new Uri("pack://application:,,,/Gui/Pages/Right/Instance/ModsListPage.xaml");
-        private Uri leftSideMenuPage = new Uri("pack://application:,,,/Gui/Pages/Left/LeftSideMenuPage.xaml");
-
 		public ModpacksContainerPage()
         {
             InitializeComponent();
@@ -133,7 +128,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Background = new ImageBrush(new BitmapImage(logo_path)),
 				Style = (Style)Application.Current.FindResource("InstanceMoreButton")
 			};
-			moreButton.Click += MoreButtonClick;
+			moreButton.Click += ClickedMoreButton;
 
 			// Titlew
 			var textContentGrid = new Grid() 
@@ -365,42 +360,34 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		}
 
-		private void MoreButtonClick(object sender, RoutedEventArgs e)
+		private void ClickedMoreButton(object sender, RoutedEventArgs e)
         {
             string instanceId = ((Button)sender).Name;
 			var lsmp = LeftSideMenuPage.instance;
 
-			string[] ButtonIds = new string[4] { "eos", "export", "setting", "back" };
 			string[] ButtonContents = new string[4] { "Energy of Space", "Экспорт", "Настройки", "Назад" };
 			RoutedEventHandler[] ButtonClicks = new RoutedEventHandler[4] { lsmp.InstanceOverview, lsmp.InstanceExport, lsmp.InstanceSetting, lsmp.BackToMainMenu };
-
-			lsmp.FavoriteInstancesPanel.Visibility = Visibility.Visible;
-			lsmp.LeftSideMenu.Visibility = Visibility.Hidden;
 			
 			for (int i = 0; i < 4; i++)
             {
-				if (lsmp.FavoriteInstancesPanel.FindName("btn" + "_" + i.ToString()) == null)
-                {
-                    lsmp.FavoriteInstancesPanel.Children.Add(GetToggleButton(ButtonContents[i], ButtonClicks[i], i, ButtonIds[i]));
-                }
+				SwitchToggleButton(lsmp.LeftSideMenu, ButtonContents[i], ButtonClicks[i], i);
             }
-            GetRightSideFrame().Source = overviewPage;
+            GetRightSideFrame().Source = GuiUris.InstancePage;
         }
 
-		private ToggleButton GetToggleButton(string content, RoutedEventHandler routedEventHandler, int index, string id)
+		private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)
 		{
-			ToggleButton toggleButton = new ToggleButton()
-			{
-				Content = content,
-				Style = (Style)Application.Current.FindResource("MWCBS1"),
-				Name = "btn" + "_" + index.ToString()
-			};
-			if (index == 0) toggleButton.IsChecked = true;
+			ToggleButton toggleButton = (ToggleButton)pageInstance.FindName("LeftSideMenuButton" + index);
+
+			toggleButton.Content = content;
+			toggleButton.Style = (Style)Application.Current.FindResource("MWCBS1");
 			toggleButton.Click += routedEventHandler;
+
+			if (index == 0) toggleButton.IsChecked = true;
 
 			return toggleButton;
 		}
 
-		private static Frame GetRightSideFrame() => MainWindow.instance.RightSideFrame;
-    }
+		public static Frame GetRightSideFrame() => MainWindow.instance.RightSideFrame;
+	}
 }
