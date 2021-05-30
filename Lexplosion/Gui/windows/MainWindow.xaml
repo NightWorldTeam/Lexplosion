@@ -33,52 +33,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- Progress Bar Styles -->
-        <Style x:Key="ProgressBar-sterling" TargetType="{x:Type ProgressBar}">
-            <Setter Property="Foreground" Value="#1c91a6"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ProgressBar}">
-                        <Grid Name="TemplateRoot" SnapsToDevicePixels="true">
-                            <Rectangle Fill="{TemplateBinding Background}"/>
-                            <Rectangle Name="PART_Track" Margin="0"/>
-                            <Decorator x:Name="PART_Indicator" HorizontalAlignment="Left" Margin="0">
-                                <Grid Name="Foreground">
-                                    <Rectangle Fill="{TemplateBinding Foreground}" Name="Indicator" />
-                                    <Grid Name="Animation" ClipToBounds="True">
-                                        <Border Name="PART_GlowRect"  Margin="0,0,0,0" HorizontalAlignment="Left" Background="{TemplateBinding Foreground}"/>
-                                    </Grid>
-                                    <Grid Name="Overlay">
-                                    </Grid>
-                                </Grid>
-                            </Decorator>
-
-                            <Border BorderThickness="{TemplateBinding BorderThickness}"
-                        BorderBrush="{TemplateBinding BorderBrush}"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsIndeterminate" Value="true">
-                                <Setter TargetName="Indicator" Property="Fill" Value="Transparent" />
-                                <Setter TargetName="PART_GlowRect" Property="Width" Value="100" />
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ThicknessAnimation
-                                        Storyboard.TargetName="PART_GlowRect"
-                                        Storyboard.TargetProperty="Margin"
-                                        From="-50,0,0,0"  To="400,0,0,0" Duration="0:0:2"
-                                        AutoReverse="True" RepeatBehavior="Forever" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
 
     <Window.Triggers>
@@ -87,7 +41,6 @@
     <Window.Background>
         <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/mainBG.png"/>
     </Window.Background>
-
 
     <!-- Pattern { Click, Style, Width, Height, Canvas.Pos, Margin, Padding, Background, BorderBrush, BorderThickness, Foreground, FontSize, FontWeight, FontFamily } -->
 
@@ -110,7 +63,6 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="0">
-            <!-- #36393a -->
             <Canvas Width="944" Height="28" Margin="0 0 0 635" Background="#151719">
                 <Image Width="20" Height="20" Canvas.Left="7" Canvas.Top="4" Source="pack://application:,,,/Assets/images/icons/nw.ico"/>
                 <TextBlock FontSize="16" Foreground="White" Text="Lexplosion" Canvas.Left="31" Canvas.Top="2"/>

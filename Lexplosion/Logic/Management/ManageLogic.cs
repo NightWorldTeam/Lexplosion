@@ -95,7 +95,7 @@ namespace Lexplosion.Logic.Management
 
             LaunchGame.runnigInstance = instanceId;
 
-            MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
+            // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
 
             if (UserData.InstancesList.ContainsKey(instanceId))
             {
