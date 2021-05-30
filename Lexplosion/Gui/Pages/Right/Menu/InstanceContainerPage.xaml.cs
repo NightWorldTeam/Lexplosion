@@ -16,22 +16,21 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// <summary>
     /// Interaction logic for TestModpacksContainerPage.xaml
     /// </summary>
-    public partial class ModpacksContainerPage : Page
+    public partial class InstanceContainerPage : Page
     {
-		public static ModpacksContainerPage obj = null;
+		public static InstanceContainerPage obj = null;
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
-
-		public ModpacksContainerPage()
+		private List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
+		public InstanceContainerPage()
         {
             InitializeComponent();
 
 			obj = this;
 			var i = 0;
-
-			foreach(string instanceId in UserData.InstancesList.Keys)
+			
+			foreach (string instanceId in UserData.InstancesList.Keys)
             {
-				List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
-
+				
 				Uri logoPath = null;
 				string desc = "";
 
@@ -48,15 +47,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 						logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 					}
 
-					if (UserData.instancesAssets[instanceId].description.Length > 36)
-					{
-						desc = UserData.instancesAssets[instanceId].description.Substring(0, 36).Trim() + "...";
-					}
-					else
-					{
-						desc = UserData.instancesAssets[instanceId].description;
-					}
-
+					desc = UserData.instancesAssets[instanceId].description;
 				}
 				else
 				{
@@ -68,13 +59,24 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", desc, instance_tags1);
 					i++;
 				}
-                catch 
+                catch
 				{ 
 
 				}
 			}
+			CreateFakeInstance(3);
 		}
 
+
+		private void CreateFakeInstance(int count) 
+		{
+			Uri logo_path1 = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+			string d = "Цель данной сборки - развить свою колонию и построить транспортную сеть в виде железной дороги. Поезда здесь существуют не просто как декорации, они необходимы, ведь предметы имеют вес, руда генерируется огромными жилами, которые встречаются не очень то и часто. В процессе игры вам придётся постоянно перемещаться между различными месторождениями, своей базой, колонией. Основной индустриальный мод в этом модпаке - это Immersive Engineering, поэтому все строения буду выглядеть очень эффектно на фоне механизмов из этого мода. Во время игры вы с головой уйдёте в логистику, путешествия и индустриализацию.";
+			for (int j = 0; j < count; j++)
+			{
+				BuildInstanceForm("EOF", j, logo_path1, "Energy of Space", "NightWorld", d, instance_tags1);
+			}
+		}
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
@@ -169,7 +171,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Text = title,
 				Padding = new Thickness(0),
 				FontSize = 22,
-				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff"))
+				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff")),
+				TextTrimming = TextTrimming.WordEllipsis
 			};
 
 			// Об Авторе
@@ -179,7 +182,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Padding = new Thickness(0),
 				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#a9b1ba")),
 				VerticalAlignment = VerticalAlignment.Center,
-				FontFamily = new FontFamily(new Uri("pack://application:,,,/assets/fonts/"), "./#Casper Bold")
+				FontFamily = new FontFamily(new Uri("pack://application:,,,/assets/fonts/"), "./#Casper Bold"),
+				TextTrimming = TextTrimming.WordEllipsis
 			};
 
 			// Описание
@@ -203,7 +207,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Text = overview,
 				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff")),
 				HorizontalAlignment = HorizontalAlignment.Left,
-				FontSize = 16
+				FontSize = 16,
+				TextTrimming = TextTrimming.WordEllipsis
 			};
 
 			// панель с тегами

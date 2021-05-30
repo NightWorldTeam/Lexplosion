@@ -96,7 +96,7 @@ namespace Lexplosion.Gui.Pages
         private void StoreClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MainWindow.instance.RightSideFrame.Source = GuiUris.ModpacksContainerPage;
+            MainWindow.instance.RightSideFrame.Source = GuiUris.InstanceContainerPage;
         }
 
         private void LibraryClicked(object sender, RoutedEventArgs e)
@@ -138,7 +138,7 @@ namespace Lexplosion.Gui.Pages
         {
             InitializeToggleButtons();
             SelectDefaultButton(sender);
-            MainWindow.instance.RightSideFrame.Source = GuiUris.ModpacksContainerPage;
+            MainWindow.instance.RightSideFrame.Source = GuiUris.InstanceContainerPage;
         }
 
         private void AddCustomModpack(object sender, RoutedEventArgs e)
