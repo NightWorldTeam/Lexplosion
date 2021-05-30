@@ -13,8 +13,14 @@ namespace Lexplosion.Global
         public static bool offline = false;
         public static bool noUpdate = false;
         public static Dictionary<string, string> settings; //общие настройки
-        public static Dictionary<string, string> InstancesList; // все игровые профили
+        public static Dictionary<string, InstanceParametrs> InstancesList; // все сборки
         public static Dictionary<string, InstanceAssets> instancesAssets;
+    }
+
+    class InstanceParametrs
+    {
+        public string Name;
+        public Logic.InstanceType Type;
     }
 
     static class LaunсherSettings

@@ -281,10 +281,10 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static Dictionary<string, string> GetModpaksList()
+        public static Dictionary<string, InstanceParametrs> GetModpaksList()
         {
-            Dictionary<string, string> baseList = GetFile<Dictionary<string, string>>(directory + "/instanesList.json");
-            Dictionary<string, string> list = new Dictionary<string, string>();
+            var baseList = GetFile<Dictionary<string, InstanceParametrs>>(directory + "/instanesList.json");
+            var list = new Dictionary<string, InstanceParametrs>();
 
             if (baseList != null)
             {
@@ -301,7 +301,7 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static void SaveModpaksList(Dictionary<string, string> content)
+        public static void SaveModpaksList(Dictionary<string, InstanceParametrs> content)
         {
             SaveFile(directory + "/instanesList.json", JsonConvert.SerializeObject(content));
         }

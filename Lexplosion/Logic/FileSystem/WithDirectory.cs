@@ -959,7 +959,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 ["gameVersion"] = instanceFile.version.gameVersion,
                 ["description"] = description,
-                ["name"] = UserData.InstancesList[instanceId],
+                ["name"] = UserData.InstancesList[instanceId].Name,
                 ["author"] = UserData.login
             };
 
@@ -1136,7 +1136,13 @@ namespace Lexplosion.Logic.FileSystem
 
             SaveFilesList(instanceId, files);
 
-            UserData.InstancesList[instanceId] = instanceInfo["name"];
+            UserData.InstancesList[instanceId] = new InstanceParametrs
+            {
+                Name = instanceInfo["name"],
+                Type = InstanceType.Local
+
+            };
+
             SaveModpaksList(UserData.InstancesList);
 
             try
@@ -1148,7 +1154,7 @@ namespace Lexplosion.Logic.FileSystem
             if (Gui.Pages.Right.Menu.ModpacksContainerPage.obj != null)
             {
                 Uri logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
-                Gui.Pages.Right.Menu.ModpacksContainerPage.obj.BuildInstanceForm(instanceId, UserData.InstancesList.Count - 1, logoPath, UserData.InstancesList[instanceId], "NightWorld", "test", new List<string>());
+                Gui.Pages.Right.Menu.ModpacksContainerPage.obj.BuildInstanceForm(instanceId, UserData.InstancesList.Count - 1, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", "test", new List<string>());
             }
 
             return ImportResult.Successful;

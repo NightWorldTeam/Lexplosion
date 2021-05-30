@@ -65,7 +65,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
                 try
                 {
-					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId], "NightWorld", desc, instance_tags1);
+					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", desc, instance_tags1);
 					i++;
 				}
                 catch 

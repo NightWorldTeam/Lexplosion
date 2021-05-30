@@ -49,7 +49,7 @@ namespace Lexplosion.Logic.Management
 
         }
 
-        public static void DefineListInstances()
+        /*public static void DefineListInstances()
         {
             if (UserData.InstancesList == null)
             {
@@ -79,6 +79,15 @@ namespace Lexplosion.Logic.Management
                     UserData.InstancesList = DataFilesManager.GetModpaksList();
 
                 }
+
+            }
+        }*/
+
+        public static void DefineListInstances()
+        {
+            if (UserData.InstancesList == null)
+            {
+                UserData.InstancesList = DataFilesManager.GetModpaksList();
 
             }
         }
