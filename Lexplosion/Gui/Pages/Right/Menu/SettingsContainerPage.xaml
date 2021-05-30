@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Right.Menu"
       mc:Ignorable="d" 
-      d:DesignHeight="499" d:DesignWidth="700"
+      d:DesignHeight="500" d:DesignWidth="700"
       Title="SettingsPage">
 
     <Grid Background="#131313" Opacity="0.7">

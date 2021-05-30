@@ -91,8 +91,8 @@
     <Compile Include="Gui\Pages\Right\Instance\InstancePage.xaml.cs">
       <DependentUpon>InstancePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Menu\FavoritesContainerPage.xaml.cs">
-      <DependentUpon>FavoritesContainerPage.xaml</DependentUpon>
+    <Compile Include="Gui\Pages\Right\Menu\LibraryContainerPage.xaml.cs">
+      <DependentUpon>LibraryContainerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Pages\Right\Menu\SettingsContainerPage.xaml.cs">
       <DependentUpon>SettingsContainerPage.xaml</DependentUpon>
@@ -165,7 +165,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Menu\FavoritesContainerPage.xaml">
+    <Page Include="Gui\Pages\Right\Menu\LibraryContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

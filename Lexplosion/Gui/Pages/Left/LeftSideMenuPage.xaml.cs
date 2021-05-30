@@ -42,7 +42,7 @@ namespace Lexplosion.Gui.Pages
         private void InitializeToggleButtons() 
         {
             ToggleButton[] toggleButtons = new ToggleButton[4] { LeftSideMenuButton0, LeftSideMenuButton1, LeftSideMenuButton2, LeftSideMenuButton3 };
-            RoutedEventHandler[] clicks = new RoutedEventHandler[4] { StoreClicked, MultiplayerClicked, LibraryClicked, SettingsClicked };
+            RoutedEventHandler[] clicks = new RoutedEventHandler[4] { StoreClicked, LibraryClicked, MultiplayerClicked, SettingsClicked };
             string[] contents = new string[4] { "Каталог", "Библиотека", "Сетевая Игра", "Настройки" };
 
             for (int i = 0; i < 4; i++) 
@@ -99,17 +99,16 @@ namespace Lexplosion.Gui.Pages
             MainWindow.instance.RightSideFrame.Source = GuiUris.ModpacksContainerPage;
         }
 
+        private void LibraryClicked(object sender, RoutedEventArgs e)
+        {
+            ReselectionToggleButton(sender);
+            MainWindow.instance.RightSideFrame.Source = GuiUris.LibraryContainerPage;
+        }
+
         private void MultiplayerClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
             MainWindow.instance.RightSideFrame.Source = GuiUris.ServersContainerPage;
-        }
-
-        private void LibraryClicked(object sender, RoutedEventArgs e)
-        {
-            ReselectionToggleButton(sender);
-
-            MainWindow.instance.RightSideFrame.Source = GuiUris.FavoritesContainerPage;
         }
 
         private void SettingsClicked(object sender, RoutedEventArgs e)

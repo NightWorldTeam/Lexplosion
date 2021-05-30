@@ -6,25 +6,27 @@
       xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Right.Menu"
       mc:Ignorable="d" 
       d:DesignHeight="499" d:DesignWidth="700"
-      Title="TestModpacksContainerPage">
+      Title="ModpacksContainerPage">
 
     <Page.Resources>
     </Page.Resources>
 
-    <ScrollViewer>
-        <Grid ShowGridLines="False" x:Name="InstanceGrid">
-            <Grid.Background>
-                <SolidColorBrush Color="#131313" Opacity="0.8"/>
-            </Grid.Background>
-            <!-- Grid Border Padding-->
-            <Grid.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="Padding" Value="10" />
-                </Style>
-            </Grid.Resources>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="175"/>
-            </Grid.ColumnDefinitions>
-        </Grid>
-    </ScrollViewer>
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid ShowGridLines="True" x:Name="InstanceGrid">
+                <Grid.Background>
+                    <SolidColorBrush Color="#131313" Opacity="0.8"/>
+                </Grid.Background>
+                <!-- Grid Border Padding-->
+                <Grid.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="Padding" Value="10" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="175"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </Page>

@@ -27,7 +27,7 @@ namespace Lexplosion.Gui.Windows
             //это страница по умолчанию
             LeftSideFrame.Source = GuiUris.LeftSideMenuPage;
             //это страница по умолчанию
-            RightSideFrame.Source = GuiUris.ModpacksContainerPage; 
+            RightSideFrame.Source = GuiUris.InstancePage; 
         }
 
         /* <-- Функционал MessageBox --> */

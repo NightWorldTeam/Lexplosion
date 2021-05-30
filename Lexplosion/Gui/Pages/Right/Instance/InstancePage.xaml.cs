@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace Lexplosion.Gui.Pages.Right.Instance
 {
@@ -9,25 +10,43 @@ namespace Lexplosion.Gui.Pages.Right.Instance
     /// </summary>
     public partial class InstancePage : Page
     {
+        private ToggleButton selectedToggleButton;
+
         public InstancePage()
         {
             InitializeComponent();
+
+            selectedToggleButton = OverviewToggleButton;
         }
 
-        private void OverviewClick(object sender, RoutedEventArgs e)
+        private void ReselectionToggleButton(object sender)
         {
-
+            ToggleButton toggleButton = (ToggleButton)sender;
+            if (toggleButton.Name != selectedToggleButton.Name)
+            {
+                toggleButton.IsChecked = true;
+                selectedToggleButton.IsChecked = false;
+                selectedToggleButton = toggleButton;
+            }
+            else toggleButton.IsChecked = true;
         }
 
-        private void VersionClick(object sender, RoutedEventArgs e)
+        private void ClickedOverview(object sender, RoutedEventArgs e)
         {
-
+            ReselectionToggleButton(sender);
         }
 
-        private void ModsListClick(object sender, RoutedEventArgs e)
+        private void ClickedModsList(object sender, RoutedEventArgs e)
         {
-
+            ReselectionToggleButton(sender);
         }
+
+        private void ClickedVersion(object sender, RoutedEventArgs e)
+        {
+            ReselectionToggleButton(sender);
+        }
+
+
 
         private void СlientManager(object sender, RoutedEventArgs e)
         {
