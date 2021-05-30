@@ -24,7 +24,7 @@ namespace Lexplosion.Logic.Management
             InstanceId = instanceid;
         }
 
-        public InstanceFiles Check()
+        public void Check()
         {
             Files = ToServer.GetFilesList(InstanceId, false);
             if(Files != null)
@@ -41,11 +41,9 @@ namespace Lexplosion.Logic.Management
             {
                 // TODO: возвращать ошибку 
             }
-
-            return Files;
         }
 
-        public List<string> Update()
+        public InitData Update()
         {
             List<string> errors_ = WithDirectory.UpdateBaseFiles(BaseFiles, Files, InstanceId, ref Updates);
             List<string> errors = WithDirectory.UpdateVariableFiles(VariableFiles, Files, InstanceId, ref Updates);
@@ -60,7 +58,12 @@ namespace Lexplosion.Logic.Management
                 errors.Add(error);
             }
 
-            return errors;
+            return new InitData
+            {
+                Errors = errors,
+                VersionFile = Files.version,
+                Libraries = Files.libraries
+            };
         }
     }
 }

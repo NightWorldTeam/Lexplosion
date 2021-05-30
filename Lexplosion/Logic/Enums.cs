@@ -20,11 +20,19 @@
         ZipFileError
     }
 
-    public enum AuthCode
+    enum AuthCode
     {
         Successfully,
         DataError,
         NoConnect
     }
+
+    enum InstanceType
+    {
+        Nightworld,
+        Local,
+        Curseforge
+    }
+
 
 }

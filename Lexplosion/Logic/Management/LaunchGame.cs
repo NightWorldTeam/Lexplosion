@@ -8,6 +8,7 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using System.Windows;
 
 namespace Lexplosion.Logic.Management
 {
@@ -17,7 +18,7 @@ namespace Lexplosion.Logic.Management
         private static Process process = new Process();
         public static string runnigInstance = "";
 
-        public static string CreateCommand(string instanceId, VersionInfo versionInfo, string versionFile, List<string> libraries, Dictionary<string, string> instanceSettings)
+        public static string CreateCommand(string instanceId, InitData data, Dictionary<string, string> instanceSettings)
         {
             int number;
             if (!instanceSettings.ContainsKey("xmx") || !Int32.TryParse(instanceSettings["xmx"], out number))
@@ -31,7 +32,7 @@ namespace Lexplosion.Logic.Management
             }
 
             string command;
-            string versionPath = UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/" + versionFile;
+            string versionPath = UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/" + data.VersionFile.minecraftJar.name;
 
             if (!instanceSettings.ContainsKey("gameArgs"))
                 instanceSettings["gameArgs"] = UserData.settings["gameArgs"];
@@ -41,19 +42,19 @@ namespace Lexplosion.Logic.Management
 
             command = @" -Djava.library.path=" + UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/natives -cp ";
 
-            foreach (string lib in libraries)
+            foreach (string lib in data.Libraries)
             {
                 command += UserData.settings["gamePath"] + "/libraries/" + lib + ";";
             }
 
             command += versionPath + @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Xmx" + instanceSettings["xmx"] + "M -Xms" + instanceSettings["xms"] + "M " + instanceSettings["gameArgs"];
-            command += versionInfo.mainClass + " --username " + UserData.login + " --version " + versionInfo.gameVersion;
+            command += data.VersionFile.mainClass + " --username " + UserData.login + " --version " + data.VersionFile.gameVersion;
             command += " --gameDir " + UserData.settings["gamePath"] + "/instances/" + instanceId;
             command += " --assetsDir " + UserData.settings["gamePath"] + "/assets";
-            command += " --assetIndex " + versionInfo.assetsVersion;
+            command += " --assetIndex " + data.VersionFile.assetsVersion;
             command += " --uuid " + UserData.UUID + " --accessToken " + UserData.accessToken + " --userProperties [] --userType legacy ";
-            command += versionInfo.arguments;
+            command += data.VersionFile.arguments;
             command += " --width " + UserData.settings["windowWidth"] + " --height " + UserData.settings["windowHeight"];
 
             return command.Replace(@"\", "/");
@@ -206,15 +207,15 @@ namespace Lexplosion.Logic.Management
 
         }
 
-        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings)
+        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceType type)
         {
 
             InitData Error(string error)
             {
                 return new InitData
                 {
-                    errors = new List<string>() { error },
-                    files = null
+                    Errors = new List<string>() { error },
+                    VersionFile = null,
                 };
             }
 
@@ -227,10 +228,11 @@ namespace Lexplosion.Logic.Management
 
                 WithDirectory.Create(UserData.settings["gamePath"]);
                 List<string> errors = new List<string>();
-                InstanceFiles files = null;
+                InitData data = null;
 
                 if (!UserData.settings.ContainsKey("gamePath") || !Directory.Exists(UserData.settings["gamePath"]) || !UserData.settings["gamePath"].Contains(":"))
                     return Error("gamePathError");
+
 
                 bool isLocal = instanceSettings.ContainsKey("isLocal") && instanceSettings["isLocal"] == "true";
                 bool updateInstance = instanceSettings.ContainsKey("update") && instanceSettings["update"] == "true";
@@ -243,22 +245,42 @@ namespace Lexplosion.Logic.Management
                 {
                     IPrototypeInstance instance;
 
-                    if (!isLocal) 
+                    switch (type) 
                     {
-                        instance = new NightworldIntance(instanceId);
-                    }
-                    else
-                    {
-                        instance = new LocalInstance(instanceId);
+                        case InstanceType.Nightworld:
+                            instance = new NightworldIntance(instanceId);
+                            break;
+                        case InstanceType.Local:
+                            instance = new LocalInstance(instanceId);
+                            break;
+                        default:
+                            instance = null;
+                            break;
+
                     }
 
-                    files = instance.Check();
-                    instance.Update();
+                    instance.Check();
+                    data = instance.Update();
 
                 } 
                 else 
                 {
-                    files = DataFilesManager.GetFilesList(instanceId);
+                    InstanceFiles files = DataFilesManager.GetFilesList(instanceId);
+
+                    if(files != null)
+                    {
+                        data = new InitData
+                        {
+                            Errors = errors,
+                            VersionFile = files.version,
+                            Libraries = files.libraries
+                        };
+                    }
+                    else
+                    {
+                        return Error("filesListError");
+                    }
+
                 }
 
                 if (updateInstance)
@@ -267,14 +289,10 @@ namespace Lexplosion.Logic.Management
                     DataFilesManager.SaveSettings(instanceSettings, instanceId);
                 }
 
-                return new InitData
-                {
-                    errors = errors,
-                    files = files
-                };
+                return data;
 
             } catch {
-                return null;
+                return Error("unknownError");
             }
 
         }

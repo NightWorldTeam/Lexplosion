@@ -23,7 +23,7 @@ namespace Lexplosion.Logic.Management
             InstanceId = instanceid;
         }
 
-        public InstanceFiles Check()
+        public void Check()
         {
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Files = DataFilesManager.GetFilesList(InstanceId);
@@ -42,16 +42,20 @@ namespace Lexplosion.Logic.Management
                 // TODO: возвращать ошибку
             }
 
-            return Files;
         }
 
-        public List<string> Update()
+        public InitData Update()
         {
             List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Files, InstanceId, ref Updates);
 
             DataFilesManager.SaveFilesList(InstanceId, Files);
 
-            return errors;
+            return new InitData
+            {
+                Errors = errors,
+                VersionFile = Files.version,
+                Libraries = Files.libraries
+            };
         }
     }
 }
