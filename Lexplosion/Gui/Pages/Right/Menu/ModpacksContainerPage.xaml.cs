@@ -350,7 +350,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				if (instanceId == LaunchGame.runnigInstance || LaunchGame.runnigInstance == "")
 				{
 					LaunchButtonBlock = true;
-					ManageLogic.СlientManager(instanceId);
+					ManageLogic.СlientManager(instanceId, Logic.InstanceType.Nightworld);
 				}
 			}	
 		}
