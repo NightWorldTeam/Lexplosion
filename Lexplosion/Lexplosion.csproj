@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Gui\FrameList.cs" />
     <Compile Include="Gui\GuiUris.cs" />
     <Compile Include="Gui\Pages\Left\LeftSideMenuPage.xaml.cs">
       <DependentUpon>LeftSideMenuPage.xaml</DependentUpon>
@@ -91,8 +92,8 @@
     <Compile Include="Gui\Pages\Right\Instance\InstancePage.xaml.cs">
       <DependentUpon>InstancePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Menu\FavoritesContainerPage.xaml.cs">
-      <DependentUpon>FavoritesContainerPage.xaml</DependentUpon>
+    <Compile Include="Gui\Pages\Right\Menu\LibraryContainerPage.xaml.cs">
+      <DependentUpon>LibraryContainerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Pages\Right\Menu\SettingsContainerPage.xaml.cs">
       <DependentUpon>SettingsContainerPage.xaml</DependentUpon>
@@ -100,8 +101,8 @@
     <Compile Include="Gui\Pages\Right\Menu\ServersContainerPage.xaml.cs">
       <DependentUpon>ServersContainerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Menu\ModpacksContainerPage.xaml.cs">
-      <DependentUpon>ModpacksContainerPage.xaml</DependentUpon>
+    <Compile Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml.cs">
+      <DependentUpon>InstanceContainerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Windows\AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
@@ -165,7 +166,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Menu\FavoritesContainerPage.xaml">
+    <Page Include="Gui\Pages\Right\Menu\LibraryContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -177,7 +178,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Menu\ModpacksContainerPage.xaml">
+    <Page Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,6 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Gui.Pages.Left;
+using Lexplosion.Gui.Pages.Right.Instance;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
 using System;
@@ -16,27 +18,31 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// <summary>
     /// Interaction logic for TestModpacksContainerPage.xaml
     /// </summary>
-    public partial class ModpacksContainerPage : Page
+    public partial class InstanceContainerPage : Page
     {
-		public static ModpacksContainerPage obj = null;
+		public static InstanceContainerPage obj = null;
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
-
-		public ModpacksContainerPage()
+		private List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
+		public InstanceContainerPage()
         {
             InitializeComponent();
+			InitializeInstance();
+			//CreateFakeInstance(4);
+		}
 
+		private void InitializeInstance() 
+		{
 			obj = this;
 			var i = 0;
 
-			foreach(string instanceId in UserData.InstancesList.Keys)
-            {
-				List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
+			foreach (string instanceId in UserData.InstancesList.Keys)
+			{
 
 				Uri logoPath = null;
 				string desc = "";
 
 				if (UserData.instancesAssets.ContainsKey(instanceId))
-                {
+				{
 					string dir = UserData.settings["gamePath"] + "/launcherAssets/" + UserData.instancesAssets[instanceId].mainImage;
 
 					if (File.Exists(dir))
@@ -48,39 +54,42 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 						logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 					}
 
-					if (UserData.instancesAssets[instanceId].description.Length > 36)
-					{
-						desc = UserData.instancesAssets[instanceId].description.Substring(0, 36).Trim() + "...";
-					}
-					else
-					{
-						desc = UserData.instancesAssets[instanceId].description;
-					}
-
+					desc = UserData.instancesAssets[instanceId].description;
 				}
 				else
 				{
 					logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 				}
 
-                try
-                {
+				try
+				{
 					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", desc, instance_tags1);
 					i++;
 				}
-                catch 
-				{ 
+				catch
+				{
 
 				}
 			}
 		}
 
+		private void CreateFakeInstance(int count) 
+		{
+			Uri logo_path1 = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+			string d = "Цель данной сборки - развить свою колонию и построить транспортную сеть в виде железной дороги. Поезда здесь существуют не просто как декорации, они необходимы, ведь предметы имеют вес, руда генерируется огромными жилами, которые встречаются не очень то и часто. В процессе игры вам придётся постоянно перемещаться между различными месторождениями, своей базой, колонией. Основной индустриальный мод в этом модпаке - это Immersive Engineering, поэтому все строения буду выглядеть очень эффектно на фоне механизмов из этого мода. Во время игры вы с головой уйдёте в логистику, путешествия и индустриализацию.";
+			string[] instanceName = new string[4] { "Energy of Space", "Long Tech", "Transport Network", "Over the Horizon" };
+			string[] instanceId = new string[4] { "EOS", "LT", "TN", "OTH" };
+			for (int j = 0; j < count; j++)
+			{
+				BuildInstanceForm(instanceId[j], j, logo_path1, instanceName[j], "NightWorld", d, instance_tags1);
+			}
+		}
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
 		public void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<string> tags)
 		{
-			/// "EOF", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1
+			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 
@@ -124,13 +133,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			// Instance Logo
 			var moreButton = new Button()
 			{
-				Name = instance_name + "More",
+				Name = title.Replace(' ', '_'),
 				Background = new ImageBrush(new BitmapImage(logo_path)),
 				Style = (Style)Application.Current.FindResource("InstanceMoreButton")
 			};
-			moreButton.Click += ClickedMoreButton;
+			moreButton.Click += (object sender, RoutedEventArgs e) => ClickedMoreButton(sender, e, title, overview, author, tags);
 
-			// Titlew
+			// Title
 			var textContentGrid = new Grid() 
 			{
 				Margin = new Thickness(10, 0, 10, 0)
@@ -169,7 +178,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Text = title,
 				Padding = new Thickness(0),
 				FontSize = 22,
-				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff"))
+				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff")),
+				TextTrimming = TextTrimming.WordEllipsis
 			};
 
 			// Об Авторе
@@ -179,7 +189,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Padding = new Thickness(0),
 				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#a9b1ba")),
 				VerticalAlignment = VerticalAlignment.Center,
-				FontFamily = new FontFamily(new Uri("pack://application:,,,/assets/fonts/"), "./#Casper Bold")
+				FontFamily = new FontFamily(new Uri("pack://application:,,,/assets/fonts/"), "./#Casper Bold"),
+				TextTrimming = TextTrimming.WordEllipsis
 			};
 
 			// Описание
@@ -203,7 +214,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Text = overview,
 				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff")),
 				HorizontalAlignment = HorizontalAlignment.Left,
-				FontSize = 16
+				FontSize = 16,
+				TextTrimming = TextTrimming.WordEllipsis
 			};
 
 			// панель с тегами
@@ -360,20 +372,20 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		}
 
-		private void ClickedMoreButton(object sender, RoutedEventArgs e)
+		private void ClickedMoreButton(object sender, RoutedEventArgs e, string title, string description, string author, List<string> tags)
         {
-            string instanceId = ((Button)sender).Name;
+            string instanceName = ((Button)sender).Name;
 			var lsmp = LeftSideMenuPage.instance;
-
-			string[] ButtonContents = new string[4] { "Energy of Space", "Экспорт", "Настройки", "Назад" };
+			string[] ButtonContents = new string[4] { instanceName.Replace('_', ' '), "Экспорт", "Настройки", "Назад" };
 			RoutedEventHandler[] ButtonClicks = new RoutedEventHandler[4] { lsmp.InstanceOverview, lsmp.InstanceExport, lsmp.InstanceSetting, lsmp.BackToMainMenu };
 			
 			for (int i = 0; i < 4; i++)
             {
 				SwitchToggleButton(lsmp.LeftSideMenu, ButtonContents[i], ButtonClicks[i], i);
             }
-            GetRightSideFrame().Source = GuiUris.InstancePage;
-        }
+			FrameList.RightSideFrame.Navigate(new InstancePage(title, description, author, tags));
+			FrameList.BottomSideFrame.Navigate(new OverviewPage(title, description));
+		}
 
 		private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)
 		{
@@ -387,7 +399,5 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			return toggleButton;
 		}
-
-		public static Frame GetRightSideFrame() => MainWindow.instance.RightSideFrame;
 	}
 }

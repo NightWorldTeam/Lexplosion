@@ -5,9 +5,9 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// <summary>
     /// Interaction logic for SettingsPage.xaml
     /// </summary>
-    public partial class SettingsPage : Page
+    public partial class SettingsContainerPage : Page
     {
-        public SettingsPage()
+        public SettingsContainerPage()
         {
             InitializeComponent();
         }

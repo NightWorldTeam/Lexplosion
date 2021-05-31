@@ -1,11 +1,10 @@
-﻿using Lexplosion.Logic.Objects;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Windows;
 using System;
 using System.Windows.Media.Imaging;
-using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
+using Lexplosion.Gui.Pages.Left;
 
 namespace Lexplosion.Gui.Pages.Right.Instance
 {
@@ -16,26 +15,20 @@ namespace Lexplosion.Gui.Pages.Right.Instance
     {
 
         public static OverviewPage instance = null;
-        private int images_count;
+        private int images_count = 1;
         private int lastIndex = 0;
 
-        public OverviewPage()
+        public OverviewPage(string title, string descrition)
         {
             InitializeComponent();
-            instance = this;
-            SetAssets();
+            SetAssets(title, descrition);
         }
 
-        public void SetAssets()
+        public void SetAssets(string title, string description)
         {
-            string modpack = LeftSideMenuPage.instance.selectedInstance;
-
-            if (UserData.instancesAssets != null && UserData.instancesAssets.ContainsKey(modpack))
-            {
-
-                Description.Text = UserData.instancesAssets[modpack].description;
-                images_count = UserData.instancesAssets[modpack].images.Count-1;
-                SetImages(UserData.instancesAssets[modpack].images);
+            if (description != null) 
+            { 
+                Description.Text = description;
             }
             else
             {

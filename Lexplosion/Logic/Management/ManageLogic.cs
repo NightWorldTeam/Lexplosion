@@ -150,7 +150,7 @@ namespace Lexplosion.Logic.Management
             if (LaunchGame.runnigInstance != "")
             {
                 LaunchGame.KillProcess();
-                Gui.Pages.Right.Menu.ModpacksContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+                Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
 
                 return;
             }
@@ -256,7 +256,7 @@ namespace Lexplosion.Logic.Management
 
                 data = null;
 
-                Gui.Pages.Right.Menu.ModpacksContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+                    Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
 
             }
         }
