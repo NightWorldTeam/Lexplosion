@@ -1,14 +1,16 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Gui.Pages.Right.Instance;
+using Lexplosion.Gui.Pages.Right.Menu;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Gui;
 using Lexplosion.Logic.Management;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 
-namespace Lexplosion.Gui.Pages
+namespace Lexplosion.Gui.Pages.Left
 {
     /// <summary>
     /// Interaction logic for LeftSideMenuPage.xaml
@@ -37,7 +39,7 @@ namespace Lexplosion.Gui.Pages
             }
         }
 
-        public static Frame GetRightSideFrame() => MainWindow.instance.RightSideFrame;
+        
 
         private void InitializeToggleButtons() 
         {
@@ -96,32 +98,36 @@ namespace Lexplosion.Gui.Pages
         private void StoreClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MainWindow.instance.RightSideFrame.Source = GuiUris.InstanceContainerPage;
+            FrameList.RightSideFrame.Navigate(new InstanceContainerPage());
         }
 
         private void LibraryClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MainWindow.instance.RightSideFrame.Source = GuiUris.LibraryContainerPage;
+            FrameList.RightSideFrame.Navigate(new LibraryContainerPage());
         }
 
         private void MultiplayerClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MainWindow.instance.RightSideFrame.Source = GuiUris.ServersContainerPage;
+            FrameList.RightSideFrame.Navigate(new ServersContainerPage());
         }
 
         private void SettingsClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-
-            MainWindow.instance.RightSideFrame.Source = GuiUris.SettingsContainerPage;
+            FrameList.RightSideFrame.Navigate(new SettingsContainerPage());
         }
 
         public void InstanceOverview(object sender, RoutedEventArgs e)
         {
-            ReselectionToggleButton(sender);
-            GetRightSideFrame().Source = GuiUris.InstancePage;
+                ReselectionToggleButton(sender);
+            FrameList.RightSideFrame.Navigate(new InstancePage(
+                    InstancePage.GetTitleInstance(),
+                    InstancePage.GetDescriptionInstance(),
+                    InstancePage.GetAuthorInstance(),
+                    InstancePage.GetTagsInstance()
+                    ));
         }
 
         public void InstanceExport(object sender, RoutedEventArgs e)
@@ -138,7 +144,7 @@ namespace Lexplosion.Gui.Pages
         {
             InitializeToggleButtons();
             SelectDefaultButton(sender);
-            MainWindow.instance.RightSideFrame.Source = GuiUris.InstanceContainerPage;
+            FrameList.RightSideFrame.Navigate(new InstanceContainerPage());
         }
 
         private void AddCustomModpack(object sender, RoutedEventArgs e)

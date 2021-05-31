@@ -64,7 +64,7 @@
                         FontWeight="Bold"/>
             </Grid>
         </Grid>
-        
-        <Grid x:Name="Frame" Grid.Row="1"></Grid>
+
+        <Frame x:Name="BottomSideFrame" Grid.Row="1"/>
     </Grid>
 </Page>

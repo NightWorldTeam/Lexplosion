@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
-using Lexplosion.Gui.Pages.Right.Instance;
+﻿using System.Windows;
+using Lexplosion.Gui.Pages.Left;
+using Lexplosion.Gui.Pages.Right.Menu;
 
 namespace Lexplosion.Gui.Windows
 {
@@ -24,10 +21,8 @@ namespace Lexplosion.Gui.Windows
 
             MouseDown += delegate { try { DragMove(); } catch { } };
 
-            //это страница по умолчанию
-            LeftSideFrame.Source = GuiUris.LeftSideMenuPage;
-            //это страница по умолчанию
-            RightSideFrame.Source = GuiUris.InstanceContainerPage; 
+            LeftSideFrame.Navigate(new LeftSideMenuPage());
+            RightSideFrame.Navigate(new InstanceContainerPage());
         }
 
         /* <-- Функционал MessageBox --> */
