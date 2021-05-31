@@ -22,7 +22,7 @@ namespace Lexplosion.Gui.Windows
             MouseDown += delegate { try { DragMove(); } catch { } };
 
             LeftSideFrame.Navigate(new LeftSideMenuPage(this));
-            RightSideFrame.Navigate(new InstanceContainerPage());
+            RightSideFrame.Navigate(new InstanceContainerPage(this));
         }
 
         /* <-- Функционал MessageBox --> */

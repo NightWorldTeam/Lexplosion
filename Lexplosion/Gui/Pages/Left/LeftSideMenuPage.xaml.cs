@@ -100,31 +100,31 @@ namespace Lexplosion.Gui.Pages.Left
         private void StoreClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            FrameList.RightSideFrame.Navigate(new InstanceContainerPage());
+            MWindow.RightSideFrame.Navigate(new InstanceContainerPage(MWindow));
         }
 
         private void LibraryClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            FrameList.RightSideFrame.Navigate(new LibraryContainerPage());
+            MWindow.RightSideFrame.Navigate(new LibraryContainerPage());
         }
 
         private void MultiplayerClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            FrameList.RightSideFrame.Navigate(new ServersContainerPage());
+            MWindow.RightSideFrame.Navigate(new ServersContainerPage());
         }
 
         private void SettingsClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            FrameList.RightSideFrame.Navigate(new SettingsContainerPage());
+            MWindow.RightSideFrame.Navigate(new SettingsContainerPage());
         }
 
         public void InstanceOverview(object sender, RoutedEventArgs e)
         {
-                ReselectionToggleButton(sender);
-            FrameList.RightSideFrame.Navigate(new InstancePage(
+            ReselectionToggleButton(sender);
+            MWindow.RightSideFrame.Navigate(new InstancePage(
                     InstancePage.GetTitleInstance(),
                     InstancePage.GetDescriptionInstance(),
                     InstancePage.GetAuthorInstance(),
@@ -146,7 +146,7 @@ namespace Lexplosion.Gui.Pages.Left
         {
             InitializeToggleButtons();
             SelectDefaultButton(sender);
-            FrameList.RightSideFrame.Navigate(new InstanceContainerPage());
+            MWindow.RightSideFrame.Navigate(new InstanceContainerPage(MWindow));
         }
 
         private void AddCustomModpack(object sender, RoutedEventArgs e)
