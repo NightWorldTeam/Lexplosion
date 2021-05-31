@@ -61,15 +61,12 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 					logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 				}
 
-				try
-				{
+                try
+                {
 					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", desc, instance_tags1);
 					i++;
 				}
-				catch
-				{
-
-				}
+                catch { }
 			}
 		}
 
@@ -133,7 +130,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			// Instance Logo
 			var moreButton = new Button()
 			{
-				Name = title.Replace(' ', '_'),
+				Name = instance_name, //Name = title.Replace(' ', '_'),
 				Background = new ImageBrush(new BitmapImage(logo_path)),
 				Style = (Style)Application.Current.FindResource("InstanceMoreButton")
 			};
