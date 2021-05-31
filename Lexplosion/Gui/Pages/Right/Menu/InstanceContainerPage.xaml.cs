@@ -38,7 +38,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			obj = this;
 			var i = 0;
 
-			foreach (string instanceId in UserData.InstancesList.Keys)
+			foreach (string instanceId in UserData.InstancesList.Keys) // TODO: возможна ситуация что во время работы этого цикла UserData.InstancesList будет изменён
 			{
 
 				Uri logoPath = null;
@@ -362,7 +362,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				if (instanceId == LaunchGame.runnigInstance || LaunchGame.runnigInstance == "")
 				{
 					LaunchButtonBlock = true;
-					ManageLogic.СlientManager(instanceId, Logic.InstanceType.Nightworld);
+					ManageLogic.СlientManager(instanceId);
 				}
 			}	
 		}

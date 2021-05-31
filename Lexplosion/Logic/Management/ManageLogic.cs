@@ -145,7 +145,7 @@ namespace Lexplosion.Logic.Management
 
         }
 
-        public static void СlientManager(string instanceId, InstanceType type)
+        public static void СlientManager(string instanceId)
         {
             if (LaunchGame.runnigInstance != "")
             {
@@ -156,6 +156,8 @@ namespace Lexplosion.Logic.Management
             }
 
             LaunchGame.runnigInstance = instanceId;
+
+            InstanceType type = UserData.InstancesList[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
 
@@ -256,7 +258,7 @@ namespace Lexplosion.Logic.Management
 
                 data = null;
 
-                    Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+                Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
 
             }
         }

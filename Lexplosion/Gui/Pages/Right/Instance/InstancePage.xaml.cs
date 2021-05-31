@@ -74,7 +74,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         private void СlientManager(object sender, RoutedEventArgs e)
         {
             if(LeftSideMenuPage.instance.selectedInstance != "")
-                ManageLogic.СlientManager(LeftSideMenuPage.instance.selectedInstance, Logic.InstanceType.Nightworld);
+                ManageLogic.СlientManager(LeftSideMenuPage.instance.selectedInstance);
 
         }
     }
