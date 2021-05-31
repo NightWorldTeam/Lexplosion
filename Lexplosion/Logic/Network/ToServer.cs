@@ -7,12 +7,20 @@ using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Global;
+using System.Windows;
 
 namespace Lexplosion.Logic.Network
 {
     static class ToServer
     {
-        private class FilesList : InstanceFiles //этот класс нужен для декодирования json
+        private class DataVersionManifest : VersionManifest //этот класс нужен для декодирования json в GetVersionManifest
+        {
+            public string code;
+            public string str;
+            public new Dictionary<string, string> libraries;
+        }
+
+        private class DataNInstanceManifest : NInstanceManifest //этот класс нужен для декодирования json в GetInstanceManifest
         {
             public string code;
             public string str;
@@ -53,7 +61,8 @@ namespace Lexplosion.Logic.Network
 
         }
 
-        static public InstanceFiles GetFilesList(string instanceId, bool isLocal = false)
+        // Функция получает манифест для NightWorld модпаков
+        public static NInstanceManifest GetInstanceManifest(string instanceId) // TODO: одинаковые блоки кода в этих двух функция вынести в другую функцию
         {
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
@@ -83,12 +92,12 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string answer = HttpPost("directoryFiles.php?modpack=" + WebUtility.UrlEncode(instanceId) + "&isLocal=" + isLocal.ToString(), data);
+                    string answer = HttpPost("instanceManifest.php?instance=" + WebUtility.UrlEncode(instanceId), data);
 
                     if (answer != null)
                     {
                         answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
-                        FilesList filesData = JsonConvert.DeserializeObject<FilesList>(answer);
+                        DataNInstanceManifest filesData = JsonConvert.DeserializeObject<DataNInstanceManifest>(answer);
 
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
@@ -101,7 +110,7 @@ namespace Lexplosion.Logic.Network
                                 }
                             }
 
-                            InstanceFiles ret = new InstanceFiles
+                            NInstanceManifest ret = new NInstanceManifest
                             {
                                 data = filesData.data,
                                 version = filesData.version,
@@ -131,6 +140,86 @@ namespace Lexplosion.Logic.Network
 
             }
             
+        }
+
+        //функция получает манифест для майкрафт версии
+        public static VersionManifest GetVersionManifest(string version)
+        {
+            string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
+            string str = "";
+            string str2 = "";
+            Random rnd = new Random();
+
+            for (int i = 0; i < 32; i++)
+            {
+                str += chars[rnd.Next(0, chars.Length)];
+                str2 += chars[rnd.Next(0, chars.Length)];
+            }
+
+            using (SHA1 sha = new SHA1Managed())
+            {
+                string key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str2 + ":" + LaunсherSettings.secretWord)));
+
+                int d = 32 - key.Length;
+                for (int i = 0; i < d; i++)
+                {
+                    key += str2[i];
+                }
+
+                List<List<string>> data = new List<List<string>>() { };
+                data.Add(new List<string>() { "str", str });
+                data.Add(new List<string>() { "str2", str2 });
+                data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
+
+                try
+                {
+                    string answer = HttpPost("versionManifest.php?gameVersion=" + WebUtility.UrlEncode(version), data);
+
+                    if (answer != null)
+                    {
+                        answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                        DataVersionManifest filesData = JsonConvert.DeserializeObject<DataVersionManifest>(answer);
+
+                        if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
+                        {
+                            List<string> libraries = new List<string>();
+                            foreach (string lib in filesData.libraries.Keys)
+                            {
+                                if (filesData.libraries[lib] == "all" || filesData.libraries[lib] == "windows")
+                                {
+                                    libraries.Add(lib);
+                                }
+                            }
+
+                            VersionManifest ret = new VersionManifest
+                            {
+                                version = filesData.version,
+                                libraries = libraries,
+                                natives = filesData.natives
+                            };
+
+                            return ret;
+
+                        }
+                        else
+                        {
+                            return null;
+                        }
+
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                }
+                catch
+                {
+                    return null;
+                }
+
+            }
+
         }
 
         static public Dictionary<string, string> Authorization(string login, string password, string email = "")

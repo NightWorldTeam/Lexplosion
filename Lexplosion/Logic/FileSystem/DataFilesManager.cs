@@ -5,12 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 
 namespace Lexplosion.Logic.FileSystem
 {
     static class DataFilesManager
     {
+        private class LocalVersionManifest //нужен для декодирования json
+        {
+            public LocalVersionInfo version;
+        }
+
         public static void SaveSettings(Dictionary<string, string> data, string instanceId = "")
         {
             string file;
@@ -193,7 +199,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(dirName);
                 }
 
-                using (FileStream fstream = new FileStream(name, FileMode.Create))
+                using (FileStream fstream = new FileStream(name, FileMode.Create, FileAccess.Write))
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(content);
                     fstream.Write(bytes, 0, bytes.Length);
@@ -214,16 +220,20 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                using (FileStream fstream = File.OpenRead(file))
+                if (File.Exists(file))
                 {
-                    byte[] fileBytes = new byte[fstream.Length];
-                    fstream.Read(fileBytes, 0, fileBytes.Length);
-                    fstream.Close();
+                    using (FileStream fstream = File.OpenRead(file))
+                    {
+                        byte[] fileBytes = new byte[fstream.Length];
+                        fstream.Read(fileBytes, 0, fileBytes.Length);
+                        fstream.Close();
 
-                    return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(fileBytes));
+                        return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(fileBytes));
+                    }
 
                 }
 
+                return default;
             }
             catch
             {
@@ -237,9 +247,9 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static void SaveFilesList(string instanceId, InstanceFiles data)
+        public static void SaveFilesList(string instanceId, VersionManifest data)
         {
-            InstanceLocalFiles dataLocal = new InstanceLocalFiles
+            LocalVersionManifest dataLocal = new LocalVersionManifest
             {
                 version = new LocalVersionInfo()
                 {
@@ -261,9 +271,9 @@ namespace Lexplosion.Logic.FileSystem
             SaveFile(directory + "/versions/libraries/" + data.version.gameVersion + ".json", JsonConvert.SerializeObject(data.libraries));
         }
 
-        public static InstanceFiles GetFilesList(string instanceId)
+        public static VersionManifest GetFilesList(string instanceId)
         {
-            InstanceFiles data = GetFile<InstanceFiles>(directory + "/instances/" + instanceId + "/" + "filesList.json");
+            VersionManifest data = GetFile<VersionManifest>(directory + "/instances/" + instanceId + "/" + "filesList.json");
             if (data == null)
             {
                 return null;
@@ -281,7 +291,7 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static Dictionary<string, InstanceParametrs> GetModpaksList()
+        public static Dictionary<string, InstanceParametrs> GetInstancesList()
         {
             var baseList = GetFile<Dictionary<string, InstanceParametrs>>(directory + "/instanesList.json");
             var list = new Dictionary<string, InstanceParametrs>();

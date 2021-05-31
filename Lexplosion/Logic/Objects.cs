@@ -13,17 +13,16 @@ namespace Lexplosion.Logic.Objects
         public string xms;
     }
 
-    class InstanceLocalFiles
+    class VersionManifest
     {
-        public LocalVersionInfo version;
-    }
-
-    class InstanceFiles
-    {
-        public Dictionary<string, WithFolder> data = new Dictionary<string, WithFolder>();
         public VersionInfo version;
         public Dictionary<string, string> natives;
         public List<string> libraries;
+    }
+
+    class NInstanceManifest : VersionManifest
+    {
+        public Dictionary<string, WithFolder> data = new Dictionary<string, WithFolder>();
     }
 
     class LocalVersionInfo

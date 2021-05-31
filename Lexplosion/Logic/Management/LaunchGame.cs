@@ -223,7 +223,7 @@ namespace Lexplosion.Logic.Management
             {
                 SetDefaultSettings();
 
-                if (!UserData.settings.ContainsKey("javaPath"))
+                if (!UserData.settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
                     return Error("javaPathError");
 
                 WithDirectory.Create(UserData.settings["gamePath"]);
@@ -265,7 +265,7 @@ namespace Lexplosion.Logic.Management
                 } 
                 else 
                 {
-                    InstanceFiles files = DataFilesManager.GetFilesList(instanceId);
+                    VersionManifest files = DataFilesManager.GetFilesList(instanceId);
 
                     if(files != null)
                     {

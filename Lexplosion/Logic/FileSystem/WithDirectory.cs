@@ -129,7 +129,7 @@ namespace Lexplosion.Logic.FileSystem
             return updates;
         }
 
-        public static VariableFilesUpdates CheckVariableFiles(InstanceFiles filesInfo, string instanceId, ref Dictionary<string, int> updates)
+        public static VariableFilesUpdates CheckVariableFiles(NInstanceManifest filesInfo, string instanceId, ref Dictionary<string, int> updates)
         {
             VariableFilesUpdates filesUpdates = new VariableFilesUpdates();
 
@@ -277,7 +277,7 @@ namespace Lexplosion.Logic.FileSystem
             return filesUpdates;
         }
 
-        public static BaseFilesUpdates CheckBaseFiles(InstanceFiles filesInfo, string instanceId, ref Dictionary<string, int> updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
+        public static BaseFilesUpdates CheckBaseFiles(VersionManifest filesInfo, string instanceId, ref Dictionary<string, int> updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
         {
             BaseFilesUpdates updatesList = new BaseFilesUpdates(); //возвращаемый список обновлений
 
@@ -564,7 +564,7 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public static List<string> UpdateBaseFiles(BaseFilesUpdates updateList, InstanceFiles filesList, string instanceId, ref Dictionary<string, int> updates)
+        public static List<string> UpdateBaseFiles(BaseFilesUpdates updateList, VersionManifest filesList, string instanceId, ref Dictionary<string, int> updates)
         {
             string addr;
             string[] folders;
@@ -733,7 +733,7 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static List<string> UpdateVariableFiles(VariableFilesUpdates updatesList, InstanceFiles filesList, string instanceId, ref Dictionary<string, int> updates)
+        public static List<string> UpdateVariableFiles(VariableFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, ref Dictionary<string, int> updates)
         {
             WebClient wc = new WebClient();
 
@@ -953,7 +953,7 @@ namespace Lexplosion.Logic.FileSystem
 
             }
 
-            InstanceFiles instanceFile = GetFilesList(instanceId);
+            VersionManifest instanceFile = GetFilesList(instanceId);
 
             Dictionary<string, string> data = new Dictionary<string, string>
             {
@@ -1107,7 +1107,7 @@ namespace Lexplosion.Logic.FileSystem
                 return ImportResult.MovingFilesError;
             }
 
-            InstanceFiles files = ToServer.GetFilesList(instanceInfo["gameVersion"], true);
+            VersionManifest files = ToServer.GetVersionManifest(instanceInfo["gameVersion"]);
             if (files == null)
             {
                 return ImportResult.ServerFilesError;
@@ -1116,17 +1116,10 @@ namespace Lexplosion.Logic.FileSystem
             Dictionary<string, int> updates = GetLastUpdates(instanceId);
 
             BaseFilesUpdates baseFiles = CheckBaseFiles(files, instanceId, ref updates); // проверяем основные файлы клиента на обновление
-            VariableFilesUpdates variableFiles = CheckVariableFiles(files, instanceId, ref updates); // проверяем дополнительные файлы клиента (моды и прочее)
 
             if(baseFiles != null) 
             {
                 errors = UpdateBaseFiles(baseFiles, files, instanceId, ref updates);
-                var errors_ = UpdateVariableFiles(variableFiles, files, instanceId, ref updates); // TODO: тут наверное это не нужно
-
-                foreach(string error in errors_)
-                {
-                    errors.Add(error);
-                }
             }
             else
             {

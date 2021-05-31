@@ -13,7 +13,7 @@ namespace Lexplosion.Logic.Management
     {
         WithDirectory.BaseFilesUpdates BaseFiles;
 
-        InstanceFiles Files;
+        VersionManifest Manifest;
         Dictionary<string, int> Updates;
 
         private string InstanceId;
@@ -26,13 +26,13 @@ namespace Lexplosion.Logic.Management
         public void Check()
         {
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
-            Files = DataFilesManager.GetFilesList(InstanceId);
-            Files = ToServer.GetFilesList(Files.version.gameVersion, true);
+            Manifest = DataFilesManager.GetFilesList(InstanceId);
+            Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion);
 
-            if (Files != null)
+            if (Manifest != null)
             {
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
-                BaseFiles = WithDirectory.CheckBaseFiles(Files, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
+                BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
 
                 // TODO: baseFiles может быть null, а VariableFiles содержать false
 
@@ -46,15 +46,15 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update()
         {
-            List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Files, InstanceId, ref Updates);
+            List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
 
-            DataFilesManager.SaveFilesList(InstanceId, Files);
+            DataFilesManager.SaveFilesList(InstanceId, Manifest);
 
             return new InitData
             {
                 Errors = errors,
-                VersionFile = Files.version,
-                Libraries = Files.libraries
+                VersionFile = Manifest.version,
+                Libraries = Manifest.libraries
             };
         }
     }
