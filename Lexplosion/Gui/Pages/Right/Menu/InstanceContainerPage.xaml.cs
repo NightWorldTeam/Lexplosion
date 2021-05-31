@@ -23,9 +23,12 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		public static InstanceContainerPage obj = null;
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
 		private List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
-		public InstanceContainerPage()
-        {
-            InitializeComponent();
+		private MainWindow MWindow;
+
+		public InstanceContainerPage(MainWindow mainWindow)
+		{
+			MWindow = mainWindow;
+			InitializeComponent();
 			InitializeInstance();
 			//CreateFakeInstance(4);
 		}
@@ -380,7 +383,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
             {
 				SwitchToggleButton(lsmp.LeftSideMenu, ButtonContents[i], ButtonClicks[i], i);
             }
-			FrameList.RightSideFrame.Navigate(new InstancePage(title, description, author, tags));
+			MWindow.RightSideFrame.Navigate(new InstancePage(title, description, author, tags));
 			FrameList.BottomSideFrame.Navigate(new OverviewPage(title, description));
 		}
 

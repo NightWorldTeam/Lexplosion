@@ -21,13 +21,15 @@ namespace Lexplosion.Gui.Pages.Left
         public static LeftSideMenuPage Obj = null;
         public string selectedInstance = "";
         private ToggleButton selectedToggleButton;
+        private MainWindow MWindow;
         
 
-        public LeftSideMenuPage()
+        public LeftSideMenuPage(MainWindow mainWindow)
         {
             InitializeComponent();
             LeftSideMenuPage.Obj = this;
             instance = this;
+            MWindow = mainWindow;
 
             InitializeToggleButtons();
 

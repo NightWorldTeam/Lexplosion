@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 
@@ -300,7 +301,8 @@ namespace Lexplosion.Logic.FileSystem
             {
                 foreach (string key in baseList.Keys)
                 {
-                    if (Directory.Exists(directory + "/instances/" + key))
+                    //проверяем установлен ил этот модпак и не содержит ли его id запрещенных символов
+                    if (Directory.Exists(directory + "/instances/" + key) && !Regex.IsMatch(key.Replace("_", ""), @"[^a-zA-Z0-9]"))
                     {
                         list[key] = baseList[key];
                     }
