@@ -21,7 +21,7 @@ namespace Lexplosion.Gui.Pages.Left
         public static LeftSideMenuPage Obj = null;
         public string selectedInstance = "";
         private ToggleButton selectedToggleButton;
-        private MainWindow MWindow;
+        private MainWindow _MainWindow;
         
 
         public LeftSideMenuPage(MainWindow mainWindow)
@@ -29,7 +29,7 @@ namespace Lexplosion.Gui.Pages.Left
             InitializeComponent();
             LeftSideMenuPage.Obj = this;
             instance = this;
-            MWindow = mainWindow;
+            _MainWindow = mainWindow;
 
             InitializeToggleButtons();
 
@@ -100,36 +100,31 @@ namespace Lexplosion.Gui.Pages.Left
         private void StoreClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MWindow.RightSideFrame.Navigate(new InstanceContainerPage(MWindow));
+            _MainWindow.RightSideFrame.Navigate(new InstanceContainerPage(_MainWindow));
         }
 
         private void LibraryClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MWindow.RightSideFrame.Navigate(new LibraryContainerPage());
+            _MainWindow.RightSideFrame.Navigate(new LibraryContainerPage());
         }
 
         private void MultiplayerClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MWindow.RightSideFrame.Navigate(new ServersContainerPage());
+            _MainWindow.RightSideFrame.Navigate(new ServersContainerPage());
         }
 
         private void SettingsClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MWindow.RightSideFrame.Navigate(new SettingsContainerPage());
+            _MainWindow.RightSideFrame.Navigate(new SettingsContainerPage());
         }
 
         public void InstanceOverview(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            MWindow.RightSideFrame.Navigate(new InstancePage(
-                    InstancePage.GetTitleInstance(),
-                    InstancePage.GetDescriptionInstance(),
-                    InstancePage.GetAuthorInstance(),
-                    InstancePage.GetTagsInstance()
-                    ));
+            _MainWindow.RightSideFrame.Navigate(new InstancePage(_MainWindow));
         }
 
         public void InstanceExport(object sender, RoutedEventArgs e)
@@ -146,7 +141,7 @@ namespace Lexplosion.Gui.Pages.Left
         {
             InitializeToggleButtons();
             SelectDefaultButton(sender);
-            MWindow.RightSideFrame.Navigate(new InstanceContainerPage(MWindow));
+            _MainWindow.RightSideFrame.Navigate(new InstanceContainerPage(_MainWindow));
         }
 
         private void AddCustomModpack(object sender, RoutedEventArgs e)

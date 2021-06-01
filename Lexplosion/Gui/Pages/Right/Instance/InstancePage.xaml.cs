@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.Pages.Left;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
 using System.Collections.Generic;
 using System.Windows;
@@ -14,32 +15,17 @@ namespace Lexplosion.Gui.Pages.Right.Instance
     {
         private ToggleButton selectedToggleButton;
         public static InstancePage instance = null;
+        private MainWindow _MainWindow;
 
-        private static string titleInstance = "";
-        private static string descriptionInstance = "";
-        private static string authorInstance = "";
-        private static List<string> tagsInstance = new List<string>();
-
-
-        public InstancePage(string title, string description, string author, List<string> tags)
+        public InstancePage(MainWindow mainWindow)
         {
             InitializeComponent();
             instance = this;
+            _MainWindow = mainWindow;
 
-            titleInstance = title;
-            descriptionInstance = description;
-            authorInstance = author;
-            tagsInstance = tags;
-
-            BottomSideFrame.Navigate(new OverviewPage(titleInstance, descriptionInstance));
+            BottomSideFrame.Navigate(new OverviewPage(mainWindow));
             selectedToggleButton = OverviewToggleButton;
         }
-
-        public static string GetTitleInstance() => titleInstance;
-        public static string GetDescriptionInstance() => descriptionInstance;
-        public static string GetAuthorInstance() => authorInstance;
-        public static List<string> GetTagsInstance() => tagsInstance;
-
 
         private void ReselectionToggleButton(object sender)
         {
@@ -56,19 +42,19 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         private void ClickedOverview(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            BottomSideFrame.Navigate(new OverviewPage(titleInstance, descriptionInstance));
+            BottomSideFrame.Navigate(new OverviewPage(_MainWindow));
         }
 
         private void ClickedModsList(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            BottomSideFrame.Navigate(new ModsListPage());
+            BottomSideFrame.Navigate(new ModsListPage(this));
         }
 
         private void ClickedVersion(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            BottomSideFrame.Navigate(new VersionPage());
+            BottomSideFrame.Navigate(new VersionPage(this));
         }
 
         private void СlientManager(object sender, RoutedEventArgs e)

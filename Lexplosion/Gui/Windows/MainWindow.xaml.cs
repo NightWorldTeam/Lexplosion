@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using Lexplosion.Gui.Pages.Left;
 using Lexplosion.Gui.Pages.Right.Menu;
 
@@ -12,6 +13,11 @@ namespace Lexplosion.Gui.Windows
         // хранит объект этого окна
         public static MainWindow Obj = null; 
         public static MainWindow instance = null;
+
+        public string instanceTitle = "";
+        public string instanceDescription = "";
+        public string instanceAuthor = "";
+        public List<string> instanceTags = new List<string>();
 
         public MainWindow()
         {

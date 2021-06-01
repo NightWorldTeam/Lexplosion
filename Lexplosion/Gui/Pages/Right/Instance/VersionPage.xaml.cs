@@ -7,7 +7,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
     /// </summary>
     public partial class VersionPage : Page
     {
-        public VersionPage()
+        public VersionPage(InstancePage instancePage)
         {
             InitializeComponent();
         }

@@ -7,7 +7,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
     /// </summary>
     public partial class ModsListPage : Page
     {
-        public ModsListPage()
+        public ModsListPage(InstancePage instancePage)
         {
             InitializeComponent();
         }

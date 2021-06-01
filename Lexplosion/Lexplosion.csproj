@@ -84,8 +84,6 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Global.cs" />
-    <Compile Include="Gui\FrameList.cs" />
-    <Compile Include="Gui\GuiUris.cs" />
     <Compile Include="Gui\Pages\Left\LeftSideMenuPage.xaml.cs">
       <DependentUpon>LeftSideMenuPage.xaml</DependentUpon>
     </Compile>
@@ -127,9 +125,6 @@
     </Compile>
     <Compile Include="Gui\Windows\RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\Windows\SettingsWindow.xaml.cs">
-      <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Pages\Right\Instance\VersionPage.xaml.cs">
       <DependentUpon>VersionPage.xaml</DependentUpon>
@@ -211,10 +206,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Windows\RegisterWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Gui\Windows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

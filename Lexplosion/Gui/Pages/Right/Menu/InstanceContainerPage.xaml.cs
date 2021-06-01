@@ -23,11 +23,11 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		public static InstanceContainerPage obj = null;
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
 		private List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
-		private MainWindow MWindow;
+		private MainWindow _MainWindow;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
-			MWindow = mainWindow;
+			_MainWindow = mainWindow;
 			InitializeComponent();
 			InitializeInstance();
 			//CreateFakeInstance(4);
@@ -133,7 +133,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			// Instance Logo
 			var moreButton = new Button()
 			{
-				Name = instance_name, //Name = title.Replace(' ', '_'),
+				Name = instance_name,
 				Background = new ImageBrush(new BitmapImage(logo_path)),
 				Style = (Style)Application.Current.FindResource("InstanceMoreButton")
 			};
@@ -376,15 +376,22 @@ namespace Lexplosion.Gui.Pages.Right.Menu
         {
             string instanceName = ((Button)sender).Name;
 			var lsmp = LeftSideMenuPage.instance;
-			string[] ButtonContents = new string[4] { instanceName.Replace('_', ' '), "Экспорт", "Настройки", "Назад" };
+			string[] ButtonContents = new string[4] { title, "Экспорт", "Настройки", "Назад" };
 			RoutedEventHandler[] ButtonClicks = new RoutedEventHandler[4] { lsmp.InstanceOverview, lsmp.InstanceExport, lsmp.InstanceSetting, lsmp.BackToMainMenu };
 			
 			for (int i = 0; i < 4; i++)
             {
 				SwitchToggleButton(lsmp.LeftSideMenu, ButtonContents[i], ButtonClicks[i], i);
             }
-			MWindow.RightSideFrame.Navigate(new InstancePage(title, description, author, tags));
-			FrameList.BottomSideFrame.Navigate(new OverviewPage(title, description));
+			_MainWindow.instanceTitle = title;
+			_MainWindow.instanceDescription = description;
+			_MainWindow.instanceAuthor = author;
+			_MainWindow.instanceTags = tags;
+
+			InstancePage instancePage = new InstancePage(_MainWindow);
+			_MainWindow.RightSideFrame.Navigate(instancePage);
+			instancePage.BottomSideFrame.Navigate(new OverviewPage(_MainWindow));
+
 		}
 
 		private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)

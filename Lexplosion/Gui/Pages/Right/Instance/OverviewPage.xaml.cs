@@ -5,6 +5,7 @@ using System;
 using System.Windows.Media.Imaging;
 using Lexplosion.Global;
 using Lexplosion.Gui.Pages.Left;
+using Lexplosion.Gui.Windows;
 
 namespace Lexplosion.Gui.Pages.Right.Instance
 {
@@ -18,10 +19,10 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         private int images_count = 1;
         private int lastIndex = 0;
 
-        public OverviewPage(string title, string descrition)
+        public OverviewPage(MainWindow mainWindow)
         {
             InitializeComponent();
-            SetAssets(title, descrition);
+            SetAssets(mainWindow.instanceTitle, mainWindow.instanceDescription);
         }
 
         public void SetAssets(string title, string description)

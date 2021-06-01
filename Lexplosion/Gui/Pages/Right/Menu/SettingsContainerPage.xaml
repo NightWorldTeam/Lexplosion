@@ -8,7 +8,71 @@
       d:DesignHeight="500" d:DesignWidth="700"
       Title="SettingsPage">
 
-    <Grid Background="#131313" Opacity="0.7">
-        <TextBlock Foreground="White" FontSize="30" FontWeight="Bold" Text="Настройки" />
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="SettingGrid">
+            <Grid.Background>
+                <SolidColorBrush Color="#131313" Opacity="0.7" />
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="1" Grid.Column="1" CornerRadius="7" Background="#151719">
+                <Grid ShowGridLines="False" Grid.Column="1" Grid.Row="1" Background="#151719" Margin="10,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Column="1" x:Name="WindowSizeGrid" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="1" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="160" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Height="50" Grid.Column="0" >
+                                <ComboBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="20"/>
+                                    </Style>
+                                </ComboBox.Resources>
+                            </ComboBox>
+                            <TextBox Width="150" Height="47" Grid.Column="1" Margin="10,0,0,0">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="3"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                            <TextBox Grid.Row="1" Width="160" Height="47" Grid.Column="3">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="3"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </Grid>
+                        <Label Grid.Row="0" Content="Window Size" FontSize="16" Foreground="#fff" Grid.Column="0"/>
+                        
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </Page>
