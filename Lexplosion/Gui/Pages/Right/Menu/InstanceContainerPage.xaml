@@ -15,7 +15,8 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <Grid ShowGridLines="False" x:Name="InstanceGrid">
                 <Grid.Background>
-                    <SolidColorBrush Color="#131313" Opacity="0.8"/>
+                    <!-- #1313131 0.8-->
+                    <SolidColorBrush Color="Black" Opacity="0.64"/>
                 </Grid.Background>
                 <!-- Grid Border Padding-->
                 <Grid.Resources>

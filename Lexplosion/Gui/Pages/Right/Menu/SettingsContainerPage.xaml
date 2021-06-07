@@ -8,71 +8,166 @@
       d:DesignHeight="500" d:DesignWidth="700"
       Title="SettingsPage">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="SettingGrid">
-            <Grid.Background>
-                <SolidColorBrush Color="#131313" Opacity="0.7" />
-            </Grid.Background>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="60"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Border Grid.Row="1" Grid.Column="1" CornerRadius="7" Background="#151719">
-                <Grid ShowGridLines="False" Grid.Column="1" Grid.Row="1" Background="#151719" Margin="10,20,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="20" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="100" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Column="1" x:Name="WindowSizeGrid" >
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+    <Page.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="Border" CornerRadius="10" BorderThickness="1.5" Background="#151719" BorderBrush="#121212">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" TargetName="Border"/>
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="Width" Value="Auto">
+                                <Setter Property="MinWidth" Value="100"/>
+                            </Trigger>
+                            <Trigger Property="Height" Value="Auto">
+                                <Setter Property="MinHeight" Value="20"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
 
-                        <Grid Grid.Row="1" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50" />
-                                <ColumnDefinition Width="160" />
-                                <ColumnDefinition Width="50" />
-                                <ColumnDefinition Width="160" />
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Height="50" Grid.Column="0" >
-                                <ComboBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="20"/>
-                                    </Style>
-                                </ComboBox.Resources>
-                            </ComboBox>
-                            <TextBox Width="150" Height="47" Grid.Column="1" Margin="10,0,0,0">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="3"/>
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
-                            <TextBox Grid.Row="1" Width="160" Height="47" Grid.Column="3">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="3"/>
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
-                        </Grid>
-                        <Label Grid.Row="0" Content="Window Size" FontSize="16" Foreground="#fff" Grid.Column="0"/>
-                        
-                    </Grid>
-                </Grid>
-            </Border>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CTB" TargetType="{x:Type TextBox}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="MinWidth" Value="145"/>
+            <Setter Property="MinHeight" Value="25"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="#b9b7b7"/>
+            <Setter Property="CaretBrush" Value="#2c99c2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border Name="Border" CornerRadius="2" Padding="2" BorderThickness="0,0,0,2">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#2c99c2"/>
+                            </Border.BorderBrush>
+                            <Border.Background>
+                                <SolidColorBrush Color="Transparent"/>
+                            </Border.Background>
+                            <Grid>
+                                <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+                                <TextBlock x:Name="WatermarkText" Text="{TemplateBinding Text}" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" IsHitTestVisible="False" Foreground="White"/>
+                            </Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FFE8EDF9" />
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="ReadOnly">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FFE8EDF9"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="MouseOver"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsKeyboardFocusWithin" Value="False"/>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WatermarkText" Value="Visible"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsKeyboardFocusWithin" Value="False"/>
+                                    <Condition Property="Text" Value="{x:Null}"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WatermarkText" Value="Visible"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.64"/>
+            </Grid.Background>
+            <TextBlock Text="Размеры окна"
+                       Height="35"
+                       FontSize="18" 
+                       FontWeight="Bold" 
+                       Foreground="#FFF" Margin="73,22,475,444"/>
+            <TextBlock Text="Ширина" 
+                       Width="87"
+                       Height="30"
+                       Foreground="#FFF" 
+                       FontSize="16" 
+                       FontWeight="Bold" Margin="137,55,477,416"/>
+            <TextBlock Text="Высота" 
+                       Width="87"
+                       Height="30"
+                       Foreground="#FFF" 
+                       FontSize="16" 
+                       FontWeight="Bold" Margin="338,57,276,414"/>
+            <CheckBox Width="40" 
+                      Height="32" 
+                      Margin="82,92,579,377" 
+                      BorderBrush="#1EAFDD"
+                      BorderThickness="100"/>
+            <TextBox Style="{StaticResource CTB}"
+                     FontSize="20"
+                     Height="42" 
+                     Text="1920"
+                     Margin="338,87,194,372"/>
+            <TextBox Style="{StaticResource CTB}"
+                     FontSize="20"
+                     Width="160" 
+                     Height="42" 
+                     Text="1280"
+                     Margin="137,87,396,372"/>
+            <TextBlock Text="Держать лаунчер открытым при запуске игры"
+                       Height="35"
+                       FontSize="18" 
+                       FontWeight="Bold" 
+                       Foreground="#FFF" Margin="73,157,194,309"/>
+            <ToggleButton Width="70"
+                          Height="30" Margin="73,197,550,274"/>
+            <TextBlock Text="Папка с игрой"
+                       Height="35"
+                       FontSize="18" 
+                       FontWeight="Bold" 
+                       Foreground="#FFF" Margin="73,243,194,223"/>
+            <TextBox Style="{StaticResource CTB}"
+                     FontSize="20"
+                     Height="42" 
+                     Text="C:\Users\GamerStorm_Hel2x_\night-world"
+                     Margin="73,288,194,176" />
+            <Button 
+                    Height="42"
+                    Content="Проводник"
+                    Foreground="#fff"
+                    FontWeight="Bold"
+                    Background="#1EAFDD" BorderThickness="0" Margin="504,288,114,176"/>
         </Grid>
     </ScrollViewer>
 </Page>

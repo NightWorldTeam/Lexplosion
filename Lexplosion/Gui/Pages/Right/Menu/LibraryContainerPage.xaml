@@ -7,8 +7,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="700"
       Title="LibraryContainerPage">
-
-    <Grid Background="#131313" Opacity="0.7">
+    <!-- #131313 0.7-->
+    <Grid Background="Black" Opacity="0.64">
         <TextBlock Foreground="White" FontSize="30" FontWeight="Bold" Text="Библиотека" />
     </Grid>
 </Page>

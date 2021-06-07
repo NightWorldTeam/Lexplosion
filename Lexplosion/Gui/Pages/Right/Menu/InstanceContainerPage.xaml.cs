@@ -29,8 +29,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		{
 			_MainWindow = mainWindow;
 			InitializeComponent();
-			InitializeInstance();
-			//CreateFakeInstance(4);
+			//InitializeInstance();
+			CreateFakeInstance(4);
 		}
 
 		private void InitializeInstance() 
@@ -101,9 +101,9 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719")),
 				Name = instance_name,
 				Effect = new DropShadowEffect() {
-					ShadowDepth = 0,
+					ShadowDepth = 3,
 					Color = (Color)ColorConverter.ConvertFromString("#151719"),
-					Opacity = 0.3
+					Opacity = 0.5
 				}
 			};
 

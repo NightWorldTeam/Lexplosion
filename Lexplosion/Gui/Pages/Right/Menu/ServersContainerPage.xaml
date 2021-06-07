@@ -8,7 +8,11 @@
       d:DesignHeight="500" d:DesignWidth="700"
       Title="ServersContainerPage">
 
-    <Grid Background="#131313" Opacity="0.7" ShowGridLines="False">
+    <Grid ShowGridLines="False" >
+        <Grid.Background>
+            <!-- #131313 0.7 -->
+            <SolidColorBrush Color="Black" Opacity="0.64" />
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
@@ -72,9 +76,16 @@
                 <Canvas Width="5" Height="48" HorizontalAlignment="Left" Background="#18E813" Margin="2,0,3,0"/>
             </Grid>
             <Grid x:Name="Friend1" Grid.Column="1">
+
                 <Grid.Background>
                     <SolidColorBrush Color="#072236" Opacity="0.9"/>
                 </Grid.Background>
+                <Grid.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="BorderThickness" Value="2" />
+                        <Setter Property="BorderBrush" Value="Black" />
+                    </Style>
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60" />
                     <ColumnDefinition Width="*" />
