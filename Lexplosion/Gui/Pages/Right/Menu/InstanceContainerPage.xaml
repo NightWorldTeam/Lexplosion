@@ -16,7 +16,8 @@
             <Grid ShowGridLines="False" x:Name="InstanceGrid">
                 <Grid.Background>
                     <!-- #1313131 0.8-->
-                    <SolidColorBrush Color="Black" Opacity="0.64"/>
+                    <!-- "Black" 0.64 -->
+                    <SolidColorBrush Color="#121212" Opacity="0.65"/>
                 </Grid.Background>
                 <!-- Grid Border Padding-->
                 <Grid.Resources>

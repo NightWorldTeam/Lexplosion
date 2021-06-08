@@ -8,7 +8,8 @@
       d:DesignHeight="500" d:DesignWidth="700"
       Title="LibraryContainerPage">
     <!-- #131313 0.7-->
-    <Grid Background="Black" Opacity="0.64">
+    <!-- "Black" 0.64 -->
+    <Grid Background="#121212" Opacity="0.65">
         <TextBlock Foreground="White" FontSize="30" FontWeight="Bold" Text="Библиотека" />
     </Grid>
 </Page>

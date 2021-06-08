@@ -11,7 +11,8 @@
     <Grid ShowGridLines="False" >
         <Grid.Background>
             <!-- #131313 0.7 -->
-            <SolidColorBrush Color="Black" Opacity="0.64" />
+            <!-- "Black" 0.64 -->
+            <SolidColorBrush Color="#121212" Opacity="0.65" />
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -56,12 +57,12 @@
                     </Grid.RowDefinitions>
                     <TextBlock VerticalAlignment="Center" 
                                Text="Hel2x" 
-                               Foreground="#18E813"
+                               Foreground="#22db1f"
                                FontSize="16" Margin="0,2"
                                TextTrimming="WordEllipsis"/>
                     <TextBlock Grid.Row="1" 
                                Text="FTB Infinity Evolved Skyblock(v2.0.1)"
-                               Foreground="#18E813" 
+                               Foreground="#22db1f" 
                                FontSize="13"
                                TextTrimming="WordEllipsis"
                                VerticalAlignment="Center" Margin="0,4,0,3" Grid.RowSpan="2"/>
@@ -73,7 +74,7 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right">
                 </Image>
-                <Canvas Width="5" Height="48" HorizontalAlignment="Left" Background="#18E813" Margin="2,0,3,0"/>
+                <Canvas Width="5" Height="48" HorizontalAlignment="Left" Background="#22db1f" Margin="2,0,3,0"/>
             </Grid>
             <Grid x:Name="Friend1" Grid.Column="1">
 
@@ -98,6 +99,7 @@
                     <TextBlock Grid.Column="1" VerticalAlignment="Center" 
                                Text="Дядя ХЕР знает кто..." 
                                Foreground="#5773FF" 
+                               
                                FontSize="16"/>
                 </Grid>
                 <Image Width="52" Height="52" Source="pack://application:,,,/Assets/images/icons/non_image.png"  HorizontalAlignment="Right"/>

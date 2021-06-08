@@ -186,6 +186,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			var textBlockAuthor = new TextBlock() 
 			{
 				Text = "by " + author,
+				FontSize = 12,
 				Padding = new Thickness(0),
 				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#a9b1ba")),
 				VerticalAlignment = VerticalAlignment.Center,

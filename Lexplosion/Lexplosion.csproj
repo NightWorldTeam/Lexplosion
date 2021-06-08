@@ -102,6 +102,9 @@
     <Compile Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml.cs">
       <DependentUpon>InstanceContainerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UserControls\SwitchButton.xaml.cs">
+      <DependentUpon>SwitchButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\Windows\AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
@@ -174,6 +177,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UserControls\SwitchButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

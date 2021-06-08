@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Right.Menu"
+      xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Right.Menu" xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="700"
       Title="SettingsPage">
@@ -110,7 +110,8 @@
                   VerticalScrollBarVisibility="Auto">
         <Grid>
             <Grid.Background>
-                <SolidColorBrush Color="Black" Opacity="0.64"/>
+                <!-- "Black" 0.64 -->
+                <SolidColorBrush Color="#121212"  Opacity="0.65"/>
             </Grid.Background>
             <TextBlock Text="Размеры окна"
                        Height="35"
@@ -129,16 +130,54 @@
                        Foreground="#FFF" 
                        FontSize="16" 
                        FontWeight="Bold" Margin="338,57,276,414"/>
-            <CheckBox Width="40" 
+            <ComboBox Width="40" 
                       Height="32" 
                       Margin="82,92,579,377" 
-                      BorderBrush="#1EAFDD"
-                      BorderThickness="100"/>
+                      Background="#1EAFDD"
+                      BorderThickness="1"
+                      MaxDropDownHeight="180"
+                      >
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1920x1080" />
+                </ComboBoxItem>
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1920x1080" />
+                </ComboBoxItem>
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1768x992" />
+                </ComboBoxItem>
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1680x1050" />
+                </ComboBoxItem>
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1600x1024" />
+                </ComboBoxItem>
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1600x900" />
+                </ComboBoxItem>
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1440x900" />
+                </ComboBoxItem>
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1280x1024" />
+                </ComboBoxItem>                
+                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
+                    <TextBlock Text="1366x768" />
+                </ComboBoxItem>
+            </ComboBox>
             <TextBox Style="{StaticResource CTB}"
                      FontSize="20"
                      Height="42" 
                      Text="1920"
                      Margin="338,87,194,372"/>
+            <Canvas>
+                <Line X1="1" Y1="0" X2="13" Y2="13"
+                      Stroke="White" StrokeThickness="2"
+                      Canvas.Left="310" Canvas.Top="110"/>
+                <Line X1="1" Y1="13" X2="13" Y2="0" 
+                      Stroke="White" StrokeThickness="2"
+                      Canvas.Left="310" Canvas.Top="110" />
+            </Canvas>
             <TextBox Style="{StaticResource CTB}"
                      FontSize="20"
                      Width="160" 
@@ -150,8 +189,7 @@
                        FontSize="18" 
                        FontWeight="Bold" 
                        Foreground="#FFF" Margin="73,157,194,309"/>
-            <ToggleButton Width="70"
-                          Height="30" Margin="73,197,550,274"/>
+            <usercontrols:SwitchButton Width="70" Height="31" Margin="73,200,550,276"/>
             <TextBlock Text="Папка с игрой"
                        Height="35"
                        FontSize="18" 
@@ -166,8 +204,7 @@
                     Height="42"
                     Content="Проводник"
                     Foreground="#fff"
-                    FontWeight="Bold"
-                    Background="#1EAFDD" BorderThickness="0" Margin="504,288,114,176"/>
+                    FontWeight="Bold" BorderThickness="0" Margin="504,288,114,176" Background="#FF1EAFDD"/>
         </Grid>
     </ScrollViewer>
 </Page>
