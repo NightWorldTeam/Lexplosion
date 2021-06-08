@@ -29,8 +29,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		{
 			_MainWindow = mainWindow;
 			InitializeComponent();
-			//InitializeInstance();
-			CreateFakeInstance(4);
+			InitializeInstance();
+			//CreateFakeInstance(4);
 		}
 
 		private void InitializeInstance() 
@@ -103,7 +103,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Effect = new DropShadowEffect() {
 					ShadowDepth = 3,
 					Color = (Color)ColorConverter.ConvertFromString("#151719"),
-					Opacity = 0.5
+					Opacity = 0.3
 				}
 			};
 
@@ -210,10 +210,10 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Height = new GridLength(1, GridUnitType.Star)
 			};
 
-			var textBlockOverview = new TextBlock() 
-			{ 
+			var textBlockOverview = new TextBlock()
+			{
 				Text = overview,
-				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff")),
+				Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#d5d5d5")),
 				HorizontalAlignment = HorizontalAlignment.Left,
 				FontSize = 16,
 				TextTrimming = TextTrimming.WordEllipsis
@@ -377,7 +377,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
         {
             string instanceName = ((Button)sender).Name;
 			var lsmp = LeftSideMenuPage.instance;
-			string[] ButtonContents = new string[4] { title, "Экспорт", "Настройки", "Назад" };
+			string[] ButtonContents = new string[4] { title, "Экспорт", "Настройки", "Вернуться" };
 			RoutedEventHandler[] ButtonClicks = new RoutedEventHandler[4] { lsmp.InstanceOverview, lsmp.InstanceExport, lsmp.InstanceSetting, lsmp.BackToMainMenu };
 			
 			for (int i = 0; i < 4; i++)

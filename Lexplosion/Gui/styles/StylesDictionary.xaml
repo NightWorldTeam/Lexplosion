@@ -136,7 +136,7 @@
     </Style>
 
     <Style x:Key="MWCBS1" TargetType="{x:Type ToggleButton}">
-        <Setter Property="Width" Value="244" />
+        <Setter Property="Width" Value="246" />
         <Setter Property="Height" Value="60" />
         <Setter Property="Background" Value="#18191b" />
         <Setter Property="Foreground" Value="White" />
@@ -158,7 +158,8 @@
                                 <ContentPresenter x:Name="Content" Margin="25,0,25,0"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Left"
-                                RecognizesAccessKey="True" />
+                                RecognizesAccessKey="True">
+                                </ContentPresenter>
                             </Border>
                         </Grid>
                     </Border>

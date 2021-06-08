@@ -12,7 +12,7 @@
 
     </Page.Resources>
 
-    <Grid ShowGridLines="True">
+    <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="108"/>
             <RowDefinition Height="*"/>

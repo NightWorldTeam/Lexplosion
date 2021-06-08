@@ -23,7 +23,17 @@
                 <Setter Property="Padding" Value="10" />
             </Style>
         </Grid.Resources>
-        <TextBlock Foreground="White" FontSize="30" FontWeight="Bold" Text="Сервера" />
+        <TextBlock Foreground="White" 
+                   FontSize="30" 
+                   FontWeight="Bold" 
+                   Text="Сервера" />
+        <TextBlock Text="КАК ИГРАТЬ??? СМОТРИ ТУТ!
+                   БЕЗ РЕГИСТРАЦИИ И СМС БЕСПЛАТНО" 
+                   FontSize="30" 
+                   TextWrapping="Wrap"
+                   FontWeight="Bold" 
+                   Foreground="BlueViolet"
+                   Margin="32,92,172,142" Grid.Row="1"/>
         <Grid x:Name="Friends" Grid.Row="1" Margin="10,0,10,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="230" />
