@@ -12,7 +12,6 @@ namespace Lexplosion.Gui.Windows
     {
         // хранит объект этого окна
         public static MainWindow Obj = null; 
-        public static MainWindow instance = null;
 
         public string instanceTitle = "";
         public string instanceDescription = "";
@@ -23,7 +22,6 @@ namespace Lexplosion.Gui.Windows
         {
             InitializeComponent();
             MainWindow.Obj = this;
-            instance = this;
 
             MouseDown += delegate { try { DragMove(); } catch { } };
 
