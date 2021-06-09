@@ -100,19 +100,19 @@ namespace Lexplosion.Gui.Pages.Left
         private void StoreClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            _MainWindow.RightSideFrame.Navigate(new InstanceContainerPage(_MainWindow));
+            _MainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _MainWindow.RightSideFrame);
         }
 
         private void LibraryClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            _MainWindow.RightSideFrame.Navigate(new LibraryContainerPage());
+            _MainWindow.PagesController<LibraryContainerPage>("LibraryContainerPage", _MainWindow.RightSideFrame);
         }
 
         private void MultiplayerClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            _MainWindow.RightSideFrame.Navigate(new ServersContainerPage());
+            _MainWindow.PagesController<ServersContainerPage>("ServersContainerPage", _MainWindow.RightSideFrame);
         }
 
         private void SettingsClicked(object sender, RoutedEventArgs e)
@@ -124,7 +124,7 @@ namespace Lexplosion.Gui.Pages.Left
         public void InstanceOverview(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            _MainWindow.RightSideFrame.Navigate(new InstancePage(_MainWindow));
+            _MainWindow.PagesController<InstancePage>("InstancePage", _MainWindow.RightSideFrame);
         }
 
         public void InstanceExport(object sender, RoutedEventArgs e)
@@ -141,7 +141,7 @@ namespace Lexplosion.Gui.Pages.Left
         {
             InitializeToggleButtons();
             SelectDefaultButton(sender);
-            _MainWindow.RightSideFrame.Navigate(new InstanceContainerPage(_MainWindow));
+            _MainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _MainWindow.RightSideFrame);
         }
 
         private void AddCustomModpack(object sender, RoutedEventArgs e)

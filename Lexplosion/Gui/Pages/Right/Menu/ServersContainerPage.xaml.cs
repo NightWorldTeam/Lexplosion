@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Lexplosion.Gui.Windows;
+using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Pages.Right.Menu
 {
@@ -7,7 +8,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// </summary>
     public partial class ServersContainerPage : Page
     {
-        public ServersContainerPage()
+        public ServersContainerPage(MainWindow mainWindow)
         {
             InitializeComponent();
         }
