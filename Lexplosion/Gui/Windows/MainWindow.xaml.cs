@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using Lexplosion.Gui.Pages.Left;
 using Lexplosion.Gui.Pages.Right.Menu;
 
@@ -18,6 +20,8 @@ namespace Lexplosion.Gui.Windows
         public string instanceAuthor = "";
         public List<string> instanceTags = new List<string>();
 
+        private Dictionary<string, Page> Pages = new Dictionary<string, Page>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,6 +31,22 @@ namespace Lexplosion.Gui.Windows
 
             LeftSideFrame.Navigate(new LeftSideMenuPage(this));
             RightSideFrame.Navigate(new InstanceContainerPage(this));
+        }
+
+        public void PagesController<T>(string page, Frame frame) where T: Page
+        {
+            Page obj;
+            if (!Pages.ContainsKey(page))
+            {
+                obj = (Page)((T)Activator.CreateInstance(typeof(T), new object[1] {this}));
+                Pages[page] = obj;
+            }
+            else
+            {
+                obj = Pages[page];
+            }
+
+            frame.Navigate(obj);
         }
 
         /* <-- Функционал MessageBox --> */

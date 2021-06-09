@@ -25,6 +25,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
 
             BottomSideFrame.Navigate(new OverviewPage(mainWindow));
             selectedToggleButton = OverviewToggleButton;
+            selectedToggleButton.IsChecked = true;
         }
 
         private void ReselectionToggleButton(object sender)

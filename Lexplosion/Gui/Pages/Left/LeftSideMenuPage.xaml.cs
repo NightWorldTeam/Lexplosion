@@ -118,7 +118,7 @@ namespace Lexplosion.Gui.Pages.Left
         private void SettingsClicked(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            _MainWindow.RightSideFrame.Navigate(new SettingsContainerPage());
+            _MainWindow.PagesController<SettingsContainerPage>("SettingsContainerPage", _MainWindow.RightSideFrame);
         }
 
         public void InstanceOverview(object sender, RoutedEventArgs e)
