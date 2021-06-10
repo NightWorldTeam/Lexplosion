@@ -13,6 +13,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System.Text.RegularExpressions;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Windows;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -30,7 +31,7 @@ namespace Lexplosion.Logic.FileSystem
         public class BaseFilesUpdates
         {
             public List<string> Natives = new List<string>();
-            public List<string> Libraries = new List<string>();
+            public Dictionary<string, LibInfo> Libraries = new Dictionary<string, LibInfo>();
             public bool MinecraftJar = false;
             public bool AssetsObjects = false;
             public bool AssetsIndexes = false;
@@ -331,11 +332,11 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //получаем версию libraries
-            if (File.Exists(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver"))
+            if (File.Exists(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + GetLibraiesType(instanceId) + ".lver"))
             {
                 try
                 {
-                    using (FileStream fstream = new FileStream(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
+                    using (FileStream fstream = new FileStream(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + GetLibraiesType(instanceId) + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
                     {
                         byte[] fileBytes = new byte[fstream.Length];
                         fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -355,16 +356,16 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + ".lver", "0");
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + GetLibraiesType(instanceId) + ".lver", "0");
                 updates["libraries"] = 0;
             }
 
             //проверяем папку libraries
             if (!Directory.Exists(directory + "/libraries"))
             {
-                foreach (string lib in filesInfo.libraries)
+                foreach (string lib in filesInfo.libraries.Keys)
                 {
-                    updatesList.Libraries.Add(lib);
+                    updatesList.Libraries[lib] = filesInfo.libraries[lib];
                 }
 
             }
@@ -373,20 +374,20 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (filesInfo.version.librariesLastUpdate != updates["libraries"]) //если версия libraries старая, то отправляем на обновления
                 {
-                    foreach (string lib in filesInfo.libraries)
+                    foreach (string lib in filesInfo.libraries.Keys)
                     {
-                        updatesList.Libraries.Add(lib);
+                        updatesList.Libraries[lib] = filesInfo.libraries[lib];
                     }
 
                 }
                 else
                 {
 
-                    foreach (string lib in filesInfo.libraries) //ищем недостающие файлы
+                    foreach (string lib in filesInfo.libraries.Keys) //ищем недостающие файлы
                     {
                         if (!File.Exists(directory + "/libraries/" + lib))
                         {
-                            updatesList.Libraries.Add(lib);
+                            updatesList.Libraries[lib] = filesInfo.libraries[lib];
                         }
                     }
                 }
@@ -460,8 +461,8 @@ namespace Lexplosion.Logic.FileSystem
                 File.Delete(file);
         }
 
-        //функция для скачивания libraries и natives
-        private static bool DownloadApplicationFiles(string url, string to, string file, WebClient wc)
+        //функция для скачивания libraries и natives (в zip файле)
+        private static bool DownloadLibFiles(string url, string to, string file, WebClient wc)
         {
             //создаем папки в соответсвии с путем к файлу из списка
             string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -481,7 +482,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 wc.DownloadFile(url + ".zip", temp + zipFile);
 
-                DelFile(to + zipFile);
+                DelFile(to + zipFile); // TODO: не ебу че это. Возможно убрать
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
                 File.Delete(temp + zipFile);
 
@@ -501,10 +502,43 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        //функция для скачивания файлов(кроме libraries и natives)
+        //функция для скачивания libraries и natives (в jar файле)
+        private static bool DownloadJarLibFiles(string url, string to, string file, WebClient wc)
+        {
+            //создаем папки в соответсвии с путем к файлу из списка
+            string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            string path = directory;
+            for (int i = 0; i < foldersPath.Length - 1; i++)
+            {
+                path += "/" + foldersPath[i];
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+            }
+
+            string temp = directory + "/temp/";
+
+            try
+            {
+                // TODO: возможно не удалять старый файл, а скачивать только в случае, если старый файл отличается
+                wc.DownloadFile(url, temp + file);
+                DelFile(to + file); 
+                File.Move(temp + file, to + file);
+
+                return true;
+
+            }
+            catch
+            {
+                DelFile(temp + file);
+                return false;
+            }
+
+        }
+
+        //функция для скачивания файлов (кроме libraries и natives) (в zip формате)
         private static bool DownloadFile(string url, string file, string to, string sha1, int size, WebClient wc)
         {
-
             string temp = directory + "/temp/";
             string zipFile = file + ".zip";
 
@@ -564,6 +598,59 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
+        //функция для скачивания файлов (кроме libraries и natives) (в jar формате)
+        private static bool DownloadJarFile(string url, string file, string to, string sha1, int size, WebClient wc)
+        {
+            string temp = directory + "/temp/";
+
+            //создаем папки в соответсвии с путем к файлу из списка
+            string[] foldersPath = to.Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
+
+            string path = directory;
+            for (int i = 0; i < foldersPath.Length - 1; i++)
+            {
+                path += "/" + foldersPath[i];
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+            }
+
+            try
+            {
+                wc.DownloadFile(url, temp + file);
+                DelFile(to);
+
+                using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
+                {
+                    byte[] fileBytes = new byte[fstream.Length];
+                    fstream.Read(fileBytes, 0, fileBytes.Length);
+                    fstream.Close();
+
+                    using (SHA1 sha = new SHA1Managed())
+                    {
+                        if (fileBytes.Length == size) //Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 &&
+                        {
+                            DelFile(to);
+                            File.Move(temp + file, to);
+
+                            return true;
+
+                        }
+                        else
+                        {
+                            File.Delete(temp + file);
+                            return false;
+
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                DelFile(temp + file);
+                return false;
+            }
+        }
+
         public static List<string> UpdateBaseFiles(BaseFilesUpdates updateList, VersionManifest filesList, string instanceId, ref Dictionary<string, int> updates)
         {
             string addr;
@@ -582,19 +669,27 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     addr = filesList.version.minecraftJar.url;
-
                 }
 
-                if (!DownloadFile(addr, filesList.version.minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size, wc))
+                bool isDownload;
+                if (filesList.version.minecraftJar.notArchived)
                 {
-                    errors.Add("version/" + filesList.version.minecraftJar.name);
-
+                    isDownload = DownloadJarFile(addr, filesList.version.minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size, wc);
                 }
                 else
                 {
-                    updates["version"] = filesList.version.minecraftJar.lastUpdate;
-                    //UpdateProgressBar();
+                    isDownload = DownloadFile(addr, filesList.version.minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size, wc);
                 }
+
+                if (isDownload)
+                {
+                    updates["version"] = filesList.version.minecraftJar.lastUpdate;
+                }
+                else
+                {
+                    errors.Add("version/" + filesList.version.minecraftJar.name);
+                }
+
             }
 
 
@@ -611,7 +706,7 @@ namespace Lexplosion.Logic.FileSystem
             foreach (string native in updateList.Natives)
             {
 
-                if (!DownloadApplicationFiles(addr + native, directory + "/instances/" + instanceId + "/version/natives/", native, wc))
+                if (!DownloadLibFiles(addr + native, directory + "/instances/" + instanceId + "/version/natives/", native, wc))
                 {
                     //скачивание не удалось
                     errors.Add("natives/" + native);
@@ -626,36 +721,44 @@ namespace Lexplosion.Logic.FileSystem
 
             updates["natives"] = filesList.version.nativesLastUpdate;
 
-
             //скачиваем libraries
-            if (filesList.version.librariesUrl == null)
-                addr = LaunсherSettings.serverUrl + "upload/libraries/";
-            else
-                addr = filesList.version.librariesUrl;
-
             folders = null;
             string ff;
-            foreach (string lib in updateList.Libraries)
+            foreach (string lib in updateList.Libraries.Keys)
             {
+                if (updateList.Libraries[lib].url == null)
+                    addr = LaunсherSettings.serverUrl + "upload/libraries/";
+                else
+                    addr = updateList.Libraries[lib].url;
+
                 folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                 ff = lib.Replace(folders[folders.Length - 1], "");
 
-                if (!DownloadApplicationFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc))
+                bool isDownload;
+                if (updateList.Libraries[lib].notArchived)
                 {
-                    errors.Add("libraries/" + lib);
-                    DelFile(directory + "/libraries/" + lib);
-
+                    isDownload = DownloadJarLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
                 }
                 else
                 {
+                    isDownload = DownloadLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
+                }
+
+                if (isDownload)
+                {
                     //UpdateProgressBar();
+                }
+                else
+                {
+                    errors.Add("libraries/" + lib);
+                    DelFile(directory + "/libraries/" + lib);
                 }
 
             }
 
             if (updateList.Libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
             {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesList.version.gameVersion + ".lver", filesList.version.librariesLastUpdate.ToString()); 
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesList.version.gameVersion + GetLibraiesType(instanceId) + ".lver", filesList.version.librariesLastUpdate.ToString()); 
             }
 
             //скачиваем assets
@@ -894,7 +997,6 @@ namespace Lexplosion.Logic.FileSystem
 
         public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportPath, string description)
         {
-
             string targetDir = directory + "/temp/" + instanceId + "-export"; //временная папка, куда будем копировать все файлы
             string srcDir = directory + "/instances/" + instanceId;
 

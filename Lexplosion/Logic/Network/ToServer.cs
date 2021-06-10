@@ -17,14 +17,19 @@ namespace Lexplosion.Logic.Network
         {
             public string code;
             public string str;
-            public new Dictionary<string, string> libraries;
+            public new Dictionary<string, DataLibInfo> libraries;
+        }
+
+        private class DataLibInfo : LibInfo
+        {
+            public string os;
         }
 
         private class DataNInstanceManifest : NInstanceManifest //этот класс нужен для декодирования json в GetInstanceManifest
         {
             public string code;
             public string str;
-            public new Dictionary<string, string> libraries;
+            public new Dictionary<string, DataLibInfo> libraries;
         }
 
         static public bool CheckLauncherUpdates()
@@ -101,12 +106,16 @@ namespace Lexplosion.Logic.Network
 
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
-                            List<string> libraries = new List<string>();
+                            Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
                             foreach (string lib in filesData.libraries.Keys)
                             {
-                                if (filesData.libraries[lib] == "all" || filesData.libraries[lib] == "windows")
+                                if (filesData.libraries[lib].os == "all" || filesData.libraries[lib].os == "windows")
                                 {
-                                    libraries.Add(lib);
+                                    libraries[lib] = new LibInfo
+                                    {
+                                        notArchived = filesData.libraries[lib].notArchived,
+                                        url = filesData.libraries[lib].url
+                                    };
                                 }
                             }
 
@@ -173,7 +182,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string answer = HttpPost("versionManifest.php?gameVersion=" + WebUtility.UrlEncode(version), data);
+                    string answer = HttpPost("versionManifest.php?gameVersion=" + WebUtility.UrlEncode(version) + "&hash=2e818dc89e364c7efcfa54bec7e873c5f00b3840", data);
 
                     if (answer != null)
                     {
@@ -182,12 +191,16 @@ namespace Lexplosion.Logic.Network
 
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
-                            List<string> libraries = new List<string>();
+                            Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
                             foreach (string lib in filesData.libraries.Keys)
                             {
-                                if (filesData.libraries[lib] == "all" || filesData.libraries[lib] == "windows")
+                                if (filesData.libraries[lib].os == "all" || filesData.libraries[lib].os == "windows")
                                 {
-                                    libraries.Add(lib);
+                                    libraries[lib] = new LibInfo
+                                    {
+                                        notArchived = filesData.libraries[lib].notArchived,
+                                        url = filesData.libraries[lib].url
+                                    };
                                 }
                             }
 

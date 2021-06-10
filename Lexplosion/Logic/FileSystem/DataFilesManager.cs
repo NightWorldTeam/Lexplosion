@@ -248,6 +248,20 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
+        //эта функция нужна для получения окончания названия файлов, содержащих инфу о либрариесов. Файлы сборок найтворлда должны быть оттделены от других файлов
+        public static string GetLibraiesType(string instanceId)
+        {
+            if(UserData.InstancesList[instanceId].Type == InstanceType.Nightworld)
+            {
+                return "-nw";
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
         public static void SaveFilesList(string instanceId, VersionManifest data)
         {
             LocalVersionManifest dataLocal = new LocalVersionManifest
@@ -264,12 +278,11 @@ namespace Lexplosion.Logic.FileSystem
                     assetsVersion = data.version.assetsVersion,
                     assetsIndexes = data.version.assetsIndexes,
                     mainClass = data.version.mainClass
-
                 }
             };
 
             SaveFile(directory + "/instances/" + instanceId + "/" + "filesList.json", JsonConvert.SerializeObject(dataLocal));
-            SaveFile(directory + "/versions/libraries/" + data.version.gameVersion + ".json", JsonConvert.SerializeObject(data.libraries));
+            SaveFile(directory + "/versions/libraries/" + data.version.gameVersion + GetLibraiesType(instanceId) + ".json", JsonConvert.SerializeObject(data.libraries));
         }
 
         public static VersionManifest GetFilesList(string instanceId)
@@ -280,10 +293,10 @@ namespace Lexplosion.Logic.FileSystem
                 return null;
             }
 
-            List<string> librariesData = GetFile<List<string>>(directory + "/versions/libraries/" + data.version.gameVersion + ".json");
+            Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(directory + "/versions/libraries/" + data.version.gameVersion + GetLibraiesType(instanceId) + ".json");
             if (librariesData == null)
             {
-                return null;
+                librariesData = new Dictionary<string, LibInfo>();
             }
 
             data.libraries = librariesData;

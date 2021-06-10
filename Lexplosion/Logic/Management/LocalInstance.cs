@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
@@ -27,6 +28,7 @@ namespace Lexplosion.Logic.Management
         {
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetFilesList(InstanceId);
+            // TODO: проверять на null
             Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion);
 
             if (Manifest != null)
@@ -35,10 +37,10 @@ namespace Lexplosion.Logic.Management
                 BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
 
                 // TODO: baseFiles может быть null, а VariableFiles содержать false
-
             }
             else
             {
+                MessageBox.Show("test2");
                 // TODO: возвращать ошибку
             }
 
