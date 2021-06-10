@@ -160,7 +160,7 @@
                 </ComboBoxItem>
                 <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
                     <TextBlock Text="1280x1024" />
-                </ComboBoxItem>                
+                </ComboBoxItem>
                 <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
                     <TextBlock Text="1366x768" />
                 </ComboBoxItem>

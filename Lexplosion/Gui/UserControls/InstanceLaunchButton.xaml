@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Lexplosion.Gui.UserControls.InstanceLaunchButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="60">
+    <Viewbox>
+        <Grid>
+            <Rectangle x:Name="DownloadLaunchButton"
+                       Width="60" 
+                       Height="60">
+                <Rectangle.Fill>
+                    <SolidColorBrush x:Name="background"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Path x:Name="InstanceLaunchPath"
+                  Stretch="Fill" 
+                  Fill="White"
+                  Stroke="White"
+                  Width="20" 
+                  Height="20"/>
+            <Rectangle x:Name="DownloadLaunchButton_InvisibleBackground"
+                       Fill="Transparent"
+                       Width="60" 
+                       Height="60"
+                       MouseEnter="DownloadLaunchButton_MouseEnter"
+                       MouseLeave="DownloadLaunchButton_MouseLeave"
+                       MouseLeftButtonDown="DownloadLaunchButton_MouseLeftButtonDown"/>
+        </Grid>
+    </Viewbox>
+</UserControl>
