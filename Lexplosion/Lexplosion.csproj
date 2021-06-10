@@ -102,6 +102,9 @@
     <Compile Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml.cs">
       <DependentUpon>InstanceContainerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UserControls\InstanceForm.xaml.cs">
+      <DependentUpon>InstanceForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\UserControls\InstanceLaunchButton.xaml.cs">
       <DependentUpon>InstanceLaunchButton.xaml</DependentUpon>
     </Compile>
@@ -180,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UserControls\InstanceForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,107 @@
+﻿<UserControl x:Class="Lexplosion.Gui.UserControls.InstanceForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="120" d:DesignWidth="600" >
+    <Canvas Margin="40,0,0,0"
+            Width="600" 
+            Height="120">
+        <Canvas.Background>
+            <SolidColorBrush Color="#151719" x:Name="Background"/>
+        </Canvas.Background>
+        <Canvas.Effect>
+            <DropShadowEffect ShadowDepth="3" Color="#151719" Opacity="0.3"/>
+        </Canvas.Effect>
+        <Grid>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="420"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="120"/>
+                </Grid.RowDefinitions>
+                <Rectangle x:Name="InstanceLogo" 
+                               Grid.Column="0" >
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/non_image.png"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Grid x:Name="TextContentGrid" 
+                          Grid.Column="1"
+                          Margin="10,0,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid x:Name="TitleGrid" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="TextBlockTitle" 
+                                       Grid.Column="0"
+                                       Padding="0"
+                                       FontSize="22"
+                                       Text="Energy of Space"
+                                       Foreground="#ffffff"
+                                       TextTrimming="WordEllipsis"/>
+                        <TextBlock x:Name="TextBlockAuthor"
+                                       Grid.Column="1"
+                                       FontSize="12"
+                                       Padding="0"
+                                       Text="by NightWorld"
+                                       Foreground="#a9b1ba"
+                                       VerticalAlignment="Center"
+                                       FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                                       TextTrimming="WordEllipsis"/>
+                    </Grid>
+                    <Grid x:Name="OverviewGrid" 
+                              Grid.Column="1" 
+                              Grid.Row="1"
+                              Margin="0,5,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="TextBlockOverview"
+                                       Grid.Column="0"
+                                       Grid.Row="0"
+                                       Text="Цель данной сборки - развить свою колонию и построить транспортную сеть в виде железной дороги. Поезда здесь существуют не просто как декорации, они необходимы, ведь предметы имеют вес, руда генерируется огромными жилами, которые встречаются не очень то и часто. В процессе игры вам придётся постоянно перемещаться между различными месторождениями, своей базой, колонией. Основной индустриальный мод в этом модпаке - это Immersive Engineering, поэтому все строения буду выглядеть очень эффектно на фоне механизмов из этого мода. Во время игры вы с головой уйдёте в логистику, путешествия и индустриализацию."
+                                       Foreground="#d5d5d5"
+                                       HorizontalAlignment="Left"
+                                       FontSize="16"
+                                       TextTrimming="WordEllipsis"/>
+                        <WrapPanel Grid.Row="1"
+                                       Margin="0,1,1,1"
+                                       Orientation="Horizontal">
+                            <Button Content="Mods" Style="{StaticResource TagStyle}"/>
+                            <Button Content="NightWorld" Style="{StaticResource TagStyle}"/>
+                            <Button Content="Text" Style="{StaticResource TagStyle}"/>
+                            <Button Content="1.7.10" Style="{StaticResource TagStyle}"/>
+                        </WrapPanel>
+                    </Grid>
+                </Grid>
+                <Grid x:Name="InstanceButtonGrid" Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+                    <local:InstanceLaunchButton Grid.Row="0"
+                                                    Width="60" 
+                                                    Height="60"/>
+                    <local:InstanceLaunchButton Grid.Row="1"
+                                                    Width="60" 
+                                                    Height="60"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Canvas>
+</UserControl>

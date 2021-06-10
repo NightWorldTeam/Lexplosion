@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Right.Menu"
+      xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Right.Menu" xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="499" d:DesignWidth="700"
       Title="ModpacksContainerPage">
@@ -13,7 +13,7 @@
 
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid ShowGridLines="False" x:Name="InstanceGrid">
+            <Grid ShowGridLines="True" x:Name="InstanceGrid">
                 <Grid.Background>
                     <!-- #1313131 0.8-->
                     <!-- "Black" 0.64 -->
@@ -26,8 +26,14 @@
                     </Style>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="175"/>
+                    <ColumnDefinition Width="600"/>
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="150"/>
+                    <RowDefinition Height="150"/>
+                </Grid.RowDefinitions>
+                <usercontrols:InstanceForm Grid.Row="1"/>
             </Grid>
         </ScrollViewer>
     </Grid>
