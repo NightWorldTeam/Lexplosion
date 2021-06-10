@@ -31,58 +31,45 @@ namespace Lexplosion.Gui.UserControls
         public SwitchButton()
         {
             InitializeComponent();
-            Back.Fill = OffColor;
+            Background.Fill = OffColor;
             Toggled = false;
             Dot.Margin = Off;
         }
 
         private bool Toggle1 { get => Toggled; set => Toggled = value; }
 
-        private void Dot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) 
-        {
-            SwitchAnimation(sender);
-        }
-
-        private void Back_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) 
+        private void Switch_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) 
         {
             SwitchAnimation(sender);
         }
 
         private void SwitchAnimation(object sender) 
         {
-            if (!Toggled)
+            if (!Toggled && Dot.Margin == new Thickness(3, 3, 32, 3))
             {
-                if (Dot.Margin == new Thickness(3, 3, 32, 3))
+                Background.Fill = OnColor;
+                Toggled = true;
+                
+                ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
                 {
-                    Back.Fill = OnColor;
-                    Toggled = true;
-
-                    ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
-                    {
-                        From = Dot.Margin,
-                        To = new Thickness(32, 3, 3, 3),
-                        Duration = TimeSpan.FromSeconds(0.3),
-                    };
-
-                    Dot.BeginAnimation(Canvas.MarginProperty, thicknessAnimation);
-                }
+                    From = Dot.Margin,
+                    To = new Thickness(32, 3, 3, 3),
+                    Duration = TimeSpan.FromSeconds(0.3),
+                };
+                Dot.BeginAnimation(Canvas.MarginProperty, thicknessAnimation);
             }
             else
             {
-                if (Dot.Margin == new Thickness(32, 3, 3, 3))
+                Background.Fill = OffColor;
+                Toggled = false;
+
+                ThicknessAnimation animation = new ThicknessAnimation()
                 {
-                    Back.Fill = OffColor;
-                    Toggled = false;
-
-                    ThicknessAnimation animation = new ThicknessAnimation()
-                    {
-                        From = Dot.Margin,
-                        To = new Thickness(3, 3, 32, 3),
-                        Duration = TimeSpan.FromSeconds(0.3)
-                    };
-
-                    Dot.BeginAnimation(Canvas.MarginProperty, animation);
-                }
+                    From = Dot.Margin,
+                    To = new Thickness(3, 3, 32, 3),
+                    Duration = TimeSpan.FromSeconds(0.3)
+                };
+                Dot.BeginAnimation(Canvas.MarginProperty, animation);
             }
         }
     }

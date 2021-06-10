@@ -7,12 +7,12 @@ using System.Windows;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("NightWorld")]
-[assembly: AssemblyDescription("NightWorld Launcher")]
+[assembly: AssemblyTitle("NW Lexplosion")]
+[assembly: AssemblyDescription("NW Lexplosion - Minecraft Launcher")]
 [assembly: AssemblyConfiguration("NightWorld")]
-[assembly: AssemblyCompany("NightWorld")]
-[assembly: AssemblyProduct("NightWorld Lexplosion")]
-[assembly: AssemblyCopyright("Copyright © NightWorld 2019")]
+[assembly: AssemblyCompany("NightWorld.Inc")]
+[assembly: AssemblyProduct("Lexplosion")]
+[assembly: AssemblyCopyright("Copyright © NightWorld 2017-2021")]
 [assembly: AssemblyTrademark("NightWorld")]
 [assembly: AssemblyCulture("")]
 
@@ -53,3 +53,4 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.2.0")]
 [assembly: AssemblyFileVersion("0.2.0")]
+[assembly: NeutralResourcesLanguage("")]

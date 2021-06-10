@@ -243,21 +243,19 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Height = new GridLength(60, GridUnitType.Pixel)
 			};
 
-			var downloadButton = new Button() 
+			var downloadButton = new UserControls.InstanceLaunchButton() 
 			{ 
 				Name = instance_name + "Download",
-				BorderThickness = new Thickness(2),
-				Style = (Style)Application.Current.FindResource("InstanceDonwloadButton")
+				//BorderThickness = new Thickness(2),
+				//Style = (Style)Application.Current.FindResource("InstanceDonwloadButton")
 			};
-			downloadButton.Click += LaunchInstance;
+			//downloadButton.Click += LaunchInstance;
 
-			var exportButton = new Button() 
+			var exportButton = new UserControls.InstanceLaunchButton()
 			{
 				Name = instance_name + "Export",
-				BorderThickness = new Thickness(2),
-				Style = (Style)Application.Current.FindResource("InstanceExportButton")
 			};
-			exportButton.Click += ExportInstance;
+			//exportButton.Click += ExportInstance;
 
 			var progressBar = new ProgressBar()
 			{

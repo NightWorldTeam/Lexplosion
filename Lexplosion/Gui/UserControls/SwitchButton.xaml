@@ -5,25 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Viewbox Width="70" Height="31">
+             d:DesignHeight="31" d:DesignWidth="70">
+    <Viewbox>
         <Grid Width="70" Height="31">
-            <Rectangle x:Name="Back"
+            <Rectangle x:Name="Background"
                        Fill="#1EAFDD"
                        Width="70" Height="31"
                        Stroke="#202224"
                        HorizontalAlignment="Left" 
                        StrokeThickness="2"
                        RadiusX="8"
-                       RadiusY="8"
-                       MouseLeftButtonDown="Back_MouseLeftButtonDown"/>
+                       RadiusY="8"/>
             <Rectangle x:Name="Dot" 
                        Fill="#202224" 
                        Width="35" 
                        Height="25" 
                        RadiusX="8" 
                        RadiusY="8"
-                       MouseLeftButtonDown="Dot_MouseLeftButtonDown" Margin="3,3,32,3"/>
+                       Margin="3,3,32,3"/>
+            <Rectangle x:Name="SwitchButton_Invible"
+                       Fill="Transparent"
+                       Width="70" 
+                       Height="31"
+                       RadiusX="8"
+                       RadiusY="8"
+                       MouseLeftButtonDown="Switch_MouseLeftButtonDown"/>
         </Grid>
     </Viewbox>
 </UserControl>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Gui.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// </summary>
     public partial class LibraryContainerPage : Page
     {
-        public LibraryContainerPage()
+        public LibraryContainerPage(MainWindow mainWindow)
         {
             InitializeComponent();
         }

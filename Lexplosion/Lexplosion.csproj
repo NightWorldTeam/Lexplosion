@@ -7,7 +7,7 @@
     <ProjectGuid>{4DF9C4D2-E828-456F-872D-622EFD405D44}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Lexplosion</RootNamespace>
-    <AssemblyName>NightWorld-Lexplosion</AssemblyName>
+    <AssemblyName>NW Lexplosion</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -102,6 +102,9 @@
     <Compile Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml.cs">
       <DependentUpon>InstanceContainerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UserControls\InstanceLaunchButton.xaml.cs">
+      <DependentUpon>InstanceLaunchButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\UserControls\SwitchButton.xaml.cs">
       <DependentUpon>SwitchButton.xaml</DependentUpon>
     </Compile>
@@ -177,6 +180,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UserControls\InstanceLaunchButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -266,7 +273,7 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 и x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
