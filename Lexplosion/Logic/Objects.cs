@@ -4,7 +4,7 @@
 namespace Lexplosion.Logic.Objects 
 {
 
-    public class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
+    class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
     {
         public string description;
         public List<string> images;
@@ -13,11 +13,18 @@ namespace Lexplosion.Logic.Objects
         public string xms;
     }
 
+    class LibInfo 
+    {
+        public bool notArchived;
+        public string url;
+    }
+
+
     class VersionManifest
     {
         public VersionInfo version;
         public Dictionary<string, string> natives;
-        public List<string> libraries;
+        public Dictionary<string, LibInfo> libraries;
     }
 
     class NInstanceManifest : VersionManifest
@@ -40,7 +47,6 @@ namespace Lexplosion.Logic.Objects
     {
         public new FileInfo minecraftJar;
         public bool security;
-        public string librariesUrl;
         public int librariesLastUpdate;
         public string nativesUrl;
         public int nativesLastUpdate;
@@ -53,6 +59,7 @@ namespace Lexplosion.Logic.Objects
         public string sha1;
         public int size;
         public int lastUpdate;
+        public bool notArchived;
     }
 
     class WithFolder
@@ -68,7 +75,7 @@ namespace Lexplosion.Logic.Objects
     {
         public List<string> Errors;
         public VersionInfo VersionFile;
-        public List<string> Libraries;
+        public Dictionary<string, LibInfo> Libraries;
     }
 
 }

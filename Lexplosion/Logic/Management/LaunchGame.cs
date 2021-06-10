@@ -42,7 +42,7 @@ namespace Lexplosion.Logic.Management
 
             command = @" -Djava.library.path=" + UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/natives -cp ";
 
-            foreach (string lib in data.Libraries)
+            foreach (string lib in data.Libraries.Keys)
             {
                 command += UserData.settings["gamePath"] + "/libraries/" + lib + ";";
             }
