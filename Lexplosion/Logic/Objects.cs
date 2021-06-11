@@ -19,6 +19,22 @@ namespace Lexplosion.Logic.Objects
         public string url;
     }
 
+    class Attachment
+    {
+        public int id;
+        public bool isDefault;
+        public string url;
+    }
+
+    class CurseforgeInstanceInfo
+    {
+        public int id;
+        public string name;
+        public List<Attachment> attachments;
+        public string summary;
+        public int downloadCount;
+    }
+
 
     class VersionManifest
     {

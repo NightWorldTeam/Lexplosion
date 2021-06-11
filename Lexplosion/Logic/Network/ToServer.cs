@@ -327,6 +327,25 @@ namespace Lexplosion.Logic.Network
 
         }
 
+        public static List<CurseforgeInstanceInfo> GetCursforgeInstances(int pageSize, int index, string searchFilter = "")
+        {
+            try
+            {
+                string answer = HttpPost("https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=0&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter), new List<List<string>>(), true);
+                if(answer != null)
+                {
+                    return JsonConvert.DeserializeObject<List<CurseforgeInstanceInfo>>(answer);
+                }
+
+                return new List<CurseforgeInstanceInfo>();
+            }
+            catch
+            {
+                return new List<CurseforgeInstanceInfo>();
+            }
+
+        }
+
         static public string HttpPost(string url, List<List<string>> data = null, bool outside = false) // TODO: List<string> заменить на массив
         {
             if (!outside)

@@ -13,7 +13,7 @@
 
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid ShowGridLines="True" x:Name="InstanceGrid">
+            <Grid ShowGridLines="False" x:Name="InstanceGrid">
                 <Grid.Background>
                     <!-- #1313131 0.8-->
                     <!-- "Black" 0.64 -->
