@@ -258,9 +258,14 @@ namespace Lexplosion.Logic.Management
 
                 data = null;
 
-                Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+                //Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
 
             }
+        }
+
+        public static void CreateInstance(string name, string version, string forgeVersion)
+        {
+
         }
 
     }

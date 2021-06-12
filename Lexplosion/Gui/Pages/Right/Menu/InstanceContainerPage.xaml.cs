@@ -34,7 +34,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			InitializeComponent();
 			InitializeInstance();
 			//CreateFakeInstance(4);
-			ManageLogic.СlientManager("Long_Tech");
 		}
 
 		private void InitializeInstance() 

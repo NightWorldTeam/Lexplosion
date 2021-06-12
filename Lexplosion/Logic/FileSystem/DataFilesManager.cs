@@ -248,16 +248,19 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        //эта функция нужна для получения окончания названия файлов, содержащих инфу о либрариесов. Файлы сборок найтворлда должны быть оттделены от других файлов
-        public static string GetLibraiesType(string instanceId)
+        //эта функция возвращает имя для файла либрариесов (файлы .lver, что хранит версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры)
+        //у каждой версии игры своё имя для файлов с информацией о либрариесах
+        public static string GetLibName(string instanceId, VersionInfo version)
         {
-            if(UserData.InstancesList[instanceId].Type == InstanceType.Nightworld)
+            string suffix = version.gameVersion + "-" + version.forgeVersion;
+
+            if (UserData.InstancesList[instanceId].Type == InstanceType.Nightworld)
             {
-                return "-nw";
+                return suffix + "-nw";
             }
             else
             {
-                return "";
+                return suffix;
             }
 
         }
@@ -283,7 +286,7 @@ namespace Lexplosion.Logic.FileSystem
             };
 
             SaveFile(directory + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(dataLocal));
-            SaveFile(directory + "/versions/libraries/" + data.version.gameVersion + GetLibraiesType(instanceId) + ".json", JsonConvert.SerializeObject(data.libraries));
+            SaveFile(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
         }
 
         public static VersionManifest GetManifest(string instanceId)
@@ -294,7 +297,7 @@ namespace Lexplosion.Logic.FileSystem
                 return null;
             }
 
-            Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(directory + "/versions/libraries/" + data.version.gameVersion + GetLibraiesType(instanceId) + ".json");
+            Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json");
             if (librariesData == null)
             {
                 librariesData = new Dictionary<string, LibInfo>();

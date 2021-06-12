@@ -19,22 +19,6 @@ namespace Lexplosion.Logic.Objects
         public string url;
     }
 
-    class Attachment
-    {
-        public int id;
-        public bool isDefault;
-        public string url;
-    }
-
-    class CurseforgeInstanceInfo
-    {
-        public int id;
-        public string name;
-        public List<Attachment> attachments;
-        public string summary;
-        public float downloadCount;
-    }
-
     class VersionManifest
     {
         public VersionInfo version;
@@ -91,5 +75,30 @@ namespace Lexplosion.Logic.Objects
         public VersionInfo VersionFile;
         public Dictionary<string, LibInfo> Libraries;
     }
+
+    //Эти 3 класса нужны для получения инфы с курсфорджа
+    class Author
+    {
+        public string name;
+        public string url;
+    }
+
+    class Attachment
+    {
+        public int id;
+        public bool isDefault;
+        public string url;
+    }
+
+    class CurseforgeInstanceInfo
+    {
+        public int id;
+        public string name;
+        public List<Attachment> attachments;
+        public List<Author> authors;
+        public string summary;
+        public float downloadCount;
+    }
+
 
 }

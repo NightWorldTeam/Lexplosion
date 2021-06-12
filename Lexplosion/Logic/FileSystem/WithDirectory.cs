@@ -353,11 +353,11 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //получаем версию libraries
-            if (File.Exists(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + GetLibraiesType(instanceId) + ".lver"))
+            if (File.Exists(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver"))
             {
                 try
                 {
-                    using (FileStream fstream = new FileStream(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + GetLibraiesType(instanceId) + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
+                    using (FileStream fstream = new FileStream(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
                     {
                         byte[] fileBytes = new byte[fstream.Length];
                         fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -377,7 +377,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesInfo.version.gameVersion + GetLibraiesType(instanceId) + ".lver", "0");
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver", "0");
                 updates["libraries"] = 0;
             }
 
@@ -392,7 +392,6 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-
                 if (filesInfo.version.librariesLastUpdate != updates["libraries"]) //если версия libraries старая, то отправляем на обновления
                 {
                     foreach (string lib in filesInfo.libraries.Keys)
@@ -782,7 +781,7 @@ namespace Lexplosion.Logic.FileSystem
 
             if (updateList.Libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
             {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + filesList.version.gameVersion + GetLibraiesType(instanceId) + ".lver", filesList.version.librariesLastUpdate.ToString()); 
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesList.version) + ".lver", filesList.version.librariesLastUpdate.ToString()); 
             }
 
             //скачиваем assets
