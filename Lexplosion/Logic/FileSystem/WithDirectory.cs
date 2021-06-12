@@ -38,6 +38,27 @@ namespace Lexplosion.Logic.FileSystem
             public bool AssetsVirtual = false;
         }
 
+        // Эти три класса нужны для декодирования json при инфы о фордже
+        class ForgeArtifact
+        {
+            public string path;
+            public string url;
+            public int size;
+        }
+
+        class ForgeLib
+        {
+            public string name;
+            public Dictionary<string, ForgeArtifact> downloads;
+        }
+
+        class ForgeVersionFile
+        {
+            public string mainClass;
+            public string id;
+            public List<ForgeLib> libraries;
+        }
+
         private class LauncherAssets //этот класс нужен для декодирования json
         {
             public int version;
@@ -611,7 +632,10 @@ namespace Lexplosion.Logic.FileSystem
             {
                 path += "/" + foldersPath[i];
                 if (!Directory.Exists(path))
+                {
                     Directory.CreateDirectory(path);
+
+                }
             }
 
             try
@@ -662,36 +686,36 @@ namespace Lexplosion.Logic.FileSystem
             //скачивание файла версии
             if (updateList.MinecraftJar)
             {
-                if (filesList.version.minecraftJar.url == null)
+                Objects.FileInfo minecraftJar = filesList.version.minecraftJar;
+                if (minecraftJar.url == null)
                 {
-                    addr = LaunсherSettings.serverUrl + "upload/versions/" + filesList.version.minecraftJar.name;
+                    addr = LaunсherSettings.serverUrl + "upload/versions/" + minecraftJar.name;
                 }
                 else
                 {
-                    addr = filesList.version.minecraftJar.url;
+                    addr = minecraftJar.url;
                 }
 
                 bool isDownload;
-                if (filesList.version.minecraftJar.notArchived)
+                if (minecraftJar.notArchived)
                 {
-                    isDownload = DownloadJarFile(addr, filesList.version.minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size, wc);
+                    isDownload = DownloadJarFile(addr, minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + minecraftJar.name, minecraftJar.sha1, minecraftJar.size, wc);
                 }
                 else
                 {
-                    isDownload = DownloadFile(addr, filesList.version.minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name, filesList.version.minecraftJar.sha1, filesList.version.minecraftJar.size, wc);
+                    isDownload = DownloadFile(addr, minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + minecraftJar.name, minecraftJar.sha1, minecraftJar.size, wc);
                 }
 
                 if (isDownload)
                 {
-                    updates["version"] = filesList.version.minecraftJar.lastUpdate;
+                    updates["version"] = minecraftJar.lastUpdate;
                 }
                 else
                 {
-                    errors.Add("version/" + filesList.version.minecraftJar.name);
+                    errors.Add("version/" + minecraftJar.name);
                 }
 
             }
-
 
             //скачиваем natives
             if (filesList.version.nativesUrl == null)

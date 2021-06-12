@@ -32,9 +32,8 @@ namespace Lexplosion.Logic.Objects
         public string name;
         public List<Attachment> attachments;
         public string summary;
-        public int downloadCount;
+        public float downloadCount;
     }
-
 
     class VersionManifest
     {
@@ -86,7 +85,6 @@ namespace Lexplosion.Logic.Objects
         public int folderVersion;
 
     }
-
     class InitData
     {
         public List<string> Errors;

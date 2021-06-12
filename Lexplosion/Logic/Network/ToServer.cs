@@ -152,7 +152,7 @@ namespace Lexplosion.Logic.Network
         }
 
         //функция получает манифест для майкрафт версии
-        public static VersionManifest GetVersionManifest(string version)
+        public static VersionManifest GetVersionManifest(string version, string forgeVersion = "")
         {
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
@@ -182,7 +182,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string answer = HttpPost("versionManifest.php?gameVersion=" + WebUtility.UrlEncode(version) + "&hash=2e818dc89e364c7efcfa54bec7e873c5f00b3840", data);
+                    string answer = HttpPost("versionManifest.php?gameVersion=" + WebUtility.UrlEncode(version) + "&hash=2e818dc89e364c7efcfa54bec7e873c5f00b3840&forgeVersion=" + WebUtility.UrlEncode(forgeVersion), data);
 
                     if (answer != null)
                     {
@@ -331,8 +331,14 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                string answer = HttpPost("https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=0&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter), new List<List<string>>(), true);
-                if(answer != null)
+                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=0&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter));
+                WebResponse resp = req.GetResponse();
+                Stream stream = resp.GetResponseStream();
+                StreamReader sr = new StreamReader(stream);
+                string answer = sr.ReadToEnd();
+                sr.Close();
+
+                if (answer != null)
                 {
                     return JsonConvert.DeserializeObject<List<CurseforgeInstanceInfo>>(answer);
                 }
@@ -343,6 +349,11 @@ namespace Lexplosion.Logic.Network
             {
                 return new List<CurseforgeInstanceInfo>();
             }
+
+        }
+
+        public static void GetCursforgeInstanceInfo(int id)
+        {
 
         }
 

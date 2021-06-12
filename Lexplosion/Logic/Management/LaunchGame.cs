@@ -63,7 +63,6 @@ namespace Lexplosion.Logic.Management
 
         public static bool Run(string command, string instanceId)
         {
-
             if (UserData.settings["showConsole"] == "true")
             {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
@@ -158,7 +157,8 @@ namespace Lexplosion.Logic.Management
                             //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
                             MainWindow.Obj.SetMessageBox("Возникла ошибка при запуске игры.");
 
-                            if (!ConsoleWindow.isShow)
+                            // TODO: перенести это в ConsoleWindow
+                            if (!ConsoleWindow.isShow) 
                             {
                                 ConsoleWindow.Window.Show();
                                 ConsoleWindow.isShow = true;
@@ -219,8 +219,8 @@ namespace Lexplosion.Logic.Management
                 };
             }
 
-            try
-            {
+            //try
+            //{
                 SetDefaultSettings();
 
                 if (!UserData.settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
@@ -291,9 +291,9 @@ namespace Lexplosion.Logic.Management
 
                 return data;
 
-            } catch {
-                return Error("unknownError");
-            }
+            //} catch {
+               // return Error("unknownError");
+            //}
 
         }
 
