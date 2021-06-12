@@ -3,6 +3,8 @@ using Lexplosion.Gui.Pages.Left;
 using Lexplosion.Gui.Pages.Right.Instance;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +26,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
 		private List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
 		private MainWindow _MainWindow;
+		private Uri non_image_uri = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
@@ -35,7 +38,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void InitializeInstance() 
 		{
-			obj = this;
+			/*
+			 			obj = this;
 			var i = 0;
 
 			foreach (string instanceId in UserData.InstancesList.Keys) // TODO: возможна ситуация что во время работы этого цикла UserData.InstancesList будет изменён
@@ -71,6 +75,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				}
                 catch { }
 			}
+			}
+			 */
+			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(0, 10);
+			for (int j = 0; j<8; j++) 
+			{ 
+				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j, new Uri(curseforgeInstances[j].attachments[0].url), curseforgeInstances[j].name, "NightWorld", curseforgeInstances[j].summary, instance_tags1);
+			}
 		}
 
 		private void CreateFakeInstance(int count) 
@@ -99,9 +110,9 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Width = 600,
 				Margin = new Thickness(40, 0, 0, 0),
 				Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719")),
-				Name = instance_name,
+				Name = "id" + instance_name,
 				Effect = new DropShadowEffect() {
-					ShadowDepth = 3,
+					ShadowDepth = 1,
 					Color = (Color)ColorConverter.ConvertFromString("#151719"),
 					Opacity = 0.3
 				}
@@ -133,7 +144,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			// Instance Logo
 			var moreButton = new Button()
 			{
-				Name = instance_name,
+				Name = "id" + instance_name,
 				Background = new ImageBrush(new BitmapImage(logo_path)),
 				Style = (Style)Application.Current.FindResource("InstanceMoreButton")
 			};
@@ -245,7 +256,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			var downloadButton = new UserControls.InstanceLaunchButton() 
 			{ 
-				Name = instance_name + "Download",
+				Name = "id" + instance_name + "Download",
 				//BorderThickness = new Thickness(2),
 				//Style = (Style)Application.Current.FindResource("InstanceDonwloadButton")
 			};
@@ -253,7 +264,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			var exportButton = new UserControls.InstanceLaunchButton()
 			{
-				Name = instance_name + "Export",
+				Name = "id" + instance_name + "Export",
 			};
 			//exportButton.Click += ExportInstance;
 
