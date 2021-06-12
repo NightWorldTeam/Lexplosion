@@ -1079,7 +1079,7 @@ namespace Lexplosion.Logic.FileSystem
 
             }
 
-            VersionManifest instanceFile = GetFilesList(instanceId);
+            VersionManifest instanceFile = GetManifest(instanceId);
 
             Dictionary<string, string> data = new Dictionary<string, string>
             {
@@ -1253,7 +1253,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
 
-            SaveFilesList(instanceId, files);
+            SaveManifest(instanceId, files);
 
             UserData.InstancesList[instanceId] = new InstanceParametrs
             {

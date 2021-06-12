@@ -28,7 +28,8 @@ namespace Lexplosion.Logic.Management
         public void Check()
         {
             Manifest = ToServer.GetInstanceManifest(InstanceId);
-            if(Manifest != null)
+
+            if (Manifest != null)
             {
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
 
@@ -52,7 +53,7 @@ namespace Lexplosion.Logic.Management
             Manifest.data = null;
             Manifest.natives = null;
 
-            DataFilesManager.SaveFilesList(InstanceId, Manifest);
+            DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             foreach (string error in errors_)
             {

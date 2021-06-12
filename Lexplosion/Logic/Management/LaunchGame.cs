@@ -42,6 +42,14 @@ namespace Lexplosion.Logic.Management
 
             command = @" -Djava.library.path=" + UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/natives -cp ";
 
+            //Не ебу в чём проблема, но если guava-17.0.jar в списках либраресов на последних местах, то 1.7.10 тупа не запускается. Что за шиза, не понимаю
+            //Но этот костыль решает проблему
+            if (data.Libraries.ContainsKey("com/google/guava/guava/17.0/guava-17.0.jar"))
+            {
+                command += UserData.settings["gamePath"] + "/libraries/com/google/guava/guava/17.0/guava-17.0.jar;";
+                data.Libraries.Remove("com/google/guava/guava/17.0/guava-17.0.jar");
+            }
+
             foreach (string lib in data.Libraries.Keys)
             {
                 command += UserData.settings["gamePath"] + "/libraries/" + lib + ";";
@@ -265,7 +273,7 @@ namespace Lexplosion.Logic.Management
                 } 
                 else 
                 {
-                    VersionManifest files = DataFilesManager.GetFilesList(instanceId);
+                    VersionManifest files = DataFilesManager.GetManifest(instanceId);
 
                     if(files != null)
                     {

@@ -55,7 +55,7 @@ namespace Lexplosion.Logic.Objects
         public string assetsVersion;
         public string assetsIndexes;
         public string mainClass;
-
+        public string forgeVersion;
     }
 
     class VersionInfo: LocalVersionInfo

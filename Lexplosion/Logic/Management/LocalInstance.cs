@@ -27,9 +27,9 @@ namespace Lexplosion.Logic.Management
         public void Check()
         {
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
-            Manifest = DataFilesManager.GetFilesList(InstanceId);
+            Manifest = DataFilesManager.GetManifest(InstanceId);
             // TODO: проверять на null
-            Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, "1.7.10-10.13.4.1614");
+            Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
 
             if (Manifest != null)
             {
@@ -50,10 +50,7 @@ namespace Lexplosion.Logic.Management
         {
             List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
 
-            Manifest.version.mainClass = "net.minecraft.launchwrapper.Launch";
-            Manifest.version.arguments = "--tweakClass cpw.mods.fml.common.launcher.FMLTweaker";
-
-            //DataFilesManager.SaveFilesList(InstanceId, Manifest);
+            DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             return new InitData
             {

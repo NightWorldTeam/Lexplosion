@@ -262,7 +262,7 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static void SaveFilesList(string instanceId, VersionManifest data)
+        public static void SaveManifest(string instanceId, VersionManifest data)
         {
             LocalVersionManifest dataLocal = new LocalVersionManifest
             {
@@ -277,17 +277,18 @@ namespace Lexplosion.Logic.FileSystem
                     gameVersion = data.version.gameVersion,
                     assetsVersion = data.version.assetsVersion,
                     assetsIndexes = data.version.assetsIndexes,
-                    mainClass = data.version.mainClass
+                    mainClass = data.version.mainClass,
+                    forgeVersion = data.version.forgeVersion
                 }
             };
 
-            SaveFile(directory + "/instances/" + instanceId + "/" + "filesList.json", JsonConvert.SerializeObject(dataLocal));
+            SaveFile(directory + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(dataLocal));
             SaveFile(directory + "/versions/libraries/" + data.version.gameVersion + GetLibraiesType(instanceId) + ".json", JsonConvert.SerializeObject(data.libraries));
         }
 
-        public static VersionManifest GetFilesList(string instanceId)
+        public static VersionManifest GetManifest(string instanceId)
         {
-            VersionManifest data = GetFile<VersionManifest>(directory + "/instances/" + instanceId + "/" + "filesList.json");
+            VersionManifest data = GetFile<VersionManifest>(directory + "/instances/" + instanceId + "/" + "manifest.json");
             if (data == null)
             {
                 return null;
