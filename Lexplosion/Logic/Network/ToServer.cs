@@ -327,11 +327,21 @@ namespace Lexplosion.Logic.Network
 
         }
 
-        public static List<CurseforgeInstanceInfo> GetCursforgeInstances(int pageSize, int index, string searchFilter = "")
+        public static List<CurseforgeInstanceInfo> GetCursforgeInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
         {
             try
             {
-                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=0&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter));
+                string url;
+                if(categoriy == ModpacksCategories.All)
+                {
+                    url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                }
+                else
+                {
+                    url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                }
+
+                WebRequest req = WebRequest.Create(url);
                 WebResponse resp = req.GetResponse();
                 Stream stream = resp.GetResponseStream();
                 StreamReader sr = new StreamReader(stream);

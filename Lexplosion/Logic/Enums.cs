@@ -34,5 +34,15 @@
         Curseforge
     }
 
+    enum ModpacksCategories
+    {
+        All,
+        Tech = 4472,
+        Magic = 4473,
+        Exploration = 4476,
+        ExtraLarge = 4482,
+        Multiplayer = 4484
+    }
+
 
 }

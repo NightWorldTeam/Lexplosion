@@ -77,7 +77,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			}
 			}
 			 */
-			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(0, 10);
+			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(0, 10, Logic.ModpacksCategories.All);
 			for (int j = 0; j<8; j++) 
 			{ 
 				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j, new Uri(curseforgeInstances[j].attachments[0].url), curseforgeInstances[j].name, "NightWorld", curseforgeInstances[j].summary, instance_tags1);
