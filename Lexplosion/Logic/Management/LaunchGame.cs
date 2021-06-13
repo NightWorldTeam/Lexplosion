@@ -227,8 +227,8 @@ namespace Lexplosion.Logic.Management
                 };
             }
 
-            //try
-            //{
+            try
+            {
                 SetDefaultSettings();
 
                 if (!UserData.settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
@@ -241,8 +241,6 @@ namespace Lexplosion.Logic.Management
                 if (!UserData.settings.ContainsKey("gamePath") || !Directory.Exists(UserData.settings["gamePath"]) || !UserData.settings["gamePath"].Contains(":"))
                     return Error("gamePathError");
 
-
-                bool isLocal = instanceSettings.ContainsKey("isLocal") && instanceSettings["isLocal"] == "true";
                 bool updateInstance = instanceSettings.ContainsKey("update") && instanceSettings["update"] == "true";
                 bool noUpdate = UserData.settings["noUpdate"] == "false" || (instanceSettings.ContainsKey("noUpdate") && instanceSettings["noUpdate"] == "false");
 
@@ -267,13 +265,20 @@ namespace Lexplosion.Logic.Management
 
                     }
 
-                    instance.Check();
-                    data = instance.Update();
+                    string result = instance.Check();
+                    if (result == "")
+                    {
+                        data = instance.Update();
+                    }
+                    else
+                    {
+                        return Error(result);
+                    }
 
                 } 
                 else 
                 {
-                    VersionManifest files = DataFilesManager.GetManifest(instanceId);
+                    VersionManifest files = DataFilesManager.GetManifest(instanceId, true);
 
                     if(files != null)
                     {
@@ -286,7 +291,7 @@ namespace Lexplosion.Logic.Management
                     }
                     else
                     {
-                        return Error("filesListError");
+                        return Error("manifestError");
                     }
 
                 }
@@ -299,9 +304,9 @@ namespace Lexplosion.Logic.Management
 
                 return data;
 
-            //} catch {
-               // return Error("unknownError");
-            //}
+            } catch {
+                return Error("unknownError");
+            }
 
         }
 

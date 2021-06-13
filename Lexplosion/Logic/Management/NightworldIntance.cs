@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.Management
             InstanceId = instanceid;
         }
 
-        public void Check()
+        public string Check()
         {
             Manifest = ToServer.GetInstanceManifest(InstanceId);
 
@@ -34,14 +34,22 @@ namespace Lexplosion.Logic.Management
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
 
                 BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
+                if (BaseFiles == null) 
+                { 
+                    return "guardError"; 
+                }
+
                 VariableFiles = WithDirectory.CheckVariableFiles(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
+                if (!VariableFiles.Successful) 
+                { 
+                    return "guardError"; 
+                }
 
-                // TODO: baseFiles может быть null, а VariableFiles содержать false
-
+                return "";
             }
             else
             {
-                // TODO: возвращать ошибку 
+                return "serverError";
             }
         }
 

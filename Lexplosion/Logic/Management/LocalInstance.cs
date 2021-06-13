@@ -24,11 +24,16 @@ namespace Lexplosion.Logic.Management
             InstanceId = instanceid;
         }
 
-        public void Check()
+        public string Check()
         {
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
-            Manifest = DataFilesManager.GetManifest(InstanceId);
-            // TODO: проверять на null
+            Manifest = DataFilesManager.GetManifest(InstanceId, false);
+
+            if(Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
+            {
+                return "versionError";
+            }
+
             Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
 
             if (Manifest != null)
@@ -36,12 +41,16 @@ namespace Lexplosion.Logic.Management
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
                 BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
 
-                // TODO: baseFiles может быть null, а VariableFiles содержать false
+                if(BaseFiles == null)
+                {
+                    return "guardError";
+                }
+
+                return "";
             }
             else
             {
-                MessageBox.Show("test2");
-                // TODO: возвращать ошибку
+                return "serverError";
             }
 
         }

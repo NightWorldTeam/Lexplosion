@@ -341,12 +341,19 @@ namespace Lexplosion.Logic.Network
                     url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
                 }
 
+                string answer;
+
                 WebRequest req = WebRequest.Create(url);
-                WebResponse resp = req.GetResponse();
-                Stream stream = resp.GetResponseStream();
-                StreamReader sr = new StreamReader(stream);
-                string answer = sr.ReadToEnd();
-                sr.Close();
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
 
                 if (answer != null)
                 {

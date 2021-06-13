@@ -289,7 +289,7 @@ namespace Lexplosion.Logic.FileSystem
             SaveFile(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
         }
 
-        public static VersionManifest GetManifest(string instanceId)
+        public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
         {
             VersionManifest data = GetFile<VersionManifest>(directory + "/instances/" + instanceId + "/" + "manifest.json");
             if (data == null)
@@ -297,14 +297,17 @@ namespace Lexplosion.Logic.FileSystem
                 return null;
             }
 
-            Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json");
-            if (librariesData == null)
+            if (includingLibraries)
             {
-                librariesData = new Dictionary<string, LibInfo>();
+                Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json");
+                if (librariesData == null)
+                {
+                    librariesData = new Dictionary<string, LibInfo>();
+                }
+
+                data.libraries = librariesData;
             }
-
-            data.libraries = librariesData;
-
+            
             return data;
 
         }

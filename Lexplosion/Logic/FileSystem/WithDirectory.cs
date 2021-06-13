@@ -135,8 +135,9 @@ namespace Lexplosion.Logic.FileSystem
                     try
                     {
                         if (JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes)) != null)
+                        {
                             updates = JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes));
-
+                        }
                     }
                     catch
                     {
@@ -214,7 +215,9 @@ namespace Lexplosion.Logic.FileSystem
                                                 File.Delete(file); //удаляем файл, если не сходится хэш или размер
 
                                                 if (!filesUpdates.Data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
+                                                {
                                                     filesUpdates.Data.Add(dir, new List<string>());
+                                                }
 
                                                 filesUpdates.Data[dir].Add(fileName); //добавляем файл в список на обновление
 
@@ -240,14 +243,12 @@ namespace Lexplosion.Logic.FileSystem
                         //сверяем версию файла с его версией в списке, если версия старая, то отправляем файл на обновление
                         if (filesInfo.data[dir].objects.ContainsKey(fileName))
                         {
-
                             if (!updates.ContainsKey(dir + "/" + fileName) || updates[dir + "/" + fileName] != filesInfo.data[dir].objects[fileName].lastUpdate)
                             {
                                 if (!filesUpdates.Data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
                                 {
                                     filesUpdates.Data.Add(dir, new List<string>());
                                 }
-
 
                                 if (!filesUpdates.Data[dir].Contains(fileName))
                                 {
@@ -265,9 +266,10 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (!File.Exists(folder + "/" + file))
                     {
-
                         if (!filesUpdates.Data.ContainsKey(dir))
+                        {
                             filesUpdates.Data.Add(dir, new List<string>());
+                        }    
 
                         if (!filesUpdates.Data[dir].Contains(file))
                         {
@@ -333,11 +335,8 @@ namespace Lexplosion.Logic.FileSystem
                                         updatesList.MinecraftJar = true;
 
                                     }
-
                                 }
-
                             }
-
                         }
                         catch
                         {
@@ -1078,7 +1077,7 @@ namespace Lexplosion.Logic.FileSystem
 
             }
 
-            VersionManifest instanceFile = GetManifest(instanceId);
+            VersionManifest instanceFile = GetManifest(instanceId, false);
 
             Dictionary<string, string> data = new Dictionary<string, string>
             {

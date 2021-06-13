@@ -9,7 +9,7 @@ namespace Lexplosion.Logic.Management
 {
     interface IPrototypeInstance
     {
-        void Check();
+        string Check();
         InitData Update();
     }
 }
