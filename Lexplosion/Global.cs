@@ -20,7 +20,7 @@ namespace Lexplosion.Global
     class InstanceParametrs
     {
         public string Name;
-        public Logic.InstanceType Type;
+        public InstanceType Type;
     }
 
     static class LaunсherSettings

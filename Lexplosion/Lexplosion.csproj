@@ -139,7 +139,7 @@
       <DependentUpon>VersionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logic\Aes.cs" />
-    <Compile Include="Logic\Enums.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
     <Compile Include="Logic\Management\LocalInstance.cs" />
     <Compile Include="Logic\Management\NightworldIntance.cs" />
