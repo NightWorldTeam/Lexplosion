@@ -41,7 +41,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		private void InitializeInstance() 
 		{
 			//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
-			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(100, 0);
+			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(100, 0, Logic.ModpacksCategories.All);
 			for (int j = 0; j<100; j++) 
 			{
 				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j, 
