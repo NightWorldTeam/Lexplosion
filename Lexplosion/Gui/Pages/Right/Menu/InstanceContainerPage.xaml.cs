@@ -11,6 +11,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
@@ -32,55 +33,23 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		{
 			_MainWindow = mainWindow;
 			InitializeComponent();
+			//отрубил отрисовку, чтобы не мешала
 			InitializeInstance();
 			//CreateFakeInstance(4);
 		}
 
 		private void InitializeInstance() 
 		{
-			/*
-			 			obj = this;
-			var i = 0;
-
-			foreach (string instanceId in UserData.InstancesList.Keys) // TODO: возможна ситуация что во время работы этого цикла UserData.InstancesList будет изменён
+			//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
+			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(100, 0);
+			for (int j = 0; j<100; j++) 
 			{
-
-				Uri logoPath = null;
-				string desc = "";
-
-				if (UserData.instancesAssets.ContainsKey(instanceId))
-				{
-					string dir = UserData.settings["gamePath"] + "/launcherAssets/" + UserData.instancesAssets[instanceId].mainImage;
-
-					if (File.Exists(dir))
-					{
-						logoPath = new Uri(dir);
-					}
-					else
-					{
-						logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
-					}
-
-					desc = UserData.instancesAssets[instanceId].description;
-				}
-				else
-				{
-					logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
-				}
-
-                try
-                {
-					BuildInstanceForm(instanceId, i, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", desc, instance_tags1);
-					i++;
-				}
-                catch { }
-			}
-			}
-			 */
-			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(0, 10);
-			for (int j = 0; j<8; j++) 
-			{ 
-				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j, new Uri(curseforgeInstances[j].attachments[0].url), curseforgeInstances[j].name, "NightWorld", curseforgeInstances[j].summary, instance_tags1);
+				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j, 
+					new Uri(curseforgeInstances[j].attachments[0].url),
+					curseforgeInstances[j].name, 
+					curseforgeInstances[j].authors[0].name, 
+					curseforgeInstances[j].summary, 
+					instance_tags1);
 			}
 		}
 
@@ -107,7 +76,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			var canvas = new Canvas()
 			{
 				Height = 120,
-				Width = 600,
+				Width = 620,
 				Margin = new Thickness(40, 0, 0, 0),
 				Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719")),
 				Name = "id" + instance_name,
@@ -127,7 +96,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			ColumnDefinition columnDefinition2 = new ColumnDefinition() 
 			{
-				Width = new GridLength(420, GridUnitType.Pixel)
+				Width = new GridLength(440, GridUnitType.Pixel)
 			};
 
 			ColumnDefinition columnDefinition3 = new ColumnDefinition() 
@@ -153,7 +122,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			// Title
 			var textContentGrid = new Grid() 
 			{
-				Margin = new Thickness(10, 0, 10, 0)
+				Margin = new Thickness(10, 0, 5, 0)
 			};
 
 			RowDefinition textContentRowDefinition1 = new RowDefinition() 
@@ -175,7 +144,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			ColumnDefinition columnDefinitionTitle2 = new ColumnDefinition() 
 			{
-				Width = new GridLength(80, GridUnitType.Pixel)
+				Width = new GridLength(100, GridUnitType.Pixel)
 			};
 
 			RowDefinition rowDefinitionTitle1 = new RowDefinition()
@@ -194,8 +163,9 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			};
 
 			// Об Авторе
-			var textBlockAuthor = new TextBlock() 
+			var textBlockAuthor = new TextBlock()
 			{
+				//Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffffff")),
 				Text = "by " + author,
 				FontSize = 12,
 				Padding = new Thickness(0),

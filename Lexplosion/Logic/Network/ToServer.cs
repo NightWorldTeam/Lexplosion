@@ -331,7 +331,7 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=0&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter));
+                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&categoryId=4484&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter));
                 WebResponse resp = req.GetResponse();
                 Stream stream = resp.GetResponseStream();
                 StreamReader sr = new StreamReader(stream);
