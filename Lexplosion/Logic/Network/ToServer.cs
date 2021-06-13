@@ -80,7 +80,7 @@ namespace Lexplosion.Logic.Network
                 str2 += chars[rnd.Next(0, chars.Length)];
             }
 
-            using(SHA1 sha = new SHA1Managed())
+            using (SHA1 sha = new SHA1Managed())
             {
                 string key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str2 + ":" + LaunсherSettings.secretWord)));
 
@@ -148,7 +148,7 @@ namespace Lexplosion.Logic.Network
                 }
 
             }
-            
+
         }
 
         //функция получает манифест для майкрафт версии
@@ -323,7 +323,7 @@ namespace Lexplosion.Logic.Network
                     return null;
                 }
 
-            }         
+            }
 
         }
 
@@ -332,7 +332,7 @@ namespace Lexplosion.Logic.Network
             try
             {
                 string url;
-                if(categoriy == ModpacksCategories.All)
+                if (categoriy == ModpacksCategories.All)
                 {
                     url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
                 }
@@ -406,7 +406,7 @@ namespace Lexplosion.Logic.Network
                         }
                     }
                     response.Close();
-                }            
+                }
 
                 return line;
 
