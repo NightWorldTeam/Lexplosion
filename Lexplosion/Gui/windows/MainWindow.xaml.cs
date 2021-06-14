@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Lexplosion.Global;
 using Lexplosion.Gui.Pages.Left;
 using Lexplosion.Gui.Pages.Right.Menu;
 
@@ -30,8 +32,11 @@ namespace Lexplosion.Gui.Windows
             MouseDown += delegate { try { DragMove(); } catch { } };
 
             LeftSideFrame.Navigate(new LeftSideMenuPage(this));
-            RightSideFrame.Navigate(new InstanceContainerPage(this));
+
+            if (UserData.InstancesList.Count > 0) RightSideFrame.Navigate(new LibraryContainerPage(this));
+            else RightSideFrame.Navigate(new InstanceContainerPage(this));
         }
+
 
         public void PagesController<T>(string page, Frame frame) where T: Page
         {
