@@ -369,8 +369,37 @@ namespace Lexplosion.Logic.Network
 
         }
 
-        public static void GetCursforgeInstanceInfo(int id)
+        public static List<CurseforgeFileInfo> GetCursforgeInstanceInfo(int id)
         {
+            try
+            {
+                string answer;
+
+                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/" + id + "/files");
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                if (answer != null)
+                {
+                    return JsonConvert.DeserializeObject<List<CurseforgeFileInfo>>(answer);
+                }
+                else
+                {
+                    return new List<CurseforgeFileInfo>();
+                }
+            }
+            catch
+            {
+                return new List<CurseforgeFileInfo>();
+            }
 
         }
 

@@ -69,6 +69,7 @@ namespace Lexplosion.Logic.Objects
         public int folderVersion;
 
     }
+
     class InitData
     {
         public List<string> Errors;
@@ -108,5 +109,40 @@ namespace Lexplosion.Logic.Objects
         public string displayName;
     }
 
+    //Манифест модпака курсфорджа InstanceManifest
+    class InstanceManifest
+    {
+        public class McVersionInfo
+        {
+            public string version;
+            public List<ModLoaders> modLoaders;
+        }
+
+        public class ModLoaders
+        {
+            public string id;
+            public bool primary;
+        }
+
+        public class FileData
+        {
+            public int projectID;
+            public int fileID;
+
+        }
+
+        public McVersionInfo minecraft;
+        public string name;
+        public string version;
+        public string author;
+        public List<FileData> files;
+    }
+
+    class CurseforgeFileInfo
+    {
+        public int id;
+        public string downloadUrl;
+        public string fileName;
+    }
 
 }

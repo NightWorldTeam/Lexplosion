@@ -1182,29 +1182,8 @@ namespace Lexplosion.Logic.FileSystem
                 instanceInfo["description"] = "";
             }
 
-            Random rnd = new Random();
-
             //<===генерация id модпака===>
-            string instanceId = instanceInfo["name"];
-            instanceId = instanceId.Replace(" ", "_");
-
-            using (SHA1 sha = new SHA1Managed())
-            {
-
-                if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
-                {
-                    do
-                    {
-                        instanceId = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(instanceInfo["name"] + ":" + rnd.Next(0, 9999))));
-                        instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
-                        instanceId = instanceId.ToLower();
-                    }
-                    while (UserData.InstancesList.ContainsKey(instanceId));
-
-                }
-
-            }
-            //<======>
+            string instanceId = Management.ManageLogic.GenerateInstanceId(instanceInfo["name"]);
 
             string addr = dir + "files/";
             string targetDir = directory + "/instances/" + instanceId + "/";
@@ -1370,8 +1349,59 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public static void DownloadCurseforgeInstance()
+        public static InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId)
         {
+            if (File.Exists(directory + "/temp/" + fileName))
+            {
+                File.Delete(directory + "/temp/" + fileName);
+            }
+
+            using (WebClient wc = new WebClient())
+            {
+                DelFile(directory + "/temp/" + fileName);
+                wc.DownloadFile(downloadUrl, directory + "/temp/" + fileName);
+            }
+
+            if (Directory.Exists(directory + "/temp/dataDownload"))
+            {
+                Directory.Delete(directory + "/temp/dataDownload");
+            }
+
+            Directory.CreateDirectory(directory + "/temp/dataDownload");
+            ZipFile.ExtractToDirectory(directory + "/temp/" + fileName, directory + "/temp/dataDownload");
+
+            InstanceManifest data = GetFile<InstanceManifest>(directory + "/temp/dataDownload/manifest.json");
+
+            if(data != null)
+            {
+                if (!Directory.Exists(directory + "/temp/dataDownload/overrides/mods"))
+                {
+                    Directory.CreateDirectory(directory + "/temp/dataDownload/overrides/mods");
+                }
+
+                foreach (InstanceManifest.FileData file in data.files)
+                {
+                    DownloadMod(file.projectID, file.fileID, directory + "/temp/dataDownload/overrides/mods/");
+                }
+
+                string SourcePath = directory + "/temp/dataDownload/overrides/";
+                string DestinationPath = directory + "/instances/" + instanceId + "/";
+
+                foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
+                }
+                    
+                foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+                }
+
+                return data;
+
+            }
+
+            return null;
 
         }
 

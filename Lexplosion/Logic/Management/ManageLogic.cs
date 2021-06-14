@@ -5,6 +5,11 @@ using System.Collections.Generic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using System.Windows;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
+using System;
+using System.Text;
 
 namespace Lexplosion.Logic.Management
 {
@@ -263,8 +268,85 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static void CreateInstance(string name, string version, string forgeVersion)
+        public static string GenerateInstanceId(string instanceName)
         {
+            Random rnd = new Random();
+
+            string instanceId = instanceName;
+            instanceId = instanceId.Replace(" ", "_");
+
+            using (SHA1 sha = new SHA1Managed())
+            {
+                if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
+                {
+                    do
+                    {
+                        instanceId = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(instanceName + ":" + rnd.Next(0, 9999))));
+                        instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
+                        instanceId = instanceId.ToLower();
+                    }
+                    while (UserData.InstancesList.ContainsKey(instanceId));
+
+                }
+            }
+
+            return instanceId;
+        }
+
+
+        public static InitData UpdateInstance(string instanceId)
+        {
+            InitData Error(string error)
+            {
+                return new InitData
+                {
+                    Errors = new List<string>() { error },
+                    VersionFile = null,
+                };
+            }
+
+            InstanceType type = UserData.InstancesList[instanceId].Type;
+
+            IPrototypeInstance instance;
+            switch (type)
+            {
+                case InstanceType.Nightworld:
+                    instance = new NightworldIntance(instanceId);
+                    break;
+                case InstanceType.Local:
+                    instance = new LocalInstance(instanceId);
+                    break;
+                case InstanceType.Curseforge:
+                    instance = new CurseforgeInstance(instanceId);
+                    break;
+                default:
+                    instance = null;
+                    break;
+
+            }
+
+            string result = instance.Check();
+            if (result == "")
+            {
+                return instance.Update();
+            }
+            else
+            {
+                return Error(result);
+            }
+
+        }
+
+        public static void CreateInstance(string name, string version, string forgeVersion, InstanceType type)
+        {
+            string instanceId = GenerateInstanceId(name);
+            Directory.CreateDirectory(WithDirectory.directory + "/instances/" + instanceId);
+
+            UserData.InstancesList[instanceId] = new InstanceParametrs
+            {
+                Name = name,
+                Type = type
+            };
 
         }
 
