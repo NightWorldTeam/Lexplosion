@@ -90,22 +90,22 @@ namespace Lexplosion.Logic.Management
 
         public static void DefineListInstances()
         {
-            if (UserData.instancesList == null)
+            if (UserData.InstancesList == null)
             {
-                UserData.instancesList = DataFilesManager.GetInstancesList();
+                UserData.InstancesList = DataFilesManager.GetInstancesList();
 
             }
         }
 
         public static void DownloadInstance(string instanceId, string instanceName, InstanceType type)
         {
-            UserData.instancesList[instanceId] = new InstanceParametrs
+            UserData.InstancesList[instanceId] = new InstanceParametrs
             {
                 Name = instanceName,
                 Type = type
             };
 
-            DataFilesManager.SaveModpaksList(UserData.instancesList);
+            DataFilesManager.SaveModpaksList(UserData.InstancesList);
 
             Lexplosion.Run.ThreadRun(delegate ()
             {
@@ -162,7 +162,7 @@ namespace Lexplosion.Logic.Management
 
             LaunchGame.runnigInstance = instanceId;
 
-            InstanceType type = UserData.instancesList[instanceId].Type;
+            InstanceType type = UserData.InstancesList[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
 

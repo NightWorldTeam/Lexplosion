@@ -254,7 +254,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             string suffix = version.gameVersion + "-" + version.forgeVersion;
 
-            if (UserData.instancesList[instanceId].Type == InstanceType.Nightworld)
+            if (UserData.InstancesList[instanceId].Type == InstanceType.Nightworld)
             {
                 return suffix + "-nw";
             }

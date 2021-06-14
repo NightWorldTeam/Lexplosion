@@ -55,7 +55,7 @@ namespace Lexplosion.Gui.Pages.Left
                 toggleButton.Click += clicks[i];
             }
 
-            if (UserData.instancesList.Count > 0 && LeftSideMenuButton1.Content.ToString() != "Экспорт") 
+            if (UserData.InstancesList.Count > 0 && LeftSideMenuButton1.Content.ToString() != "Экспорт") 
             {
                 LeftSideMenuButton1.IsChecked = true;
                 selectedToggleButton = LeftSideMenuButton1;

@@ -33,7 +33,7 @@ namespace Lexplosion.Gui.Windows
 
             LeftSideFrame.Navigate(new LeftSideMenuPage(this));
 
-            if (UserData.instancesList.Count > 0) RightSideFrame.Navigate(new LibraryContainerPage(this));
+            if (UserData.InstancesList.Count > 0) RightSideFrame.Navigate(new LibraryContainerPage(this));
             else RightSideFrame.Navigate(new InstanceContainerPage(this));
         }
 

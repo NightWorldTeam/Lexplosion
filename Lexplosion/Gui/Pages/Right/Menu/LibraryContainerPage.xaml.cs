@@ -39,7 +39,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		private void InitializeInstance() 
 		{
 			List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
-			Dictionary<string, InstanceParametrs> instancesList = UserData.instancesList;
+			Dictionary<string, InstanceParametrs> instancesList = UserData.InstancesList;
 			Dictionary<string, InstanceAssets> instanceAssets = UserData.instancesAssets;
 
 			int i = 0;
