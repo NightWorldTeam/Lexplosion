@@ -2,6 +2,7 @@
 using Lexplosion.Gui.Pages.Left;
 using Lexplosion.Gui.Pages.Right.Instance;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
@@ -45,9 +46,9 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			int i = 0;
 			foreach (string key in instancesList.Keys) 
 			{
-				BuildInstanceForm(
+				BuildInstanceForm( // TODO: в instanceAssets может не быть ключа
 					key, i, 
-					new Uri("C:/Users/GamerStorm_Hel2x_/night-world/launcherAssets/" + instanceAssets[key].mainImage),
+					new Uri(WithDirectory.directory + "/launcherAssets/" + instanceAssets[key].mainImage),
 					instancesList[key].Name,
 					"NightWorld",
 					instanceAssets[key].description,
