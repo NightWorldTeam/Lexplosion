@@ -1083,7 +1083,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 ["gameVersion"] = instanceFile.version.gameVersion,
                 ["description"] = description,
-                ["name"] = UserData.InstancesList[instanceId].Name,
+                ["name"] = UserData.instancesList[instanceId].Name,
                 ["author"] = UserData.login
             };
 
@@ -1198,7 +1198,7 @@ namespace Lexplosion.Logic.FileSystem
                         instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
                         instanceId = instanceId.ToLower();
                     }
-                    while (UserData.InstancesList.ContainsKey(instanceId));
+                    while (UserData.instancesList.ContainsKey(instanceId));
 
                 }
 
@@ -1253,14 +1253,14 @@ namespace Lexplosion.Logic.FileSystem
 
             SaveManifest(instanceId, files);
 
-            UserData.InstancesList[instanceId] = new InstanceParametrs
+            UserData.instancesList[instanceId] = new InstanceParametrs
             {
                 Name = instanceInfo["name"],
                 Type = InstanceType.Local
 
             };
 
-            SaveModpaksList(UserData.InstancesList);
+            SaveModpaksList(UserData.instancesList);
 
             try
             {
@@ -1271,7 +1271,7 @@ namespace Lexplosion.Logic.FileSystem
             if (Gui.Pages.Right.Menu.InstanceContainerPage.obj != null)
             {
                 Uri logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
-                Gui.Pages.Right.Menu.InstanceContainerPage.obj.BuildInstanceForm(instanceId, UserData.InstancesList.Count - 1, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", "test", new List<string>());
+                Gui.Pages.Right.Menu.InstanceContainerPage.obj.BuildInstanceForm(instanceId, UserData.instancesList.Count - 1, logoPath, UserData.instancesList[instanceId].Name, "NightWorld", "test", new List<string>());
             }
 
             return ImportResult.Successful;

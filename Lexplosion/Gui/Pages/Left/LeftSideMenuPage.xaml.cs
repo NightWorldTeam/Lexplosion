@@ -42,7 +42,6 @@ namespace Lexplosion.Gui.Pages.Left
         }
 
         
-
         private void InitializeToggleButtons() 
         {
             ToggleButton[] toggleButtons = new ToggleButton[4] { LeftSideMenuButton0, LeftSideMenuButton1, LeftSideMenuButton2, LeftSideMenuButton3 };
@@ -56,22 +55,17 @@ namespace Lexplosion.Gui.Pages.Left
                 toggleButton.Click += clicks[i];
             }
 
-            selectedToggleButton = LeftSideMenuButton0;
-        } 
-
-        private ToggleButton GetLeftSideMenu()
-        {
-            ToggleButton toggleButton = new ToggleButton()
+            if (UserData.instancesList.Count > 0 && LeftSideMenuButton1.Content.ToString() != "Экспорт") 
             {
-                Width = 242,
-                Height = 60,
-                Content = " ",
-                Style = (Style)Application.Current.FindResource("MWCBS1"),
-                Name = "  "
-            };
-
-            return toggleButton;
-        }
+                LeftSideMenuButton1.IsChecked = true;
+                selectedToggleButton = LeftSideMenuButton1;
+            }
+            else
+            {
+                LeftSideMenuButton0.IsChecked = true;
+                selectedToggleButton = LeftSideMenuButton0;
+            }
+        } 
 
         private void ReselectionToggleButton(object sender) 
         {

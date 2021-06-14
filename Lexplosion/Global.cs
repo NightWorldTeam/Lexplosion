@@ -13,7 +13,7 @@ namespace Lexplosion.Global
         public static bool offline = false;
         public static bool noUpdate = false;
         public static Dictionary<string, string> settings; //общие настройки
-        public static Dictionary<string, InstanceParametrs> InstancesList; // все сборки
+        public static Dictionary<string, InstanceParametrs> instancesList; // все сборки
         public static Dictionary<string, InstanceAssets> instancesAssets;
     }
 

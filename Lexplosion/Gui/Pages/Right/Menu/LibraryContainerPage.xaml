@@ -9,7 +9,24 @@
       Title="LibraryContainerPage">
     <!-- #131313 0.7-->
     <!-- "Black" 0.64 -->
-    <Grid Background="#121212" Opacity="0.65">
-        <TextBlock Foreground="White" FontSize="30" FontWeight="Bold" Text="Библиотека" />
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid ShowGridLines="False" x:Name="InstanceGrid">
+                <Grid.Background>
+                    <!-- #1313131 0.8-->
+                    <!-- "Black" 0.64 -->
+                    <SolidColorBrush Color="#121212" Opacity="0.65"/>
+                </Grid.Background>
+                <!-- Grid Border Padding-->
+                <Grid.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="Padding" Value="10" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="600"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>
