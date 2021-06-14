@@ -14,6 +14,7 @@ using Lexplosion.Logic.Objects;
 using System.Text.RegularExpressions;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using System.Windows;
+using System.Linq;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -1301,6 +1302,77 @@ namespace Lexplosion.Logic.FileSystem
             {
                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
             });
+        }
+
+        public static bool DownloadMod(int projectID, int fileID, string path)
+        {
+            try
+            {
+                string answer;
+
+                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/files");
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                if (answer == null)
+                {
+                    return false;
+                }
+
+                List<ModInfo> data = JsonConvert.DeserializeObject<List<ModInfo>>(answer);
+
+                string fileUrl = "";
+                string fileName = "";
+
+                foreach (ModInfo v in data)
+                {
+                    if (v.id == fileID && !String.IsNullOrWhiteSpace(v.downloadUrl) && !String.IsNullOrWhiteSpace(v.fileName))
+                    {
+                        char[] invalidFileChars = Path.GetInvalidFileNameChars();
+                        bool isInvalidFilename = invalidFileChars.Any(s => v.fileName.Contains(s));
+
+                        if (isInvalidFilename)
+                        {
+                            continue;
+                        }
+
+                        fileUrl = v.downloadUrl;
+                        fileName = v.fileName;
+                        break;
+                    }
+                }
+
+                if (fileUrl != "")
+                {
+                    using (WebClient wc = new WebClient())
+                    {
+                        DelFile(directory + "/temp/" + fileName);
+                        wc.DownloadFile(fileUrl, directory + "/temp/" + fileName);
+                        File.Move(directory + "/temp/" + fileName, path + fileName);
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static void DownloadCurseforgeInstance()
+        {
+
         }
 
     }
