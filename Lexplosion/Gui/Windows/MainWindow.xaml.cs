@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Lexplosion.Gui.Pages.Left;
@@ -32,6 +33,7 @@ namespace Lexplosion.Gui.Windows
             LeftSideFrame.Navigate(new LeftSideMenuPage(this));
             RightSideFrame.Navigate(new InstanceContainerPage(this));
         }
+
 
         public void PagesController<T>(string page, Frame frame) where T: Page
         {

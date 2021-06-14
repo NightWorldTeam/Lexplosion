@@ -28,12 +28,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="600"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition Height="150"/>
-                </Grid.RowDefinitions>
-                <usercontrols:InstanceForm Grid.Row="1"/>
             </Grid>
         </ScrollViewer>
     </Grid>
