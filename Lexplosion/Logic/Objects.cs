@@ -100,5 +100,13 @@ namespace Lexplosion.Logic.Objects
         public float downloadCount;
     }
 
+    class ModInfo
+    {
+        public int id;
+        public string fileName;
+        public string downloadUrl;
+        public string displayName;
+    }
+
 
 }
