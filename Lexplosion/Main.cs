@@ -29,6 +29,8 @@ namespace Lexplosion
         [STAThread]
         static void Main()
         {
+            SplashScreen splashScreen = new SplashScreen("launcher_loading.png");
+            splashScreen.Show(true);
             // получем количество процессов с таким же именем
             int processesCount = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length; 
 
@@ -62,8 +64,6 @@ namespace Lexplosion
             { 
                 Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml") 
             };
-            SplashScreen splash = new SplashScreen("launcher_loading.png");
-            splash.Show(true);
             app.Run(new AuthWindow());
         }
 

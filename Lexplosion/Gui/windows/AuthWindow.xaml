@@ -7,6 +7,7 @@
         Width="944" Height="528" 
         ResizeMode="NoResize" Icon="pack://application:,,,/Assets/images/icons/nw.ico" 
         Title="NightWorld"
+        WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" WindowStyle="None">
 
     <Window.Resources>

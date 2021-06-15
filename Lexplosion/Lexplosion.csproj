@@ -315,5 +315,8 @@
   <ItemGroup>
     <Resource Include="Assets\launcher_loading.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="launcher_loading.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
