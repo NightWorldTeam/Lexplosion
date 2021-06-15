@@ -46,14 +46,24 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			int i = 0;
 			foreach (string key in instancesList.Keys) 
 			{
-				BuildInstanceForm( // TODO: в instanceAssets может не быть ключа
-					key, i, 
-					new Uri(WithDirectory.directory + "/launcherAssets/" + instanceAssets[key].mainImage),
+				string description = "";
+				string image = "pack://application:,,,/assets/images/icons/non_image.png";
+                if (instanceAssets.ContainsKey(key))
+                {
+					description = instanceAssets[key].description;
+					image = WithDirectory.directory + "/launcherAssets/" + instanceAssets[key].mainImage;
+				}
+
+				BuildInstanceForm(
+					key, i,
+					new Uri(image),
 					instancesList[key].Name,
 					"NightWorld",
-					instanceAssets[key].description,
+					description,
 					instance_tags1
 					);
+
+				i++;
 			}
 			/*
 			    public string description;
