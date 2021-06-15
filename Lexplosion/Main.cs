@@ -62,7 +62,8 @@ namespace Lexplosion
             { 
                 Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml") 
             };
-
+            SplashScreen splash = new SplashScreen("launcher_loading.png");
+            splash.Show(true);
             app.Run(new AuthWindow());
         }
 

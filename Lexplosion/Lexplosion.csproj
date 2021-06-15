@@ -312,5 +312,8 @@
   <ItemGroup>
     <Resource Include="Assets\images\icons\non_image.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\launcher_loading.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
