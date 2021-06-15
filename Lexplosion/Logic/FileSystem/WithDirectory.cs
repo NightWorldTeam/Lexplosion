@@ -478,7 +478,9 @@ namespace Lexplosion.Logic.FileSystem
         private static void DelFile(string file)
         {
             if (File.Exists(file))
+            {
                 File.Delete(file);
+            }
         }
 
         //функция для скачивания libraries и natives (в zip файле)
@@ -1240,7 +1242,7 @@ namespace Lexplosion.Logic.FileSystem
 
             };
 
-            SaveModpaksList(UserData.InstancesList);
+            SaveInstancesList(UserData.InstancesList);
 
             try
             {
@@ -1349,59 +1351,87 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public static InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId)
+        public static InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors)
         {
-            if (File.Exists(directory + "/temp/" + fileName))
-            {
-                File.Delete(directory + "/temp/" + fileName);
-            }
+            errors = new List<string>();
 
-            using (WebClient wc = new WebClient())
+            try
             {
+                if (File.Exists(directory + "/temp/" + fileName))
+                {
+                    File.Delete(directory + "/temp/" + fileName);
+                }
+
+                using (WebClient wc = new WebClient())
+                {
+                    DelFile(directory + "/temp/" + fileName);
+                    wc.DownloadFile(downloadUrl, directory + "/temp/" + fileName);
+                }
+
+                if (Directory.Exists(directory + "/temp/dataDownload"))
+                {
+                    Directory.Delete(directory + "/temp/dataDownload");
+                }
+
+                Directory.CreateDirectory(directory + "/temp/dataDownload");
+                ZipFile.ExtractToDirectory(directory + "/temp/" + fileName, directory + "/temp/dataDownload");
                 DelFile(directory + "/temp/" + fileName);
-                wc.DownloadFile(downloadUrl, directory + "/temp/" + fileName);
-            }
 
-            if (Directory.Exists(directory + "/temp/dataDownload"))
+                InstanceManifest data = GetFile<InstanceManifest>(directory + "/temp/dataDownload/manifest.json");
+
+                if (data != null)
+                {
+                    if (!Directory.Exists(directory + "/temp/dataDownload/overrides/mods"))
+                    {
+                        Directory.CreateDirectory(directory + "/temp/dataDownload/overrides/mods");
+                    }
+
+                    foreach (InstanceManifest.FileData file in data.files)
+                    {
+                        bool anw = DownloadMod(file.projectID, file.fileID, directory + "/temp/dataDownload/overrides/mods/");
+
+                        //скачивание модпа не удалось. Добавляем его данные в список ошибок
+                        if (!anw)
+                        {
+                            errors.Add(file.projectID + " " + file.fileID);
+                        }
+                    }
+
+                    string SourcePath = directory + "/temp/dataDownload/overrides/";
+                    string DestinationPath = directory + "/instances/" + instanceId + "/";
+
+                    foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
+                    {
+                        Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
+                    }
+
+                    foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
+                    {
+                        File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+                    }
+
+                    if (Directory.Exists(directory + "/temp/dataDownload"))
+                    {
+                        Directory.Delete(directory + "/temp/dataDownload", true);
+                    }
+
+                    return data;
+
+                }
+
+                if (Directory.Exists(directory + "/temp/dataDownload"))
+                {
+                    Directory.Delete(directory + "/temp/dataDownload", true);
+                }
+
+                errors.Add("curseforgeManifestError");
+
+                return null;
+            }
+            catch
             {
-                Directory.Delete(directory + "/temp/dataDownload");
+                return null;
             }
-
-            Directory.CreateDirectory(directory + "/temp/dataDownload");
-            ZipFile.ExtractToDirectory(directory + "/temp/" + fileName, directory + "/temp/dataDownload");
-
-            InstanceManifest data = GetFile<InstanceManifest>(directory + "/temp/dataDownload/manifest.json");
-
-            if(data != null)
-            {
-                if (!Directory.Exists(directory + "/temp/dataDownload/overrides/mods"))
-                {
-                    Directory.CreateDirectory(directory + "/temp/dataDownload/overrides/mods");
-                }
-
-                foreach (InstanceManifest.FileData file in data.files)
-                {
-                    DownloadMod(file.projectID, file.fileID, directory + "/temp/dataDownload/overrides/mods/");
-                }
-
-                string SourcePath = directory + "/temp/dataDownload/overrides/";
-                string DestinationPath = directory + "/instances/" + instanceId + "/";
-
-                foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
-                {
-                    Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
-                }
-                    
-                foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
-                {
-                    File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
-                }
-
-                return data;
-
-            }
-
-            return null;
 
         }
 

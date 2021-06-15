@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
 {
@@ -105,7 +106,7 @@ namespace Lexplosion.Logic.Management
                 Type = type
             };
 
-            DataFilesManager.SaveModpaksList(UserData.InstancesList);
+            DataFilesManager.SaveInstancesList(UserData.InstancesList);
 
             Lexplosion.Run.ThreadRun(delegate ()
             {
@@ -337,16 +338,40 @@ namespace Lexplosion.Logic.Management
 
         }
 
-        public static void CreateInstance(string name, string version, string forgeVersion, InstanceType type)
+        public static string CreateInstance(string name, InstanceType type, string gameVersion, string forge, int cursforgeId = 0)
         {
             string instanceId = GenerateInstanceId(name);
-            Directory.CreateDirectory(WithDirectory.directory + "/instances/" + instanceId);
 
             UserData.InstancesList[instanceId] = new InstanceParametrs
             {
                 Name = name,
                 Type = type
             };
+
+            DataFilesManager.SaveInstancesList(UserData.InstancesList);
+            Directory.CreateDirectory(WithDirectory.directory + "/instances/" + instanceId);
+
+            VersionManifest manifest = new VersionManifest
+            {
+                version = new VersionInfo
+                {
+                    gameVersion = gameVersion,
+                    forgeVersion = forge
+                }
+            };
+            DataFilesManager.SaveManifest(instanceId, manifest);
+
+            if(type == InstanceType.Curseforge)
+            {
+                Dictionary<string, int> instanceData = new Dictionary<string, int>()
+                {
+                    ["cursforgeId"] = cursforgeId
+                };
+
+                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/cursforgeData.json", JsonConvert.SerializeObject(instanceData));
+            }
+
+            return instanceId;
 
         }
 

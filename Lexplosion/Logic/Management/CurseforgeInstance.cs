@@ -97,11 +97,33 @@ namespace Lexplosion.Logic.Management
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
             {
-                InstanceManifest manifest = WithDirectory.DownloadCurseforgeInstance(Info.downloadUrl, Info.fileName, InstanceId);
+                InstanceManifest manifest = WithDirectory.DownloadCurseforgeInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error);
+
+                if(error.Count > 0)
+                {
+                    return new InitData
+                    {
+                        Errors = error,
+                        VersionFile = null,
+                        Libraries = null
+                    };
+                }
 
                 if (!BaseFilesIsCheckd)
                 {
-                    Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, manifest.minecraft.modLoaders[0].id);
+                    //определяем приоритетную версию форджа
+                    string modLoader = "";
+                    foreach(var loader in manifest.minecraft.modLoaders)
+                    {
+                        if (loader.primary)
+                        {
+                            modLoader = loader.id;
+                            break;
+                        }
+
+                    }
+
+                    Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, modLoader);
 
                     if (Manifest != null)
                     {

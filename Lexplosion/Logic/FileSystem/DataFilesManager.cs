@@ -267,13 +267,19 @@ namespace Lexplosion.Logic.FileSystem
 
         public static void SaveManifest(string instanceId, VersionManifest data)
         {
+            string minecraftJar = "";
+            if(data.version.minecraftJar != null)
+            {
+                minecraftJar = data.version.minecraftJar.name;
+            }
+
             LocalVersionManifest dataLocal = new LocalVersionManifest
             {
                 version = new LocalVersionInfo()
                 {
                     minecraftJar = new Dictionary<string, string>
                     {
-                        ["name"] = data.version.minecraftJar.name
+                        ["name"] = minecraftJar
                     },
 
                     arguments = data.version.arguments,
@@ -333,7 +339,7 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static void SaveModpaksList(Dictionary<string, InstanceParametrs> content)
+        public static void SaveInstancesList(Dictionary<string, InstanceParametrs> content)
         {
             SaveFile(directory + "/instanesList.json", JsonConvert.SerializeObject(content));
         }

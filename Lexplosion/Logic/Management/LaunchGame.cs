@@ -259,6 +259,9 @@ namespace Lexplosion.Logic.Management
                         case InstanceType.Local:
                             instance = new LocalInstance(instanceId);
                             break;
+                        case InstanceType.Curseforge:
+                            instance = new CurseforgeInstance(instanceId);
+                            break;
                         default:
                             instance = null;
                             break;
