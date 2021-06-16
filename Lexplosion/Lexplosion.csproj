@@ -291,9 +291,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\images\background\settingsBG.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\images\background\regBG.png" />
   </ItemGroup>
   <ItemGroup>
