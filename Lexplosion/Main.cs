@@ -40,7 +40,7 @@ namespace Lexplosion
                 Process.GetCurrentProcess().Kill(); //стопаем процесс
             }
 
-            // Встраивание Newtonosoft.Json в exe
+            // Встраивание dll в exe
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve; 
             App app = new App();
             app.Exit += BeforeExit;
@@ -111,11 +111,14 @@ namespace Lexplosion
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-
             if (args.Name.Contains("Newtonsoft.Json"))
             {
                 return Assembly.Load(Resources.NewtonsoftJson);
+            }
 
+            if (args.Name.Contains("LumiSoft.Net"))
+            {
+                return Assembly.Load(Resources.LumiSoftNet);
             }
 
             return null;

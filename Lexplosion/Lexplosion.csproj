@@ -7,7 +7,7 @@
     <ProjectGuid>{4DF9C4D2-E828-456F-872D-622EFD405D44}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Lexplosion</RootNamespace>
-    <AssemblyName>NW Lexplosion</AssemblyName>
+    <AssemblyName>Lexplosion</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -313,10 +313,10 @@
     <Resource Include="Assets\images\icons\non_image.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\launcher_loading.png" />
+    <Resource Include="launcher_loading.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="launcher_loading.png" />
+    <None Include="Logic\dll\LumiSoft.Net.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

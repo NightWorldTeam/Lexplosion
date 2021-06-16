@@ -63,6 +63,16 @@ namespace Lexplosion.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        public static byte[] LumiSoftNet {
+            get {
+                object obj = ResourceManager.GetObject("LumiSoftNet", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         public static byte[] NewtonsoftJson {
             get {
                 object obj = ResourceManager.GetObject("NewtonsoftJson", resourceCulture);
