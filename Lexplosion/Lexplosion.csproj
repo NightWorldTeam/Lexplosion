@@ -147,8 +147,10 @@
     <Compile Include="Logic\Management\IPrototypeInstance.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
     <Compile Include="Logic\Management\ManageLogic.cs" />
+    <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />
     <Compile Include="Logic\Network\DataServer.cs" />
+    <Compile Include="Logic\Network\Gateway.cs" />
     <Compile Include="Logic\Network\NetworkClient.cs" />
     <Compile Include="Logic\Network\NetworkServer.cs" />
     <Compile Include="Logic\Network\ServerBridge.cs" />
@@ -158,6 +160,7 @@
     <Compile Include="Logic\Network\ToServer.cs" />
     <Compile Include="Logic\FileSystem\WithDirectory.cs" />
     <Compile Include="Logic\StreamList.cs" />
+    <Compile Include="Logic\Сryptography.cs" />
     <Compile Include="Main.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>

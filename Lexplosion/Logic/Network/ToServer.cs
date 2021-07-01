@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Global;
 using System.Windows;
+using Lexplosion.Logic.FileSystem;
 
 namespace Lexplosion.Logic.Network
 {
@@ -331,6 +332,11 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
+                if(pageSize > 50)
+                {
+                    pageSize = 50;
+                }
+
                 string url;
                 if (categoriy == ModpacksCategories.All)
                 {

@@ -75,5 +75,46 @@ namespace Lexplosion.Logic.Management
                 Libraries = Manifest.libraries
             };
         }
+
+        public string CheckOnlyBase()
+        {
+            Manifest = ToServer.GetInstanceManifest(InstanceId);
+
+            if (Manifest != null)
+            {
+                Updates = WithDirectory.GetLastUpdates(InstanceId);
+
+                BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
+                if (BaseFiles == null)
+                {
+                    return "guardError";
+                }
+
+                return "";
+            }
+            else
+            {
+                return "serverError";
+            }
+
+        }
+
+        public InitData UpdateOnlyBase()
+        {
+            List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
+
+            Manifest.data = null;
+            Manifest.natives = null;
+
+            DataFilesManager.SaveManifest(InstanceId, Manifest);
+
+            return new InitData
+            {
+                Errors = errors,
+                VersionFile = Manifest.version,
+                Libraries = Manifest.libraries
+            };
+
+        }
     }
 }

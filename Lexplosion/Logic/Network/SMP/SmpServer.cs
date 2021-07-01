@@ -153,7 +153,6 @@ namespace Lexplosion.Logic.Network.SMP
             clients.Keys.CopyTo(ipEndPoints, 0);
 
             return ipEndPoints;
-
         }
 
         public delegate void Closing(IPEndPoint ip);
@@ -172,7 +171,6 @@ namespace Lexplosion.Logic.Network.SMP
                 i++;
 
                 Thread.Sleep(100);
-
             }
 
             if (workPing == null)
@@ -184,7 +182,6 @@ namespace Lexplosion.Logic.Network.SMP
                 workPing = null;
                 return -1;
             }
-
         }
 
         public bool Close(IPEndPoint point) // TODO: доработать этот метод. Ему нельзя работать паралельно с уже работающим DeletingConnection
@@ -228,19 +225,18 @@ namespace Lexplosion.Logic.Network.SMP
                                 DeletingConnection(ref data);
                             }
                         }
-
                     }
                 }
 
                 Thread.Sleep(2000);
             }
-
         }
 
         protected void ServiceSend(ref Client client) //метод отправляющий пакеты данных
         {
             while (client.isConnected)
             {
+                // TODO: попытаться фиксануть этот костыль
                 while (client.packagesInfo.Count == 0) //костыль блять
                 {
                     client.sendingWait[0].WaitOne();
