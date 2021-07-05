@@ -5,13 +5,14 @@ using System.Net;
 using System.Reflection;
 using System.Windows;
 using Lexplosion.Properties;
-using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using System.Threading;
+using Lexplosion.Gui.Windows;
+using System.Threading.Tasks;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -25,32 +26,45 @@ namespace Lexplosion
     {
         public static StreamList threads = new StreamList();
         private static bool haveImportantThread = false;
-
+        private static App app = new App();
         [STAThread]
         static void Main()
         {
-            SplashScreen splashScreen = new SplashScreen("launcher_loading.png");
-            splashScreen.Show(true);
-            // получем количество процессов с таким же именем
-            int processesCount = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length; 
+            
+            Thread t = new Thread(new ThreadStart(InitializedSystem));
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            StartSplashW();
+        }
 
-            if(processesCount > 1)
+
+        private static void StartSplashW()
+        {
+            app.Run(new SplashWindow());
+        }
+
+
+        private static void InitializedSystem() 
+        {
+            // получем количество процессов с таким же именем
+            int processesCount = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length;
+
+            if (processesCount > 1)
             {
                 MessageBox.Show("Лаунчер уже запущен!");
                 Process.GetCurrentProcess().Kill(); //стопаем процесс
             }
 
             // Встраивание dll в exe
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve; 
-            App app = new App();
-            app.Exit += BeforeExit;
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+            //app.Exit += BeforeExit;
 
             // инициализация
             UserData.settings = DataFilesManager.GetSettings();
             LaunchGame.SetDefaultSettings();
             WithDirectory.Create(UserData.settings["gamePath"]);
 
-            if (ToServer.CheckLauncherUpdates()) 
+            if (ToServer.CheckLauncherUpdates())
             {
                 // TODO: при отсуствии коннекта с сервером тут лаунчер повиснет на секунд 30
                 LauncherUpdate();
@@ -60,12 +74,20 @@ namespace Lexplosion
             WithDirectory.CheckLauncherAssets();
             UserData.instancesAssets = DataFilesManager.GetLauncherAssets();
 
-            Application.Current.Resources = new ResourceDictionary() 
-            { 
-                Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml") 
+            Application.Current.Resources = new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml")
             };
-            app.Run(new AuthWindow());
+
+            app.Dispatcher.Invoke(() =>
+            {
+                var authWindow = new AuthWindow();
+                app.MainWindow.Close();
+                app.MainWindow = authWindow;
+                app.MainWindow.Show();
+            });
         }
+
 
         private static void LauncherUpdate()
         {
@@ -170,7 +192,6 @@ namespace Lexplosion
 
             thread.Start();
             threads.Release();
-
 
         }
     }

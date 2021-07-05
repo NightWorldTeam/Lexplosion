@@ -23,7 +23,6 @@ namespace Lexplosion.Gui.Windows
         public AuthWindow()
         {
             InitializeComponent();
-
             MouseDown += delegate { try { DragMove(); } catch { } };
 
             // Установка водного знака для поля
@@ -51,9 +50,9 @@ namespace Lexplosion.Gui.Windows
                 Left = this.Left,
                 Top = this.Top,
                 WindowState = WindowState.Normal
-            };
-            regWindow.Show(); regWindow.Activate();
+            }; 
             this.Close();
+            regWindow.ShowDialog(); regWindow.Activate();
         }
 
         private void Auth(object sender, RoutedEventArgs e)
@@ -102,8 +101,9 @@ namespace Lexplosion.Gui.Windows
                 Top = this.Top,
                 WindowState = WindowState.Normal
             };
-            mainWindow.Show(); mainWindow.Activate();
             this.Close();
+            mainWindow.ShowDialog(); mainWindow.Activate();
+            
 
             // mainWindow.NameBlock.Text = UserData.login;
             // if (status == 0)
