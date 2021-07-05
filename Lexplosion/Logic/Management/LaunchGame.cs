@@ -68,7 +68,6 @@ namespace Lexplosion.Logic.Management
             return command.Replace(@"\", "/");
         }
 
-
         public static bool Run(string command, string instanceId)
         {
             if (UserData.settings["showConsole"] == "true")
@@ -241,33 +240,29 @@ namespace Lexplosion.Logic.Management
                 if (!UserData.settings.ContainsKey("gamePath") || !Directory.Exists(UserData.settings["gamePath"]) || !UserData.settings["gamePath"].Contains(":"))
                     return Error("gamePathError");
 
-                bool updateInstance = instanceSettings.ContainsKey("update") && instanceSettings["update"] == "true";
-                bool noUpdate = UserData.settings["noUpdate"] == "false" || (instanceSettings.ContainsKey("noUpdate") && instanceSettings["noUpdate"] == "false");
+                bool autoUpdate = instanceSettings.ContainsKey("autoUpdate") && instanceSettings["autoUpdate"] == "true";
 
-                if (updateInstance)
-                    DataFilesManager.DeleteLastUpdates(instanceId);
+                IPrototypeInstance instance;
 
-                if (!UserData.offline && (updateInstance || noUpdate))
+                switch (type)
                 {
-                    IPrototypeInstance instance;
+                    case InstanceType.Nightworld:
+                        instance = new NightworldIntance(instanceId);
+                        break;
+                    case InstanceType.Local:
+                        instance = new LocalInstance(instanceId);
+                        break;
+                    case InstanceType.Curseforge:
+                        instance = new CurseforgeInstance(instanceId);
+                        break;
+                    default:
+                        instance = null;
+                        break;
 
-                    switch (type) 
-                    {
-                        case InstanceType.Nightworld:
-                            instance = new NightworldIntance(instanceId);
-                            break;
-                        case InstanceType.Local:
-                            instance = new LocalInstance(instanceId);
-                            break;
-                        case InstanceType.Curseforge:
-                            instance = new CurseforgeInstance(instanceId);
-                            break;
-                        default:
-                            instance = null;
-                            break;
+                }
 
-                    }
-
+                if (!UserData.offline && autoUpdate)
+                {
                     string result = instance.Check();
                     if (result == "")
                     {
@@ -277,13 +272,24 @@ namespace Lexplosion.Logic.Management
                     {
                         return Error(result);
                     }
-
-                } 
-                else 
+                }
+                else if (!UserData.offline)
+                {
+                    string result = instance.CheckOnlyBase();
+                    if (result == "")
+                    {
+                        data = instance.UpdateOnlyBase();
+                    }
+                    else
+                    {
+                        return Error(result);
+                    }
+                }
+                else
                 {
                     VersionManifest files = DataFilesManager.GetManifest(instanceId, true);
 
-                    if(files != null)
+                    if (files != null)
                     {
                         data = new InitData
                         {
@@ -296,18 +302,12 @@ namespace Lexplosion.Logic.Management
                     {
                         return Error("manifestError");
                     }
-
-                }
-
-                if (updateInstance)
-                {
-                    instanceSettings["update"] = "false";
-                    DataFilesManager.SaveSettings(instanceSettings, instanceId);
                 }
 
                 return data;
-
-            } catch {
+            } 
+            catch 
+            {
                 return Error("unknownError");
             }
 

@@ -68,5 +68,15 @@ namespace Lexplosion.Logic.Management
                 Libraries = Manifest.libraries
             };
         }
+
+        public string CheckOnlyBase()
+        {
+            return Check();
+        }
+
+        public InitData UpdateOnlyBase()
+        {
+            return Update();
+        }
     }
 }

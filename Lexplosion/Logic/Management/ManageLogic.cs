@@ -94,61 +94,35 @@ namespace Lexplosion.Logic.Management
             if (UserData.InstancesList == null)
             {
                 UserData.InstancesList = DataFilesManager.GetInstancesList();
-
             }
         }
 
-        public static void DownloadInstance(string instanceId, string instanceName, InstanceType type)
+        public static void DownloadInstance(string instanceId, InstanceType type)
         {
-            UserData.InstancesList[instanceId] = new InstanceParametrs
-            {
-                Name = instanceName,
-                Type = type
-            };
-
-            DataFilesManager.SaveInstancesList(UserData.InstancesList);
-
             Lexplosion.Run.ThreadRun(delegate ()
             {
-                Run(instanceId, type);
+                IPrototypeInstance instance;
+
+                switch (type)
+                {
+                    case InstanceType.Nightworld:
+                        instance = new NightworldIntance(instanceId);
+                        break;
+                    case InstanceType.Local:
+                        instance = new LocalInstance(instanceId);
+                        break;
+                    case InstanceType.Curseforge:
+                        instance = new CurseforgeInstance(instanceId);
+                        break;
+                    default:
+                        instance = null;
+                        break;
+
+                }
+
+                string result = instance.Check();
+                instance.Update(); // TODO: тут выводить ошибки
             });
-
-            void Run(string initModPack, InstanceType instype)
-            {
-                Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
-
-                InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype);
-                if (data.Errors.Contains("javaPathError"))
-                {
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Не удалось определить путь до Java!", "Ошибка 940");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
-                    return;
-
-                }
-                else if (data.Errors.Contains("gamePathError"))
-                {
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Ошибка при определении игровой директории!", "Ошибка 950");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
-                    return;
-
-                }
-
-                if (data.Errors.Count != 0)
-                {
-                    string errorsText = "\n\n" + string.Join("\n", data.Errors) + "\n";
-
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Не удалось загрузить следующие файлы:" + errorsText, "Ошибка 960");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
-                }
-
-            }
-
         }
 
         public static void СlientManager(string instanceId)
@@ -288,6 +262,19 @@ namespace Lexplosion.Logic.Management
                     }
                     while (UserData.InstancesList.ContainsKey(instanceId));
 
+                } 
+                else if (UserData.InstancesList.ContainsKey(instanceId))
+                {
+                    string instanceId_ = instanceId;
+                    int i = 0;
+                    do
+                    {
+                        instanceId_ = instanceId + "_" + i;
+                        i++;
+                    }
+                    while (UserData.InstancesList.ContainsKey(instanceId_));
+
+                    instanceId = instanceId_;
                 }
             }
 

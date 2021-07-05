@@ -11,5 +11,7 @@ namespace Lexplosion.Logic.Management
     {
         string Check();
         InitData Update();
+        string CheckOnlyBase();
+        InitData UpdateOnlyBase();
     }
 }

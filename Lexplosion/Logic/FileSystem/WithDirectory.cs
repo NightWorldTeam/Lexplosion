@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using System.Windows;
 using System.Linq;
+using Lexplosion.Logic.Management;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -1020,7 +1021,7 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportPath, string description)
+        public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
         {
             string targetDir = directory + "/temp/" + instanceId + "-export"; //временная папка, куда будем копировать все файлы
             string srcDir = directory + "/instances/" + instanceId;
@@ -1041,7 +1042,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 string dirUnit = dirUnit_.Replace(@"\", "/"); //адрес исходного файла
                 string target = dirUnit.Replace(srcDir, targetDir + "/files"); //адрес этого файла во временной папке
-                string finalPath = target.Substring(0, target.LastIndexOf("/")); //адрес времееной папки, где будет храниться этот файл
+                string finalPath = target.Substring(0, target.LastIndexOf("/")); //адрес временной папки, где будет храниться этот файл
 
                 try
                 {
@@ -1049,7 +1050,6 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         Directory.CreateDirectory(finalPath);
                     }
-                    
                 }
                 catch
                 {
@@ -1071,7 +1071,6 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         return ExportResult.FileCopyError;
                     }
-
                 }
                 else
                 {
@@ -1087,7 +1086,8 @@ namespace Lexplosion.Logic.FileSystem
                 ["gameVersion"] = instanceFile.version.gameVersion,
                 ["description"] = description,
                 ["name"] = UserData.InstancesList[instanceId].Name,
-                ["author"] = UserData.login
+                ["author"] = UserData.login,
+                ["forgeVersion"] = instanceFile.version.forgeVersion
             };
 
 
@@ -1103,10 +1103,9 @@ namespace Lexplosion.Logic.FileSystem
                 return ExportResult.InfoFileError;
             }
 
-
             try
             {
-                ZipFile.CreateFromDirectory(targetDir, exportPath + "/" + instanceId + ".zip");
+                ZipFile.CreateFromDirectory(targetDir, exportFile);
                 Directory.Delete(targetDir, true);
 
                 return ExportResult.Successful;
@@ -1123,16 +1122,8 @@ namespace Lexplosion.Logic.FileSystem
 
         public static ImportResult ImportInstance(string zipFile, out List<string> errors)
         {
-
             string dir = directory + "/temp/import/";
             errors = new List<string>();
-
-            if (UserData.offline)
-            {
-                Directory.Delete(dir, true);
-
-                return ImportResult.IsOfflineMode;
-            }
 
             if (!Directory.Exists(dir))
             {
@@ -1169,7 +1160,7 @@ namespace Lexplosion.Logic.FileSystem
                 return ImportResult.GameVersionError;
             }
 
-            if(!instanceInfo.ContainsKey("name") || string.IsNullOrEmpty(instanceInfo["name"]))
+            if (!instanceInfo.ContainsKey("name") || string.IsNullOrEmpty(instanceInfo["name"]))
             {
                 instanceInfo["name"] = "Unknown Name";
             }
@@ -1184,8 +1175,13 @@ namespace Lexplosion.Logic.FileSystem
                 instanceInfo["description"] = "";
             }
 
-            //<===генерация id модпака===>
-            string instanceId = Management.ManageLogic.GenerateInstanceId(instanceInfo["name"]);
+            if (!instanceInfo.ContainsKey("forgeVersion") || string.IsNullOrEmpty(instanceInfo["forgeVersion"]))
+            {
+                instanceInfo["forgeVersion"] = "";
+            }
+
+            string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceType.Local, instanceInfo["gameVersion"], instanceInfo["forgeVersion"]);
+            MessageBox.Show(instanceId);
 
             string addr = dir + "files/";
             string targetDir = directory + "/instances/" + instanceId + "/";
@@ -1213,36 +1209,10 @@ namespace Lexplosion.Logic.FileSystem
                 return ImportResult.MovingFilesError;
             }
 
-            VersionManifest files = ToServer.GetVersionManifest(instanceInfo["gameVersion"]);
-            if (files == null)
-            {
-                return ImportResult.ServerFilesError;
-            }
+            LocalInstance instance = new LocalInstance(instanceId);
 
-            Dictionary<string, int> updates = GetLastUpdates(instanceId);
-
-            BaseFilesUpdates baseFiles = CheckBaseFiles(files, instanceId, ref updates); // проверяем основные файлы клиента на обновление
-
-            if(baseFiles != null) 
-            {
-                errors = UpdateBaseFiles(baseFiles, files, instanceId, ref updates);
-            }
-            else
-            {
-                // TODO: разобраться че сделать
-            }
-
-
-            SaveManifest(instanceId, files);
-
-            UserData.InstancesList[instanceId] = new InstanceParametrs
-            {
-                Name = instanceInfo["name"],
-                Type = InstanceType.Local
-
-            };
-
-            SaveInstancesList(UserData.InstancesList);
+            instance.Check(); // TODO: тут вовзращать ошибки
+            instance.Update();
 
             try
             {
@@ -1257,6 +1227,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             return ImportResult.Successful;
+
         }
 
         public static void RemoveInstanceDirecory(string instanceId)

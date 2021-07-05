@@ -36,7 +36,6 @@ namespace Lexplosion.Logic.Network
                 {
                     STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, bridgeUdp.Client); //получем наш внешний адрес
 
-
                     //парсим и получаем порт
                     string externalPort = result.PublicEndPoint.ToString();
                     externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
