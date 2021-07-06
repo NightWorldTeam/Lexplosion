@@ -224,6 +224,35 @@
             <Setter Property="Foreground" Value="#b9b7b7"/>
         </Style>
 
+
+        <Style x:Key="SPS" TargetType="{x:Type ToggleButton}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Width="17.5" Height="11.8" x:Name="SPBorder">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="SPBorder" Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/hide_password.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="SPBorder" Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/visible_password.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Window.Background>
         <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/authBG.png"/>
@@ -267,15 +296,21 @@
 
 
                 <TextBlock x:Name="PasswordBoxWaterMark" Height="30" Margin="86,277,86,193" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#b9b7b7" FontSize="15"/>
+                <ToggleButton Focusable="False" IsChecked="True" Style="{StaticResource SPS}" x:Name="ShowPassword" Click="ShowPassword_Click" Margin="236,286,63,203"/>
+
+                <TextBox x:Name="PasswordVisible" Style="{StaticResource CTB}" Width="125" Height="30" HorizontalContentAlignment="Center" Margin="86,277,86,193" GotFocus="PasswordVisible_GotFocus" LostFocus="PasswordVisible_LostFocus"/>
                 <PasswordBox Style="{StaticResource CPB}" x:Name="TBPassword" Height="30" Margin="86,277,86,193" GotFocus="Password_GotFocus" LostFocus="Password_LostFocus"/>
 
-                <CheckBox Style="{StaticResource CCBS}" x:Name="SaveMe" Margin="92,338,92,141" Content="Запомнить меня" Height="Auto"/>
-                <Button Style="{StaticResource CLB}" Click="Auth" Content="Войти" Width="166" Height="40" Margin="77,381,74,79" FontSize="20"/>
-                <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" BorderThickness="0" Click="Register" Width="30" Height="30" Margin="10,460,277,10" >
-                    <Image Source="pack://application:,,,/assets/images/icons/add_profile.png" Width="28" Height="28"></Image>
+                <CheckBox Focusable="False" Style="{StaticResource CCBS}" x:Name="SaveMe" Margin="92,338,92,141" Content="Запомнить меня" Height="Auto"/>
+                <Button Focusable="False" Style="{StaticResource CLB}" Click="Auth" Content="Войти" Width="166" Height="40" Margin="77,381,74,79" FontSize="20"/>
+                <Button Focusable="False"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        Click="Register" 
+                        Width="30" Height="30" 
+                        Margin="10,460,277,10">
+                    <Image Source="pack://application:,,,/assets/images/icons/add_profile.png"/>
                 </Button>
-            </Grid>
-            <Grid Grid.Column="1">
             </Grid>
         </Grid>
 

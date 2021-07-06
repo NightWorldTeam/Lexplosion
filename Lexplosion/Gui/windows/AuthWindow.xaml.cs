@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.Logic.Management;
@@ -151,6 +154,19 @@ namespace Lexplosion.Gui.Windows
             }
         }
 
+
+        private void PasswordVisible_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox passwordVisibile = (TextBox)sender;
+            if (passwordVisibile.Text == string.Empty)
+            {
+                passwordVisibile.Text = string.Empty;
+                PasswordBoxWaterMark.Visibility = Visibility.Collapsed;
+                passwordVisibile.GotFocus -= Password_GotFocus;
+            }
+        }
+
+
         // Функционал для водных знаков --> GotFocus (Потеря фокуса с элемента интерфейса)
 
         private void Login_LostFocus(object sender, RoutedEventArgs e)
@@ -171,6 +187,33 @@ namespace Lexplosion.Gui.Windows
                 PasswordBoxWaterMark.Visibility = Visibility.Visible;
                 PasswordBoxWaterMark.Text = Password_WaterMark;
                 passwordBox.GotFocus += Password_GotFocus;
+            }
+        }
+
+
+        private void PasswordVisible_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox passwordVisibile = (TextBox)sender;
+            if (passwordVisibile.Text.Trim().Equals(string.Empty))
+            {
+                passwordVisibile.Text = Password_WaterMark;
+                passwordVisibile.GotFocus += Login_GotFocus;
+            }
+        }
+
+        private void ShowPassword_Click(object sender, RoutedEventArgs e) 
+        {
+            if ((bool)ShowPassword.IsChecked)
+            {
+                TBPassword.Visibility = Visibility.Visible;
+                PasswordVisible.Visibility = Visibility.Hidden;
+                TBPassword.Password = PasswordVisible.Text;
+            }
+            else 
+            {
+                PasswordVisible.Visibility = Visibility.Visible;
+                TBPassword.Visibility = Visibility.Hidden;
+                PasswordVisible.Text = TBPassword.Password;
             }
         }
 

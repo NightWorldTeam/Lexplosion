@@ -78,7 +78,7 @@ namespace Lexplosion
             {
                 Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml")
             };
-
+            Thread.Sleep(1000);
             app.Dispatcher.Invoke(() =>
             {
                 var authWindow = new AuthWindow();
