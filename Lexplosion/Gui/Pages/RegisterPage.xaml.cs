@@ -1,26 +1,38 @@
-﻿using System.Diagnostics;
+﻿using Lexplosion.Gui.Windows;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
-namespace Lexplosion.Gui.Windows
+namespace Lexplosion.Gui
 {
     /// <summary>
-    /// Логика взаимодействия для RegisterWindow.xaml
+    /// Interaction logic for RegisterPage.xaml
     /// </summary>
-    public partial class RegisterWindow : Window
+    public partial class RegisterPage : Page
     {
         private const string Login_WaterMark = "Логин";
         private const string Password_WaterMark = "Пароль";
         private const string ConfirmPassword_WaterMark = "Повтор Пароля";
         private const string Email_WaterMark = "Электронная почта";
 
-        public RegisterWindow()
+        private AuthWindow authWindow = null;
+
+        public RegisterPage(AuthWindow aw)
         {
             InitializeComponent();
-            MouseDown += delegate { try { DragMove(); } catch { return; } };
-
+            authWindow = aw;
             if (TBLogin.Text == string.Empty && TBPassword.Password == string.Empty && TBConfirmPassword.Password == string.Empty && TBEmail.Text == string.Empty)
             {
                 TBLogin.Text = Login_WaterMark;
@@ -30,16 +42,10 @@ namespace Lexplosion.Gui.Windows
             }
         }
 
+
         private void ToLoginForm(object sender, RoutedEventArgs e)
         {
-            AuthWindow authWindow = new AuthWindow
-            {
-                Left = this.Left,
-                Top = this.Top,
-                WindowState = WindowState.Normal
-            };
-            authWindow.Show(); authWindow.Activate();
-            this.Close();
+            authWindow.ShowAuthPage();
         }
 
         public bool IsValidEmailAddress(string email)
@@ -47,10 +53,11 @@ namespace Lexplosion.Gui.Windows
             return Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
         }
 
-        private void RegisterAccount(object sender, RoutedEventArgs e) {
-            if (TBLogin.Text != null && TBPassword.Password  != null && TBConfirmPassword.Password  != null && TBEmail.Text != null)
+        private void RegisterAccount(object sender, RoutedEventArgs e)
+        {
+            if (TBLogin.Text != null && TBPassword.Password != null && TBConfirmPassword.Password != null && TBEmail.Text != null)
             {
-                if (TBPassword.Password  == TBConfirmPassword.Password )
+                if (TBPassword.Password == TBConfirmPassword.Password)
                 {
                     if (IsValidEmailAddress(TBEmail.Text))
                     {
@@ -61,7 +68,8 @@ namespace Lexplosion.Gui.Windows
                         SetMessageBox(TBEmail.Text + ": не является email");
                     }
                 }
-                else {
+                else
+                {
                     SetMessageBox("Пароли не совпадают!");
                 }
             }
@@ -77,7 +85,8 @@ namespace Lexplosion.Gui.Windows
             }
         }
 
-        private void ConfirmPassword_MouseDown(object sender, MouseButtonEventArgs e) {
+        private void ConfirmPassword_MouseDown(object sender, MouseButtonEventArgs e)
+        {
 
         }
 
@@ -131,7 +140,7 @@ namespace Lexplosion.Gui.Windows
         private void ConfirmPassword_LostFocus(object sender, RoutedEventArgs e)
         {
             if (TBConfirmPassword.Password.Trim().Equals(string.Empty))
-            {  
+            {
                 ConfirmPasswordBoxWaterMark.Text = ConfirmPassword_WaterMark;
                 ConfirmPasswordBoxWaterMark.Visibility = Visibility.Visible;
                 TBConfirmPassword.GotFocus += ConfirmPassword_GotFocus;
@@ -160,9 +169,5 @@ namespace Lexplosion.Gui.Windows
             this.TextMarker.Text = message;
             this.MessageTitle.Text = title;
         }
-
-        /* <-- Функционал кастомного меню --> */
-        private void CloseWindow(object sender, RoutedEventArgs e) { Process.GetCurrentProcess().Kill(); }
-        private void HideWindow(object sender, RoutedEventArgs e) { this.WindowState = WindowState.Minimized; }
     }
 }

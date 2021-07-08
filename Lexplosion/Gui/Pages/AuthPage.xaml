@@ -1,0 +1,278 @@
+﻿<Page x:Class="Lexplosion.Gui.Pages.AuthPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Lexplosion.Gui.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="422" d:DesignWidth="800"
+      Title="AuthPage">
+
+    <Page.Resources>
+        <!-- Login Button Style -->
+        <Style x:Key="CLB" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" CornerRadius="5" BorderThickness="0" Background="#2c99c2" BorderBrush="#1c91a6">
+                            <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#2c99c8" />
+                                <Setter TargetName="Border" Property="Background" Value="#24b7d1"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#2c99c2" />
+                                <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Custom Register Button -->
+        <Style x:Key="CRB" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="pack://application:,,,/assets/fonts/#Casper Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Name="Border" SnapsToDevicePixels="True" BorderBrush="Transparent" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="false">
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Foreground" Value="LightCyan"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Custom CheckBox Style-->
+        <Style x:Key="CCBS" TargetType="{x:Type CheckBox}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontFamily" Value="pack://application:,,,/Assets/fonts/#FuturaBookC"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <BulletDecorator Background="Transparent" Margin="0,0,-3,6">
+                            <BulletDecorator.Bullet>
+                                <Grid Width="15" Height="15" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                    <Border x:Name="Border" Background="Transparent" BorderBrush="#2c99c2" BorderThickness="2">
+                                        <Path Visibility="Collapsed"
+                                              Width="7"
+                                              Height="7"
+                                              x:Name="CheckMark"
+                                              SnapsToDevicePixels="False"
+                                              StrokeThickness="2"
+                                              Data="M 0 0 L 7 7 M 0 7 L 7 0">
+                                            <Path.Stroke>
+                                                <SolidColorBrush Color="White" />
+                                            </Path.Stroke>
+                                        </Path>
+                                    </Border>
+                                </Grid>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                RecognizesAccessKey="True" />
+                        </BulletDecorator>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Custom TextBox Style -->
+        <Style x:Key="CTB" TargetType="{x:Type TextBox}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="MinWidth" Value="145"/>
+            <Setter Property="MinHeight" Value="25"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="#b9b7b7"/>
+            <Setter Property="CaretBrush" Value="#2c99c2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border Name="Border" CornerRadius="2" Padding="2" BorderThickness="0,0,0,2">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#2c99c2"/>
+                            </Border.BorderBrush>
+                            <Border.Background>
+                                <SolidColorBrush Color="Transparent"/>
+                            </Border.Background>
+                            <Grid>
+                                <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+                                <TextBlock x:Name="WatermarkText" Text="{TemplateBinding Text}" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" IsHitTestVisible="False" Foreground="White"/>
+                            </Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FFE8EDF9" />
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="ReadOnly">
+                                        <Storyboard>
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                                                <EasingColorKeyFrame KeyTime="0" Value="#FFE8EDF9"/>
+                                            </ColorAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="MouseOver"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsKeyboardFocusWithin" Value="False"/>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WatermarkText" Value="Visible"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsKeyboardFocusWithin" Value="False"/>
+                                    <Condition Property="Text" Value="{x:Null}"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WatermarkText" Value="Visible"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CPB" TargetType="{x:Type PasswordBox}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#2c99c2"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <Setter Property="CaretBrush" Value="#2c99c2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="#b9b7b7"/>
+        </Style>
+
+
+        <Style x:Key="SPS" TargetType="{x:Type ToggleButton}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Width="17.5" Height="11.8" x:Name="SPBorder">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="SPBorder" Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/hide_password.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="SPBorder" Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="pack://application:,,,/assets/images/icons/visible_password.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Page.Background>
+        <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/authBG.png"/>
+    </Page.Background>
+    <Grid Margin="0,0,0,0" ShowGridLines="False">
+        <!--  -->
+
+        <!--  -->
+
+        <!-- Window Width = 944; Canvas Width = 265; TextBox = 145; -->
+        <Grid Grid.Row="1" ShowGridLines="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="265*"></ColumnDefinition>
+                <ColumnDefinition Width="627"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Canvas Background="Black" Opacity="0.64"/>
+                <TextBlock Text="NightWorld" HorizontalAlignment="Center" Foreground="White" FontSize="30" FontFamily="pack://application:,,,/Assets/fonts/#Arkhip" Margin="36,66,36,398"/>
+                <TextBox  Style="{StaticResource CTB}" x:Name="TBLogin" Width="125" Height="30" Margin="86,200,86,270" HorizontalContentAlignment="Center" GotFocus="Login_GotFocus" LostFocus="Login_LostFocus"/>
+
+
+                <TextBlock x:Name="PasswordBoxWaterMark" Height="30" Margin="86,277,86,193" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#b9b7b7" FontSize="15"/>
+                <ToggleButton Focusable="False" IsChecked="True" Style="{StaticResource SPS}" x:Name="ShowPassword" Click="ShowPassword_Click" Margin="236,286,63,203"/>
+
+                <TextBox x:Name="PasswordVisible" Style="{StaticResource CTB}" Width="125" Height="30" HorizontalContentAlignment="Center" Margin="86,277,86,193" GotFocus="PasswordVisible_GotFocus" LostFocus="PasswordVisible_LostFocus"/>
+                <PasswordBox Style="{StaticResource CPB}" x:Name="TBPassword" Height="30" Margin="86,277,86,193" GotFocus="Password_GotFocus" LostFocus="Password_LostFocus"/>
+
+                <CheckBox Focusable="False" Style="{StaticResource CCBS}" x:Name="SaveMe" Margin="92,338,92,141" Content="Запомнить меня" Height="Auto"/>
+                <Button Focusable="False" Style="{StaticResource CLB}" Click="Auth" Content="Войти" Width="166" Height="40" Margin="77,381,74,79" FontSize="20"/>
+                <Button Focusable="False"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        Click="Register" 
+                        Width="30" Height="30" 
+                        Margin="10,460,277,10">
+                    <Image Source="pack://application:,,,/assets/images/icons/add_profile.png"/>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <Canvas x:Name="GridMessageBox" Margin="0,28,0,0" Visibility="Collapsed">
+            <Grid x:Name="NBShadowBackground" Opacity="0.9" Background="#000000" Width="944" Height="500"/>
+            <TextBlock x:Name="MessageTitle" TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="25" Width="338" Height="36" Canvas.Left="303" Canvas.Top="152"/>
+            <TextBlock x:Name="TextMarker" TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="25" Width="338" Height="198" Canvas.Left="303" Canvas.Top="193"/>
+            <Button Click="Okey" Width="150" Height="44" Content="OK" Canvas.Left="397" Canvas.Top="420" Style="{StaticResource CLB}" FontFamily="pack://application:,,,/assets/fonts/#Casper Bold" FontWeight="Bold" FontSize="18"/>
+        </Canvas>
+    </Grid>
+</Page>
