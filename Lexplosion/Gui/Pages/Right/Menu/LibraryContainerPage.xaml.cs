@@ -375,6 +375,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			toggleButton.Click += routedEventHandler;
 
 			if (index == 0) toggleButton.IsChecked = true;
+			if (index == 1) toggleButton.IsChecked = false;
 
 			return toggleButton;
 		}
