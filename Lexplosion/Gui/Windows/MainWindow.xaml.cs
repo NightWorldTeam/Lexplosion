@@ -56,7 +56,6 @@ namespace Lexplosion.Gui.Windows
         /* <-- Функционал MessageBox --> */
         private void Okey(object sender, RoutedEventArgs e)
         {
-
         }
 
         public void SetMessageBox(string message, string title = "Ошибка")
