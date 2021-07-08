@@ -27,22 +27,20 @@ namespace Lexplosion
         public static StreamList threads = new StreamList();
         private static bool haveImportantThread = false;
         private static App app = new App();
+
         [STAThread]
         static void Main()
-        {
-            
-            Thread t = new Thread(new ThreadStart(InitializedSystem));
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
+        {   
+            Thread thread = new Thread(new ThreadStart(InitializedSystem));
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
             StartSplashW();
         }
-
 
         private static void StartSplashW()
         {
             app.Run(new SplashWindow());
         }
-
 
         private static void InitializedSystem() 
         {
@@ -78,16 +76,21 @@ namespace Lexplosion
             {
                 Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml")
             };
+
             Thread.Sleep(1000);
             app.Dispatcher.Invoke(() =>
             {
-                var authWindow = new AuthWindow();
+                /*var authWindow = new AuthWindow();
                 app.MainWindow.Close();
                 app.MainWindow = authWindow;
-                app.MainWindow.Show();
+                app.MainWindow.Show();*/
+                var authWindow = new AuthWindow();
+                authWindow.Show();
+                app.MainWindow.Close();
+                app.MainWindow = authWindow;
+
             });
         }
-
 
         private static void LauncherUpdate()
         {
@@ -164,7 +167,6 @@ namespace Lexplosion
 
         public static void ThreadRun(ThreadStart ThreadFunc, bool isImportant = false)
         {
-
             haveImportantThread = haveImportantThread || isImportant;
 
             threads.Wait();

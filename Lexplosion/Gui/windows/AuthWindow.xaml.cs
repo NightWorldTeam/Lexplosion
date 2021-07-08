@@ -17,7 +17,6 @@ namespace Lexplosion.Gui.Windows
     /// </summary>
     public partial class AuthWindow : Window
     {
-
         public AuthWindow()
         {
             InitializeComponent();
@@ -26,19 +25,15 @@ namespace Lexplosion.Gui.Windows
             
         }
 
-
         public void ShowAuthPage() 
         {
             AuthFrame.Navigate(new AuthPage(this));
         }
 
-
         public void ShowRegisterPage() 
         {
             AuthFrame.Navigate(new RegisterPage(this));
         }
-
-
 
         public void ShowMainWindow() 
         {
@@ -48,8 +43,10 @@ namespace Lexplosion.Gui.Windows
                 Top = this.Top,
                 WindowState = WindowState.Normal
             };
+
+            mainWindow.Show(); 
+            mainWindow.Activate();
             this.Close();
-            mainWindow.ShowDialog(); mainWindow.Activate();
         }
 
         /* <-- Функционал кастомного меню --> */

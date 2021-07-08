@@ -37,7 +37,6 @@ namespace Lexplosion.Gui.Windows
             else RightSideFrame.Navigate(new InstanceContainerPage(this));
         }
 
-
         public void PagesController<T>(string page, Frame frame) where T: Page
         {
             Page obj;
