@@ -12,7 +12,6 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using System.Threading;
 using Lexplosion.Gui.Windows;
-using System.Threading.Tasks;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -85,6 +84,8 @@ namespace Lexplosion
                 app.MainWindow = authWindow;
                 app.MainWindow.Show();*/
                 var authWindow = new AuthWindow();
+                authWindow.Left = app.MainWindow.Left - 97;
+                authWindow.Top = app.MainWindow.Top - 39;
                 authWindow.Show();
                 app.MainWindow.Close();
                 app.MainWindow = authWindow;
@@ -156,7 +157,6 @@ namespace Lexplosion
             {
                 threads.StopThreads();
             }
-
         }
 
         public static void Exit()

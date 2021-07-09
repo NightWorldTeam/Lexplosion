@@ -33,27 +33,10 @@
             </Setter>
         </Style>
     </Window.Resources>
-        <Grid>
-        <Canvas Grid.Row="0" Margin="0 0 0 635" Height="28" Width="750" Background="#151719">
-            <Image Width="20" Height="20" Source="pack://application:,,,/Assets/images/icons/nw.ico" Canvas.Left="3" Canvas.Top="3"/>
-            <TextBlock FontSize="16" Foreground="White" Text="Lexplosion" Canvas.Left="31" Canvas.Top="2"/>
-
-            <Button Click="CloseWindow" FontWeight="Bold" BorderBrush="#151719" Background="#151719" Foreground="White" FontSize="10" Width="28" Height="28" Canvas.Left="722" Style="{StaticResource CBSG}">
-                <Canvas>
-                    <Line X1="1" Y1="0" X2="13" Y2="13" Stroke="White" Canvas.Left="8" Canvas.Top="7" />
-                    <Line X1="1" Y1="13" X2="13" Y2="0" Stroke="White" Canvas.Left="8" Canvas.Top="7" />
-                </Canvas>
-            </Button>
-
-            <Button Click="HideWindow" FontWeight="Bold" BorderBrush="#151719" Background="#151719" Foreground="White" FontSize="10" Width="28" Height="28" Canvas.Left="694" Style="{StaticResource CBSG}">
-                <Canvas>
-                    <Line X1="0" Y1="0" Y2="0" X2="12.5" Stroke="White" Canvas.Left="8" Canvas.Top="14" />
-                </Canvas>
-            </Button>
-        </Canvas>
+    <Grid>
         <ProgressBar Minimum="0" Maximum="100" Width="200" Height="20" Margin="266,310,284,120" Background="#131313" Foreground="#c96d"/>
-            <Grid.Background>
+        <Grid.Background>
             <ImageBrush ImageSource="pack://application:,,,/launcher_loading.png"/>
-            </Grid.Background>
+        </Grid.Background>
     </Grid>
 </Window>

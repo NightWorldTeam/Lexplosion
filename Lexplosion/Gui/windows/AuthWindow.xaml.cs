@@ -21,8 +21,7 @@ namespace Lexplosion.Gui.Windows
         {
             InitializeComponent();
             ShowAuthPage();
-            MouseDown += delegate { try { DragMove(); } catch { } };
-            
+            MouseDown += delegate { try { DragMove(); } catch { } };    
         }
 
         public void ShowAuthPage() 
