@@ -174,7 +174,6 @@ namespace Lexplosion.Logic.Network
         {
             WaitingOpenThread.Abort();
             WorkThread.Abort();
-
         }
 
     }

@@ -204,9 +204,28 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
+        //метод останавливает работу сервера
         public void StopWork()
         {
+            ServerWork = false;
 
+            serviceRead.Abort();
+            connectionSupport.Abort();
+
+            foreach (Client client in clients.Values)
+            {
+                for (int i = 0; i < 20; i++) //отправляем 20 запросов на разрыв соединения
+                {
+                    socket.Send(new byte[1] { 0x05 }, 1, client.point);
+                }
+
+                // TODO: сделать какой-нибудь id для сессии, чтобы запросы на разрыв соединения от предидущего соединения на влияли на текущее
+
+                client.serviceSend.Abort();
+            }
+
+            socket.Close();
+            socket.Dispose();
         }
 
         protected void ConnectionSupport() //метод отправляющий пакеты пинга при долгой неактивности для удержания соединения
@@ -234,7 +253,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         protected void ServiceSend(ref Client client) //метод отправляющий пакеты данных
         {
-            while (client.isConnected)
+            while (client.isConnected && ServerWork)
             {
                 // TODO: попытаться фиксануть этот костыль
                 while (client.packagesInfo.Count == 0) //костыль блять
@@ -350,6 +369,7 @@ namespace Lexplosion.Logic.Network.SMP
 
             //удаляем клиента из списка
             IPEndPoint iPoint = client.point;
+            clients[iPoint].serviceSend.Abort();
             clients.TryRemove(iPoint, out _); // TODO: нет синхронизации. Некоторые потоки в этот момент могут работать с этим списком
 
             ReadingSignal.Release();
@@ -539,13 +559,16 @@ namespace Lexplosion.Logic.Network.SMP
                     }
 
                 }
-                catch { }
+                catch 
+                {
+                    // TODO: тут куда-то кидать инфу об исключении
+                    break;
+                }
 
                 if (!closing) //если он уже не был разлочен при case 5
                 {
                     ReadingSignal.Release(); //разблочиваем
                 }
-
 
             }
 

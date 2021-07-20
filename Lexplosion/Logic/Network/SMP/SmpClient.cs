@@ -38,7 +38,6 @@ namespace Lexplosion.Logic.Network.SMP
         protected List<int[]> packagesInfo = new List<int[]>(); //количество пакетов и байт, что стоит на отправку. 0 - количество пакетов 1 - количество байт
         protected ushort lastPackage = 0; //id пакета, о доставке которого сейчас ожидается подтверждение
 
-
         protected bool workPing = false;
         protected long[] times = new long[20]; //харнит время отправки пакетов с пингом
 

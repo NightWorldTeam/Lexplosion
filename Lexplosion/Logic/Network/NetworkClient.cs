@@ -80,7 +80,6 @@ namespace Lexplosion.Logic.Network
                 readingThread.Start();
 
                 Sending();
-
             }
 
         }
@@ -90,7 +89,6 @@ namespace Lexplosion.Logic.Network
         protected virtual void Sending() { }
 
         protected virtual void Reading() { }
-
 
     }
 }

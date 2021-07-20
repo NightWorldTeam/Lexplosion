@@ -54,7 +54,7 @@ namespace Lexplosion.Logic.Network
 
             List<Socket> isDisconected = new List<Socket>();
 
-            while (true)
+            while (IsWork)
             {
                 SendingBlock.WaitOne();
 
@@ -126,7 +126,7 @@ namespace Lexplosion.Logic.Network
             threadResetReading.WaitOne(); //ждём первого подключения
             threadResetReading.Set();
 
-            while (true)
+            while (IsWork)
             {
                 try
                 {
@@ -140,11 +140,17 @@ namespace Lexplosion.Logic.Network
                     break;
                     // TODO: тут че-то сделать
                 }
-
-
             }
         }
 
-        
+        public override void StopWork()
+        {
+            base.StopWork();
+
+            foreach(Socket sock in Sockets)
+            {
+                sock.Close();
+            }
+        }
     }
 }

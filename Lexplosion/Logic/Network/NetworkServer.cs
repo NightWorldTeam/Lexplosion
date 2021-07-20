@@ -27,9 +27,11 @@ namespace Lexplosion.Logic.Network
         protected UdpClient ServerUdp;
 
         protected List<IPEndPoint> AvailableConnections;
+        protected bool IsWork = false;
 
         public NetworkServer(int port)
         {
+            IsWork = true;
             ListSocketsBlock = new Semaphore(1, 1);
             AcceptingBlock = new Semaphore(1, 1);
             SendingBlock = new Semaphore(1, 1);
@@ -150,14 +152,22 @@ namespace Lexplosion.Logic.Network
                     {
                         AcceptingBlock.Release();
                     }
-
                 }
-
             }
-
         }
 
-        protected virtual void ClientAbort(IPEndPoint point) { } // мутод который вызывается при обрыве соединения
+        public virtual void StopWork()
+        {
+            IsWork = false;
+
+            AcceptingThread.Abort();
+            SendingThread.Abort();
+            ReadingThread.Abort();
+
+            Server.StopWork();
+        }
+
+        protected virtual void ClientAbort(IPEndPoint point) { } // мeтод который вызывается при обрыве соединения
 
         protected virtual void BeforeConnect(IPEndPoint point, int port) { } // это метод который запускается после установления соединения
 

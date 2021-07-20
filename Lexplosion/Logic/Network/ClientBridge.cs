@@ -35,9 +35,7 @@ namespace Lexplosion.Logic.Network
 
                     AvailableServers[sock] = server_uuid;
                     Sockets.Add(sock);
-
                 }
-
             }
 
             //убираем сервера, которых нет в списке
@@ -179,8 +177,6 @@ namespace Lexplosion.Logic.Network
 
             }
             catch { }
-
-            Console.WriteLine("ВЫШЕЛ " + isWorking + " " + Bridge.IsConnected);
 
             Bridge.Close();
             Close(null);
