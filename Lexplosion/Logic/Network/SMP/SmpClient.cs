@@ -15,7 +15,10 @@ namespace Lexplosion.Logic.Network.SMP
         public long ping = -1;
 
         public IPEndPoint point = null;
-        protected Thread serviceWork = null;
+
+        protected Thread serviceSend = null;
+        protected Thread serviceReceive = null;
+        protected Thread connectionControl = null;
 
         protected ConcurrentDictionary<ushort, byte[]> packagesBuffer = new ConcurrentDictionary<ushort, byte[]>(); //буфер принятых пакетов
         protected ConcurrentQueue<byte[]> sendingBuffer = new ConcurrentQueue<byte[]>(); //буфер пакетов на отправку
@@ -130,8 +133,13 @@ namespace Lexplosion.Logic.Network.SMP
                 point = remoteIp;
                 socket.Connect(point);
 
-                serviceWork = new Thread(delegate () { ServiceWork(); });
-                serviceWork.Start();
+                serviceSend = new Thread(delegate () { ServiceSend(); });
+                serviceReceive = new Thread(delegate () { ServiceReceive(); });
+                connectionControl = new Thread(delegate () { ConnectionControl(); });
+
+                serviceSend.Start();
+                serviceReceive.Start();
+                connectionControl.Start();
 
                 ping = Ping(); //более точно измеряем пинг
                 if (ping == -1)
@@ -160,12 +168,16 @@ namespace Lexplosion.Logic.Network.SMP
                     {
                         socket.Send(new byte[1] { 0x05 }, 1);
                     }
-
-                    isConnected = false;
-                    socket.Close();
-                    threadReset.Set();
                 }
                 catch { }
+
+                isConnected = false;
+                socket.Close();
+                threadReset.Set();
+
+                serviceSend.Abort();
+                serviceReceive.Abort();
+                connectionControl.Abort();
             }
 
         }
@@ -182,7 +194,6 @@ namespace Lexplosion.Logic.Network.SMP
                 i++;
 
                 Thread.Sleep(100);
-
             }
 
             if (!workPing)
@@ -196,114 +207,111 @@ namespace Lexplosion.Logic.Network.SMP
 
         }
 
-        protected void ServiceWork() //метод работающий всегда. Читает UDP сокет и контролирует доставку пакетов
+        protected void ConnectionControl() //метод работающий всегда. контролирует доставку пакетов
         {
-            new Thread(delegate () //поток отправляющий пакеты пинга при долгой неактивности для удержания соединения
+            while (isConnected)
             {
-                while (isConnected)
+                if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime >= 2000) //проверяем что последний пакет был отправлен более 2 секунд назад
                 {
-                    if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime >= 2000) //проверяем что последний пакет был отправлен более 2 секунд назад
+                    if (Ping() == -1) //проверяем ответил ли хост
                     {
-                        if (Ping() == -1) //проверяем ответил ли хост
-                        {
-                            Close();
-                            ClientClosing?.Invoke(point);
-                        }
-
-                    }
-
-                    Thread.Sleep(2000);
-                }
-
-            }).Start();
-
-            new Thread(delegate () //поток отправляющий пакеты данных
-            {
-                while (isConnected)
-                {
-                    while (packagesInfo.Count == 0) //костыль блять
-                    {
-                        sendingWait[0].WaitOne();
-                    }
-
-                    semaphore.WaitOne();
-                    sendingWait[1].Set();
-
-                    List<byte[]> sendData = new List<byte[]>();
-
-                    ushort idInt = sendingPointer;
-
-                    int i;
-                    for (i = 0; i < packagesInfo.Count; i++)
-                    {
-                        byte[] id = BitConverter.GetBytes(idInt);
-
-                        sendData.Add(new byte[packagesInfo[i][1]]);
-                        byte[] temp;
-
-                        sendData[i][0] = 0x03;  //код пакета
-                        sendData[i][1] = id[0]; //первая часть его айдишника
-                        sendData[i][2] = id[1]; //вторая часть
-
-                        int offset = 3;
-                        for (int j = 0; j < packagesInfo[i][0]; j++)
-                        {
-                            sendingBuffer.TryDequeue(out temp);
-
-                            byte[] packageSize = BitConverter.GetBytes((ushort)temp.Length);
-
-                            sendData[i][offset] = 0x00; //это флаг
-                            sendData[i][offset + 1] = packageSize[0]; //размер сегмента данных (первая часть)
-                            sendData[i][offset + 2] = packageSize[1]; //размер сегмента данных (вторая часть)
-
-                            offset += 3;
-
-                            Array.Copy(temp, 0, sendData[i], offset, temp.Length);
-                            offset += temp.Length;
-
-                        }
-                        idInt++;
-
-                    }
-
-                    idInt--;
-
-                    sendData[i - 1][3] = 0x01; //флагу последнего пакета присваевам значение что необходимо подтверждение доставки
-                    lock (locker)
-                    {
-                        lastPackage = idInt;
-                    }
-
-                    packagesInfo.Clear();
-
-                    semaphore.Release(); //возобновляем работу метода send
-
-                    int b = 0;
-                    while (isConnected && (idInt + 1) != sendingPointer && b < 20) //отправляем этот пакет максимум 20 раз, пока соединение активно. Когда придет подтверждение доставки sendingPointer увеличится на еденицу
-                    {
-                        for (i = 0; i < sendData.Count; i++)
-                        {
-                            socket.Send(sendData[i], sendData[i].Length);
-                        }
-                        lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
-                        b++;
-                        suspensionSend.WaitOne((int)ping); //после отправки пакета стопаем цикл пока не придет подвтерждение. Но максимальное время остановки == пингу
-                    }
-
-                    if (b >= 19 && (idInt + 1) != sendingPointer)
-                    {
-                        isConnected = false;
-                        socket.Close();
-                        threadReset.Set();
+                        Close();
                         ClientClosing?.Invoke(point);
                     }
+                }
 
+                Thread.Sleep(2000);
+            }
+        }
+
+        protected void ServiceSend() //метод работающий всегда. отправляет пакеты данных
+        {
+            while (isConnected)
+            {
+                while (packagesInfo.Count == 0) //костыль блять
+                {
+                    sendingWait[0].WaitOne();
+                }
+
+                semaphore.WaitOne();
+                sendingWait[1].Set();
+
+                List<byte[]> sendData = new List<byte[]>();
+
+                ushort idInt = sendingPointer;
+
+                int i;
+                for (i = 0; i < packagesInfo.Count; i++)
+                {
+                    byte[] id = BitConverter.GetBytes(idInt);
+
+                    sendData.Add(new byte[packagesInfo[i][1]]);
+                    byte[] temp;
+
+                    sendData[i][0] = 0x03;  //код пакета
+                    sendData[i][1] = id[0]; //первая часть его айдишника
+                    sendData[i][2] = id[1]; //вторая часть
+
+                    int offset = 3;
+                    for (int j = 0; j < packagesInfo[i][0]; j++)
+                    {
+                        sendingBuffer.TryDequeue(out temp);
+
+                        byte[] packageSize = BitConverter.GetBytes((ushort)temp.Length);
+
+                        sendData[i][offset] = 0x00; //это флаг
+                        sendData[i][offset + 1] = packageSize[0]; //размер сегмента данных (первая часть)
+                        sendData[i][offset + 2] = packageSize[1]; //размер сегмента данных (вторая часть)
+
+                        offset += 3;
+
+                        Array.Copy(temp, 0, sendData[i], offset, temp.Length);
+                        offset += temp.Length;
+
+                    }
+                    idInt++;
 
                 }
 
-            }).Start();
+                idInt--;
 
+                sendData[i - 1][3] = 0x01; //флагу последнего пакета присваевам значение что необходимо подтверждение доставки
+                lock (locker)
+                {
+                    lastPackage = idInt;
+                }
+
+                packagesInfo.Clear();
+
+                semaphore.Release(); //возобновляем работу метода send
+
+                int b = 0;
+                while (isConnected && (idInt + 1) != sendingPointer && b < 20) //отправляем этот пакет максимум 20 раз, пока соединение активно. Когда придет подтверждение доставки sendingPointer увеличится на еденицу
+                {
+                    for (i = 0; i < sendData.Count; i++)
+                    {
+                        socket.Send(sendData[i], sendData[i].Length);
+                    }
+                    lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+                    b++;
+                    suspensionSend.WaitOne((int)ping); //после отправки пакета стопаем цикл пока не придет подвтерждение. Но максимальное время остановки == пингу
+                }
+
+                if (b >= 19 && (idInt + 1) != sendingPointer)
+                {
+                    isConnected = false;
+                    socket.Close();
+                    threadReset.Set();
+                    ClientClosing?.Invoke(point);
+                }
+
+            }
+
+        }
+
+        protected void ServiceReceive() //метод работающий всегда. Читает UDP сокет и контролирует доставку пакетов
+        {
             byte[] data;
             while (isConnected)
             {

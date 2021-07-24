@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Newtonsoft.Json;
@@ -16,9 +17,13 @@ namespace Lexplosion.Logic.Network
         public bool isServer = false;
         public bool isClient = false;
         public AutoResetEvent waiting = new AutoResetEvent(false);
+        private AutoResetEvent waitingInforming = new AutoResetEvent(false);
 
         private Thread WaitingOpenThread;
         private Thread WorkThread;
+        private Thread InformingThread;
+
+        ServerBridge Server = null;
 
         public void Initialization(int pid)
         {
@@ -37,37 +42,54 @@ namespace Lexplosion.Logic.Network
                 client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
                 client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
 
-                bool successful = ListenGameSrvers(client, out string name, out int port, pid);
-
-                if (!successful) // TODO: из всего алгоритма выходить не надо, надо только перевести всё в ручной режим
-                {
-                    return;
-                }
-
-                isServer = true;
-
-                List<List<string>> input = new List<List<string>>();
-
-                input.Add(new List<string>() { "UUID", "344a7f427fb765610ef96eb7bce95257" });
-                input.Add(new List<string>() { "password", Сryptography.Sha256("1") });
-
-                string ans = ToServer.HttpPost("https://night-world.org/libraries/scripts/setGameServer.php", input);
-
-                ServerBridge server = new ServerBridge(port);
-
-                client.Client.ReceiveTimeout = 3000;
                 while (true)
                 {
-                    bool result = ListenGameSrvers(client, out string name_, out int port_, pid);
-                    if (!result || name_ != name || port != port_) // если функция вернула false или изменилось имя или изменился порт - значит серер был закрыт
+                    client.Client.ReceiveTimeout = -1;
+                    bool successful = ListenGameSrvers(client, out string name, out int port, pid);
+
+                    if (!successful) // TODO: из всего алгоритма выходить не надо, надо только перевести всё в ручной режим
                     {
-                        isServer = false;
-                        // TODO: тут деинициализировать сервер
-                        break;
+                        return;
                     }
 
-                    Thread.Sleep(3000);
+                    isServer = true;
+
+                    InformingThread = new Thread(delegate ()
+                    {
+                        List<List<string>> input = new List<List<string>>();
+
+                        input.Add(new List<string>() { "UUID", "344a7f427fb765610ef96eb7bce95257" });
+                        input.Add(new List<string>() { "password", Сryptography.Sha256("1") });
+
+                        //раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
+                        while (isServer)
+                        {
+                            ToServer.HttpPost("https://night-world.org/libraries/scripts/setGameServer.php", input, true);
+                            waitingInforming.WaitOne(120000);
+                        }
+
+                        ToServer.HttpPost("https://night-world.org/libraries/scripts/dropGameServer.php", input, true);
+                    });
+
+                    InformingThread.Start();
+                    Server = new ServerBridge(port);
+
+                    client.Client.ReceiveTimeout = 3000;
+                    while (true)
+                    {
+                        bool result = ListenGameSrvers(client, out string name_, out int port_, pid);
+                        if (!result || name_ != name || port != port_) // если функция вернула false или изменилось имя или изменился порт - значит серер был закрыт
+                        {
+                            isServer = false;
+                            waitingInforming.Set(); // вызвобождаем поток InformingThread чтобы он не ждал лишнее время
+                            Server.StopWork();
+                            break;
+                        }
+
+                        Thread.Sleep(3000);
+                    }
                 }
+
             });
 
             WorkThread.Start();
@@ -84,12 +106,18 @@ namespace Lexplosion.Logic.Network
             {
                 try
                 {
-                test:
-                    byte[] data = client.Receive(ref ip);
-                    if (isClient) //если работает клиент то ждем когда перестанет
+                    byte[] data;
+                    while (true)
                     {
-                        waiting.WaitOne();
-                        goto test; // TODO: думаю, можно сделать это без goto
+                        data = client.Receive(ref ip);
+                        if (isClient) //если работает клиент то ждем когда перестанет
+                        {
+                            waiting.WaitOne();
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
 
                     List<ushort> processPorts = Utils.GetProcessUdpPorts(pid);
@@ -107,7 +135,6 @@ namespace Lexplosion.Logic.Network
                             port = port_;
 
                             return true;
-
                         }
                     }
                 }
@@ -134,7 +161,6 @@ namespace Lexplosion.Logic.Network
                 if (processPorts.Contains(4445) && !isServer)
                 {
                     List<List<string>> input = new List<List<string>>();
-
                     input.Add(new List<string>() { "UUID", "bbab3c32222e4f08a8b291d1e9b9267c" });
                     input.Add(new List<string>() { "password", Сryptography.Sha256("tipidor") });
 
@@ -170,10 +196,18 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public void Stop()
+        public void StopWork()
         {
+            isServer = false;
+
             WaitingOpenThread.Abort();
             WorkThread.Abort();
+
+            if (Server != null)
+            {
+                waitingInforming.Set();
+                Server.StopWork();
+            }
         }
 
     }

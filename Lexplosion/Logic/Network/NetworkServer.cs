@@ -81,7 +81,6 @@ namespace Lexplosion.Logic.Network
 
             while (true)
             {
-
                 {
                     byte[] data = new byte[1];
 

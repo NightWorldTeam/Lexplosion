@@ -12,10 +12,10 @@ using System.Windows;
 
 namespace Lexplosion.Logic.Management
 {
-
     static class LaunchGame // TODO: возможно из статично класса перевести в обычный 
     {
-        private static Process process = new Process();
+        private static Process process = null;
+        private static Gateway gameGateway = null;
         public static string runnigInstance = "";
 
         public static string CreateCommand(string instanceId, InitData data, Dictionary<string, string> instanceSettings)
@@ -70,6 +70,9 @@ namespace Lexplosion.Logic.Management
 
         public static bool Run(string command, string instanceId)
         {
+            process = new Process();
+            gameGateway = new Gateway();
+
             if (UserData.settings["showConsole"] == "true")
             {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
@@ -189,13 +192,18 @@ namespace Lexplosion.Logic.Management
                     });
 
                     process.Dispose();
-                    process = new Process();
+                    gameGateway.StopWork();
+
+                    gameGateway = null;
+                    process = null;
                     runnigInstance = "";
 
                 };
 
                 process.Start();
                 process.BeginOutputReadLine();
+
+                gameGateway.Initialization(process.Id);
 
                 return true;
 
@@ -207,6 +215,8 @@ namespace Lexplosion.Logic.Management
                     MainWindow.Obj.SetMessageBox("Сбой запуска! Не удалось запустить процесс.");
                 });
 
+                gameGateway = null;
+                process = null;
                 runnigInstance = "";
 
                 return false;
@@ -319,9 +329,17 @@ namespace Lexplosion.Logic.Management
             {
                 process.Kill();
                 process.Dispose();
-            } catch { }
+            } 
+            catch { }
 
-            process = new Process();
+            try
+            {
+                gameGateway.StopWork();
+            }
+            catch { }
+
+            gameGateway = null;
+            process = null;
             runnigInstance = "";
         }
 
