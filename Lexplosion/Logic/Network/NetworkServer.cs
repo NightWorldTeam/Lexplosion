@@ -16,7 +16,6 @@ namespace Lexplosion.Logic.Network
         protected Thread ReadingThread;
         protected Thread SendingThread;
 
-        protected Semaphore ListSocketsBlock;
         protected Semaphore AcceptingBlock; //блокировка во время приёма подключения
         protected Semaphore SendingBlock; //блокировка во время работы метода Sending
 
@@ -29,10 +28,9 @@ namespace Lexplosion.Logic.Network
         protected List<IPEndPoint> AvailableConnections;
         protected bool IsWork = false;
 
-        public NetworkServer(int port)
+        public NetworkServer(string serverPrefix)
         {
             IsWork = true;
-            ListSocketsBlock = new Semaphore(1, 1);
             AcceptingBlock = new Semaphore(1, 1);
             SendingBlock = new Semaphore(1, 1);
 
@@ -58,7 +56,7 @@ namespace Lexplosion.Logic.Network
 
             AcceptingThread = new Thread(delegate () //поток принимающий новые подключения
             {
-                Accepting(port);
+                Accepting(serverPrefix);
             });
 
             AcceptingThread.Start();
@@ -67,7 +65,7 @@ namespace Lexplosion.Logic.Network
 
         }
 
-        protected virtual void Accepting(int port) // TODO: нужно избегать повторного подключения
+        protected virtual void Accepting(string serverType) // TODO: нужно избегать повторного подключения
         {
             //подключаемся к управляющему серверу
             TcpClient client = new TcpClient();
@@ -75,11 +73,11 @@ namespace Lexplosion.Logic.Network
 
             NetworkStream stream = client.GetStream();
 
-            string st = "{\"UUID\" : \"344a7f427fb765610ef96eb7bce95257\", \"type\": \"server\"}";
+            string st = "{\"UUID\" : \"344a7f427fb765610ef96eb7bce95257\", \"type\": \""+ serverType + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             stream.Write(sendData, 0, sendData.Length); //авторизируемся на упрявляющем сервере
 
-            while (true)
+            while (IsWork)
             {
                 {
                     byte[] data = new byte[1];
@@ -141,11 +139,10 @@ namespace Lexplosion.Logic.Network
                     if (Server.Connect(point))
                     {
                         AvailableConnections.Add(point);
-                        BeforeConnect(point, port);
+                        BeforeConnect(point);
 
                         threadReset.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
                         threadResetReading.Set();
-
                     }
                     else
                     {
@@ -168,7 +165,7 @@ namespace Lexplosion.Logic.Network
 
         protected virtual void ClientAbort(IPEndPoint point) { } // мeтод который вызывается при обрыве соединения
 
-        protected virtual void BeforeConnect(IPEndPoint point, int port) { } // это метод который запускается после установления соединения
+        protected virtual void BeforeConnect(IPEndPoint point) { } // это метод который запускается после установления соединения
 
         protected virtual void Sending() { } // тут получаем данные от клиентов
 

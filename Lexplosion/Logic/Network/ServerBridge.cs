@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {
@@ -11,12 +12,18 @@ namespace Lexplosion.Logic.Network
         protected ConcurrentDictionary<IPEndPoint, Socket> Connections; //это нужно для читающего потока
         protected ConcurrentDictionary<Socket, IPEndPoint> ClientsPoints; //этот список нужен для отправляющего потока
         protected List<Socket> Sockets; //этот список нужен для отправляющего потока
+        protected Semaphore ConnectSemaphore; //блокировка для метода BeforeConnect
 
-        public ServerBridge(int port): base(port)
+        const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
+        int Port;
+
+        public ServerBridge(int port): base(serverType)
         {
+            ConnectSemaphore = new Semaphore(1, 1);
             Connections = new ConcurrentDictionary<IPEndPoint, Socket>();
             ClientsPoints = new ConcurrentDictionary<Socket, IPEndPoint>();
             Sockets = new List<Socket>();
+            Port = port;
         }
 
         protected override void ClientAbort(IPEndPoint point)
@@ -34,18 +41,18 @@ namespace Lexplosion.Logic.Network
             SendingBlock.Release();
         }
 
-        protected override void BeforeConnect(IPEndPoint point, int port)
+        protected override void BeforeConnect(IPEndPoint point)
         {
             Socket bridge = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            bridge.Connect("127.0.0.1", port);
+            bridge.Connect("127.0.0.1", Port);
             Connections[point] = bridge;
             ClientsPoints[bridge] = point;
             AcceptingBlock.Release();
 
             //добавляем клиента
-            ListSocketsBlock.WaitOne();
+            ConnectSemaphore.WaitOne();
             Sockets.Add(bridge);
-            ListSocketsBlock.Release();
+            ConnectSemaphore.Release();
         }
 
         protected override void Sending() //отправляем данные с майнкрафт клиентов в сеть
@@ -58,9 +65,9 @@ namespace Lexplosion.Logic.Network
             {
                 SendingBlock.WaitOne();
 
-                ListSocketsBlock.WaitOne();
+                ConnectSemaphore.WaitOne();
                 List<Socket> listeningSokets = new List<Socket>(Sockets);
-                ListSocketsBlock.Release();
+                ConnectSemaphore.Release();
 
                 try
                 {
