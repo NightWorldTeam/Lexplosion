@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace Lexplosion.Gui.UserControls
 {
     /// <summary>
-    /// Interaction logic for InstanceForm.xaml
+    /// Interaction logic for InstanceData.xaml
     /// </summary>
     public partial class InstanceForm : UserControl
     {

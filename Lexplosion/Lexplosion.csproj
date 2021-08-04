@@ -71,6 +71,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -115,8 +118,8 @@
     <Compile Include="Gui\UserControls\InstanceForm.xaml.cs">
       <DependentUpon>InstanceForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\UserControls\InstanceLaunchButton.xaml.cs">
-      <DependentUpon>InstanceLaunchButton.xaml</DependentUpon>
+    <Compile Include="Gui\UserControls\InstanceMultiButton.xaml.cs">
+      <DependentUpon>InstanceMultiButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\UserControls\SwitchButton.xaml.cs">
       <DependentUpon>SwitchButton.xaml</DependentUpon>
@@ -212,7 +215,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\UserControls\InstanceLaunchButton.xaml">
+    <Page Include="Gui\UserControls\InstanceMultiButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

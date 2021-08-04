@@ -94,12 +94,12 @@
                         <RowDefinition Height="60"/>
                         <RowDefinition Height="60"/>
                     </Grid.RowDefinitions>
-                    <local:InstanceLaunchButton Grid.Row="0"
-                                                    Width="60" 
-                                                    Height="60"/>
-                    <local:InstanceLaunchButton Grid.Row="1"
-                                                    Width="60" 
-                                                    Height="60"/>
+                    <local:InstanceMultiButton Grid.Row="0"
+                        Width="60" 
+                        Height="60"/>
+                    <local:InstanceMultiButton  Grid.Row="1"
+                        Width="60" 
+                        Height="60"/>
                 </Grid>
             </Grid>
         </Grid>

@@ -77,7 +77,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<string> tags)
 		{
-			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1
+			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			this.Dispatcher.Invoke(() =>
 			{
@@ -234,7 +234,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 					Height = new GridLength(60, GridUnitType.Pixel)
 				};
 
-				var downloadButton = new UserControls.InstanceLaunchButton()
+				var downloadButton = new UserControls.InstanceMultiButton(UserControls.InstanceMultiButton.ButtonTypes.Basic, true, true)
 				{
 					Name = "id" + instance_name + "Download",
 					//BorderThickness = new Thickness(2),
@@ -242,7 +242,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				};
 				//downloadButton.Click += LaunchInstance;
 
-				var exportButton = new UserControls.InstanceLaunchButton()
+				var exportButton = new UserControls.InstanceMultiButton(UserControls.InstanceMultiButton.ButtonTypes.Folder, true, true)
 				{
 					Name = "id" + instance_name + "Export",
 				};

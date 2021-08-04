@@ -7,12 +7,11 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
@@ -24,15 +23,35 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// </summary>
     public partial class InstanceContainerPage : Page
     {
+		// дОЛБАЁБ, ПОТОМУ-ЧТО ЭТОТ ваш VIsual Studия
+		class InstanceData
+		{
+			/* string */
+			public string InstanceTitle;
+			public string InstanceId;
+			public string author;
+			public string overview;
+			/* int */
+			public int CurseforgeInstanceId;
+			/* uri */
+			public Uri LogoPath;
+			/* tags*/
+			public List<string> tags;
+			/* bool */
+			public bool IsInstalled;
+			public bool IsAddedToLibrary;
+		}
+
 		public static InstanceContainerPage obj = null;
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
-		private List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
-		private MainWindow _MainWindow;
-		private Uri non_image_uri = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+		private List<string> _instanceTags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
+		private MainWindow _mainWindow;
+		private readonly Uri _nonImageUri = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+		private Dictionary<object, InstanceData> _instancesData = new Dictionary<object, InstanceData>();
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
-			_MainWindow = mainWindow;
+			_mainWindow = mainWindow;
 			InitializeComponent();
 			GetInitializeInstance();
 			//CreateFakeInstance(4);
@@ -54,28 +73,45 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 					curseforgeInstances[j].name,
 					curseforgeInstances[j].authors[0].name,
 					curseforgeInstances[j].summary,
-					instance_tags1);
+					_instanceTags1);
 			}
 		}
 
 		private void CreateFakeInstance(int count) 
 		{
-			Uri logo_path1 = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
-			string d = "Цель данной сборки - развить свою колонию и построить транспортную сеть в виде железной дороги. Поезда здесь существуют не просто как декорации, они необходимы, ведь предметы имеют вес, руда генерируется огромными жилами, которые встречаются не очень то и часто. В процессе игры вам придётся постоянно перемещаться между различными месторождениями, своей базой, колонией. Основной индустриальный мод в этом модпаке - это Immersive Engineering, поэтому все строения буду выглядеть очень эффектно на фоне механизмов из этого мода. Во время игры вы с головой уйдёте в логистику, путешествия и индустриализацию.";
+			Uri logoPath1 = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+			string description = "Цель данной сборки - развить свою колонию и построить транспортную сеть в виде железной дороги. Поезда здесь существуют не просто как декорации, они необходимы, ведь предметы имеют вес, руда генерируется огромными жилами, которые встречаются не очень то и часто. В процессе игры вам придётся постоянно перемещаться между различными месторождениями, своей базой, колонией. Основной индустриальный мод в этом модпаке - это Immersive Engineering, поэтому все строения буду выглядеть очень эффектно на фоне механизмов из этого мода. Во время игры вы с головой уйдёте в логистику, путешествия и индустриализацию.";
 			string[] instanceName = new string[4] { "Energy of Space", "Long Tech", "Transport Network", "Over the Horizon" };
 			string[] instanceId = new string[4] { "EOS", "LT", "TN", "OTH" };
 			for (int j = 0; j < count; j++)
 			{
-				BuildInstanceForm(instanceId[j], j, logo_path1, instanceName[j], "NightWorld", d, instance_tags1);
+				BuildInstanceForm(instanceId[j], j, logoPath1, instanceName[j], "NightWorld", description, _instanceTags1);
 			}
 		}
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
-		public void BuildInstanceForm(string instance_name, int row, Uri logo_path, string title, string author, string overview, List<string> tags)
+		public void BuildInstanceForm(string instanceName, int row, Uri logoPath, string title, string author, string overview, List<string> tags)
 		{
-			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", instance_tags1
+			/// "EOS", 0, logoPath1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
+			InstanceData instanceForm = new InstanceData()
+			{
+				/* string */
+				InstanceTitle = title,
+				InstanceId = "",
+				author = author,
+				overview = overview,
+				/* int */
+				CurseforgeInstanceId = Int32.Parse(instanceName),
+				/* uri */
+				LogoPath = logoPath,
+				/* list<string >*/
+				tags = tags,
+				/* bool */
+				IsInstalled = false,
+				IsAddedToLibrary = false
+			};
 			this.Dispatcher.Invoke(() =>
 			{
 				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
@@ -86,7 +122,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 					Width = 620,
 					Margin = new Thickness(40, 0, 0, 0),
 					Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151719")),
-					Name = "id" + instance_name,
+					Name = "id" + instanceName,
 					Effect = new DropShadowEffect() {
 						ShadowDepth = 1,
 						Color = (Color)ColorConverter.ConvertFromString("#151719"),
@@ -96,22 +132,22 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 				var grid = new Grid();
 				// Делаем разметку для элементов.
-				ColumnDefinition columnDefinition1 = new ColumnDefinition() 
+				ColumnDefinition columnDefinition1 = new ColumnDefinition()
 				{
 					Width = new GridLength(120, GridUnitType.Pixel)
 				};
 
-				ColumnDefinition columnDefinition2 = new ColumnDefinition() 
+				ColumnDefinition columnDefinition2 = new ColumnDefinition()
 				{
 					Width = new GridLength(440, GridUnitType.Pixel)
 				};
 
-				ColumnDefinition columnDefinition3 = new ColumnDefinition() 
+				ColumnDefinition columnDefinition3 = new ColumnDefinition()
 				{
 					Width = new GridLength(60, GridUnitType.Pixel)
 				};
 
-				RowDefinition rowDefinition = new RowDefinition() 
+				RowDefinition rowDefinition = new RowDefinition()
 				{
 					Height = new GridLength(120, GridUnitType.Pixel)
 				};
@@ -119,36 +155,36 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				// Instance Logo
 				var moreButton = new Button()
 				{
-					Name = "id" + instance_name,
-					Background = new ImageBrush(new BitmapImage(logo_path)),
+					Name = "id" + instanceName,
+					Background = new ImageBrush(new BitmapImage(logoPath)),
 					Style = (Style)Application.Current.FindResource("InstanceMoreButton")
 				};
 				moreButton.Click += (object sender, RoutedEventArgs e) => ClickedMoreButton(sender, e, title, overview, author, tags);
 
 				// Title
-				var textContentGrid = new Grid() 
+				var textContentGrid = new Grid()
 				{
 					Margin = new Thickness(10, 0, 5, 0)
 				};
 
-				RowDefinition textContentRowDefinition1 = new RowDefinition() 
-				{ 
-					Height = new GridLength(30, GridUnitType.Pixel) 
+				RowDefinition textContentRowDefinition1 = new RowDefinition()
+				{
+					Height = new GridLength(30, GridUnitType.Pixel)
 				};
 
-				RowDefinition textContentRowDefinition2 = new RowDefinition() 
-				{ 
-					Height = new GridLength(1, GridUnitType.Star) 
+				RowDefinition textContentRowDefinition2 = new RowDefinition()
+				{
+					Height = new GridLength(1, GridUnitType.Star)
 				};
 
 				// Разметка для заголовков
 				var titleGrid = new Grid();
-				ColumnDefinition columnDefinitionTitle1 = new ColumnDefinition() 
+				ColumnDefinition columnDefinitionTitle1 = new ColumnDefinition()
 				{
 					Width = new GridLength(1, GridUnitType.Star)
 				};
 
-				ColumnDefinition columnDefinitionTitle2 = new ColumnDefinition() 
+				ColumnDefinition columnDefinitionTitle2 = new ColumnDefinition()
 				{
 					Width = new GridLength(100, GridUnitType.Pixel)
 				};
@@ -159,7 +195,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				};
 
 				// Заголовок - Название
-				var textBlockTitle = new TextBlock() 
+				var textBlockTitle = new TextBlock()
 				{
 					Text = title,
 					Padding = new Thickness(0),
@@ -187,13 +223,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 					Margin = new Thickness(0, 5, 0, 0)
 				};
 
-				RowDefinition overviewRowDefinition1 = new RowDefinition() 
+				RowDefinition overviewRowDefinition1 = new RowDefinition()
 				{
 					Height = new GridLength(35, GridUnitType.Pixel)
 				};
 
 				RowDefinition overviewRowDefinition2 = new RowDefinition()
-				{ 
+				{
 					Height = new GridLength(1, GridUnitType.Star)
 				};
 
@@ -207,42 +243,56 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				};
 
 				// панель с тегами
-				var tagsWrapPanel = new WrapPanel() 
-				{ 
+				var tagsWrapPanel = new WrapPanel()
+				{
 					Margin = new Thickness(0, 1, 1, 1),
 					Orientation = Orientation.Horizontal
 				};
 
 				// добавление тегов
-				foreach (string tag in tags) 
-				{ 
+				foreach (string tag in tags)
+				{
 					tagsWrapPanel.Children.Add(GetTagsButton(tag));
 				}
 
 				// панель с кнопками
 				var instanceButtonGrid = new Grid();
-				RowDefinition instanceButtonRowDefinition1 = new RowDefinition() 
+				RowDefinition instanceButtonRowDefinition1 = new RowDefinition()
 				{
 					Height = new GridLength(60, GridUnitType.Pixel)
 				};
-				RowDefinition instanceButtonRowDefinition2 = new RowDefinition() 
+				RowDefinition instanceButtonRowDefinition2 = new RowDefinition()
 				{
 					Height = new GridLength(60, GridUnitType.Pixel)
 				};
 
-				var downloadButton = new UserControls.InstanceLaunchButton() 
-				{ 
-					Name = "id" + instance_name + "Download",
-					//BorderThickness = new Thickness(2),
-					//Style = (Style)Application.Current.FindResource("InstanceDonwloadButton")
-				};
-				//downloadButton.Click += LaunchInstance;
-
-				var exportButton = new UserControls.InstanceLaunchButton()
+				var instanceLaunchButton = new UserControls.InstanceMultiButton(UserControls.InstanceMultiButton.ButtonTypes.Basic, instanceForm.IsInstalled, instanceForm.IsAddedToLibrary)
 				{
-					Name = "id" + instance_name + "Export",
+					Name = "id" + instanceName + "Download",
 				};
-				//exportButton.Click += ExportInstance;
+				_instancesData.Add((object)instanceLaunchButton, instanceForm);
+				if (_instancesData[(object)instanceLaunchButton].IsInstalled) 
+				{
+					instanceLaunchButton.MouseLeftButtonDown += LaunchInstance;
+				}
+				else 
+				{
+					instanceLaunchButton.MouseLeftButtonDown += CurrentDownloadInstance;
+				}
+
+				var addToLibrary = new UserControls.InstanceMultiButton(UserControls.InstanceMultiButton.ButtonTypes.Library, instanceForm.IsInstalled, instanceForm.IsAddedToLibrary)
+				{
+					Name = "id" + instanceName + "Export",
+				};
+				_instancesData.Add((object)addToLibrary, instanceForm);
+				if (_instancesData[(object)addToLibrary].IsAddedToLibrary)
+				{
+
+				}
+				else 
+				{
+					
+				}
 
 				var progressBar = new ProgressBar()
 				{
@@ -283,13 +333,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 				Grid.SetColumn(textBlockOverview, 0);
 				Grid.SetRow(textBlockOverview, 0);
 				Grid.SetColumn(instanceButtonGrid, 2);
-				Grid.SetRow(downloadButton, 0);
-				Grid.SetRow(exportButton, 1);
+				Grid.SetRow(instanceLaunchButton, 0);
+				Grid.SetRow(addToLibrary, 1);
 				Grid.SetColumn(progressBar, 1);
 				// Добавление объектов в форму.
 				// Добавление дочерних элементов
-				instanceButtonGrid.Children.Add(exportButton);
-				instanceButtonGrid.Children.Add(downloadButton);
+				instanceButtonGrid.Children.Add(addToLibrary);
+				instanceButtonGrid.Children.Add(instanceLaunchButton);
 				overviewGrid.Children.Add(tagsWrapPanel);
 				overviewGrid.Children.Add(textBlockOverview);
 				textContentGrid.Children.Add(overviewGrid);
@@ -354,6 +404,17 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			}	
 		}
 
+		private void CurrentDownloadInstance(object sender, RoutedEventArgs e) 
+		{
+			if (_instancesData[sender].CurseforgeInstanceId != 0) {
+				MessageBox.Show(_instancesData[sender].CurseforgeInstanceId.ToString());
+				//string instanceId = ManageLogic.CreateInstance(
+				//	_instancesData[sender].InstanceTitle, InstanceType.Curseforge, "", "", _instancesData[sender].CurseforgeInstanceId
+				//	);
+				//ManageLogic.DownloadInstance(instanceId, InstanceType.Curseforge);
+			}
+		}
+
 		private void ExportInstance(object sender, RoutedEventArgs e)
 		{
 
@@ -370,15 +431,14 @@ namespace Lexplosion.Gui.Pages.Right.Menu
             {
 				SwitchToggleButton(lsmp.LeftSideMenu, ButtonContents[i], ButtonClicks[i], i);
             }
-			_MainWindow.instanceTitle = title;
-			_MainWindow.instanceDescription = description;
-			_MainWindow.instanceAuthor = author;
-			_MainWindow.instanceTags = tags;
+			_mainWindow.instanceTitle = title;
+			_mainWindow.instanceDescription = description;
+			_mainWindow.instanceAuthor = author;
+			_mainWindow.instanceTags = tags;
 
-			InstancePage instancePage = new InstancePage(_MainWindow);
-			_MainWindow.RightSideFrame.Navigate(instancePage);
-			instancePage.BottomSideFrame.Navigate(new OverviewPage(_MainWindow));
-
+			InstancePage instancePage = new InstancePage(_mainWindow);
+			_mainWindow.RightSideFrame.Navigate(instancePage);
+			instancePage.BottomSideFrame.Navigate(new OverviewPage(_mainWindow));
 		}
 
 		private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)
