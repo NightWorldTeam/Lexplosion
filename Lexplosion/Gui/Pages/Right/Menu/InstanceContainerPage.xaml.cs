@@ -68,7 +68,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(20, 0, ModpacksCategories.All);
 			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 			{
-				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j,
+				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j+1,
 					new Uri(curseforgeInstances[j].attachments[0].url),
 					curseforgeInstances[j].name,
 					curseforgeInstances[j].authors[0].name,

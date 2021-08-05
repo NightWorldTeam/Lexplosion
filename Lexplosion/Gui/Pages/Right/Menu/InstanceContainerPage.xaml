@@ -13,11 +13,27 @@
 
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid>
+            <Grid ShowGridLines="False" x:Name="InstanceGrid">
+                <Grid.Background>
+                    <!-- #1313131 0.8-->
+                    <!-- "Black" 0.64 -->
+                    <SolidColorBrush Color="#121212" Opacity="0.65"/>
+                </Grid.Background>
+                <!-- Grid Border Padding-->
+                <Grid.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="Padding" Value="10" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="600"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="90"/>
+                </Grid.RowDefinitions>
                 <TextBox Width="300" 
                          Height="50" 
-                         Margin="20"
-                         HorizontalAlignment="Center"
+                         Margin="200,20,101,20"
                          VerticalAlignment="Top"
                          Background="Black" 
                          Foreground="LightGray"
@@ -25,6 +41,7 @@
                          FontSize="26"
                          BorderThickness="0.5"
                          BorderBrush="#131313"
+                         Grid.Row="0"
                          >
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -32,24 +49,6 @@
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
-                <Grid ShowGridLines="False" 
-                      x:Name="InstanceGrid" 
-                      Height="424" VerticalAlignment="Bottom">
-                    <!-- Grid Border Padding-->
-                    <Grid.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="Padding" Value="10" />
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="600"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
-                <Grid.Background>
-                <!-- #1313131 0.8-->
-                <!-- "Black" 0.64 -->
-                <SolidColorBrush Color="#121212" Opacity="0.65"/>
-                </Grid.Background>
             </Grid>
         </ScrollViewer>
     </Grid>
