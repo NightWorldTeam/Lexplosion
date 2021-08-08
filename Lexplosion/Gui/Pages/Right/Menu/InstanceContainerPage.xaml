@@ -13,12 +13,12 @@
 
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer.Background>
+                <!-- #1313131 0.8-->
+                <!-- "Black" 0.64 -->
+                <SolidColorBrush Color="#121212" Opacity="0.65"/>
+            </ScrollViewer.Background>
             <Grid ShowGridLines="False" x:Name="InstanceGrid">
-                <Grid.Background>
-                    <!-- #1313131 0.8-->
-                    <!-- "Black" 0.64 -->
-                    <SolidColorBrush Color="#121212" Opacity="0.65"/>
-                </Grid.Background>
                 <!-- Grid Border Padding-->
                 <Grid.Resources>
                     <Style TargetType="Border">
@@ -31,24 +31,36 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="90"/>
                 </Grid.RowDefinitions>
-                <TextBox Width="300" 
-                         Height="50" 
-                         Margin="200,20,101,20"
-                         VerticalAlignment="Top"
-                         Background="Black" 
-                         Foreground="LightGray"
-                         Padding="5"
-                         FontSize="26"
-                         BorderThickness="0.5"
-                         BorderBrush="#131313"
-                         Grid.Row="0"
-                         >
-                    <TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="5"/>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
+                <Grid Width="300" Height="50" ShowGridLines="False" Grid.Row="0" Margin="200,20,101,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition Width="50" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Width="300" 
+                        Height="50" 
+                        VerticalAlignment="Top"
+                        Background="Black" 
+                        Foreground="LightGray"
+                        Padding="5"
+                        FontSize="26"
+                        BorderThickness="0.5"
+                        BorderBrush="#131313"
+                        Grid.Column="0"
+                        x:Name="SearchBox">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="5"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <Button Width="50" 
+                        Height="50"
+                        Grid.Column="1"
+                        Click="MatchingResults" 
+                        Background="Black"
+                        Foreground="White"
+                        Content="S"/>
+                </Grid>
             </Grid>
         </ScrollViewer>
     </Grid>

@@ -7,6 +7,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,7 +66,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		private void InitializeInstance() 
 		{
 			//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
-			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(20, 0, ModpacksCategories.All);
+			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(10, 0, ModpacksCategories.All);
 			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 			{
 				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j+1,
@@ -82,10 +83,10 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			Uri logoPath1 = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 			string description = "Цель данной сборки - развить свою колонию и построить транспортную сеть в виде железной дороги. Поезда здесь существуют не просто как декорации, они необходимы, ведь предметы имеют вес, руда генерируется огромными жилами, которые встречаются не очень то и часто. В процессе игры вам придётся постоянно перемещаться между различными месторождениями, своей базой, колонией. Основной индустриальный мод в этом модпаке - это Immersive Engineering, поэтому все строения буду выглядеть очень эффектно на фоне механизмов из этого мода. Во время игры вы с головой уйдёте в логистику, путешествия и индустриализацию.";
 			string[] instanceName = new string[4] { "Energy of Space", "Long Tech", "Transport Network", "Over the Horizon" };
-			string[] instanceId = new string[4] { "EOS", "LT", "TN", "OTH" };
+			string[] instanceId = new string[4] { "123", "123", "123", "123" };
 			for (int j = 0; j < count; j++)
 			{
-				BuildInstanceForm(instanceId[j], j, logoPath1, instanceName[j], "NightWorld", description, _instanceTags1);
+				BuildInstanceForm(instanceId[j], j+1, logoPath1, instanceName[j], "NightWorld", description, _instanceTags1);
 			}
 		}
 
@@ -95,6 +96,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		{
 			/// "EOS", 0, logoPath1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
+
+			//logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 			InstanceData instanceForm = new InstanceData()
 			{
 				/* string */
@@ -452,6 +455,16 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			if (index == 0) toggleButton.IsChecked = true;
 
 			return toggleButton;
+		}
+
+		private void MatchingResults(object sender, RoutedEventArgs e) 
+		{
+			InstanceGrid.Children.RemoveRange(1, 10000);
+			CreateFakeInstance(4);
+			if (SearchBox.Text.Length == 0) 
+			{
+				InitializeInstance();
+			}
 		}
 	}
 }

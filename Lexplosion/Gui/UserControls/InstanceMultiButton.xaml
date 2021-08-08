@@ -8,7 +8,7 @@
              d:DesignHeight="60" d:DesignWidth="60">
     <Viewbox>
         <Grid>
-            <Rectangle x:Name="LaunchButton"
+            <Rectangle x:Name="Background"
                        Width="60" 
                        Height="60">
                 <Rectangle.Fill>
