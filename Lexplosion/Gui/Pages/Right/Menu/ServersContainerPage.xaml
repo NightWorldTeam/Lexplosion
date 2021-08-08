@@ -109,7 +109,6 @@
                     <TextBlock Grid.Column="1" VerticalAlignment="Center" 
                                Text="Дядя ХЕР знает кто..." 
                                Foreground="#5773FF" 
-                               
                                FontSize="16"/>
                 </Grid>
                 <Image Width="52" Height="52" Source="pack://application:,,,/Assets/images/icons/non_image.png"  HorizontalAlignment="Right"/>

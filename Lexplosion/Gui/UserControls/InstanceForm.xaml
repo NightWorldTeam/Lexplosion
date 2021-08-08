@@ -5,158 +5,180 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="120" d:DesignWidth="620" >
-    <Canvas Margin="0,0,0,0" Width="620" Height="120">
-        <Canvas.Background>
-            <SolidColorBrush Color="#151719" x:Name="Background"/>
-        </Canvas.Background>
-        <Canvas.Effect>
-            <DropShadowEffect ShadowDepth="3" Color="#151719" Opacity="0.3"/>
-        </Canvas.Effect>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="440"/>
-                <ColumnDefinition Width="60"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="120"/>
-            </Grid.RowDefinitions>
-            <Grid x:Name="InstanceLogo" Grid.Column="0"
-                MouseEnter="InstanceLogo_MouseEnter"
-                MouseLeave="InstanceLogo_MouseLeave"
-                MouseLeftButtonDown="InstanceLogoClick">
-                <Rectangle x:Name="InstanceLogo_Background"/>
-                <Label x:Name="InstanceLogo_Text"
-                    Foreground="White"
-                    FontWeight="Bold"
-                    FontSize="22" 
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Visibility="Collapsed"/>
-            </Grid>
-            <Grid x:Name="TextContentGrid" 
-                Grid.Column="1"
-                Margin="10,0,0,0">
+             d:DesignHeight="120" d:DesignWidth="620">
+    <Grid>
+        <Canvas Margin="0,0,0,0" Width="620" Height="120">
+            <Canvas.Background>
+                <SolidColorBrush Color="#151719" x:Name="Background"/>
+            </Canvas.Background>
+            <Canvas.Effect>
+                <DropShadowEffect ShadowDepth="3" Color="#151719" Opacity="0.3"/>
+            </Canvas.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="440"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="120"/>
                 </Grid.RowDefinitions>
-                <Grid x:Name="TitleGrid" Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="100"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock x:Name="TextBlockTitle" 
-                        Grid.Column="0"
-                        Padding="0"
-                        FontSize="22"
-                        Foreground="#ffffff"
-                        TextTrimming="WordEllipsis"/>
-                    <TextBlock x:Name="TextBlockAuthor"
-                        Grid.Column="1"
-                        FontSize="12"
-                        Padding="0"
-                        Foreground="#a9b1ba"
+                <Grid x:Name="InstanceLogo" Grid.Column="0"
+                    MouseEnter="InstanceLogo_MouseEnter"
+                    MouseLeave="InstanceLogo_MouseLeave"
+                    MouseLeftButtonDown="InstanceLogoClick">
+                    <Rectangle x:Name="InstanceLogo_Background"/>
+                    <Label x:Name="InstanceLogo_Text"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        FontSize="22" 
                         VerticalAlignment="Center"
-                        FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
-                        TextTrimming="WordEllipsis"/>
+                        HorizontalAlignment="Center"
+                        Visibility="Collapsed"/>
                 </Grid>
-                <Grid x:Name="OverviewGrid" 
-                    Grid.Column="1" 
-                    Grid.Row="1"
-                    Margin="0,5,0,0">
+                <Grid x:Name="TextContentGrid" 
+                    Grid.Column="1"
+                    Margin="10,0,0,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="35"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="TextBlockOverview"
-                        Grid.Column="0"
-                        Grid.Row="0"
-                        Foreground="#d5d5d5"
-                        HorizontalAlignment="Left"
-                        FontSize="16"
-                        TextTrimming="WordEllipsis"/>
-                    <WrapPanel x:Name="TagsBlock"
+                    <Grid x:Name="TitleGrid" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="TextBlockTitle" 
+                            Grid.Column="0"
+                            Padding="0"
+                            FontSize="22"
+                            Foreground="#ffffff"
+                            TextTrimming="WordEllipsis"/>
+                        <TextBlock x:Name="TextBlockAuthor"
+                            Grid.Column="1"
+                            FontSize="12"
+                            Padding="0"
+                            Foreground="#a9b1ba"
+                            VerticalAlignment="Center"
+                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                            TextTrimming="WordEllipsis"/>
+                    </Grid>
+                    <Grid x:Name="OverviewGrid" 
+                        Grid.Column="1" 
                         Grid.Row="1"
-                        Margin="0,1,1,1"
-                        Orientation="Horizontal"/>
+                        Margin="0,5,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="TextBlockOverview"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Foreground="#d5d5d5"
+                            HorizontalAlignment="Left"
+                            FontSize="16"
+                            TextTrimming="WordEllipsis"/>
+                        <WrapPanel x:Name="TagsBlock"
+                            Grid.Row="1"
+                            Margin="0,1,1,1"
+                            Orientation="Horizontal"/>
+                    </Grid>
+                </Grid>
+                <Grid x:Name="MultiButtonsGrid" Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+                    <Grid x:Name="UpperButton" Grid.Row="0">
+                        <Rectangle
+                            Width="60" 
+                            Height="60">
+                            <Rectangle.Fill>
+                                <SolidColorBrush x:Name="UpperButtonBackground"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Path x:Name="UpperButtonPath"
+                            Stretch="Fill" 
+                            Fill="White"
+                            Stroke="White"
+                            Width="20" 
+                            Height="20"/>
+                        <Label x:Name="InstallProgress"
+                            Foreground="White"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            FontSize="18"
+                            FontWeight="SemiBold"/>
+                        <Rectangle x:Name="Button_InvisibleBackground"
+                            Fill="Transparent"
+                            Width="60" 
+                            Height="60"  
+                            MouseEnter="UpperButton_MouseEnter" 
+                            MouseLeave="UpperButton_MouseLeave"
+                            MouseLeftButtonDown="UpperButtonClick">
+                            <Rectangle.ToolTip>
+                                <ToolTip x:Name="UpperButtonToolTip"
+                                    Placement="Relative" 
+                                    Background="Black" 
+                                    BorderThickness="0"
+                                    FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
+                                    <Label FontSize="12" Foreground="White" FontWeight="Bold" x:Name="UpperButtonToolTipLable"/>
+                                </ToolTip>
+                            </Rectangle.ToolTip>
+                        </Rectangle>
+                    </Grid>
+                    <Grid x:Name="LowerButton" Grid.Row="1">
+                        <Rectangle 
+                            Width="60" 
+                            Height="60">
+                            <Rectangle.Fill>
+                                <SolidColorBrush x:Name="LowerButtonBackground"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Path x:Name="LowerButtonPath"
+                            Stretch="Fill" 
+                            Fill="White"
+                            Stroke="White"
+                            Width="20" 
+                            Height="20"/>
+                        <Rectangle x:Name="LowerButton_InvisibleBackground"
+                            Fill="Transparent"
+                            Width="60" 
+                            Height="60"  
+                            MouseEnter="LowerButton_MouseEnter" 
+                            MouseLeave="LowerButton_MouseLeave"
+                            MouseLeftButtonDown="LowerButtonClick">
+                            <Rectangle.ToolTip>
+                                <ToolTip x:Name="LowerButtonToolTip"
+                                    Placement="Relative" 
+                                    HorizontalOffset="-120" 
+                                    Background="Black" 
+                                    BorderThickness="0"
+                                    FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
+                                    <Label FontSize="12" Foreground="White" FontWeight="Bold" x:Name="LowerButtonToolTipLable"/>
+                                </ToolTip>
+                            </Rectangle.ToolTip>
+                        </Rectangle>
+                    </Grid>
                 </Grid>
             </Grid>
-            <Grid x:Name="MultiButtonsGrid" Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="60"/>
-                </Grid.RowDefinitions>
-                <Grid x:Name="UpperButton" Grid.Row="0">
-                    <Rectangle
-                        Width="60" 
-                        Height="60">
-                        <Rectangle.Fill>
-                            <SolidColorBrush x:Name="UpperButtonBackground"/>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Path x:Name="UpperButtonPath"
-                        Stretch="Fill" 
-                        Fill="White"
-                        Stroke="White"
-                        Width="20" 
-                        Height="20"/>
-                    <Rectangle x:Name="Button_InvisibleBackground"
-                        Fill="Transparent"
-                        Width="60" 
-                        Height="60"  
-                        MouseEnter="UpperButton_MouseEnter" 
-                        MouseLeave="UpperButton_MouseLeave"
-                        MouseLeftButtonDown="UpperButtonClick">
-                        <Rectangle.ToolTip>
-                            <ToolTip x:Name="UpperButtonToolTip"
-                                Placement="Relative" 
-                                Background="Black" 
-                                BorderThickness="0"
-                                FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
-                                <Label FontSize="12" Foreground="White" FontWeight="Bold" x:Name="UpperButtonToolTipLable"/>
-                            </ToolTip>
-                        </Rectangle.ToolTip>
-                    </Rectangle>
-                </Grid>
-                <Grid x:Name="LowerButton" Grid.Row="1">
-                    <Rectangle 
-                        Width="60" 
-                        Height="60">
-                        <Rectangle.Fill>
-                            <SolidColorBrush x:Name="LowerButtonBackground"/>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Path x:Name="LowerButtonPath"
-                        Stretch="Fill" 
-                        Fill="White"
-                        Stroke="White"
-                        Width="20" 
-                        Height="20"/>
-                    <Rectangle x:Name="LowerButton_InvisibleBackground"
-                        Fill="Transparent"
-                        Width="60" 
-                        Height="60"  
-                        MouseEnter="LowerButton_MouseEnter" 
-                        MouseLeave="LowerButton_MouseLeave"
-                        MouseLeftButtonDown="LowerButtonClick">
-                        <Rectangle.ToolTip>
-                            <ToolTip x:Name="LowerButtonToolTip"
-                                Placement="Relative" 
-                                HorizontalOffset="-120" 
-                                Background="Black" 
-                                BorderThickness="0"
-                                FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
-                                <Label FontSize="12" Foreground="White" FontWeight="Bold" x:Name="LowerButtonToolTipLable"/>
-                            </ToolTip>
-                        </Rectangle.ToolTip>
-                    </Rectangle>
-                </Grid>
-            </Grid>
-        </Grid>
-    </Canvas>
+        </Canvas>
+        <ProgressBar x:Name="InstanceProgressBar"
+            Value="100"
+            Minimum="0" 
+            Maximum="100" 
+            Height="5" 
+            BorderThickness="0" 
+            Margin="120,115,60,0"
+            Background="#131313"
+            Foreground="#5773FF"
+            Visibility="Visible">
+            <ProgressBar.Effect>
+                <DropShadowEffect ShadowDepth="1" BlurRadius="20" Opacity="0.3"/>
+            </ProgressBar.Effect>
+        </ProgressBar>
+    </Grid>
 </UserControl>
