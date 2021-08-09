@@ -175,7 +175,7 @@
             Margin="120,115,60,0"
             Background="#131313"
             Foreground="#5773FF"
-            Visibility="Visible">
+            Visibility="Collapsed">
             <ProgressBar.Effect>
                 <DropShadowEffect ShadowDepth="1" BlurRadius="20" Opacity="0.3"/>
             </ProgressBar.Effect>

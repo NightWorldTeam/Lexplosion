@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Logic.Management;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -97,7 +98,7 @@ namespace Lexplosion.Gui.UserControls
                 CurseforgeInstanceId = curseforgeInstanceId,
                 InstanceLogoPath = instanceLogoPath,
                 InstanceTags = instanceTags,
-                IsInstanceInstalled = false,
+                IsInstanceInstalled = isInstanceInstalled,
                 IsInstanceAddedToLibrary = isInstanceAddedToLibrary,
                 IsDownloadingInstance = false
             };
@@ -142,7 +143,7 @@ namespace Lexplosion.Gui.UserControls
             {
                 
                 SetupButtons("upper", MultiButtonProperties.GeometryPlayIcon, -67, "Играть", UpperButtonFunctions.Play, lowerButtonFunc);
-                SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Открыть папку с игрой", upperButtonFunc, LowerButtonFunctions.OpenFolder);
+                SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", upperButtonFunc, LowerButtonFunctions.OpenFolder);
             }
             else
             {
@@ -281,6 +282,7 @@ namespace Lexplosion.Gui.UserControls
                     DownloadInstance();
                     break;
                 case UpperButtonFunctions.Play:
+                    LaunchInstance();
                     break;
                 case UpperButtonFunctions.ProgressBar:
                     break;
@@ -333,12 +335,23 @@ namespace Lexplosion.Gui.UserControls
             SetupButtons("upper", null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, lowerButtonFunc);
             SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", upperButtonFunc, LowerButtonFunctions.PauseDownload);
             InstanceProgressBar.Visibility = Visibility.Visible;
-            InstallProgress.Content = "100%";
+            InstanceProgressBar.Value = 0;
+            InstallProgress.Content = "0%";
+
+            if (instanceProperties.CurseforgeInstanceId != 0)
+            {
+                MessageBox.Show(instanceProperties.CurseforgeInstanceId.ToString());
+                string instanceId = ManageLogic.CreateInstance(
+                    instanceProperties.InstanceTitle, InstanceType.Curseforge, "", "", instanceProperties.CurseforgeInstanceId
+                	);
+                ManageLogic.DownloadInstance(instanceId, InstanceType.Curseforge);
+            }
         }
 
         private void LaunchInstance()
         {
-            
+            string instanceId = "eos";
+                ManageLogic.СlientManager(instanceId);
         }
 
         private void PauseInstance() 
