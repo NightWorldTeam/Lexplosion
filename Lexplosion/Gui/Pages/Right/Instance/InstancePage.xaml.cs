@@ -15,15 +15,18 @@ namespace Lexplosion.Gui.Pages.Right.Instance
     {
         private ToggleButton selectedToggleButton;
         public static InstancePage instance = null;
-        private MainWindow _MainWindow;
 
-        public InstancePage(MainWindow mainWindow)
+        private string title;
+        private string description;
+
+        public InstancePage(string title, string description)
         {
             InitializeComponent();
             instance = this;
-            _MainWindow = mainWindow;
+            this.title = title;
+            this.description = description;
 
-            BottomSideFrame.Navigate(new OverviewPage(mainWindow));
+            BottomSideFrame.Navigate(new OverviewPage(this.title, this.description));
             selectedToggleButton = OverviewToggleButton;
             selectedToggleButton.IsChecked = true;
         }
@@ -43,7 +46,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         private void ClickedOverview(object sender, RoutedEventArgs e)
         {
             ReselectionToggleButton(sender);
-            BottomSideFrame.Navigate(new OverviewPage(_MainWindow));
+            BottomSideFrame.Navigate(new OverviewPage(this.title, this.description));
         }
 
         private void ClickedModsList(object sender, RoutedEventArgs e)

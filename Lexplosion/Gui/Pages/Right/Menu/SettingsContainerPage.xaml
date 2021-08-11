@@ -29,7 +29,6 @@
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
-
                 </Setter.Value>
             </Setter>
         </Style>
@@ -49,12 +48,12 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Border Name="Border" CornerRadius="2" Padding="2" BorderThickness="0,0,0,2">
+                        <Border Name="Border" CornerRadius="8" Padding="2" BorderThickness="2">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="#2c99c2"/>
                             </Border.BorderBrush>
                             <Border.Background>
-                                <SolidColorBrush Color="Transparent"/>
+                                <SolidColorBrush Color="#1f1f1f"/>
                             </Border.Background>
                             <Grid>
                                 <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
@@ -104,107 +103,194 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Flat ComboBox -->
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+            <Canvas Background="Transparent">
+                <Path x:Name="Arrow" Margin="7"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Width="32"
+                    Height="31"    
+                    Fill="White"
+                    Data="M25.3337 4H6.66699C5.60613 4 4.58871 4.42143 3.83857 5.17157C3.08842 5.92172 2.66699 6.93913 2.66699 8V18.6667C2.66699 19.7275 3.08842 20.7449 3.83857 21.4951C4.58871 22.2452 5.60613 22.6667 6.66699 22.6667H14.667V25.3333H9.33366C8.98004 25.3333 8.6409 25.4738 8.39085 25.7239C8.1408 25.9739 8.00033 26.313 8.00033 26.6667C8.00033 27.0203 8.1408 27.3594 8.39085 27.6095C8.6409 27.8595 8.98004 28 9.33366 28H22.667C23.0206 28 23.3598 27.8595 23.6098 27.6095C23.8599 27.3594 24.0003 27.0203 24.0003 26.6667C24.0003 26.313 23.8599 25.9739 23.6098 25.7239C23.3598 25.4738 23.0206 25.3333 22.667 25.3333H17.3337V22.6667H25.3337C26.3945 22.6667 27.4119 22.2452 28.1621 21.4951C28.9122 20.7449 29.3337 19.7275 29.3337 18.6667V8C29.3337 6.93913 28.9122 5.92172 28.1621 5.17157C27.4119 4.42143 26.3945 4 25.3337 4ZM26.667 18.6667C26.667 19.0203 26.5265 19.3594 26.2765 19.6095C26.0264 19.8595 25.6873 20 25.3337 20H6.66699C6.31337 20 5.97423 19.8595 5.72418 19.6095C5.47413 19.3594 5.33366 19.0203 5.33366 18.6667V8C5.33366 7.64638 5.47413 7.30724 5.72418 7.05719C5.97423 6.80714 6.31337 6.66667 6.66699 6.66667H25.3337C25.6873 6.66667 26.0264 6.80714 26.2765 7.05719C26.5265 7.30724 26.667 7.64638 26.667 8V18.6667Z" /> 
+            </Canvas>
+        </ControlTemplate>
+
+        <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton 
+                                Name="ToggleButton" 
+                                Template="{StaticResource ComboBoxToggleButton}" 
+                                Grid.Column="2" 
+                                Focusable="false"
+                                IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                ClickMode="Press">
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite" 
+                                IsHitTestVisible="False"
+                                Margin="3,3,23,3"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left" />
+                            <!-- None Fade Scroll Slide -->
+                            <Popup Name="Popup"
+                                Placement="Bottom"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                AllowsTransparency="True" 
+                                Focusable="False"
+                                PopupAnimation="Scroll">
+                                <Grid Name="DropDown"
+                                    SnapsToDevicePixels="True"        
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                        Background="#FF3F3F3F"
+                                        BorderThickness="1"
+                                        BorderBrush="#888888"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#888888"/>
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                            <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="true">
+                                <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="0"/>
+                                <Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsEditable"  Value="true">
+                                <Setter Property="IsTabStop" Value="false"/>
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+            </Style.Triggers>
+        </Style>
+
+        <!-- SimpleStyles: ComboBoxItem -->
+        <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                        <Border Name="Border"
+                              Padding="2"
+                              SnapsToDevicePixels="true">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="#FF4F4F4F"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#888888"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto">
-        <Grid>
+        VerticalScrollBarVisibility="Auto">
+        <Grid ShowGridLines="True">
             <Grid.Background>
                 <!-- "Black" 0.64 -->
                 <SolidColorBrush Color="#121212"  Opacity="0.65"/>
             </Grid.Background>
             <TextBlock Text="Размеры окна"
-                       Height="35"
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="#FFF" Margin="73,22,475,444"/>
+                Height="35"
+                FontSize="18" 
+                FontWeight="Bold" 
+                Foreground="#FFF" Margin="73,22,475,444"/>
             <TextBlock Text="Ширина" 
-                       Width="87"
-                       Height="30"
-                       Foreground="#FFF" 
-                       FontSize="16" 
-                       FontWeight="Bold" Margin="137,55,477,416"/>
+                Width="87"
+                Height="30"
+                Foreground="#FFF" 
+                FontSize="16" 
+                FontWeight="Bold" Margin="137,55,477,416"/>
             <TextBlock Text="Высота" 
-                       Width="87"
-                       Height="30"
-                       Foreground="#FFF" 
-                       FontSize="16" 
-                       FontWeight="Bold" Margin="338,57,276,414"/>
-            <ComboBox Width="40" 
-                      Height="32" 
-                      Margin="82,92,579,377" 
-                      Background="#1EAFDD"
-                      BorderThickness="1"
-                      MaxDropDownHeight="180"
-                      >
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1920x1080" />
-                </ComboBoxItem>
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1920x1080" />
-                </ComboBoxItem>
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1768x992" />
-                </ComboBoxItem>
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1680x1050" />
-                </ComboBoxItem>
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1600x1024" />
-                </ComboBoxItem>
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1600x900" />
-                </ComboBoxItem>
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1440x900" />
-                </ComboBoxItem>
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1280x1024" />
-                </ComboBoxItem>
-                <ComboBoxItem Margin="20,0,0,0" Width="120" FontSize="16">
-                    <TextBlock Text="1366x768" />
-                </ComboBoxItem>
-            </ComboBox>
+                Width="87"
+                Height="30"
+                Foreground="#FFF" 
+                FontSize="16" 
+                FontWeight="Bold" Margin="338,57,276,414"/>
+            <ComboBox x:Name="ScreenResolutions" 
+                Width="32" 
+                Height="32" 
+                Margin="82,92,559,377" 
+                MaxDropDownHeight="180"/>
+
             <TextBox Style="{StaticResource CTB}"
-                     FontSize="20"
-                     Height="42" 
-                     Text="1920"
-                     Margin="338,87,194,372"/>
+                FontSize="20"
+                Height="42" 
+                Text="1920"
+                Margin="338,87,194,372"/>
             <Canvas>
                 <Line X1="1" Y1="0" X2="13" Y2="13"
-                      Stroke="White" StrokeThickness="2"
-                      Canvas.Left="310" Canvas.Top="110"/>
+                    Stroke="White" StrokeThickness="2"
+                    Canvas.Left="310" Canvas.Top="110"/>
                 <Line X1="1" Y1="13" X2="13" Y2="0" 
-                      Stroke="White" StrokeThickness="2"
-                      Canvas.Left="310" Canvas.Top="110" />
+                    Stroke="White" StrokeThickness="2"
+                    Canvas.Left="310" Canvas.Top="110" />
             </Canvas>
             <TextBox Style="{StaticResource CTB}"
-                     FontSize="20"
-                     Width="160" 
-                     Height="42" 
-                     Text="1280"
-                     Margin="137,87,396,372"/>
+                FontSize="20"
+                Width="160" 
+                Height="42" 
+                Text="1280"
+                Margin="137,87,396,372"/>
             <TextBlock Text="Держать лаунчер открытым при запуске игры"
-                       Height="35"
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="#FFF" Margin="73,157,194,309"/>
+                Height="35"
+                FontSize="18" 
+                FontWeight="Bold" 
+                Foreground="#FFF" Margin="73,157,194,309"/>
+
             <usercontrols:SwitchButton Width="70" Height="31" Margin="73,200,550,276"/>
+
             <TextBlock Text="Папка с игрой"
-                       Height="35"
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="#FFF" Margin="73,243,194,223"/>
-            <TextBox Style="{StaticResource CTB}"
-                     FontSize="20"
-                     Height="42" 
-                     Text="C:\Users\GamerStorm_Hel2x_\night-world"
-                     Margin="73,288,194,176" />
+                Height="35"
+                FontSize="18" 
+                FontWeight="Bold" 
+                Foreground="#FFF" Margin="73,243,194,223"/>
+            <TextBox x:Name="InstanceFolderPath" 
+                Style="{StaticResource CTB}"
+                FontSize="20"
+                Height="42" 
+                Text="C:\Users\GamerStorm_Hel2x_\night-world"
+                Margin="73,288,194,176" />
             <Button 
-                    Height="42"
-                    Content="Проводник"
-                    Foreground="#fff"
-                    FontWeight="Bold" BorderThickness="0" Margin="504,288,114,176" Background="#FF1EAFDD"/>
+                Height="42"
+                Content="Проводник"
+                Foreground="#fff"
+                FontWeight="Bold" 
+                BorderThickness="0"
+                Margin="504,288,114,176" 
+                Background="#FF1EAFDD"/>
         </Grid>
     </ScrollViewer>
 </Page>

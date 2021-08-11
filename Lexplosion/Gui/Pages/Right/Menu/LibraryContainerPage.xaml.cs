@@ -28,10 +28,10 @@ namespace Lexplosion.Gui.Pages.Right.Menu
     /// </summary>
     public partial class LibraryContainerPage : Page
     {
-		private MainWindow _MainWindow;
+		private MainWindow _mainWindow;
 		public LibraryContainerPage(MainWindow mainWindow)
         {
-			_MainWindow = mainWindow;
+			_mainWindow = mainWindow;
 			InitializeComponent();
 			InitializeInstance();
 		}
@@ -82,12 +82,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			this.Dispatcher.Invoke(() =>
 			{
 				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
-				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(title, id, author, overview, 0, logo_path, tags, true, true);
-				// Добавление в Столбики и Колноки в форме.
+				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, id, author, overview, 0, logo_path, tags, true, true);
+																																	 // Добавление в Столбики и Колноки в форме.
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);
 			});
 		}
+
 
 
 		private RowDefinition GetRowDefinition()
@@ -112,5 +113,10 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			return toggleButton;
 		}
-	}
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+			InstanceGrid.Children.RemoveRange(0, 100);
+        }
+    }
 }

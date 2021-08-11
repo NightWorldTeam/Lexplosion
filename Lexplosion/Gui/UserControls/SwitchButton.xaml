@@ -11,17 +11,17 @@
             <Rectangle x:Name="Background"
                        Fill="#1EAFDD"
                        Width="70" Height="31"
-                       Stroke="#202224"
+                       Stroke="#202202"
                        HorizontalAlignment="Left" 
-                       StrokeThickness="2"
-                       RadiusX="8"
-                       RadiusY="8"/>
+                       StrokeThickness="1"
+                       RadiusX="10"
+                       RadiusY="10"/>
             <Rectangle x:Name="Dot" 
                        Fill="#202224" 
                        Width="35" 
                        Height="25" 
-                       RadiusX="8" 
-                       RadiusY="8"
+                       RadiusX="10" 
+                       RadiusY="10"
                        Margin="3,3,32,3"/>
             <Rectangle x:Name="SwitchButton_Invible"
                        Fill="Transparent"

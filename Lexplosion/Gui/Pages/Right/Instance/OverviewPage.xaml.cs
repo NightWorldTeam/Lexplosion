@@ -19,17 +19,36 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         private int images_count = 1;
         private int lastIndex = 0;
 
-        public OverviewPage(MainWindow mainWindow)
+        class InstanceData 
         {
-            InitializeComponent();
-            SetAssets(mainWindow.instanceTitle, mainWindow.instanceDescription);
+            public string title;
+            public string description;
         }
 
-        public void SetAssets(string title, string description)
+        private InstanceData instanceData;
+
+        public OverviewPage(string title, string description)
         {
-            if (description != null) 
+            InitializeComponent();
+            this.instanceData = new InstanceData()
+            {
+                title = title,
+                description = description
+            };
+            SetInstanceData(instanceData);
+            SetAssets();
+        }
+
+        private void SetInstanceData(InstanceData instanceData) 
+        {
+            this.instanceData = instanceData;
+        }
+
+        public void SetAssets()
+        {
+            if (instanceData.description != null) 
             { 
-                Description.Text = description;
+                Description.Text = instanceData.description;
             }
             else
             {
@@ -39,7 +58,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
 
         private void Arrow_Right_Button(object sender, RoutedEventArgs e)
         {
-            string modpack = LeftSideMenuPage.instance.selectedInstance;
+            /*string modpack = LeftSideMenuPage.instance.selectedInstance;
 
             if (UserData.instancesAssets != null)
             {
@@ -53,11 +72,12 @@ namespace Lexplosion.Gui.Pages.Right.Instance
                 }
                 SetImages(UserData.instancesAssets[modpack].images);
             }
+            */
         }
 
         private void Arrow_Left_Button(object sender, RoutedEventArgs e)
         {
-            string modpack = LeftSideMenuPage.instance.selectedInstance;
+            /*string modpack = LeftSideMenuPage.instance.selectedInstance;
 
             if (UserData.instancesAssets != null)
             {
@@ -71,7 +91,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
                 }
                 SetImages(UserData.instancesAssets[modpack].images);
             }
-
+            */
         }
 
         private void SetImages(List<string> mpAssets)

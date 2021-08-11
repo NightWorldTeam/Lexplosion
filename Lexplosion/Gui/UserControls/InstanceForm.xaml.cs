@@ -1,11 +1,17 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Global;
+using Lexplosion.Gui.Pages.Left;
+using Lexplosion.Gui.Pages.Right.Instance;
+using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.Management;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -83,12 +89,13 @@ namespace Lexplosion.Gui.UserControls
         private UpperButtonFunctions upperButtonFunc;
         private LowerButtonFunctions lowerButtonFunc;
         private InstanceProperties instanceProperties;
+        private MainWindow mainWindow;
 
-        public InstanceForm(string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, int curseforgeInstanceId,
+        public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, int curseforgeInstanceId,
             Uri instanceLogoPath, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
         {
             InitializeComponent();
-
+            this.mainWindow = mainWindow;
             InstanceProperties instanceProperties = new InstanceProperties()
             {
                 InstanceTitle = instanceTitle,
@@ -300,13 +307,13 @@ namespace Lexplosion.Gui.UserControls
                     MessageBox.Show("Delete From Library");
                     break;
                 case LowerButtonFunctions.OpenFolder:
-                    MessageBox.Show("Open Folder");
+                    OpenInstanceFolder();
                     break;
                 case LowerButtonFunctions.PauseDownload:
                     PauseInstance();
                     break;
                 case LowerButtonFunctions.CancelDownload:
-                    CancelDownload();
+                    CancelInstanceDownload();
                     break;
             }
         }
@@ -327,7 +334,33 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceLogoClick(object sender, MouseButtonEventArgs e)
         {
+            var lsmp = LeftSideMenuPage.instance;
+            string[] ButtonContents = new string[4] { instanceProperties.InstanceTitle, "Экспорт", "Настройки", "Вернуться" };
+            RoutedEventHandler[] ButtonClicks = new RoutedEventHandler[4] { lsmp.InstanceOverview, lsmp.InstanceExport, lsmp.InstanceSetting, lsmp.BackToMainMenu };
 
+            for (int i = 0; i < 4; i++)
+            {
+                SwitchToggleButton(lsmp.LeftSideMenu, ButtonContents[i], ButtonClicks[i], i);
+            }
+            InstancePage instancePage = new InstancePage(instanceProperties.InstanceTitle, instanceProperties.InstanceOverview);
+            // TODO: не работает контроллер
+            //mainWindow.PagesController<InstancePage>("RightSideFrame", mainWindow.RightSideFrame);
+            mainWindow.RightSideFrame.Navigate(new InstancePage(instanceProperties.InstanceTitle, instanceProperties.InstanceOverview));
+            instancePage.BottomSideFrame.Navigate(new OverviewPage(instanceProperties.InstanceTitle, instanceProperties.InstanceOverview));
+        }
+
+        private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)
+        {
+            ToggleButton toggleButton = (ToggleButton)pageInstance.FindName("LeftSideMenuButton" + index);
+
+            toggleButton.Content = content;
+            toggleButton.Style = (Style)Application.Current.FindResource("MWCBS1");
+            toggleButton.Click += routedEventHandler;
+
+            if (index == 0) toggleButton.IsChecked = true;
+            else toggleButton.IsChecked = false;
+
+            return toggleButton;
         }
 
         private void DownloadInstance()
@@ -363,10 +396,22 @@ namespace Lexplosion.Gui.UserControls
             SetupButtons("lower", MultiButtonProperties.GeometryCancelIcon, -160, "Отменить скачивание", upperButtonFunc, LowerButtonFunctions.CancelDownload);
         }
 
-        private void CancelDownload() 
+        private void CancelInstanceDownload() 
         {
             FormSetup();
             InstanceProgressBar.Visibility = Visibility.Collapsed;
+        }
+
+        public void SetDownloadProcent(int procent) 
+        {
+            InstanceProgressBar.Value = procent;
+            InstallProgress.Content = procent + "%";
+        }
+
+        private void OpenInstanceFolder() 
+        {
+            MessageBox.Show(UserData.settings["gamePath"]);
+            Process.Start("explorer", @"" + UserData.settings["gamePath"].Replace("/", @"\") + @"\instances\" + instanceProperties.InstanceId);
         }
     }
 }
