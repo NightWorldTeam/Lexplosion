@@ -159,6 +159,7 @@
     <Compile Include="Logic\Management\ManageLogic.cs" />
     <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />
+    <Compile Include="Logic\Network\DataClient.cs" />
     <Compile Include="Logic\Network\DataServer.cs" />
     <Compile Include="Logic\Network\Gateway.cs" />
     <Compile Include="Logic\Network\NetworkClient.cs" />
