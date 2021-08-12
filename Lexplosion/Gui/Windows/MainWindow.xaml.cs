@@ -15,11 +15,15 @@ namespace Lexplosion.Gui.Windows
     public partial class MainWindow : Window
     {
         // хранит объект этого окна
-        public static MainWindow Obj = null; 
+        public static MainWindow Obj = null;
 
-        public string instanceTitle = "";
-        public string instanceDescription = "";
-        public string instanceAuthor = "";
+        public string instanceTitle;
+        public string instanceId;
+        public string instanceDescription;
+        public string instanceAuthor;
+        public int curseforgeInstanceId;
+        public Uri instanceLogoPath;
+
         public List<string> instanceTags = new List<string>();
 
         private Dictionary<string, Page> Pages = new Dictionary<string, Page>();

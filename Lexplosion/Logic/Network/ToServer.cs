@@ -9,6 +9,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Global;
 using System.Windows;
 using Lexplosion.Logic.FileSystem;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Lexplosion.Logic.Network
 {

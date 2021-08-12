@@ -89,7 +89,6 @@ namespace Lexplosion
                 authWindow.Show();
                 app.MainWindow.Close();
                 app.MainWindow = authWindow;
-
             });
         }
 
@@ -126,13 +125,11 @@ namespace Lexplosion
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();
-
             } 
             catch 
             {
                 MessageBox.Show("Не удалось обновить лаунчер!");
             }
-
         }
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
@@ -194,7 +191,6 @@ namespace Lexplosion
 
             thread.Start();
             threads.Release();
-
         }
     }
 }

@@ -322,7 +322,6 @@ namespace Lexplosion.Logic.Management
             {
                 return Error(result);
             }
-
         }
 
         public static string CreateInstance(string name, InstanceType type, string gameVersion, string forge, int cursforgeId = 0)
@@ -359,9 +358,6 @@ namespace Lexplosion.Logic.Management
             }
 
             return instanceId;
-
         }
-
     }
-
 }

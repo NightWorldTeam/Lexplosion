@@ -16,7 +16,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
     {
 
         public static OverviewPage instance = null;
-        private int images_count = 1;
+        private int imagesCount = 1;
         private int lastIndex = 0;
 
         class InstanceData 

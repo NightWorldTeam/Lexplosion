@@ -36,7 +36,13 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			InitializeInstance();
 		}
 
-
+		/*
+			public string description;
+			public List<string> images;
+			public string mainImage;
+			public string xmx;
+			public string xms;
+		*/
 		private void InitializeInstance() 
 		{
 			List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
@@ -65,13 +71,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 				i++;
 			}
-			/*
-			    public string description;
-				public List<string> images;
-				public string mainImage;
-				public string xmx;
-				public string xms;
-			 */
 		}
 
 
@@ -90,7 +89,6 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 		}
 
 
-
 		private RowDefinition GetRowDefinition()
 		{
 			RowDefinition rowDefinition = new RowDefinition()
@@ -99,6 +97,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			};
 			return rowDefinition;
 		}
+
 
 		private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)
 		{
@@ -113,10 +112,5 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 			return toggleButton;
 		}
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-			InstanceGrid.Children.RemoveRange(0, 100);
-        }
     }
 }

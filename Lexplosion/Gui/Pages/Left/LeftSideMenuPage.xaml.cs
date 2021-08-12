@@ -2,7 +2,6 @@
 using Lexplosion.Gui.Pages.Right.Instance;
 using Lexplosion.Gui.Pages.Right.Menu;
 using Lexplosion.Gui.Windows;
-using Lexplosion.Gui;
 using Lexplosion.Logic.Management;
 using System;
 using System.Windows;
@@ -22,7 +21,6 @@ namespace Lexplosion.Gui.Pages.Left
         public string selectedInstance = "";
         private ToggleButton selectedToggleButton;
         private MainWindow _MainWindow;
-        
 
         public LeftSideMenuPage(MainWindow mainWindow)
         {

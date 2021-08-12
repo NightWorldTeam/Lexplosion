@@ -23,10 +23,8 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         {
             InitializeComponent();
             instance = this;
-            this.title = title;
-            this.description = description;
 
-            BottomSideFrame.Navigate(new OverviewPage(this.title, this.description));
+            BottomSideFrame.Navigate(new OverviewPage(title, description));
             selectedToggleButton = OverviewToggleButton;
             selectedToggleButton.IsChecked = true;
         }

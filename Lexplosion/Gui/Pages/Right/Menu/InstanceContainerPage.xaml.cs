@@ -7,6 +7,8 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -48,8 +50,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void InitializeInstance() 
 		{
-			//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
 			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(10, 0, ModpacksCategories.All);
+
 			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 			{
 				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j+1,
@@ -80,7 +82,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			this.Dispatcher.Invoke(() =>
 			{
 				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
-				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, instanceName, author, overview, 0, logoPath, tags, true, true);
+				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, instanceName, author, overview, 0, logoPath, tags, false, true);
 				// Добавление в Столбики и Колноки в форме.
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);
