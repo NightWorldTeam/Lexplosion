@@ -15,11 +15,15 @@ namespace Lexplosion.Gui.Windows
     public partial class MainWindow : Window
     {
         // хранит объект этого окна
-        public static MainWindow Obj = null; 
+        public static MainWindow Obj = null;
 
-        public string instanceTitle = "";
-        public string instanceDescription = "";
-        public string instanceAuthor = "";
+        public string instanceTitle;
+        public string instanceId;
+        public string instanceDescription;
+        public string instanceAuthor;
+        public int curseforgeInstanceId;
+        public Uri instanceLogoPath;
+
         public List<string> instanceTags = new List<string>();
 
         private Dictionary<string, Page> Pages = new Dictionary<string, Page>();
@@ -30,11 +34,17 @@ namespace Lexplosion.Gui.Windows
             MainWindow.Obj = this;
 
             MouseDown += delegate { try { DragMove(); } catch { } };
+            this.PagesController<LeftSideMenuPage>("LeftSideFrame", this.LeftSideFrame);
+            // TODO: для этого есть метод PagesController
 
-            LeftSideFrame.Navigate(new LeftSideMenuPage(this)); // TODO: для этого есть метод PagesController
-
-            if (UserData.InstancesList.Count > 0) RightSideFrame.Navigate(new LibraryContainerPage(this));
-            else RightSideFrame.Navigate(new InstanceContainerPage(this));
+            if (UserData.InstancesList.Count > 0) 
+            {
+                this.PagesController<LibraryContainerPage>("RightSideFrame", this.RightSideFrame);
+            }
+            else
+            {
+                this.PagesController<InstanceContainerPage>("RightSideFrame", this.RightSideFrame);
+            }
         }
 
         public void PagesController<T>(string page, Frame frame) where T: Page
