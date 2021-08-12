@@ -292,7 +292,10 @@ namespace Lexplosion.Logic.FileSystem
             };
 
             SaveFile(directory + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(dataLocal));
-            SaveFile(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
+            if(data.libraries != null)
+            {
+                SaveFile(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
+            }    
         }
 
         public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
@@ -327,7 +330,8 @@ namespace Lexplosion.Logic.FileSystem
             {
                 foreach (string key in baseList.Keys)
                 {
-                    //проверяем установлен ил этот модпак и не содержит ли его id запрещенных символов
+                    //MessageBox.Show((!Regex.IsMatch(key.Replace("_", ""), @"[^a-zA-Z0-9]")).ToString() + " " + key);
+                    //проверяем установлен ли этот модпак и не содержит ли его id запрещенных символов
                     if (Directory.Exists(directory + "/instances/" + key) && !Regex.IsMatch(key.Replace("_", ""), @"[^a-zA-Z0-9]"))
                     {
                         list[key] = baseList[key];

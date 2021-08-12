@@ -55,7 +55,6 @@ namespace Lexplosion.Logic.Network
             try
             {
                 string answer = HttpPost("filesList/modpacksList.json");
-
                 Dictionary<string, string> list = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
 
                 return list;
@@ -156,6 +155,7 @@ namespace Lexplosion.Logic.Network
         //функция получает манифест для майкрафт версии
         public static VersionManifest GetVersionManifest(string version, string forgeVersion = "")
         {
+            MessageBox.Show("- " + forgeVersion);
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
             string str2 = "";
@@ -185,10 +185,10 @@ namespace Lexplosion.Logic.Network
                 try
                 {
                     string answer = HttpPost("versionManifest.php?gameVersion=" + WebUtility.UrlEncode(version) + "&hash=2e818dc89e364c7efcfa54bec7e873c5f00b3840&forgeVersion=" + WebUtility.UrlEncode(forgeVersion), data);
-
                     if (answer != null)
                     {
                         answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+
                         DataVersionManifest filesData = JsonConvert.DeserializeObject<DataVersionManifest>(answer);
 
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
@@ -218,18 +218,21 @@ namespace Lexplosion.Logic.Network
                         }
                         else
                         {
+                            MessageBox.Show("null1");
                             return null;
                         }
 
                     }
                     else
                     {
+                        MessageBox.Show("null2");
                         return null;
                     }
 
                 }
                 catch
                 {
+                    MessageBox.Show("null3");
                     return null;
                 }
 

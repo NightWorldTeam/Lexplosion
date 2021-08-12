@@ -1258,6 +1258,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static bool DownloadMod(int projectID, int fileID, string path)
         {
+            return true;
             try
             {
                 string answer;
@@ -1361,7 +1362,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         bool anw = DownloadMod(file.projectID, file.fileID, directory + "/temp/dataDownload/overrides/mods/");
 
-                        //скачивание модпа не удалось. Добавляем его данные в список ошибок
+                        //скачивание мода не удалось. Добавляем его данные в список ошибок
                         if (!anw)
                         {
                             errors.Add(file.projectID + " " + file.fileID);
@@ -1387,7 +1388,6 @@ namespace Lexplosion.Logic.FileSystem
                     }
 
                     return data;
-
                 }
 
                 if (Directory.Exists(directory + "/temp/dataDownload"))

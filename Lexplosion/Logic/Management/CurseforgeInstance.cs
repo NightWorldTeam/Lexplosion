@@ -75,7 +75,6 @@ namespace Lexplosion.Logic.Management
                 {
                     return "serverError";
                 }
-
             }
 
             List<CurseforgeFileInfo> instanceVersionsInfo = ToServer.GetCursforgeInstanceInfo(InstanceData["cursforgeId"]); //получем информацию об этом модпаке
@@ -91,7 +90,6 @@ namespace Lexplosion.Logic.Management
             }
 
             return "";
-
         }
 
         public InitData Update()
@@ -124,10 +122,9 @@ namespace Lexplosion.Logic.Management
                             modLoader = loader.id;
                             break;
                         }
-
                     }
-
-                    Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, modLoader);
+                    
+                    Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modLoader);
 
                     if (Manifest != null)
                     {
@@ -136,6 +133,7 @@ namespace Lexplosion.Logic.Management
 
                         if (BaseFiles == null)
                         {
+                            ProgressHandler(97);
                             return new InitData
                             {
                                 Errors = new List<string>() { "guardError" },
@@ -146,6 +144,7 @@ namespace Lexplosion.Logic.Management
                     }
                     else
                     {
+                        ProgressHandler(99);
                         return new InitData
                         {
                             Errors = new List<string>() { "serverError" },
@@ -159,6 +158,7 @@ namespace Lexplosion.Logic.Management
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/cursforgeData.json", JsonConvert.SerializeObject(InstanceData));
             }
 
+            MessageBox.Show("gv");
             DataFilesManager.SaveManifest(InstanceId, Manifest);
             ProgressHandler(100);
 
@@ -203,6 +203,7 @@ namespace Lexplosion.Logic.Management
         {
             List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
 
+            MessageBox.Show("test2 " + Manifest.version.forgeVersion + " 1");
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             return new InitData

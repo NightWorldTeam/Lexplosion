@@ -129,11 +129,11 @@ namespace Lexplosion.Logic.Management
                 instance.Update(); // TODO: тут выводить ошибки
 
                 //Убираем все обработчики событий
-                FieldInfo f1 = typeof(Control).GetField("EventClick", BindingFlags.Static | BindingFlags.NonPublic);
+                /*FieldInfo f1 = typeof(Control).GetField("EventClick", BindingFlags.Static | BindingFlags.NonPublic);
                 object obj = f1.GetValue(ProgressHandler);
                 PropertyInfo pi = ProgressHandler.GetType().GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
                 EventHandlerList list = (EventHandlerList)pi.GetValue(ProgressHandler, null);
-                list.RemoveHandler(obj, list[obj]);
+                list.RemoveHandler(obj, list[obj]);*/
             });
         }
 
@@ -266,14 +266,31 @@ namespace Lexplosion.Logic.Management
             {
                 if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
                 {
-                    do
+                    int j = 0;
+                    while (j < instanceId.Length)
                     {
-                        instanceId = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(instanceName + ":" + rnd.Next(0, 9999))));
-                        instanceId = instanceId.Replace("+", "").Replace("/", "").Replace("=", "");
-                        instanceId = instanceId.ToLower();
+                        if (Regex.IsMatch(instanceId[j].ToString(), @"[^a-zA-Z0-9]") && instanceId[j] != '_')
+                        {
+                            instanceId = instanceId.Replace(instanceId[j], '_');
+                        }
+                        j++;
                     }
-                    while (UserData.InstancesList.ContainsKey(instanceId));
 
+                    if (UserData.InstancesList.ContainsKey(instanceId))
+                    {
+                        string instanceId_ = instanceId;
+                        int i = 0;
+                        do
+                        {
+                            if (i > 0)
+                            {
+                                instanceId_ = instanceId + "__" + i;
+                            }
+                            i++;
+                        }
+                        while (UserData.InstancesList.ContainsKey(instanceId_));
+                        instanceId = instanceId_;
+                    }
                 } 
                 else if (UserData.InstancesList.ContainsKey(instanceId))
                 {
