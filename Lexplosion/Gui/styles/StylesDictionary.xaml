@@ -106,6 +106,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
+                    <!-- Scroll bar space -->
                     <Border Background="{StaticResource DarkDarkBackgroundBrush}"/>
                 </ControlTemplate>
             </Setter.Value>
@@ -120,7 +121,7 @@
             <Setter.Value>
                 <ControlTemplate>
                     <Border Background="{StaticResource DarkDarkBackgroundBrush}">
-                        <Rectangle x:Name="ThumbRect" RadiusX="4" RadiusY="4" Fill="#1f202a" MaxWidth="13"/>
+                        <Rectangle x:Name="ThumbRect" RadiusX="4" RadiusY="4" Fill="#17171c" MaxWidth="13"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

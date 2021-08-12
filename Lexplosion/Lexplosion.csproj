@@ -71,6 +71,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,10 +87,16 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.2.0.0\lib\net40\WpfAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Gui\InstanceCreator\InstanceMasterPage.xaml.cs">
+      <DependentUpon>InstanceMasterPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\Pages\AuthPage.xaml.cs">
       <DependentUpon>AuthPage.xaml</DependentUpon>
     </Compile>
@@ -115,8 +124,8 @@
     <Compile Include="Gui\UserControls\InstanceForm.xaml.cs">
       <DependentUpon>InstanceForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\UserControls\InstanceLaunchButton.xaml.cs">
-      <DependentUpon>InstanceLaunchButton.xaml</DependentUpon>
+    <Compile Include="Gui\UserControls\InstanceMultiButton.xaml.cs">
+      <DependentUpon>InstanceMultiButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\UserControls\SwitchButton.xaml.cs">
       <DependentUpon>SwitchButton.xaml</DependentUpon>
@@ -177,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Gui\InstanceCreator\InstanceMasterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Gui\Pages\AuthPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -213,7 +226,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\UserControls\InstanceLaunchButton.xaml">
+    <Page Include="Gui\UserControls\InstanceMultiButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -343,5 +356,6 @@
   <ItemGroup>
     <Resource Include="Assets\images\icons\visible_password.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -11,12 +11,12 @@
     <!-- "Black" 0.64 -->
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid ShowGridLines="False" x:Name="InstanceGrid">
-                <Grid.Background>
-                    <!-- #1313131 0.8-->
-                    <!-- "Black" 0.64 -->
-                    <SolidColorBrush Color="#121212" Opacity="0.65"/>
-                </Grid.Background>
+            <ScrollViewer.Background>
+                <!-- #1313131 0.8-->
+                <!-- "Black" 0.64 -->
+                <SolidColorBrush Color="#121212" Opacity="0.65"/>
+            </ScrollViewer.Background>
+            <Grid ShowGridLines="False" x:Name="InstanceGrid" Margin="40, 0, 0, 0">
                 <!-- Grid Border Padding-->
                 <Grid.Resources>
                     <Style TargetType="Border">
@@ -26,6 +26,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="600"/>
                 </Grid.ColumnDefinitions>
+                <Button Width="120" Height="20" Grid.Column="0" Margin="0,0,0,-400" Click="Button_Click"/>
             </Grid>
         </ScrollViewer>
     </Grid>
