@@ -67,6 +67,9 @@ namespace Lexplosion.Logic.FileSystem
             public Dictionary<string, InstanceAssets> data;
         }
 
+        public delegate void ProgressHandlerDelegate(int procents);
+        public static event ProgressHandlerDelegate ProgressHandler;
+
         public static string directory;
 
         public static void Create(string path)
