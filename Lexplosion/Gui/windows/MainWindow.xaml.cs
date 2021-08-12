@@ -30,11 +30,17 @@ namespace Lexplosion.Gui.Windows
             MainWindow.Obj = this;
 
             MouseDown += delegate { try { DragMove(); } catch { } };
+            this.PagesController<LeftSideMenuPage>("LeftSideFrame", this.LeftSideFrame);
+            // TODO: для этого есть метод PagesController
 
-            LeftSideFrame.Navigate(new LeftSideMenuPage(this)); // TODO: для этого есть метод PagesController
-
-            if (UserData.InstancesList.Count > 0) RightSideFrame.Navigate(new LibraryContainerPage(this));
-            else RightSideFrame.Navigate(new InstanceContainerPage(this));
+            if (UserData.InstancesList.Count > 0) 
+            {
+                this.PagesController<LibraryContainerPage>("RightSideFrame", this.RightSideFrame);
+            }
+            else
+            {
+                this.PagesController<InstanceContainerPage>("RightSideFrame", this.RightSideFrame);
+            }
         }
 
         public void PagesController<T>(string page, Frame frame) where T: Page
