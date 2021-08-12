@@ -23,14 +23,17 @@ namespace Lexplosion.Logic.Management
         private Dictionary<string, int> InstanceData;
 
         private bool BaseFilesIsCheckd = false;
+        private static event ManageLogic.ProgressHandlerDelegate ProgressHandler;
 
-        public CurseforgeInstance(string instanceid)
+        public CurseforgeInstance(string instanceid, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
             InstanceId = instanceid;
+            ProgressHandler = progressHandler;
         }
 
         public string Check()
         {
+            ProgressHandler(10);
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InstanceData = DataFilesManager.GetFile<Dictionary<string, int>>(WithDirectory.directory + "/instances/" + InstanceId + "/cursforgeData.json");
 
@@ -48,8 +51,9 @@ namespace Lexplosion.Logic.Management
             {
                 return "versionError";
             }
+            ProgressHandler(20);
 
-            if(Manifest.version.forgeVersion != null && Manifest.version.forgeVersion != "")
+            if (Manifest.version.forgeVersion != null && Manifest.version.forgeVersion != "")
             {
                 BaseFilesIsCheckd = true;
 
@@ -93,7 +97,7 @@ namespace Lexplosion.Logic.Management
         public InitData Update()
         {
             List<string> errors = new List<string>();
-
+            ProgressHandler(30);
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
             {
@@ -156,6 +160,7 @@ namespace Lexplosion.Logic.Management
             }
 
             DataFilesManager.SaveManifest(InstanceId, Manifest);
+            ProgressHandler(100);
 
             return new InitData
             {

@@ -11,14 +11,20 @@ using System.Text.RegularExpressions;
 using System;
 using System.Text;
 using Newtonsoft.Json;
+using System.Reflection;
+using System.Windows.Controls;
+using System.ComponentModel;
 
 namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
     {
+
+        public delegate void ProgressHandlerDelegate(int procents);
+        public static event ProgressHandlerDelegate ProgressHandler;
+
         public static AuthCode Auth(string login, string password, bool saveUser)
         {
-
             Dictionary<string, string> response = ToServer.Authorization(login, password);
 
             if (response != null)
@@ -112,16 +118,22 @@ namespace Lexplosion.Logic.Management
                         instance = new LocalInstance(instanceId);
                         break;
                     case InstanceType.Curseforge:
-                        instance = new CurseforgeInstance(instanceId);
+                        instance = new CurseforgeInstance(instanceId, ProgressHandler);
                         break;
                     default:
                         instance = null;
                         break;
-
                 }
 
                 string result = instance.Check();
                 instance.Update(); // TODO: тут выводить ошибки
+
+                //Убираем все обработчики событий
+                FieldInfo f1 = typeof(Control).GetField("EventClick", BindingFlags.Static | BindingFlags.NonPublic);
+                object obj = f1.GetValue(ProgressHandler);
+                PropertyInfo pi = ProgressHandler.GetType().GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
+                EventHandlerList list = (EventHandlerList)pi.GetValue(ProgressHandler, null);
+                list.RemoveHandler(obj, list[obj]);
             });
         }
 
@@ -282,7 +294,7 @@ namespace Lexplosion.Logic.Management
         }
 
 
-        public static InitData UpdateInstance(string instanceId)
+        public static InitData UpdateInstance(string instanceId, ProgressHandlerDelegate ProgressHandler)
         {
             InitData Error(string error)
             {
@@ -305,7 +317,7 @@ namespace Lexplosion.Logic.Management
                     instance = new LocalInstance(instanceId);
                     break;
                 case InstanceType.Curseforge:
-                    instance = new CurseforgeInstance(instanceId);
+                    instance = new CurseforgeInstance(instanceId, ProgressHandler);
                     break;
                 default:
                     instance = null;
