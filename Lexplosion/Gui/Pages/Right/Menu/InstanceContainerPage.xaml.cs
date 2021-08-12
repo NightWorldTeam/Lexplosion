@@ -65,6 +65,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void CreateFakeInstance(int count) 
 		{
+			/*
 			Uri logoPath1 = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 			string description = "Цель данной сборки - развить свою колонию и построить транспортную сеть в виде железной дороги. Поезда здесь существуют не просто как декорации, они необходимы, ведь предметы имеют вес, руда генерируется огромными жилами, которые встречаются не очень то и часто. В процессе игры вам придётся постоянно перемещаться между различными месторождениями, своей базой, колонией. Основной индустриальный мод в этом модпаке - это Immersive Engineering, поэтому все строения буду выглядеть очень эффектно на фоне механизмов из этого мода. Во время игры вы с головой уйдёте в логистику, путешествия и индустриализацию.";
 			string[] instanceName = new string[4] { "Energy of Space", "Long Tech", "Transport Network", "Over the Horizon" };
@@ -73,16 +74,17 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			{
 				BuildInstanceForm(instanceId[j], j+1, logoPath1, instanceName[j], "NightWorld", description, _instanceTags1);
 			}
+			*/
 		}
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
-		public void BuildInstanceForm(string instanceName, int row, Uri logoPath, string title, string author, string overview, List<string> tags)
+		public void BuildInstanceForm(string instanceId, int row, Uri logoPath, string title, string author, string overview, List<string> tags)
 		{
 			this.Dispatcher.Invoke(() =>
 			{
 				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
-				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, instanceName, author, overview, 0, logoPath, tags, false, true);
+				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, "", author, overview, Int32.Parse(instanceId), logoPath, tags, false, true);
 				// Добавление в Столбики и Колноки в форме.
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);

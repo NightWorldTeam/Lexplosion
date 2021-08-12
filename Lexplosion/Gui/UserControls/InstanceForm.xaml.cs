@@ -2,6 +2,7 @@
 using Lexplosion.Gui.Pages.Left;
 using Lexplosion.Gui.Pages.Right.Instance;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using System;
 using System.Collections.Generic;
@@ -132,7 +133,9 @@ namespace Lexplosion.Gui.UserControls
             if (instanceProperties.InstanceTags.Count > 0) { 
                 foreach (string tag in instanceProperties.InstanceTags) 
                 {
-                    TagsBlock.Children.Add(SetTagsButton(tag));
+                    if (TagsBlock.Children.Count < 3) { 
+                        TagsBlock.Children.Add(SetTagsButton(tag));
+                    }
                 }
             }
             
@@ -313,7 +316,6 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceLogo_MouseEnter(object sender, MouseEventArgs e)
         {
-
             InstanceLogo_Background.Effect = new BlurEffect();
             InstanceLogo_Text.Content = "Больше";
             InstanceLogo_Text.Visibility = Visibility.Visible;
@@ -358,6 +360,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void DownloadInstance()
         {
+            WithDirectory.ProgressHandler += SetDownloadProcent;
             SetupButtons("upper", null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, lowerButtonFunc);
             SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", upperButtonFunc, LowerButtonFunctions.PauseDownload);
             InstanceProgressBar.Visibility = Visibility.Visible;
@@ -396,7 +399,7 @@ namespace Lexplosion.Gui.UserControls
         public void SetDownloadProcent(int procent) 
         {
             InstanceProgressBar.Value = procent;
-            InstallProgress.Content = procent + "%";
+            InstallProgress.Content = procent.ToString() + "%";
         }
 
         private void OpenInstanceFolder() 
