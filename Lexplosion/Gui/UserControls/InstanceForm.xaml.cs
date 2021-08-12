@@ -67,6 +67,7 @@ namespace Lexplosion.Gui.UserControls
             ContinueDownload,
             Play,
             ProgressBar,
+            Update,
             NonSelected
         }
 
@@ -289,6 +290,8 @@ namespace Lexplosion.Gui.UserControls
                     break;
                 case UpperButtonFunctions.ProgressBar:
                     break;
+                case UpperButtonFunctions.Update:
+                    break;
             }
         }
 
@@ -360,7 +363,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void DownloadInstance()
         {
-            WithDirectory.ProgressHandler += SetDownloadProcent;
+            ManageLogic.ProgressHandler += SetDownloadProcent;
             SetupButtons("upper", null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, lowerButtonFunc);
             SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", upperButtonFunc, LowerButtonFunctions.PauseDownload);
             InstanceProgressBar.Visibility = Visibility.Visible;
@@ -396,10 +399,12 @@ namespace Lexplosion.Gui.UserControls
             InstanceProgressBar.Visibility = Visibility.Collapsed;
         }
 
-        public void SetDownloadProcent(int procent) 
+        public void SetDownloadProcent(int procent)
         {
-            InstanceProgressBar.Value = procent;
-            InstallProgress.Content = procent.ToString() + "%";
+            MainWindow.Obj.Dispatcher.Invoke(delegate { 
+                InstanceProgressBar.Value = procent;
+                InstallProgress.Content = procent.ToString() + "%";
+            });
         }
 
         private void OpenInstanceFolder() 

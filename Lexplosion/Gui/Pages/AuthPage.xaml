@@ -258,11 +258,11 @@
                 <CheckBox Focusable="False" Style="{StaticResource CCBS}" x:Name="SaveMe" Margin="92,338,92,141" Content="Запомнить меня" Height="Auto"/>
                 <Button Focusable="False" Style="{StaticResource CLB}" Click="Auth" Content="Войти" Width="166" Height="40" Margin="77,381,74,79" FontSize="20"/>
                 <Button Focusable="False"
-                        BorderThickness="0"
-                        Background="Transparent"
-                        Click="Register" 
-                        Width="30" Height="30" 
-                        Margin="10,460,277,10">
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Click="Register" 
+                    Width="30" Height="30" 
+                    Margin="10,460,277,10">
                     <Image Source="pack://application:,,,/assets/images/icons/add_profile.png"/>
                 </Button>
             </Grid>

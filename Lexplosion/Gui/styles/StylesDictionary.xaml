@@ -238,7 +238,7 @@
         <Setter Property="Width" Value="120"/>
         <Setter Property="Height" Value="38"/>
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="WhiteSmoke"/>
         <Setter Property="FontSize" Value="25"/>
         <Setter Property="Template">
             <Setter.Value>
