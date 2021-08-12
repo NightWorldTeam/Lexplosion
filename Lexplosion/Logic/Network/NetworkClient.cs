@@ -42,7 +42,6 @@ namespace Lexplosion.Logic.Network
                     byte[] portData = Encoding.UTF8.GetBytes(externalPort);
 
                     stream.Write(portData, 0, portData.Length); //отправяем управляющему серверу наш порт
-
                 }
                 else
                 {
