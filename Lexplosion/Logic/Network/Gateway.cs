@@ -175,7 +175,6 @@ namespace Lexplosion.Logic.Network
                     if (servers != null && servers.Count > 0)
                     {
                         isClient = true;
-
                         List<int> ports = bridge.SetServers(servers);
 
                         if (!bridge.IsInitialized)

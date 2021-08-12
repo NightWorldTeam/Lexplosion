@@ -31,11 +31,12 @@ namespace Lexplosion.Gui.Windows
 
             MouseDown += delegate { try { DragMove(); } catch { } };
 
-            LeftSideFrame.Navigate(new LeftSideMenuPage(this)); // TODO: для этого есть метод PagesController
+            LeftSideFrame.Navigate(new LeftSideMenuPage(this));
 
             if (UserData.InstancesList.Count > 0) RightSideFrame.Navigate(new LibraryContainerPage(this));
             else RightSideFrame.Navigate(new InstanceContainerPage(this));
         }
+
 
         public void PagesController<T>(string page, Frame frame) where T: Page
         {
