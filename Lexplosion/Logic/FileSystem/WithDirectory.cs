@@ -421,27 +421,21 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     updatesList.Natives.Add(key);
                 }
-
             }
             else
             {
-
                 if (!updates.ContainsKey("natives") || filesInfo.version.nativesLastUpdate != updates["natives"]) //если версия natives старая, то отправляем на обновления
                 {
-
                     foreach (string key in filesInfo.natives.Keys)
                     {
                         if (filesInfo.natives[key] == "windows" || filesInfo.natives[key] == "all")
                         {
                             updatesList.Natives.Add(key);
                         }
-
                     }
-
                 }
                 else
                 {
-
                     foreach (string n in filesInfo.natives.Keys) //ищем недостающие файлы
                     {
                         if (filesInfo.natives[n] == "windows" || filesInfo.natives[n] == "all")
@@ -450,7 +444,6 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 updatesList.Natives.Add(n);
                             }
-
                         }
                     }
                 }

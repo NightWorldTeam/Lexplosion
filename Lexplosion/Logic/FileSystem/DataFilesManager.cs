@@ -245,7 +245,6 @@ namespace Lexplosion.Logic.FileSystem
 
                 return default;
             }
-
         }
 
         //эта функция возвращает имя для файла либрариесов (файлы .lver, что хранит версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры)
@@ -262,7 +261,6 @@ namespace Lexplosion.Logic.FileSystem
             {
                 return suffix;
             }
-
         }
 
         public static void SaveManifest(string instanceId, VersionManifest data)
@@ -318,7 +316,6 @@ namespace Lexplosion.Logic.FileSystem
             }
             
             return data;
-
         }
 
         public static Dictionary<string, InstanceParametrs> GetInstancesList()
@@ -340,7 +337,6 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             return list;
-
         }
 
         public static void SaveInstancesList(Dictionary<string, InstanceParametrs> content)

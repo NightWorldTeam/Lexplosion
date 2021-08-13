@@ -203,7 +203,6 @@ namespace Lexplosion.Logic.Management
         {
             List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
 
-            MessageBox.Show("test2 " + Manifest.version.forgeVersion + " 1");
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             return new InitData

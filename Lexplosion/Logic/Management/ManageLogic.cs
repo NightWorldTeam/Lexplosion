@@ -19,9 +19,11 @@ namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
     {
-
         public delegate void ProgressHandlerDelegate(int procents);
         public static event ProgressHandlerDelegate ProgressHandler;
+
+        public delegate void ComplitedDownloadDelegate(int procents);
+        public static event ComplitedDownloadDelegate ComplitedDownload;
 
         public static AuthCode Auth(string login, string password, bool saveUser)
         {
@@ -128,12 +130,10 @@ namespace Lexplosion.Logic.Management
                 string result = instance.Check();
                 instance.Update(); // TODO: тут выводить ошибки
 
-                //Убираем все обработчики событий
-                /*FieldInfo f1 = typeof(Control).GetField("EventClick", BindingFlags.Static | BindingFlags.NonPublic);
-                object obj = f1.GetValue(ProgressHandler);
-                PropertyInfo pi = ProgressHandler.GetType().GetProperty("Events", BindingFlags.NonPublic | BindingFlags.Instance);
-                EventHandlerList list = (EventHandlerList)pi.GetValue(ProgressHandler, null);
-                list.RemoveHandler(obj, list[obj]);*/
+                foreach (Delegate d in ProgressHandler.GetInvocationList())
+                {
+                    ProgressHandler -= (ProgressHandlerDelegate)d;
+                }
             });
         }
 
@@ -177,7 +177,7 @@ namespace Lexplosion.Logic.Management
             {
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
 
-                InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype);
+                InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, ProgressHandler);
 
                 if (data.Errors.Contains("javaPathError"))
                 {
@@ -227,7 +227,7 @@ namespace Lexplosion.Logic.Management
                 }*/
 
                 if (data.Errors.Count == 0)
-                {
+                {    
                     string command = LaunchGame.CreateCommand(initModPack, data, instanceSettings);
                     LaunchGame.Run(command, initModPack);
                     DataFilesManager.SaveSettings(UserData.settings);

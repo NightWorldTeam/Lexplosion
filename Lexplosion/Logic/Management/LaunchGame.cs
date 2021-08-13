@@ -174,6 +174,7 @@ namespace Lexplosion.Logic.Management
                                 ConsoleWindow.isShow = true;
                             }
                             ConsoleWindow.Window.Update(consoleText);
+                            ConsoleWindow.Window.Update(command);
                         });
 
                         consoleText = "";
@@ -221,12 +222,10 @@ namespace Lexplosion.Logic.Management
 
                 return false;
             }
-
         }
 
-        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceType type)
+        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceType type, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
-
             InitData Error(string error)
             {
                 return new InitData
@@ -263,12 +262,11 @@ namespace Lexplosion.Logic.Management
                         instance = new LocalInstance(instanceId);
                         break;
                     case InstanceType.Curseforge:
-                        instance = new CurseforgeInstance(instanceId, null);
+                        instance = new CurseforgeInstance(instanceId, progressHandler);
                         break;
                     default:
                         instance = null;
                         break;
-
                 }
 
                 if (!UserData.offline && autoUpdate)
