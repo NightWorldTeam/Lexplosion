@@ -36,8 +36,6 @@ namespace Lexplosion.Gui.Pages.MW
 			MainGrid.Children.Add(leftPanel);
 		}
 
-
-
 		private async void GetInitializeInstance()
 		{
 			await Task.Run(() => InitializeInstance());
@@ -46,7 +44,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance()
 		{
-			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(10, 0, ModpacksCategories.All);
+			List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(10, 0, ModpacksCategories.All);
 
 			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 			{
@@ -72,7 +70,6 @@ namespace Lexplosion.Gui.Pages.MW
 				InstanceGrid.Children.Add(instanceForm);
 			});
 		}
-
 
 		private RowDefinition GetRowDefinition()
 		{
@@ -106,7 +103,7 @@ namespace Lexplosion.Gui.Pages.MW
 			{
 				_isInitializeInstance = false;
 				//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
-				List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(10, 0, ModpacksCategories.All, SearchBox.Text);
+				List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(10, 0, ModpacksCategories.All, SearchBox.Text);
 				for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 				{
 					BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,

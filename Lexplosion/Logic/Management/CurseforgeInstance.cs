@@ -77,7 +77,7 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            List<CurseforgeFileInfo> instanceVersionsInfo = ToServer.GetCursforgeInstanceInfo(InstanceData["cursforgeId"]); //получем информацию об этом модпаке
+            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InstanceData["cursforgeId"]); //получем информацию об этом модпаке
 
             //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
             foreach (CurseforgeFileInfo ver in instanceVersionsInfo)

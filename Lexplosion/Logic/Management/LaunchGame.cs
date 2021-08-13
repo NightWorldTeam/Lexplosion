@@ -318,7 +318,6 @@ namespace Lexplosion.Logic.Management
             {
                 return Error("unknownError");
             }
-
         }
 
         public static void KillProcess()

@@ -77,26 +77,25 @@ namespace Lexplosion.Logic.Objects
         public Dictionary<string, LibInfo> Libraries;
     }
 
-    //Эти 3 класса нужны для получения инфы с курсфорджа
-    public class Author
-    {
-        public string name;
-        public string url;
-    }
-
-    public class Attachment
-    {
-        public int id;
-        public bool isDefault;
-        public string url;
-    }
-
     public class CurseforgeInstanceInfo
     {
         public class Category
         {
             public int categoryId;
             public string name;
+        }
+
+        public class Author
+        {
+            public string name;
+            public string url;
+        }
+
+        public class Attachment
+        {
+            public int id;
+            public bool isDefault;
+            public string url;
         }
 
         public int id;

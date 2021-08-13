@@ -360,9 +360,9 @@ namespace Lexplosion.Gui.UserControls
                 string instanceId = ManageLogic.CreateInstance(
                     instanceProperties.InstanceTitle, InstanceType.Curseforge, "", "", instanceProperties.CurseforgeInstanceId
                 	);
+                ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.DownloadInstance(instanceId, InstanceType.Curseforge);
             }
-            ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
         }
 
         private void LaunchInstance()
