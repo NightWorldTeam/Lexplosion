@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.UserControls;
+using Lexplosion.Gui.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +20,20 @@ namespace Lexplosion.Gui.Pages.MW
     /// <summary>
     /// Interaction logic for ServersContainerPage.xaml
     /// </summary>
-    public partial class ServersContainerPage : Page
+    public partial class MultiplayerContainerPage : Page
     {
-        public ServersContainerPage()
+        private MainWindow _mainWindow;
+
+        public MultiplayerContainerPage(MainWindow mainWindow)
         {
             InitializeComponent();
+            _mainWindow = mainWindow;
             InitializeLeftPanel();
         }
 
         private void InitializeLeftPanel()
         {
-            LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.MultiplayerContainer);
+            LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.MultiplayerContainer, _mainWindow);
             Grid.SetColumn(leftPanel, 0);
             MainGrid.Children.Add(leftPanel);
         }

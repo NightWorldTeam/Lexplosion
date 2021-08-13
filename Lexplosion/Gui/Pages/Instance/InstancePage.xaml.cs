@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.UserControls;
+using Lexplosion.Gui.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,21 +24,21 @@ namespace Lexplosion.Gui.Pages.Instance
     {
         //private ToggleButton selectedToggleButton;
         public static InstancePage instance = null;
+        private MainWindow _mainWindow;
 
-        private string title;
-        private string description;
+        //private string title;
+        //private string description;
 
-        public InstancePage(string title, string description)
+        public InstancePage(MainWindow mainWindow)
         {
             InitializeComponent();
             InitializeLeftPanel();
-            instance = this;
-            InstanceTitle.Text = title;
+            _mainWindow = mainWindow;
         }
 
         private void InitializeLeftPanel() 
         {
-            LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.OpenedInstance);
+            LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.OpenedInstance, _mainWindow);
             Grid.SetColumn(leftPanel, 0);
             MainGrid.Children.Add(leftPanel);
         }

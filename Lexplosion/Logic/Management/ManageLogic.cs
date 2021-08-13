@@ -22,7 +22,7 @@ namespace Lexplosion.Logic.Management
         public delegate void ProgressHandlerDelegate(int procents);
         public static event ProgressHandlerDelegate ProgressHandler;
 
-        public delegate void ComplitedDownloadDelegate(int procents);
+        public delegate void ComplitedDownloadDelegate(Dictionary<string, string> errors);
         public static event ComplitedDownloadDelegate ComplitedDownload;
 
         public static AuthCode Auth(string login, string password, bool saveUser)
@@ -143,7 +143,7 @@ namespace Lexplosion.Logic.Management
             {
                 LaunchGame.KillProcess();
                 // TODO: Тут вырезал строку
-                //Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+                //Gui.PageType.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
 
                 return;
             }
@@ -251,7 +251,7 @@ namespace Lexplosion.Logic.Management
 
                 data = null;
 
-                //Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+                //Gui.PageType.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
 
             }
         }

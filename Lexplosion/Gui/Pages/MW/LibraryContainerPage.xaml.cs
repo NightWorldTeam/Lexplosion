@@ -37,7 +37,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeLeftPanel()
 		{
-			LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.InstanceLibrary);
+			LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.InstanceLibrary, _mainWindow);
 			Grid.SetColumn(leftPanel, 0);
 			MainGrid.Children.Add(leftPanel);
 		}

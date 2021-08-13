@@ -16,27 +16,28 @@ namespace Lexplosion.Gui.Pages.MW
     public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
-		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
 		private List<string> _instanceTags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
 		private MainWindow _mainWindow;
-		private readonly Uri _nonImageUri = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+		//private readonly Uri _nonImageUri = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 
 		private bool _isInitializeInstance = false;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
-			_mainWindow = mainWindow;
 			InitializeComponent();
+			_mainWindow = mainWindow;
 			InitializeLeftPanel();
 			GetInitializeInstance();
 		}
 
 		private void InitializeLeftPanel()
 		{
-			LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.InstanceContainer);
+			LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.InstanceContainer, _mainWindow);
 			Grid.SetColumn(leftPanel, 0);
 			MainGrid.Children.Add(leftPanel);
 		}
+
+
 
 		private async void GetInitializeInstance()
 		{

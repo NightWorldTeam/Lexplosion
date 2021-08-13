@@ -27,6 +27,8 @@ namespace Lexplosion.Gui.Pages.MW
     public partial class SettingsContainerPage : Page
     {
         private string sysPath;
+        private MainWindow _mainWindow;
+
         private List<string> _screenResolutions = new List<string>()
         {
             "1920x1080", "1768x992", "1680x1050",  "1600x1024", "1600x900", "1440x900", "1280x1024",
@@ -38,13 +40,14 @@ namespace Lexplosion.Gui.Pages.MW
         public SettingsContainerPage(MainWindow mainWindow)
         {
             InitializeComponent();
+            _mainWindow = mainWindow;
             SetSettings();
             InitializeLeftPanel();
         }
 
         private void InitializeLeftPanel() 
         {
-            LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.LauncherSettings);
+            LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.LauncherSettings, _mainWindow);
             Grid.SetColumn(leftPanel, 0);
             MainGrid.Children.Add(leftPanel);
         }

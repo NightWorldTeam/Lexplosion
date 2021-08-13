@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="244">
-    <Grid x:Name="LeftSideMenu">
+    <Grid x:Name="LeftPanelGrid">
         <Grid.Background>
             <SolidColorBrush Color="#18191b"/>
         </Grid.Background>
-        <StackPanel x:Name="LeftSideMenuStackPanel" Margin="-1,10,0,0" Visibility="Visible" >
+        <StackPanel x:Name="LeftPanelMenu" Margin="-1,10,0,0" Visibility="Visible" >
             <ToggleButton Focusable="False" x:Name="MenuButton0" Style="{StaticResource MWCBS1}" />
             <ToggleButton Focusable="False" x:Name="MenuButton1" Style="{StaticResource MWCBS1}" />
             <ToggleButton Focusable="False" x:Name="MenuButton2" Style="{StaticResource MWCBS1}" />
