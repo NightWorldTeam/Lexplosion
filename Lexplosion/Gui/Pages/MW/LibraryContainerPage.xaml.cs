@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static Lexplosion.Logic.Objects.CurseforgeInstanceInfo;
 
 namespace Lexplosion.Gui.Pages.MW
 {
@@ -51,7 +52,7 @@ namespace Lexplosion.Gui.Pages.MW
 		*/
 		private void InitializeInstance()
 		{
-			List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
+			List<Category> instanceTags = new List<Category>();
 			Dictionary<string, InstanceParametrs> instancesList = UserData.InstancesList;
 			Dictionary<string, InstanceAssets> instanceAssets = UserData.instancesAssets;
 
@@ -72,7 +73,7 @@ namespace Lexplosion.Gui.Pages.MW
 					instancesList[key].Name,
 					"by NightWorld",
 					description,
-					instance_tags1
+					instanceTags
 					);
 
 				i++;
@@ -80,7 +81,7 @@ namespace Lexplosion.Gui.Pages.MW
 		}
 
 
-		private void BuildInstanceForm(string id, int row, Uri logo_path, string title, string author, string overview, List<string> tags)
+		private void BuildInstanceForm(string id, int row, Uri logo_path, string title, string author, string overview, List<Category> tags)
 		{
 			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.

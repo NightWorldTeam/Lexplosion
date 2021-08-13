@@ -16,7 +16,6 @@ namespace Lexplosion.Gui.Pages.MW
     public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
-		private List<string> _instanceTags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
 		private MainWindow _mainWindow;
 		//private readonly Uri _nonImageUri = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 
@@ -56,13 +55,13 @@ namespace Lexplosion.Gui.Pages.MW
 					curseforgeInstances[j].name,
 					curseforgeInstances[j].authors[0].name,
 					curseforgeInstances[j].summary,
-					_instanceTags1);
+					curseforgeInstances[j].categories);
 			}
 		}
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
-		public void BuildInstanceForm(string instanceId, int row, Uri logoPath, string title, string author, string overview, List<string> tags)
+		public void BuildInstanceForm(string instanceId, int row, Uri logoPath, string title, string author, string overview, List<CurseforgeInstanceInfo.Category> tags)
 		{
 			this.Dispatcher.Invoke(() =>
 			{
@@ -115,7 +114,7 @@ namespace Lexplosion.Gui.Pages.MW
 						curseforgeInstances[j].name,
 						curseforgeInstances[j].authors[0].name,
 						curseforgeInstances[j].summary,
-						_instanceTags1);
+						curseforgeInstances[j].categories);
 				}
 			}
 		}

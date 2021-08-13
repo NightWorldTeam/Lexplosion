@@ -78,20 +78,20 @@ namespace Lexplosion.Logic.Objects
     }
 
     //Эти 3 класса нужны для получения инфы с курсфорджа
-    class Author
+    public class Author
     {
         public string name;
         public string url;
     }
 
-    class Attachment
+    public class Attachment
     {
         public int id;
         public bool isDefault;
         public string url;
     }
 
-    class CurseforgeInstanceInfo
+    public class CurseforgeInstanceInfo
     {
         public class Category
         {

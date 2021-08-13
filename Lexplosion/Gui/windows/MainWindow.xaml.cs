@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using Lexplosion.Global;
 using Lexplosion.Gui.Pages.MW;
+using Lexplosion.Gui.UserControls;
 
 namespace Lexplosion.Gui.Windows
 {
@@ -23,6 +25,7 @@ namespace Lexplosion.Gui.Windows
         public int curseforgeInstanceId;
         public Uri instanceLogoPath;
 
+        public ToggleButton selectedToggleButton;
         public List<string> instanceTags = new List<string>();
 
         private Dictionary<string, Page> Pages = new Dictionary<string, Page>();

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using static Lexplosion.Logic.Objects.CurseforgeInstanceInfo;
 
 namespace Lexplosion.Gui.UserControls
 {
@@ -52,7 +53,7 @@ namespace Lexplosion.Gui.UserControls
 
             public Uri InstanceLogoPath;
 
-            public List<string> InstanceTags;
+            public List<Category> InstanceTags;
 
             public bool IsInstanceInstalled;
             public bool IsInstanceAddedToLibrary;
@@ -85,7 +86,7 @@ namespace Lexplosion.Gui.UserControls
         private MainWindow mainWindow;
 
         public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, int curseforgeInstanceId,
-            Uri instanceLogoPath, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
+            Uri instanceLogoPath, List<Category> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
@@ -130,11 +131,10 @@ namespace Lexplosion.Gui.UserControls
              * Setup Instance Tags
              */
             if (instanceProperties.InstanceTags.Count > 0) { 
-                foreach (string tag in instanceProperties.InstanceTags) 
-                {
-                    if (TagsBlock.Children.Count < 3) { 
-                        TagsBlock.Children.Add(SetTagsButton(tag));
-                    }
+                foreach (Category tag in instanceProperties.InstanceTags) 
+                {   
+
+                    TagsBlock.Children.Add(SetTagsButton(tag.name));
                 }
             }
             
@@ -210,7 +210,7 @@ namespace Lexplosion.Gui.UserControls
         {
             var tag = new Button()
             {
-                Name = "tag" + content.Replace('.', '_'),
+                //Name = "tag" + content.Replace('.', '_'),
                 Content = content,
                 Style = (Style)Application.Current.FindResource("TagStyle"),
             };
