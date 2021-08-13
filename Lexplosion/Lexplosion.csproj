@@ -118,8 +118,8 @@
     <Compile Include="Gui\Pages\MW\LibraryContainerPage.xaml.cs">
       <DependentUpon>LibraryContainerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\MW\ServersContainerPage.xaml.cs">
-      <DependentUpon>ServersContainerPage.xaml</DependentUpon>
+    <Compile Include="Gui\Pages\MW\MultiplayerContainerPage.xaml.cs">
+      <DependentUpon>MultiplayerContainerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Pages\MW\SettingsContainerPage.xaml.cs">
       <DependentUpon>SettingsContainerPage.xaml</DependentUpon>
@@ -132,6 +132,9 @@
     </Compile>
     <Compile Include="Gui\UserControls\InstanceMultiButton.xaml.cs">
       <DependentUpon>InstanceMultiButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\UserControls\LeftPanel.xaml.cs">
+      <DependentUpon>LeftPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\UserControls\SwitchButton.xaml.cs">
       <DependentUpon>SwitchButton.xaml</DependentUpon>
@@ -215,7 +218,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\MW\ServersContainerPage.xaml">
+    <Page Include="Gui\Pages\MW\MultiplayerContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -232,6 +235,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\UserControls\InstanceMultiButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UserControls\LeftPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

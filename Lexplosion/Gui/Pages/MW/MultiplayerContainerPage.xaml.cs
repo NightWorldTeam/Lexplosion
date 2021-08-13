@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Gui.UserControls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,14 @@ namespace Lexplosion.Gui.Pages.MW
         public ServersContainerPage()
         {
             InitializeComponent();
+            InitializeLeftPanel();
+        }
+
+        private void InitializeLeftPanel()
+        {
+            LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.MultiplayerContainer);
+            Grid.SetColumn(leftPanel, 0);
+            MainGrid.Children.Add(leftPanel);
         }
     }
 }

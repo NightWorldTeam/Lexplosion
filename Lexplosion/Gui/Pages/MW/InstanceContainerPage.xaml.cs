@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Windows;
+﻿using Lexplosion.Gui.UserControls;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
@@ -26,17 +27,15 @@ namespace Lexplosion.Gui.Pages.MW
 		{
 			_mainWindow = mainWindow;
 			InitializeComponent();
+			InitializeLeftPanel();
 			GetInitializeInstance();
-			InitializeLeftSideMenu("Каталог", "Библиотека", "Сетевая игра", "Настройки");
-			//CreateFakeInstance(4);
 		}
 
-		private void InitializeLeftSideMenu(string btn0, string btn1, string btn2, string btn3) 
+		private void InitializeLeftPanel()
 		{
-			LeftSideMenuButton0.Content = btn0;
-			LeftSideMenuButton1.Content = btn1;
-			LeftSideMenuButton2.Content = btn2;
-			LeftSideMenuButton3.Content = btn3;
+			LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.InstanceContainer);
+			Grid.SetColumn(leftPanel, 0);
+			MainGrid.Children.Add(leftPanel);
 		}
 
 		private async void GetInitializeInstance()
@@ -58,20 +57,6 @@ namespace Lexplosion.Gui.Pages.MW
 					curseforgeInstances[j].summary,
 					_instanceTags1);
 			}
-		}
-
-		private void CreateFakeInstance(int count)
-		{
-			/*
-			Uri logoPath1 = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
-			string description = "Цель данной сборки - развить свою колонию и построить транспортную сеть в виде железной дороги. Поезда здесь существуют не просто как декорации, они необходимы, ведь предметы имеют вес, руда генерируется огромными жилами, которые встречаются не очень то и часто. В процессе игры вам придётся постоянно перемещаться между различными месторождениями, своей базой, колонией. Основной индустриальный мод в этом модпаке - это Immersive Engineering, поэтому все строения буду выглядеть очень эффектно на фоне механизмов из этого мода. Во время игры вы с головой уйдёте в логистику, путешествия и индустриализацию.";
-			string[] instanceName = new string[4] { "Energy of Space", "Long Tech", "Transport Network", "Over the Horizon" };
-			string[] instanceId = new string[4] { "123", "123", "123", "123" };
-			for (int j = 0; j < count; j++)
-			{
-				BuildInstanceForm(instanceId[j], j+1, logoPath1, instanceName[j], "NightWorld", description, _instanceTags1);
-			}
-			*/
 		}
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.

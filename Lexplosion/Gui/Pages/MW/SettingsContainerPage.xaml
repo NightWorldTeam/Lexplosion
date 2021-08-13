@@ -241,22 +241,11 @@
         </Style>
     </Page.Resources>
 
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="244"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="LeftSideMenu" Grid.Column="0">
-            <Grid.Background>
-                <SolidColorBrush Color="#18191b"/>
-            </Grid.Background>
-            <StackPanel x:Name="LeftSideMenuStackPanel" Margin="-1,10,0,0" Visibility="Visible" >
-                <ToggleButton Focusable="False" x:Name="LeftSideMenuButton0" Style="{StaticResource MWCBS1}" />
-                <ToggleButton Focusable="False" x:Name="LeftSideMenuButton1" Style="{StaticResource MWCBS1}" />
-                <ToggleButton Focusable="False" x:Name="LeftSideMenuButton2" Style="{StaticResource MWCBS1}" />
-                <ToggleButton Focusable="False" x:Name="LeftSideMenuButton3" Style="{StaticResource MWCBS1}" />
-            </StackPanel>
-        </Grid>
         <Grid Grid.Column="1">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <Grid ShowGridLines="True">
