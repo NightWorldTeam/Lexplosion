@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
-namespace Lexplosion.Logic.Objects 
+namespace Lexplosion.Logic.Objects
 {
 
     class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
@@ -13,7 +13,7 @@ namespace Lexplosion.Logic.Objects
         public string xms;
     }
 
-    class LibInfo 
+    class LibInfo
     {
         public bool notArchived;
         public string url;
@@ -42,7 +42,7 @@ namespace Lexplosion.Logic.Objects
         public string forgeVersion;
     }
 
-    class VersionInfo: LocalVersionInfo
+    class VersionInfo : LocalVersionInfo
     {
         public new FileInfo minecraftJar;
         public bool security;
@@ -93,9 +93,16 @@ namespace Lexplosion.Logic.Objects
 
     class CurseforgeInstanceInfo
     {
+        public class Category
+        {
+            public int categoryId;
+            public string name;
+        }
+
         public int id;
         public string name;
         public List<Attachment> attachments;
+        public List<Category> categories;
         public List<Author> authors;
         public string summary;
         public float downloadCount;
