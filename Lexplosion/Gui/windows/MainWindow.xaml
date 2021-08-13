@@ -51,12 +51,7 @@
         </Grid.RowDefinitions>
         <!-- Custom Menu -->
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="244*"/>
-                <ColumnDefinition Width="700*"/>
-            </Grid.ColumnDefinitions>
-            <Frame x:Name="LeftSideFrame" NavigationUIVisibility="Hidden" Grid.Column="0"/>
-            <Frame x:Name="RightSideFrame" NavigationUIVisibility="Hidden" Grid.Column="1"/>
+            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Column="1"/>
         </Grid>
         <Grid Grid.Row="0">
             <Canvas Width="944" Height="28" Margin="0 0 0 635" Background="#151719">

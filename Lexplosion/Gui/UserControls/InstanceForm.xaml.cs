@@ -1,6 +1,4 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Gui.Pages.Left;
-using Lexplosion.Gui.Pages.Right.Instance;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
@@ -332,19 +330,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceLogoClick(object sender, MouseButtonEventArgs e)
         {
-            var lsmp = LeftSideMenuPage.instance;
             string[] ButtonContents = new string[4] { instanceProperties.InstanceTitle, "Экспорт", "Настройки", "Вернуться" };
-            RoutedEventHandler[] ButtonClicks = new RoutedEventHandler[4] { lsmp.InstanceOverview, lsmp.InstanceExport, lsmp.InstanceSetting, lsmp.BackToMainMenu };
-
-            for (int i = 0; i < 4; i++)
-            {
-                SwitchToggleButton(lsmp.LeftSideMenu, ButtonContents[i], ButtonClicks[i], i);
-            }
-            InstancePage instancePage = new InstancePage(instanceProperties.InstanceTitle, instanceProperties.InstanceOverview);
-            // TODO: не работает контроллер
-            //mainWindow.PagesController<InstancePage>("RightSideFrame", mainWindow.RightSideFrame);
-            mainWindow.RightSideFrame.Navigate(new InstancePage(instanceProperties.InstanceTitle, instanceProperties.InstanceOverview));
-            instancePage.BottomSideFrame.Navigate(new OverviewPage(instanceProperties.InstanceTitle, instanceProperties.InstanceOverview));
         }
 
         private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)

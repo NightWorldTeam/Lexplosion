@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Lexplosion.Global;
-using Lexplosion.Gui.Pages.Left;
-using Lexplosion.Gui.Pages.Right.Menu;
+using Lexplosion.Gui.Pages.MW;
 
 namespace Lexplosion.Gui.Windows
 {
@@ -34,17 +33,7 @@ namespace Lexplosion.Gui.Windows
             MainWindow.Obj = this;
 
             MouseDown += delegate { try { DragMove(); } catch { } };
-            this.PagesController<LeftSideMenuPage>("LeftSideFrame", this.LeftSideFrame);
-            // TODO: для этого есть метод PagesController
-
-            if (UserData.InstancesList.Count > 0) 
-            {
-                this.PagesController<LibraryContainerPage>("RightSideFrame", this.RightSideFrame);
-            }
-            else
-            {
-                this.PagesController<InstanceContainerPage>("RightSideFrame", this.RightSideFrame);
-            }
+            this.PagesController<InstanceContainerPage>("MainFrame", this.MainFrame);
         }
 
         public void PagesController<T>(string page, Frame frame) where T: Page

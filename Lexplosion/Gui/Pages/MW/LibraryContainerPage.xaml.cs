@@ -1,6 +1,4 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Gui.Pages.Left;
-using Lexplosion.Gui.Pages.Right.Instance;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
@@ -11,26 +9,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Lexplosion.Gui.Pages.Right.Menu
+namespace Lexplosion.Gui.Pages.MW
 {
-    /// <summary>
-    /// Interaction logic for LibraryContainerPage.xaml
-    /// </summary>
-    public partial class LibraryContainerPage : Page
-    {
+	// <summary>
+	/// Interaction logic for LibraryContainerPage.xaml
+	/// </summary>
+	public partial class LibraryContainerPage : Page
+	{
 		private MainWindow _mainWindow;
 		public LibraryContainerPage(MainWindow mainWindow)
-        {
+		{
 			_mainWindow = mainWindow;
 			InitializeComponent();
 			InitializeInstance();
@@ -43,19 +39,19 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			public string xmx;
 			public string xms;
 		*/
-		private void InitializeInstance() 
+		private void InitializeInstance()
 		{
 			List<string> instance_tags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
 			Dictionary<string, InstanceParametrs> instancesList = UserData.InstancesList;
 			Dictionary<string, InstanceAssets> instanceAssets = UserData.instancesAssets;
 
 			int i = 0;
-			foreach (string key in instancesList.Keys) 
+			foreach (string key in instancesList.Keys)
 			{
 				string description = "";
 				string image = "pack://application:,,,/assets/images/icons/non_image.png";
-                if (instanceAssets.ContainsKey(key))
-                {
+				if (instanceAssets.ContainsKey(key))
+				{
 					description = instanceAssets[key].description;
 					image = WithDirectory.directory + "/launcherAssets/" + instanceAssets[key].mainImage;
 				}
@@ -82,7 +78,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			{
 				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, id, author, overview, 0, logo_path, tags, true, true);
-																																	 // Добавление в Столбики и Колноки в форме.
+				// Добавление в Столбики и Колноки в форме.
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);
 			});
@@ -97,20 +93,5 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			};
 			return rowDefinition;
 		}
-
-
-		private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)
-		{
-			ToggleButton toggleButton = (ToggleButton)pageInstance.FindName("LeftSideMenuButton" + index);
-
-			toggleButton.Content = content;
-			toggleButton.Style = (Style)Application.Current.FindResource("MWCBS1");
-			toggleButton.Click += routedEventHandler;
-
-			if (index == 0) toggleButton.IsChecked = true;
-			if (index == 1) toggleButton.IsChecked = false;
-
-			return toggleButton;
-		}
-    }
+	}
 }

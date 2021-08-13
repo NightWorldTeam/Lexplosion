@@ -100,23 +100,29 @@
     <Compile Include="Gui\Pages\AuthPage.xaml.cs">
       <DependentUpon>AuthPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Left\LeftSideMenuPage.xaml.cs">
-      <DependentUpon>LeftSideMenuPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\Pages\Right\Instance\InstancePage.xaml.cs">
+    <Compile Include="Gui\Pages\Instance\InstancePage.xaml.cs">
       <DependentUpon>InstancePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Menu\LibraryContainerPage.xaml.cs">
+    <Compile Include="Gui\Pages\Instance\ModsListPage.xaml.cs">
+      <DependentUpon>ModsListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Pages\Instance\OverviewPage.xaml.cs">
+      <DependentUpon>OverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Pages\Instance\VersionPage.xaml.cs">
+      <DependentUpon>VersionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Pages\MW\InstanceContainerPage.xaml.cs">
+      <DependentUpon>InstanceContainerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Pages\MW\LibraryContainerPage.xaml.cs">
       <DependentUpon>LibraryContainerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Menu\SettingsContainerPage.xaml.cs">
-      <DependentUpon>SettingsContainerPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\Pages\Right\Menu\ServersContainerPage.xaml.cs">
+    <Compile Include="Gui\Pages\MW\ServersContainerPage.xaml.cs">
       <DependentUpon>ServersContainerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml.cs">
-      <DependentUpon>InstanceContainerPage.xaml</DependentUpon>
+    <Compile Include="Gui\Pages\MW\SettingsContainerPage.xaml.cs">
+      <DependentUpon>SettingsContainerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Pages\RegisterPage.xaml.cs">
       <DependentUpon>RegisterPage.xaml</DependentUpon>
@@ -144,15 +150,6 @@
     </Compile>
     <Compile Include="Gui\Pages\ModpackSettingsPage.xaml.cs">
       <DependentUpon>ModpackSettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\Pages\Right\Instance\ModsListPage.xaml.cs">
-      <DependentUpon>ModsListPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\Pages\Right\Instance\OverviewPage.xaml.cs">
-      <DependentUpon>OverviewPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\Pages\Right\Instance\VersionPage.xaml.cs">
-      <DependentUpon>VersionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
@@ -194,27 +191,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Left\LeftSideMenuPage.xaml">
+    <Page Include="Gui\Pages\Instance\InstancePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Instance\InstancePage.xaml">
+    <Page Include="Gui\Pages\Instance\ModsListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Menu\LibraryContainerPage.xaml">
+    <Page Include="Gui\Pages\Instance\OverviewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Menu\SettingsContainerPage.xaml">
+    <Page Include="Gui\Pages\Instance\VersionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Menu\ServersContainerPage.xaml">
+    <Page Include="Gui\Pages\MW\InstanceContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Pages\Right\Menu\InstanceContainerPage.xaml">
+    <Page Include="Gui\Pages\MW\LibraryContainerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Pages\MW\ServersContainerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Pages\MW\SettingsContainerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -251,18 +256,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Pages\ModpackSettingsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Gui\Pages\Right\Instance\ModsListPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Gui\Pages\Right\Instance\OverviewPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Gui\Pages\Right\Instance\VersionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

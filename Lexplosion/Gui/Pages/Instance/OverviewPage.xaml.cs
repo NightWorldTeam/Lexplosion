@@ -1,16 +1,23 @@
-﻿using System.Windows.Controls;
-using System.Collections.Generic;
-using System.Windows;
+﻿using Lexplosion.Global;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Lexplosion.Global;
-using Lexplosion.Gui.Pages.Left;
-using Lexplosion.Gui.Windows;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
-namespace Lexplosion.Gui.Pages.Right.Instance
+namespace Lexplosion.Gui.Pages.Instance
 {
     /// <summary>
-    /// Логика взаимодействия для OverviewPage.xaml
+    /// Interaction logic for OverviewPage.xaml
     /// </summary>
     public partial class OverviewPage : Page
     {
@@ -19,7 +26,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         private int imagesCount = 1;
         private int lastIndex = 0;
 
-        class InstanceData 
+        class InstanceData
         {
             public string title;
             public string description;
@@ -39,15 +46,15 @@ namespace Lexplosion.Gui.Pages.Right.Instance
             SetAssets();
         }
 
-        private void SetInstanceData(InstanceData instanceData) 
+        private void SetInstanceData(InstanceData instanceData)
         {
             this.instanceData = instanceData;
         }
 
         public void SetAssets()
         {
-            if (instanceData.description != null) 
-            { 
+            if (instanceData.description != null)
+            {
                 Description.Text = instanceData.description;
             }
             else
@@ -59,7 +66,6 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         private void Arrow_Right_Button(object sender, RoutedEventArgs e)
         {
             /*string modpack = LeftSideMenuPage.instance.selectedInstance;
-
             if (UserData.instancesAssets != null)
             {
                 if (lastIndex < images_count)
@@ -78,7 +84,6 @@ namespace Lexplosion.Gui.Pages.Right.Instance
         private void Arrow_Left_Button(object sender, RoutedEventArgs e)
         {
             /*string modpack = LeftSideMenuPage.instance.selectedInstance;
-
             if (UserData.instancesAssets != null)
             {
                 if (lastIndex - 1 != -1)
@@ -103,7 +108,7 @@ namespace Lexplosion.Gui.Pages.Right.Instance
                     ChangeImageBrush.ImageSource = new BitmapImage(new Uri(UserData.settings["gamePath"] + "/launcherAssets/" + mpAssets[lastIndex], UriKind.Relative));
                     ImageManagerGrid.Visibility = Visibility.Visible;
                 }
-                catch  { }
+                catch { }
             }
             else
             {

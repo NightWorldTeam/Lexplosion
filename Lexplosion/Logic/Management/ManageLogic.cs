@@ -142,7 +142,8 @@ namespace Lexplosion.Logic.Management
             if (LaunchGame.runnigInstance != "")
             {
                 LaunchGame.KillProcess();
-                Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
+                // TODO: Тут вырезал строку
+                //Gui.Pages.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
 
                 return;
             }

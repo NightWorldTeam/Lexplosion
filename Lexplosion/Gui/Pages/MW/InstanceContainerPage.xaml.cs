@@ -1,31 +1,19 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Gui.Pages.Left;
-using Lexplosion.Gui.Pages.Right.Instance;
-using Lexplosion.Gui.Windows;
-using Lexplosion.Logic.Management;
+﻿using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
 
-namespace Lexplosion.Gui.Pages.Right.Menu
+namespace Lexplosion.Gui.Pages.MW
 {
     /// <summary>
-    /// Interaction logic for TestModpacksContainerPage.xaml
+    /// Interaction logic for InstanceContainerPage.xaml
     /// </summary>
     public partial class InstanceContainerPage : Page
-    {
+	{
 		public static InstanceContainerPage obj = null;
 		public bool LaunchButtonBlock = false; //блокировщик кнопки запуска модпака
 		private List<string> _instanceTags1 = new List<string>() { "1.10.2", "Mods", "NightWorld" };
@@ -39,22 +27,31 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			_mainWindow = mainWindow;
 			InitializeComponent();
 			GetInitializeInstance();
+			InitializeLeftSideMenu("Каталог", "Библиотека", "Сетевая игра", "Настройки");
 			//CreateFakeInstance(4);
 		}
 
-		private async void GetInitializeInstance() 
+		private void InitializeLeftSideMenu(string btn0, string btn1, string btn2, string btn3) 
+		{
+			LeftSideMenuButton0.Content = btn0;
+			LeftSideMenuButton1.Content = btn1;
+			LeftSideMenuButton2.Content = btn2;
+			LeftSideMenuButton3.Content = btn3;
+		}
+
+		private async void GetInitializeInstance()
 		{
 			await Task.Run(() => InitializeInstance());
 			_isInitializeInstance = true;
 		}
 
-		private void InitializeInstance() 
+		private void InitializeInstance()
 		{
 			List<CurseforgeInstanceInfo> curseforgeInstances = ToServer.GetCursforgeInstances(10, 0, ModpacksCategories.All);
 
 			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 			{
-				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j+1,
+				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,
 					new Uri(curseforgeInstances[j].attachments[0].url),
 					curseforgeInstances[j].name,
 					curseforgeInstances[j].authors[0].name,
@@ -63,7 +60,7 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 			}
 		}
 
-		private void CreateFakeInstance(int count) 
+		private void CreateFakeInstance(int count)
 		{
 			/*
 			Uri logoPath1 = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
@@ -93,8 +90,8 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 
 		private RowDefinition GetRowDefinition()
-        {
-			RowDefinition rowDefinition = new RowDefinition() 
+		{
+			RowDefinition rowDefinition = new RowDefinition()
 			{
 				Height = new GridLength(150, GridUnitType.Pixel)
 			};
@@ -103,23 +100,24 @@ namespace Lexplosion.Gui.Pages.Right.Menu
 
 		private void MatchingResults(object sender, RoutedEventArgs e)
 		{
-			if (InstanceGrid.Children.Count > 1) 
+			if (InstanceGrid.Children.Count > 1)
 			{
 				InstanceGrid.Children.RemoveRange(1, 10);
 			}
-			
-			if (InstanceGrid.RowDefinitions.Count > 1) 
-			{ 
-				InstanceGrid.RowDefinitions.RemoveRange(1, InstanceGrid.RowDefinitions.Count-1);
+
+			if (InstanceGrid.RowDefinitions.Count > 1)
+			{
+				InstanceGrid.RowDefinitions.RemoveRange(1, InstanceGrid.RowDefinitions.Count - 1);
 			}
 
-			if (SearchBox.Text.Length == 0) 
+			if (SearchBox.Text.Length == 0)
 			{
-				if (!_isInitializeInstance) { 
+				if (!_isInitializeInstance)
+				{
 					InitializeInstance();
 				}
 			}
-			else 
+			else
 			{
 				_isInitializeInstance = false;
 				//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...

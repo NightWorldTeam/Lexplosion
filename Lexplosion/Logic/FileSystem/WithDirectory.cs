@@ -1219,13 +1219,14 @@ namespace Lexplosion.Logic.FileSystem
                 Directory.Delete(dir, true);
             }
             catch { }
-
+            // TODO: Тут вырезал строку
+            /*
             if (Gui.Pages.Right.Menu.InstanceContainerPage.obj != null)
             {
                 Uri logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
                 Gui.Pages.Right.Menu.InstanceContainerPage.obj.BuildInstanceForm(instanceId, UserData.InstancesList.Count - 1, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", "test", new List<string>());
             }
-
+            */
             return ImportResult.Successful;
 
         }
