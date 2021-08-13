@@ -36,12 +36,12 @@ namespace Lexplosion.Gui.Windows
             this.PagesController<InstanceContainerPage>("MainFrame", this.MainFrame);
         }
 
-        public void PagesController<T>(string page, Frame frame) where T: Page
+        public void PagesController<T>(string page, Frame frame) where T : Page
         {
             Page obj;
             if (!Pages.ContainsKey(page))
             {
-                obj = (Page)((T)Activator.CreateInstance(typeof(T), new object[1] {this}));
+                obj = (Page)((T)Activator.CreateInstance(typeof(T), new object[1] { this }));
                 Pages[page] = obj;
             }
             else

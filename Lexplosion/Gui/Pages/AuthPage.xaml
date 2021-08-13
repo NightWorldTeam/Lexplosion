@@ -273,7 +273,7 @@
 
                 <CheckBox Focusable="False" Style="{StaticResource CCBS}" x:Name="SaveMe" Margin="92,338,92,141" Content="Запомнить меня" Height="Auto"/>
                 <Button Focusable="False" Style="{StaticResource CLB}" Click="Auth" Content="Войти" Width="166" Height="40" Margin="77,381,74,79" FontSize="20"/>
-                <Button Focusable="False"
+                <Button Focusable="False" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
                     BorderThickness="0"
                     Background="Transparent"
                     Click="Register" 
