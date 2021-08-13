@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Gui.UserControls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,11 +30,16 @@ namespace Lexplosion.Gui.Pages.Instance
         public InstancePage(string title, string description)
         {
             InitializeComponent();
+            InitializeLeftPanel();
             instance = this;
             InstanceTitle.Text = title;
-            //BottomSideFrame.Navigate(new OverviewPage(title, description));
-            //selectedToggleButton = OverviewToggleButton;
-            //selectedToggleButton.IsChecked = true;
+        }
+
+        private void InitializeLeftPanel() 
+        {
+            LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.OpenedInstance);
+            Grid.SetColumn(leftPanel, 0);
+            MainGrid.Children.Add(leftPanel);
         }
 
         private void ReselectionToggleButton(object sender)

@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
@@ -29,7 +30,16 @@ namespace Lexplosion.Gui.Pages.MW
 		{
 			_mainWindow = mainWindow;
 			InitializeComponent();
+			InitializeLeftPanel();
 			InitializeInstance();
+			
+		}
+
+		private void InitializeLeftPanel()
+		{
+			LeftPanel leftPanel = new LeftPanel(LeftPanel.Pages.InstanceLibrary);
+			Grid.SetColumn(leftPanel, 0);
+			MainGrid.Children.Add(leftPanel);
 		}
 
 		/*

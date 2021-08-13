@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="Lexplosion.Gui.UserControls.LeftPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="244">
+    <Grid x:Name="LeftSideMenu">
+        <Grid.Background>
+            <SolidColorBrush Color="#18191b"/>
+        </Grid.Background>
+        <StackPanel x:Name="LeftSideMenuStackPanel" Margin="-1,10,0,0" Visibility="Visible" >
+            <ToggleButton Focusable="False" x:Name="MenuButton0" Style="{StaticResource MWCBS1}" />
+            <ToggleButton Focusable="False" x:Name="MenuButton1" Style="{StaticResource MWCBS1}" />
+            <ToggleButton Focusable="False" x:Name="MenuButton2" Style="{StaticResource MWCBS1}" />
+            <ToggleButton Focusable="False" x:Name="MenuButton3" Style="{StaticResource MWCBS1}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
