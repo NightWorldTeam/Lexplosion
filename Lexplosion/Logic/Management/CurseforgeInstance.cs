@@ -123,7 +123,7 @@ namespace Lexplosion.Logic.Management
                         UserData.instancesAssets[InstanceId] = new InstanceAssets
                         {
                             description = "",
-                            mainImage = fileName
+                            mainImage = "/instances-assets/" + InstanceId + "/" + a[a.Length - 1]
                         };
                     }
                     else
