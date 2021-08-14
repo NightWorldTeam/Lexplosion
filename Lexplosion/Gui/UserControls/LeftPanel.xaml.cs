@@ -63,9 +63,10 @@ namespace Lexplosion.Gui.UserControls
             _mainWindow = mw;
 
             toggleButtons.Add(MenuButton0);
-            toggleButtons.Add(MenuButton1);
-            toggleButtons.Add(MenuButton2);
+            toggleButtons.Add(MenuButton1); 
+            toggleButtons.Add(MenuButton2); 
             toggleButtons.Add(MenuButton3);
+
             MenuButton0.IsChecked = true;
             ReselectionButton(MenuButton0);
             InitializeLeftMenu();

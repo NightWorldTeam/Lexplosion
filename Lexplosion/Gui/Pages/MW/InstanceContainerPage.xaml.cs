@@ -16,16 +16,15 @@ namespace Lexplosion.Gui.Pages.MW
     public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
-		private MainWindow _mainWindow;
-		//private readonly Uri _nonImageUri = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 
+		private MainWindow _mainWindow;
 		private bool _isInitializeInstance = false;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
 			InitializeComponent();
-			_mainWindow = mainWindow;
 			obj = this;
+			_mainWindow = mainWindow;
 			GetInitializeInstance();
 		}
 
@@ -41,6 +40,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 			{
+				// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
 				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,
 					new Uri(curseforgeInstances[j].attachments[0].thumbnailUrl),
 					curseforgeInstances[j].name,
