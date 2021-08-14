@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
@@ -16,13 +15,11 @@ namespace Lexplosion.Gui.Pages.MW
     /// </summary>
     public partial class LibraryContainerPage : Page
 	{
-		public static LibraryContainerPage obj = null;
 		private MainWindow _mainWindow;
 		public LibraryContainerPage(MainWindow mainWindow)
 		{
 			_mainWindow = mainWindow;
 			InitializeComponent();
-			obj = this;
 			InitializeInstance();
 		}
 

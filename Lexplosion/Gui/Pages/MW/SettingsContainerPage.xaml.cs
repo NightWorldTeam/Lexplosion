@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.FileSystem;
 using System.Collections.Generic;
@@ -15,8 +14,6 @@ namespace Lexplosion.Gui.Pages.MW
     /// </summary>
     public partial class SettingsContainerPage : Page
     {
-        public static SettingsContainerPage obj = null;
-
         private string sysPath;
         private MainWindow _mainWindow;
 
@@ -31,7 +28,6 @@ namespace Lexplosion.Gui.Pages.MW
         public SettingsContainerPage(MainWindow mainWindow)
         {
             InitializeComponent();
-            obj = this;
             _mainWindow = mainWindow;
             SetSettings();
         }

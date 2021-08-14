@@ -16,16 +16,15 @@ namespace Lexplosion.Gui.Pages.MW
     public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
-		private MainWindow _mainWindow;
-		//private readonly Uri _nonImageUri = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
 
+		private MainWindow _mainWindow;
 		private bool _isInitializeInstance = false;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
 			InitializeComponent();
-			_mainWindow = mainWindow;
 			obj = this;
+			_mainWindow = mainWindow;
 			GetInitializeInstance();
 		}
 
