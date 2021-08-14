@@ -33,15 +33,36 @@
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
-                    <Canvas x:Name="SearchLayer" Grid.Row="0">
-
-                    </Canvas>
-                    <Canvas>
-                        <TextBlock Text="Sort by" Foreground="White" Width="1"/>
-                            <ComboBox Width="100" Grid.Column="0"/>
-                            <TextBlock Text="Filter by" Foreground="White" Width="50"/>
-                        <ComboBox Width="100" Margin="52,0,449,0"/>
-                    </Canvas>
+                    <Grid Width="300" Height="50" ShowGridLines="False" Grid.Row="0" Margin="160,20,101,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Width="300" 
+                            Height="50" 
+                            VerticalAlignment="Top"
+                            Background="Black" 
+                            Foreground="LightGray"
+                            Padding="5"
+                            FontSize="26"
+                            BorderThickness="0.5"
+                            BorderBrush="#131313"
+                            Grid.Column="0"
+                        x:Name="SearchBox">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+                        <Button Width="50" 
+                        Height="50"
+                        Grid.Column="1"
+                        Click="MatchingResults" 
+                        Background="Black"
+                        Foreground="White"
+                        Content="S"/>
+                    </Grid>
                 </Grid>
             </Grid>
         </ScrollViewer>

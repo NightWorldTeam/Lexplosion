@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using Lexplosion.Global;
 using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.UserControls;
 
@@ -22,10 +25,8 @@ namespace Lexplosion.Gui.Windows
         public int curseforgeInstanceId;
         public Uri instanceLogoPath;
 
-        public ToggleButton selectedToggleButton;
-        public List<string> instanceTags = new List<string>();
-
         private Dictionary<string, Page> Pages = new Dictionary<string, Page>();
+        public Page SelectedPage;
 
         public MainWindow()
         {
@@ -33,7 +34,17 @@ namespace Lexplosion.Gui.Windows
             MainWindow.Obj = this;
 
             MouseDown += delegate { try { DragMove(); } catch { } };
-            this.PagesController<InstanceContainerPage>("MainFrame", this.MainFrame);
+            
+            SelectedPage = InstanceContainerPage.obj;
+            InitializeLeftMenu();
+        }
+
+        private void InitializeLeftMenu() 
+        {
+            LeftPanel leftPanel = new LeftPanel(SelectedPage, LeftPanel.PageType.InstanceContainer, this);
+            Grid.SetColumn(leftPanel, 0);
+            MainColumns.Children.Add(leftPanel);
+            this.PagesController<InstanceContainerPage>("InstanceContainerPage", this.RightFrame);
         }
 
         public void PagesController<T>(string page, Frame frame) where T : Page
