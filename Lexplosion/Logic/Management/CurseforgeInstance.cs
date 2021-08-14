@@ -123,12 +123,12 @@ namespace Lexplosion.Logic.Management
                         UserData.instancesAssets[InstanceId] = new InstanceAssets
                         {
                             description = "",
-                            mainImage = "/instances-assets/" + InstanceId + "/" + a[a.Length - 1]
+                            mainImage = InstanceId + "/" + a[a.Length - 1]
                         };
                     }
                     else
                     {
-                        UserData.instancesAssets[InstanceId].mainImage = "/instances-assets/" + InstanceId + "/" + a[a.Length - 1];
+                        UserData.instancesAssets[InstanceId].mainImage = InstanceId + "/" + a[a.Length - 1];
                     }
 
                     DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.instancesAssets[InstanceId]));
