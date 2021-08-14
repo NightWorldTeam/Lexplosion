@@ -5,42 +5,25 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using static Lexplosion.Logic.Objects.CurseforgeInstanceInfo;
 
 namespace Lexplosion.Gui.Pages.MW
 {
-	// <summary>
-	/// Interaction logic for LibraryContainerPage.xaml
-	/// </summary>
-	public partial class LibraryContainerPage : Page
+    // <summary>
+    /// Interaction logic for LibraryContainerPage.xaml
+    /// </summary>
+    public partial class LibraryContainerPage : Page
 	{
+		public static LibraryContainerPage obj = null;
 		private MainWindow _mainWindow;
 		public LibraryContainerPage(MainWindow mainWindow)
 		{
 			_mainWindow = mainWindow;
 			InitializeComponent();
-			InitializeLeftPanel();
+			obj = this;
 			InitializeInstance();
-			
-		}
-
-		private void InitializeLeftPanel()
-		{
-			LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.InstanceLibrary, _mainWindow);
-			Grid.SetColumn(leftPanel, 0);
-			MainGrid.Children.Add(leftPanel);
 		}
 
 		/*

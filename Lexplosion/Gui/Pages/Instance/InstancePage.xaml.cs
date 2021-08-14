@@ -23,7 +23,7 @@ namespace Lexplosion.Gui.Pages.Instance
     public partial class InstancePage : Page
     {
         //private ToggleButton selectedToggleButton;
-        public static InstancePage instance = null;
+        public static InstancePage obj = null;
         private MainWindow _mainWindow;
 
         //private string title;
@@ -32,15 +32,8 @@ namespace Lexplosion.Gui.Pages.Instance
         public InstancePage(MainWindow mainWindow)
         {
             InitializeComponent();
-            InitializeLeftPanel();
+            obj = this;
             _mainWindow = mainWindow;
-        }
-
-        private void InitializeLeftPanel() 
-        {
-            LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.OpenedInstance, _mainWindow);
-            Grid.SetColumn(leftPanel, 0);
-            MainGrid.Children.Add(leftPanel);
         }
 
         private void ReselectionToggleButton(object sender)

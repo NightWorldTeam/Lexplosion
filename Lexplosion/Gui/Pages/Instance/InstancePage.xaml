@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Instance" xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="944"
+      d:DesignHeight="450" d:DesignWidth="700"
       Title="InstancePage">
 
     <Page.Resources>
@@ -30,33 +30,27 @@
     </Page.Resources>
 
     <Grid x:Name="MainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="244"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <Grid Grid.Column="1">
-            <Grid ShowGridLines="False">
-                <Grid.Background>
-                    <SolidColorBrush Color="#1f202a" Opacity="0.74"/>
-                </Grid.Background>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="108"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Border BorderBrush="#151719" BorderThickness="0,0,0,3" Margin="0,-10,0,10" Grid.Row="0"/>
-                <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="400"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock x:Name="InstanceTitle"
+        <Grid ShowGridLines="False">
+            <Grid.Background>
+                <SolidColorBrush Color="#1f202a" Opacity="0.74"/>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="108"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border BorderBrush="#151719" BorderThickness="0,0,0,3" Margin="0,-10,0,10" Grid.Row="0"/>
+            <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="InstanceTitle"
                             FontSize="24"
                             Margin="8,0,0,0"
                             FontStyle="Italic"
@@ -65,31 +59,31 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             Foreground="White"/>
-                        <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
-                            <ToggleButton x:Name="OverviewToggleButton"
+                    <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
+                        <ToggleButton x:Name="OverviewToggleButton"
                                 Content="Overview" 
                                 Click="ClickedOverview" 
                                 Style="{StaticResource MWCBS}" />
-                            <ToggleButton x:Name="ModsToggleButton"
+                        <ToggleButton x:Name="ModsToggleButton"
                                 Content="Mods"
                                 Click="ClickedModsList" 
                                 Style="{StaticResource MWCBS}" />
-                            <ToggleButton x:Name="VersionToggleButton"
+                        <ToggleButton x:Name="VersionToggleButton"
                                 Content="Version" 
                                 Click="ClickedVersion" 
                                 Style="{StaticResource MWCBS}" />
-                        </WrapPanel>
-                    </Grid>
-                    <Grid Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="40" />
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="140"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="2" 
+                    </WrapPanel>
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="2" 
                             Grid.Row="1" 
                             Width="120"
                             Height="30"
@@ -97,10 +91,9 @@
                             Content="Играть"
                             FontSize="16"
                             FontWeight="Bold"/>
-                    </Grid>
                 </Grid>
-                <Frame x:Name="BottomSideFrame" Grid.Row="1"/>
             </Grid>
+            <Frame x:Name="BottomSideFrame" Grid.Row="1"/>
         </Grid>
     </Grid>
 </Page>

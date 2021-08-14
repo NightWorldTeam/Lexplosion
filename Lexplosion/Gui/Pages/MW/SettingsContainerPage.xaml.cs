@@ -2,22 +2,11 @@
 using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.FileSystem;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Lexplosion.Gui.Pages.MW
 {
@@ -26,6 +15,8 @@ namespace Lexplosion.Gui.Pages.MW
     /// </summary>
     public partial class SettingsContainerPage : Page
     {
+        public static SettingsContainerPage obj = null;
+
         private string sysPath;
         private MainWindow _mainWindow;
 
@@ -40,16 +31,9 @@ namespace Lexplosion.Gui.Pages.MW
         public SettingsContainerPage(MainWindow mainWindow)
         {
             InitializeComponent();
+            obj = this;
             _mainWindow = mainWindow;
             SetSettings();
-            InitializeLeftPanel();
-        }
-
-        private void InitializeLeftPanel() 
-        {
-            LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.LauncherSettings, _mainWindow);
-            Grid.SetColumn(leftPanel, 0);
-            MainGrid.Children.Add(leftPanel);
         }
 
         private void SetSettings()

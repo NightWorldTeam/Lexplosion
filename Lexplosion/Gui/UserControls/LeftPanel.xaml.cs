@@ -51,16 +51,23 @@ namespace Lexplosion.Gui.UserControls
         private Page pageObj;
         private MainWindow _mainWindow;
 
+        private List<ToggleButton> toggleButtons = new List<ToggleButton>();
         private Dictionary<ToggleButton, Functions> Buttons = new Dictionary<ToggleButton, Functions>();
 
         public LeftPanel(Page obj, PageType page, MainWindow mw)
         {
             InitializeComponent();
-            
+
             pageObj = obj;
             activePageType = page;
             _mainWindow = mw;
-            ReselectionButton();
+
+            toggleButtons.Add(MenuButton0);
+            toggleButtons.Add(MenuButton1);
+            toggleButtons.Add(MenuButton2);
+            toggleButtons.Add(MenuButton3);
+            MenuButton0.IsChecked = true;
+            ReselectionButton(MenuButton0);
             InitializeLeftMenu();
         }
 
@@ -89,7 +96,8 @@ namespace Lexplosion.Gui.UserControls
 
         private void InitializeContent(string btn0, string btn1, string btn2, string btn3)
         {
-            if (activePageType != PageType.OpenedInstance) {
+            if (activePageType != PageType.OpenedInstance)
+            {
                 Buttons.Add(MenuButton0, Functions.Catalog);
                 Buttons.Add(MenuButton1, Functions.Library);
                 Buttons.Add(MenuButton2, Functions.Multiplayer);
@@ -116,18 +124,18 @@ namespace Lexplosion.Gui.UserControls
             switch (Buttons[MenuButton0])
             {
                 case Functions.Catalog:
-                    MenuButton0.Click += IsCatalogSelected;
+                    MenuButton0.Click += CatalogSelected;
                     // TODO: Установка фрейма
                     break;
                 case Functions.Instance:
-                    _mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.MainFrame);
+                    _mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.RightFrame);
                     break;
             }
 
             switch (Buttons[MenuButton1])
             {
                 case Functions.Library:
-                    MenuButton1.Click += IsLibrarySelected;
+                    MenuButton1.Click += LibrarySelected;
                     break;
                 case Functions.Export:
                     break;
@@ -136,7 +144,7 @@ namespace Lexplosion.Gui.UserControls
             switch (Buttons[MenuButton2])
             {
                 case Functions.Multiplayer:
-                    MenuButton2.Click += IsMultiplayerSelected;
+                    MenuButton2.Click += MultiplayerSelected;
                     break;
                 case Functions.InstanceSettings:
                     break;
@@ -145,81 +153,74 @@ namespace Lexplosion.Gui.UserControls
             switch (Buttons[MenuButton3])
             {
                 case Functions.LauncherSettings:
-                    MenuButton3.Click += IsLauncherSettingsSelected;
+                    MenuButton3.Click += LauncherSettingsSelected;
                     break;
                 case Functions.Back:
-                    MenuButton3.Click += IsBackSelected;
+                    MenuButton3.Click += BackSelected;
                     break;
             }
         }
 
-        private void IsCatalogSelected(object sender, RoutedEventArgs e) 
+        private void CatalogSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _mainWindow.MainFrame);
-            _mainWindow.selectedToggleButton = MenuButton0;
-            MenuButton1.IsChecked = false;
-            MenuButton2.IsChecked = false;
-            MenuButton3.IsChecked = false;
-        }
-        private void IsInstanceSelected(object sender, RoutedEventArgs e) 
-        {
-            _mainWindow.selectedToggleButton = MenuButton0;
-            MenuButton1.IsChecked = false;
-            MenuButton2.IsChecked = false;
-            MenuButton3.IsChecked = false;
+            _mainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _mainWindow.RightFrame);
+            //_mainWindow.SelectedPage = InstanceContainerPage.obj;
+            ReselectionButton(MenuButton0);
         }
 
-        private void IsLibrarySelected(object sender, RoutedEventArgs e) 
+        private void InstanceSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<LibraryContainerPage>("LibraryContainerPage", _mainWindow.MainFrame);
-            _mainWindow.selectedToggleButton = MenuButton1;
+            ReselectionButton(MenuButton0);
         }
 
-        private void IsExportSelected(object sender, RoutedEventArgs e) 
+        private void LibrarySelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.selectedToggleButton = MenuButton1;
+            _mainWindow.PagesController<LibraryContainerPage>("LibraryContainerPage", _mainWindow.RightFrame);
+            ReselectionButton(MenuButton1);
+        }
+
+        private void ExportSelected(object sender, RoutedEventArgs e)
+        {
+            ReselectionButton(MenuButton1);
         }
 
 
-        private void IsMultiplayerSelected(object sender, RoutedEventArgs e) 
+        private void MultiplayerSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<MultiplayerContainerPage>("MultiplayerContainerPage", _mainWindow.MainFrame);
-            _mainWindow.selectedToggleButton = MenuButton2;
+            _mainWindow.PagesController<MultiplayerContainerPage>("MultiplayerContainerPage", _mainWindow.RightFrame);
+            ReselectionButton(MenuButton2);
         }
 
-        private void IsInstanceSettingsSelected(object sender, RoutedEventArgs e) 
+        private void InstanceSettingsSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.selectedToggleButton = MenuButton2;
+            ReselectionButton(MenuButton2);
         }
 
-        private void IsLauncherSettingsSelected(object sender, RoutedEventArgs e)
+        private void LauncherSettingsSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<SettingsContainerPage>("SettingsContainerPage", _mainWindow.MainFrame);
-            _mainWindow.selectedToggleButton = MenuButton3;
+            _mainWindow.PagesController<SettingsContainerPage>("SettingsContainerPage", _mainWindow.RightFrame);
+            ReselectionButton(MenuButton3);
         }
 
-        private void IsBackSelected(object sender, RoutedEventArgs e) 
+        private void BackSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _mainWindow.MainFrame);
-            _mainWindow.selectedToggleButton = MenuButton3;
+            _mainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _mainWindow.RightFrame);
+            ReselectionButton(MenuButton3);
         }
 
-        private void ReselectionButton() 
+        private void ReselectionButton(ToggleButton selectedButton)
         {
-            if (_mainWindow.selectedToggleButton != null)
-            {
-                foreach (ToggleButton button in LeftPanelMenu.Children)
+            foreach (ToggleButton toggleButton in toggleButtons) 
+            { 
+                if (toggleButton != selectedButton) 
                 {
-                    if (_mainWindow.selectedToggleButton != button)
-                    {
-                        button.IsChecked = false;
-                    }
+                    toggleButton.IsEnabled = true;
+                    toggleButton.IsChecked = false;
                 }
-            }
-            else
-            {
-                MenuButton0.IsChecked = true;
-                _mainWindow.selectedToggleButton = MenuButton0;
+                else 
+                {
+                    selectedButton.IsEnabled = false;
+                }
             }
         }
     }

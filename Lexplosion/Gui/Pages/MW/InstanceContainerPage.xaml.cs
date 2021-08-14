@@ -25,15 +25,8 @@ namespace Lexplosion.Gui.Pages.MW
 		{
 			InitializeComponent();
 			_mainWindow = mainWindow;
-			InitializeLeftPanel();
+			obj = this;
 			GetInitializeInstance();
-		}
-
-		private void InitializeLeftPanel()
-		{
-			LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.InstanceContainer, _mainWindow);
-			Grid.SetColumn(leftPanel, 0);
-			MainGrid.Children.Add(leftPanel);
 		}
 
 		private async void GetInitializeInstance()

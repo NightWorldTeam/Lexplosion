@@ -6,34 +6,27 @@
       xmlns:local="clr-namespace:Lexplosion.Gui.Pages.MW" 
       xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="944"
+      d:DesignHeight="450" d:DesignWidth="700"
       Title="LibraryContainerPage">
 
     <Grid x:Name="MainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="244"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <Grid Grid.Column="1">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ScrollViewer.Background>
-                    <!-- #1313131 0.8-->
-                    <!-- "Black" 0.64 -->
-                    <SolidColorBrush Color="#121212" Opacity="0.65"/>
-                </ScrollViewer.Background>
-                <Grid ShowGridLines="False" x:Name="InstanceGrid" Margin="40, 0, 0, 0">
-                    <!-- Grid Border Padding-->
-                    <Grid.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="Padding" Value="10" />
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="600"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
-            </ScrollViewer>
-        </Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer.Background>
+                <!-- #1313131 0.8-->
+                <!-- "Black" 0.64 -->
+                <SolidColorBrush Color="#121212" Opacity="0.65"/>
+            </ScrollViewer.Background>
+            <Grid ShowGridLines="False" x:Name="InstanceGrid" Margin="40, 0, 0, 0">
+                <!-- Grid Border Padding-->
+                <Grid.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="Padding" Value="10" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="600"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>

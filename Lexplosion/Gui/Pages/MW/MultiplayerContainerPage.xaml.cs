@@ -22,20 +22,14 @@ namespace Lexplosion.Gui.Pages.MW
     /// </summary>
     public partial class MultiplayerContainerPage : Page
     {
+        public static MultiplayerContainerPage obj = null;
         private MainWindow _mainWindow;
 
         public MultiplayerContainerPage(MainWindow mainWindow)
         {
             InitializeComponent();
+            obj = this;
             _mainWindow = mainWindow;
-            InitializeLeftPanel();
-        }
-
-        private void InitializeLeftPanel()
-        {
-            LeftPanel leftPanel = new LeftPanel(this, LeftPanel.PageType.MultiplayerContainer, _mainWindow);
-            Grid.SetColumn(leftPanel, 0);
-            MainGrid.Children.Add(leftPanel);
         }
     }
 }

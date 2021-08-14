@@ -6,17 +6,10 @@
       xmlns:local="clr-namespace:Lexplosion.Gui.Pages.MW" 
       xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="944"
+      d:DesignHeight="450" d:DesignWidth="700"
       Title="MultiplayerContainerPage">
 
     <Grid x:Name="MainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="244"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <Grid Grid.Column="1">
-<Grid ShowGridLines="False" >
         <Grid.Background>
             <!-- #131313 0.7 -->
             <!-- "Black" 0.64 -->
@@ -149,8 +142,6 @@
                 <Image Width="52" Height="52" Source="pack://application:,,,/Assets/images/icons/non_image.png" HorizontalAlignment="Right"/>
                 <Canvas Width="5" Height="48" HorizontalAlignment="Left" Background="Gray" Margin="2,0,0,0"/>
             </Grid>
-        </Grid>
-    </Grid>
         </Grid>
     </Grid>
 </Page>

@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Lexplosion.Gui.Pages.MW" xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="944"
+      d:DesignHeight="450" d:DesignWidth="700"
       Title="SettingsContainerPage">
 
     <Page.Resources>
@@ -242,65 +242,60 @@
     </Page.Resources>
 
     <Grid x:Name="MainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="244"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                <Grid ShowGridLines="True">
-                    <Grid.Background>
-                        <!-- "Black" 0.64 -->
-                        <SolidColorBrush Color="#121212"  Opacity="0.65"/>
-                    </Grid.Background>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid ShowGridLines="True">
+                <Grid.Background>
+                    <!-- "Black" 0.64 -->
+                    <SolidColorBrush Color="#121212"  Opacity="0.65"/>
+                </Grid.Background>
 
-                    <TextBlock Text="Размеры окна"
+                <TextBlock Text="Размеры окна"
                         Height="35"
                         FontSize="18" 
                         FontWeight="Bold" 
                         Foreground="#FFF" 
                         Margin="73,22,475,444"/>
-                    <TextBlock Text="Ширина" 
+                <TextBlock Text="Ширина" 
                         Width="87"
                         Height="30"
                         Foreground="#FFF" 
                         FontSize="16" 
                         FontWeight="Bold"
                         Margin="137,55,477,416"/>
-                    <TextBlock Text="Высота" 
+                <TextBlock Text="Высота" 
                         Width="87"
                         Height="30"
                         Foreground="#FFF" 
                         FontSize="16" 
                         FontWeight="Bold" 
                         Margin="338,57,276,414"/>
-                    <ComboBox x:Name="ScreenResolutions"
+                <ComboBox x:Name="ScreenResolutions"
                         SelectionChanged="ScreenResolutions_SelectionChanged"
                         Width="44"
                         Height="43"
                         Margin="81,89,567,373" 
                         MaxDropDownHeight="180"/>
 
-                    <TextBox x:Name="HeightTextBox"
+                <TextBox x:Name="HeightTextBox"
                         LostFocus="HeightTextBox_LostFocus"
                         TextChanged="HeightTextBox_TextChanged"
                         Style="{StaticResource CTB}"
                         FontSize="20"
                         Height="42" 
                         Margin="338,87,194,372"/>
-                    <Canvas Margin="1,-5,0,0">
-                        <Line X1="1" Y1="0" X2="13" Y2="13"
+                <Canvas Margin="1,-5,0,0">
+                    <Line X1="1" Y1="0" X2="13" Y2="13"
                             Stroke="White" 
                             StrokeThickness="2"
                             Canvas.Left="310" 
                             Canvas.Top="110" />
-                        <Line X1="1" Y1="13" X2="13" Y2="0" 
+                    <Line X1="1" Y1="13" X2="13" Y2="0" 
                             Stroke="White" 
                             StrokeThickness="2"
                             Canvas.Left="310" 
                             Canvas.Top="110" />
-                    </Canvas>
-                    <TextBox x:Name="WidthTextBox"
+                </Canvas>
+                <TextBox x:Name="WidthTextBox"
                         LostFocus="WidthTextBox_LostFocus"
                         TextChanged="WidthTextBox_TextChanged"
                         Style="{StaticResource CTB}"
@@ -308,34 +303,33 @@
                         Width="160" 
                         Height="42" 
                         Margin="137,87,396,372"/>
-                    <TextBlock Text="Держать лаунчер открытым при запуске игры"
+                <TextBlock Text="Держать лаунчер открытым при запуске игры"
                         Height="35"
                         FontSize="18" 
                         FontWeight="Bold" 
                         Foreground="#FFF" 
                         Margin="73,157,194,309"/>
 
-                    <usercontrols:SwitchButton Width="70" Height="31" Margin="73,200,550,276"/>
+                <usercontrols:SwitchButton Width="70" Height="31" Margin="73,200,550,276"/>
 
-                    <TextBlock Text="Папка с игрой"
+                <TextBlock Text="Папка с игрой"
                         Height="35"
                         FontSize="18" 
                         FontWeight="Bold" 
                         Foreground="#FFF" 
                         Margin="73,243,194,223"/>
-                    <TextBox x:Name="InstanceFolderPath" 
+                <TextBox x:Name="InstanceFolderPath" 
                         Style="{StaticResource CTB}"
                         FontSize="20"
                         Height="42" 
                         Margin="73,288,194,176"/>
-                    <Button x:Name="OpenFolderBrowserButton"
+                <Button x:Name="OpenFolderBrowserButton"
                         Style="{StaticResource FolderBrowerButton}"
                         Content="Проводник"
                         Height="42"
                         Click="OpenFolderBrowser"
                         Margin="504,288,114,176"/>
-                </Grid>
-            </ScrollViewer>
-        </Grid>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>
