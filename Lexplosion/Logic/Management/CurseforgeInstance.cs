@@ -4,7 +4,9 @@ using Lexplosion.Logic.Objects;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -94,6 +96,23 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update()
         {
+            CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InstanceData["cursforgeId"]);
+            if(info.attachments.Count > 0)
+            {
+                // TODO: написать где-то отдельную функцию для скачивания файла
+                using (WebClient wc = new WebClient())
+                {
+                    string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    string[] a = info.attachments[0].thumbnailUrl.Split('.');
+
+                    wc.DownloadFile(info.attachments[0].thumbnailUrl, dir + "/main." + a[a.Length - 1]);
+                }
+            }
+
             List<string> errors = new List<string>();
             ProgressHandler(30);
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем

@@ -40,8 +40,9 @@ namespace Lexplosion.Gui.Pages.MW
 
 			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 			{
+				// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
 				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,
-					new Uri(curseforgeInstances[j].attachments[0].url),
+					new Uri(curseforgeInstances[j].attachments[0].thumbnailUrl),
 					curseforgeInstances[j].name,
 					curseforgeInstances[j].authors[0].name,
 					curseforgeInstances[j].summary,
@@ -99,7 +100,7 @@ namespace Lexplosion.Gui.Pages.MW
 				for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 				{
 					BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,
-						new Uri(curseforgeInstances[j].attachments[0].url),
+						new Uri(curseforgeInstances[j].attachments[0].thumbnailUrl),
 						curseforgeInstances[j].name,
 						curseforgeInstances[j].authors[0].name,
 						curseforgeInstances[j].summary,
