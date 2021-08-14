@@ -95,7 +95,7 @@ namespace Lexplosion.Logic.Objects
         {
             public int id;
             public bool isDefault;
-            public string url;
+            public string thumbnailUrl;
         }
 
         public int id;
