@@ -44,7 +44,7 @@ namespace Lexplosion.Gui.Pages.MW
 				if (instanceAssets.ContainsKey(key))
 				{
 					description = instanceAssets[key].description;
-					image = WithDirectory.directory + "/launcherAssets/" + instanceAssets[key].mainImage;
+					image = WithDirectory.directory + "/instances-assets/" + instanceAssets[key].mainImage;
 				}
 
 				BuildInstanceForm(

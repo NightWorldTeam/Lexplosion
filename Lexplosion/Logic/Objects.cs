@@ -7,6 +7,7 @@ namespace Lexplosion.Logic.Objects
     class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
     {
         public string description;
+        public string author;
         public List<string> images;
         public string mainImage;
         public string xmx;

@@ -68,8 +68,8 @@ namespace Lexplosion
             }
 
             // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
-            WithDirectory.CheckLauncherAssets();
-            UserData.instancesAssets = DataFilesManager.GetLauncherAssets();
+            ManageLogic.DefineListInstances();
+            //WithDirectory.CheckLauncherAssets();
 
             Application.Current.Resources = new ResourceDictionary()
             {

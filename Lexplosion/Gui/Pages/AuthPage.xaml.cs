@@ -83,8 +83,6 @@ namespace Lexplosion.Gui.Pages
 
         void ChangeWindow(sbyte status)
         {
-            ManageLogic.DefineListInstances();
-
             authWindow.ShowMainWindow();
 
 

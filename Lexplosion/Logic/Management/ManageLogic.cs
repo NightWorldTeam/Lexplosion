@@ -103,6 +103,25 @@ namespace Lexplosion.Logic.Management
             {
                 UserData.InstancesList = DataFilesManager.GetInstancesList();
             }
+
+            UserData.instancesAssets = new Dictionary<string, InstanceAssets>();
+
+            if (Directory.Exists(WithDirectory.directory + "/instances-assets"))
+            {
+                foreach (string instance in UserData.InstancesList.Keys)
+                {
+                    InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.directory + "/instances-assets/" + instance + "/assets.json");
+
+                    if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + instance + "/" + assetsData.mainImage))
+                    {
+                        UserData.instancesAssets[instance] = new InstanceAssets
+                        {
+                            mainImage = "/" + instance + "/" + assetsData.mainImage
+                        };
+                    }
+                }
+            }
+
         }
 
         public static void DownloadInstance(string instanceId, InstanceType type)

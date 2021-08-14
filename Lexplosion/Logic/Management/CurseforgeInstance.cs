@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.FileSystem;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Newtonsoft.Json;
@@ -96,22 +97,44 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update()
         {
-            CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InstanceData["cursforgeId"]);
-            if(info.attachments.Count > 0)
+            try
             {
-                // TODO: написать где-то отдельную функцию для скачивания файла
-                using (WebClient wc = new WebClient())
+                CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InstanceData["cursforgeId"]);
+                if (info.attachments.Count > 0)
                 {
+                    // TODO: написать где-то отдельную функцию для скачивания файла
                     string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-                    string[] a = info.attachments[0].thumbnailUrl.Split('.');
+                    string[] a = info.attachments[0].thumbnailUrl.Split('/');
+                    string fileName = dir + "/" + a[a.Length - 1];
 
-                    wc.DownloadFile(info.attachments[0].thumbnailUrl, dir + "/main." + a[a.Length - 1]);
+                    using (WebClient wc = new WebClient())
+                    {
+                        if (!Directory.Exists(dir))
+                        {
+                            Directory.CreateDirectory(dir);
+                        }
+
+                        // TODO: в info.attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
+                        wc.DownloadFile(info.attachments[0].thumbnailUrl, fileName);
+                    }
+
+                    if (!UserData.instancesAssets.ContainsKey(InstanceId) || UserData.instancesAssets[InstanceId] == null)
+                    {
+                        UserData.instancesAssets[InstanceId] = new InstanceAssets
+                        {
+                            description = "",
+                            mainImage = fileName
+                        };
+                    }
+                    else
+                    {
+                        UserData.instancesAssets[InstanceId].mainImage = "/instances-assets/" + InstanceId + "/" + a[a.Length - 1];
+                    }
+
+                    DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.instancesAssets[InstanceId]));
                 }
             }
+            catch { }
 
             List<string> errors = new List<string>();
             ProgressHandler(30);
