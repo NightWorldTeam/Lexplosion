@@ -3,19 +3,10 @@ using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.Windows;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace Lexplosion.Gui.UserControls
 {
@@ -28,6 +19,7 @@ namespace Lexplosion.Gui.UserControls
     {
         enum Functions
         {
+            Initialize,
             Catalog,
             Library,
             Multiplayer,
@@ -63,53 +55,44 @@ namespace Lexplosion.Gui.UserControls
             _mainWindow = mw;
 
             toggleButtons.Add(MenuButton0);
-            toggleButtons.Add(MenuButton1); 
-            toggleButtons.Add(MenuButton2); 
+            toggleButtons.Add(MenuButton1);
+            toggleButtons.Add(MenuButton2);
             toggleButtons.Add(MenuButton3);
 
             MenuButton0.IsChecked = true;
             ReselectionButton(MenuButton0);
             InitializeLeftMenu();
+            InstanceForm.InstanceOpened += InitializeInstancePage;
         }
 
         private void InitializeLeftMenu()
         {
-            switch (activePageType)
-            {
-                case PageType.InstanceContainer:
-                    InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
-                    break;
-                case PageType.InstanceLibrary:
-                    InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
-                    break;
-                case PageType.LauncherSettings:
-                    InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
-                    break;
-                case PageType.MultiplayerContainer:
-                    InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
-                    break;
-                case PageType.OpenedInstance:
-                    InitializeContent("Модпак", "Экспорт", "Настройки", "Назад");
-                    break;
-            }
+            InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
         }
-
 
         private void InitializeContent(string btn0, string btn1, string btn2, string btn3)
         {
+            if (Buttons.Count == 0)
+            {
+                Buttons.Add(MenuButton0, Functions.Initialize);
+                Buttons.Add(MenuButton1, Functions.Initialize);
+                Buttons.Add(MenuButton2, Functions.Initialize);
+                Buttons.Add(MenuButton3, Functions.Initialize);
+            }
+
             if (activePageType != PageType.OpenedInstance)
             {
-                Buttons.Add(MenuButton0, Functions.Catalog);
-                Buttons.Add(MenuButton1, Functions.Library);
-                Buttons.Add(MenuButton2, Functions.Multiplayer);
-                Buttons.Add(MenuButton3, Functions.LauncherSettings);
+                Buttons[MenuButton0] = Functions.Catalog;
+                Buttons[MenuButton1] = Functions.Library;
+                Buttons[MenuButton2] = Functions.Multiplayer;
+                Buttons[MenuButton3] = Functions.LauncherSettings;
             }
             else
             {
-                Buttons.Add(MenuButton0, Functions.Instance);
-                Buttons.Add(MenuButton1, Functions.Export);
-                Buttons.Add(MenuButton2, Functions.InstanceSettings);
-                Buttons.Add(MenuButton3, Functions.Back);
+                Buttons[MenuButton0] = Functions.Instance;
+                Buttons[MenuButton1] = Functions.Export;
+                Buttons[MenuButton2] = Functions.InstanceSettings;
+                Buttons[MenuButton3] = Functions.Back;
             }
 
             MenuButton0.Content = btn0;
@@ -126,10 +109,9 @@ namespace Lexplosion.Gui.UserControls
             {
                 case Functions.Catalog:
                     MenuButton0.Click += CatalogSelected;
-                    // TODO: Установка фрейма
                     break;
                 case Functions.Instance:
-                    _mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.RightFrame);
+                    MenuButton0.Click += InstanceSelected;
                     break;
             }
 
@@ -139,6 +121,7 @@ namespace Lexplosion.Gui.UserControls
                     MenuButton1.Click += LibrarySelected;
                     break;
                 case Functions.Export:
+                    MenuButton1.Click += ExportSelected;
                     break;
             }
 
@@ -148,6 +131,7 @@ namespace Lexplosion.Gui.UserControls
                     MenuButton2.Click += MultiplayerSelected;
                     break;
                 case Functions.InstanceSettings:
+                    MenuButton2.Click += InstanceSettingsSelected;
                     break;
             }
 
@@ -165,12 +149,12 @@ namespace Lexplosion.Gui.UserControls
         private void CatalogSelected(object sender, RoutedEventArgs e)
         {
             _mainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _mainWindow.RightFrame);
-            //_mainWindow.SelectedPage = InstanceContainerPage.obj;
             ReselectionButton(MenuButton0);
         }
 
         private void InstanceSelected(object sender, RoutedEventArgs e)
         {
+            _mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.RightFrame);
             ReselectionButton(MenuButton0);
         }
 
@@ -182,7 +166,8 @@ namespace Lexplosion.Gui.UserControls
 
         private void ExportSelected(object sender, RoutedEventArgs e)
         {
-            ReselectionButton(MenuButton1);
+            //_mainWindow.PagesController<InstanceExportPage>("InstanceExportPage", _mainWindow.RightFrame);
+            ReselectionButton(MenuButton1);   
         }
 
 
@@ -194,6 +179,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceSettingsSelected(object sender, RoutedEventArgs e)
         {
+            //_mainWindow.PagesController<InstanceSettingsPage>("InstanceExportPage", _mainWindow.RightFrame);
             ReselectionButton(MenuButton2);
         }
 
@@ -205,23 +191,70 @@ namespace Lexplosion.Gui.UserControls
 
         private void BackSelected(object sender, RoutedEventArgs e)
         {
+            InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
             _mainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _mainWindow.RightFrame);
-            ReselectionButton(MenuButton3);
+            ReselectionButton(MenuButton0);
+            activePageType = PageType.InstanceContainer;
         }
 
         private void ReselectionButton(ToggleButton selectedButton)
         {
-            foreach (ToggleButton toggleButton in toggleButtons) 
-            { 
-                if (toggleButton != selectedButton) 
+            foreach (ToggleButton toggleButton in toggleButtons)
+            {
+                if (toggleButton != selectedButton)
                 {
                     toggleButton.IsEnabled = true;
                     toggleButton.IsChecked = false;
                 }
-                else 
+                else
                 {
+                    selectedButton.IsChecked = true;
                     selectedButton.IsEnabled = false;
                 }
+            }
+        }
+
+        private void InitializeInstancePage() 
+        {
+            activePageType = PageType.OpenedInstance;
+            _mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.RightFrame);
+            InitializeContent("Модпак", "Экспорт", "Настройки", "Назад");
+            ReselectionButton(MenuButton0);
+        }
+
+        // -- DropDownMenu -- //
+        private void AddCustomModpack(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuArrow(object sender, RoutedEventArgs e)
+        {
+            if (DropDownMenu.Margin == new Thickness(0, 286, 0, 0))
+            {
+                DropDownMenuSwitcher.IsChecked = true;
+
+                ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                {
+                    From = DropDownMenu.Margin,
+                    To = new Thickness(0, 466, 0, 0),
+                    Duration = TimeSpan.FromSeconds(0.7),
+                };
+
+                DropDownMenu.BeginAnimation(Canvas.MarginProperty, thicknessAnimation);
+            }
+            else if (DropDownMenu.Margin == new Thickness(0, 466, 0, 0))
+            {
+                DropDownMenuSwitcher.IsChecked = false;
+
+                ThicknessAnimation animation = new ThicknessAnimation()
+                {
+                    From = DropDownMenu.Margin,
+                    To = new Thickness(0, 286, 0, 0),
+                    Duration = TimeSpan.FromSeconds(0.5)
+                };
+
+                DropDownMenu.BeginAnimation(Canvas.MarginProperty, animation);
             }
         }
     }

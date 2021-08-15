@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using Lexplosion.Global;
 using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.UserControls;
 
@@ -27,6 +24,7 @@ namespace Lexplosion.Gui.Windows
 
         private Dictionary<string, Page> Pages = new Dictionary<string, Page>();
         public Page SelectedPage;
+        public LeftPanel LeftPanel;
 
         public MainWindow()
         {
@@ -42,6 +40,7 @@ namespace Lexplosion.Gui.Windows
         private void InitializeLeftMenu() 
         {
             LeftPanel leftPanel = new LeftPanel(SelectedPage, LeftPanel.PageType.InstanceContainer, this);
+            LeftPanel = leftPanel;
             Grid.SetColumn(leftPanel, 0);
             MainColumns.Children.Add(leftPanel);
             this.PagesController<InstanceContainerPage>("InstanceContainerPage", this.RightFrame);

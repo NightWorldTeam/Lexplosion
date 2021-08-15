@@ -8,7 +8,7 @@
       d:DesignHeight="450" d:DesignWidth="700"
       Title="InstanceContainerPage">
 
-    <Grid x:Name="MainGrid">
+    <Grid x:Name="MainGrid" Focusable="False">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ScrollViewer.Background>
                 <!-- #1313131 0.8-->

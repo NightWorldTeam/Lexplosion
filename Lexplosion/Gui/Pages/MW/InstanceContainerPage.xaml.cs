@@ -1,5 +1,4 @@
-﻿using Lexplosion.Gui.UserControls;
-using Lexplosion.Gui.Windows;
+﻿using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
@@ -36,8 +35,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance()
 		{
-			List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(10, 0, ModpacksCategories.All);
-
+			List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(5, 0, ModpacksCategories.All);
 			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
 			{
 				// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение

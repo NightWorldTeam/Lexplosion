@@ -1,13 +1,11 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -83,13 +81,16 @@ namespace Lexplosion.Gui.UserControls
         private UpperButtonFunctions upperButtonFunc;
         private LowerButtonFunctions lowerButtonFunc;
         private InstanceProperties instanceProperties;
-        private MainWindow mainWindow;
+        private MainWindow _mainWindow;
+
+        public delegate void InstanceOpenedHandler();
+        public static event InstanceOpenedHandler InstanceOpened;
 
         public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, int curseforgeInstanceId,
             Uri instanceLogoPath, List<Category> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
         {
             InitializeComponent();
-            this.mainWindow = mainWindow;
+            this._mainWindow = mainWindow;
             InstanceProperties instanceProperties = new InstanceProperties()
             {
                 InstanceTitle = instanceTitle,
@@ -211,6 +212,7 @@ namespace Lexplosion.Gui.UserControls
             var tag = new Button()
             {
                 //Name = "tag" + content.Replace('.', '_'),
+                Focusable = false,
                 Content = content,
                 Style = (Style)Application.Current.FindResource("TagStyle"),
             };
@@ -330,21 +332,9 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceLogoClick(object sender, MouseButtonEventArgs e)
         {
-            string[] ButtonContents = new string[4] { instanceProperties.InstanceTitle, "Экспорт", "Настройки", "Вернуться" };
-        }
-
-        private ToggleButton SwitchToggleButton(StackPanel pageInstance, string content, RoutedEventHandler routedEventHandler, int index)
-        {
-            ToggleButton toggleButton = (ToggleButton)pageInstance.FindName("LeftSideMenuButton" + index);
-
-            toggleButton.Content = content;
-            toggleButton.Style = (Style)Application.Current.FindResource("MWCBS1");
-            toggleButton.Click += routedEventHandler;
-
-            if (index == 0) toggleButton.IsChecked = true;
-            else toggleButton.IsChecked = false;
-
-            return toggleButton;
+            InstanceOpened.Invoke();
+            //_mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.RightFrame);
+            //_mainWindow.LeftPanel.RebuildLeftPanel();
         }
 
         private void DownloadInstance()
