@@ -9,32 +9,8 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Title="SplashWindow" Height="450" Width="750" AllowsTransparency="True">
-    <Window.Resources>
-        <Style x:Key="CBSG" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border>
-                            <Border.Style>
-                                <Style TargetType="{x:Type Border}">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Gray"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
-                            <Grid Background="Transparent">
-                                <ContentPresenter></ContentPresenter>
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
+    
     <Grid>
-        <ProgressBar Minimum="0" Maximum="100" Width="200" Height="20" Margin="266,310,284,120" Background="#131313" Foreground="#c96d"/>
         <Grid.Background>
             <ImageBrush ImageSource="pack://application:,,,/launcher_loading.png"/>
         </Grid.Background>

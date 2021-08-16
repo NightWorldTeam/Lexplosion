@@ -11,10 +11,10 @@
             <SolidColorBrush Color="#18191b"/>
         </Grid.Background>
         <StackPanel x:Name="LeftPanelMenu" Margin="-1,10,0,0" Visibility="Visible">
-            <ToggleButton Focusable="False" x:Name="MenuButton0" Style="{StaticResource MWCBS1}" />
-            <ToggleButton Focusable="False" x:Name="MenuButton1" Style="{StaticResource MWCBS1}" />
-            <ToggleButton Focusable="False" x:Name="MenuButton2" Style="{StaticResource MWCBS1}" />
-            <ToggleButton Focusable="False" x:Name="MenuButton3" Style="{StaticResource MWCBS1}" />
+            <ToggleButton x:Name="MenuButton0" Style="{StaticResource MWCBS1}" />
+            <ToggleButton x:Name="MenuButton1" Style="{StaticResource MWCBS1}" />
+            <ToggleButton x:Name="MenuButton2" Style="{StaticResource MWCBS1}" />
+            <ToggleButton x:Name="MenuButton3" Style="{StaticResource MWCBS1}" />
         </StackPanel>
 
         <Grid x:Name="DropDownMenu" 

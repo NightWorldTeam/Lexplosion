@@ -97,5 +97,13 @@ namespace Lexplosion.Gui.Pages.MW
             WidthTextBox.Text = UserData.settings["windowWidth"];
             HeightTextBox.Text = UserData.settings["windowHeight"];
         }
+
+        private void GameFolderPath_LostFocus(object sender, RoutedEventArgs e)
+        {
+            UserData.settings["gamePath"] = GameFolderPath.Text.Replace(@"\", "/");
+            sysPath = UserData.settings["gamePath"].Replace("/", @"\");
+            InstanceFolderPath.Text = sysPath;
+            DataFilesManager.SaveSettings(UserData.settings);
+        }
     }
 }

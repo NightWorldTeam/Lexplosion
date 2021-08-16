@@ -143,6 +143,7 @@
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontSize" Value="22" />
         <Setter Property="Margin" Value="0" />
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -240,6 +241,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="WhiteSmoke"/>
         <Setter Property="FontSize" Value="25"/>
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -268,6 +270,7 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Margin" Value="2,0,2,0" />
         <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -278,56 +281,34 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <Style x:Key="InstanceMoreButton" TargetType="{x:Type Button}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border>
-                        <Grid>
-                            <Border x:Name="BKG" Background="{TemplateBinding Background}" />
-                            <TextBlock x:Name="Text" Text="More" Foreground="White" FontWeight="Bold" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed" />
-                        </Grid>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="False">
-                            <Setter TargetName="Text" Property="Visibility" Value="Collapsed" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="BKG" Property="Effect">
-                                <Setter.Value>
-                                    <BlurEffect />
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="Text" Property="Visibility" Value="Visible" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    
     <!-- DropDownMenu -->
     <Style x:Key="CDDMS" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Grid Background="Transparent">
                         <Path x:Name="Arrow"
-                                Stretch="Fill"
-                                Width="16" 
-                                Height="16"                                
-                                Stroke="#fff"
-                                StrokeThickness="1" 
-                                RenderTransformOrigin="0.5,0.5">
+                            Stretch="Fill"
+                            Width="16" 
+                            Height="16"                                
+                            Stroke="#fff"
+                            StrokeThickness="1" 
+                            RenderTransformOrigin="0.5,0.5">
                         </Path>
                         <ContentPresenter/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Arrow" Property="Data" Value="M 10.5 15.188 v 5.625 A 1.687 1.687 0 0 1 8.812 22.5 H 1.688 A 1.687 1.687 0 0 1 0 20.813 V 15.188 A 1.687 1.687 0 0 1 1.688 13.5 H 8.812 A 1.687 1.687 0 0 1 10.5 15.188 Z M 0 26.438 v 5.625 A 1.687 1.687 0 0 0 1.688 33.75 H 8.812 A 1.687 1.687 0 0 0 10.5 32.063 V 26.438 A 1.687 1.687 0 0 0 8.812 24.75 H 1.688 A 1.687 1.687 0 0 0 0 26.438 Z M 8.812 2.25 H 1.688 A 1.687 1.687 0 0 0 0 3.938 V 9.563 A 1.687 1.687 0 0 0 1.688 11.25 H 8.812 A 1.687 1.687 0 0 0 10.5 9.563 V 3.938 A 1.687 1.687 0 0 0 8.812 2.25 Z m 5.625 31.5 H 34.313 A 1.687 1.687 0 0 0 36 32.063 V 26.438 a 1.687 1.687 0 0 0 -1.687 -1.687 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 33.75 Z M 12.75 3.938 V 9.563 a 1.687 1.687 0 0 0 1.688 1.688 H 34.313 A 1.687 1.687 0 0 0 36 9.563 V 3.938 A 1.687 1.687 0 0 0 34.313 2.25 H 14.437 A 1.687 1.687 0 0 0 12.75 3.938 Z M 14.437 22.5 H 34.313 A 1.687 1.687 0 0 0 36 20.813 V 15.188 A 1.687 1.687 0 0 0 34.313 13.5 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 22.5 Z"/>
+                            <Setter TargetName="Arrow" 
+                                Property="Data"
+                                Value="M 10.5 15.188 v 5.625 A 1.687 1.687 0 0 1 8.812 22.5 H 1.688 A 1.687 1.687 0 0 1 0 20.813 V 15.188 A 1.687 1.687 0 0 1 1.688 13.5 H 8.812 A 1.687 1.687 0 0 1 10.5 15.188 Z M 0 26.438 v 5.625 A 1.687 1.687 0 0 0 1.688 33.75 H 8.812 A 1.687 1.687 0 0 0 10.5 32.063 V 26.438 A 1.687 1.687 0 0 0 8.812 24.75 H 1.688 A 1.687 1.687 0 0 0 0 26.438 Z M 8.812 2.25 H 1.688 A 1.687 1.687 0 0 0 0 3.938 V 9.563 A 1.687 1.687 0 0 0 1.688 11.25 H 8.812 A 1.687 1.687 0 0 0 10.5 9.563 V 3.938 A 1.687 1.687 0 0 0 8.812 2.25 Z m 5.625 31.5 H 34.313 A 1.687 1.687 0 0 0 36 32.063 V 26.438 a 1.687 1.687 0 0 0 -1.687 -1.687 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 33.75 Z M 12.75 3.938 V 9.563 a 1.687 1.687 0 0 0 1.688 1.688 H 34.313 A 1.687 1.687 0 0 0 36 9.563 V 3.938 A 1.687 1.687 0 0 0 34.313 2.25 H 14.437 A 1.687 1.687 0 0 0 12.75 3.938 Z M 14.437 22.5 H 34.313 A 1.687 1.687 0 0 0 36 20.813 V 15.188 A 1.687 1.687 0 0 0 34.313 13.5 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 22.5 Z"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="False">
-                            <Setter TargetName="Arrow" Property="Data" Value="M 10.5 15.188 v 5.625 A 1.687 1.687 0 0 1 8.812 22.5 H 1.688 A 1.687 1.687 0 0 1 0 20.813 V 15.188 A 1.687 1.687 0 0 1 1.688 13.5 H 8.812 A 1.687 1.687 0 0 1 10.5 15.188 Z M 0 26.438 v 5.625 A 1.687 1.687 0 0 0 1.688 33.75 H 8.812 A 1.687 1.687 0 0 0 10.5 32.063 V 26.438 A 1.687 1.687 0 0 0 8.812 24.75 H 1.688 A 1.687 1.687 0 0 0 0 26.438 Z M 8.812 2.25 H 1.688 A 1.687 1.687 0 0 0 0 3.938 V 9.563 A 1.687 1.687 0 0 0 1.688 11.25 H 8.812 A 1.687 1.687 0 0 0 10.5 9.563 V 3.938 A 1.687 1.687 0 0 0 8.812 2.25 Z m 5.625 31.5 H 34.313 A 1.687 1.687 0 0 0 36 32.063 V 26.438 a 1.687 1.687 0 0 0 -1.687 -1.687 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 33.75 Z M 12.75 3.938 V 9.563 a 1.687 1.687 0 0 0 1.688 1.688 H 34.313 A 1.687 1.687 0 0 0 36 9.563 V 3.938 A 1.687 1.687 0 0 0 34.313 2.25 H 14.437 A 1.687 1.687 0 0 0 12.75 3.938 Z M 14.437 22.5 H 34.313 A 1.687 1.687 0 0 0 36 20.813 V 15.188 A 1.687 1.687 0 0 0 34.313 13.5 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 22.5 Z"/>
+                            <Setter TargetName="Arrow" 
+                                Property="Data"
+                                Value="M 10.5 15.188 v 5.625 A 1.687 1.687 0 0 1 8.812 22.5 H 1.688 A 1.687 1.687 0 0 1 0 20.813 V 15.188 A 1.687 1.687 0 0 1 1.688 13.5 H 8.812 A 1.687 1.687 0 0 1 10.5 15.188 Z M 0 26.438 v 5.625 A 1.687 1.687 0 0 0 1.688 33.75 H 8.812 A 1.687 1.687 0 0 0 10.5 32.063 V 26.438 A 1.687 1.687 0 0 0 8.812 24.75 H 1.688 A 1.687 1.687 0 0 0 0 26.438 Z M 8.812 2.25 H 1.688 A 1.687 1.687 0 0 0 0 3.938 V 9.563 A 1.687 1.687 0 0 0 1.688 11.25 H 8.812 A 1.687 1.687 0 0 0 10.5 9.563 V 3.938 A 1.687 1.687 0 0 0 8.812 2.25 Z m 5.625 31.5 H 34.313 A 1.687 1.687 0 0 0 36 32.063 V 26.438 a 1.687 1.687 0 0 0 -1.687 -1.687 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 33.75 Z M 12.75 3.938 V 9.563 a 1.687 1.687 0 0 0 1.688 1.688 H 34.313 A 1.687 1.687 0 0 0 36 9.563 V 3.938 A 1.687 1.687 0 0 0 34.313 2.25 H 14.437 A 1.687 1.687 0 0 0 12.75 3.938 Z M 14.437 22.5 H 34.313 A 1.687 1.687 0 0 0 36 20.813 V 15.188 A 1.687 1.687 0 0 0 34.313 13.5 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 22.5 Z"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -340,6 +321,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Foreground" Value="White"/>
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -354,7 +336,8 @@
     <Style x:Key="CBSS" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="FontSize" Value="24"></Setter>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -364,5 +347,9 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Frame}">
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
     </Style>
 </ResourceDictionary>
