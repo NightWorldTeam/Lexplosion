@@ -331,7 +331,7 @@ namespace Lexplosion.Logic.Management
         }
 
 
-        public static InitData UpdateInstance(string instanceId, ProgressHandlerDelegate ProgressHandler)
+        public static InitData UpdateInstance(string instanceId)
         {
             InitData Error(string error)
             {
@@ -398,9 +398,13 @@ namespace Lexplosion.Logic.Management
 
             if(type == InstanceType.Curseforge)
             {
-                Dictionary<string, int> instanceData = new Dictionary<string, int>()
+                var instanceData = new CurseforgeInstance.CurseforgeLocalInfo
                 {
-                    ["cursforgeId"] = cursforgeId
+                    InfoData = new Dictionary<string, int>()
+                    {
+                        ["cursforgeId"] = cursforgeId
+                    },
+                    LocalFiles = new List<string>()
                 };
 
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/cursforgeData.json", JsonConvert.SerializeObject(instanceData));

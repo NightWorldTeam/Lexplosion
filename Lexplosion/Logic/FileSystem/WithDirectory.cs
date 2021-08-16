@@ -315,7 +315,6 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-
                 string minecraftJarFile = directory + "/instances/" + instanceId + "/version/" + filesInfo.version.minecraftJar.name;
                 if (updates.ContainsKey("version") && File.Exists(minecraftJarFile) && filesInfo.version.minecraftJar.lastUpdate == updates["version"]) //проверяем его наличие и версию
                 {
@@ -399,11 +398,9 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         updatesList.Libraries[lib] = filesInfo.libraries[lib];
                     }
-
                 }
                 else
                 {
-
                     foreach (string lib in filesInfo.libraries.Keys) //ищем недостающие файлы
                     {
                         if (!File.Exists(directory + "/libraries/" + lib))
@@ -1250,9 +1247,8 @@ namespace Lexplosion.Logic.FileSystem
             });
         }
 
-        public static bool DownloadMod(int projectID, int fileID, string path)
+        public static string DownloadMod(int projectID, int fileID, string path)
         {
-            return true;
             try
             {
                 string answer;
@@ -1271,7 +1267,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (answer == null)
                 {
-                    return false;
+                    return null;
                 }
 
                 List<ModInfo> data = JsonConvert.DeserializeObject<List<ModInfo>>(answer);
@@ -1306,20 +1302,28 @@ namespace Lexplosion.Logic.FileSystem
                         File.Move(directory + "/temp/" + fileName, path + fileName);
                     }
 
-                    return true;
+                    return fileName;
                 }
 
-                return false;
+                return null;
             }
             catch
             {
-                return false;
+                return null;
             }
         }
 
-        public static InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors)
+        public static InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles)
         {
+            //удаляем старые файлы
+            foreach(string file in localFiles)
+            {
+                DelFile(directory + "/instances/" + instanceId + file);
+            }
+            MessageBox.Show("test");
+
             errors = new List<string>();
+            localFiles = new List<string>();
 
             try
             {
@@ -1354,12 +1358,17 @@ namespace Lexplosion.Logic.FileSystem
 
                     foreach (InstanceManifest.FileData file in data.files)
                     {
-                        bool anw = DownloadMod(file.projectID, file.fileID, directory + "/temp/dataDownload/overrides/mods/");
+                        string filename = DownloadMod(file.projectID, file.fileID, directory + "/temp/dataDownload/overrides/mods/");
 
                         //скачивание мода не удалось. Добавляем его данные в список ошибок
-                        if (!anw)
+                        if (filename == null)
                         {
                             errors.Add(file.projectID + " " + file.fileID);
+                            // TODO: зачем я тут продолжаю цикл? Наверное ужно его остановить
+                        }
+                        else
+                        {
+                            localFiles.Add("/mods/" + filename);
                         }
                     }
 
@@ -1374,6 +1383,7 @@ namespace Lexplosion.Logic.FileSystem
                     foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
                     {
                         File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+                        localFiles.Add(newPath.Replace(SourcePath, "/"));
                     }
 
                     if (Directory.Exists(directory + "/temp/dataDownload"))
@@ -1395,6 +1405,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch
             {
+                MessageBox.Show("cath-");
                 return null;
             }
 

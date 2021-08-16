@@ -16,6 +16,12 @@ namespace Lexplosion.Logic.Management
 {
     class CurseforgeInstance : IPrototypeInstance
     {
+        public class CurseforgeLocalInfo
+        {
+            public Dictionary<string, int> InfoData;
+            public List<string> LocalFiles;
+        }
+
         WithDirectory.BaseFilesUpdates BaseFiles;
 
         VersionManifest Manifest;
@@ -23,7 +29,7 @@ namespace Lexplosion.Logic.Management
         CurseforgeFileInfo Info = null;
 
         private string InstanceId;
-        private Dictionary<string, int> InstanceData;
+        private CurseforgeLocalInfo InstanceData;
 
         private bool BaseFilesIsCheckd = false;
         private static event ManageLogic.ProgressHandlerDelegate ProgressHandler;
@@ -38,16 +44,16 @@ namespace Lexplosion.Logic.Management
         {
             ProgressHandler(10);
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
-            InstanceData = DataFilesManager.GetFile<Dictionary<string, int>>(WithDirectory.directory + "/instances/" + InstanceId + "/cursforgeData.json");
+            InstanceData = DataFilesManager.GetFile<CurseforgeLocalInfo>(WithDirectory.directory + "/instances/" + InstanceId + "/cursforgeData.json");
 
-            if (InstanceData == null || !InstanceData.ContainsKey("cursforgeId"))
+            if (InstanceData.InfoData == null || !InstanceData.InfoData.ContainsKey("cursforgeId"))
             {
                 return "cursforgeIdError";
             }
 
-            if (!InstanceData.ContainsKey("instanceVersion"))
+            if (!InstanceData.InfoData.ContainsKey("instanceVersion"))
             {
-                InstanceData["instanceVersion"] = 0;
+                InstanceData.InfoData["instanceVersion"] = 0;
             }
 
             if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
@@ -71,8 +77,6 @@ namespace Lexplosion.Logic.Management
                     {
                         return "guardError";
                     }
-
-                    return "";
                 }
                 else
                 {
@@ -80,14 +84,14 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InstanceData["cursforgeId"]); //получем информацию об этом модпаке
+            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InstanceData.InfoData["cursforgeId"]); //получем информацию об этом модпаке
 
             //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
             foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
             {
-                if (ver.id > InstanceData["instanceVersion"])
+                if (ver.id > InstanceData.InfoData["instanceVersion"])
                 {
-                    InstanceData["instanceVersion"] = ver.id;
+                    InstanceData.InfoData["instanceVersion"] = ver.id;
                     Info = ver;
                 }
             }
@@ -99,7 +103,7 @@ namespace Lexplosion.Logic.Management
         {
             try
             {
-                CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InstanceData["cursforgeId"]);
+                CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InstanceData.InfoData["cursforgeId"]);
                 if (info.attachments.Count > 0)
                 {
                     // TODO: написать где-то отдельную функцию для скачивания файла
@@ -141,7 +145,7 @@ namespace Lexplosion.Logic.Management
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
             {
-                InstanceManifest manifest = WithDirectory.DownloadCurseforgeInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error);
+                InstanceManifest manifest = WithDirectory.DownloadCurseforgeInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref InstanceData.LocalFiles);
 
                 if(error.Count > 0)
                 {
