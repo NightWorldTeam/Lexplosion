@@ -102,23 +102,32 @@ namespace Lexplosion.Logic.Management
             if (UserData.InstancesList == null)
             {
                 UserData.InstancesList = DataFilesManager.GetInstancesList();
+                UserData.CursforgeInstances = new Dictionary<int, string>();
             }
 
             UserData.instancesAssets = new Dictionary<string, InstanceAssets>();
 
-            if (Directory.Exists(WithDirectory.directory + "/instances-assets"))
+            foreach (string instance in UserData.InstancesList.Keys)
             {
-                foreach (string instance in UserData.InstancesList.Keys)
+                //получаем курсовские айди всех установленных курсфорджевских модпаков
+                if(UserData.InstancesList[instance].Type == InstanceType.Curseforge)
                 {
-                    InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.directory + "/instances-assets/" + instance + "/assets.json");
-
-                    if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + instance + "/" + assetsData.mainImage))
+                    CfJsonBase data = DataFilesManager.GetFile<CfJsonBase>(WithDirectory.directory + "/instances/" + instance + "/cursforgeData.json");
+                    if (data != null && data.InfoData != null && data.InfoData.ContainsKey("cursforgeId"))
                     {
-                        UserData.instancesAssets[instance] = new InstanceAssets
-                        {
-                            mainImage = "/" + instance + "/" + assetsData.mainImage
-                        };
+                        UserData.CursforgeInstances[data.InfoData["cursforgeId"]] = instance;
                     }
+                }
+
+                //получаем асетсы модпаков
+                InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.directory + "/instances-assets/" + instance + "/assets.json");
+
+                if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + instance + "/" + assetsData.mainImage))
+                {
+                    UserData.instancesAssets[instance] = new InstanceAssets
+                    {
+                        mainImage = "/" + instance + "/" + assetsData.mainImage
+                    };
                 }
             }
 
@@ -373,6 +382,28 @@ namespace Lexplosion.Logic.Management
             }
         }
 
+        public static bool ChckIntanceUpdates(string instanceId, InstanceType type)
+        {
+            /*switch (type)
+            {
+                case InstanceType.Curseforge:
+                    List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InstanceData.InfoData["cursforgeId"]); //получем информацию об этом модпаке
+
+                    //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
+                    foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
+                    {
+                        if (ver.id > InstanceData.InfoData["instanceVersion"])
+                        {
+                            InstanceData.InfoData["instanceVersion"] = ver.id;
+                            Info = ver;
+                        }
+                    }
+                    break;
+            }*/
+
+            return false;
+        } 
+
         public static string CreateInstance(string name, InstanceType type, string gameVersion, string forge, int cursforgeId = 0)
         {
             string instanceId = GenerateInstanceId(name);
@@ -411,6 +442,13 @@ namespace Lexplosion.Logic.Management
             }
 
             return instanceId;
+        }
+
+
+        // эта хуйня нужна чисто чтобы json модпака курса в методе DefineListInstances декодировать
+        class CfJsonBase
+        {
+            public Dictionary<string, int> InfoData;
         }
     }
 }
