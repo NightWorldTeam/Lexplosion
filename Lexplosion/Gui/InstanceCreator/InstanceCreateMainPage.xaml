@@ -5,28 +5,43 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Lexplosion.Gui.InstanceCreator"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="700"
       Title="InstanceCreateMainPage">
 
     <Grid>
         <ScrollViewer>
             <Grid>
-                <TextBlock x:Name="TextBlockInstanceName"
-                    Text="Название"
-                    Foreground="White"
-                    FontSize="24" Margin="10,14,651,397"/>
-                <TextBox x:Name="InstanceName" 
-                    FontSize="20"
-                    Height="42" 
-                    Width="200" Margin="10,53,583,355"/>
-                <TextBlock x:Name="TextBlockInstanceOverview"
-                    Text="Описание"
-                    Foreground="White"
-                    FontSize="24" Margin="10,106,651,305"/>
-                <TextBox x:Name="InstanceOverview" 
-                    FontSize="20"
-                    Height="42" 
-                    Width="200" Margin="10,150,583,258"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.Background>
+                        <SolidColorBrush Color="#151515"/>
+                    </Grid.Background>
+                    <TextBlock x:Name="TextBlockInstanceName"
+                        Text="Название"
+                        Foreground="White"
+                        FontSize="24" Margin="23,0,249,409"/>
+                    <TextBox x:Name="InstanceName" 
+                        FontSize="20"
+                        Height="42" 
+                        Width="200" Margin="13,46,167,362"/>
+                    <Button Width="120" Height="120" Margin="252,10,28,320">
+                        
+                    </Button>
+                    <TextBlock x:Name="TextBlockInstanceOverview"
+                        Text="Описание"
+                        Foreground="White"
+                        FontSize="24" Margin="23,111,242,305" RenderTransformOrigin="0.5,0.5"/>
+                    <TextBox x:Name="InstanceOverview" 
+                        FontSize="20" Margin="23,150,10,170" />
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.Background>
+                        <SolidColorBrush Color="#131313"/>
+                    </Grid.Background>
+                </Grid>
             </Grid>
         </ScrollViewer>
     </Grid>
