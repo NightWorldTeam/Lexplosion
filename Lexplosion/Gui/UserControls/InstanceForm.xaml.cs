@@ -333,8 +333,6 @@ namespace Lexplosion.Gui.UserControls
         private void InstanceLogoClick(object sender, MouseButtonEventArgs e)
         {
             InstanceOpened.Invoke();
-            //_mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.RightFrame);
-            //_mainWindow.LeftPanel.RebuildLeftPanel();
         }
 
         private void DownloadInstance()

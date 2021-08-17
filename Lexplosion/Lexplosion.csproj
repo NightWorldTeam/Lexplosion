@@ -91,6 +91,18 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Gui\InstanceCreator\InstanceCreateMainPage.xaml.cs">
+      <DependentUpon>InstanceCreateMainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\InstanceCreator\InstanceCreateModsPage.xaml.cs">
+      <DependentUpon>InstanceCreateModsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\InstanceCreator\InstanceCreateResourcepacksPage.xaml.cs">
+      <DependentUpon>InstanceCreateResourcepacksPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\InstanceCreator\InstanceCreateShaderspacksPage.xaml.cs">
+      <DependentUpon>InstanceCreateShaderspacksPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\InstanceCreator\InstanceMasterPage.xaml.cs">
       <DependentUpon>InstanceMasterPage.xaml</DependentUpon>
     </Compile>
@@ -183,6 +195,22 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\InstanceCreator\InstanceCreateMainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\InstanceCreator\InstanceCreateModsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\InstanceCreator\InstanceCreateResourcepacksPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\InstanceCreator\InstanceCreateShaderspacksPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\InstanceCreator\InstanceMasterPage.xaml">
       <SubType>Designer</SubType>
