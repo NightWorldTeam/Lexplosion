@@ -55,27 +55,27 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock x:Name="InstanceTitle"
-                            FontSize="24"
-                            Margin="8,0,0,0"
-                            FontStyle="Italic"
-                            VerticalAlignment="Center" 
-                            FontWeight="SemiBold"
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Foreground="White"/>
+                        FontSize="24"
+                        Margin="8,0,0,0"
+                        FontStyle="Italic"
+                        VerticalAlignment="Center" 
+                        FontWeight="SemiBold"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Foreground="White"/>
                     <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
                         <ToggleButton x:Name="OverviewToggleButton"
-                                Content="Overview" 
-                                Click="ClickedOverview" 
-                                Style="{StaticResource MWCBS}" />
+                            Content="Overview" 
+                            Click="ClickedOverview" 
+                            Style="{StaticResource MWCBS}" />
                         <ToggleButton x:Name="ModsToggleButton"
-                                Content="Mods"
-                                Click="ClickedModsList" 
-                                Style="{StaticResource MWCBS}" />
+                            Content="Mods"
+                            Click="ClickedModsList" 
+                            Style="{StaticResource MWCBS}" />
                         <ToggleButton x:Name="VersionToggleButton"
-                                Content="Version" 
-                                Click="ClickedVersion" 
-                                Style="{StaticResource MWCBS}" />
+                            Content="Version" 
+                            Click="ClickedVersion" 
+                            Style="{StaticResource MWCBS}" />
                     </WrapPanel>
                 </Grid>
                 <Grid Grid.Column="2">
@@ -88,13 +88,13 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="2" 
-                            Grid.Row="1" 
-                            Width="120"
-                            Height="30"
-                            Style="{StaticResource CBS}"
-                            Content="Играть"
-                            FontSize="16"
-                            FontWeight="Bold"/>
+                        Grid.Row="1" 
+                        Width="120"
+                        Height="30"
+                        Style="{StaticResource CBS}"
+                        Content="Играть"
+                        FontSize="16"
+                        FontWeight="Bold"/>
                 </Grid>
             </Grid>
             <Frame x:Name="BottomSideFrame" Grid.Row="1"/>
