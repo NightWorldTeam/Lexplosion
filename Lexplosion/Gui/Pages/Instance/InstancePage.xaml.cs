@@ -33,7 +33,10 @@ namespace Lexplosion.Gui.Pages.Instance
         private void ClickedOverview(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show(typeof(OverviewPage).ToString());
-            _mainWindow.PagesController<OverviewPage>("OverviewPage", BottomSideFrame);
+            _mainWindow.PagesController("OverviewPage", this.BottomSideFrame, delegate ()
+            {
+                return new OverviewPage("title", "description");
+            });
             ReselectionButton(OverviewToggleButton);
         }
 

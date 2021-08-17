@@ -26,6 +26,8 @@ namespace Lexplosion.Gui.Windows
         public Page SelectedPage;
         public LeftPanel LeftPanel;
 
+        public delegate Page CreateObject();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -43,15 +45,20 @@ namespace Lexplosion.Gui.Windows
             LeftPanel = leftPanel;
             Grid.SetColumn(leftPanel, 0);
             MainColumns.Children.Add(leftPanel);
-            this.PagesController<InstanceContainerPage>("InstanceContainerPage", this.RightFrame);
+            //this.PagesController<InstanceContainerPage>("InstanceContainerPage", this.RightFrame);
+
+            this.PagesController("InstanceContainerPage", this.RightFrame, delegate ()
+            {
+                return new InstanceContainerPage(this);
+            });   
         }
 
-        public void PagesController<T>(string page, Frame frame) where T : Page
+        public void PagesController(string page, Frame frame, CreateObject createObject)
         {
             Page obj;
             if (!Pages.ContainsKey(page))
             {
-                obj = (Page)((T)Activator.CreateInstance(typeof(T), new object[1] { this }));
+                obj = createObject();
                 Pages[page] = obj;
             }
             else

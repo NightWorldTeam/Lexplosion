@@ -32,22 +32,36 @@ namespace Lexplosion.Gui.InstanceCreator
 
         private void Main_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<InstanceCreateMainPage>("InstanceCreateMainPage", this.BottomSideFrame);
+            _mainWindow.PagesController("InstanceCreateMainPage", this.BottomSideFrame, delegate ()
+            {
+                return new InstanceCreateMainPage();
+            });
         }
 
         private void Mods_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<InstanceCreateModsPage>("InstanceCreateModsPage", this.BottomSideFrame);
+            _mainWindow.PagesController("InstanceCreateModsPage", this.BottomSideFrame, delegate ()
+            {
+                return new InstanceCreateModsPage();
+            });
         }
 
         private void Resourcepacks_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<InstanceCreateResourcepacksPage>("InstanceCreateResourcepacksPage", this.BottomSideFrame);
+            _mainWindow.PagesController("InstanceCreateResourcepacksPage", this.BottomSideFrame, delegate ()
+            {
+                return new InstanceCreateResourcepacksPage();
+            });
         }
 
         private void Shaderspacks_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<InstanceCreateShaderspacksPage>("InstanceCreateResourcepacksPage", this.BottomSideFrame);
+            _mainWindow.PagesController("InstanceCreateShaderspacksPage", this.BottomSideFrame, delegate ()
+            {
+                return new InstanceCreateShaderspacksPage();
+            });
         }
+
+        private void SetDefaultPage() { }
     }
 }

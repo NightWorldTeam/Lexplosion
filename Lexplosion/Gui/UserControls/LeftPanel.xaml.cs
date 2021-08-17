@@ -152,19 +152,28 @@ namespace Lexplosion.Gui.UserControls
 
         private void CatalogSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _mainWindow.RightFrame);
+            _mainWindow.PagesController("InstanceContainerPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new InstanceContainerPage(_mainWindow);
+            });
             ReselectionButton(MenuButton0);
         }
 
         private void InstanceSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.RightFrame);
+            _mainWindow.PagesController("InstancePage", _mainWindow.RightFrame, delegate ()
+            {
+                return new InstancePage(_mainWindow);
+            });
             ReselectionButton(MenuButton0);
         }
 
         private void LibrarySelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<LibraryContainerPage>("LibraryContainerPage", _mainWindow.RightFrame);
+            _mainWindow.PagesController("LibraryContainerPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new LibraryContainerPage(_mainWindow);
+            });
             ReselectionButton(MenuButton1);
         }
 
@@ -177,7 +186,10 @@ namespace Lexplosion.Gui.UserControls
 
         private void MultiplayerSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<MultiplayerContainerPage>("MultiplayerContainerPage", _mainWindow.RightFrame);
+            _mainWindow.PagesController("MultiplayerContainerPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new MultiplayerContainerPage(_mainWindow);
+            });
             ReselectionButton(MenuButton2);
         }
 
@@ -189,14 +201,20 @@ namespace Lexplosion.Gui.UserControls
 
         private void LauncherSettingsSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController<SettingsContainerPage>("SettingsContainerPage", _mainWindow.RightFrame);
+            _mainWindow.PagesController("SettingsContainerPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new SettingsContainerPage(_mainWindow);
+            });
             ReselectionButton(MenuButton3);
         }
 
         private void BackSelected(object sender, RoutedEventArgs e)
         {
             InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
-            _mainWindow.PagesController<InstanceContainerPage>("InstanceContainerPage", _mainWindow.RightFrame);
+            _mainWindow.PagesController("InstanceContainerPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new InstanceContainerPage(_mainWindow);
+            });
             ReselectionButton(MenuButton0);
             activePageType = PageType.InstanceContainer;
         }
@@ -221,7 +239,10 @@ namespace Lexplosion.Gui.UserControls
         private void InitializeInstancePage() 
         {
             activePageType = PageType.OpenedInstance;
-            _mainWindow.PagesController<InstancePage>("InstancePage", _mainWindow.RightFrame);
+            _mainWindow.PagesController("InstancePage", _mainWindow.RightFrame, delegate ()
+            {
+                return new InstancePage(_mainWindow);
+            });
             InitializeContent("Модпак", "Экспорт", "Настройки", "Назад");
             ReselectionButton(MenuButton0);
         }

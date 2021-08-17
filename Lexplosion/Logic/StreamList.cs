@@ -5,7 +5,6 @@ using System.Windows;
 
 namespace Lexplosion.Logic
 {
-
     class StreamList
     {
         public class ThreadInfo
