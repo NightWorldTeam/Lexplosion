@@ -19,6 +19,7 @@ namespace Lexplosion.Logic.Management
         Dictionary<string, int> Updates;
 
         private string InstanceId;
+        public InstancePlatformData InfoData;
 
         public NightworldIntance(string instanceid)
         {
@@ -27,7 +28,13 @@ namespace Lexplosion.Logic.Management
 
         public string Check()
         {
-            Manifest = ToServer.GetInstanceManifest(InstanceId);
+            InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
+            if (InfoData == null || InfoData.id == null)
+            {
+                return "nightworldIdError";
+            }
+
+            Manifest = ToServer.GetInstanceManifest(InfoData.id);
 
             if (Manifest != null)
             {
@@ -78,7 +85,13 @@ namespace Lexplosion.Logic.Management
 
         public string CheckOnlyBase()
         {
-            Manifest = ToServer.GetInstanceManifest(InstanceId);
+            InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
+            if (InfoData == null || InfoData.id == null)
+            {
+                return "nightworldIdError";
+            }
+
+            Manifest = ToServer.GetInstanceManifest(InfoData.id);
 
             if (Manifest != null)
             {

@@ -1315,10 +1315,13 @@ namespace Lexplosion.Logic.FileSystem
 
         public static InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles)
         {
-            //удаляем старые файлы
-            foreach(string file in localFiles)
+            if(localFiles != null)
             {
-                DelFile(directory + "/instances/" + instanceId + file);
+                //удаляем старые файлы
+                foreach (string file in localFiles)
+                {
+                    DelFile(directory + "/instances/" + instanceId + file);
+                }
             }
             MessageBox.Show("test");
 
@@ -1335,6 +1338,10 @@ namespace Lexplosion.Logic.FileSystem
                 using (WebClient wc = new WebClient())
                 {
                     DelFile(directory + "/temp/" + fileName);
+                    MainWindow.Obj.Dispatcher.Invoke(delegate
+                    {
+                        Clipboard.SetText(downloadUrl);
+                    });
                     wc.DownloadFile(downloadUrl, directory + "/temp/" + fileName);
                 }
 
@@ -1406,6 +1413,7 @@ namespace Lexplosion.Logic.FileSystem
             catch
             {
                 MessageBox.Show("cath-");
+                errors.Add("uncnowError");
                 return null;
             }
 

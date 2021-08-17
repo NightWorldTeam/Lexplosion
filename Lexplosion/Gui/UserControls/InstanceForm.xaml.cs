@@ -348,7 +348,7 @@ namespace Lexplosion.Gui.UserControls
             {
                 MessageBox.Show(instanceProperties.CurseforgeInstanceId.ToString());
                 string instanceId = ManageLogic.CreateInstance(
-                    instanceProperties.InstanceTitle, InstanceType.Curseforge, "", "", instanceProperties.CurseforgeInstanceId
+                    instanceProperties.InstanceTitle, InstanceType.Curseforge, "", "", instanceProperties.CurseforgeInstanceId.ToString()
                 	);
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.DownloadInstance(instanceId, InstanceType.Curseforge);

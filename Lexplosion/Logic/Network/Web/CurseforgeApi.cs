@@ -59,7 +59,7 @@ namespace Lexplosion.Logic.Network
 
         }
 
-        public static List<CurseforgeFileInfo> GetInstanceInfo(int id)
+        public static List<CurseforgeFileInfo> GetInstanceInfo(string id)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static CurseforgeInstanceInfo GetInstance(int id)
+        public static CurseforgeInstanceInfo GetInstance(string id)
         {
             try
             {

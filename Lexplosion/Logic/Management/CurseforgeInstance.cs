@@ -16,12 +16,6 @@ namespace Lexplosion.Logic.Management
 {
     class CurseforgeInstance : IPrototypeInstance
     {
-        public class CurseforgeLocalInfo
-        {
-            public Dictionary<string, int> InfoData;
-            public List<string> LocalFiles;
-        }
-
         WithDirectory.BaseFilesUpdates BaseFiles;
 
         VersionManifest Manifest;
@@ -29,7 +23,7 @@ namespace Lexplosion.Logic.Management
         CurseforgeFileInfo Info = null;
 
         private string InstanceId;
-        private CurseforgeLocalInfo InstanceData;
+        public InstancePlatformData InfoData;
 
         private bool BaseFilesIsCheckd = false;
         private static event ManageLogic.ProgressHandlerDelegate ProgressHandler;
@@ -44,22 +38,18 @@ namespace Lexplosion.Logic.Management
         {
             ProgressHandler(10);
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
-            InstanceData = DataFilesManager.GetFile<CurseforgeLocalInfo>(WithDirectory.directory + "/instances/" + InstanceId + "/cursforgeData.json");
+            InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
 
-            if (InstanceData.InfoData == null || !InstanceData.InfoData.ContainsKey("cursforgeId"))
+            if (InfoData == null || InfoData.id == null || !Int32.TryParse(InfoData.id, out _))
             {
                 return "cursforgeIdError";
-            }
-
-            if (!InstanceData.InfoData.ContainsKey("instanceVersion"))
-            {
-                InstanceData.InfoData["instanceVersion"] = 0;
             }
 
             if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
             {
                 return "versionError";
             }
+
             ProgressHandler(20);
 
             if (Manifest.version.forgeVersion != null && Manifest.version.forgeVersion != "")
@@ -84,14 +74,14 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InstanceData.InfoData["cursforgeId"]); //получем информацию об этом модпаке
+            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InfoData.id); //получем информацию об этом модпаке
 
             //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
             foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
             {
-                if (ver.id > InstanceData.InfoData["instanceVersion"])
+                if (ver.id > InfoData.instanceVersion)
                 {
-                    InstanceData.InfoData["instanceVersion"] = ver.id;
+                    InfoData.instanceVersion = ver.id;
                     Info = ver;
                 }
             }
@@ -103,7 +93,7 @@ namespace Lexplosion.Logic.Management
         {
             try
             {
-                CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InstanceData.InfoData["cursforgeId"]);
+                CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
                 if (info.attachments.Count > 0)
                 {
                     // TODO: написать где-то отдельную функцию для скачивания файла
@@ -145,9 +135,11 @@ namespace Lexplosion.Logic.Management
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
             {
-                InstanceManifest manifest = WithDirectory.DownloadCurseforgeInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref InstanceData.LocalFiles);
+                List<string> localFiles = DataFilesManager.GetFile<List<string>>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
+                InstanceManifest manifest = WithDirectory.DownloadCurseforgeInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref localFiles);
+                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json", JsonConvert.SerializeObject(localFiles)); // функция DownloadCurseforgeInstance изменила этот список. сохраняем его
 
-                if(error.Count > 0)
+                if (error.Count > 0)
                 {
                     return new InitData
                     {
@@ -201,7 +193,7 @@ namespace Lexplosion.Logic.Management
                 }
 
                 WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
-                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/cursforgeData.json", JsonConvert.SerializeObject(InstanceData));
+                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
             }
 
             MessageBox.Show("gv");

@@ -102,20 +102,20 @@ namespace Lexplosion.Logic.Management
             if (UserData.InstancesList == null)
             {
                 UserData.InstancesList = DataFilesManager.GetInstancesList();
-                UserData.CursforgeInstances = new Dictionary<int, string>();
+                UserData.ExternalIds = new Dictionary<string, string>();
             }
 
             UserData.instancesAssets = new Dictionary<string, InstanceAssets>();
 
             foreach (string instance in UserData.InstancesList.Keys)
             {
-                //получаем курсовские айди всех установленных курсфорджевских модпаков
-                if(UserData.InstancesList[instance].Type == InstanceType.Curseforge)
+                //получаем нешние айдишники всех не локальных модпаков
+                if(UserData.InstancesList[instance].Type != InstanceType.Local)
                 {
-                    CfJsonBase data = DataFilesManager.GetFile<CfJsonBase>(WithDirectory.directory + "/instances/" + instance + "/cursforgeData.json");
-                    if (data != null && data.InfoData != null && data.InfoData.ContainsKey("cursforgeId"))
+                    InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
+                    if (data != null && data.id != null)
                     {
-                        UserData.CursforgeInstances[data.InfoData["cursforgeId"]] = instance;
+                        UserData.ExternalIds[data.id] = instance;
                     }
                 }
 
@@ -404,7 +404,7 @@ namespace Lexplosion.Logic.Management
             return false;
         } 
 
-        public static string CreateInstance(string name, InstanceType type, string gameVersion, string forge, int cursforgeId = 0)
+        public static string CreateInstance(string name, InstanceType type, string gameVersion, string forge, string externalId = "")
         {
             string instanceId = GenerateInstanceId(name);
 
@@ -427,28 +427,19 @@ namespace Lexplosion.Logic.Management
             };
             DataFilesManager.SaveManifest(instanceId, manifest);
 
-            if(type == InstanceType.Curseforge)
+            if(type != InstanceType.Local)
             {
-                var instanceData = new CurseforgeInstance.CurseforgeLocalInfo
+                UserData.ExternalIds[externalId] = instanceId;
+
+                var instanceData = new InstancePlatformData
                 {
-                    InfoData = new Dictionary<string, int>()
-                    {
-                        ["cursforgeId"] = cursforgeId
-                    },
-                    LocalFiles = new List<string>()
+                    id = externalId
                 };
 
-                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/cursforgeData.json", JsonConvert.SerializeObject(instanceData));
+                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
             }
 
             return instanceId;
-        }
-
-
-        // эта хуйня нужна чисто чтобы json модпака курса в методе DefineListInstances декодировать
-        class CfJsonBase
-        {
-            public Dictionary<string, int> InfoData;
         }
     }
 }
