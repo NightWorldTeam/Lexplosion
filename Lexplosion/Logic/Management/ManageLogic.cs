@@ -384,22 +384,32 @@ namespace Lexplosion.Logic.Management
 
         public static bool ChckIntanceUpdates(string instanceId, InstanceType type)
         {
-            /*switch (type)
+            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json");
+            if(infoData == null || infoData.id == null)
+            {
+                return true;
+            }
+
+            switch (type)
             {
                 case InstanceType.Curseforge:
-                    List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InstanceData.InfoData["cursforgeId"]); //получем информацию об этом модпаке
+                    if(!Int32.TryParse(infoData.id, out _))
+                    {
+                        return true;
+                    }
 
-                    //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
+                    List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(infoData.id); //получем информацию об этом модпаке
+
+                    //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
                     foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
                     {
-                        if (ver.id > InstanceData.InfoData["instanceVersion"])
+                        if (ver.id > infoData.instanceVersion)
                         {
-                            InstanceData.InfoData["instanceVersion"] = ver.id;
-                            Info = ver;
+                            return true;
                         }
                     }
                     break;
-            }*/
+            }
 
             return false;
         } 
