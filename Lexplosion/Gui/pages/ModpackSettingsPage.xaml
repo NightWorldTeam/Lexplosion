@@ -69,7 +69,10 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Image Source="pack://application:,,,/Assets/images/icons/settings.png"/>
+                        <Grid>
+                            <Image Source="pack://application:,,,/Assets/images/icons/settings.png"/>
+                            <ContentPresenter />
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Pages.Instance;
+﻿using Lexplosion.Gui.InstanceCreator;
+using Lexplosion.Gui.Pages.Instance;
 using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.Windows;
 using System;
@@ -45,6 +46,9 @@ namespace Lexplosion.Gui.UserControls
 
         private List<ToggleButton> toggleButtons = new List<ToggleButton>();
         private Dictionary<ToggleButton, Functions> Buttons = new Dictionary<ToggleButton, Functions>();
+
+        public delegate void AddCustomModpackClicked();
+        public static event AddCustomModpackClicked AddModpackClicked;
 
         public LeftPanel(Page obj, PageType page, MainWindow mw)
         {
@@ -225,7 +229,7 @@ namespace Lexplosion.Gui.UserControls
         // -- DropDownMenu -- //
         private void AddCustomModpack(object sender, RoutedEventArgs e)
         {
-
+            AddModpackClicked.Invoke();
         }
 
         private void MenuArrow(object sender, RoutedEventArgs e)

@@ -8,39 +8,68 @@
       d:DesignHeight="450" d:DesignWidth="700"
       Title="InstanceCreateMainPage">
 
+    <Page.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="24"/>
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <ScrollViewer>
-            <Grid>
+            <Grid ShowGridLines="True">
+                <Grid.Background>
+                    <SolidColorBrush Color="#151515"/>
+                </Grid.Background>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="400" />
-                    <ColumnDefinition Width="*" />
+
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="130" />
+                    <RowDefinition Height="150" />
+                    <RowDefinition Height="100" />
+                    <RowDefinition Height="100" />
+                </Grid.RowDefinitions>
                 <Grid Grid.Column="0">
-                    <Grid.Background>
-                        <SolidColorBrush Color="#151515"/>
-                    </Grid.Background>
-                    <TextBlock x:Name="TextBlockInstanceName"
-                        Text="Название"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Название"
+                        Grid.Column="1"
                         Foreground="White"
-                        FontSize="24" Margin="23,0,249,409"/>
-                    <TextBox x:Name="InstanceName" 
-                        FontSize="20"
-                        Height="42" 
-                        Width="200" Margin="13,46,167,362"/>
-                    <Button Width="120" Height="120" Margin="252,10,28,320">
-                        
-                    </Button>
-                    <TextBlock x:Name="TextBlockInstanceOverview"
-                        Text="Описание"
-                        Foreground="White"
-                        FontSize="24" Margin="23,111,242,305" RenderTransformOrigin="0.5,0.5"/>
-                    <TextBox x:Name="InstanceOverview" 
-                        FontSize="20" Margin="23,150,10,170" />
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Width="Auto"
+                        Height="Auto"/>
+                    <TextBox x:Name="InstanceNameTextBox"
+                        Grid.Column="1"
+                        Style="{StaticResource CTB}"
+                        Width="230"
+                        Height="40"
+                        HorizontalAlignment="Left"/>
+                    <Button x:Name="InstanceLogo"
+                        Grid.Column="2"
+                        Width="120"
+                        Height="120"></Button>
                 </Grid>
-                <Grid Grid.Column="1">
-                    <Grid.Background>
-                        <SolidColorBrush Color="#131313"/>
-                    </Grid.Background>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Описание"
+                        Grid.Column="1"
+                        Foreground="White"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Width="Auto"
+                        Height="Auto"/>
+                    <TextBox x:Name="InstanceOverviewTextBox"
+                        Grid.Column="1"
+                        Style="{StaticResource CTB}"
+                        HorizontalAlignment="Left" Margin="0,37,-110,10" Width="411"/>
                 </Grid>
             </Grid>
         </ScrollViewer>

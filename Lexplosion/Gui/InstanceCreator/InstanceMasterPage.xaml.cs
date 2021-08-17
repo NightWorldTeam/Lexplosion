@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Windows;
+﻿using Lexplosion.Gui.UserControls;
+using Lexplosion.Gui.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace Lexplosion.Gui.InstanceCreator
         {
             InitializeComponent();
             _mainWindow = mainWindow;
+            LeftPanel.AddModpackClicked += SetDefaultPage;
         }
 
         private void Main_Click(object sender, RoutedEventArgs e)
