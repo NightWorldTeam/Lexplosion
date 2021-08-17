@@ -186,6 +186,7 @@
     <Compile Include="Logic\Network\SMP\SmpClient.cs" />
     <Compile Include="Logic\Network\SMP\SmpServer.cs" />
     <Compile Include="Logic\Network\Web\CurseforgeApi.cs" />
+    <Compile Include="Logic\Network\Web\NightWorldApi.cs" />
     <Compile Include="Logic\Objects.cs" />
     <Compile Include="Logic\Network\Web\ToServer.cs" />
     <Compile Include="Logic\FileSystem\WithDirectory.cs" />

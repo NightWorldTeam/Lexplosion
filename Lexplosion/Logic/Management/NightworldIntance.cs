@@ -21,6 +21,8 @@ namespace Lexplosion.Logic.Management
         private string InstanceId;
         public InstancePlatformData InfoData;
 
+        private bool requiresUpdates = true;
+
         public NightworldIntance(string instanceid)
         {
             InstanceId = instanceid;
@@ -34,7 +36,10 @@ namespace Lexplosion.Logic.Management
                 return "nightworldIdError";
             }
 
-            Manifest = ToServer.GetInstanceManifest(InfoData.id);
+            int version = NightWorldApi.GetInstanceVersion(InfoData.id);
+            requiresUpdates = version > InfoData.instanceVersion;
+
+            Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
 
             if (Manifest != null)
             {
@@ -46,10 +51,13 @@ namespace Lexplosion.Logic.Management
                     return "guardError"; 
                 }
 
-                VariableFiles = WithDirectory.CheckVariableFiles(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
-                if (!VariableFiles.Successful) 
-                { 
-                    return "guardError"; 
+                if (requiresUpdates)
+                {
+                    VariableFiles = WithDirectory.CheckVariableFiles(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
+                    if (!VariableFiles.Successful)
+                    {
+                        return "guardError";
+                    }
                 }
 
                 return "";
@@ -63,16 +71,28 @@ namespace Lexplosion.Logic.Management
         public InitData Update()
         {
             List<string> errors_ = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
-            List<string> errors = WithDirectory.UpdateVariableFiles(VariableFiles, Manifest, InstanceId, ref Updates);
+            List<string> errors = null;
+
+            if (requiresUpdates)
+            {
+                errors = WithDirectory.UpdateVariableFiles(VariableFiles, Manifest, InstanceId, ref Updates);
+            }
 
             Manifest.data = null;
             Manifest.natives = null;
 
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
-            foreach (string error in errors_)
+            if(errors != null)
             {
-                errors.Add(error);
+                foreach (string error in errors_)
+                {
+                    errors.Add(error);
+                }
+            }
+            else
+            {
+                errors = errors_;
             }
 
             return new InitData
@@ -91,7 +111,7 @@ namespace Lexplosion.Logic.Management
                 return "nightworldIdError";
             }
 
-            Manifest = ToServer.GetInstanceManifest(InfoData.id);
+            Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
 
             if (Manifest != null)
             {

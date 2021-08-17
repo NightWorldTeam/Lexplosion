@@ -911,7 +911,6 @@ namespace Lexplosion.Logic.FileSystem
             SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
 
             return errors;
-
         }
 
         public static void CheckLauncherAssets()

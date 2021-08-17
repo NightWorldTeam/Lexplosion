@@ -13,7 +13,7 @@ namespace Lexplosion.Logic.Objects
         public string xms;
     }
 
-    class LibInfo
+    public class LibInfo
     {
         public bool notArchived;
         public string url;
@@ -28,7 +28,15 @@ namespace Lexplosion.Logic.Objects
 
     class NInstanceManifest : VersionManifest
     {
-        public Dictionary<string, WithFolder> data = new Dictionary<string, WithFolder>();
+        public class WithFolder
+        {
+            public Dictionary<string, FileInfo> objects;
+            public List<string> oldFiles;
+            public bool security;
+            public int folderVersion;
+        }
+
+        public Dictionary<string, NInstanceManifest.WithFolder> data = new Dictionary<string, NInstanceManifest.WithFolder>();
     }
 
     class InstancePlatformData
@@ -65,15 +73,6 @@ namespace Lexplosion.Logic.Objects
         public int size;
         public int lastUpdate;
         public bool notArchived;
-    }
-
-    class WithFolder
-    {
-        public Dictionary<string, FileInfo> objects;
-        public List<string> oldFiles;
-        public bool security;
-        public int folderVersion;
-
     }
 
     class InitData
@@ -155,6 +154,18 @@ namespace Lexplosion.Logic.Objects
         public int id;
         public string downloadUrl;
         public string fileName;
+    }
+
+    class NWInstanceInfo
+    {
+        public string name;
+        public string imageUrl;
+        public int version;
+    }
+
+    public class DataLibInfo : LibInfo
+    {
+        public string os;
     }
 
 }
