@@ -102,23 +102,32 @@ namespace Lexplosion.Logic.Management
             if (UserData.InstancesList == null)
             {
                 UserData.InstancesList = DataFilesManager.GetInstancesList();
+                UserData.ExternalIds = new Dictionary<string, string>();
             }
 
             UserData.instancesAssets = new Dictionary<string, InstanceAssets>();
 
-            if (Directory.Exists(WithDirectory.directory + "/instances-assets"))
+            foreach (string instance in UserData.InstancesList.Keys)
             {
-                foreach (string instance in UserData.InstancesList.Keys)
+                //получаем нешние айдишники всех не локальных модпаков
+                if(UserData.InstancesList[instance].Type != InstanceType.Local)
                 {
-                    InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.directory + "/instances-assets/" + instance + "/assets.json");
-
-                    if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + instance + "/" + assetsData.mainImage))
+                    InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
+                    if (data != null && data.id != null)
                     {
-                        UserData.instancesAssets[instance] = new InstanceAssets
-                        {
-                            mainImage = "/" + instance + "/" + assetsData.mainImage
-                        };
+                        UserData.ExternalIds[data.id] = instance;
                     }
+                }
+
+                //получаем асетсы модпаков
+                InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.directory + "/instances-assets/" + instance + "/assets.json");
+
+                if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + instance + "/" + assetsData.mainImage))
+                {
+                    UserData.instancesAssets[instance] = new InstanceAssets
+                    {
+                        mainImage = "/" + instance + "/" + assetsData.mainImage
+                    };
                 }
             }
 
@@ -331,7 +340,7 @@ namespace Lexplosion.Logic.Management
         }
 
 
-        public static InitData UpdateInstance(string instanceId, ProgressHandlerDelegate ProgressHandler)
+        public static InitData UpdateInstance(string instanceId)
         {
             InitData Error(string error)
             {
@@ -373,7 +382,29 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static string CreateInstance(string name, InstanceType type, string gameVersion, string forge, int cursforgeId = 0)
+        public static bool ChckIntanceUpdates(string instanceId, InstanceType type)
+        {
+            /*switch (type)
+            {
+                case InstanceType.Curseforge:
+                    List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InstanceData.InfoData["cursforgeId"]); //получем информацию об этом модпаке
+
+                    //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
+                    foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
+                    {
+                        if (ver.id > InstanceData.InfoData["instanceVersion"])
+                        {
+                            InstanceData.InfoData["instanceVersion"] = ver.id;
+                            Info = ver;
+                        }
+                    }
+                    break;
+            }*/
+
+            return false;
+        } 
+
+        public static string CreateInstance(string name, InstanceType type, string gameVersion, string forge, string externalId = "")
         {
             string instanceId = GenerateInstanceId(name);
 
@@ -396,14 +427,16 @@ namespace Lexplosion.Logic.Management
             };
             DataFilesManager.SaveManifest(instanceId, manifest);
 
-            if(type == InstanceType.Curseforge)
+            if(type != InstanceType.Local)
             {
-                Dictionary<string, int> instanceData = new Dictionary<string, int>()
+                UserData.ExternalIds[externalId] = instanceId;
+
+                var instanceData = new InstancePlatformData
                 {
-                    ["cursforgeId"] = cursforgeId
+                    id = externalId
                 };
 
-                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/cursforgeData.json", JsonConvert.SerializeObject(instanceData));
+                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
             }
 
             return instanceId;

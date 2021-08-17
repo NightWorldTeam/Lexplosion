@@ -23,7 +23,8 @@ namespace Lexplosion.Global
         */
         public static Dictionary<string, string> settings; //общие настройки
         public static Dictionary<string, InstanceParametrs> InstancesList; // все сборки
-        public static Dictionary<string, InstanceAssets> instancesAssets;
+        public static Dictionary<string, InstanceAssets> instancesAssets; // ассетсы всех модпаков
+        public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)
     }
 
     class InstanceParametrs

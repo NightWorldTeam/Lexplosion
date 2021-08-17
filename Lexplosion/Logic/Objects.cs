@@ -3,7 +3,6 @@
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects
 {
-
     class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
     {
         public string description;
@@ -30,6 +29,12 @@ namespace Lexplosion.Logic.Objects
     class NInstanceManifest : VersionManifest
     {
         public Dictionary<string, WithFolder> data = new Dictionary<string, WithFolder>();
+    }
+
+    class InstancePlatformData
+    {
+        public string id;
+        public int instanceVersion;
     }
 
     class LocalVersionInfo
