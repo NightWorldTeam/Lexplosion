@@ -86,7 +86,6 @@ namespace Lexplosion.Logic.Management
                     ConsoleWindow.Window.Update("Выполняется запуск игры...");
                     ConsoleWindow.Window.Update(command);
                 });
-
             }
 
             bool launcherVisible = true;
@@ -95,7 +94,6 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-
                 MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
                     //MainWindow.window.InitProgressBar.Visibility = Visibility.Visible;
@@ -134,7 +132,6 @@ namespace Lexplosion.Logic.Management
                             consoleText = "";
                         }
                     }
-
                 }
 
                 void WriteToConsole(object s, DataReceivedEventArgs e)
@@ -145,7 +142,6 @@ namespace Lexplosion.Logic.Management
                         {
                             ConsoleWindow.Window.Update(e.Data);
                         });
-
                     }
                     else
                     {
@@ -198,7 +194,6 @@ namespace Lexplosion.Logic.Management
                     gameGateway = null;
                     process = null;
                     runnigInstance = "";
-
                 };
 
                 process.Start();
@@ -207,7 +202,6 @@ namespace Lexplosion.Logic.Management
                 gameGateway.Initialization(process.Id);
 
                 return true;
-
             } 
             catch 
             {

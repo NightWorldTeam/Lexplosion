@@ -175,55 +175,7 @@ namespace Lexplosion.Logic.Management
             void Run(string initModPack, InstanceType instype)
             {
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
-
                 InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, ProgressHandler);
-
-                /*if (data.Errors.Contains("javaPathError"))
-                {
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Не удалось определить путь до Java!", "Ошибка 940");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
-                    return;
-
-                }
-                else if (data.Errors.Contains("gamePathError"))
-                {
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Ошибка при определении игровой директории!", "Ошибка 950");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
-                    return;
-
-                }
-                else if (UserData.offline && (UserData.settings.ContainsKey(instanceId + "-update") && UserData.settings[instanceId + "-update"] == "true")) //если лаунчер запущен в оффлайн режиме и выбранный модпак поставлен на обновление
-                {
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Клиент поставлен на обновление, но лаунчер запущен в оффлайн режиме! Войдите в онлайн режим.", "Ошибка 980");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
-                    return;
-
-                }
-                else if ((data.files == null && (UserData.offline || UserData.settings["noUpdate"] == "true")) && !(UserData.settings.ContainsKey(instanceId + "-update") && UserData.settings[instanceId + "-update"] == "true"))
-                { //если  data.files равно null при вылюченных обновлениях или при оффлайн игре. При том модпак не стоит на обновлении
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Вы должны хотя бы 1 раз запустить клиент в онлайн режиме и с включенными обновлениями!", "Ошибка 970");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
-                    //return;
-                    MessageBox.Show("3");
-
-                }
-                else if (data.files == null)
-                {
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Не удалось запустить игру!", "Ошибка 930");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
-                    //return;
-                    MessageBox.Show("4");
-                }*/
 
                 if (data.InitResult == InstanceInit.Successful)
                 {    
