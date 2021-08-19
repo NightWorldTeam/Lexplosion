@@ -12,10 +12,10 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System.Text.RegularExpressions;
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using System.Windows;
 using System.Linq;
 using Lexplosion.Logic.Management;
+using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -38,27 +38,6 @@ namespace Lexplosion.Logic.FileSystem
             public bool AssetsObjects = false;
             public bool AssetsIndexes = false;
             public bool AssetsVirtual = false;
-        }
-
-        // Эти три класса нужны для декодирования json при инфы о фордже
-        class ForgeArtifact
-        {
-            public string path;
-            public string url;
-            public int size;
-        }
-
-        class ForgeLib
-        {
-            public string name;
-            public Dictionary<string, ForgeArtifact> downloads;
-        }
-
-        class ForgeVersionFile
-        {
-            public string mainClass;
-            public string id;
-            public List<ForgeLib> libraries;
         }
 
         private class LauncherAssets //этот класс нужен для декодирования json
@@ -323,7 +302,6 @@ namespace Lexplosion.Logic.FileSystem
                                     {
                                         File.Delete(minecraftJarFile); //удаляем файл, если не сходится хэш или размер
                                         updatesList.MinecraftJar = true;
-
                                     }
                                 }
                             }
@@ -1283,7 +1261,6 @@ namespace Lexplosion.Logic.FileSystem
                     DelFile(directory + "/instances/" + instanceId + file);
                 }
             }
-            MessageBox.Show("test");
 
             errors = new List<string>();
             localFiles = new List<string>();

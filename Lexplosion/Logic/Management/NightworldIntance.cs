@@ -22,26 +22,36 @@ namespace Lexplosion.Logic.Management
         public InstancePlatformData InfoData;
 
         private bool requiresUpdates = true;
+        private bool onlyBase;
         private static event ManageLogic.ProgressHandlerDelegate ProgressHandler;
 
-        public NightworldIntance(string instanceid, ManageLogic.ProgressHandlerDelegate progressHandler)
+        public NightworldIntance(string instanceid, bool onlyBase_, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;
+            onlyBase = onlyBase_;
         }
 
-        public string Check()
+        public InstanceInit Check()
         {
             ProgressHandler(0);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null)
             {
-                return "nightworldIdError";
+                return InstanceInit.NightworldIdError;
             }
 
-            int version = NightWorldApi.GetInstanceVersion(InfoData.id);
-            requiresUpdates = version > InfoData.instanceVersion;
+            int version = 0;
+            if (!onlyBase)
+            {
+                version = NightWorldApi.GetInstanceVersion(InfoData.id);
+                requiresUpdates = version > InfoData.instanceVersion;
+            }
+            else
+            {
+                requiresUpdates = false;
+            }
 
             if (!requiresUpdates)
             {
@@ -53,7 +63,7 @@ namespace Lexplosion.Logic.Management
 
                     if (tempManifest == null)
                     {
-                        return "serverError";
+                        return InstanceInit.ServerError;
                     }
 
                     Manifest = new NInstanceManifest 
@@ -73,7 +83,7 @@ namespace Lexplosion.Logic.Management
 
                         if (tempManifest == null)
                         {
-                            return "serverError";
+                            return InstanceInit.ServerError;
                         }
                     }
 
@@ -90,13 +100,13 @@ namespace Lexplosion.Logic.Management
                 Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
                 if (Manifest == null || Manifest.version == null)
                 {
-                    return "serverError";
+                    return InstanceInit.ServerError;
                 }
 
                 VersionManifest manifest_ = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
                 if (manifest_ == null)
                 {
-                    return "serverError";
+                    return InstanceInit.ServerError;
                 }
 
                 Manifest.version = manifest_.version;
@@ -111,7 +121,7 @@ namespace Lexplosion.Logic.Management
                 BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
                 if (BaseFiles == null) 
                 { 
-                    return "guardError"; 
+                    return InstanceInit.GuardError; 
                 }
 
                 if (requiresUpdates)
@@ -119,15 +129,15 @@ namespace Lexplosion.Logic.Management
                     VariableFiles = WithDirectory.CheckVariableFiles(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
                     if (!VariableFiles.Successful)
                     {
-                        return "guardError";
+                        return InstanceInit.GuardError;
                     }
                 }
 
-                return "";
+                return InstanceInit.Successful;
             }
             else
             {
-                return "serverError";
+                return InstanceInit.ServerError;
             }
         }
 
@@ -163,59 +173,19 @@ namespace Lexplosion.Logic.Management
 
             ProgressHandler(100);
 
-            return new InitData
+            InstanceInit result = InstanceInit.Successful;
+            if(errors.Count > 0)
             {
-                Errors = errors,
-                VersionFile = Manifest.version,
-                Libraries = Manifest.libraries
-            };
-        }
-
-        public string CheckOnlyBase()
-        {
-            InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
-            if (InfoData == null || InfoData.id == null)
-            {
-                return "nightworldIdError";
+                result = InstanceInit.DownloadFilesError;
             }
-
-            Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
-
-            if (Manifest != null)
-            {
-                Updates = WithDirectory.GetLastUpdates(InstanceId);
-
-                BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
-                if (BaseFiles == null)
-                {
-                    return "guardError";
-                }
-
-                return "";
-            }
-            else
-            {
-                return "serverError";
-            }
-
-        }
-
-        public InitData UpdateOnlyBase()
-        {
-            List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
-
-            Manifest.data = null;
-            Manifest.natives = null;
-
-            DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             return new InitData
             {
-                Errors = errors,
+                InitResult = result,
+                DownloadErrors = errors,
                 VersionFile = Manifest.version,
                 Libraries = Manifest.libraries
             };
-
         }
     }
 }

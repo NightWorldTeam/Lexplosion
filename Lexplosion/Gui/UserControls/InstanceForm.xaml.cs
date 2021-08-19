@@ -347,7 +347,7 @@ namespace Lexplosion.Gui.UserControls
                 MessageBox.Show(instanceProperties.CurseforgeInstanceId.ToString());
                 string instanceId = ManageLogic.CreateInstance(
                     instanceProperties.InstanceTitle, InstanceType.Curseforge, "", "", instanceProperties.CurseforgeInstanceId.ToString()
-                	);
+                    );
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.UpdateInstance(instanceId);
             }
@@ -388,20 +388,24 @@ namespace Lexplosion.Gui.UserControls
             Process.Start("explorer", @"" + UserData.settings["gamePath"].Replace("/", @"\") + @"\instances\" + instanceProperties.InstanceId);
         }
 
-        private void InstanceDownloadCompleted(Dictionary<string, string> errors) 
+        private void InstanceDownloadCompleted(InstanceInit result, List<string> downloadErrors) 
         {
-            if (errors.Count > 0) 
+            if (result == InstanceInit.Successful) 
             {
                 instanceProperties.IsInstanceInstalled = true;
                 FormSetup();
                 InstanceProgressBar.Visibility = Visibility.Collapsed;
             }
-            else 
+            else if (result == InstanceInit.DownloadFilesError)
             {
-                foreach (string key in errors.Keys) 
+                foreach (string file in downloadErrors) 
                 {
-                    MessageBox.Show(errors[key]);
+                    MessageBox.Show("Error " + file);
                 }
+            }
+            else
+            {
+                MessageBox.Show("Error " + result);
             }
         }
     }

@@ -26,15 +26,17 @@ namespace Lexplosion.Logic.Management
         public InstancePlatformData InfoData;
 
         private bool BaseFilesIsCheckd = false;
+        private bool onlyBase;
         private static event ManageLogic.ProgressHandlerDelegate ProgressHandler;
 
-        public CurseforgeInstance(string instanceid, ManageLogic.ProgressHandlerDelegate progressHandler)
+        public CurseforgeInstance(string instanceid, bool onlyBase_, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;
+            onlyBase = onlyBase_;
         }
 
-        public string Check()
+        public InstanceInit Check()
         {
             ProgressHandler(10);
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
@@ -42,12 +44,12 @@ namespace Lexplosion.Logic.Management
 
             if (InfoData == null || InfoData.id == null || !Int32.TryParse(InfoData.id, out _))
             {
-                return "cursforgeIdError";
+                return InstanceInit.CursforgeIdError;
             }
 
             if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
             {
-                return "versionError";
+                return InstanceInit.VersionError;
             }
 
             ProgressHandler(20);
@@ -65,34 +67,38 @@ namespace Lexplosion.Logic.Management
 
                     if (BaseFiles == null)
                     {
-                        return "guardError";
+                        return InstanceInit.GuardError;
                     }
                 }
                 else
                 {
-                    return "serverError";
+                    return InstanceInit.ServerError;
                 }
             }
 
             List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InfoData.id); //получем информацию об этом модпаке
 
-            //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
-            foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
+            if (!onlyBase)
             {
-                if (ver.id > InfoData.instanceVersion)
+                //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
+                foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
                 {
-                    InfoData.instanceVersion = ver.id;
-                    Info = ver;
+                    if (ver.id > InfoData.instanceVersion)
+                    {
+                        InfoData.instanceVersion = ver.id;
+                        Info = ver;
+                    }
                 }
             }
 
-            return "";
+            return InstanceInit.Successful;
         }
 
         public InitData Update()
         {
             try
             {
+                // скачивание иконки
                 CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
                 if (info.attachments.Count > 0)
                 {
@@ -130,7 +136,6 @@ namespace Lexplosion.Logic.Management
             }
             catch { }
 
-            List<string> errors = new List<string>();
             ProgressHandler(30);
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
@@ -143,9 +148,8 @@ namespace Lexplosion.Logic.Management
                 {
                     return new InitData
                     {
-                        Errors = error,
-                        VersionFile = null,
-                        Libraries = null
+                        InitResult = InstanceInit.DownloadFilesError,
+                        DownloadErrors = error,
                     };
                 }
 
@@ -174,9 +178,7 @@ namespace Lexplosion.Logic.Management
                             ProgressHandler(97);
                             return new InitData
                             {
-                                Errors = new List<string>() { "guardError" },
-                                VersionFile = null,
-                                Libraries = null
+                                InitResult = InstanceInit.GuardError,
                             };
                         }
                     }
@@ -185,15 +187,27 @@ namespace Lexplosion.Logic.Management
                         ProgressHandler(99);
                         return new InitData
                         {
-                            Errors = new List<string>() { "serverError" },
-                            VersionFile = null,
-                            Libraries = null
+                            InitResult = InstanceInit.ServerError,
                         };
                     }
                 }
 
                 WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
+            }
+            else
+            {
+                if(BaseFilesIsCheckd)
+                {
+                    WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
+                }
+                else
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.ForgeVersionError,
+                    };
+                }
             }
 
             MessageBox.Show("gv");
@@ -202,50 +216,7 @@ namespace Lexplosion.Logic.Management
 
             return new InitData
             {
-                Errors = errors,
-                VersionFile = Manifest.version,
-                Libraries = Manifest.libraries
-            };
-        }
-
-        public string CheckOnlyBase()
-        {
-            Manifest = DataFilesManager.GetManifest(InstanceId, false);
-
-            if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
-            {
-                return "versionError";
-            }
-
-            Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
-
-            if (Manifest != null)
-            {
-                Updates = WithDirectory.GetLastUpdates(InstanceId);
-                BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
-
-                if (BaseFiles == null)
-                {
-                    return "guardError";
-                }
-
-                return "";
-            }
-            else
-            {
-                return "serverError";
-            }
-        }
-
-        public InitData UpdateOnlyBase()
-        {
-            List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
-
-            DataFilesManager.SaveManifest(InstanceId, Manifest);
-
-            return new InitData
-            {
-                Errors = errors,
+                InitResult = InstanceInit.Successful,
                 VersionFile = Manifest.version,
                 Libraries = Manifest.libraries
             };

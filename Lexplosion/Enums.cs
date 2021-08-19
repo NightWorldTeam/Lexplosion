@@ -54,5 +54,18 @@
         Skyblock = 4736,
     }
 
-
+    enum InstanceInit
+    {
+        Successful,
+        DownloadFilesError,
+        NightworldIdError,
+        CursforgeIdError,
+        ServerError,
+        GuardError,
+        VersionError,
+        ForgeVersionError,
+        GamePathError,
+        ManifestError,
+        UnknownError
+    }
 }

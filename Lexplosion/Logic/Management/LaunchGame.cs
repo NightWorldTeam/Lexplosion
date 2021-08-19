@@ -226,12 +226,11 @@ namespace Lexplosion.Logic.Management
 
         public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceType type, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
-            InitData Error(string error)
+            InitData Error(InstanceInit init)
             {
                 return new InitData
                 {
-                    Errors = new List<string>() { error },
-                    VersionFile = null,
+                    InitResult = init
                 };
             }
 
@@ -240,53 +239,39 @@ namespace Lexplosion.Logic.Management
                 SetDefaultSettings();
 
                 if (!UserData.settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
-                    return Error("javaPathError");
+                    return null;
 
                 WithDirectory.Create(UserData.settings["gamePath"]);
-                List<string> errors = new List<string>();
                 InitData data = null;
 
                 if (!UserData.settings.ContainsKey("gamePath") || !Directory.Exists(UserData.settings["gamePath"]) || !UserData.settings["gamePath"].Contains(":"))
-                    return Error("gamePathError");
+                    return Error(InstanceInit.GamePathError);
 
                 bool autoUpdate = instanceSettings.ContainsKey("autoUpdate") && instanceSettings["autoUpdate"] == "true";
 
-                IPrototypeInstance instance;
-
-                switch (type)
+                if (!UserData.offline)
                 {
-                    case InstanceType.Nightworld:
-                        instance = new NightworldIntance(instanceId, progressHandler);
-                        break;
-                    case InstanceType.Local:
-                        instance = new LocalInstance(instanceId);
-                        break;
-                    case InstanceType.Curseforge:
-                        instance = new CurseforgeInstance(instanceId, progressHandler);
-                        break;
-                    default:
-                        instance = null;
-                        break;
-                }
+                    IPrototypeInstance instance;
+                    switch (type)
+                    {
+                        case InstanceType.Nightworld:
+                            instance = new NightworldIntance(instanceId, !autoUpdate, progressHandler);
+                            break;
+                        case InstanceType.Local:
+                            instance = new LocalInstance(instanceId);
+                            break;
+                        case InstanceType.Curseforge:
+                            instance = new CurseforgeInstance(instanceId, !autoUpdate, progressHandler);
+                            break;
+                        default:
+                            instance = null;
+                            break;
+                    }
 
-                if (!UserData.offline && autoUpdate)
-                {
-                    string result = instance.Check();
-                    if (result == "")
+                    InstanceInit result = instance.Check();
+                    if (result == InstanceInit.Successful)
                     {
                         data = instance.Update();
-                    }
-                    else
-                    {
-                        return Error(result);
-                    }
-                }
-                else if (!UserData.offline)
-                {
-                    string result = instance.CheckOnlyBase();
-                    if (result == "")
-                    {
-                        data = instance.UpdateOnlyBase();
                     }
                     else
                     {
@@ -301,14 +286,13 @@ namespace Lexplosion.Logic.Management
                     {
                         data = new InitData
                         {
-                            Errors = errors,
                             VersionFile = files.version,
                             Libraries = files.libraries
                         };
                     }
                     else
                     {
-                        return Error("manifestError");
+                        return Error(InstanceInit.ManifestError);
                     }
                 }
 
@@ -316,7 +300,7 @@ namespace Lexplosion.Logic.Management
             } 
             catch 
             {
-                return Error("unknownError");
+                return Error(InstanceInit.UnknownError);
             }
         }
 

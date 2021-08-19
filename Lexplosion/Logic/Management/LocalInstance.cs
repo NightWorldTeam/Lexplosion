@@ -24,14 +24,14 @@ namespace Lexplosion.Logic.Management
             InstanceId = instanceid;
         }
 
-        public string Check()
+        public InstanceInit Check()
         {
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
 
             if(Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
             {
-                return "versionError";
+                return InstanceInit.VersionError;
             }
 
             Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
@@ -43,14 +43,14 @@ namespace Lexplosion.Logic.Management
 
                 if(BaseFiles == null)
                 {
-                    return "guardError";
+                    return InstanceInit.GuardError;
                 }
 
-                return "";
+                return InstanceInit.Successful;
             }
             else
             {
-                return "serverError";
+                return InstanceInit.Successful;
             }
 
         }
@@ -58,25 +58,21 @@ namespace Lexplosion.Logic.Management
         public InitData Update()
         {
             List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
-
             DataFilesManager.SaveManifest(InstanceId, Manifest);
+
+            InstanceInit result = InstanceInit.Successful;
+            if (errors.Count > 0)
+            {
+                result = InstanceInit.DownloadFilesError;
+            }
 
             return new InitData
             {
-                Errors = errors,
+                InitResult = result,
+                DownloadErrors = errors,
                 VersionFile = Manifest.version,
                 Libraries = Manifest.libraries
             };
-        }
-
-        public string CheckOnlyBase()
-        {
-            return Check();
-        }
-
-        public InitData UpdateOnlyBase()
-        {
-            return Update();
         }
     }
 }

@@ -77,7 +77,8 @@ namespace Lexplosion.Logic.Objects
 
     class InitData
     {
-        public List<string> Errors;
+        public InstanceInit InitResult;
+        public List<string> DownloadErrors;
         public VersionInfo VersionFile;
         public Dictionary<string, LibInfo> Libraries;
     }

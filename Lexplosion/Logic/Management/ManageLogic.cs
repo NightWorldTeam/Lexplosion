@@ -22,7 +22,7 @@ namespace Lexplosion.Logic.Management
         public delegate void ProgressHandlerDelegate(int procents);
         public static event ProgressHandlerDelegate ProgressHandler;
 
-        public delegate void ComplitedDownloadDelegate(Dictionary<string, string> errors);
+        public delegate void ComplitedDownloadDelegate(InstanceInit result, List<string> downloadErrors);
         public static event ComplitedDownloadDelegate ComplitedDownload;
 
         public static AuthCode Auth(string login, string password, bool saveUser)
@@ -59,40 +59,6 @@ namespace Lexplosion.Logic.Management
                 return AuthCode.NoConnect;
             }
         }
-
-        /*public static void DefineListInstances()
-        {
-            if (UserData.InstancesList == null)
-            {
-                if (!UserData.offline)
-                {
-                    UserData.InstancesList = ToServer.GetModpaksList();
-
-                    Dictionary<string, string> temp = DataFilesManager.GetModpaksList();
-                    foreach(string key in temp.Keys)
-                    {
-
-                        if (!UserData.InstancesList.ContainsKey(key))
-                        {
-                            UserData.InstancesList[key] = temp[key];
-                        }
-
-                    }
-
-                    Run.ThreadRun(delegate ()
-                    {
-                        DataFilesManager.SaveModpaksList(UserData.InstancesList);
-                    });
-
-                }
-                else
-                {
-                    UserData.InstancesList = DataFilesManager.GetModpaksList();
-
-                }
-
-            }
-        }*/
 
         public static void DefineListInstances()
         {
@@ -139,21 +105,29 @@ namespace Lexplosion.Logic.Management
                 switch (type)
                 {
                     case InstanceType.Nightworld:
-                        instance = new NightworldIntance(instanceId, ProgressHandler);
+                        instance = new NightworldIntance(instanceId, false, ProgressHandler);
                         break;
                     case InstanceType.Local:
                         instance = new LocalInstance(instanceId);
                         break;
                     case InstanceType.Curseforge:
-                        instance = new CurseforgeInstance(instanceId, ProgressHandler);
+                        instance = new CurseforgeInstance(instanceId, false, ProgressHandler);
                         break;
                     default:
                         instance = null;
                         break;
                 }
 
-                string result = instance.Check();
-                instance.Update(); // TODO: тут выводить ошибки
+                InstanceInit result = instance.Check();
+                if(result == InstanceInit.Successful)
+                {
+                    InitData res = instance.Update();
+                    ComplitedDownload(res.InitResult, res.DownloadErrors);
+                }
+                else
+                {
+                    ComplitedDownload(result, null);
+                }
 
                 foreach (Delegate d in ProgressHandler.GetInvocationList())
                 {
@@ -204,7 +178,7 @@ namespace Lexplosion.Logic.Management
 
                 InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, ProgressHandler);
 
-                if (data.Errors.Contains("javaPathError"))
+                /*if (data.Errors.Contains("javaPathError"))
                 {
                     MainWindow.Obj.Dispatcher.Invoke(delegate {
                         MainWindow.Obj.SetMessageBox("Не удалось определить путь до Java!", "Ошибка 940");
@@ -222,7 +196,7 @@ namespace Lexplosion.Logic.Management
                     return;
 
                 }
-                /*else if (UserData.offline && (UserData.settings.ContainsKey(instanceId + "-update") && UserData.settings[instanceId + "-update"] == "true")) //если лаунчер запущен в оффлайн режиме и выбранный модпак поставлен на обновление
+                else if (UserData.offline && (UserData.settings.ContainsKey(instanceId + "-update") && UserData.settings[instanceId + "-update"] == "true")) //если лаунчер запущен в оффлайн режиме и выбранный модпак поставлен на обновление
                 {
                     MainWindow.Obj.Dispatcher.Invoke(delegate {
                         MainWindow.Obj.SetMessageBox("Клиент поставлен на обновление, но лаунчер запущен в оффлайн режиме! Войдите в онлайн режим.", "Ошибка 980");
@@ -251,7 +225,7 @@ namespace Lexplosion.Logic.Management
                     MessageBox.Show("4");
                 }*/
 
-                if (data.Errors.Count == 0)
+                if (data.InitResult == InstanceInit.Successful)
                 {    
                     string command = LaunchGame.CreateCommand(initModPack, data, instanceSettings);
                     LaunchGame.Run(command, initModPack);
@@ -262,16 +236,15 @@ namespace Lexplosion.Logic.Management
                         MainWindow.Obj.IsInstalled[MainWindow.Obj.selectedModpack] = true;
                         //ClientManagement.Content = "Остановить";
                     });*/
-
                 }
                 else
                 {
-                    string errorsText = "\n\n" + string.Join("\n", data.Errors) + "\n";
+                    /*string errorsText = "\n\n" + string.Join("\n", data.Errors) + "\n";
 
                     MainWindow.Obj.Dispatcher.Invoke(delegate {
                         MainWindow.Obj.SetMessageBox("Не удалось загрузить следующие файлы:" + errorsText, "Ошибка 960");
                         //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });
+                    });*/
                 }
 
                 data = null;
