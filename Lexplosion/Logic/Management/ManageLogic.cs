@@ -48,19 +48,16 @@ namespace Lexplosion.Logic.Management
                     UserData.isAuthorized = true;
 
                     return AuthCode.Successfully;
-
                 }
                 else
                 {
                     return AuthCode.DataError;
                 }
-
             }
             else
             {
                 return AuthCode.NoConnect;
             }
-
         }
 
         /*public static void DefineListInstances()
@@ -130,19 +127,19 @@ namespace Lexplosion.Logic.Management
                     };
                 }
             }
-
         }
 
-        public static void DownloadInstance(string instanceId, InstanceType type)
+        public static void UpdateInstance(string instanceId)
         {
             Lexplosion.Run.ThreadRun(delegate ()
             {
+                InstanceType type = UserData.InstancesList[instanceId].Type;
                 IPrototypeInstance instance;
 
                 switch (type)
                 {
                     case InstanceType.Nightworld:
-                        instance = new NightworldIntance(instanceId);
+                        instance = new NightworldIntance(instanceId, ProgressHandler);
                         break;
                     case InstanceType.Local:
                         instance = new LocalInstance(instanceId);
@@ -280,7 +277,6 @@ namespace Lexplosion.Logic.Management
                 data = null;
 
                 //Gui.PageType.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
-
             }
         }
 
@@ -337,49 +333,6 @@ namespace Lexplosion.Logic.Management
             }
 
             return instanceId;
-        }
-
-
-        public static InitData UpdateInstance(string instanceId)
-        {
-            InitData Error(string error)
-            {
-                return new InitData
-                {
-                    Errors = new List<string>() { error },
-                    VersionFile = null,
-                };
-            }
-
-            InstanceType type = UserData.InstancesList[instanceId].Type;
-
-            IPrototypeInstance instance;
-            switch (type)
-            {
-                case InstanceType.Nightworld:
-                    instance = new NightworldIntance(instanceId);
-                    break;
-                case InstanceType.Local:
-                    instance = new LocalInstance(instanceId);
-                    break;
-                case InstanceType.Curseforge:
-                    instance = new CurseforgeInstance(instanceId, ProgressHandler);
-                    break;
-                default:
-                    instance = null;
-                    break;
-
-            }
-
-            string result = instance.Check();
-            if (result == "")
-            {
-                return instance.Update();
-            }
-            else
-            {
-                return Error(result);
-            }
         }
 
         public static bool ChckIntanceUpdates(string instanceId, InstanceType type)

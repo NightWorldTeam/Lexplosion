@@ -8,6 +8,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Lexplosion.Logic.Network
 {
@@ -81,7 +82,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string answer = ToServer.HttpPost("instanceManifest.php?instance=" + WebUtility.UrlEncode(instanceId), data);
+                    string answer = ToServer.HttpPost("instancesManifest.php?instance=" + WebUtility.UrlEncode(instanceId), data);
 
                     if (answer != null)
                     {
@@ -90,19 +91,23 @@ namespace Lexplosion.Logic.Network
 
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
-                            Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
-                            foreach (string lib in filesData.libraries.Keys)
+                            Dictionary<string, LibInfo> libraries = null;
+                            if(filesData.libraries != null)
                             {
-                                if (filesData.libraries[lib].os == "all" || filesData.libraries[lib].os == "windows")
+                                libraries = new Dictionary<string, LibInfo>();
+                                foreach (string lib in filesData.libraries.Keys)
                                 {
-                                    libraries[lib] = new LibInfo
+                                    if (filesData.libraries[lib].os == "all" || filesData.libraries[lib].os == "windows")
                                     {
-                                        notArchived = filesData.libraries[lib].notArchived,
-                                        url = filesData.libraries[lib].url
-                                    };
+                                        libraries[lib] = new LibInfo
+                                        {
+                                            notArchived = filesData.libraries[lib].notArchived,
+                                            url = filesData.libraries[lib].url
+                                        };
+                                    }
                                 }
                             }
-
+                            
                             NInstanceManifest ret = new NInstanceManifest
                             {
                                 data = filesData.data,

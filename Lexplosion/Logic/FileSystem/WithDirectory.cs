@@ -88,7 +88,6 @@ namespace Lexplosion.Logic.FileSystem
                     }
 
                     Directory.CreateDirectory(directory + "/temp");
-
                 }
                 else if (!Directory.Exists(directory + "/temp"))
                 {
@@ -97,7 +96,6 @@ namespace Lexplosion.Logic.FileSystem
 
             }
             catch { }
-
         }
         public static void DropLastUpdates(string instanceId)
         {
@@ -109,7 +107,6 @@ namespace Lexplosion.Logic.FileSystem
                     fstream.Write(new byte[0], 0, 0);
                     fstream.Close();
                 }
-
             }
             catch { }
         }
@@ -145,7 +142,6 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         File.Delete(directory + "/instances/" + instanceId + "/lastUpdates.json");
                     }
-
                 }
 
             }
@@ -185,7 +181,6 @@ namespace Lexplosion.Logic.FileSystem
                         fstream.Write(bytes, 0, bytes.Length);
                         fstream.Close();
                     }
-
                 }
                 catch { }
 
@@ -222,9 +217,7 @@ namespace Lexplosion.Logic.FileSystem
                                                 }
 
                                                 filesUpdates.Data[dir].Add(fileName); //добавляем файл в список на обновление
-
                                             }
-
                                         }       
                                     }
                                     else
@@ -232,7 +225,6 @@ namespace Lexplosion.Logic.FileSystem
                                         File.Delete(file);
                                     }
                                 }
-
                             }
                             catch
                             {
@@ -256,7 +248,6 @@ namespace Lexplosion.Logic.FileSystem
                                 {
                                     filesUpdates.Data[dir].Add(fileName);
                                 }
-
                             }
                         }
                     }
@@ -277,10 +268,8 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             filesUpdates.Data[dir].Add(file);
                         }
-
                     }
                 }
-
             }
 
             //ищем старые файлы
@@ -344,7 +333,6 @@ namespace Lexplosion.Logic.FileSystem
                             return null; //чтение файла не удалось, стопаем весь процесс
                         }
                     }
-
                 }
                 else
                 {
@@ -373,7 +361,6 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     updates["libraries"] = 0;
                 }
-
             }
             else
             {
@@ -388,7 +375,6 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     updatesList.Libraries[lib] = filesInfo.libraries[lib];
                 }
-
             }
             else
             {
@@ -503,7 +489,6 @@ namespace Lexplosion.Logic.FileSystem
                 File.Move(temp + file, to + file);
 
                 return true;
-
             }
             catch
             {
@@ -539,7 +524,6 @@ namespace Lexplosion.Logic.FileSystem
                 File.Move(temp + file, to + file);
 
                 return true;
-
             }
             catch
             {
@@ -588,19 +572,14 @@ namespace Lexplosion.Logic.FileSystem
                             File.Move(temp + file, to);
 
                             return true;
-
                         }
                         else
                         {
                             File.Delete(temp + file);
                             return false;
-
                         }
-
                     }
-
                 }
-
             }
             catch
             {
@@ -649,13 +628,11 @@ namespace Lexplosion.Logic.FileSystem
                             File.Move(temp + file, to);
 
                             return true;
-
                         }
                         else
                         {
                             File.Delete(temp + file);
                             return false;
-
                         }
                     }
                 }
@@ -727,7 +704,6 @@ namespace Lexplosion.Logic.FileSystem
                     //скачивание не удалось
                     errors.Add("natives/" + native);
                     DelFile(directory + "/instances/" + instanceId + "/version/natives/" + native);
-
                 }
                 else
                 {
@@ -849,10 +825,9 @@ namespace Lexplosion.Logic.FileSystem
             SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
 
             return errors;
-
         }
 
-        public static List<string> UpdateVariableFiles(VariableFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, ref Dictionary<string, int> updates)
+        public static List<string> UpdateVariableFiles(VariableFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref Dictionary<string, int> updates)
         {
             WebClient wc = new WebClient();
 
@@ -869,19 +844,16 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (filesList.data[dir].objects[file].url == null)
                     {
-                        addr = LaunсherSettings.serverUrl + "upload/modpacks/" + instanceId + "/" + dir + "/" + file;
-
+                        addr = LaunсherSettings.serverUrl + "upload/modpacks/" + externalId + "/" + dir + "/" + file;
                     }
                     else
                     {
                         addr = filesList.data[dir].objects[file].url;
-
                     }
 
                     if (!DownloadFile(addr, folders[folders.Length - 1], directory + "/instances/" + instanceId + "/" + dir + "/" + file, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size, wc))
                     {
                         errors.Add(dir + "/" + file);
-
                     }
                     else
                     {
@@ -962,9 +934,7 @@ namespace Lexplosion.Logic.FileSystem
                                 goto DownloadAssets;
                             }
                         }
-
                     }
-
                 }
 
             DownloadAssets: //скачивание асетсов
@@ -1004,10 +974,8 @@ namespace Lexplosion.Logic.FileSystem
                     UserData.settings["launcherAssetsV"] = data.version.ToString();
                     SaveSettings(UserData.settings);
                 }
-
             }
             catch { }
-
         }
 
         public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
@@ -1065,7 +1033,6 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     return ExportResult.FileCopyError;
                 }
-
             }
 
             VersionManifest instanceFile = GetManifest(instanceId, false);
@@ -1104,9 +1071,7 @@ namespace Lexplosion.Logic.FileSystem
                 Directory.Delete(targetDir, true);
 
                 return ExportResult.ZipFileError;
-
             }
-
         }
 
         public static ImportResult ImportInstance(string zipFile, out List<string> errors)
@@ -1217,7 +1182,6 @@ namespace Lexplosion.Logic.FileSystem
             }
             */
             return ImportResult.Successful;
-
         }
 
         public static void RemoveInstanceDirecory(string instanceId)
@@ -1228,9 +1192,6 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     Directory.Delete(directory + "/instances/" + instanceId, true);
                 }
-
-                Thread.Sleep(1000);
-
             }
             catch
             {
@@ -1415,9 +1376,6 @@ namespace Lexplosion.Logic.FileSystem
                 errors.Add("uncnowError");
                 return null;
             }
-
         }
-
     }
-
 }

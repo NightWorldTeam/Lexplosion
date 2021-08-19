@@ -241,16 +241,7 @@ namespace Lexplosion.Logic.FileSystem
         //у каждой версии игры своё имя для файлов с информацией о либрариесах
         public static string GetLibName(string instanceId, VersionInfo version)
         {
-            string suffix = version.gameVersion + "-" + version.forgeVersion;
-
-            if (UserData.InstancesList[instanceId].Type == InstanceType.Nightworld)
-            {
-                return suffix + "-nw";
-            }
-            else
-            {
-                return suffix;
-            }
+            return version.gameVersion + "-" + version.forgeVersion;
         }
 
         public static void SaveManifest(string instanceId, VersionManifest data)

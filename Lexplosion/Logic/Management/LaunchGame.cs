@@ -256,7 +256,7 @@ namespace Lexplosion.Logic.Management
                 switch (type)
                 {
                     case InstanceType.Nightworld:
-                        instance = new NightworldIntance(instanceId);
+                        instance = new NightworldIntance(instanceId, progressHandler);
                         break;
                     case InstanceType.Local:
                         instance = new LocalInstance(instanceId);

@@ -349,7 +349,7 @@ namespace Lexplosion.Gui.UserControls
                     instanceProperties.InstanceTitle, InstanceType.Curseforge, "", "", instanceProperties.CurseforgeInstanceId.ToString()
                 	);
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
-                ManageLogic.DownloadInstance(instanceId, InstanceType.Curseforge);
+                ManageLogic.UpdateInstance(instanceId);
             }
         }
 

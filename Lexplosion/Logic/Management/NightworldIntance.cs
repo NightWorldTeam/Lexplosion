@@ -22,15 +22,19 @@ namespace Lexplosion.Logic.Management
         public InstancePlatformData InfoData;
 
         private bool requiresUpdates = true;
+        private static event ManageLogic.ProgressHandlerDelegate ProgressHandler;
 
-        public NightworldIntance(string instanceid)
+        public NightworldIntance(string instanceid, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
             InstanceId = instanceid;
+            ProgressHandler = progressHandler;
         }
 
         public string Check()
         {
+            ProgressHandler(0);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
+
             if (InfoData == null || InfoData.id == null)
             {
                 return "nightworldIdError";
@@ -39,7 +43,66 @@ namespace Lexplosion.Logic.Management
             int version = NightWorldApi.GetInstanceVersion(InfoData.id);
             requiresUpdates = version > InfoData.instanceVersion;
 
-            Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
+            if (!requiresUpdates)
+            {
+                VersionManifest manifest = DataFilesManager.GetManifest(InstanceId, false);
+                if (manifest == null || manifest.version == null || manifest.version.gameVersion == null || manifest.version.gameVersion == "")
+                {
+                    NInstanceManifest manifest_ = NightWorldApi.GetInstanceManifest(InfoData.id);
+                    VersionManifest tempManifest = ToServer.GetVersionManifest(manifest_.version.gameVersion, manifest_.version.forgeVersion);
+
+                    if (tempManifest == null)
+                    {
+                        return "serverError";
+                    }
+
+                    Manifest = new NInstanceManifest 
+                    {
+                        libraries = tempManifest.libraries,
+                        natives = tempManifest.natives,
+                        version = tempManifest.version
+                    };
+                }
+                else
+                {
+                    VersionManifest tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+                    if (tempManifest == null)
+                    {
+                        NInstanceManifest manifest_ = NightWorldApi.GetInstanceManifest(InfoData.id);
+                        tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+
+                        if (tempManifest == null)
+                        {
+                            return "serverError";
+                        }
+                    }
+
+                    Manifest = new NInstanceManifest
+                    {
+                        libraries = tempManifest.libraries,
+                        natives = tempManifest.natives,
+                        version = tempManifest.version
+                    };
+                }
+            }
+            else
+            {
+                Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
+                if (Manifest == null || Manifest.version == null)
+                {
+                    return "serverError";
+                }
+
+                VersionManifest manifest_ = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+                if (manifest_ == null)
+                {
+                    return "serverError";
+                }
+
+                Manifest.version = manifest_.version;
+                Manifest.libraries = manifest_.libraries;
+                Manifest.natives = manifest_.natives;
+            }
 
             if (Manifest != null)
             {
@@ -70,13 +133,16 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update()
         {
+            ProgressHandler(20);
             List<string> errors_ = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
             List<string> errors = null;
+            ProgressHandler(30);
 
             if (requiresUpdates)
             {
-                errors = WithDirectory.UpdateVariableFiles(VariableFiles, Manifest, InstanceId, ref Updates);
+                errors = WithDirectory.UpdateVariableFiles(VariableFiles, Manifest, InstanceId, InfoData.id, ref Updates);
             }
+            ProgressHandler(40);
 
             Manifest.data = null;
             Manifest.natives = null;
@@ -94,6 +160,8 @@ namespace Lexplosion.Logic.Management
             {
                 errors = errors_;
             }
+
+            ProgressHandler(100);
 
             return new InitData
             {
