@@ -21,13 +21,20 @@ namespace Lexplosion.Gui.UserControls
         enum Functions
         {
             Initialize,
+            // Главное меню
             Catalog,
             Library,
             Multiplayer,
             LauncherSettings,
+            // Профиль сборки
             Instance,
             Export,
             InstanceSettings,
+            // Установки
+            Vanilla,
+            AddInstance,
+            ImportInstance,
+            // Другое
             Back
         }
 
@@ -37,7 +44,8 @@ namespace Lexplosion.Gui.UserControls
             InstanceLibrary,
             MultiplayerContainer,
             LauncherSettings,
-            OpenedInstance
+            OpenedInstance,
+            Installers,
         }
 
         private PageType activePageType;
@@ -71,7 +79,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InitializeLeftMenu()
         {
-            InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
+            InitializeContent("Добавить сборку", "Библиотека", "Сетевая игра", "Настройки");
         }
 
         private void InitializeContent(string btn0, string btn1, string btn2, string btn3)
@@ -84,14 +92,21 @@ namespace Lexplosion.Gui.UserControls
                 Buttons.Add(MenuButton3, Functions.Initialize);
             }
 
-            if (activePageType != PageType.OpenedInstance)
+            if (activePageType != PageType.OpenedInstance && activePageType != PageType.Installers)
             {
                 Buttons[MenuButton0] = Functions.Catalog;
                 Buttons[MenuButton1] = Functions.Library;
                 Buttons[MenuButton2] = Functions.Multiplayer;
                 Buttons[MenuButton3] = Functions.LauncherSettings;
             }
-            else
+            else if (activePageType == PageType.Installers) 
+            {
+                Buttons[MenuButton0] = Functions.Vanilla;
+                Buttons[MenuButton1] = Functions.AddInstance;
+                Buttons[MenuButton2] = Functions.ImportInstance;
+                Buttons[MenuButton3] = Functions.Back;
+            }
+            else if (activePageType == PageType.OpenedInstance)
             {
                 Buttons[MenuButton0] = Functions.Instance;
                 Buttons[MenuButton1] = Functions.Export;
@@ -117,6 +132,9 @@ namespace Lexplosion.Gui.UserControls
                 case Functions.Instance:
                     MenuButton0.Click += InstanceSelected;
                     break;
+                case Functions.Vanilla:
+                    MenuButton0.Click += AddVanilla;
+                    break;
             }
 
             switch (Buttons[MenuButton1])
@@ -127,6 +145,9 @@ namespace Lexplosion.Gui.UserControls
                 case Functions.Export:
                     MenuButton1.Click += ExportSelected;
                     break;
+                case Functions.AddInstance:
+                    MenuButton1.Click += AddNewInstance;
+                    break;
             }
 
             switch (Buttons[MenuButton2])
@@ -136,6 +157,9 @@ namespace Lexplosion.Gui.UserControls
                     break;
                 case Functions.InstanceSettings:
                     MenuButton2.Click += InstanceSettingsSelected;
+                    break;
+                case Functions.ImportInstance:
+                    MenuButton2.Click += ImportInstance;
                     break;
             }
 
@@ -208,6 +232,34 @@ namespace Lexplosion.Gui.UserControls
             ReselectionButton(MenuButton3);
         }
 
+        private void AddVanilla(object sender, RoutedEventArgs e)
+        {
+            _mainWindow.PagesController("AddVanillaPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new AddVanillaPage(_mainWindow);
+            });
+            ReselectionButton(MenuButton0);
+        }
+
+        private void AddNewInstance(object sender, RoutedEventArgs e)
+        {
+            _mainWindow.PagesController("InstanceMasterPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new InstanceMasterPage(_mainWindow);
+            });
+            ReselectionButton(MenuButton1);
+        }
+
+        private void ImportInstance(object sender, RoutedEventArgs e)
+        {
+            _mainWindow.PagesController("InstanceImportPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new InstanceImportPage(_mainWindow);
+            });
+            ReselectionButton(MenuButton2);
+        }
+
+
         private void BackSelected(object sender, RoutedEventArgs e)
         {
             InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
@@ -250,6 +302,13 @@ namespace Lexplosion.Gui.UserControls
         // -- DropDownMenu -- //
         private void AddCustomModpack(object sender, RoutedEventArgs e)
         {
+            activePageType = PageType.Installers;
+            _mainWindow.PagesController("InstanceMasterPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new InstanceMasterPage(_mainWindow);
+            });
+            InitializeContent("Vanilla", "Создать сборку", "Импорт сборки", "Назад");
+            ReselectionButton(MenuButton0);
             AddModpackClicked.Invoke();
         }
 

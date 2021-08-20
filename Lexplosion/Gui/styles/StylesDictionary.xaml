@@ -271,6 +271,7 @@
         <Setter Property="Margin" Value="2,0,2,0" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">

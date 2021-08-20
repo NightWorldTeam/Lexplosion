@@ -66,7 +66,7 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 <Button Style="{StaticResource TSB}"
-                        Background="Black"
+                    Background="Black"
                     Click="AddCustomModpack" 
                     Width="175" Height="30" 
                     FontSize="16"/>

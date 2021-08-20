@@ -13,15 +13,14 @@
             <SolidColorBrush Color="#1f202a" Opacity="0.74"/>
         </Grid.Background>
         <Grid.RowDefinitions>
-            <RowDefinition Height="108"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid ShowGridLines="False" Grid.Row="0">
             <Grid.Background>
-                <SolidColorBrush Color="#151719" />
+                <SolidColorBrush Color="#212121" />
             </Grid.Background>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -48,7 +47,7 @@
                 Grid.Column="3" 
                 Grid.Row="1" 
                 Style="{StaticResource MWCBS}" 
-                Content="Ресурспаки" 
+                Content="Ресурспаки"
                 Width="Auto"
                 Click="Resourcepacks_Click"/>
             <ToggleButton x:Name="Shaderspacks"
@@ -58,6 +57,7 @@
                 Content="Шейдеры"
                 Click="Shaderspacks_Click"/>
         </Grid>
+        <Border Background="Black" Height="2" Margin="0,48,0,0"/>
         <Grid Grid.Row="1">
             <Frame x:Name="BottomSideFrame"/>
         </Grid>

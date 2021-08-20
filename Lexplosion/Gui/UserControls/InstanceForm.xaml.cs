@@ -212,7 +212,6 @@ namespace Lexplosion.Gui.UserControls
             var tag = new Button()
             {
                 //Name = "tag" + content.Replace('.', '_'),
-                Focusable = false,
                 Content = content,
                 Style = (Style)Application.Current.FindResource("TagStyle"),
             };

@@ -62,6 +62,12 @@ namespace Lexplosion.Gui.InstanceCreator
             });
         }
 
-        private void SetDefaultPage() { }
+        private void SetDefaultPage() 
+        {
+            _mainWindow.PagesController("InstanceCreateMainPage", this.BottomSideFrame, delegate ()
+            {
+                return new InstanceCreateMainPage();
+            });
+        }
     }
 }

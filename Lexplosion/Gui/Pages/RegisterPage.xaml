@@ -203,49 +203,50 @@
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <TextBox Style="{StaticResource CTB}" 
-                                 x:Name="TBLogin"  
-                                 HorizontalContentAlignment="Center" 
-                                 GotFocus="Login_GotFocus" 
-                                 LostFocus="Login_LostFocus" 
-                                 Width="180" 
-                                 Height="30" VerticalAlignment="Bottom"/>
+                            x:Name="TBLogin"  
+                            HorizontalContentAlignment="Center" 
+                            GotFocus="Login_GotFocus" 
+                            LostFocus="Login_LostFocus" 
+                            Width="180" 
+                            Height="30"
+                            VerticalAlignment="Bottom"/>
                     </Grid>
                     <Grid Grid.Row="1">
                         <TextBlock x:Name="PasswordBoxWaterMark" 
-                                   Height="30"  
-                                   HorizontalAlignment="Center" 
-                                   Foreground="#b9b7b7" 
-                                   FontSize="15" 
-                                   VerticalAlignment="Bottom"/>
+                            Height="30"  
+                            HorizontalAlignment="Center" 
+                            Foreground="#b9b7b7" 
+                            FontSize="15" 
+                            VerticalAlignment="Bottom"/>
                         <PasswordBox Style="{StaticResource CPB}" 
-                                     x:Name="TBPassword"  
-                                     HorizontalContentAlignment="Center" 
-                                     GotFocus="Password_GotFocus" 
-                                     LostFocus="Password_LostFocus" 
-                                     Width="180" Height="30" VerticalAlignment="Bottom"/>
+                            x:Name="TBPassword"  
+                            HorizontalContentAlignment="Center" 
+                            GotFocus="Password_GotFocus" 
+                            LostFocus="Password_LostFocus" 
+                            Width="180" Height="30" VerticalAlignment="Bottom"/>
                     </Grid>
                     <Grid Grid.Row="2">
                         <TextBlock x:Name="ConfirmPasswordBoxWaterMark" 
-                                   Height="30"  
-                                   HorizontalAlignment="Center" 
-                                   Foreground="#b9b7b7" 
-                                   FontSize="15" 
-                                   VerticalAlignment="Bottom"/>
+                            Height="30"  
+                            HorizontalAlignment="Center" 
+                            Foreground="#b9b7b7" 
+                            FontSize="15" 
+                            VerticalAlignment="Bottom"/>
                         <PasswordBox Style="{StaticResource CPB}" 
-                                     x:Name="TBConfirmPassword"  
-                                     HorizontalContentAlignment="Center" 
-                                     GotFocus="ConfirmPassword_GotFocus" 
-                                     LostFocus="ConfirmPassword_LostFocus" 
-                                     PreviewMouseDown="ConfirmPassword_MouseDown" 
-                                     Width="180" Height="30" VerticalAlignment="Bottom"/>
+                            x:Name="TBConfirmPassword"  
+                            HorizontalContentAlignment="Center" 
+                            GotFocus="ConfirmPassword_GotFocus" 
+                            LostFocus="ConfirmPassword_LostFocus" 
+                            PreviewMouseDown="ConfirmPassword_MouseDown" 
+                            Width="180" Height="30" VerticalAlignment="Bottom"/>
                     </Grid>
                     <Grid Grid.Row="3">
                         <TextBox Style="{StaticResource CTB}" 
-                                 x:Name="TBEmail"  
-                                 HorizontalContentAlignment="Center"
-                                 GotFocus="Email_GotFocus" 
-                                 LostFocus="Email_LostFocus" 
-                                 Width="180" Height="30" VerticalAlignment="Bottom"/>
+                            x:Name="TBEmail"  
+                            HorizontalContentAlignment="Center"
+                            GotFocus="Email_GotFocus" 
+                            LostFocus="Email_LostFocus" 
+                            Width="180" Height="30" VerticalAlignment="Bottom"/>
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="2" >
