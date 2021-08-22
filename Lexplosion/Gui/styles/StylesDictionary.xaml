@@ -365,13 +365,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Border Name="Border" CornerRadius="8" Padding="2" BorderThickness="2">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="#2c99c2"/>
-                        </Border.BorderBrush>
-                        <Border.Background>
-                            <SolidColorBrush Color="#1f1f1f"/>
-                        </Border.Background>
+                    <Border Name="Border" 
+                        CornerRadius="8"
+                        Padding="2"
+                        BorderThickness="2"
+                        BorderBrush="#2c99c2"
+                        Background="#1f1f1f">
                         <Grid>
                             <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
                             <TextBlock x:Name="WatermarkText" Text="{TemplateBinding Text}" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" IsHitTestVisible="False" Foreground="White"/>

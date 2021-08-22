@@ -79,7 +79,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InitializeLeftMenu()
         {
-            InitializeContent("Добавить сборку", "Библиотека", "Сетевая игра", "Настройки");
+            InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
         }
 
         private void InitializeContent(string btn0, string btn1, string btn2, string btn3)

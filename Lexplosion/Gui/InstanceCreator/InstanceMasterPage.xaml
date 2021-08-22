@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
         <Grid ShowGridLines="False" Grid.Row="0">
             <Grid.Background>
-                <SolidColorBrush Color="#212121" />
+                <SolidColorBrush Color="#151515"/>
             </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>

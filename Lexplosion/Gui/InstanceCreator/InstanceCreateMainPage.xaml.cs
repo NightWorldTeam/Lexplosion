@@ -20,9 +20,38 @@ namespace Lexplosion.Gui.InstanceCreator
     /// </summary>
     public partial class InstanceCreateMainPage : Page
     {
+        private List<string> instanceTags = new List<string>() 
+        { 
+            "Tech", "Magic", "Sci-Fi", "Adventure and RPG", "Exploration", "Mini Game", "Quests", 
+            "Hardcore", "Map Based", "Small / Light", "Extra Large", "Combat / PvP", "Multiplayer",
+            "FTB Offical Pack", "Skyblock"
+        };
+        private List<string> minecraftVersion = new List<string>() 
+        { 
+            "1.17.1", "1.16.5", "1.15.2", "1.14.4", "1.13.2", "1.12.2", "1.11", 
+            "1.10.2", "1.9", "1.8.2"
+        };
+
         public InstanceCreateMainPage()
         {
             InitializeComponent();
+            foreach (string tag in instanceTags) 
+            {
+                TagsListCB.Items.Add(tag);
+            }
+            int i = 0;
+            foreach (string version in minecraftVersion) 
+            {
+                if (i == 0) 
+                {
+                    VersionCB.Items.Add("Latest release " + version);
+                } 
+                else 
+                { 
+                    VersionCB.Items.Add("Release " + version);
+                }
+                i++;
+            }
         }
     }
 }
