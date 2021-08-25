@@ -105,5 +105,10 @@ namespace Lexplosion.Gui.Pages.MW
             InstanceFolderPath.Text = sysPath;
             DataFilesManager.SaveSettings(UserData.settings);
         }
+
+        private void InstanceFolderPath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

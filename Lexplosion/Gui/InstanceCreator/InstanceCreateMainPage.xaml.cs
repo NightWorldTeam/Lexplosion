@@ -35,10 +35,11 @@ namespace Lexplosion.Gui.InstanceCreator
         public InstanceCreateMainPage()
         {
             InitializeComponent();
-            foreach (string tag in instanceTags) 
+            /**foreach (string tag in instanceTags) 
             {
                 TagsListCB.Items.Add(tag);
             }
+            */
             int i = 0;
             foreach (string version in minecraftVersion) 
             {
@@ -52,6 +53,11 @@ namespace Lexplosion.Gui.InstanceCreator
                 }
                 i++;
             }
+        }
+
+        private void ForgeSelected_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

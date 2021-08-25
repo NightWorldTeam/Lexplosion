@@ -214,13 +214,13 @@
                         Margin="338,87,194,372"/>
                 <Canvas Margin="1,-5,0,0">
                     <Line X1="1" Y1="0" X2="13" Y2="13"
-                            Stroke="White" 
-                            StrokeThickness="2"
+                            Stroke="#BDBDBD" 
+                            StrokeThickness="3"
                             Canvas.Left="310" 
                             Canvas.Top="110" />
                     <Line X1="1" Y1="13" X2="13" Y2="0" 
-                            Stroke="White" 
-                            StrokeThickness="2"
+                            Stroke="#BDBDBD" 
+                            StrokeThickness="3"
                             Canvas.Left="310" 
                             Canvas.Top="110" />
                 </Canvas>
@@ -253,7 +253,7 @@
                     Style="{StaticResource CTB}"
                     FontSize="20"
                     Height="42" 
-                    Margin="73,288,194,176"/>
+                    Margin="73,288,194,176" TextChanged="InstanceFolderPath_TextChanged"/>
                 <Button x:Name="OpenFolderBrowserButton"
                     Style="{StaticResource FolderBrowerButton}"
                     Content="Проводник"

@@ -12,8 +12,7 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="24"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="WhiteSmoke" />
             <Setter Property="Padding" Value="5,0,0,0"/>
         </Style>
 
@@ -51,7 +50,7 @@
                                 IsHitTestVisible="False"
                                 Margin="3,3,23,3"
                                 VerticalAlignment="Center"
-                                HorizontalAlignment="Left" />
+                                HorizontalAlignment="Left"/>
                             <!-- None, Fade, Scroll, Slide -->
                             <Popup Name="Popup"
                                 Placement="Bottom"
@@ -62,14 +61,18 @@
                                 <Grid Name="DropDown"
                                     SnapsToDevicePixels="True"        
                                     MinWidth="140"
-                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                      HorizontalAlignment="Left">
+                                    
                                     <Border x:Name="DropDownBorder"
                                         CornerRadius="5"
                                         Background="#1f1f1f"
                                         BorderThickness="2"
-                                        BorderBrush="#1EAFDD"/>
+                                        BorderBrush="#1EAFDD" />
                                     <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        <StackPanel IsItemsHost="True" 
+                                            KeyboardNavigation.DirectionalNavigation="Contained"
+                                            />
                                     </ScrollViewer>
                                 </Grid>
                             </Popup>
@@ -126,6 +129,90 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="RadioButton" TargetType="{x:Type ToggleButton}">
+        </Style>
+
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border>
+                            <Grid>
+                                <Ellipse x:Name="RadioButton"
+                                    Width="24"
+                                    Height="24"
+                                    StrokeThickness="2"
+                                    Stroke="#121212"
+                                    Fill="#505050"
+                                    HorizontalAlignment="Left"
+                                    Margin="2,0,0,0"/>
+                                <ContentPresenter Margin="35,-2,0,0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="RadioButton" Property="Stroke" Value="#47BAEC"/>
+                                <Setter TargetName="RadioButton" Property="StrokeThickness" Value="4"/>
+                                <Setter TargetName="RadioButton" Property="Fill" Value="#343434"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="CaretBrush" Value="#2c99c2"/>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                        <Border x:Name="border" Background="#252525"
+                                BorderBrush="#191919"
+                                BorderThickness="2"
+                                CornerRadius="5">
+                            <ScrollViewer Margin="1" x:Name="PART_ContentHost" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#1EAFDD"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="False">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#191919"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LogoButton" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderThickness="2">
+                            <Border.Background>
+                                <SolidColorBrush Color="#131313" Opacity="0.1" />
+                            </Border.Background>
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="Black" Opacity="0.3" />
+                            </Border.BorderBrush>
+                            <Grid>
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers></ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <Grid>
@@ -136,88 +223,75 @@
                 </Grid.Background>
                 <!-- Name -->
                 <TextBlock Text="Название" 
-                    Margin="30,30,0,0"
+                    Margin="30,26,0,0"
                     Width="244" 
-                    Height="25"
+                    Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
                     TextAlignment="Left"/>
                 <TextBox x:Name="InstanceNameTB"
                     Width="244"
                     Height="40"
-                    Style="{StaticResource CTB}"
                     Margin="30,60,0,0"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"/>
 
                 <!-- Version -->
                 <TextBlock Text="Версия"
-                    Margin="304,30,0,0"
+                    Margin="304,26,0,0"
                     Width="244" 
-                    Height="25"
+                    Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
                     TextAlignment="Left"/>
                 <ComboBox x:Name="VersionCB"
-                    Width="244"
+                    Width="140"
                     Height="40"
                     Margin="304,60,0,0"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"/>
 
                 <!-- Logo -->
+                
                 <Button x:Name="InstanceLogo"
+                    Style="{StaticResource LogoButton}"
                     Content="Logo"
                     Width="120"
                     Height="120"
                     VerticalAlignment="Top"
-                    Margin="0,20,10,0"
+                    Margin="0,20,50,0"
                     HorizontalAlignment="Right"/>
-
-                <!-- Overview -->
-                <TextBlock Text="Описание"
-                    Margin="30,160,0,0"
-                    Width="400" 
-                    Height="25"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Left"
-                    TextAlignment="Left"/>
-                <TextBox x:Name="InstanceOverviewTB"
-                    Width="400"
-                    Height="140"
-                    Style="{StaticResource CTB}"
-                    Margin="30,190,0,0"
+                
+                <!-- Modloader -->
+                
+                <TextBlock Text="Modloader"
+                    Margin="30,130,0,0"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"/>
-
-                <!-- Tags -->
-                <TextBlock Text="Версия"
-                    Margin="450,160,0,0"
-                    Width="233" 
-                    Height="25"
+                
+                <RadioButton x:Name="NoneSelected"
+                    Content="Не выбрано"
+                    Width="200" 
+                    Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
-                    TextAlignment="Left"/>
-                <Border BorderThickness="2" 
-                    BorderBrush="#2c99c2"
-                    CornerRadius="8"
-                    Height="140"
-                    Width="233"
-                    Margin="0,190,10,0"
+                    Margin="30,170,0,0" Checked="ForgeSelected_Checked" />                
+                <RadioButton x:Name="ForgeSelected"
+                    Content="Forge"
+                    Width="144" 
+                    Height="30"
                     VerticalAlignment="Top"
-                    HorizontalAlignment="Right"
-                    Padding="3,3,3,3"
-                    Background="#1f1f1f">
-                    <Grid>
-                        <WrapPanel x:Name="InstanceTagsWP"/>
-                        <ComboBox x:Name="TagsListCB"
-                            Width="135" 
-                            Height="40"
-                            Background="Wheat"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Center"/>
-                    </Grid>
-                </Border>
+                    HorizontalAlignment="Left"
+                    Margin="220,170,0,0" Checked="ForgeSelected_Checked" />                
+                <RadioButton x:Name="FabricSelected"
+                    Content="Fabric"
+                    Width="144" 
+                    Height="30"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    Margin="340,170,0,0" Checked="ForgeSelected_Checked" />
+
+                <!-- More -->
             </Grid>
         </ScrollViewer>
     </Grid>
