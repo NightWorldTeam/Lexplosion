@@ -1310,10 +1310,11 @@ namespace Lexplosion.Logic.FileSystem
                             errors.Add(file.projectID + " " + file.fileID);
                             // TODO: зачем я тут продолжаю цикл? Наверное ужно его остановить
                         }
-                        else
+                        /*else
                         {
                             localFiles.Add("/mods/" + filename);
-                        }
+                            // TODO: думаю ту  смысла добавлять в список нет. Я этой сделаю на 1331 строке
+                        }*/
                     }
 
                     string SourcePath = directory + "/temp/dataDownload/overrides/";
