@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,19 @@ namespace Lexplosion.Logic.Management
             InstanceId = instanceid;
             ProgressHandler = progressHandler;
             onlyBase = onlyBase_;
+        }
+
+        private bool InvalidStruct()
+        {
+            foreach(string file in Updates.Keys)
+            {
+                if (!File.Exists(file) && !Directory.Exists(file))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public InstanceInit Check()
@@ -124,7 +138,7 @@ namespace Lexplosion.Logic.Management
                     return InstanceInit.GuardError; 
                 }
 
-                if (requiresUpdates)
+                if (requiresUpdates || InvalidStruct())
                 {
                     VariableFiles = WithDirectory.CheckVariableFiles(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
                     if (!VariableFiles.Successful)

@@ -210,7 +210,6 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            MessageBox.Show("gv");
             DataFilesManager.SaveManifest(InstanceId, Manifest);
             ProgressHandler(100);
 
