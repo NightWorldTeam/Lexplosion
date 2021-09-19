@@ -55,9 +55,21 @@ namespace Lexplosion.Gui.InstanceCreator
             }
         }
 
-        private void ForgeSelected_Checked(object sender, RoutedEventArgs e)
+        private void FabricSelected_Click(object sender, RoutedEventArgs e)
         {
+            if (FabricSelected.IsEnabled) 
+            {
+                FabricSelected.IsEnabled = false;
+                FabricSelected.IsChecked = false;
+            }
+        }
 
+        private void ForgeSelected_Click(object sender, RoutedEventArgs e)
+        {
+            if (ForgeSelected.IsChecked.Value)
+            {
+                FabricSelected.IsChecked = false;
+            }
         }
     }
 }

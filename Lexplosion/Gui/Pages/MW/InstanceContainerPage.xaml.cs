@@ -56,7 +56,9 @@ namespace Lexplosion.Gui.Pages.MW
 			this.Dispatcher.Invoke(() =>
 			{
 				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
-				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, "", author, overview, Int32.Parse(instanceId), logoPath, tags, false, true);
+				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
+					_mainWindow, title, "", author, overview, Int32.Parse(instanceId), logoPath, tags, false, false
+				);
 				// Добавление в Столбики и Колноки в форме.
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);
@@ -74,6 +76,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void MatchingResults(object sender, RoutedEventArgs e)
 		{
+			var last_request = "";
 			if (InstanceGrid.Children.Count > 1)
 			{
 				InstanceGrid.Children.RemoveRange(1, 10);
@@ -93,18 +96,21 @@ namespace Lexplosion.Gui.Pages.MW
 			}
 			else
 			{
-				_isInitializeInstance = false;
-				//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
-				List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(10, 0, ModpacksCategories.All, SearchBox.Text);
-				for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
-				{
-					BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,
-						new Uri(curseforgeInstances[j].attachments[0].thumbnailUrl),
-						curseforgeInstances[j].name,
-						curseforgeInstances[j].authors[0].name,
-						curseforgeInstances[j].summary,
-						curseforgeInstances[j].categories);
-				}
+				//if (last_request != SearchBox.Text || last_request == "") { 
+					last_request = SearchBox.Text;
+					_isInitializeInstance = false;
+					//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
+					List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(10, 0, ModpacksCategories.All, SearchBox.Text);
+					for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
+					{
+						BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,
+							new Uri(curseforgeInstances[j].attachments[0].thumbnailUrl),
+							curseforgeInstances[j].name,
+							curseforgeInstances[j].authors[0].name,
+							curseforgeInstances[j].summary,
+							curseforgeInstances[j].categories);
+					}
+				//}
 			}
 		}
 	}

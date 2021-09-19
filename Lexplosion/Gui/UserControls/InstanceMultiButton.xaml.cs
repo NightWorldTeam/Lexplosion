@@ -136,7 +136,7 @@ namespace Lexplosion.Gui.UserControls
                     {
                         InstanceLaunchPath.Data = _geometryLibraryAdd;
                         Tooltips.HorizontalOffset = -160;
-                        ToolTipLable.Content = "Удалить из библиотеку";
+                        ToolTipLable.Content = "Удалить из библиотеки";
                     }
                     break;
                 case ButtonTypes.Folder:
@@ -157,7 +157,7 @@ namespace Lexplosion.Gui.UserControls
 
         public void IsInstalledInstance() 
         {
-            
+            // start game here
         }
     }
 }

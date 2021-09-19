@@ -37,8 +37,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">
                         <Grid>
-                            <ToggleButton 
-                                Name="ToggleButton" 
+                            <ToggleButton x:Name="PART_ContentHost"
+                                          ContentTemplate="{}"
                                 Template="{StaticResource ComboBoxToggleButton}" 
                                 Grid.Column="2" 
                                 IsTabStop="False"
@@ -270,26 +270,26 @@
                     HorizontalAlignment="Left"/>
                 
                 <RadioButton x:Name="NoneSelected"
-                    Content="Не выбрано"
-                    Width="200" 
+                    Content="Отсутствует"
+                    Width="170" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
-                    Margin="30,170,0,0" Checked="ForgeSelected_Checked" />                
+                    Margin="30,170,0,0"/>                
                 <RadioButton x:Name="ForgeSelected"
                     Content="Forge"
-                    Width="144" 
+                    Width="120" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
-                    Margin="220,170,0,0" Checked="ForgeSelected_Checked" />                
+                    Margin="205,170,0,0"/>                
                 <RadioButton x:Name="FabricSelected"
                     Content="Fabric"
                     Width="144" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
-                    Margin="340,170,0,0" Checked="ForgeSelected_Checked" />
+                    Margin="340,170,0,0"/>
 
                 <!-- More -->
             </Grid>
