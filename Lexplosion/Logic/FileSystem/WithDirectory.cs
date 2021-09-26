@@ -636,7 +636,7 @@ namespace Lexplosion.Logic.FileSystem
                 Objects.FileInfo minecraftJar = filesList.version.minecraftJar;
                 if (minecraftJar.url == null)
                 {
-                    addr = LaunсherSettings.serverUrl + "upload/versions/" + minecraftJar.name;
+                    addr = LaunсherSettings.URL.Upload + "versions/" + minecraftJar.name;
                 }
                 else
                 {
@@ -667,7 +667,7 @@ namespace Lexplosion.Logic.FileSystem
             //скачиваем natives
             if (filesList.version.nativesUrl == null)
             {
-                addr = LaunсherSettings.serverUrl + "upload/natives/" + filesList.version.gameVersion + "/";
+                addr = LaunсherSettings.URL.Upload + "natives/" + filesList.version.gameVersion + "/";
             }
             else
             {
@@ -697,7 +697,7 @@ namespace Lexplosion.Logic.FileSystem
             foreach (string lib in updateList.Libraries.Keys)
             {
                 if (updateList.Libraries[lib].url == null)
-                    addr = LaunсherSettings.serverUrl + "upload/libraries/";
+                    addr = LaunсherSettings.URL.Upload + "libraries/";
                 else
                     addr = updateList.Libraries[lib].url;
 
@@ -742,7 +742,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 try
                 {
-                    wc.DownloadFile(LaunсherSettings.serverUrl + "upload/assets/" + filesList.version.assetsVersion + "/objects.zip", directory + "/temp/objects.zip");
+                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/objects.zip", directory + "/temp/objects.zip");
 
                     ZipFile.ExtractToDirectory(directory + "/temp/objects.zip", directory + "/assets/objects");
                     File.Delete(directory + "/temp/objects.zip");
@@ -783,7 +783,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 try
                 {
-                    wc.DownloadFile(LaunсherSettings.serverUrl + "upload/assets/" + filesList.version.assetsVersion + "/" + filesList.version.assetsVersion + ".zip", directory + "/temp/" + filesList.version.assetsVersion + ".zip");
+                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/" + filesList.version.assetsVersion + ".zip", directory + "/temp/" + filesList.version.assetsVersion + ".zip");
 
                     ZipFile.ExtractToDirectory(directory + "/temp/" + filesList.version.assetsVersion + ".zip", directory + "/assets/virtual/" + filesList.version.assetsVersion);
                     File.Delete(directory + "/temp/" + filesList.version.assetsVersion + ".zip");
@@ -822,7 +822,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (filesList.data[dir].objects[file].url == null)
                     {
-                        addr = LaunсherSettings.serverUrl + "upload/modpacks/" + externalId + "/" + dir + "/" + file;
+                        addr = LaunсherSettings.URL.Upload + "modpacks/" + externalId + "/" + dir + "/" + file;
                     }
                     else
                     {
@@ -931,12 +931,12 @@ namespace Lexplosion.Logic.FileSystem
 
                     using (WebClient wc = new WebClient())
                     {
-                        wc.DownloadFile(LaunсherSettings.serverUrl + "/upload/images.zip", directory + "/temp/launcherAssets-Images.zip");
+                        wc.DownloadFile(LaunсherSettings.URL.Upload + "/images.zip", directory + "/temp/launcherAssets-Images.zip");
 
                         ZipFile.ExtractToDirectory(directory + "/temp/launcherAssets-Images.zip", directory + "/launcherAssets");
                         File.Delete(directory + "/temp/launcherAssets-Images.zip");
 
-                        wc.DownloadFile(LaunсherSettings.serverUrl + "/upload/images.zip", directory + "/temp/launcherAssets-Images.zip");
+                        wc.DownloadFile(LaunсherSettings.URL.Upload + "/images.zip", directory + "/temp/launcherAssets-Images.zip");
                     }
 
                     UserData.settings["launcherAssetsV"] = data.version.ToString();
@@ -1300,7 +1300,7 @@ namespace Lexplosion.Logic.FileSystem
                         Directory.CreateDirectory(directory + "/temp/dataDownload/overrides/mods");
                     }
 
-                    foreach (InstanceManifest.FileData file in data.files)
+                    /*foreach (InstanceManifest.FileData file in data.files)
                     {
                         string filename = DownloadMod(file.projectID, file.fileID, directory + "/temp/dataDownload/overrides/mods/");
 
@@ -1314,8 +1314,8 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             localFiles.Add("/mods/" + filename);
                             // TODO: думаю ту  смысла добавлять в список нет. Я этой сделаю на 1331 строке
-                        }*/
-                    }
+                        }
+                    }*/
 
                     string SourcePath = directory + "/temp/dataDownload/overrides/";
                     string DestinationPath = directory + "/instances/" + instanceId + "/";

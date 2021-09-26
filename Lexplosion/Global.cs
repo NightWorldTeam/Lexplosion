@@ -35,8 +35,17 @@ namespace Lexplosion.Global
 
     static class LaunсherSettings
     {
+        public struct URL
+        {
+            public const string ModpacksData = "http://nw-prod/minecraft/modpacks/";
+            public const string VersionsData = "http://nw-prod/minecraft/versions/";
+            public const string Upload = "http://nw-prod/minecraft/upload/";
+            public const string LauncherParts = "http://nw-prod/assets/launcher/windows/";
+            public const string LogicScripts = "http://nw-prod/libraries/scripts/";
+            public const string DataScripts = "http://nw-prod/libraries/launcherScripts/";
+        }
+
         public static string gamePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Replace(@"\", "/") + "/" + "night-world";
-        public const string serverUrl = "https://night-world.org/rest/launcher/";
         public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ";
         public const string passwordKey = "ZEmMJ0ZaXQXuHu8tUnfdaCLCQaFgRjOP";
         public const int version = 1574676433;

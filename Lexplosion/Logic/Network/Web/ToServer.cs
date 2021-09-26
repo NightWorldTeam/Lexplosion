@@ -68,7 +68,13 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string answer = HttpPost("versionManifest.php?gameVersion=" + WebUtility.UrlEncode(version) + "&hash=2e818dc89e364c7efcfa54bec7e873c5f00b3840&forgeVersion=" + WebUtility.UrlEncode(forgeVersion), data);
+                    string forge = "";
+                    if(!string.IsNullOrEmpty(forgeVersion))
+                    {
+                        forge = "/forge/" + WebUtility.UrlEncode(forgeVersion);
+                    }
+                    string answer = HttpPost(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + forge, data);
+
                     if (answer != null)
                     {
                         answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
@@ -98,30 +104,25 @@ namespace Lexplosion.Logic.Network
                             };
 
                             return ret;
-
                         }
                         else
                         {
                             MessageBox.Show("null1");
                             return null;
                         }
-
                     }
                     else
                     {
                         MessageBox.Show("null2");
                         return null;
                     }
-
                 }
                 catch
                 {
                     MessageBox.Show("null3");
                     return null;
                 }
-
             }
-
         }
 
         static public Dictionary<string, string> Authorization(string login, string password, string email = "")
@@ -148,7 +149,6 @@ namespace Lexplosion.Logic.Network
                 {
                     key += str2[i];
                 }
-                //MessageBox.Show(key);
 
                 List<List<string>> data = new List<List<string>>() { };
                 data.Add(new List<string>() { "login", login });
@@ -162,7 +162,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    answer = HttpPost("authorization.php", data);
+                    answer = HttpPost(LaunсherSettings.URL.DataScripts + "authorization.php", data);
 
                     if (answer == null)
                     {
@@ -174,11 +174,9 @@ namespace Lexplosion.Logic.Network
 
                         response.Add("status", "ERROR:1");
                         return response;
-
                     }
                     else
                     {
-
                         answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
                         Dictionary<string, string> userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
 
@@ -192,7 +190,6 @@ namespace Lexplosion.Logic.Network
                                 response.Add("accesToken", userData["accesToken"]);
 
                                 return response;
-
                             }
                             else
                             {
@@ -205,21 +202,16 @@ namespace Lexplosion.Logic.Network
                             return null;
                         }
                     }
-
                 }
                 catch
                 {
                     return null;
                 }
-
             }
-
         }
 
-        static public string HttpPost(string url, List<List<string>> data = null, bool outside = false) // TODO: List<string> заменить на массив
+        static public string HttpPost(string url, List<List<string>> data = null) // TODO: List<string> заменить на массив
         {
-            if (!outside)
-                url = LaunсherSettings.serverUrl + url;
             try
             {
                 WebRequest request = WebRequest.Create(url);

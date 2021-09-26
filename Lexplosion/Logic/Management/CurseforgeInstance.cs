@@ -38,7 +38,7 @@ namespace Lexplosion.Logic.Management
 
         public InstanceInit Check()
         {
-            ProgressHandler(10);
+            //ProgressHandler(10);
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
 
@@ -52,7 +52,7 @@ namespace Lexplosion.Logic.Management
                 return InstanceInit.VersionError;
             }
 
-            ProgressHandler(20);
+            //ProgressHandler(20);
 
             if (Manifest.version.forgeVersion != null && Manifest.version.forgeVersion != "")
             {
@@ -100,10 +100,10 @@ namespace Lexplosion.Logic.Management
             {
                 // скачивание иконки
                 CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
+                string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
                 if (info.attachments.Count > 0)
                 {
                     // TODO: написать где-то отдельную функцию для скачивания файла
-                    string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
                     string[] a = info.attachments[0].thumbnailUrl.Split('/');
                     string fileName = dir + "/" + a[a.Length - 1];
 
@@ -130,13 +130,26 @@ namespace Lexplosion.Logic.Management
                     {
                         UserData.instancesAssets[InstanceId].mainImage = InstanceId + "/" + a[a.Length - 1];
                     }
-
-                    DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.instancesAssets[InstanceId]));
                 }
+
+                //устанавливаем описание
+                if (info.summary != null)
+                {
+                    UserData.instancesAssets[InstanceId].description = info.summary;
+                }
+
+                //устанавливаем автора
+                if (info.authors.Count > 0 && info.authors[0].name != null)
+                {
+                    UserData.instancesAssets[InstanceId].author = info.authors[0].name;
+                }
+
+                // сохраняем асетсы модпака
+                DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.instancesAssets[InstanceId]));
             }
             catch { }
 
-            ProgressHandler(30);
+            //ProgressHandler(30);
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
             {
@@ -175,7 +188,7 @@ namespace Lexplosion.Logic.Management
 
                         if (BaseFiles == null)
                         {
-                            ProgressHandler(97);
+                            //ProgressHandler(97);
                             return new InitData
                             {
                                 InitResult = InstanceInit.GuardError,
@@ -184,7 +197,7 @@ namespace Lexplosion.Logic.Management
                     }
                     else
                     {
-                        ProgressHandler(99);
+                        //ProgressHandler(99);
                         return new InitData
                         {
                             InitResult = InstanceInit.ServerError,
@@ -211,7 +224,7 @@ namespace Lexplosion.Logic.Management
             }
 
             DataFilesManager.SaveManifest(InstanceId, Manifest);
-            ProgressHandler(100);
+            //ProgressHandler(100);
 
             return new InitData
             {

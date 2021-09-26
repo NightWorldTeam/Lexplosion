@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Newtonsoft.Json;
@@ -64,11 +65,11 @@ namespace Lexplosion.Logic.Network
                         //раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
                         while (isServer)
                         {
-                            ToServer.HttpPost("https://night-world.org/libraries/scripts/setGameServer.php", input, true);
+                            ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
                             waitingInforming.WaitOne(120000);
                         }
 
-                        ToServer.HttpPost("https://night-world.org/libraries/scripts/dropGameServer.php", input, true);
+                        ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer.php", input);
                     });
 
                     InformingThread.Start();
@@ -164,7 +165,7 @@ namespace Lexplosion.Logic.Network
                     input.Add(new List<string>() { "UUID", "bbab3c32222e4f08a8b291d1e9b9267c" });
                     input.Add(new List<string>() { "password", Сryptography.Sha256("tipidor") });
 
-                    string data = ToServer.HttpPost("https://night-world.org/libraries/scripts/getGameServers.php", input);
+                    string data = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getGameServers.php", input);
                     List<string> servers = null;
                     try
                     {

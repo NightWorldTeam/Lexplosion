@@ -106,13 +106,13 @@ namespace Lexplosion
                     if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
                     {
                         File.Delete(UserData.settings["gamePath"] + "/UpgradeTool.exe");
-                        wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
                         DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
 
                     }
                     else if (!File.Exists(UserData.settings["gamePath"] + "/UpgradeTool.exe"))
                     {
-                        wc.DownloadFile(LaunсherSettings.serverUrl + "windows/UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe", UserData.settings["gamePath"] + "/UpgradeTool.exe");
                         DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
                     }
 
@@ -121,7 +121,7 @@ namespace Lexplosion
                 // запуск UpgradeTool.exe
                 Process proc = new Process();
                 proc.StartInfo.FileName = UserData.settings["gamePath"] + "/UpgradeTool.exe";
-                proc.StartInfo.Arguments = Assembly.GetExecutingAssembly().Location + " " + LaunсherSettings.serverUrl + "windows/NightWorld.exe" + " " + Process.GetCurrentProcess().ProcessName;
+                proc.StartInfo.Arguments = Assembly.GetExecutingAssembly().Location + " " + LaunсherSettings.URL.LauncherParts + "NightWorld.exe" + " " + Process.GetCurrentProcess().ProcessName;
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();

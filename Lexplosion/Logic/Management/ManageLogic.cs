@@ -72,7 +72,7 @@ namespace Lexplosion.Logic.Management
 
             foreach (string instance in UserData.InstancesList.Keys)
             {
-                //получаем нешние айдишники всех не локальных модпаков
+                //получаем внешние айдишники всех не локальных модпаков
                 if(UserData.InstancesList[instance].Type != InstanceType.Local)
                 {
                     InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
@@ -85,11 +85,13 @@ namespace Lexplosion.Logic.Management
                 //получаем асетсы модпаков
                 InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.directory + "/instances-assets/" + instance + "/assets.json");
 
-                if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + instance + "/" + assetsData.mainImage))
+                if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + assetsData.mainImage))
                 {
                     UserData.instancesAssets[instance] = new InstanceAssets
                     {
-                        mainImage = "/" + instance + "/" + assetsData.mainImage
+                        mainImage = "/" + assetsData.mainImage,
+                        description = assetsData.description,
+                        author = assetsData.author
                     };
                 }
             }
@@ -119,7 +121,7 @@ namespace Lexplosion.Logic.Management
                 }
 
                 InstanceInit result = instance.Check();
-                if(result == InstanceInit.Successful)
+                if (result == InstanceInit.Successful)
                 {
                     InitData res = instance.Update();
                     ComplitedDownload(res.InitResult, res.DownloadErrors);
@@ -148,7 +150,6 @@ namespace Lexplosion.Logic.Management
             }
 
             LaunchGame.runnigInstance = instanceId;
-
             InstanceType type = UserData.InstancesList[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");

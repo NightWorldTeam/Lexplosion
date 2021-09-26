@@ -10,6 +10,6 @@ namespace Lexplosion.Logic.Management
     interface IPrototypeInstance
     {
         InstanceInit Check();
-        InitData Update();
+        InitData Update(); // TODO: сделать так, чтобы при неудачном скачивании некоторых файлов он сохранял результат работы, чтобы не перекачивать всё снова
     }
 }

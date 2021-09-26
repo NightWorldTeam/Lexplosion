@@ -55,6 +55,7 @@ namespace Lexplosion.Logic.Management
             {
                 return InstanceInit.NightworldIdError;
             }
+            ProgressHandler(1);
 
             int version = 0;
             if (!onlyBase)
@@ -66,6 +67,7 @@ namespace Lexplosion.Logic.Management
             {
                 requiresUpdates = false;
             }
+            ProgressHandler(2);
 
             if (!requiresUpdates)
             {
@@ -73,8 +75,12 @@ namespace Lexplosion.Logic.Management
                 if (manifest == null || manifest.version == null || manifest.version.gameVersion == null || manifest.version.gameVersion == "")
                 {
                     NInstanceManifest manifest_ = NightWorldApi.GetInstanceManifest(InfoData.id);
-                    VersionManifest tempManifest = ToServer.GetVersionManifest(manifest_.version.gameVersion, manifest_.version.forgeVersion);
+                    if (manifest_ == null)
+                    {
+                        return InstanceInit.ServerError;
+                    }
 
+                    VersionManifest tempManifest = ToServer.GetVersionManifest(manifest_.version.gameVersion, manifest_.version.forgeVersion);
                     if (tempManifest == null)
                     {
                         return InstanceInit.ServerError;
@@ -93,8 +99,12 @@ namespace Lexplosion.Logic.Management
                     if (tempManifest == null)
                     {
                         NInstanceManifest manifest_ = NightWorldApi.GetInstanceManifest(InfoData.id);
-                        tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+                        if (manifest_ == null)
+                        {
+                            return InstanceInit.ServerError;
+                        }
 
+                        tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
                         if (tempManifest == null)
                         {
                             return InstanceInit.ServerError;
@@ -111,6 +121,7 @@ namespace Lexplosion.Logic.Management
             }
             else
             {
+                ProgressHandler(3);
                 Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
                 if (Manifest == null || Manifest.version == null)
                 {
@@ -126,6 +137,7 @@ namespace Lexplosion.Logic.Management
                 Manifest.version = manifest_.version;
                 Manifest.libraries = manifest_.libraries;
                 Manifest.natives = manifest_.natives;
+                ProgressHandler(4);
             }
 
             if (Manifest != null)
@@ -146,6 +158,7 @@ namespace Lexplosion.Logic.Management
                         return InstanceInit.GuardError;
                     }
                 }
+                ProgressHandler(5);
 
                 return InstanceInit.Successful;
             }

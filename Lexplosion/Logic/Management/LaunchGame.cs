@@ -50,6 +50,18 @@ namespace Lexplosion.Logic.Management
                 data.Libraries.Remove("com/google/guava/guava/17.0/guava-17.0.jar");
             }
 
+            /*if (data.Libraries.ContainsKey("org/apache/logging/log4j/log4j-api/2.11.2/log4j-api-2.11.2.jar"))
+            {
+                command += UserData.settings["gamePath"] + "/libraries/org/apache/logging/log4j/log4j-api/2.11.2/log4j-api-2.11.2.jar;";
+                data.Libraries.Remove("org/apache/logging/log4j/log4j-api/2.11.2/log4j-api-2.11.2.jar");
+            }
+
+            if (data.Libraries.ContainsKey("org/apache/logging/log4j/log4j-core/2.11.2/log4j-core-2.11.2.jar"))
+            {
+                command += UserData.settings["gamePath"] + "/libraries/org/apache/logging/log4j/log4j-core/2.11.2/log4j-core-2.11.2.jar;";
+                data.Libraries.Remove("org/apache/logging/log4j/log4j-core/2.11.2/log4j-core-2.11.2.jar");
+            }*/
+
             foreach (string lib in data.Libraries.Keys)
             {
                 command += UserData.settings["gamePath"] + "/libraries/" + lib + ";";
@@ -302,7 +314,7 @@ namespace Lexplosion.Logic.Management
         {
             try
             {
-                process.Kill();
+                process.Kill(); // TODO: тут иногда крашится (ввроде если ошибка скачивания была)
                 process.Dispose();
             } 
             catch { }

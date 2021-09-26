@@ -58,6 +58,7 @@ namespace Lexplosion.Logic.Management
         public InitData Update()
         {
             List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
+            MessageBox.Show(string.Join(", ", errors));
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             InstanceInit result = InstanceInit.Successful;

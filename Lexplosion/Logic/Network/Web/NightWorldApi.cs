@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                string answer = ToServer.HttpPost("filesList/modpacksList.json");
+                string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData);
                 Dictionary<string, NWInstanceInfo> list = JsonConvert.DeserializeObject<Dictionary<string, NWInstanceInfo>>(answer);
 
                 return list;
@@ -40,7 +40,7 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                string answer = ToServer.HttpPost("instanceVersion.php?id="+ id);
+                string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(id) + "/version");
                 Int32.TryParse(answer, out int idInt);
 
                 return idInt;
@@ -82,7 +82,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string answer = ToServer.HttpPost("instancesManifest.php?instance=" + WebUtility.UrlEncode(instanceId), data);
+                    string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(instanceId) + "/manifest", data);
 
                     if (answer != null)
                     {
