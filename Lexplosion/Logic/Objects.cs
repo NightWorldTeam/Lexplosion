@@ -133,43 +133,6 @@ namespace Lexplosion.Logic.Objects
         public string Id;
     }
 
-    class ModInfo
-    {
-        public int id;
-        public string fileName;
-        public string downloadUrl;
-        public string displayName;
-    }
-
-    //Манифест модпака курсфорджа InstanceManifest
-    class InstanceManifest
-    {
-        public class McVersionInfo
-        {
-            public string version;
-            public List<ModLoaders> modLoaders;
-        }
-
-        public class ModLoaders
-        {
-            public string id;
-            public bool primary;
-        }
-
-        public class FileData
-        {
-            public int projectID;
-            public int fileID;
-
-        }
-
-        public McVersionInfo minecraft;
-        public string name;
-        public string version;
-        public string author;
-        public List<FileData> files;
-    }
-
     class CurseforgeFileInfo
     {
         public int id;

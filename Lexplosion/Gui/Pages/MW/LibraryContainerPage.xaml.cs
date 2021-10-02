@@ -33,24 +33,22 @@ namespace Lexplosion.Gui.Pages.MW
 		private void InitializeInstance()
 		{
 			List<string> instanceTags = new List<string>();
-			Dictionary<string, InstanceParametrs> instancesList = UserData.InstancesList;
-			Dictionary<string, InstanceAssets> instanceAssets = UserData.instancesAssets;
 
 			int i = 0;
-			foreach (string key in instancesList.Keys)
+			foreach (string key in UserData.Instances.List.Keys)
 			{
 				string description = "";
 				string image = "pack://application:,,,/assets/images/icons/non_image.png";
-				if (instanceAssets.ContainsKey(key))
+				if (UserData.Instances.Assets.ContainsKey(key))
 				{
-					description = instanceAssets[key].description;
-					image = WithDirectory.directory + "/instances-assets/" + instanceAssets[key].mainImage;
+					description = UserData.Instances.Assets[key].description;
+					image = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 				}
 
 				BuildInstanceForm(
 					key, i,
 					new Uri(image),
-					instancesList[key].Name,
+					UserData.Instances.List[key].Name,
 					"by NightWorld",
 					description,
 					instanceTags

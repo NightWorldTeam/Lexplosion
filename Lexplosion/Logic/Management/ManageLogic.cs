@@ -62,23 +62,19 @@ namespace Lexplosion.Logic.Management
 
         public static void DefineListInstances()
         {
-            if (UserData.InstancesList == null)
-            {
-                UserData.InstancesList = DataFilesManager.GetInstancesList();
-                UserData.ExternalIds = new Dictionary<string, string>();
-            }
+            UserData.Instances.List = DataFilesManager.GetInstancesList();
+            UserData.Instances.ExternalIds = new Dictionary<string, string>();
+            UserData.Instances.Assets = new Dictionary<string, InstanceAssets>();
 
-            UserData.instancesAssets = new Dictionary<string, InstanceAssets>();
-
-            foreach (string instance in UserData.InstancesList.Keys)
+            foreach (string instance in UserData.Instances.List.Keys)
             {
                 //получаем внешние айдишники всех не локальных модпаков
-                if(UserData.InstancesList[instance].Type != InstanceType.Local)
+                if(UserData.Instances.List[instance].Type != InstanceType.Local)
                 {
                     InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
                     if (data != null && data.id != null)
                     {
-                        UserData.ExternalIds[data.id] = instance;
+                        UserData.Instances.ExternalIds[data.id] = instance;
                     }
                 }
 
@@ -87,9 +83,9 @@ namespace Lexplosion.Logic.Management
 
                 if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + assetsData.mainImage))
                 {
-                    UserData.instancesAssets[instance] = new InstanceAssets
+                    UserData.Instances.Assets[instance] = new InstanceAssets
                     {
-                        mainImage = "/" + assetsData.mainImage,
+                        mainImage = "/" + assetsData.mainImage, // TODO: если эти значения null то заменять на пустую строку 
                         description = assetsData.description,
                         author = assetsData.author
                     };
@@ -101,7 +97,7 @@ namespace Lexplosion.Logic.Management
         {
             Lexplosion.Run.ThreadRun(delegate ()
             {
-                InstanceType type = UserData.InstancesList[instanceId].Type;
+                InstanceType type = UserData.Instances.List[instanceId].Type;
                 IPrototypeInstance instance;
 
                 switch (type)
@@ -150,7 +146,7 @@ namespace Lexplosion.Logic.Management
             }
 
             LaunchGame.runnigInstance = instanceId;
-            InstanceType type = UserData.InstancesList[instanceId].Type;
+            InstanceType type = UserData.Instances.List[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
 
@@ -227,7 +223,7 @@ namespace Lexplosion.Logic.Management
                         j++;
                     }
 
-                    if (UserData.InstancesList.ContainsKey(instanceId))
+                    if (UserData.Instances.List.ContainsKey(instanceId))
                     {
                         string instanceId_ = instanceId;
                         int i = 0;
@@ -239,11 +235,11 @@ namespace Lexplosion.Logic.Management
                             }
                             i++;
                         }
-                        while (UserData.InstancesList.ContainsKey(instanceId_));
+                        while (UserData.Instances.List.ContainsKey(instanceId_));
                         instanceId = instanceId_;
                     }
                 } 
-                else if (UserData.InstancesList.ContainsKey(instanceId))
+                else if (UserData.Instances.List.ContainsKey(instanceId))
                 {
                     string instanceId_ = instanceId;
                     int i = 0;
@@ -252,7 +248,7 @@ namespace Lexplosion.Logic.Management
                         instanceId_ = instanceId + "_" + i;
                         i++;
                     }
-                    while (UserData.InstancesList.ContainsKey(instanceId_));
+                    while (UserData.Instances.List.ContainsKey(instanceId_));
 
                     instanceId = instanceId_;
                 }
@@ -297,13 +293,13 @@ namespace Lexplosion.Logic.Management
         {
             string instanceId = GenerateInstanceId(name);
 
-            UserData.InstancesList[instanceId] = new InstanceParametrs
+            UserData.Instances.AddInstance(instanceId, new InstanceParametrs
             {
                 Name = name,
                 Type = type
-            };
+            }, null, externalId);
 
-            DataFilesManager.SaveInstancesList(UserData.InstancesList);
+            DataFilesManager.SaveInstancesList(UserData.Instances.List);
             Directory.CreateDirectory(WithDirectory.directory + "/instances/" + instanceId);
 
             VersionManifest manifest = new VersionManifest
@@ -318,8 +314,6 @@ namespace Lexplosion.Logic.Management
 
             if(type != InstanceType.Local)
             {
-                UserData.ExternalIds[externalId] = instanceId;
-
                 var instanceData = new InstancePlatformData
                 {
                     id = externalId
@@ -366,11 +360,11 @@ namespace Lexplosion.Logic.Management
                             Id = nwModpack
                         };
 
-                        instanceInfo.IsInstalled = UserData.ExternalIds.ContainsKey(nwModpack);
+                        instanceInfo.IsInstalled = UserData.Instances.ExternalIds.ContainsKey(nwModpack);
 
                         if (instanceInfo.IsInstalled)
                         {
-                            instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.InstancesList[UserData.ExternalIds[nwModpack]].Name, InstanceType.Nightworld);
+                            instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[nwModpack]].Name, InstanceType.Nightworld);
                         }
 
                         Instances.Add(instanceInfo);
@@ -396,11 +390,11 @@ namespace Lexplosion.Logic.Management
                         Id = instance.id.ToString()
                     };
 
-                    instanceInfo.IsInstalled = UserData.ExternalIds.ContainsKey(instance.id.ToString());
+                    instanceInfo.IsInstalled = UserData.Instances.ExternalIds.ContainsKey(instance.id.ToString());
 
                     if (instanceInfo.IsInstalled)
                     {
-                        instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.InstancesList[UserData.ExternalIds[instance.id.ToString()]].Name, InstanceType.Curseforge);
+                        instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[instance.id.ToString()]].Name, InstanceType.Curseforge);
                     }
 
                     Instances.Add(instanceInfo);

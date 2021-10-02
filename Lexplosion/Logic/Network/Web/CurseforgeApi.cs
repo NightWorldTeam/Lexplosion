@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Objects;
+﻿using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Objects;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,20 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Lexplosion.Logic.Network
 {
     static class CurseforgeApi
     {
+        public enum AddonType
+        {
+            Mod = 6,
+            Resourcepacks = 12,
+            Maps = 17,
+            Unknown
+        }
+
         public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
         {
             try
@@ -120,6 +130,113 @@ namespace Lexplosion.Logic.Network
             catch
             {
                 return null;
+            }
+        }
+
+        private class ProjectTypeInfo
+        {
+            public class CategorySection
+            {
+                public int packageType;
+            }
+
+            public class FileData
+            {
+                public int id;
+                public string fileName;
+                public string downloadUrl;
+                public string displayName;
+                public List<Dictionary<string, int>> dependencies;
+            }
+
+            public CategorySection categorySection;
+            public List<FileData> files;
+        }
+
+        public static bool DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false)
+        {
+            try
+            {
+                string answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID);
+                if (answer == null)
+                {
+                    return false;
+                }
+
+                ProjectTypeInfo data = JsonConvert.DeserializeObject<ProjectTypeInfo>(answer);
+
+                answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/files");
+                if (answer == null)
+                {
+                    return false;
+                }
+
+                data.files = JsonConvert.DeserializeObject<List<ProjectTypeInfo.FileData>>(answer);
+
+                string fileUrl = "";
+                string fileName = "";
+
+                foreach (ProjectTypeInfo.FileData v in data.files)
+                {
+                    if (v.id == fileID && !String.IsNullOrWhiteSpace(v.downloadUrl) && !String.IsNullOrWhiteSpace(v.fileName))
+                    {
+                        char[] invalidFileChars = Path.GetInvalidFileNameChars();
+                        bool isInvalidFilename = invalidFileChars.Any(s => v.fileName.Contains(s));
+
+                        if (isInvalidFilename)
+                        {
+                            continue;
+                        }
+
+                        fileUrl = v.downloadUrl;
+                        fileName = v.fileName;
+
+                        if (downloadDependencies && v.dependencies.Count > 0)
+                        {
+                            foreach (Dictionary<string, int> value in v.dependencies)
+                            {
+                                if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId") && value.ContainsKey("fileId"))
+                                {
+                                    bool res = DownloadAddon(value["addonId"], value["fileId"], path, true);
+                                    if (!res)
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+                }
+
+                if (fileUrl != "")
+                {
+                    string folderName = "";
+                    AddonType addonType = (AddonType)data.categorySection.packageType;
+                    switch (addonType)
+                    {
+                        case CurseforgeApi.AddonType.Mod:
+                            folderName = "mods/";
+                            break;
+                        case CurseforgeApi.AddonType.Maps:
+                            folderName = "saves/";
+                            break;
+                        case CurseforgeApi.AddonType.Resourcepacks:
+                            folderName = "resourcepacks/";
+                            break;
+                        case CurseforgeApi.AddonType.Unknown:
+                            return false;
+                    }
+
+                    return WithDirectory.DownloadFile(fileUrl, fileName, path + folderName);
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

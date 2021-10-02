@@ -257,5 +257,31 @@ namespace Lexplosion.Logic.Network
                 return null;
             }
         }
+
+        public static string HttpGet(string url)
+        {
+            try
+            {
+                string answer;
+
+                WebRequest req = WebRequest.Create(url);
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                return answer;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

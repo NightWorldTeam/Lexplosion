@@ -22,9 +22,29 @@ namespace Lexplosion.Global
         login, password
         */
         public static Dictionary<string, string> settings; //общие настройки
-        public static Dictionary<string, InstanceParametrs> InstancesList; // все сборки
-        public static Dictionary<string, InstanceAssets> instancesAssets; // ассетсы всех модпаков
-        public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)
+
+        public static class Instances
+        {
+            public static Dictionary<string, InstanceParametrs> List; // все сборки
+            public static Dictionary<string, InstanceAssets> Assets; // ассетсы всех модпаков
+            public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)
+
+            public static void AddInstance(string localId, InstanceParametrs parametrs, InstanceAssets asstes, string externalId = "")
+            {
+                List[localId] = parametrs;
+                Assets[localId] = asstes;
+
+                if(externalId != "" && externalId != null)
+                {
+                    ExternalIds[externalId] = localId;
+                }
+            }
+
+            public static void SetAssets(string id, InstanceAssets asstes)
+            {
+                Assets[id] = asstes;
+            }
+        }
     }
 
     class InstanceParametrs

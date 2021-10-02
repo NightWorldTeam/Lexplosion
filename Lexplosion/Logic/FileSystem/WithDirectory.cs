@@ -21,14 +21,6 @@ namespace Lexplosion.Logic.FileSystem
 {
     static class WithDirectory
     {
-        //этот класс возвращает метод CheckVariableFiles
-        public class VariableFilesUpdates
-        {
-            public Dictionary<string, List<string>> Data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
-            public List<string> OldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
-            public bool Successful = true; // удачна или неудачна ли проверка
-        }
-
         // этот класс возвращает метод CheckBaseFiles
         public class BaseFilesUpdates
         {
@@ -129,9 +121,9 @@ namespace Lexplosion.Logic.FileSystem
             return updates;
         }
 
-        public static VariableFilesUpdates CheckVariableFiles(NInstanceManifest filesInfo, string instanceId, ref Dictionary<string, int> updates)
+        public static NightworldIntance.ModpackFilesUpdates CheckNigntworldInstance(NInstanceManifest filesInfo, string instanceId, ref Dictionary<string, int> updates)
         {
-            VariableFilesUpdates filesUpdates = new VariableFilesUpdates();
+            var filesUpdates = new NightworldIntance.ModpackFilesUpdates();
 
             //Проходимся по списку папок(data) из класса instanceFiles
             foreach (string dir in filesInfo.data.Keys)
@@ -805,7 +797,7 @@ namespace Lexplosion.Logic.FileSystem
             return errors;
         }
 
-        public static List<string> UpdateVariableFiles(VariableFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref Dictionary<string, int> updates)
+        public static List<string> UpdateNightworldInstance(NightworldIntance.ModpackFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref Dictionary<string, int> updates)
         {
             WebClient wc = new WebClient();
 
@@ -1019,7 +1011,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 ["gameVersion"] = instanceFile.version.gameVersion,
                 ["description"] = description,
-                ["name"] = UserData.InstancesList[instanceId].Name,
+                ["name"] = UserData.Instances.List[instanceId].Name,
                 ["author"] = UserData.login,
                 ["forgeVersion"] = instanceFile.version.forgeVersion
             };
@@ -1185,73 +1177,30 @@ namespace Lexplosion.Logic.FileSystem
             });
         }
 
-        public static string DownloadMod(int projectID, int fileID, string path)
+        public static bool DownloadFile(string url, string fileName, string path)
         {
             try
             {
-                string answer;
-
-                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/files");
-                using (WebResponse resp = req.GetResponse())
+                if (!Directory.Exists(directory + path))
                 {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
+                    Directory.CreateDirectory(directory + path);
+                }
+                using (WebClient wc = new WebClient())
+                {
+                    DelFile(directory + "/temp/" + fileName);
+                    wc.DownloadFile(url, directory + "/temp/" + fileName);
+                    File.Move(directory + "/temp/" + fileName, directory + "/" + path + "/" + fileName);
                 }
 
-                if (answer == null)
-                {
-                    return null;
-                }
-
-                List<ModInfo> data = JsonConvert.DeserializeObject<List<ModInfo>>(answer);
-
-                string fileUrl = "";
-                string fileName = "";
-
-                foreach (ModInfo v in data)
-                {
-                    if (v.id == fileID && !String.IsNullOrWhiteSpace(v.downloadUrl) && !String.IsNullOrWhiteSpace(v.fileName))
-                    {
-                        char[] invalidFileChars = Path.GetInvalidFileNameChars();
-                        bool isInvalidFilename = invalidFileChars.Any(s => v.fileName.Contains(s));
-
-                        if (isInvalidFilename)
-                        {
-                            continue;
-                        }
-
-                        fileUrl = v.downloadUrl;
-                        fileName = v.fileName;
-                        break;
-                    }
-                }
-
-                if (fileUrl != "")
-                {
-                    using (WebClient wc = new WebClient())
-                    {
-                        DelFile(directory + "/temp/" + fileName);
-                        wc.DownloadFile(fileUrl, directory + "/temp/" + fileName);
-                        File.Move(directory + "/temp/" + fileName, path + fileName);
-                    }
-
-                    return fileName;
-                }
-
-                return null;
+                return true;
             }
             catch
             {
-                return null;
+                return false;
             }
         }
 
-        public static InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles)
+        public static CurseforgeInstance.InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles)
         {
             if(localFiles != null)
             {
@@ -1275,10 +1224,6 @@ namespace Lexplosion.Logic.FileSystem
                 using (WebClient wc = new WebClient())
                 {
                     DelFile(directory + "/temp/" + fileName);
-                    MainWindow.Obj.Dispatcher.Invoke(delegate
-                    {
-                        Clipboard.SetText(downloadUrl);
-                    });
                     wc.DownloadFile(downloadUrl, directory + "/temp/" + fileName);
                 }
 
@@ -1291,31 +1236,20 @@ namespace Lexplosion.Logic.FileSystem
                 ZipFile.ExtractToDirectory(directory + "/temp/" + fileName, directory + "/temp/dataDownload");
                 DelFile(directory + "/temp/" + fileName);
 
-                InstanceManifest data = GetFile<InstanceManifest>(directory + "/temp/dataDownload/manifest.json");
+                var data = GetFile<CurseforgeInstance.InstanceManifest>(directory + "/temp/dataDownload/manifest.json");
 
                 if (data != null)
                 {
-                    if (!Directory.Exists(directory + "/temp/dataDownload/overrides/mods"))
-                    {
-                        Directory.CreateDirectory(directory + "/temp/dataDownload/overrides/mods");
-                    }
 
-                    /*foreach (InstanceManifest.FileData file in data.files)
+                    foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
                     {
-                        string filename = DownloadMod(file.projectID, file.fileID, directory + "/temp/dataDownload/overrides/mods/");
-
-                        //скачивание мода не удалось. Добавляем его данные в список ошибок
-                        if (filename == null)
+                        bool result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/temp/dataDownload/overrides/");
+                        if (!result) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
                         {
                             errors.Add(file.projectID + " " + file.fileID);
-                            // TODO: зачем я тут продолжаю цикл? Наверное ужно его остановить
+                            return null;
                         }
-                        /*else
-                        {
-                            localFiles.Add("/mods/" + filename);
-                            // TODO: думаю ту  смысла добавлять в список нет. Я этой сделаю на 1331 строке
-                        }
-                    }*/
+                    }
 
                     string SourcePath = directory + "/temp/dataDownload/overrides/";
                     string DestinationPath = directory + "/instances/" + instanceId + "/";

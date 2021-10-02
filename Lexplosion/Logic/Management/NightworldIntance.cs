@@ -13,8 +13,15 @@ namespace Lexplosion.Logic.Management
 {
     class NightworldIntance : IPrototypeInstance
     {
+        public class ModpackFilesUpdates
+        {
+            public Dictionary<string, List<string>> Data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
+            public List<string> OldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
+            public bool Successful = true; // удачна или неудачна ли проверка
+        }
+
         WithDirectory.BaseFilesUpdates BaseFiles;
-        WithDirectory.VariableFilesUpdates VariableFiles;
+        ModpackFilesUpdates VariableFiles;
 
         NInstanceManifest Manifest;
         Dictionary<string, int> Updates;
@@ -152,7 +159,7 @@ namespace Lexplosion.Logic.Management
 
                 if (requiresUpdates || InvalidStruct())
                 {
-                    VariableFiles = WithDirectory.CheckVariableFiles(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
+                    VariableFiles = WithDirectory.CheckNigntworldInstance(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
                     if (!VariableFiles.Successful)
                     {
                         return InstanceInit.GuardError;
@@ -177,7 +184,7 @@ namespace Lexplosion.Logic.Management
 
             if (requiresUpdates)
             {
-                errors = WithDirectory.UpdateVariableFiles(VariableFiles, Manifest, InstanceId, InfoData.id, ref Updates);
+                errors = WithDirectory.UpdateNightworldInstance(VariableFiles, Manifest, InstanceId, InfoData.id, ref Updates);
             }
             ProgressHandler(40);
 

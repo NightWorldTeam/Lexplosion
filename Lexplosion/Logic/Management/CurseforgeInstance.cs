@@ -16,6 +16,33 @@ namespace Lexplosion.Logic.Management
 {
     class CurseforgeInstance : IPrototypeInstance
     {
+        public class InstanceManifest
+        {
+            public class McVersionInfo
+            {
+                public string version;
+                public List<ModLoaders> modLoaders;
+            }
+
+            public class ModLoaders
+            {
+                public string id;
+                public bool primary;
+            }
+
+            public class FileData
+            {
+                public int projectID;
+                public int fileID;
+            }
+
+            public McVersionInfo minecraft;
+            public string name;
+            public string version;
+            public string author;
+            public List<FileData> files;
+        }
+
         WithDirectory.BaseFilesUpdates BaseFiles;
 
         VersionManifest Manifest;
@@ -101,6 +128,8 @@ namespace Lexplosion.Logic.Management
                 // скачивание иконки
                 CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
                 string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
+                InstanceAssets assets = new InstanceAssets();
+
                 if (info.attachments.Count > 0)
                 {
                     // TODO: написать где-то отдельную функцию для скачивания файла
@@ -118,34 +147,25 @@ namespace Lexplosion.Logic.Management
                         wc.DownloadFile(info.attachments[0].thumbnailUrl, fileName);
                     }
 
-                    if (!UserData.instancesAssets.ContainsKey(InstanceId) || UserData.instancesAssets[InstanceId] == null)
-                    {
-                        UserData.instancesAssets[InstanceId] = new InstanceAssets
-                        {
-                            description = "",
-                            mainImage = InstanceId + "/" + a[a.Length - 1]
-                        };
-                    }
-                    else
-                    {
-                        UserData.instancesAssets[InstanceId].mainImage = InstanceId + "/" + a[a.Length - 1];
-                    }
+                    assets.description = "";
+                    assets.mainImage = InstanceId + "/" + a[a.Length - 1];
                 }
 
                 //устанавливаем описание
                 if (info.summary != null)
                 {
-                    UserData.instancesAssets[InstanceId].description = info.summary;
+                    assets.description = info.summary;
                 }
 
                 //устанавливаем автора
                 if (info.authors.Count > 0 && info.authors[0].name != null)
                 {
-                    UserData.instancesAssets[InstanceId].author = info.authors[0].name;
+                    assets.author = info.authors[0].name;
                 }
 
                 // сохраняем асетсы модпака
-                DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.instancesAssets[InstanceId]));
+                UserData.Instances.SetAssets(InstanceId, assets);
+                DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.Instances.Assets[InstanceId]));
             }
             catch { }
 
