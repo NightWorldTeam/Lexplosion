@@ -32,7 +32,7 @@ namespace Lexplosion.Gui.Pages.MW
 		*/
 		private void InitializeInstance()
 		{
-			List<Category> instanceTags = new List<Category>();
+			List<string> instanceTags = new List<string>();
 			Dictionary<string, InstanceParametrs> instancesList = UserData.InstancesList;
 			Dictionary<string, InstanceAssets> instanceAssets = UserData.instancesAssets;
 
@@ -61,7 +61,7 @@ namespace Lexplosion.Gui.Pages.MW
 		}
 
 
-		private void BuildInstanceForm(string id, int row, Uri logo_path, string title, string author, string overview, List<Category> tags)
+		private void BuildInstanceForm(string id, int row, Uri logo_path, string title, string author, string overview, List<string> tags)
 		{
 			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.

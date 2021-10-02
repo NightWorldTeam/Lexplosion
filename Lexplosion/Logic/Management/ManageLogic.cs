@@ -330,5 +330,84 @@ namespace Lexplosion.Logic.Management
 
             return instanceId;
         }
+
+        public static List<OutsideInstance> GetOutsideInstances(InstanceType type, int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
+        {
+            List<string> CategoriesListConverter(List<CurseforgeInstanceInfo.Category> categories)
+            {
+                List<string> znfvrdfga = new List<string>();
+                foreach (var c in categories)
+                {
+                    znfvrdfga.Add(c.name);
+                }
+
+                return znfvrdfga;
+            }
+
+            List<OutsideInstance> Instances = new List<OutsideInstance>();
+
+            if (type == InstanceType.Nightworld)
+            {
+                Dictionary<string, NWInstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
+                int i = 0;
+                foreach (string nwModpack in nwInstances.Keys)
+                {
+                    if (i >= pageSize * index)
+                    {
+                        OutsideInstance instanceInfo = new OutsideInstance()
+                        {
+                            Name = nwInstances[nwModpack].name,
+                            Author = nwInstances[nwModpack].author,
+                            MainImageUrl = nwInstances[nwModpack].mainImage,
+                            Categories = new List<string>(),
+                            Description = "",
+                            DownloadCount = 0,
+                            Type = InstanceType.Nightworld,
+                            Id = nwModpack
+                        };
+
+                        instanceInfo.IsInstalled = UserData.ExternalIds.ContainsKey(nwModpack);
+
+                        if (instanceInfo.IsInstalled)
+                        {
+                            instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.InstancesList[UserData.ExternalIds[nwModpack]].Name, InstanceType.Nightworld);
+                        }
+
+                        Instances.Add(instanceInfo);
+                    }
+
+                    i++;
+                }
+            }
+            else if (type == InstanceType.Curseforge)
+            {
+                List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, index, ModpacksCategories.All, searchFilter);
+                foreach (var instance in curseforgeInstances)
+                {
+                    OutsideInstance instanceInfo = new OutsideInstance()
+                    {
+                        Name = instance.name,
+                        Author = instance.authors[0].name, // TODO: тут может быть null
+                        MainImageUrl = instance.attachments[0].thumbnailUrl, // TODO: тут тоже может быть null
+                        Categories = CategoriesListConverter(instance.categories),
+                        Description = instance.summary,
+                        DownloadCount = instance.downloadCount,
+                        Type = InstanceType.Curseforge,
+                        Id = instance.id.ToString()
+                    };
+
+                    instanceInfo.IsInstalled = UserData.ExternalIds.ContainsKey(instance.id.ToString());
+
+                    if (instanceInfo.IsInstalled)
+                    {
+                        instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.InstancesList[UserData.ExternalIds[instance.id.ToString()]].Name, InstanceType.Curseforge);
+                    }
+
+                    Instances.Add(instanceInfo);
+                }
+            }
+
+            return Instances;
+        }
     }
 }

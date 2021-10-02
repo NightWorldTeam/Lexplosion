@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
@@ -35,23 +36,23 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance()
 		{
-			List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(5, 0, ModpacksCategories.All);
-			for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
+			List<OutsideInstance> instances = ManageLogic.GetOutsideInstances(InstanceType.Curseforge, 5, 0, ModpacksCategories.All);
+			for (int j = 0; j < instances.ToArray().Length; j++)
 			{
 				// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
 				// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
-				BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,
-					new Uri(curseforgeInstances[j].attachments[0].thumbnailUrl),
-					curseforgeInstances[j].name,
-					curseforgeInstances[j].authors[0].name,
-					curseforgeInstances[j].summary,
-					curseforgeInstances[j].categories);
+				BuildInstanceForm(instances[j].Id, j + 1,
+					new Uri(instances[j].MainImageUrl),
+					instances[j].Name,
+					instances[j].Author,
+					instances[j].Description,
+					instances[j].Categories);
 			}
 		}
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
-		public void BuildInstanceForm(string instanceId, int row, Uri logoPath, string title, string author, string overview, List<CurseforgeInstanceInfo.Category> tags)
+		public void BuildInstanceForm(string instanceId, int row, Uri logoPath, string title, string author, string overview, List<string> tags)
 		{
 			this.Dispatcher.Invoke(() =>
 			{
@@ -100,15 +101,15 @@ namespace Lexplosion.Gui.Pages.MW
 					last_request = SearchBox.Text;
 					_isInitializeInstance = false;
 					//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
-					List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(10, 0, ModpacksCategories.All, SearchBox.Text);
-					for (int j = 0; j < curseforgeInstances.ToArray().Length; j++)
+					List<OutsideInstance> instances = ManageLogic.GetOutsideInstances(InstanceType.Curseforge, 10, 0, ModpacksCategories.All, SearchBox.Text);
+					for (int j = 0; j < instances.ToArray().Length; j++)
 					{
-						BuildInstanceForm(curseforgeInstances[j].id.ToString(), j + 1,
-							new Uri(curseforgeInstances[j].attachments[0].thumbnailUrl),
-							curseforgeInstances[j].name,
-							curseforgeInstances[j].authors[0].name,
-							curseforgeInstances[j].summary,
-							curseforgeInstances[j].categories);
+						BuildInstanceForm(instances[j].Id.ToString(), j + 1,
+							new Uri(instances[j].MainImageUrl),
+							instances[j].Name,
+							instances[j].Author,
+							instances[j].Description,
+							instances[j].Categories);
 					}
 				//}
 			}

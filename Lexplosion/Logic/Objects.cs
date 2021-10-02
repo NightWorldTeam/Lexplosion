@@ -83,6 +83,12 @@ namespace Lexplosion.Logic.Objects
         public Dictionary<string, LibInfo> Libraries;
     }
 
+    /*public class Category
+    {
+        public int categoryId;
+        public string name;
+    }*/
+
     public class CurseforgeInstanceInfo
     {
         public class Category
@@ -111,6 +117,20 @@ namespace Lexplosion.Logic.Objects
         public List<Author> authors;
         public string summary;
         public float downloadCount;
+    }
+
+    class OutsideInstance
+    {
+        public InstanceType Type;
+        public bool UpdateAvailable;
+        public bool IsInstalled;
+        public string Name;
+        public string Author;
+        public string MainImageUrl;
+        public List<string> Categories;
+        public float DownloadCount;
+        public string Description;
+        public string Id;
     }
 
     class ModInfo
@@ -160,7 +180,8 @@ namespace Lexplosion.Logic.Objects
     class NWInstanceInfo
     {
         public string name;
-        public string imageUrl;
+        public string mainImage;
+        public string author;
         public int version;
     }
 

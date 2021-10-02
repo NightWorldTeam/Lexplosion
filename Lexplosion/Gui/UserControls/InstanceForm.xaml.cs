@@ -51,7 +51,7 @@ namespace Lexplosion.Gui.UserControls
 
             public Uri InstanceLogoPath;
 
-            public List<Category> InstanceTags;
+            public List<string> InstanceTags;
 
             public bool IsInstanceInstalled;
             public bool IsInstanceAddedToLibrary;
@@ -87,7 +87,7 @@ namespace Lexplosion.Gui.UserControls
         public static event InstanceOpenedHandler InstanceOpened;
 
         public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, int curseforgeInstanceId,
-            Uri instanceLogoPath, List<Category> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
+            Uri instanceLogoPath, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
         {
             InitializeComponent();
             this._mainWindow = mainWindow;
@@ -132,9 +132,9 @@ namespace Lexplosion.Gui.UserControls
              * Setup Instance Tags
              */
             if (instanceProperties.InstanceTags.Count > 0 && TagsBlock.Children.Count == 0) { 
-                foreach (Category tag in instanceProperties.InstanceTags) 
+                foreach (string tag in instanceProperties.InstanceTags) 
                 {   
-                    TagsBlock.Children.Add(SetTagsButton(tag.name));
+                    TagsBlock.Children.Add(SetTagsButton(tag));
                 }
             }
             
@@ -355,7 +355,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void LaunchInstance()
         {
-            string instanceId = "eos";
+            string instanceId = "test";
                 ManageLogic.СlientManager(instanceId);
         }
 
