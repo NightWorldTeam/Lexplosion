@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using Lexplosion.Global;
+using Lexplosion.Logic;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Newtonsoft.Json;
@@ -59,17 +60,17 @@ namespace Lexplosion.Logic.Network
                     {
                         List<List<string>> input = new List<List<string>>();
 
-                        input.Add(new List<string>() { "UUID", "344a7f427fb765610ef96eb7bce95257" });
-                        input.Add(new List<string>() { "password", Сryptography.Sha256("1") });
+                        input.Add(new List<string>() { "UUID", UserData.UUID });
+                        input.Add(new List<string>() { "password", UserData.PaswordSHA });
 
                         //раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
                         while (isServer)
                         {
-                            ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
+                            ToServer.HttpPost("https://night-world.org/libraries/scripts/setGameServer.php", input);
                             waitingInforming.WaitOne(120000);
                         }
 
-                        ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer.php", input);
+                        ToServer.HttpPost("https://night-world.org/libraries/scripts/dropGameServer.php", input);
                     });
 
                     InformingThread.Start();
@@ -130,7 +131,7 @@ namespace Lexplosion.Logic.Network
                         if (strData.Substring(0, 6) == "[MOTD]" && strData.Substring(strData.Length - 5, 5) == "[/AD]")
                         {
                             string name_ = strData.Substring(6, strData.IndexOf("[/MOTD]") - 6);
-                            int port_ = Int32.Parse(strData.Substring(strData.IndexOf("[AD]") + 4, strData.Length - strData.IndexOf("[/AD]") - 1));
+                            int port_ = Int32.Parse(strData.Replace("[MOTD]" + name_ + "[/MOTD]", "").Replace("[/AD]", "").Replace("[AD]", ""));
 
                             name = name_;
                             port = port_;
@@ -147,13 +148,13 @@ namespace Lexplosion.Logic.Network
 
         public void WaitingOpen(int pid)
         {
-            ClientBridge bridge = new ClientBridge();
+            ClientBridge bridge = new ClientBridge("test");
 
             UdpClient client = new UdpClient();
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             // TODO: MulticastTimeToLive
             client.Client.Ttl = 0; //это чтобы другие компьютеры в локальной сети не видели этого сервера
-            client.Client.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4445));
+            client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
             client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"), IPAddress.Parse("127.0.0.1"));
 
             while (true)
@@ -162,10 +163,10 @@ namespace Lexplosion.Logic.Network
                 if (processPorts.Contains(4445) && !isServer)
                 {
                     List<List<string>> input = new List<List<string>>();
-                    input.Add(new List<string>() { "UUID", "bbab3c32222e4f08a8b291d1e9b9267c" });
-                    input.Add(new List<string>() { "password", Сryptography.Sha256("tipidor") });
+                    input.Add(new List<string>() { "UUID", UserData.UUID });
+                    input.Add(new List<string>() { "password", UserData.PaswordSHA });
 
-                    string data = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getGameServers.php", input);
+                    string data = ToServer.HttpPost("https://night-world.org/libraries/scripts/getGameServers.php", input);
                     List<string> servers = null;
                     try
                     {
@@ -177,11 +178,6 @@ namespace Lexplosion.Logic.Network
                     {
                         isClient = true;
                         List<int> ports = bridge.SetServers(servers);
-
-                        if (!bridge.IsInitialized)
-                        {
-                            bridge.StartEmulation("test");
-                        }
 
                         //Отправляем пакеты сервера для отображения в локальных мирах
                         foreach (int port in ports)

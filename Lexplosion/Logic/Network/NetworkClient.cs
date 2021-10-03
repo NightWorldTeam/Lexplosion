@@ -12,6 +12,12 @@ namespace Lexplosion.Logic.Network
     abstract class NetworkClient // TODO: вложенные потоки нужно сделать нефоновыми. ну чтобы они давали программе закрыться
     {
         protected SmpClient Bridge;
+        protected string ClientType;
+
+        public NetworkClient(string clientType)
+        {
+            ClientType = clientType;
+        }
 
         public virtual void Initialization(string UUID, int port, string serverUUID)
         {
@@ -21,10 +27,10 @@ namespace Lexplosion.Logic.Network
 
             //подключаемся к управляющему серверу
             TcpClient client = new TcpClient();
-            client.Connect("127.0.0.1", 4565); //194.61.2.176
+            client.Connect("194.61.2.176", 4565);
 
             NetworkStream stream = client.GetStream();
-            string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"client\", \"UUID\": \"" + UUID + "\"}";
+            string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
 
@@ -34,7 +40,8 @@ namespace Lexplosion.Logic.Network
 
                 if (buf[0] == 98) // сервер согласился, а управляющий сервер запрашивает порт
                 {
-                    STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, bridgeUdp.Client); //получем наш внешний адрес
+                    STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, bridgeUdp.Client); //получем наш внешний адрес
+                    Console.WriteLine(result.NetType);
 
                     //парсим и получаем порт
                     string externalPort = result.PublicEndPoint.ToString();
@@ -68,6 +75,7 @@ namespace Lexplosion.Logic.Network
 
             if (Bridge.Connect(Int32.Parse(hostPort), hostIp)) // TODO: было исключени о неверном формате строки
             {
+                Console.WriteLine("Ping " + Bridge.ping);
                 stream.Close();
                 client.Close();
 
@@ -76,11 +84,18 @@ namespace Lexplosion.Logic.Network
                     Reading();
                 });
 
+                Thread sendingThread = new Thread(delegate ()
+                {
+                    Sending();
+                });
+
+                sendingThread.Start();
                 readingThread.Start();
-
-                Sending();
             }
-
+            else
+            {
+                Console.WriteLine("пиздец");
+            }
         }
 
         public virtual void Close(IPEndPoint point) { }

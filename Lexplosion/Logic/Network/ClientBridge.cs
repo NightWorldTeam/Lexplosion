@@ -6,19 +6,27 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {
-    class ClientBridge: NetworkClient // TODO: возможно Initialization заменить на конструктор
+    class ClientBridge : NetworkClient // TODO: возможно Initialization заменить на конструктор
     {
         protected Socket ServerSimulator;
-        protected Socket listener;
 
         protected List<Socket> Sockets = new List<Socket>();
         protected Dictionary<Socket, string> AvailableServers = new Dictionary<Socket, string>();
 
-        protected AutoResetEvent WaitAccepting = new AutoResetEvent(false);
-        protected Semaphore AcceptingBlock = new Semaphore(1,1); //блокировка на время работы метода AcceptHandler
+        protected Semaphore AcceptingBlock = new Semaphore(1, 1); //блокировка на время работы метода AcceptHandler
+        protected AutoResetEvent SendingWait = new AutoResetEvent(false);
+        protected AutoResetEvent ReadingWait = new AutoResetEvent(false);
 
-        public bool IsInitialized { get; private set; } = false;
+        public bool IsInitialized { get; private set; } = true;
         private bool IsConnected = false; // когда будет подключен майкнрафт клиент эта переменная будет true
+        string UUID = "";
+
+        const string clientType = "game-client"; // эта строка нужна при подключении к управляющему серверу
+
+        public ClientBridge(string uuid) : base(clientType)
+        {
+            UUID = uuid;
+        }
 
         public List<int> SetServers(List<string> servers)
         {
@@ -30,7 +38,7 @@ namespace Lexplosion.Logic.Network
                 if (!AvailableServers.ContainsValue(server_uuid))
                 {
                     Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    sock.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0));
+                    sock.Bind(new IPEndPoint(IPAddress.Any, 0));
                     sock.Listen(1);
 
                     AvailableServers[sock] = server_uuid;
@@ -56,11 +64,9 @@ namespace Lexplosion.Logic.Network
                     ports.Add(((IPEndPoint)serverSocket.LocalEndPoint).Port); //добавояем порт сокета в список
                     serverSocket.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), serverSocket); // запусакаем асинхронный асепт
                 }
-
             }
 
             return ports;
-
         }
 
         // этот метод срабатывает при подключении клиента
@@ -70,40 +76,27 @@ namespace Lexplosion.Logic.Network
 
             if (IsInitialized)
             {
-                Socket listener_ = (Socket)data.AsyncState;
-                Socket serverSimulator_ = listener_.EndAccept(data);
+                Socket listener = (Socket)data.AsyncState;
 
                 // если майкнрафт клиент уже подключен то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
                 if (IsConnected)
                 {
                     AcceptingBlock.Release();
-                    serverSimulator_.Close();
+                    Socket sock = listener.EndAccept(data);
+                    sock.Close();
+
                     return;
                 }
 
                 // TODO: тут проверить тот ли клиент подключился
-                IsConnected = true;
+                string serverUUID = AvailableServers[listener];
+                base.Initialization(UUID, ((IPEndPoint)listener.LocalEndPoint).Port, serverUUID);
 
-                listener = listener_;
+                Socket serverSimulator_ = listener.EndAccept(data);
                 ServerSimulator = serverSimulator_;
 
-                WaitAccepting.Set();
-            }
-
-            AcceptingBlock.Release();
-
-        }
-
-        public void StartEmulation(string UUID)
-        {
-            IsInitialized = true;
-
-            new Thread(delegate () //поток принимающий новые подключения
-            {
-                WaitAccepting.WaitOne();
-
-                string serverUUID;
-                serverUUID = AvailableServers[listener];
+                ReadingWait.Set();
+                SendingWait.Set();
 
                 //закрываем другие сокеты
                 foreach (Socket sock in AvailableServers.Keys)
@@ -114,14 +107,15 @@ namespace Lexplosion.Logic.Network
                     }
                 }
 
-                base.Initialization(UUID, ((IPEndPoint)listener.LocalEndPoint).Port, serverUUID);
+                IsConnected = true;
+            }
 
-            }).Start();     
-
+            AcceptingBlock.Release();
         }
 
         public override void Close(IPEndPoint point)
         {
+            Console.WriteLine("Close");
             IsInitialized = false;
             IsConnected = false;
             ServerSimulator.Close(); //закрываем соединение с клиентом
@@ -129,6 +123,9 @@ namespace Lexplosion.Logic.Network
 
         override protected void Sending() //отправляет данные с майнкрафт клиента в сеть
         {
+            SendingWait.WaitOne();
+            Console.WriteLine("sending begin");
+
             try
             {
                 while (Bridge.IsConnected)
@@ -146,8 +143,9 @@ namespace Lexplosion.Logic.Network
                     Bridge.Send(buffer_);
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine("Sending " + e);
                 Bridge.Close();
                 Close(null);
             }
@@ -156,6 +154,9 @@ namespace Lexplosion.Logic.Network
 
         override protected void Reading() //получаем данные из сети и отправляем на майкрафт клиент
         {
+            ReadingWait.WaitOne();
+            Console.WriteLine("reading begin");
+
             bool isWorking = Bridge.Receive(out byte[] buffer);
 
             try
@@ -176,7 +177,12 @@ namespace Lexplosion.Logic.Network
                 }
 
             }
-            catch { }
+            catch (Exception e)
+            {
+                Console.WriteLine("Reading exception " + e);
+            }
+
+            Console.WriteLine("Reading " + Bridge.IsConnected);
 
             Bridge.Close();
             Close(null);

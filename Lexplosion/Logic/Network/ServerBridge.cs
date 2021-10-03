@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {
-    class ServerBridge: NetworkServer
+    class ServerBridge : NetworkServer
     {
         protected ConcurrentDictionary<IPEndPoint, Socket> Connections; //это нужно для читающего потока
         protected ConcurrentDictionary<Socket, IPEndPoint> ClientsPoints; //этот список нужен для отправляющего потока
@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Network
         const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
         int Port;
 
-        public ServerBridge(int port): base(serverType)
+        public ServerBridge(int port) : base(serverType)
         {
             ConnectSemaphore = new Semaphore(1, 1);
             Connections = new ConcurrentDictionary<IPEndPoint, Socket>();
@@ -28,6 +28,7 @@ namespace Lexplosion.Logic.Network
 
         protected override void ClientAbort(IPEndPoint point)
         {
+            Console.WriteLine("clientAbort");
             AcceptingBlock.WaitOne();
             SendingBlock.WaitOne();
 
@@ -82,11 +83,13 @@ namespace Lexplosion.Logic.Network
                 }
                 catch (SocketException e)
                 {
+                    Console.WriteLine("SendingSocketException");
                     // TODO: тут что-то придумать
                     continue;
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.WriteLine("SendingException " + e);
                     // TODO: какое-то странное исключение, выходим
                 }
 
@@ -95,8 +98,14 @@ namespace Lexplosion.Logic.Network
                     try
                     {
                         //получем данные с локального сокета и отправляем клиенту через сеть с помощью SMP
-                        byte[] data = new byte[256];
-                        int bytes = sock.Receive(data); 
+                        byte[] data = new byte[1024];
+                        int bytes = sock.Receive(data);
+
+                        if (bytes == 0)
+                        {
+                            Console.WriteLine("Bytes is 0");
+                            // TODO: закрывать соединение
+                        }
 
                         byte[] data_ = new byte[bytes]; // TODO: тут хуевый перенос массива
                         for (int i = 0; i < bytes; i++)
@@ -108,10 +117,12 @@ namespace Lexplosion.Logic.Network
                     }
                     catch (SocketException e)
                     {
+                        Console.WriteLine("sending1 ");
                         isDisconected.Add(sock); //добавляем клиента в список чтобы потом отключить
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        Console.WriteLine("sending2 " + e);
                         // TODO: подумать че делать
                     }
                 }
@@ -128,7 +139,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        protected override void Reading() //данные из сети отправляем майнкрафт клиентам
+        protected override void Reading() //данные из сети отправляем майнкрафту
         {
             threadResetReading.WaitOne(); //ждём первого подключения
             threadResetReading.Set();
@@ -142,8 +153,9 @@ namespace Lexplosion.Logic.Network
                     Connections[point].Send(data, data.Length, SocketFlags.None);
                     AcceptingBlock.Release();
                 }
-                catch 
+                catch (Exception e)
                 {
+                    Console.WriteLine("reading " + e);
                     break;
                     // TODO: тут че-то сделать
                 }
@@ -154,7 +166,7 @@ namespace Lexplosion.Logic.Network
         {
             base.StopWork();
 
-            foreach(Socket sock in Sockets)
+            foreach (Socket sock in Sockets)
             {
                 sock.Close();
             }

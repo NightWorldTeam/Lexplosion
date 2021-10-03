@@ -8,6 +8,7 @@ namespace Lexplosion.Global
     {
         public static string login = "";
         public static string UUID = "00000000-0000-0000-0000-000000000000";
+        public static string PaswordSHA = "";
         public static string accessToken = "null";
         public static bool isAuthorized = false;
         public static bool offline = false;

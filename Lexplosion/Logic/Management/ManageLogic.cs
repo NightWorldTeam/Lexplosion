@@ -36,6 +36,7 @@ namespace Lexplosion.Logic.Management
                     UserData.login = response["login"];
                     UserData.UUID = response["UUID"];
                     UserData.accessToken = response["accesToken"];
+                    UserData.PaswordSHA = Сryptography.Sha256(password);
 
                     if (saveUser)
                     {

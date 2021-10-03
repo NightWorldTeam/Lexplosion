@@ -8,5 +8,11 @@ namespace Lexplosion.Logic.Network
 {
     class DataClient : NetworkClient
     {
+        const string clientType = "data-client"; // эта строка нужна при подключении к управляющему серверу
+
+        public DataClient() : base(clientType)
+        {
+
+        }
     }
 }

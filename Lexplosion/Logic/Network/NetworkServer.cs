@@ -28,7 +28,7 @@ namespace Lexplosion.Logic.Network
         protected List<IPEndPoint> AvailableConnections;
         protected bool IsWork = false;
 
-        public NetworkServer(string serverPrefix)
+        public NetworkServer(string serverType)
         {
             IsWork = true;
             AcceptingBlock = new Semaphore(1, 1);
@@ -56,7 +56,7 @@ namespace Lexplosion.Logic.Network
 
             AcceptingThread = new Thread(delegate () //поток принимающий новые подключения
             {
-                Accepting(serverPrefix);
+                Accepting(serverType);
             });
 
             AcceptingThread.Start();
@@ -68,41 +68,38 @@ namespace Lexplosion.Logic.Network
         protected virtual void Accepting(string serverType) // TODO: нужно избегать повторного подключения
         {
             //подключаемся к управляющему серверу
-            TcpClient client = new TcpClient();
-            client.Connect("127.0.0.1", 4565); //194.61.2.176
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 4565));
 
-            NetworkStream stream = client.GetStream();
-
-            string st = "{\"UUID\" : \"344a7f427fb765610ef96eb7bce95257\", \"type\": \""+ serverType + "\"}";
+            string st = "{\"UUID\" : \"344a7f427fb765610ef96eb7bce95257\", \"type\": \"" + serverType + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
-            stream.Write(sendData, 0, sendData.Length); //авторизируемся на упрявляющем сервере
+            socket.Send(sendData); //авторизируемся на упрявляющем сервере
 
             while (IsWork)
             {
                 {
                     byte[] data = new byte[1];
 
-                    int bytes = stream.Read(data, 0, data.Length);
+                    int bytes = socket.Receive(data);
 
                     if (bytes == 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
                     {
-                        stream.Write(new byte[1] { 97 }, 0, 1); //отправляем серверу соглашение
+                        socket.Send(new byte[1] { 97 }); //отправляем серверу соглашение
 
-                        bytes = stream.Read(data, 0, data.Length);
+                        bytes = socket.Receive(data);
                         if (bytes == 1 && data[0] == 98) //сервер запрашивает мой порт
                         {
+                            // TODO: сделать получения списка stun серверов с нашего сервера
                             Server.ReciveStop.WaitOne(); // это нужно чтобы не было коллизий с работающем методом Recive
-                            STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, ServerUdp.Client); //получем наш внешний адрес
+                            STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, ServerUdp.Client); //получем наш внешний адрес
                             Server.ReciveStop.Release();
 
                             //парсим порт
                             string externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
                             externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
                             byte[] portData = Encoding.UTF8.GetBytes(externalPort.ToString());
-                            //byte[] portData = Encoding.UTF8.GetBytes("fsd");
 
-                            stream.Write(portData, 0, portData.Length); //отправляем серверу наш порт
-
+                            socket.Send(portData); //отправляем серверу наш порт
                         }
                         else
                         {
@@ -120,7 +117,7 @@ namespace Lexplosion.Logic.Network
 
                 {
                     byte[] data = new byte[21];
-                    int bytes = stream.Read(data, 0, data.Length); //получем ip клиента
+                    int bytes = socket.Receive(data); //получем ip клиента
 
                     byte[] resp = new byte[bytes];
                     for (int i = 0; i < bytes; i++) // TODO: сделать этот перенос нормально, но не через resize
@@ -138,6 +135,7 @@ namespace Lexplosion.Logic.Network
 
                     if (Server.Connect(point))
                     {
+                        Console.WriteLine("КОННЕКТ!!!");
                         AvailableConnections.Add(point);
                         BeforeConnect(point);
 
@@ -146,10 +144,13 @@ namespace Lexplosion.Logic.Network
                     }
                     else
                     {
+                        Console.WriteLine("Пиздец");
                         AcceptingBlock.Release();
                     }
                 }
             }
+
+            socket.Close(); //закрываем соединение с управляющим сервером
         }
 
         public virtual void StopWork()
