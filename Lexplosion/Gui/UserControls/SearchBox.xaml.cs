@@ -42,20 +42,25 @@ namespace Lexplosion.Gui.UserControls
 			if (page.InstanceGrid.RowDefinitions.Count > 2)
 				page.InstanceGrid.RowDefinitions.RemoveRange(1, page.InstanceGrid.RowDefinitions.Count - 1);
 
+            InstanceType selectedInstanceType;
+
+            if (SelectInstanceTypeBox.SelectedIndex == 0) selectedInstanceType = InstanceType.Nightworld;
+            else selectedInstanceType = InstanceType.Curseforge;
+
             if (SearchTextBox.Text.Length != 0)
             {
                 //if (last_request != SearchBox.Text || last_request == "") { 
                 last_request = SearchTextBox.Text;
                 page._isInitializeInstance = false;
                 //TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
-                List<OutsideInstance> instances = ManageLogic.GetOutsideInstances(InstanceType.Curseforge, 10, 0, ModpacksCategories.All, SearchTextBox.Text);
+                List<OutsideInstance> instances = ManageLogic.GetOutsideInstances(selectedInstanceType, 10, 0, ModpacksCategories.All, SearchTextBox.Text); ;
                 if (instances.Count > 0)
                     for (int j = 0; j < instances.ToArray().Length; j++)
                     {
                         page.BuildInstanceForm(instances[j].Id.ToString(), j + 1,
                             new Uri(instances[j].MainImageUrl),
                             instances[j].Name,
-                            instances[j].Author,
+                            instances[j].Author, 
                             instances[j].Description,
                             instances[j].Categories);
                         page.LoadingLable.Visibility = Visibility.Collapsed;

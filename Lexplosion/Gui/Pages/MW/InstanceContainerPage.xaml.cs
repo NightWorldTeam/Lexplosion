@@ -27,7 +27,7 @@ namespace Lexplosion.Gui.Pages.MW
 			SearchBox searchBox = new SearchBox(this)
 			{
 				Margin = new Thickness(0, 14, 0, 0),
-				Width = 386,
+				Width = 400,
 				HorizontalAlignment = HorizontalAlignment.Center
 			};
 			obj = this;
