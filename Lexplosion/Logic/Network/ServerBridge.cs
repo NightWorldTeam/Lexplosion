@@ -58,7 +58,7 @@ namespace Lexplosion.Logic.Network
 
         protected override void Sending() //отправляем данные с майнкрафт клиентов в сеть
         {
-            threadReset.WaitOne(); //ждём первого подключения
+            SendingWait.WaitOne(); //ждём первого подключения
 
             List<Socket> isDisconected = new List<Socket>();
 
@@ -74,14 +74,14 @@ namespace Lexplosion.Logic.Network
                 {
                     Socket.Select(listeningSokets, null, null, -1); //слушаем все сокеты
                 }
-                catch (ArgumentNullException e)
+                catch (ArgumentNullException)
                 {
-                    threadReset.WaitOne(); //ждём первого подключения
+                    SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
 
                     continue;
                 }
-                catch (SocketException e)
+                catch (SocketException)
                 {
                     Console.WriteLine("SendingSocketException");
                     // TODO: тут что-то придумать
@@ -141,8 +141,8 @@ namespace Lexplosion.Logic.Network
 
         protected override void Reading() //данные из сети отправляем майнкрафту
         {
-            threadResetReading.WaitOne(); //ждём первого подключения
-            threadResetReading.Set();
+            ReadingWait.WaitOne(); //ждём первого подключения
+            ReadingWait.Set();
 
             while (IsWork)
             {

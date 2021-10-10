@@ -16,6 +16,7 @@ using System.Windows;
 using System.Linq;
 using Lexplosion.Logic.Management;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Diagnostics;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -68,6 +69,48 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch { }
         }
+
+        public static bool InstallFile(string url, string fileName, string path)
+        {
+            try
+            {
+                if (!Directory.Exists(directory + path))
+                {
+                    Directory.CreateDirectory(directory + path);
+                }
+                using (WebClient wc = new WebClient())
+                {
+                    DelFile(directory + "/temp/" + fileName);
+                    wc.DownloadFile(url, directory + "/temp/" + fileName);
+                    File.Move(directory + "/temp/" + fileName, directory + "/" + path + "/" + fileName);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool DownloadFile(string url, string fileName)
+        {
+            try
+            {
+                using (WebClient wc = new WebClient())
+                {
+                    DelFile(directory + "/temp/" + fileName);
+                    wc.DownloadFile(url, directory + "/temp/" + fileName);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static void DropLastUpdates(string instanceId)
         {
             try
@@ -324,7 +367,6 @@ namespace Lexplosion.Logic.FileSystem
                         int ver = 0;
                         Int32.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
                         updates["libraries"] = ver;
-
                     }
                 }
                 catch
@@ -357,9 +399,20 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    foreach (string lib in filesInfo.libraries.Keys) //ищем недостающие файлы
+                    // получем файл, в ктором хранятси список либрариесов, которые удачно скачались в прошлый раз
+                    List<string> downloadedFiles = new List<string>();
+                    string downloadedInfoAddr = directory + "/versions/libraries/" + GetLibName(instanceId, filesInfo.version) + "-downloaded.json";
+                    bool fileExided = false;
+                    if (File.Exists(downloadedInfoAddr))
                     {
-                        if (!File.Exists(directory + "/libraries/" + lib))
+                        downloadedFiles = GetFile<List<string>>(downloadedInfoAddr);
+                        fileExided = true;
+                    }
+
+                    //ищем недостающие файлы
+                    foreach (string lib in filesInfo.libraries.Keys) 
+                    {
+                        if ((downloadedFiles == null && fileExided) || !File.Exists(directory + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
                         {
                             updatesList.Libraries[lib] = filesInfo.libraries[lib];
                         }
@@ -685,42 +738,135 @@ namespace Lexplosion.Logic.FileSystem
 
             //скачиваем libraries
             folders = null;
-            string ff;
-            foreach (string lib in updateList.Libraries.Keys)
-            {
-                if (updateList.Libraries[lib].url == null)
-                    addr = LaunсherSettings.URL.Upload + "libraries/";
-                else
-                    addr = updateList.Libraries[lib].url;
-
-                folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                ff = lib.Replace(folders[folders.Length - 1], "");
-
-                bool isDownload;
-                if (updateList.Libraries[lib].notArchived)
-                {
-                    isDownload = DownloadJarLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
-                }
-                else
-                {
-                    isDownload = DownloadLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
-                }
-
-                if (isDownload)
-                {
-                    //UpdateProgressBar();
-                }
-                else
-                {
-                    errors.Add("libraries/" + lib);
-                    DelFile(directory + "/libraries/" + lib);
-                }
-
-            }
+            List<string> executedMethods = new List<string>();
+            List<string> downloadedLibs = new List<string>(); // сюда мы пихаем файлы, которые удачно скачались. При каждом удачном скачивании сохраняем список в файл. Если все файлы скачались удачно - удаляем этот список
+            string downloadedLibsAddr = directory + "/versions/libraries/" + GetLibName(instanceId, filesList.version) + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
 
             if (updateList.Libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
             {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesList.version) + ".lver", filesList.version.librariesLastUpdate.ToString()); 
+                SaveFile(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesList.version) + ".lver", filesList.version.librariesLastUpdate.ToString());
+            }
+
+            foreach (string lib in updateList.Libraries.Keys)
+            {                
+                if (updateList.Libraries[lib].obtainingMethod == null)
+                {
+                    if (updateList.Libraries[lib].url == null)
+                    {
+                        addr = LaunсherSettings.URL.Upload + "libraries/";
+                    }
+                    else
+                    {
+                        addr = updateList.Libraries[lib].url;
+                    }
+
+                    folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    string ff = lib.Replace(folders[folders.Length - 1], "");
+
+                    bool isDownload;
+                    if (updateList.Libraries[lib].notArchived)
+                    {
+                        isDownload = DownloadJarLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
+                    }
+                    else
+                    {
+                        isDownload = DownloadLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
+                    }
+
+                    if (isDownload)
+                    {
+                        //UpdateProgressBar();
+                        downloadedLibs.Add(lib);
+                        SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
+                    }
+                    else
+                    {
+                        errors.Add("libraries/" + lib);
+                        DelFile(directory + "/libraries/" + lib);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        List<List<string>> obtainingMethod = updateList.Libraries[lib].obtainingMethod; // получаем метод
+
+                        if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
+                        {
+                            int i = 1; //начинаем цикл с первого элемента, т.к нулевой - название метода
+                            while (i < obtainingMethod.Count) 
+                            {
+                                // получаем команду и выполняем её
+                                switch (obtainingMethod[i][0])
+                                {
+                                    case "downloadFile":
+                                        if (!DownloadFile(obtainingMethod[i][1], obtainingMethod[i][2]))
+                                        {
+                                            goto EndWhile; //возникла ошибка
+                                        }
+                                        break;
+                                    case "unzipFile":
+                                        ZipFile.ExtractToDirectory(directory + "/temp/" + obtainingMethod[i][1], directory + "/temp/" + obtainingMethod[i][2]);
+                                        break;
+                                    case "startProcess":
+                                        Utils.ProcessExecutor executord;
+                                        string processExecutord = obtainingMethod[i][1];
+
+                                        if (processExecutord == "java")
+                                        {
+                                            executord = Utils.ProcessExecutor.Java;
+                                        }
+                                        else if (processExecutord == "cmd")
+                                        {
+                                            executord = Utils.ProcessExecutor.Cmd;
+                                        }
+                                        else
+                                        {
+                                            goto EndWhile; //возникла ошибка
+                                        }
+
+                                        string command = obtainingMethod[i][2];
+                                        command = command.Replace("{DIR}", directory);
+                                        command = command.Replace("{MINECRAFT_JAR}", directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name);
+                                        if (!Utils.StartProcess(command, executord))
+                                        {
+                                            errors.Add("libraries/" + lib);
+                                            goto EndWhile; //возникла ошибка
+                                        }
+
+                                        break;
+
+                                    case "moveFile":
+                                        File.Move(obtainingMethod[i][2].Replace("{DIR}", directory), obtainingMethod[i][1].Replace("{DIR}", directory));
+                                        break;
+                                }
+                                i++;
+                            }
+                        }
+
+                        //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
+                        EndWhile: executedMethods.Add(obtainingMethod[0][0]);
+                        if (!File.Exists(directory + "/libraries/" + lib))
+                        {
+                            errors.Add("libraries/" + lib);
+                        }
+                        else
+                        {
+                            downloadedLibs.Add(lib);
+                            SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
+                        }
+                    }
+                    catch
+                    {
+                        errors.Add("libraries/" + lib);
+                    }
+                }
+            }
+
+            if(downloadedLibs.Count == updateList.Libraries.Count)
+            {
+                //все либрариесы скачались удачно. Удаляем файл
+                DelFile(downloadedLibsAddr);
             }
 
             //скачиваем assets
@@ -1175,29 +1321,6 @@ namespace Lexplosion.Logic.FileSystem
             {
                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
             });
-        }
-
-        public static bool DownloadFile(string url, string fileName, string path)
-        {
-            try
-            {
-                if (!Directory.Exists(directory + path))
-                {
-                    Directory.CreateDirectory(directory + path);
-                }
-                using (WebClient wc = new WebClient())
-                {
-                    DelFile(directory + "/temp/" + fileName);
-                    wc.DownloadFile(url, directory + "/temp/" + fileName);
-                    File.Move(directory + "/temp/" + fileName, directory + "/" + path + "/" + fileName);
-                }
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         public static CurseforgeInstance.InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles)

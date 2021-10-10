@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Lexplosion.Global;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -23,6 +25,12 @@ namespace Lexplosion.Logic.Management
             UdpTableBasic,
             UdpTableOwnerPid,
             UdpTableOwnerModule
+        }
+
+        public enum ProcessExecutor
+        {
+            Java,
+            Cmd
         }
 
         public struct UdpRowOwnerPid
@@ -105,6 +113,41 @@ namespace Lexplosion.Logic.Management
             }
 
             return data;
+        }
+
+        public static bool StartProcess(string command, ProcessExecutor executor)
+        {
+            string fileName = "";
+
+            if (executor == ProcessExecutor.Cmd)
+            {
+                fileName = "cmd.exe";
+                command = "/C " + command;
+            }
+            else if (executor == ProcessExecutor.Java)
+            {
+                fileName = UserData.settings["javaPath"];
+            }
+            else
+            {
+                return false;
+            }
+
+            try
+            {
+                Process process = new Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = fileName;
+                process.StartInfo.Arguments = command;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.WorkingDirectory = UserData.settings["gamePath"];
+                process.Start();
+                return process.WaitForExit(300000); // ждём 5 минут
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

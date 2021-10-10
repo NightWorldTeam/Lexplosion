@@ -91,7 +91,8 @@ namespace Lexplosion.Logic.Network
                                     libraries[lib] = new LibInfo
                                     {
                                         notArchived = filesData.libraries[lib].notArchived,
-                                        url = filesData.libraries[lib].url
+                                        url = filesData.libraries[lib].url,
+                                        obtainingMethod = filesData.libraries[lib].obtainingMethod
                                     };
                                 }
                             }

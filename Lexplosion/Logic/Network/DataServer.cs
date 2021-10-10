@@ -41,7 +41,7 @@ namespace Lexplosion.Logic.Network
 
         protected override void Sending()
         {
-            threadReset.WaitOne(); //ждём первого подключения
+            SendingWait.WaitOne(); //ждём первого подключения
 
             while (IsWork)
             {
@@ -71,8 +71,8 @@ namespace Lexplosion.Logic.Network
 
         protected override void Reading() 
         {
-            threadResetReading.WaitOne(); //ждём первого подключения
-            threadResetReading.Set();
+            ReadingWait.WaitOne(); //ждём первого подключения
+            ReadingWait.Set();
 
             while (IsWork)
             {

@@ -229,7 +229,7 @@ namespace Lexplosion.Logic.Network
                             return false;
                     }
 
-                    return WithDirectory.DownloadFile(fileUrl, fileName, path + folderName);
+                    return WithDirectory.InstallFile(fileUrl, fileName, path + folderName);
                 }
 
                 return false;

@@ -70,7 +70,7 @@ namespace Lexplosion.Logic.Network
         }
 
         // этот метод срабатывает при подключении клиента
-        public void AcceptHandler(IAsyncResult data)
+        private void AcceptHandler(IAsyncResult data)
         {
             AcceptingBlock.WaitOne();
 
@@ -90,7 +90,7 @@ namespace Lexplosion.Logic.Network
 
                 // TODO: тут проверить тот ли клиент подключился
                 string serverUUID = AvailableServers[listener];
-                base.Initialization(UUID, ((IPEndPoint)listener.LocalEndPoint).Port, serverUUID);
+                base.Initialization(UUID, serverUUID);
 
                 Socket serverSimulator_ = listener.EndAccept(data);
                 ServerSimulator = serverSimulator_;

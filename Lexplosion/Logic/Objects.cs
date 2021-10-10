@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
-namespace Lexplosion.Logic.Objects
+namespace Lexplosion.Logic.Objects // TODO: позаменять классы на структуры
 {
     class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
     {
@@ -17,6 +17,7 @@ namespace Lexplosion.Logic.Objects
     {
         public bool notArchived;
         public string url;
+        public List<List<string>> obtainingMethod;
     }
 
     class VersionManifest
