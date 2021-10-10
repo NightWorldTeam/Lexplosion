@@ -24,7 +24,7 @@ namespace Lexplosion.Gui.UserControls
         Thickness Off = new Thickness(3, 3, 32, 3);
 
         SolidColorBrush OffColor = new SolidColorBrush(Color.FromRgb(128, 128, 128));
-        SolidColorBrush OnColor = new SolidColorBrush(Color.FromRgb(30, 175, 221));
+        SolidColorBrush OnColor = new SolidColorBrush(Color.FromRgb(22, 127, 252));
 
         private bool Toggled = false;
         

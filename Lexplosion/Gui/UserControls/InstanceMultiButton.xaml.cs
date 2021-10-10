@@ -50,7 +50,7 @@ namespace Lexplosion.Gui.UserControls
         /**
          * Colors when user Enter and Leave to button
          */
-        private readonly Color _mouseEnterColor = System.Windows.Media.Color.FromArgb(255, 44, 153, 194);
+        private readonly Color _mouseEnterColor = System.Windows.Media.Color.FromArgb(255, 22, 127, 252);
         private readonly Color _mouseLeaveColor = System.Windows.Media.Color.FromArgb(255, 21, 23, 25);
 
         /**

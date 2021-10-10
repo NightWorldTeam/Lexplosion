@@ -368,8 +368,8 @@
                     <Border Name="Border" 
                         CornerRadius="8"
                         Padding="2"
-                        BorderThickness="2"
-                        BorderBrush="#2c99c2"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
                         Background="#1f1f1f">
                         <Grid>
                             <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>

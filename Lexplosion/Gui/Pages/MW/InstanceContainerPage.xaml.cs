@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Windows;
+﻿using Lexplosion.Gui.UserControls;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
@@ -18,20 +19,28 @@ namespace Lexplosion.Gui.Pages.MW
 		public static InstanceContainerPage obj = null;
 
 		private MainWindow _mainWindow;
-		private bool _isInitializeInstance = false;
+		public bool _isInitializeInstance = false;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
 			InitializeComponent();
+			SearchBox searchBox = new SearchBox(this)
+			{
+				Margin = new Thickness(0, 14, 0, 0),
+				Width = 386,
+				HorizontalAlignment = HorizontalAlignment.Center
+			};
 			obj = this;
 			_mainWindow = mainWindow;
+			InstanceGrid.Children.Add(searchBox);
 			GetInitializeInstance();
 		}
 
-		private async void GetInitializeInstance()
+		public async void GetInitializeInstance()
 		{
 			await Task.Run(() => InitializeInstance());
 			_isInitializeInstance = true;
+			LoadingLable.Visibility = Visibility.Collapsed;
 		}
 
 		private void InitializeInstance()
@@ -73,46 +82,6 @@ namespace Lexplosion.Gui.Pages.MW
 				Height = new GridLength(150, GridUnitType.Pixel)
 			};
 			return rowDefinition;
-		}
-
-		private void MatchingResults(object sender, RoutedEventArgs e)
-		{
-			var last_request = "";
-			if (InstanceGrid.Children.Count > 1)
-			{
-				InstanceGrid.Children.RemoveRange(1, 10);
-			}
-
-			if (InstanceGrid.RowDefinitions.Count > 1)
-			{
-				InstanceGrid.RowDefinitions.RemoveRange(1, InstanceGrid.RowDefinitions.Count - 1);
-			}
-
-			if (SearchBox.Text.Length == 0)
-			{
-				if (!_isInitializeInstance)
-				{
-					InitializeInstance();
-				}
-			}
-			else
-			{
-				//if (last_request != SearchBox.Text || last_request == "") { 
-					last_request = SearchBox.Text;
-					_isInitializeInstance = false;
-					//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
-					List<OutsideInstance> instances = ManageLogic.GetOutsideInstances(InstanceType.Curseforge, 10, 0, ModpacksCategories.All, SearchBox.Text);
-					for (int j = 0; j < instances.ToArray().Length; j++)
-					{
-						BuildInstanceForm(instances[j].Id.ToString(), j + 1,
-							new Uri(instances[j].MainImageUrl),
-							instances[j].Name,
-							instances[j].Author,
-							instances[j].Description,
-							instances[j].Categories);
-					}
-				//}
-			}
 		}
 	}
 }

@@ -14,18 +14,18 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Border" CornerRadius="5" BorderThickness="0" Background="#2c99c2" BorderBrush="#1c91a6">
+                        <Border x:Name="Border" CornerRadius="5" BorderThickness="0" Background="#167FFC" BorderBrush="#1c91a6">
                             <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#2c99c8" />
-                                <Setter TargetName="Border" Property="Background" Value="#24b7d1"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#167FFC" />
+                                <Setter TargetName="Border" Property="Background" Value="#167FFC"/>
                                 <Setter Property="Foreground" Value="White"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="False">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#2c99c2" />
-                                <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#167FFC" />
+                                <Setter TargetName="Border" Property="Background" Value="#167FFC"/>
                                 <Setter Property="Foreground" Value="White"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -77,7 +77,7 @@
                         <BulletDecorator Background="Transparent" Margin="0,0,-3,6">
                             <BulletDecorator.Bullet>
                                 <Grid Width="15" Height="15" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                    <Border x:Name="Border" Background="Transparent" BorderBrush="#2c99c2" BorderThickness="2">
+                                    <Border x:Name="Border" Background="Transparent" BorderBrush="#167FFC" BorderThickness="2">
                                         <Path Visibility="Collapsed"
                                               Width="7"
                                               Height="7"
@@ -129,13 +129,13 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Foreground" Value="#b9b7b7"/>
-            <Setter Property="CaretBrush" Value="#2c99c2"/>
+            <Setter Property="CaretBrush" Value="#167FFC"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
                         <Border Name="Border" CornerRadius="2" Padding="2" BorderThickness="0,0,0,2">
                             <Border.BorderBrush>
-                                <SolidColorBrush Color="#2c99c2"/>
+                                <SolidColorBrush Color="#167FFC"/>
                             </Border.BorderBrush>
                             <Border.Background>
                                 <SolidColorBrush Color="Transparent"/>
@@ -191,9 +191,9 @@
 
         <Style x:Key="CPB" TargetType="{x:Type PasswordBox}">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="#2c99c2"/>
+            <Setter Property="BorderBrush" Value="#167FFC"/>
             <Setter Property="BorderThickness" Value="0,0,0,2"/>
-            <Setter Property="CaretBrush" Value="#2c99c2"/>
+            <Setter Property="CaretBrush" Value="#167FFC"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Foreground" Value="#b9b7b7"/>
