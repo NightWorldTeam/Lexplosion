@@ -19,9 +19,9 @@ namespace Lexplosion.Logic.Network
             ClientType = clientType;
         }
 
-        public virtual void Initialization(string UUID, int port, string serverUUID)
+        public virtual void Initialization(string UUID, string serverUUID)
         {
-            UdpClient bridgeUdp = new UdpClient(9655);
+            UdpClient bridgeUdp = new UdpClient(9655); // TODO: порт может быть занят
             Bridge = new SmpClient(bridgeUdp);
             Bridge.ClientClosing += Close;
 

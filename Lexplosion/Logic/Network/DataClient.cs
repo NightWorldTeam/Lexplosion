@@ -9,10 +9,11 @@ namespace Lexplosion.Logic.Network
     class DataClient : NetworkClient
     {
         const string clientType = "data-client"; // эта строка нужна при подключении к управляющему серверу
+        string UUID = "";
 
-        public DataClient() : base(clientType)
+        public DataClient(string uuid) : base(clientType)
         {
-
+            UUID = uuid;
         }
     }
 }

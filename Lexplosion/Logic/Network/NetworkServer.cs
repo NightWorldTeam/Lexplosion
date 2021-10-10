@@ -19,8 +19,8 @@ namespace Lexplosion.Logic.Network
         protected Semaphore AcceptingBlock; //блокировка во время приёма подключения
         protected Semaphore SendingBlock; //блокировка во время работы метода Sending
 
-        protected AutoResetEvent threadReset;
-        protected AutoResetEvent threadResetReading;
+        protected AutoResetEvent SendingWait;
+        protected AutoResetEvent ReadingWait;
 
         protected SmpServer Server;
         protected UdpClient ServerUdp;
@@ -34,8 +34,8 @@ namespace Lexplosion.Logic.Network
             AcceptingBlock = new Semaphore(1, 1);
             SendingBlock = new Semaphore(1, 1);
 
-            threadReset = new AutoResetEvent(false);
-            threadResetReading = new AutoResetEvent(false);
+            SendingWait = new AutoResetEvent(false);
+            ReadingWait = new AutoResetEvent(false);
 
             ServerUdp = new UdpClient(9654);
             Server = new SmpServer(ServerUdp);
@@ -139,8 +139,8 @@ namespace Lexplosion.Logic.Network
                         AvailableConnections.Add(point);
                         BeforeConnect(point);
 
-                        threadReset.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
-                        threadResetReading.Set();
+                        SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
+                        ReadingWait.Set();
                     }
                     else
                     {

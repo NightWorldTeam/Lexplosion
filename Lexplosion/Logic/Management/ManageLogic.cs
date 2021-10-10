@@ -197,8 +197,6 @@ namespace Lexplosion.Logic.Management
                     });*/
                 }
 
-                data = null;
-
                 //Gui.PageType.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
             }
         }
