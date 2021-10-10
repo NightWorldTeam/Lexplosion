@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="Lexplosion.Gui.UserControls.SearchBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="386">
+    <UserControl.Resources>
+        <Style x:Key="SearchButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="Border" BorderBrush="#131313" BorderThickness="0,1,1,1" 
+                                    CornerRadius="0,5,5,0" Background="{TemplateBinding Background}"/>
+                            <Path Width="27" 
+                                      Height="27" 
+                                      Stroke="#fff"
+                                      Fill="#fff"
+                                      Data="M26.9189 25.0593L18.154 16.2944C19.5142 14.5361 20.2499 12.3862 20.2499 10.125C20.2499 7.41822 19.1935 4.88023 17.2833 2.96661C15.3731 1.053 12.8283 0 10.125 0C7.42159 0 4.87685 1.05637 2.96661 2.96661C1.053 4.87685 0 7.41822 0 10.125C0 12.8283 1.05637 15.3731 2.96661 17.2833C4.87685 19.1969 7.41822 20.2499 10.125 20.2499C12.3862 20.2499 14.5327 19.5142 16.2911 18.1574L25.0559 26.9189C25.0816 26.9446 25.1121 26.965 25.1457 26.9789C25.1793 26.9928 25.2153 27 25.2516 27C25.288 27 25.324 26.9928 25.3576 26.9789C25.3912 26.965 25.4217 26.9446 25.4474 26.9189L26.9189 25.4508C26.9446 25.4251 26.965 25.3945 26.9789 25.361C26.9928 25.3274 27 25.2914 27 25.255C27 25.2187 26.9928 25.1827 26.9789 25.1491C26.965 25.1155 26.9446 25.085 26.9189 25.0593ZM15.4709 15.4709C14.0399 16.8986 12.1432 17.6849 10.125 17.6849C8.10671 17.6849 6.20997 16.8986 4.77898 15.4709C3.35136 14.0399 2.56499 12.1432 2.56499 10.125C2.56499 8.10671 3.35136 6.2066 4.77898 4.77898C6.20997 3.35136 8.10671 2.56499 10.125 2.56499C12.1432 2.56499 14.0433 3.34799 15.4709 4.77898C16.8986 6.20997 17.6849 8.10671 17.6849 10.125C17.6849 12.1432 16.8986 14.0433 15.4709 15.4709Z"/>
+                            <ContentPresenter />
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#141517"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SearchTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground" Value="LightGray"/>
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Background" Value="#151719" />
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="#131513" BorderThickness="1,1,0,1" CornerRadius="5,0,0,5"/>
+                            <ScrollViewer Margin="5" x:Name="PART_ContentHost"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="243"/> 
+            <ColumnDefinition Width="43"/> 
+            <ColumnDefinition Width="10"/> 
+            <ColumnDefinition Width="*"/> 
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.Column="0" 
+                 Width="243" 
+                 HorizontalAlignment="Left" 
+                 Style="{StaticResource SearchTextBox}" 
+                 x:Name="SearchTextBox"/>
+        <Button Width="43" 
+                Height="40"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                Grid.Column="1"
+                Background="#151519"
+                Click="SearchButton_Click"
+                x:Name="SearchButton"
+                Style="{StaticResource SearchButtonStyle}"/>
+
+        <ComboBox Grid.Column="3" Background="#131313">
+            <ComboBoxItem>NightWorld</ComboBoxItem>
+            <ComboBoxItem>CurseForge</ComboBoxItem>
+        </ComboBox>
+    </Grid>
+</UserControl>

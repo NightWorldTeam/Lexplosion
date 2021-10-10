@@ -151,6 +151,9 @@
     <Compile Include="Gui\UserControls\LeftPanel.xaml.cs">
       <DependentUpon>LeftPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UserControls\SearchBox.xaml.cs">
+      <DependentUpon>SearchBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\UserControls\SwitchButton.xaml.cs">
       <DependentUpon>SwitchButton.xaml</DependentUpon>
     </Compile>
@@ -280,6 +283,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\UserControls\LeftPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\UserControls\SearchBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
