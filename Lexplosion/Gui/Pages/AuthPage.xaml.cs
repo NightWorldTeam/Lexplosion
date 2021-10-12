@@ -61,22 +61,27 @@ namespace Lexplosion.Gui.Pages
                     return;
                 }
 
-                AuthCode code = ManageLogic.Auth(login, password, SaveMe.IsChecked == true);
+                var isChecked = SaveMe.IsChecked;
+                Lexplosion.Run.ThreadRun(delegate () { 
+                    AuthCode code = ManageLogic.Auth(login, password, isChecked is true);
 
-                switch (code)
-                {
-                    case AuthCode.Successfully:
-                        ChangeWindow(1);
-                        break;
+                    this.Dispatcher.Invoke(() => { 
+                        switch (code)
+                        {
+                            case AuthCode.Successfully:
+                                ChangeWindow(1);
+                                break;
 
-                    case AuthCode.DataError:
-                        SetMessageBox("Неверный логин или пароль!");
-                        break;
+                            case AuthCode.DataError:
+                                SetMessageBox("Неверный логин или пароль!");
+                                break;
 
-                    case AuthCode.NoConnect:
-                        SetMessageBox("Нет соединения с сервером!");
-                        break;
-                }
+                            case AuthCode.NoConnect:
+                                SetMessageBox("Нет соединения с сервером!");
+                                break;
+                        }
+                    });
+                });
             }
 
         }

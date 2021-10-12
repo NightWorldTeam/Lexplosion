@@ -1,21 +1,19 @@
 ﻿using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Pages.MW
 {
-	/// <summary>
-	/// Interaction logic for InstanceContainerPage.xaml
-	/// </summary>
-	public partial class InstanceContainerPage : Page
+    /// <summary>
+    /// Interaction logic for InstanceContainerPage.xaml
+    /// </summary>
+    public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
 
@@ -111,7 +109,6 @@ namespace Lexplosion.Gui.Pages.MW
 					List<OutsideInstance> instances = ManageLogic.GetOutsideInstances(selectedInstanceSource, pageSize, 0, ModpacksCategories.All, searchBoxText); ;
 					if (instances.Count > 0)
 					{
-						MessageBox.Show(selectedInstanceSource.ToString());
 						for (int j = 0; j < instances.ToArray().Length; j++)
 						{
 							BuildInstanceForm(instances[j].Id.ToString(), j + 1,
