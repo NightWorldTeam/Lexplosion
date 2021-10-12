@@ -147,6 +147,8 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string mainImage;
         public string author;
         public int version;
+        public string description;
+        public List<string> categories;
     }
 
     public class DataLibInfo : LibInfo

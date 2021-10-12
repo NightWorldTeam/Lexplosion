@@ -349,11 +349,11 @@ namespace Lexplosion.Logic.Management
                     {
                         OutsideInstance instanceInfo = new OutsideInstance()
                         {
-                            Name = nwInstances[nwModpack].name,
-                            Author = nwInstances[nwModpack].author,
-                            MainImageUrl = nwInstances[nwModpack].mainImage,
-                            Categories = new List<string>(),
-                            Description = "",
+                            Name = nwInstances[nwModpack].name ?? "Uncnown name",
+                            Author = nwInstances[nwModpack].author ?? "",
+                            MainImageUrl = nwInstances[nwModpack].mainImage, // TODO: url до картинке может быть битым и не только тут
+                            Categories = nwInstances[nwModpack].categories ?? new List<string>(),
+                            Description = nwInstances[nwModpack].description ?? "",
                             DownloadCount = 0,
                             Type = InstanceSource.Nightworld,
                             Id = nwModpack
