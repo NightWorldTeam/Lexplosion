@@ -1,6 +1,6 @@
 ﻿namespace Lexplosion
 {
-    enum ImportResult
+    public enum ImportResult
     {
         Successful,
         ZipFileError,
@@ -11,7 +11,7 @@
         DirectoryCreateError
     }
 
-    enum ExportResult
+    public enum ExportResult
     {
         Successful,
         TempPathError,
@@ -20,21 +20,21 @@
         ZipFileError
     }
 
-    enum AuthCode
+    public enum AuthCode
     {
         Successfully,
         DataError,
         NoConnect
     }
 
-    enum InstanceType
+    public enum InstanceSource
     {
         Nightworld,
-        Local,
-        Curseforge
+        Curseforge,
+        Local
     }
 
-    enum ModpacksCategories
+    public enum ModpacksCategories
     {
         All,
         Tech = 4472,
@@ -54,7 +54,7 @@
         Skyblock = 4736,
     }
 
-    enum InstanceInit
+    public enum InstanceInit
     {
         Successful,
         DownloadFilesError,

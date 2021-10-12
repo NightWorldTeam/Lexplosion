@@ -38,7 +38,6 @@
                     <ControlTemplate TargetType="{x:Type ComboBox}">
                         <Grid>
                             <ToggleButton x:Name="PART_ContentHost"
-                                          ContentTemplate="{}"
                                 Template="{StaticResource ComboBoxToggleButton}" 
                                 Grid.Column="2" 
                                 IsTabStop="False"

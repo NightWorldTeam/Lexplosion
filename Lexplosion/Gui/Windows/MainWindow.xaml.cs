@@ -19,7 +19,7 @@ namespace Lexplosion.Gui.Windows
         public string instanceId;
         public string instanceDescription;
         public string instanceAuthor;
-        public int curseforgeInstanceId;
+        public string outsideInstanceId;
         public Uri instanceLogoPath;
 
         private Dictionary<string, Page> Pages = new Dictionary<string, Page>();

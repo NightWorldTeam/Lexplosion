@@ -190,10 +190,11 @@
                 x:Name="SearchButton"
                 Style="{StaticResource SearchButtonStyle}"/>
 
-        <ComboBox x:Name="SelectInstanceTypeBox" Grid.Column="3" 
-                  Background="#131313" Height="40" VerticalAlignment="Top"
-                  SelectedIndex="1">
-            <ComboBoxItem>NightWorld</ComboBoxItem>
+        <ComboBox x:Name="SourceBox" Grid.Column="3" 
+                  Background="#131313" Height="30" VerticalAlignment="Top"
+                  Margin="0,5,0,0"
+                  SelectionChanged="SourceBox_SelectionChanged">
+            <ComboBoxItem >NightWorld</ComboBoxItem>
             <ComboBoxItem>CurseForge</ComboBoxItem>
         </ComboBox>
     </Grid>

@@ -47,7 +47,7 @@ namespace Lexplosion.Gui.UserControls
             public string InstanceAuthor;
             public string InstanceOverview;
 
-            public int CurseforgeInstanceId;
+            public string OutsideInstanceId;
 
             public Uri InstanceLogoPath;
 
@@ -86,7 +86,7 @@ namespace Lexplosion.Gui.UserControls
         public delegate void InstanceOpenedHandler();
         public static event InstanceOpenedHandler InstanceOpened;
 
-        public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, int curseforgeInstanceId,
+        public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, string outsideInstanceId,
             Uri instanceLogoPath, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
         {
             InitializeComponent();
@@ -97,7 +97,7 @@ namespace Lexplosion.Gui.UserControls
                 InstanceId = instanceId,
                 InstanceAuthor = instanceAuthor,
                 InstanceOverview = instanceOverview,
-                CurseforgeInstanceId = curseforgeInstanceId,
+                OutsideInstanceId = outsideInstanceId,
                 InstanceLogoPath = instanceLogoPath,
                 InstanceTags = instanceTags,
                 IsInstanceInstalled = isInstanceInstalled,
@@ -341,12 +341,12 @@ namespace Lexplosion.Gui.UserControls
             SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", upperButtonFunc, LowerButtonFunctions.PauseDownload);
             InstanceProgressBar.Visibility = Visibility.Visible;
 
-            if (instanceProperties.CurseforgeInstanceId != 0)
+            if (instanceProperties.OutsideInstanceId != "")
             {
-                MessageBox.Show(instanceProperties.CurseforgeInstanceId.ToString());
+                MessageBox.Show(instanceProperties.OutsideInstanceId.ToString());
                 string instanceId = ManageLogic.CreateInstance(
-                    instanceProperties.InstanceTitle, InstanceType.Curseforge, 
-                    "", "", instanceProperties.CurseforgeInstanceId.ToString()
+                    instanceProperties.InstanceTitle, InstanceSource.Curseforge, 
+                    "", "", instanceProperties.OutsideInstanceId.ToString()
                 );
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.UpdateInstance(instanceId);
@@ -356,12 +356,11 @@ namespace Lexplosion.Gui.UserControls
         private void LaunchInstance()
         {
             string instanceId = "test";
-                ManageLogic.СlientManager(instanceId);
+            ManageLogic.СlientManager(instanceId);
         }
 
         private void PauseInstance() 
         {
-
             InstanceProgressBar.Visibility = Visibility.Collapsed;
             InstallProgress.Visibility = Visibility.Hidden;
             SetupButtons("upper", MultiButtonProperties.GeometryDownloadIcon, -180, "Продолжить скачивание", UpperButtonFunctions.Download, lowerButtonFunc);

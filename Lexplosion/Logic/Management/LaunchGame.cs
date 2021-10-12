@@ -218,7 +218,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceType type, ManageLogic.ProgressHandlerDelegate progressHandler)
+        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceSource type, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
             InitData Error(InstanceInit init)
             {
@@ -248,13 +248,13 @@ namespace Lexplosion.Logic.Management
                     IPrototypeInstance instance;
                     switch (type)
                     {
-                        case InstanceType.Nightworld:
+                        case InstanceSource.Nightworld:
                             instance = new NightworldIntance(instanceId, !autoUpdate, progressHandler);
                             break;
-                        case InstanceType.Local:
+                        case InstanceSource.Local:
                             instance = new LocalInstance(instanceId);
                             break;
-                        case InstanceType.Curseforge:
+                        case InstanceSource.Curseforge:
                             instance = new CurseforgeInstance(instanceId, !autoUpdate, progressHandler);
                             break;
                         default:

@@ -70,7 +70,7 @@ namespace Lexplosion.Logic.Management
             foreach (string instance in UserData.Instances.List.Keys)
             {
                 //получаем внешние айдишники всех не локальных модпаков
-                if(UserData.Instances.List[instance].Type != InstanceType.Local)
+                if(UserData.Instances.List[instance].Type != InstanceSource.Local)
                 {
                     InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
                     if (data != null && data.id != null)
@@ -98,18 +98,18 @@ namespace Lexplosion.Logic.Management
         {
             Lexplosion.Run.ThreadRun(delegate ()
             {
-                InstanceType type = UserData.Instances.List[instanceId].Type;
+                InstanceSource type = UserData.Instances.List[instanceId].Type;
                 IPrototypeInstance instance;
 
                 switch (type)
                 {
-                    case InstanceType.Nightworld:
+                    case InstanceSource.Nightworld:
                         instance = new NightworldIntance(instanceId, false, ProgressHandler);
                         break;
-                    case InstanceType.Local:
+                    case InstanceSource.Local:
                         instance = new LocalInstance(instanceId);
                         break;
-                    case InstanceType.Curseforge:
+                    case InstanceSource.Curseforge:
                         instance = new CurseforgeInstance(instanceId, false, ProgressHandler);
                         break;
                     default:
@@ -147,7 +147,7 @@ namespace Lexplosion.Logic.Management
             }
 
             LaunchGame.runnigInstance = instanceId;
-            InstanceType type = UserData.Instances.List[instanceId].Type;
+            InstanceSource type = UserData.Instances.List[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
 
@@ -170,7 +170,7 @@ namespace Lexplosion.Logic.Management
                 Run(instanceId, type);
             });
 
-            void Run(string initModPack, InstanceType instype)
+            void Run(string initModPack, InstanceSource instype)
             {
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
                 InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, ProgressHandler);
@@ -256,7 +256,7 @@ namespace Lexplosion.Logic.Management
             return instanceId;
         }
 
-        public static bool ChckIntanceUpdates(string instanceId, InstanceType type)
+        public static bool ChckIntanceUpdates(string instanceId, InstanceSource type)
         {
             var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json");
             if(infoData == null || infoData.id == null)
@@ -266,7 +266,7 @@ namespace Lexplosion.Logic.Management
 
             switch (type)
             {
-                case InstanceType.Curseforge:
+                case InstanceSource.Curseforge:
                     if(!Int32.TryParse(infoData.id, out _))
                     {
                         return true;
@@ -288,7 +288,7 @@ namespace Lexplosion.Logic.Management
             return false;
         } 
 
-        public static string CreateInstance(string name, InstanceType type, string gameVersion, string forge, string externalId = "")
+        public static string CreateInstance(string name, InstanceSource type, string gameVersion, string forge, string externalId = "")
         {
             string instanceId = GenerateInstanceId(name);
 
@@ -311,7 +311,7 @@ namespace Lexplosion.Logic.Management
             };
             DataFilesManager.SaveManifest(instanceId, manifest);
 
-            if(type != InstanceType.Local)
+            if(type != InstanceSource.Local)
             {
                 var instanceData = new InstancePlatformData
                 {
@@ -324,7 +324,7 @@ namespace Lexplosion.Logic.Management
             return instanceId;
         }
 
-        public static List<OutsideInstance> GetOutsideInstances(InstanceType type, int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
+        public static List<OutsideInstance> GetOutsideInstances(InstanceSource type, int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
         {
             List<string> CategoriesListConverter(List<CurseforgeInstanceInfo.Category> categories)
             {
@@ -339,7 +339,7 @@ namespace Lexplosion.Logic.Management
 
             List<OutsideInstance> Instances = new List<OutsideInstance>();
 
-            if (type == InstanceType.Nightworld)
+            if (type == InstanceSource.Nightworld)
             {
                 Dictionary<string, NWInstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
                 int i = 0;
@@ -355,7 +355,7 @@ namespace Lexplosion.Logic.Management
                             Categories = new List<string>(),
                             Description = "",
                             DownloadCount = 0,
-                            Type = InstanceType.Nightworld,
+                            Type = InstanceSource.Nightworld,
                             Id = nwModpack
                         };
 
@@ -363,7 +363,7 @@ namespace Lexplosion.Logic.Management
 
                         if (instanceInfo.IsInstalled)
                         {
-                            instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[nwModpack]].Name, InstanceType.Nightworld);
+                            instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[nwModpack]].Name, InstanceSource.Nightworld);
                         }
 
                         Instances.Add(instanceInfo);
@@ -372,7 +372,7 @@ namespace Lexplosion.Logic.Management
                     i++;
                 }
             }
-            else if (type == InstanceType.Curseforge)
+            else if (type == InstanceSource.Curseforge)
             {
                 List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, index, ModpacksCategories.All, searchFilter);
                 foreach (var instance in curseforgeInstances)
@@ -385,7 +385,7 @@ namespace Lexplosion.Logic.Management
                         Categories = CategoriesListConverter(instance.categories),
                         Description = instance.summary,
                         DownloadCount = instance.downloadCount,
-                        Type = InstanceType.Curseforge,
+                        Type = InstanceSource.Curseforge,
                         Id = instance.id.ToString()
                     };
 
@@ -393,7 +393,7 @@ namespace Lexplosion.Logic.Management
 
                     if (instanceInfo.IsInstalled)
                     {
-                        instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[instance.id.ToString()]].Name, InstanceType.Curseforge);
+                        instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[instance.id.ToString()]].Name, InstanceSource.Curseforge);
                     }
 
                     Instances.Add(instanceInfo);

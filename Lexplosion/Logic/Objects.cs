@@ -122,7 +122,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
 
     class OutsideInstance
     {
-        public InstanceType Type;
+        public InstanceSource Type;
         public bool UpdateAvailable;
         public bool IsInstalled;
         public string Name;

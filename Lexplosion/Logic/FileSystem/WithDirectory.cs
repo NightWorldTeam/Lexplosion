@@ -1250,7 +1250,7 @@ namespace Lexplosion.Logic.FileSystem
                 instanceInfo["forgeVersion"] = "";
             }
 
-            string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceType.Local, instanceInfo["gameVersion"], instanceInfo["forgeVersion"]);
+            string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceSource.Local, instanceInfo["gameVersion"], instanceInfo["forgeVersion"]);
             MessageBox.Show(instanceId);
 
             string addr = dir + "files/";

@@ -145,11 +145,11 @@
     <Compile Include="Gui\UserControls\InstanceForm.xaml.cs">
       <DependentUpon>InstanceForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\UserControls\InstanceMultiButton.xaml.cs">
-      <DependentUpon>InstanceMultiButton.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Gui\UserControls\LeftPanel.xaml.cs">
       <DependentUpon>LeftPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\UserControls\Paginator.xaml.cs">
+      <DependentUpon>Paginator.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\UserControls\SearchBox.xaml.cs">
       <DependentUpon>SearchBox.xaml</DependentUpon>
@@ -279,11 +279,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\UserControls\InstanceMultiButton.xaml">
+    <Page Include="Gui\UserControls\LeftPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\UserControls\LeftPanel.xaml">
+    <Page Include="Gui\UserControls\Paginator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

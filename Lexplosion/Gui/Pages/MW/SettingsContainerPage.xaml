@@ -263,7 +263,7 @@
                     Margin="73,288,194,176" TextChanged="InstanceFolderPath_TextChanged"/>
                 <Button x:Name="OpenFolderBrowserButton"
                     Style="{StaticResource FolderBrowerButton}"
-                    Content="Проводник"
+                    Content="Обзор"
                     Height="38"
                     Click="OpenFolderBrowser"
                     Margin="491,288,128,177"/>

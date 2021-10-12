@@ -19,7 +19,7 @@
                     <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
                 <!-- Grid Border Padding-->
-                <TextBlock x:Name="LoadingLable" 
+                <TextBlock x:Name="LoadingLabel" 
                            Text="Идёт загрузка. Пожалуйста подождите..." 
                            Foreground="DarkGray"
                            FontStyle="Italic"
