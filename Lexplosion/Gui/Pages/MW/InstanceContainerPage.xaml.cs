@@ -20,6 +20,7 @@ namespace Lexplosion.Gui.Pages.MW
 		private MainWindow _mainWindow;
 		public bool _isInitializeInstance = false;
 		private SearchBox searchBox;
+		private Paginator paginator;
 		private int pageSize = 10;
 
 		public InstanceContainerPage(MainWindow mainWindow)
@@ -31,6 +32,9 @@ namespace Lexplosion.Gui.Pages.MW
 				Width = 400,
 				HorizontalAlignment = HorizontalAlignment.Center
 			};
+
+			paginator = new Paginator();
+
 			obj = this;
 			_mainWindow = mainWindow;
 			InstanceGrid.Children.Add(searchBox);
@@ -44,19 +48,24 @@ namespace Lexplosion.Gui.Pages.MW
 			ChangeLoadingLabel("", Visibility.Collapsed);
 		}
 
-		private void InitializeInstance(InstanceSource instanceSource)
+		private void InitializeInstance(InstanceSource instanceSource, int pageIndex=0, string searchBoxText="")
 		{
-			List<OutsideInstance> instances = ManageLogic.GetOutsideInstances(instanceSource, pageSize, 0, ModpacksCategories.All);
-			for (int j = 0; j < instances.ToArray().Length; j++)
-			{
-				// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
-				// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
-				BuildInstanceForm(instances[j].Id, j + 1,
-					new Uri(instances[j].MainImageUrl),
-					instances[j].Name,
-					instances[j].Author,
-					instances[j].Description,
-					instances[j].Categories);
+			var instances = ManageLogic.GetOutsideInstances(instanceSource, pageSize, 0, ModpacksCategories.All, searchBoxText);
+			if (instances.Count == 0) 
+				ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
+			else { 
+				for (int j = 0; j < instances.ToArray().Length; j++)
+				{
+					// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
+					// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
+					BuildInstanceForm(instances[j].Id.ToString(), j + 1,
+						new Uri(instances[j].MainImageUrl),
+						instances[j].Name,
+						instances[j].Author,
+						instances[j].Description,
+						instances[j].Categories);
+					ChangeLoadingLabel("", Visibility.Collapsed);
+				}
 			}
 		}
 
@@ -94,7 +103,6 @@ namespace Lexplosion.Gui.Pages.MW
 			var selectedInstanceSource = (InstanceSource)sourceBoxSelectedIndex;
 
 			if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(2, 10);
-
 			if (InstanceGrid.RowDefinitions.Count > 2)
 				InstanceGrid.RowDefinitions.RemoveRange(1, InstanceGrid.RowDefinitions.Count - 1);
 
@@ -105,25 +113,7 @@ namespace Lexplosion.Gui.Pages.MW
 				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
 				{
 					_isInitializeInstance = false;
-					//TODO: Вызывать функцию в LeftSideMenu, что вероянее всего уберёт задержку между auth и main window, а также уберёт перевызов из других страниц...
-					List<OutsideInstance> instances = ManageLogic.GetOutsideInstances(selectedInstanceSource, pageSize, 0, ModpacksCategories.All, searchBoxText); ;
-					if (instances.Count > 0)
-					{
-						for (int j = 0; j < instances.ToArray().Length; j++)
-						{
-							BuildInstanceForm(instances[j].Id.ToString(), j + 1,
-								new Uri(instances[j].MainImageUrl),
-								instances[j].Name,
-								instances[j].Author,
-								instances[j].Description,
-								instances[j].Categories);
-							ChangeLoadingLabel(loadingLableText, Visibility.Collapsed);
-						}
-					}
-					else
-					{
-						ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
-					}
+					InitializeInstance(selectedInstanceSource, paginator.pageIndex, searchBoxText);
 
 					searchBox.LastRequest = searchBoxText;
 					searchBox.LastSelectedIndex = sourceBoxSelectedIndex;

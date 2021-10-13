@@ -20,9 +20,12 @@ namespace Lexplosion.Gui.UserControls
     /// </summary>
     public partial class Paginator : UserControl
     {
+        public int pageIndex;
+
         public Paginator()
         {
             InitializeComponent();
+            pageIndex = 0;
         }
     }
 }

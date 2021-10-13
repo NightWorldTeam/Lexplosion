@@ -324,7 +324,7 @@ namespace Lexplosion.Logic.Management
             return instanceId;
         }
 
-        public static List<OutsideInstance> GetOutsideInstances(InstanceSource type, int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
+        public static List<OutsideInstance> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
             List<string> CategoriesListConverter(List<CurseforgeInstanceInfo.Category> categories)
             {
@@ -345,7 +345,7 @@ namespace Lexplosion.Logic.Management
                 int i = 0;
                 foreach (string nwModpack in nwInstances.Keys)
                 {
-                    if (i >= pageSize * index)
+                    if (i >= pageSize * pageIndex)
                     {
                         OutsideInstance instanceInfo = new OutsideInstance()
                         {
@@ -374,7 +374,7 @@ namespace Lexplosion.Logic.Management
             }
             else if (type == InstanceSource.Curseforge)
             {
-                List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, index, ModpacksCategories.All, searchFilter);
+                List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex, ModpacksCategories.All, searchFilter);
                 foreach (var instance in curseforgeInstances)
                 {
                     OutsideInstance instanceInfo = new OutsideInstance()
