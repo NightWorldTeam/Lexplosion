@@ -37,6 +37,28 @@ namespace Lexplosion.Logic.Network
             catch { return false; }
         }
 
+        public static List<MCVersionInfo> GetVersionsList()
+        {
+            try
+            {
+                string answer = HttpGet(LaunсherSettings.URL.VersionsData);
+                if(answer != null)
+                {
+                    List<MCVersionInfo> data = JsonConvert.DeserializeObject<List<MCVersionInfo>>(answer);
+                    return data ?? new List<MCVersionInfo>(); ;
+                }
+                else
+                {
+                    return new List<MCVersionInfo>();
+                }
+            }
+            catch
+            {
+                return new List<MCVersionInfo>();
+            }
+
+        }
+
         //функция получает манифест для майкрафт версии
         public static VersionManifest GetVersionManifest(string version, string forgeVersion = "")
         {

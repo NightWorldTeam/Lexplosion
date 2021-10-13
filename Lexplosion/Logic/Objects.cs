@@ -156,4 +156,10 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string os;
     }
 
+    public struct MCVersionInfo
+    {
+        public string type;
+        public string id;
+    }
+
 }
