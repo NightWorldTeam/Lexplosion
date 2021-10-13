@@ -90,7 +90,17 @@ namespace Lexplosion.Logic.Management
                     byte[] imageBytes;
                     using (var webClient = new WebClient())
                     {
-                        imageBytes = webClient.DownloadData(instance.attachments[0].thumbnailUrl);
+                        string url = instance.attachments[0].thumbnailUrl;
+                        foreach(var attachment in instance.attachments)
+                        {
+                            if (attachment.isDefault)
+                            {
+                                url = attachment.thumbnailUrl;
+                                break;
+                            }
+                        }
+
+                        imageBytes = webClient.DownloadData(url);
                     }
 
                     OutsideInstance instanceInfo = new OutsideInstance()

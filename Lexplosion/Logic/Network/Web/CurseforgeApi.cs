@@ -40,7 +40,6 @@ namespace Lexplosion.Logic.Network
                 {
                     url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
                 }
-
                 string answer;
 
                 WebRequest req = WebRequest.Create(url);
