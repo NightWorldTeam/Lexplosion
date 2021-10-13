@@ -175,11 +175,12 @@
             <ColumnDefinition Width="10"/> 
             <ColumnDefinition Width="*"/> 
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" 
-                 Width="243" 
-                 HorizontalAlignment="Left" 
-                 Style="{StaticResource SearchTextBox}" 
-                 x:Name="SearchTextBox"/>
+        <TextBox x:Name="SearchTextBox" 
+            Grid.Column="0" 
+            Width="243" 
+            HorizontalAlignment="Left" 
+            PreviewKeyDown="SearchTextBox_PreviewKeyDown"
+            Style="{StaticResource SearchTextBox}" />
         <Button Width="43" 
                 Height="40"
                 VerticalAlignment="Top"

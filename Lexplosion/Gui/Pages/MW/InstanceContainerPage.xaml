@@ -8,25 +8,30 @@
       Title="InstanceContainerPage">
 
     <Grid x:Name="MainGrid" Focusable="False">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" x:Name="ContainerPage_ScrollViewer">
             <ScrollViewer.Background>
                 <!-- #1313131 0.8-->
                 <!-- "Black" 0.64 -->
                 <SolidColorBrush Color="#121212" Opacity="0.65"/>
             </ScrollViewer.Background>
-            <Grid ShowGridLines="False" x:Name="InstanceGrid" Margin="0, 0, 0, 0">
+            <Grid x:Name="ControlElementsGrid" ShowGridLines="False">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
-                <!-- Grid Border Padding-->
-                <TextBlock x:Name="LoadingLabel" 
-                           Text="Идёт загрузка. Пожалуйста подождите..." 
-                           Foreground="DarkGray"
-                           FontStyle="Italic"
-                           TextAlignment="Center"
-                           FontSize="22"
-                           Margin="110,71,110,-45.2"
-                           Visibility="Visible" Height="35" Width="480"/>
+                <Grid ShowGridLines="False" x:Name="InstanceGrid" Grid.Row="1" Margin="0, 0, 0, 0">
+                    <TextBlock x:Name="LoadingLabel" 
+                               Text="Идёт загрузка. Пожалуйста подождите..." 
+                               Foreground="DarkGray"
+                               FontStyle="Italic"
+                               TextAlignment="Center"
+                               FontSize="22"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Top"
+                               Margin="0,30,0,0"
+                               Visibility="Visible" Height="35" Width="480"/>
+                </Grid>
             </Grid>
         </ScrollViewer>
     </Grid>

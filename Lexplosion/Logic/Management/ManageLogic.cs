@@ -374,7 +374,7 @@ namespace Lexplosion.Logic.Management
             }
             else if (type == InstanceSource.Curseforge)
             {
-                List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex, ModpacksCategories.All, searchFilter);
+                List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex*pageSize, ModpacksCategories.All, searchFilter);
                 foreach (var instance in curseforgeInstances)
                 {
                     OutsideInstance instanceInfo = new OutsideInstance()

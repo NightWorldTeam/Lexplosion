@@ -13,19 +13,52 @@ namespace Lexplosion.Gui.Pages.MW
     /// <summary>
     /// Interaction logic for InstanceContainerPage.xaml
     /// </summary>
+	/// 
+	
+
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
     public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
 
 		private MainWindow _mainWindow;
 		public bool _isInitializeInstance = false;
-		private SearchBox searchBox;
+		public SearchBox searchBox;
 		private Paginator paginator;
 		private int pageSize = 10;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
 			InitializeComponent();
+
+			obj = this;
+			_mainWindow = mainWindow;
+
+			InitializeControlElements();
+			GetInitializeInstance(InstanceSource.Curseforge);
+		}
+
+		private void InitializeControlElements() 
+		{
 			searchBox = new SearchBox(this)
 			{
 				Margin = new Thickness(0, 14, 0, 0),
@@ -33,12 +66,14 @@ namespace Lexplosion.Gui.Pages.MW
 				HorizontalAlignment = HorizontalAlignment.Center
 			};
 
-			paginator = new Paginator();
+			paginator = new Paginator(this);
+			paginator.Visibility = Visibility.Hidden;
 
-			obj = this;
-			_mainWindow = mainWindow;
-			InstanceGrid.Children.Add(searchBox);
-			GetInitializeInstance(InstanceSource.Curseforge);
+			Grid.SetRow(searchBox, 0);
+			Grid.SetRow(paginator, 2);
+
+			ControlElementsGrid.Children.Add(searchBox);
+			ControlElementsGrid.Children.Add(paginator);
 		}
 
 		public async void GetInitializeInstance(InstanceSource instanceSource)
@@ -50,15 +85,22 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance(InstanceSource instanceSource, int pageIndex=0, string searchBoxText="")
 		{
-			var instances = ManageLogic.GetOutsideInstances(instanceSource, pageSize, 0, ModpacksCategories.All, searchBoxText);
-			if (instances.Count == 0) 
-				ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
-			else { 
+			var instances = ManageLogic.GetOutsideInstances(
+				instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
+			);
+			
+			this.Dispatcher.Invoke(() => { 
+				if (instances.Count < 10) paginator.Visibility = Visibility.Hidden;
+				else paginator.Visibility = Visibility.Visible;
+			});
+
+			if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
+			else {
 				for (int j = 0; j < instances.ToArray().Length; j++)
 				{
 					// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
 					// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
-					BuildInstanceForm(instances[j].Id.ToString(), j + 1,
+					BuildInstanceForm(instances[j].Id.ToString(), j,
 						new Uri(instances[j].MainImageUrl),
 						instances[j].Name,
 						instances[j].Author,
@@ -75,23 +117,35 @@ namespace Lexplosion.Gui.Pages.MW
 		{
 			this.Dispatcher.Invoke(() =>
 			{
-				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
+				if (InstanceGrid.RowDefinitions.Count < 10)
+				{ InstanceGrid.RowDefinitions.Add(GetRowDefinition()); }
 				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
 					_mainWindow, title, "", author, overview, instanceId, logoPath, tags, false, false
 				);
-				// Добавление в Столбики и Колноки в форме.
+
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);
 			});
 		}
 
-		private RowDefinition GetRowDefinition()
+		private RowDefinition GetRowDefinition(int height=150)
 		{
 			RowDefinition rowDefinition = new RowDefinition()
 			{
-				Height = new GridLength(150, GridUnitType.Pixel)
+				Height = new GridLength(height, GridUnitType.Pixel)
 			};
 			return rowDefinition;
+		}
+
+		public void ChangePage() 
+		{
+			var selectedInstanceSource = (InstanceSource)searchBox.SourceBox.SelectedIndex;
+			var searchBoxText = searchBox.SearchTextBox.Text;
+
+			ClearGrid();
+			// TODO: Добавить анимация для скрола.
+			ContainerPage_ScrollViewer.ScrollToVerticalOffset(0.0);
+			InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
 		}
 
 		public void SearchInstances()
@@ -102,9 +156,7 @@ namespace Lexplosion.Gui.Pages.MW
 			var loadingLableText = LoadingLabel.Text;
 			var selectedInstanceSource = (InstanceSource)sourceBoxSelectedIndex;
 
-			if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(2, 10);
-			if (InstanceGrid.RowDefinitions.Count > 2)
-				InstanceGrid.RowDefinitions.RemoveRange(1, InstanceGrid.RowDefinitions.Count - 1);
+			ClearGrid();
 
 			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 
@@ -113,8 +165,7 @@ namespace Lexplosion.Gui.Pages.MW
 				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
 				{
 					_isInitializeInstance = false;
-					InitializeInstance(selectedInstanceSource, paginator.pageIndex, searchBoxText);
-
+					InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
 					searchBox.LastRequest = searchBoxText;
 					searchBox.LastSelectedIndex = sourceBoxSelectedIndex;
 				}
@@ -132,6 +183,13 @@ namespace Lexplosion.Gui.Pages.MW
 				LoadingLabel.Text = content;
 				LoadingLabel.Visibility = visibility;
 			});
+		}
+
+		private void ClearGrid() 
+		{
+			if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(1, 10);
+			if (InstanceGrid.RowDefinitions.Count > 2)
+				InstanceGrid.RowDefinitions.RemoveRange(0, InstanceGrid.RowDefinitions.Count - 1);
 		}
 	}
 }
