@@ -12,6 +12,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using System.Threading;
 using Lexplosion.Gui.Windows;
+using System.Collections.Generic;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -75,6 +76,8 @@ namespace Lexplosion
             {
                 Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml")
             };
+
+            OutsideDataManager.DefineInstances();
 
             Thread.Sleep(1000);
             app.Dispatcher.Invoke(() =>

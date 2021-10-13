@@ -49,7 +49,7 @@ namespace Lexplosion.Gui.UserControls
 
             public string OutsideInstanceId;
 
-            public Uri InstanceLogoPath;
+            public BitmapImage Logo;
 
             public List<string> InstanceTags;
 
@@ -87,7 +87,7 @@ namespace Lexplosion.Gui.UserControls
         public static event InstanceOpenedHandler InstanceOpened;
 
         public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, string outsideInstanceId,
-            Uri instanceLogoPath, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
+            BitmapImage logo, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
         {
             InitializeComponent();
             this._mainWindow = mainWindow;
@@ -98,7 +98,7 @@ namespace Lexplosion.Gui.UserControls
                 InstanceAuthor = instanceAuthor,
                 InstanceOverview = instanceOverview,
                 OutsideInstanceId = outsideInstanceId,
-                InstanceLogoPath = instanceLogoPath,
+                Logo = logo,
                 InstanceTags = instanceTags,
                 IsInstanceInstalled = isInstanceInstalled,
                 IsInstanceAddedToLibrary = isInstanceAddedToLibrary,
@@ -123,7 +123,7 @@ namespace Lexplosion.Gui.UserControls
             /*
              * Setup Basic Data
              */
-            InstanceLogo_Background.Fill = new ImageBrush(new BitmapImage(instanceProperties.InstanceLogoPath));
+            InstanceLogo_Background.Fill = new ImageBrush(instanceProperties.Logo);
             TextBlockTitle.Text = instanceProperties.InstanceTitle;
             TextBlockAuthor.Text = instanceProperties.InstanceAuthor;
             TextBlockOverview.Text = instanceProperties.InstanceOverview;

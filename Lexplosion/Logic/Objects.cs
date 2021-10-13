@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects // TODO: позаменять классы на структуры
@@ -127,7 +128,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public bool IsInstalled;
         public string Name;
         public string Author;
-        public string MainImageUrl;
+        public byte[] MainImage;
         public List<string> Categories;
         public float DownloadCount;
         public string Description;

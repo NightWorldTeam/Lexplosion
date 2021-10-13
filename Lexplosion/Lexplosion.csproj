@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-  	<LangVersion>preview</LangVersion>
+    <LangVersion>preview</LangVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4DF9C4D2-E828-456F-872D-622EFD405D44}</ProjectGuid>
@@ -185,6 +185,7 @@
     <Compile Include="Logic\Management\IPrototypeInstance.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
     <Compile Include="Logic\Management\ManageLogic.cs" />
+    <Compile Include="Logic\Management\OutsideDataManager.cs" />
     <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />
     <Compile Include="Logic\Network\DataClient.cs" />

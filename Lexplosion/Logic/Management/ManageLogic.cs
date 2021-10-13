@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.Reflection;
 using System.Windows.Controls;
 using System.ComponentModel;
+using System.Threading;
 
 namespace Lexplosion.Logic.Management
 {
@@ -256,7 +257,7 @@ namespace Lexplosion.Logic.Management
             return instanceId;
         }
 
-        public static bool ChckIntanceUpdates(string instanceId, InstanceSource type)
+        public static bool CheckIntanceUpdates(string instanceId, InstanceSource type)
         {
             var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json");
             if(infoData == null || infoData.id == null)
@@ -322,85 +323,6 @@ namespace Lexplosion.Logic.Management
             }
 
             return instanceId;
-        }
-
-        public static List<OutsideInstance> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
-        {
-            List<string> CategoriesListConverter(List<CurseforgeInstanceInfo.Category> categories)
-            {
-                List<string> znfvrdfga = new List<string>();
-                foreach (var c in categories)
-                {
-                    znfvrdfga.Add(c.name);
-                }
-
-                return znfvrdfga;
-            }
-
-            List<OutsideInstance> Instances = new List<OutsideInstance>();
-
-            if (type == InstanceSource.Nightworld)
-            {
-                Dictionary<string, NWInstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
-                int i = 0;
-                foreach (string nwModpack in nwInstances.Keys)
-                {
-                    if (i >= pageSize * pageIndex)
-                    {
-                        OutsideInstance instanceInfo = new OutsideInstance()
-                        {
-                            Name = nwInstances[nwModpack].name ?? "Uncnown name",
-                            Author = nwInstances[nwModpack].author ?? "",
-                            MainImageUrl = nwInstances[nwModpack].mainImage, // TODO: url до картинке может быть битым и не только тут
-                            Categories = nwInstances[nwModpack].categories ?? new List<string>(),
-                            Description = nwInstances[nwModpack].description ?? "",
-                            DownloadCount = 0,
-                            Type = InstanceSource.Nightworld,
-                            Id = nwModpack
-                        };
-
-                        instanceInfo.IsInstalled = UserData.Instances.ExternalIds.ContainsKey(nwModpack);
-
-                        if (instanceInfo.IsInstalled)
-                        {
-                            instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[nwModpack]].Name, InstanceSource.Nightworld);
-                        }
-
-                        Instances.Add(instanceInfo);
-                    }
-
-                    i++;
-                }
-            }
-            else if (type == InstanceSource.Curseforge)
-            {
-                List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex*pageSize, ModpacksCategories.All, searchFilter);
-                foreach (var instance in curseforgeInstances)
-                {
-                    OutsideInstance instanceInfo = new OutsideInstance()
-                    {
-                        Name = instance.name,
-                        Author = instance.authors[0].name, // TODO: тут может быть null
-                        MainImageUrl = instance.attachments[0].thumbnailUrl, // TODO: тут тоже может быть null
-                        Categories = CategoriesListConverter(instance.categories),
-                        Description = instance.summary,
-                        DownloadCount = instance.downloadCount,
-                        Type = InstanceSource.Curseforge,
-                        Id = instance.id.ToString()
-                    };
-
-                    instanceInfo.IsInstalled = UserData.Instances.ExternalIds.ContainsKey(instance.id.ToString());
-
-                    if (instanceInfo.IsInstalled)
-                    {
-                        instanceInfo.UpdateAvailable = ChckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[instance.id.ToString()]].Name, InstanceSource.Curseforge);
-                    }
-
-                    Instances.Add(instanceInfo);
-                }
-            }
-
-            return Instances;
         }
     }
 }

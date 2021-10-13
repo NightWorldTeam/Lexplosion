@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.Pages.MW
 {
@@ -57,6 +58,15 @@ namespace Lexplosion.Gui.Pages.MW
 			GetInitializeInstance(InstanceSource.Curseforge);
 		}
 
+		private BitmapImage ToImage(byte[] array)
+		{
+			BitmapImage image = new BitmapImage();
+			image.BeginInit();
+			image.StreamSource = new System.IO.MemoryStream(array);
+			image.EndInit();
+			return image;
+		}
+
 		private void InitializeControlElements() 
 		{
 			searchBox = new SearchBox(this)
@@ -85,7 +95,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance(InstanceSource instanceSource, int pageIndex=0, string searchBoxText="")
 		{
-			var instances = ManageLogic.GetOutsideInstances(
+			var instances = OutsideDataManager.GetInstances(
 				instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 			);
 			
@@ -101,7 +111,7 @@ namespace Lexplosion.Gui.Pages.MW
 					// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
 					// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
 					BuildInstanceForm(instances[j].Id.ToString(), j,
-						new Uri(instances[j].MainImageUrl),
+						instances[j].MainImage,
 						instances[j].Name,
 						instances[j].Author,
 						instances[j].Description,
@@ -113,14 +123,14 @@ namespace Lexplosion.Gui.Pages.MW
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
-		public void BuildInstanceForm(string instanceId, int row, Uri logoPath, string title, string author, string overview, List<string> tags)
+		public void BuildInstanceForm(string instanceId, int row, byte[] logo, string title, string author, string overview, List<string> tags)
 		{
 			this.Dispatcher.Invoke(() =>
 			{
 				if (InstanceGrid.RowDefinitions.Count < 10)
 				{ InstanceGrid.RowDefinitions.Add(GetRowDefinition()); }
 				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
-					_mainWindow, title, "", author, overview, instanceId, logoPath, tags, false, false
+					_mainWindow, title, "", author, overview, instanceId, ToImage(logo), tags, false, false
 				);
 
 				Grid.SetRow(instanceForm, row);

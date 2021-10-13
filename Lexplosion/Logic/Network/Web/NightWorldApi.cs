@@ -27,7 +27,7 @@ namespace Lexplosion.Logic.Network
             {
                 string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData);
                 Dictionary<string, NWInstanceInfo> list = JsonConvert.DeserializeObject<Dictionary<string, NWInstanceInfo>>(answer);
-
+                
                 return list;
             }
             catch
