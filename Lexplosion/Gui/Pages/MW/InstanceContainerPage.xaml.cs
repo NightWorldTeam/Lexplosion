@@ -172,7 +172,7 @@ namespace Lexplosion.Gui.Pages.MW
 				else
 				{
 					searchBox.LastRequest = searchBoxText;
-					GetInitializeInstance(selectedInstanceSource); ;
+					GetInitializeInstance(selectedInstanceSource);
 					ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 				}
 			});
