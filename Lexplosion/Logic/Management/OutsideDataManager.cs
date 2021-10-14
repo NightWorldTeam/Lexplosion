@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
@@ -20,9 +19,7 @@ namespace Lexplosion.Logic.Management
     {
         private static Dictionary<InstanceSource, List<OutsideInstance>> uploadedInstances = new Dictionary<InstanceSource, List<OutsideInstance>>();
         private static AutoResetEvent WaitUpload = new AutoResetEvent(false); //нужен для ожидания загрузки модпаков
-        //private static AutoResetEvent GetMethodBlock = new AutoResetEvent(true); //нужен возбежании одновременного вызова двух методов GetInstances
         private static string SearchFilter = "";
-        private static int lastPage = -1;
 
         public static void DefineInstances()
         {
@@ -87,16 +84,12 @@ namespace Lexplosion.Logic.Management
             }
             else if (type == InstanceSource.Curseforge)
             {
-
                 List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, ModpacksCategories.All, searchFilter);
-
                 foreach (var instance in curseforgeInstances)
                 {
                     byte[] imageBytes;
                     using (var webClient = new WebClient())
                     {
-                        webClient.Proxy = new System.Net.WebProxy();
-
                         string url = instance.attachments[0].thumbnailUrl;
                         foreach(var attachment in instance.attachments)
                         {
@@ -139,12 +132,9 @@ namespace Lexplosion.Logic.Management
 
         public static List<OutsideInstance> GetInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
-            //GetMethodBlock.WaitOne();
-
-            if (SearchFilter != searchFilter || pageIndex < lastPage)
+            if(SearchFilter != searchFilter)
             {
                 SearchFilter = searchFilter;
-                lastPage = pageIndex;
 
                 UploadInstances(type, pageSize, pageIndex, categoriy, searchFilter);
                 var UploadedOutsideInstances_ = uploadedInstances[type];
@@ -155,7 +145,6 @@ namespace Lexplosion.Logic.Management
                     UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
                 });
 
-                //GetMethodBlock.Set();
                 return UploadedOutsideInstances_;
             }
 
@@ -170,22 +159,17 @@ namespace Lexplosion.Logic.Management
                     UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
                 });
 
-                //GetMethodBlock.Set();
                 return UploadedOutsideInstances_;
             }
             else
             {
                 WaitUpload.WaitOne();
-                var UploadedOutsideInstances_ = uploadedInstances[type];
-                uploadedInstances[type] = null;
-
                 Lexplosion.Run.ThreadRun(delegate ()
                 {
                     UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
                 });
 
-                //GetMethodBlock.Set();
-                return UploadedOutsideInstances_;
+                return uploadedInstances[type];
             }
         }
     }
