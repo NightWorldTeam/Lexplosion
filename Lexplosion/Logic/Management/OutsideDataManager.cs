@@ -19,7 +19,9 @@ namespace Lexplosion.Logic.Management
     {
         private static Dictionary<InstanceSource, List<OutsideInstance>> uploadedInstances = new Dictionary<InstanceSource, List<OutsideInstance>>();
         private static AutoResetEvent WaitUpload = new AutoResetEvent(false); //нужен для ожидания загрузки модпаков
+
         private static string SearchFilter = "";
+        private static int PageIndex = -1;
 
         public static void DefineInstances()
         {
@@ -132,10 +134,8 @@ namespace Lexplosion.Logic.Management
 
         public static List<OutsideInstance> GetInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
-            if(SearchFilter != searchFilter)
+            if(SearchFilter != searchFilter || pageIndex < PageIndex)
             {
-                SearchFilter = searchFilter;
-
                 UploadInstances(type, pageSize, pageIndex, categoriy, searchFilter);
                 var UploadedOutsideInstances_ = uploadedInstances[type];
                 uploadedInstances[type] = null;
@@ -144,6 +144,9 @@ namespace Lexplosion.Logic.Management
                 {
                     UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
                 });
+
+                SearchFilter = searchFilter;
+                PageIndex = pageIndex;
 
                 return UploadedOutsideInstances_;
             }
@@ -159,17 +162,25 @@ namespace Lexplosion.Logic.Management
                     UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
                 });
 
+                SearchFilter = searchFilter;
+                PageIndex = pageIndex;
+
                 return UploadedOutsideInstances_;
             }
             else
             {
                 WaitUpload.WaitOne();
+                var UploadedOutsideInstances_ = uploadedInstances[type];
+
                 Lexplosion.Run.ThreadRun(delegate ()
                 {
                     UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
                 });
 
-                return uploadedInstances[type];
+                SearchFilter = searchFilter;
+                PageIndex = pageIndex;
+
+                return UploadedOutsideInstances_;
             }
         }
     }
