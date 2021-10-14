@@ -11,8 +11,8 @@ namespace Lexplosion.Gui.UserControls
     /// </summary>
     public partial class Paginator : UserControl
     {
-        public int pageIndex = 1;
-        public (int min, int max) pageLimit = (1, 1638);
+        public int pageIndex = 0;
+        public (int min, int max) pageLimit = (0, 1638);
 
         public int PageIndex
         {
@@ -22,15 +22,15 @@ namespace Lexplosion.Gui.UserControls
                 if (pageIndex < value)
                 {
                     if (value == pageLimit.max) NextPageButton.Visibility = Visibility.Hidden;
-                    if (value > 1) PrevPageButton.Visibility = Visibility.Visible;
+                    if (value > 0) PrevPageButton.Visibility = Visibility.Visible;
                 }
                 else if (pageIndex > value) 
                 {
-                    if (value == 1) PrevPageButton.Visibility = Visibility.Hidden;
+                    if (value == 0) PrevPageButton.Visibility = Visibility.Hidden;
                     if (value == pageLimit.max - 1) NextPageButton.Visibility = Visibility.Visible;
                 }
                 pageIndex = value;
-                SelectedPageTextBox.Text = value.ToString();
+                SelectedPageTextBox.Text = (value + 1).ToString();
                 page.ChangePage();
             }
         }
@@ -41,8 +41,10 @@ namespace Lexplosion.Gui.UserControls
         {
             InitializeComponent();
             page = _page;
+            SelectedPageTextBox.Text = (PageIndex + 1).ToString();
+            PrevPageButton.Visibility = Visibility.Hidden;
         }
-
+        
         private void NextPageButton_Click(object sender, RoutedEventArgs e)
         {
             if (PageIndex < pageLimit.max) PageIndex++;
@@ -58,7 +60,7 @@ namespace Lexplosion.Gui.UserControls
             // if "Enter" button clicked
             if (e.Key == Key.Return)
             {
-                PageIndex = Int32.Parse(SelectedPageTextBox.Text);
+                PageIndex = Int32.Parse(SelectedPageTextBox.Text) - 1;
                 e.Handled = true;
             }
         }
