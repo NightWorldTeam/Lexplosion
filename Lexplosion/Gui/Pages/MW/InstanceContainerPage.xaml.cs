@@ -19,33 +19,16 @@ namespace Lexplosion.Gui.Pages.MW
 
 	// TODO: Сделать общую страницу контейнер для Library и Catalog.
 	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
     public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
 
 		private MainWindow _mainWindow;
-		public bool _isInitializeInstance = false;
-		public SearchBox searchBox;
 		private Paginator paginator;
 		private int pageSize = 10;
+
+		public bool _isInitializeInstance = false;
+		public SearchBox searchBox;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
@@ -60,6 +43,8 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private BitmapImage ToImage(byte[] array)
 		{
+			if (array is null)
+				return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
 			BitmapImage image = new BitmapImage();
 			image.BeginInit();
 			image.StreamSource = new System.IO.MemoryStream(array);
@@ -95,11 +80,12 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance(InstanceSource instanceSource, int pageIndex=0, string searchBoxText="")
 		{
+			Console.WriteLine("Номер страницы - " + pageIndex.ToString());
 			var instances = OutsideDataManager.GetInstances(
 				instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 			);
-			
-			this.Dispatcher.Invoke(() => { 
+			Console.WriteLine("Количество модпаков - " + instances.Count.ToString());
+			this.Dispatcher.Invoke(() => {
 				if (instances.Count < 10) paginator.Visibility = Visibility.Hidden;
 				else paginator.Visibility = Visibility.Visible;
 			});
@@ -154,7 +140,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 			ClearGrid();
 			// TODO: Добавить анимация для скрола.
-			ContainerPage_ScrollViewer.ScrollToVerticalOffset(0.0);
+			//ContainerPage_ScrollViewer.ScrollToVerticalOffset(0.0);
 			InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
 		}
 
@@ -172,12 +158,12 @@ namespace Lexplosion.Gui.Pages.MW
 
 			Lexplosion.Run.ThreadRun(delegate ()
 			{
-				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
-				{
-					_isInitializeInstance = false;
-					InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
-					searchBox.LastRequest = searchBoxText;
-					searchBox.LastSelectedIndex = sourceBoxSelectedIndex;
+			if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
+			{
+				_isInitializeInstance = false;
+				InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
+				searchBox.LastRequest = searchBoxText;
+				searchBox.LastSelectedIndex = sourceBoxSelectedIndex;
 				}
 				else
 				{

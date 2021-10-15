@@ -89,22 +89,24 @@ namespace Lexplosion.Logic.Management
                 List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, ModpacksCategories.All, searchFilter);
                 foreach (var instance in curseforgeInstances)
                 {
-                    byte[] imageBytes;
-                    using (var webClient = new WebClient())
+                    byte[] imageBytes = null;
+
+                    if (instance.attachments is not null && instance.attachments.Count > 0)
                     {
-                        string url = instance.attachments[0].thumbnailUrl;
-                        foreach(var attachment in instance.attachments)
+                        using (var webClient = new WebClient())
                         {
-                            if (attachment.isDefault)
+                            string url = instance.attachments[0].thumbnailUrl;
+                            foreach (var attachment in instance.attachments)
                             {
-                                url = attachment.thumbnailUrl;
-                                break;
+                                if (attachment.isDefault)
+                                {
+                                    url = attachment.thumbnailUrl;
+                                    break;
+                                }
                             }
+                            imageBytes = webClient.DownloadData(url);
                         }
-
-                        imageBytes = webClient.DownloadData(url);
                     }
-
                     OutsideInstance instanceInfo = new OutsideInstance()
                     {
                         Name = instance.name,
@@ -134,9 +136,10 @@ namespace Lexplosion.Logic.Management
 
         public static List<OutsideInstance> GetInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
-            if(SearchFilter != searchFilter || pageIndex < PageIndex)
+            if (SearchFilter != searchFilter || pageIndex < PageIndex)
             {
                 UploadInstances(type, pageSize, pageIndex, categoriy, searchFilter);
+                Console.WriteLine(uploadedInstances[type] == null);
                 var UploadedOutsideInstances_ = uploadedInstances[type];
                 uploadedInstances[type] = null;
 
@@ -154,6 +157,7 @@ namespace Lexplosion.Logic.Management
             if (uploadedInstances[type] != null)
             {
                 WaitUpload.Reset();
+                Console.WriteLine(uploadedInstances[type] == null);
                 var UploadedOutsideInstances_ = uploadedInstances[type];
                 uploadedInstances[type] = null;
 
@@ -170,6 +174,7 @@ namespace Lexplosion.Logic.Management
             else
             {
                 WaitUpload.WaitOne();
+                Console.WriteLine(uploadedInstances[type] == null);
                 var UploadedOutsideInstances_ = uploadedInstances[type];
 
                 Lexplosion.Run.ThreadRun(delegate ()
