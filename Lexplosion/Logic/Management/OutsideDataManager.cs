@@ -91,7 +91,7 @@ namespace Lexplosion.Logic.Management
                 {
                     byte[] imageBytes = null;
 
-                    if (instance.attachments is not null && instance.attachments.Count > 0)
+                    if (instance.attachments != null && instance.attachments.Count > 0)
                     {
                         using (var webClient = new WebClient())
                         {
@@ -107,6 +107,13 @@ namespace Lexplosion.Logic.Management
                             imageBytes = webClient.DownloadData(url);
                         }
                     }
+
+                    string author = "";
+                    if(instance.authors != null && instance.authors.Count > 0 && instance.authors[0].name != null)
+                    {
+                        author = instance.authors[0].name;
+                    }
+
                     OutsideInstance instanceInfo = new OutsideInstance()
                     {
                         Name = instance.name,
@@ -139,7 +146,7 @@ namespace Lexplosion.Logic.Management
             if (SearchFilter != searchFilter || pageIndex < PageIndex)
             {
                 UploadInstances(type, pageSize, pageIndex, categoriy, searchFilter);
-                Console.WriteLine(uploadedInstances[type] == null);
+                Console.WriteLine((uploadedInstances[type] == null) + " A");
                 var UploadedOutsideInstances_ = uploadedInstances[type];
                 uploadedInstances[type] = null;
 
@@ -157,7 +164,7 @@ namespace Lexplosion.Logic.Management
             if (uploadedInstances[type] != null)
             {
                 WaitUpload.Reset();
-                Console.WriteLine(uploadedInstances[type] == null);
+                Console.WriteLine((uploadedInstances[type] == null) + " B");
                 var UploadedOutsideInstances_ = uploadedInstances[type];
                 uploadedInstances[type] = null;
 
@@ -174,8 +181,9 @@ namespace Lexplosion.Logic.Management
             else
             {
                 WaitUpload.WaitOne();
-                Console.WriteLine(uploadedInstances[type] == null);
+                Console.WriteLine((uploadedInstances[type] == null) + " C");
                 var UploadedOutsideInstances_ = uploadedInstances[type];
+                uploadedInstances[type] = null;
 
                 Lexplosion.Run.ThreadRun(delegate ()
                 {
