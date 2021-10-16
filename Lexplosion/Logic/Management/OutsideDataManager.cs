@@ -17,7 +17,14 @@ namespace Lexplosion.Logic.Management
 {
     static class OutsideDataManager
     {
-        private static Dictionary<InstanceSource, List<OutsideInstance>> uploadedInstances = new Dictionary<InstanceSource, List<OutsideInstance>>();
+        class InstacesList
+        {
+            public List<OutsideInstance> Next = null;
+            public List<OutsideInstance> This = null;
+            public List<OutsideInstance> Back = null;
+        }
+
+        private static Dictionary<InstanceSource, InstacesList> uploadedInstances = new Dictionary<InstanceSource, InstacesList>();
         private static AutoResetEvent WaitUpload = new AutoResetEvent(false); //нужен для ожидания загрузки модпаков
 
         private static string SearchFilter = "";
@@ -25,11 +32,14 @@ namespace Lexplosion.Logic.Management
 
         public static void DefineInstances()
         {
-            UploadInstances(InstanceSource.Curseforge, 10, 0, ModpacksCategories.All);
-            UploadInstances(InstanceSource.Nightworld, 10, 0, ModpacksCategories.All);
+            uploadedInstances[InstanceSource.Curseforge] = new InstacesList();
+            uploadedInstances[InstanceSource.Nightworld] = new InstacesList();
+
+            uploadedInstances[InstanceSource.Curseforge].Next = UploadInstances(InstanceSource.Curseforge, 10, 0, ModpacksCategories.All);
+            uploadedInstances[InstanceSource.Nightworld].Next = UploadInstances(InstanceSource.Nightworld, 10, 0, ModpacksCategories.All);
         }
 
-        private static void UploadInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
+        private static List<OutsideInstance> UploadInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
             List<string> CategoriesListConverter(List<CurseforgeInstanceInfo.Category> categories)
             {
@@ -109,7 +119,7 @@ namespace Lexplosion.Logic.Management
                     }
 
                     string author = "";
-                    if(instance.authors != null && instance.authors.Count > 0 && instance.authors[0].name != null)
+                    if (instance.authors != null && instance.authors.Count > 0 && instance.authors[0].name != null)
                     {
                         author = instance.authors[0].name;
                     }
@@ -137,64 +147,78 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            uploadedInstances[type] = Instances;
-            WaitUpload.Set();
+            return Instances;
+        }
+
+        private static void ChangePages(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
+        {
+            if (pageIndex > PageIndex)
+            {
+                uploadedInstances[InstanceSource.Curseforge].Back = uploadedInstances[type].This;
+                uploadedInstances[InstanceSource.Curseforge].This = uploadedInstances[type].Next;
+                uploadedInstances[InstanceSource.Curseforge].Next = null;
+                uploadedInstances[InstanceSource.Curseforge].Next = UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
+                Console.WriteLine("Next " + (uploadedInstances[InstanceSource.Curseforge].Next == null).ToString() + " " + pageIndex + " " + PageIndex);
+            }
+            else
+            {
+                uploadedInstances[InstanceSource.Curseforge].Next = uploadedInstances[type].This;
+                uploadedInstances[InstanceSource.Curseforge].This = uploadedInstances[type].Back;
+                uploadedInstances[InstanceSource.Curseforge].Back = null;
+                uploadedInstances[InstanceSource.Curseforge].Back = pageIndex > 0 ? UploadInstances(type, pageSize, pageIndex - 1, categoriy, searchFilter) : null;
+                Console.WriteLine("Back " + (uploadedInstances[InstanceSource.Curseforge].Back == null).ToString() + " " + pageIndex + " " + PageIndex);
+            }
         }
 
         public static List<OutsideInstance> GetInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
-            if (SearchFilter != searchFilter || pageIndex < PageIndex)
+            List<OutsideInstance> page;
+            if (pageIndex > PageIndex)
             {
-                UploadInstances(type, pageSize, pageIndex, categoriy, searchFilter);
-                Console.WriteLine((uploadedInstances[type] == null) + " A");
-                var UploadedOutsideInstances_ = uploadedInstances[type];
-                uploadedInstances[type] = null;
-
-                Lexplosion.Run.ThreadRun(delegate ()
+                if(SearchFilter == searchFilter)
                 {
-                    UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
-                });
-
-                SearchFilter = searchFilter;
-                PageIndex = pageIndex;
-
-                return UploadedOutsideInstances_;
+                    page = uploadedInstances[type].Next;
+                }
+                else
+                {
+                    page = UploadInstances(type, pageSize, pageIndex, ModpacksCategories.All, searchFilter);
+                    SearchFilter = searchFilter;
+                }
+            }
+            else
+            {
+                if (SearchFilter == searchFilter)
+                {
+                    page = uploadedInstances[type].Back;
+                }
+                else
+                {
+                    page = UploadInstances(type, pageSize, pageIndex, ModpacksCategories.All, searchFilter);
+                    SearchFilter = searchFilter;
+                }
             }
 
-            if (uploadedInstances[type] != null)
+            if (page != null)
             {
                 WaitUpload.Reset();
-                Console.WriteLine((uploadedInstances[type] == null) + " B");
-                var UploadedOutsideInstances_ = uploadedInstances[type];
-                uploadedInstances[type] = null;
-
-                Lexplosion.Run.ThreadRun(delegate ()
-                {
-                    UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
-                });
-
-                SearchFilter = searchFilter;
-                PageIndex = pageIndex;
-
-                return UploadedOutsideInstances_;
+                Console.WriteLine("A " + (page == null).ToString());
             }
             else
             {
                 WaitUpload.WaitOne();
-                Console.WriteLine((uploadedInstances[type] == null) + " C");
-                var UploadedOutsideInstances_ = uploadedInstances[type];
-                uploadedInstances[type] = null;
+                page = pageIndex > PageIndex ? uploadedInstances[type].Next : uploadedInstances[type].Back;
+                Console.WriteLine("B " + (page == null).ToString());
+            }
 
-                Lexplosion.Run.ThreadRun(delegate ()
-                {
-                    UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
-                });
-
+            Lexplosion.Run.ThreadRun(delegate ()
+            {
+                ChangePages(type, pageSize, pageIndex, categoriy, searchFilter);
                 SearchFilter = searchFilter;
                 PageIndex = pageIndex;
+                WaitUpload.Set();
+            });
 
-                return UploadedOutsideInstances_;
-            }
+            return page;
         }
     }
 }

@@ -165,7 +165,7 @@ namespace Lexplosion
             Environment.Exit(0);
         }
 
-        public static void ThreadRun(ThreadStart ThreadFunc, bool isImportant = false)
+        public static Thread ThreadRun(ThreadStart ThreadFunc, bool isImportant = false)
         {
             haveImportantThread = haveImportantThread || isImportant;
 
@@ -187,13 +187,14 @@ namespace Lexplosion
                 ThreadFunc();
 
                 threadsList.RemoveAt(threadKey);
-
             });
 
             threads[key].thread = thread;
 
             thread.Start();
             threads.Release();
+
+            return thread;
         }
     }
 }
