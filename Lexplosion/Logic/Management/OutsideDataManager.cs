@@ -152,6 +152,7 @@ namespace Lexplosion.Logic.Management
 
         private static void ChangePages(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
+            Console.WriteLine("filter " + searchFilter);
             if (pageIndex > PageIndex)
             {
                 uploadedInstances[InstanceSource.Curseforge].Back = uploadedInstances[type].This;
@@ -160,13 +161,20 @@ namespace Lexplosion.Logic.Management
                 uploadedInstances[InstanceSource.Curseforge].Next = UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
                 Console.WriteLine("Next " + (uploadedInstances[InstanceSource.Curseforge].Next == null).ToString() + " " + pageIndex + " " + PageIndex);
             }
-            else
+            else if (pageIndex < PageIndex)
             {
                 uploadedInstances[InstanceSource.Curseforge].Next = uploadedInstances[type].This;
                 uploadedInstances[InstanceSource.Curseforge].This = uploadedInstances[type].Back;
                 uploadedInstances[InstanceSource.Curseforge].Back = null;
                 uploadedInstances[InstanceSource.Curseforge].Back = pageIndex > 0 ? UploadInstances(type, pageSize, pageIndex - 1, categoriy, searchFilter) : null;
                 Console.WriteLine("Back " + (uploadedInstances[InstanceSource.Curseforge].Back == null).ToString() + " " + pageIndex + " " + PageIndex);
+            }
+            else
+            {
+                uploadedInstances[InstanceSource.Curseforge].Next = null;
+                uploadedInstances[InstanceSource.Curseforge].Back = null;
+                uploadedInstances[InstanceSource.Curseforge].Next = UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
+                uploadedInstances[InstanceSource.Curseforge].Back = pageIndex > 0 ? UploadInstances(type, pageSize, pageIndex - 1, categoriy, searchFilter) : null;
             }
         }
 
@@ -175,27 +183,18 @@ namespace Lexplosion.Logic.Management
             List<OutsideInstance> page;
             if (pageIndex > PageIndex)
             {
-                if(SearchFilter == searchFilter)
-                {
-                    page = uploadedInstances[type].Next;
-                }
-                else
-                {
-                    page = UploadInstances(type, pageSize, pageIndex, ModpacksCategories.All, searchFilter);
-                    SearchFilter = searchFilter;
-                }
+                page = uploadedInstances[type].Next;
+            }
+            else if (pageIndex < PageIndex)
+            {
+                page = uploadedInstances[type].Back;
             }
             else
             {
-                if (SearchFilter == searchFilter)
-                {
-                    page = uploadedInstances[type].Back;
-                }
-                else
-                {
-                    page = UploadInstances(type, pageSize, pageIndex, ModpacksCategories.All, searchFilter);
-                    SearchFilter = searchFilter;
-                }
+                page = UploadInstances(type, pageSize, pageIndex, ModpacksCategories.All, searchFilter);
+                WaitUpload.WaitOne();
+                SearchFilter = searchFilter;
+                uploadedInstances[type].This = page;
             }
 
             if (page != null)
