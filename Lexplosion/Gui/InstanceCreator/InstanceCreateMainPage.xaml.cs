@@ -52,6 +52,7 @@ namespace Lexplosion.Gui.InstanceCreator
                     VersionCB.Items.Add("Release " + version);
                 }
                 i++;
+                //
             }
             ModloaderVersion.Items.Add("Ну тут либо forge должен быть");
             ModloaderVersion.Items.Add("Ну или fabric. Я про их версии если чё");
