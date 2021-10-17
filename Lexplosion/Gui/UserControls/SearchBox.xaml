@@ -14,7 +14,8 @@
                     Width="{TemplateBinding Width}" 
                     Height="{TemplateBinding Height}" 
                     Background="#171717"
-                    BorderBrush="#131313">
+                    BorderBrush="#131313"
+                    BorderThickness="{TemplateBinding BorderThickness}">
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                     <ContentPresenter />
                 </Grid>

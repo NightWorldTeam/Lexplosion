@@ -85,10 +85,7 @@ namespace Lexplosion.Gui.Pages.MW
 				instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 			);
 			Console.WriteLine("Количество модпаков - " + instances.Count.ToString());
-			this.Dispatcher.Invoke(() => {
-				if (instances.Count < 10) paginator.Visibility = Visibility.Hidden;
-				else paginator.Visibility = Visibility.Visible;
-			});
+			paginator.ChangePaginatorVisibility(instances.Count, pageSize);
 
 			if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
 			else {
@@ -124,15 +121,6 @@ namespace Lexplosion.Gui.Pages.MW
 			});
 		}
 
-		private RowDefinition GetRowDefinition(int height=150)
-		{
-			RowDefinition rowDefinition = new RowDefinition()
-			{
-				Height = new GridLength(height, GridUnitType.Pixel)
-			};
-			return rowDefinition;
-		}
-
 		public void ChangePage() 
 		{
 			var selectedInstanceSource = (InstanceSource)searchBox.SourceBox.SelectedIndex;
@@ -140,7 +128,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 			ClearGrid();
 			// TODO: Добавить анимация для скрола.
-			//ContainerPage_ScrollViewer.ScrollToVerticalOffset(0.0);
+			ContainerPage_ScrollViewer.ScrollToVerticalOffset(0.0);
 			InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
 		}
 
@@ -151,7 +139,7 @@ namespace Lexplosion.Gui.Pages.MW
 			var searchBoxText = searchBox.SearchTextBox.Text;
 			var loadingLableText = LoadingLabel.Text;
 			var selectedInstanceSource = (InstanceSource)sourceBoxSelectedIndex;
-
+			paginator.PageIndex = 0;
 			ClearGrid();
 
 			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
@@ -187,6 +175,15 @@ namespace Lexplosion.Gui.Pages.MW
 			if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(1, 10);
 			if (InstanceGrid.RowDefinitions.Count > 2)
 				InstanceGrid.RowDefinitions.RemoveRange(0, InstanceGrid.RowDefinitions.Count - 1);
+		}
+
+		private RowDefinition GetRowDefinition(int height = 150)
+		{
+			RowDefinition rowDefinition = new RowDefinition()
+			{
+				Height = new GridLength(height, GridUnitType.Pixel)
+			};
+			return rowDefinition;
 		}
 	}
 }

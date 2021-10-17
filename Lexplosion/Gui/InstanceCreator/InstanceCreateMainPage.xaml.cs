@@ -29,7 +29,7 @@ namespace Lexplosion.Gui.InstanceCreator
         private List<string> minecraftVersion = new List<string>() 
         { 
             "1.17.1", "1.16.5", "1.15.2", "1.14.4", "1.13.2", "1.12.2", "1.11", 
-            "1.10.2", "1.9", "1.8.2"
+            "1.10.2", "1.9", "1.8.2", "1.7.10", "1.7.2", "1.7", "1.6.4"
         };
 
         public InstanceCreateMainPage()
@@ -53,23 +53,11 @@ namespace Lexplosion.Gui.InstanceCreator
                 }
                 i++;
             }
+            ModloaderVersion.Items.Add("Ну тут либо forge должен быть");
+            ModloaderVersion.Items.Add("Ну или fabric. Я про их версии если чё");
+            NoneSelected.IsChecked = true;
         }
 
-        private void FabricSelected_Click(object sender, RoutedEventArgs e)
-        {
-            if (FabricSelected.IsEnabled) 
-            {
-                FabricSelected.IsEnabled = false;
-                FabricSelected.IsChecked = false;
-            }
-        }
 
-        private void ForgeSelected_Click(object sender, RoutedEventArgs e)
-        {
-            if (ForgeSelected.IsChecked.Value)
-            {
-                FabricSelected.IsChecked = false;
-            }
-        }
     }
 }

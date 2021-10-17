@@ -19,6 +19,7 @@ namespace Lexplosion.Gui.UserControls
             get { return pageIndex; }
             set
             {
+                SelectedPageTextBox.Text = (value + 1).ToString();
                 if (pageIndex < value)
                 {
                     if (value == pageLimit.max) NextPageButton.Visibility = Visibility.Hidden;
@@ -30,7 +31,6 @@ namespace Lexplosion.Gui.UserControls
                     if (value == pageLimit.max - 1) NextPageButton.Visibility = Visibility.Visible;
                 }
                 pageIndex = value;
-                SelectedPageTextBox.Text = (value + 1).ToString();
                 page.ChangePage();
             }
         }
@@ -63,6 +63,14 @@ namespace Lexplosion.Gui.UserControls
                 PageIndex = Int32.Parse(SelectedPageTextBox.Text) - 1;
                 e.Handled = true;
             }
+        }
+
+        public void ChangePaginatorVisibility(int instancesCount, int pageSize) 
+        {
+            this.Dispatcher.Invoke(() => {
+                if (instancesCount < pageSize) this.Visibility = Visibility.Hidden;
+                else this.Visibility = Visibility.Visible;
+            });
         }
     }
 }

@@ -9,39 +9,53 @@
       Title="InstanceCreateMainPage">
 
     <Page.Resources>
+        <!-- TextBlock -->
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="Foreground" Value="WhiteSmoke" />
             <Setter Property="Padding" Value="5,0,0,0"/>
         </Style>
-
+        <!-- Flat ComboBox -->
         <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
-            <Border CornerRadius="8" 
-                Width="{TemplateBinding Width}" 
-                Height="{TemplateBinding Height}" 
-                Background="#1f1f1f" 
-                BorderBrush="#2c99c2" 
-                BorderThickness="2">
+            <Border x:Name="border"
+                    CornerRadius="6" 
+                    Width="{TemplateBinding Width}" 
+                    Height="{TemplateBinding Height}" 
+                    Background="#171717"
+                    BorderBrush="#121212"
+                    BorderThickness="1">
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">
+                    <ContentPresenter />
+                </Grid>
             </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="border" Property="BorderBrush" Value="#167FFC"/>
+                    <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
         </ControlTemplate>
 
         <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
-            <Setter Property="SnapsToDevicePixels" Value="true"/>
-            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">
                         <Grid>
-                            <ToggleButton x:Name="PART_ContentHost"
+                            <ToggleButton 
+                                Name="ToggleButton" 
                                 Template="{StaticResource ComboBoxToggleButton}" 
-                                Grid.Column="2" 
+                                Grid.Column="2"
                                 IsTabStop="False"
-                                Focusable="false"
+                                Focusable="False"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                Foreground="White"
+                                FontSize="18"
                                 IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
                                 ClickMode="Press">
                             </ToggleButton>
@@ -49,7 +63,7 @@
                                 IsHitTestVisible="False"
                                 Margin="3,3,23,3"
                                 VerticalAlignment="Center"
-                                HorizontalAlignment="Left"/>
+                                HorizontalAlignment="Left" />
                             <!-- None, Fade, Scroll, Slide -->
                             <Popup Name="Popup"
                                 Placement="Bottom"
@@ -59,19 +73,15 @@
                                 PopupAnimation="Scroll">
                                 <Grid Name="DropDown"
                                     SnapsToDevicePixels="True"        
-                                    MinWidth="140"
-                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                                      HorizontalAlignment="Left">
-                                    
+                                    MinWidth="180"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
-                                        CornerRadius="5"
+                                        CornerRadius="7"
                                         Background="#1f1f1f"
                                         BorderThickness="2"
-                                        BorderBrush="#1EAFDD" />
+                                        BorderBrush="#167FFC"/>
                                     <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True" 
-                                            KeyboardNavigation.DirectionalNavigation="Contained"
-                                            />
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
                                     </ScrollViewer>
                                 </Grid>
                             </Popup>
@@ -118,7 +128,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsHighlighted" Value="true">
-                                <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
+                                <Setter TargetName="Border" Property="Background" Value="#167FFC"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Foreground" Value="White"/>
@@ -129,34 +139,35 @@
             </Setter>
         </Style>
 
-        <Style x:Key="RadioButton" TargetType="{x:Type ToggleButton}">
-        </Style>
-
         <Style TargetType="{x:Type RadioButton}">
             <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="False" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="24" />
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Height" Value="Auto" />
+            <Setter Property="FontSize" Value="22" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
                         <Border>
                             <Grid>
                                 <Ellipse x:Name="RadioButton"
-                                    Width="24"
-                                    Height="24"
-                                    StrokeThickness="2"
-                                    Stroke="#121212"
+                                    Width="20"
+                                    Height="20"
+                                    StrokeThickness="1"
+                                    Stroke="#131313"
                                     Fill="#505050"
                                     HorizontalAlignment="Left"
-                                    Margin="2,0,0,0"/>
+                                    Margin="2,0,0,0"
+                                         SnapsToDevicePixels="False"/>
                                 <ContentPresenter Margin="35,-2,0,0"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="RadioButton" Property="Stroke" Value="#47BAEC"/>
-                                <Setter TargetName="RadioButton" Property="StrokeThickness" Value="4"/>
-                                <Setter TargetName="RadioButton" Property="Fill" Value="#343434"/>
+                                <Setter TargetName="RadioButton" Property="Stroke" Value="#167FFC"/>
+                                <Setter TargetName="RadioButton" Property="StrokeThickness" Value="6"/>
+                                <Setter TargetName="RadioButton" Property="Fill" Value="#EDEDED"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -165,24 +176,24 @@
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="CaretBrush" Value="#2c99c2"/>
+            <Setter Property="CaretBrush" Value="#167FFC"/>
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontSize" Value="18" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBoxBase}">
-                        <Border x:Name="border" Background="#252525"
-                                BorderBrush="#191919"
-                                BorderThickness="2"
+                        <Border x:Name="border" Background="#171717"
+                                BorderBrush="#121212"
+                                BorderThickness="1"
                                 CornerRadius="5">
-                            <ScrollViewer Margin="1" x:Name="PART_ContentHost" />
+                            <ScrollViewer Margin="10,0,0,0" x:Name="PART_ContentHost" VerticalAlignment="Center" HorizontalAlignment="Left" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsFocused" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="#1EAFDD"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#167FFC"/>
                             </Trigger>
                             <Trigger Property="IsFocused" Value="False">
-                                <Setter TargetName="border" Property="BorderBrush" Value="#191919"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#121212"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -212,17 +223,34 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Name="Buttn" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="7">
+                            <Grid>
+                                <ContentPresenter Margin="-2,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <Grid>
         <ScrollViewer>
             <Grid ShowGridLines="False">
                 <Grid.Background>
-                    <SolidColorBrush Color="#151515" Opacity="0.60"/>
+                    <SolidColorBrush Color="#171717" Opacity="0.60"/>
                 </Grid.Background>
                 <!-- Name -->
                 <TextBlock Text="Название" 
-                    Margin="30,26,0,0"
+                    Margin="26,24,0,0"
                     Width="244" 
                     Height="30"
                     VerticalAlignment="Top"
@@ -237,21 +265,20 @@
 
                 <!-- Version -->
                 <TextBlock Text="Версия"
-                    Margin="304,26,0,0"
+                    Margin="300,26,0,0"
                     Width="244" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
                     TextAlignment="Left"/>
                 <ComboBox x:Name="VersionCB"
-                    Width="140"
+                    Width="180"
                     Height="40"
                     Margin="304,60,0,0"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"/>
 
                 <!-- Logo -->
-                
                 <Button x:Name="InstanceLogo"
                     Style="{StaticResource LogoButton}"
                     Content="Logo"
@@ -262,35 +289,59 @@
                     HorizontalAlignment="Right"/>
                 
                 <!-- Modloader -->
-                
                 <TextBlock Text="Modloader"
-                    Margin="30,130,0,0"
+                    Margin="26,130,0,0"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"/>
                 
                 <RadioButton x:Name="NoneSelected"
                     Content="Отсутствует"
-                    Width="170" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
                     Margin="30,170,0,0"/>                
                 <RadioButton x:Name="ForgeSelected"
-                    Content="Forge"
-                    Width="120" 
+                    Content="Forge" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
                     Margin="205,170,0,0"/>                
                 <RadioButton x:Name="FabricSelected"
-                    Content="Fabric"
-                    Width="144" 
+                    Content="Fabric" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
-                    Margin="340,170,0,0"/>
+                    Margin="320,170,0,0"/>
 
                 <!-- More -->
+                <ComboBox x:Name="ModloaderVersion"
+                    Width="180"
+                    Height="40"
+                    HorizontalAlignment="Left"
+                    Margin="30,20,0,0"/>
+
+                <Button x:Name="CreateInstanceButton"
+                        BorderThickness="0"
+                        Background="#167FFC"
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="DemiBold"
+                        Content="Создать"
+                        HorizontalAlignment="Left"
+                        Margin="26,360,0,0"
+                        Width="105"
+                        Height="35"/> 
+                <Button x:Name="MoreInstanceSettings"
+                        Background="#232527" 
+                        BorderThickness="0" 
+                        Foreground="White"
+                        FontSize="14"
+                        FontWeight="DemiBold"
+                        Content="Больше"
+                        Width="105"
+                        Height="35"
+                        HorizontalAlignment="Left"
+                        Margin="150,360,0,0"/> 
             </Grid>
         </ScrollViewer>
     </Grid>
