@@ -185,7 +185,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    answer = HttpPost("https://night-world.org/rest/launcher/authorization.php", data); // TODO: LaunсherSettings.URL.DataScripts + "authorization.php"
+                    answer = HttpPost(LaunсherSettings.URL.DataScripts + "authorization.php", data);
 
                     if (answer == null)
                     {

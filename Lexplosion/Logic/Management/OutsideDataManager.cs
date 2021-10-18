@@ -155,26 +155,26 @@ namespace Lexplosion.Logic.Management
             Console.WriteLine("filter " + searchFilter);
             if (pageIndex > PageIndex)
             {
-                uploadedInstances[InstanceSource.Curseforge].Back = uploadedInstances[type].This;
-                uploadedInstances[InstanceSource.Curseforge].This = uploadedInstances[type].Next;
-                uploadedInstances[InstanceSource.Curseforge].Next = null;
-                uploadedInstances[InstanceSource.Curseforge].Next = UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
+                uploadedInstances[type].Back = uploadedInstances[type].This;
+                uploadedInstances[type].This = uploadedInstances[type].Next;
+                uploadedInstances[type].Next = null;
+                uploadedInstances[type].Next = UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
                 Console.WriteLine("Next " + (uploadedInstances[InstanceSource.Curseforge].Next == null).ToString() + " " + pageIndex + " " + PageIndex);
             }
             else if (pageIndex < PageIndex)
             {
-                uploadedInstances[InstanceSource.Curseforge].Next = uploadedInstances[type].This;
-                uploadedInstances[InstanceSource.Curseforge].This = uploadedInstances[type].Back;
-                uploadedInstances[InstanceSource.Curseforge].Back = null;
-                uploadedInstances[InstanceSource.Curseforge].Back = pageIndex > 0 ? UploadInstances(type, pageSize, pageIndex - 1, categoriy, searchFilter) : null;
+                uploadedInstances[type].Next = uploadedInstances[type].This;
+                uploadedInstances[type].This = uploadedInstances[type].Back;
+                uploadedInstances[type].Back = null;
+                uploadedInstances[type].Back = pageIndex > 0 ? UploadInstances(type, pageSize, pageIndex - 1, categoriy, searchFilter) : null;
                 Console.WriteLine("Back " + (uploadedInstances[InstanceSource.Curseforge].Back == null).ToString() + " " + pageIndex + " " + PageIndex);
             }
             else
             {
-                uploadedInstances[InstanceSource.Curseforge].Next = null;
-                uploadedInstances[InstanceSource.Curseforge].Back = null;
-                uploadedInstances[InstanceSource.Curseforge].Next = UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
-                uploadedInstances[InstanceSource.Curseforge].Back = pageIndex > 0 ? UploadInstances(type, pageSize, pageIndex - 1, categoriy, searchFilter) : null;
+                uploadedInstances[type].Next = null;
+                uploadedInstances[type].Back = null;
+                uploadedInstances[type].Next = UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
+                uploadedInstances[type].Back = pageIndex > 0 ? UploadInstances(type, pageSize, pageIndex - 1, categoriy, searchFilter) : null;
             }
         }
 
