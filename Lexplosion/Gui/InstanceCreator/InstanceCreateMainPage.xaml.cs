@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,11 +28,6 @@ namespace Lexplosion.Gui.InstanceCreator
             "Hardcore", "Map Based", "Small / Light", "Extra Large", "Combat / PvP", "Multiplayer",
             "FTB Offical Pack", "Skyblock"
         };
-        private List<string> minecraftVersion = new List<string>() 
-        { 
-            "1.17.1", "1.16.5", "1.15.2", "1.14.4", "1.13.2", "1.12.2", "1.11", 
-            "1.10.2", "1.9", "1.8.2", "1.7.10", "1.7.2", "1.7", "1.6.4"
-        };
 
         public InstanceCreateMainPage()
         {
@@ -40,25 +37,32 @@ namespace Lexplosion.Gui.InstanceCreator
                 TagsListCB.Items.Add(tag);
             }
             */
-            int i = 0;
-            foreach (string version in minecraftVersion) 
-            {
-                if (i == 0) 
-                {
-                    VersionCB.Items.Add("Latest release " + version);
-                } 
-                else 
-                { 
-                    VersionCB.Items.Add("Release " + version);
-                }
-                i++;
-                //
-            }
+
+            Lexplosion.Run.ThreadRun(() => SetupMinecraftVersions());
+            
+            VersionCB.SelectedIndex = 0;
             ModloaderVersion.Items.Add("Ну тут либо forge должен быть");
             ModloaderVersion.Items.Add("Ну или fabric. Я про их версии если чё");
             NoneSelected.IsChecked = true;
         }
 
+        private void SetupMinecraftVersions() 
+        {
+            foreach (var version in ToServer.GetVersionsList())
+            {
+                this.Dispatcher.Invoke(() => { 
+                    VersionCB.Items.Add(version.type + " " + version.id);
+                });
+            }
+        }
 
+        private void CreateInstanceButton_Click(object sender, RoutedEventArgs e)
+        {
+            // InstanceNameTB.Text - Поле с название сборки
+            // VersionCB - выбранная версия
+            // NoneSelected.IsChecked = True; - ничего не выбрано
+            // ForgeSelected.IsChecked = True; - фордж
+            // FabricSelected.IsChecked = True; - фабрик
+        }
     }
 }

@@ -330,7 +330,8 @@
                         HorizontalAlignment="Left"
                         Margin="26,360,0,0"
                         Width="105"
-                        Height="35"/> 
+                        Height="35"
+                        Click="CreateInstanceButton_Click"/> 
                 <Button x:Name="MoreInstanceSettings"
                         Background="#232527" 
                         BorderThickness="0" 
