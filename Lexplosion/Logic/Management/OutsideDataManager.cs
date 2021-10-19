@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Management
                         byte[] imageBytes;
                         using (var webClient = new WebClient())
                         {
-                            imageBytes = webClient.DownloadData(nwInstances[nwModpack].mainImage);
+                            imageBytes = webClient.DownloadData(nwInstances[nwModpack].mainImage); // TODO: тут try сделать
                         }
 
                         OutsideInstance instanceInfo = new OutsideInstance()
