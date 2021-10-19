@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,15 +37,23 @@ namespace Lexplosion.Gui.InstanceCreator
                 TagsListCB.Items.Add(tag);
             }
             */
-            foreach (var version in ToServer.GetVersionsList()) 
-            {
-                VersionCB.Items.Add(version.type + " " + version.id);
-            }
 
+            Lexplosion.Run.ThreadRun(() => SetupMinecraftVersions());
+            
             VersionCB.SelectedIndex = 0;
             ModloaderVersion.Items.Add("Ну тут либо forge должен быть");
             ModloaderVersion.Items.Add("Ну или fabric. Я про их версии если чё");
             NoneSelected.IsChecked = true;
+        }
+
+        private void SetupMinecraftVersions() 
+        {
+            foreach (var version in ToServer.GetVersionsList())
+            {
+                this.Dispatcher.Invoke(() => { 
+                    VersionCB.Items.Add(version.type + " " + version.id);
+                });
+            }
         }
 
         private void CreateInstanceButton_Click(object sender, RoutedEventArgs e)
