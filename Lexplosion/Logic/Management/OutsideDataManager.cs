@@ -27,7 +27,6 @@ namespace Lexplosion.Logic.Management
         private static Dictionary<InstanceSource, InstacesList> uploadedInstances = new Dictionary<InstanceSource, InstacesList>();
         private static AutoResetEvent WaitUpload = new AutoResetEvent(false); //нужен для ожидания загрузки модпаков
 
-        private static string SearchFilter = "";
         private static int PageIndex = -1;
 
         public static void DefineInstances()
@@ -41,6 +40,7 @@ namespace Lexplosion.Logic.Management
 
         private static List<OutsideInstance> UploadInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
+            Console.WriteLine("UploadInstances " + pageIndex);
             List<string> CategoriesListConverter(List<CurseforgeInstanceInfo.Category> categories)
             {
                 List<string> znfvrdfga = new List<string>();
@@ -147,19 +147,21 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
+            Console.WriteLine("UploadInstances End " + pageIndex);
+
             return Instances;
         }
 
         private static void ChangePages(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
-            Console.WriteLine("filter " + searchFilter);
+            //Console.WriteLine("filter " + searchFilter);
             if (pageIndex > PageIndex)
             {
                 uploadedInstances[type].Back = uploadedInstances[type].This;
                 uploadedInstances[type].This = uploadedInstances[type].Next;
                 uploadedInstances[type].Next = null;
                 uploadedInstances[type].Next = UploadInstances(type, pageSize, pageIndex + 1, categoriy, searchFilter);
-                Console.WriteLine("Next " + (uploadedInstances[InstanceSource.Curseforge].Next == null).ToString() + " " + pageIndex + " " + PageIndex);
+                //Console.WriteLine("Next " + (uploadedInstances[InstanceSource.Curseforge].Next == null) + " " + pageIndex + " " + PageIndex);
             }
             else if (pageIndex < PageIndex)
             {
@@ -167,7 +169,7 @@ namespace Lexplosion.Logic.Management
                 uploadedInstances[type].This = uploadedInstances[type].Back;
                 uploadedInstances[type].Back = null;
                 uploadedInstances[type].Back = pageIndex > 0 ? UploadInstances(type, pageSize, pageIndex - 1, categoriy, searchFilter) : null;
-                Console.WriteLine("Back " + (uploadedInstances[InstanceSource.Curseforge].Back == null).ToString() + " " + pageIndex + " " + PageIndex);
+                //Console.WriteLine("Back " + (uploadedInstances[InstanceSource.Curseforge].Back == null).ToString() + " " + pageIndex + " " + PageIndex);
             }
             else
             {
@@ -180,6 +182,7 @@ namespace Lexplosion.Logic.Management
 
         public static List<OutsideInstance> GetInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
+            Console.WriteLine("CLICK");
             List<OutsideInstance> page;
             if (pageIndex > PageIndex)
             {
@@ -193,26 +196,24 @@ namespace Lexplosion.Logic.Management
             {
                 page = UploadInstances(type, pageSize, pageIndex, ModpacksCategories.All, searchFilter);
                 WaitUpload.WaitOne();
-                SearchFilter = searchFilter;
                 uploadedInstances[type].This = page;
             }
 
             if (page != null)
             {
                 WaitUpload.Reset();
-                Console.WriteLine("A " + (page == null).ToString());
+                //Console.WriteLine("A " + (page == null).ToString());
             }
             else
             {
                 WaitUpload.WaitOne();
-                page = pageIndex > PageIndex ? uploadedInstances[type].Next : uploadedInstances[type].Back;
-                Console.WriteLine("B " + (page == null).ToString());
+                page = pageIndex >= PageIndex ? uploadedInstances[type].Next : uploadedInstances[type].Back;
+                //Console.WriteLine("B " + (page == null).ToString());
             }
 
             Lexplosion.Run.ThreadRun(delegate ()
             {
                 ChangePages(type, pageSize, pageIndex, categoriy, searchFilter);
-                SearchFilter = searchFilter;
                 PageIndex = pageIndex;
                 WaitUpload.Set();
             });

@@ -50,9 +50,12 @@ namespace Lexplosion.Gui.InstanceCreator
         {
             foreach (var version in ToServer.GetVersionsList())
             {
-                this.Dispatcher.Invoke(() => { 
-                    VersionCB.Items.Add(version.type + " " + version.id);
-                });
+                if(version.type == "release")
+                {
+                    this.Dispatcher.Invoke(() => {
+                        VersionCB.Items.Add(version.type + " " + version.id);
+                    });
+                } 
             }
         }
 
