@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,15 +10,15 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.Pages.MW
 {
-    /// <summary>
-    /// Interaction logic for InstanceContainerPage.xaml
-    /// </summary>
+	/// <summary>
+	/// Interaction logic for InstanceContainerPage.xaml
+	/// </summary>
 	/// 
-	
+
 
 	// TODO: Сделать общую страницу контейнер для Library и Catalog.
 	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-    public partial class InstanceContainerPage : Page
+	public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
 
@@ -52,7 +51,7 @@ namespace Lexplosion.Gui.Pages.MW
 			return image;
 		}
 
-		private void InitializeControlElements() 
+		private void InitializeControlElements()
 		{
 			searchBox = new SearchBox(this)
 			{
@@ -78,7 +77,7 @@ namespace Lexplosion.Gui.Pages.MW
 			ChangeLoadingLabel("", Visibility.Collapsed);
 		}
 
-		private void InitializeInstance(InstanceSource instanceSource, int pageIndex=0, string searchBoxText="")
+		private void InitializeInstance(InstanceSource instanceSource, int pageIndex = 0, string searchBoxText = "")
 		{
 			Console.WriteLine("Номер страницы - " + pageIndex.ToString());
 			var instances = OutsideDataManager.GetInstances(
@@ -88,7 +87,8 @@ namespace Lexplosion.Gui.Pages.MW
 			paginator.ChangePaginatorVisibility(instances.Count, pageSize);
 
 			if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
-			else {
+			else
+			{
 				for (int j = 0; j < instances.ToArray().Length; j++)
 				{
 					// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
@@ -108,10 +108,11 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public void BuildInstanceForm(string instanceId, int row, byte[] logo, string title, string author, string overview, List<string> tags)
 		{
+
 			this.Dispatcher.Invoke(() =>
 			{
 				if (InstanceGrid.RowDefinitions.Count < 10)
-				{ InstanceGrid.RowDefinitions.Add(GetRowDefinition()); }
+					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
 					_mainWindow, title, "", author, overview, instanceId, ToImage(logo), tags, false, false
 				);
@@ -121,7 +122,7 @@ namespace Lexplosion.Gui.Pages.MW
 			});
 		}
 
-		public void ChangePage() 
+		public void ChangePage()
 		{
 			var selectedInstanceSource = (InstanceSource)searchBox.SourceBox.SelectedIndex;
 			var searchBoxText = searchBox.SearchTextBox.Text;
@@ -146,12 +147,12 @@ namespace Lexplosion.Gui.Pages.MW
 
 			Lexplosion.Run.ThreadRun(delegate ()
 			{
-			if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
-			{
-				_isInitializeInstance = false;
-				InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
-				searchBox.LastRequest = searchBoxText;
-				searchBox.LastSelectedIndex = sourceBoxSelectedIndex;
+				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
+				{
+					_isInitializeInstance = false;
+					InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
+					searchBox.LastRequest = searchBoxText;
+					searchBox.LastSelectedIndex = sourceBoxSelectedIndex;
 				}
 				else
 				{
@@ -162,15 +163,15 @@ namespace Lexplosion.Gui.Pages.MW
 			});
 		}
 
-		private void ChangeLoadingLabel(string content, Visibility visibility) 
+		private void ChangeLoadingLabel(string content, Visibility visibility)
 		{
-			this.Dispatcher.Invoke(() => { 
+			this.Dispatcher.Invoke(() => {
 				LoadingLabel.Text = content;
 				LoadingLabel.Visibility = visibility;
 			});
 		}
 
-		private void ClearGrid() 
+		private void ClearGrid()
 		{
 			if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(1, 10);
 			if (InstanceGrid.RowDefinitions.Count > 2)

@@ -24,7 +24,7 @@
                     Height="{TemplateBinding Height}" 
                     Background="#171717"
                     BorderBrush="#121212"
-                    BorderThickness="1">
+                    BorderThickness="1.5">
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">
                     <ContentPresenter />
                 </Grid>
@@ -35,6 +35,11 @@
                     <Setter TargetName="border" Property="BorderThickness" Value="2"/>
                 </Trigger>
             </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ComboBoxCheckBox" TargetType="{x:Type CheckBox}">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">
+                <ContentPresenter />
+            </Grid>
         </ControlTemplate>
 
         <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
@@ -73,10 +78,10 @@
                                 PopupAnimation="Scroll">
                                 <Grid Name="DropDown"
                                     SnapsToDevicePixels="True"        
-                                    MinWidth="180"
+                                    MinWidth="200"
                                     MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
-                                        CornerRadius="7"
+                                        CornerRadius="6"
                                         Background="#1f1f1f"
                                         BorderThickness="2"
                                         BorderBrush="#167FFC"/>
@@ -181,11 +186,11 @@
             <Setter Property="FontSize" Value="18" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                    <ControlTemplate TargetType="{x:Type TextBox}">
                         <Border x:Name="border" Background="#171717"
                                 BorderBrush="#121212"
-                                BorderThickness="1"
-                                CornerRadius="5">
+                                BorderThickness="1.5"
+                                CornerRadius="6">
                             <ScrollViewer Margin="10,0,0,0" x:Name="PART_ContentHost" VerticalAlignment="Center" HorizontalAlignment="Left" />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -207,7 +212,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border x:Name="border" BorderThickness="2">
+                        <Border x:Name="border" BorderThickness="3">
                             <Border.Background>
                                 <SolidColorBrush Color="#131313" Opacity="0.1" />
                             </Border.Background>

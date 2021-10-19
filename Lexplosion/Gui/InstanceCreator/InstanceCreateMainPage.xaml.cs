@@ -59,10 +59,10 @@ namespace Lexplosion.Gui.InstanceCreator
         private void CreateInstanceButton_Click(object sender, RoutedEventArgs e)
         {
             // InstanceNameTB.Text - Поле с название сборки
-            // VersionCB - выбранная версия
-            // NoneSelected.IsChecked = True; - ничего не выбрано
-            // ForgeSelected.IsChecked = True; - фордж
-            // FabricSelected.IsChecked = True; - фабрик
+            // VersionCB - комбобокс с версиями
+            // NoneSelected.IsChecked = True; - ничего не выбрано радиокнопка
+            // ForgeSelected.IsChecked = True; - фордж радиокнопка
+            // FabricSelected.IsChecked = True; - фабрик радиокнопка
         }
     }
 }

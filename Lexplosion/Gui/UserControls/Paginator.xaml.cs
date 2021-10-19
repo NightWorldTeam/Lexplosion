@@ -19,6 +19,7 @@ namespace Lexplosion.Gui.UserControls
             get { return pageIndex; }
             set
             {
+                Console.WriteLine(3);
                 SelectedPageTextBox.Text = (value + 1).ToString();
                 if (pageIndex < value)
                 {
@@ -31,6 +32,7 @@ namespace Lexplosion.Gui.UserControls
                     if (value == pageLimit.max - 1) NextPageButton.Visibility = Visibility.Visible;
                 }
                 pageIndex = value;
+                
                 page.ChangePage();
             }
         }
@@ -52,7 +54,8 @@ namespace Lexplosion.Gui.UserControls
 
         private void PrevPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PageIndex > 1) PageIndex--;
+            Console.WriteLine(PageIndex);
+            if (PageIndex > 0) PageIndex--;
         }
 
         private void SelectedPageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
