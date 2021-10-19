@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Network;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace Lexplosion.Gui.InstanceCreator
                 if(version.type == "release")
                 {
                     this.Dispatcher.Invoke(() => {
-                        VersionCB.Items.Add(version.type + " " + version.id);
+                        VersionCB.Items.Add(version.id);
                     });
                 } 
             }
@@ -66,6 +67,8 @@ namespace Lexplosion.Gui.InstanceCreator
             // NoneSelected.IsChecked = True; - ничего не выбрано радиокнопка
             // ForgeSelected.IsChecked = True; - фордж радиокнопка
             // FabricSelected.IsChecked = True; - фабрик радиокнопка
+
+            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, VersionCB.Text, "");
         }
     }
 }
