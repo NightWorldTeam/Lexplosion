@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -54,6 +55,8 @@ namespace Lexplosion.Logic.Management
 
             List<OutsideInstance> Instances = new List<OutsideInstance>();
 
+            List<AutoResetEvent> events = new List<AutoResetEvent>();
+
             if (type == InstanceSource.Nightworld)
             {
                 Dictionary<string, NWInstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
@@ -63,23 +66,21 @@ namespace Lexplosion.Logic.Management
                 {
                     if (i < pageSize * (pageIndex + 1))
                     {
-                        byte[] imageBytes;
-                        using (var webClient = new WebClient())
-                        {
-                            imageBytes = webClient.DownloadData(nwInstances[nwModpack].mainImage); // TODO: тут try сделать
-                        }
-
                         OutsideInstance instanceInfo = new OutsideInstance()
                         {
                             Name = nwInstances[nwModpack].name ?? "Uncnown name",
                             Author = nwInstances[nwModpack].author ?? "",
-                            MainImage = imageBytes, // TODO: url до картинке может быть битым и не только тут
+                            MainImage = null,
                             Categories = nwInstances[nwModpack].categories ?? new List<string>(),
                             Description = nwInstances[nwModpack].description ?? "",
                             DownloadCount = 0,
                             Type = InstanceSource.Nightworld,
                             Id = nwModpack
                         };
+
+                        var e = new AutoResetEvent(false);
+                        events.Add(e);
+                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceInfo, nwInstances[nwModpack].mainImage });
 
                         instanceInfo.IsInstalled = UserData.Instances.ExternalIds.ContainsKey(nwModpack);
 
@@ -99,25 +100,6 @@ namespace Lexplosion.Logic.Management
                 List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, ModpacksCategories.All, searchFilter);
                 foreach (var instance in curseforgeInstances)
                 {
-                    byte[] imageBytes = null;
-
-                    if (instance.attachments != null && instance.attachments.Count > 0)
-                    {
-                        using (var webClient = new WebClient())
-                        {
-                            string url = instance.attachments[0].thumbnailUrl;
-                            foreach (var attachment in instance.attachments)
-                            {
-                                if (attachment.isDefault)
-                                {
-                                    url = attachment.thumbnailUrl;
-                                    break;
-                                }
-                            }
-                            imageBytes = webClient.DownloadData(url);
-                        }
-                    }
-
                     string author = "";
                     if (instance.authors != null && instance.authors.Count > 0 && instance.authors[0].name != null)
                     {
@@ -128,13 +110,30 @@ namespace Lexplosion.Logic.Management
                     {
                         Name = instance.name,
                         Author = instance.authors[0].name, // TODO: тут может быть null
-                        MainImage = imageBytes, // TODO: тут тоже может быть null
+                        MainImage = null, // TODO: если картинки не найдено тут нулл и останется
                         Categories = CategoriesListConverter(instance.categories),
                         Description = instance.summary,
                         DownloadCount = instance.downloadCount,
                         Type = InstanceSource.Curseforge,
                         Id = instance.id.ToString()
                     };
+
+                    if (instance.attachments != null && instance.attachments.Count > 0)
+                    {
+                        string url = instance.attachments[0].thumbnailUrl;
+                        foreach (var attachment in instance.attachments)
+                        {
+                            if (attachment.isDefault)
+                            {
+                                url = attachment.thumbnailUrl;
+                                break;
+                            }
+                        }
+
+                        var e = new AutoResetEvent(false);
+                        events.Add(e);
+                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceInfo, url });
+                    }
 
                     instanceInfo.IsInstalled = UserData.Instances.ExternalIds.ContainsKey(instance.id.ToString());
 
@@ -147,9 +146,37 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
+            foreach (var e in events)
+            {
+                e.WaitOne();
+            }
+
             Console.WriteLine("UploadInstances End " + pageIndex);
 
             return Instances;
+        }
+
+        private static void ImageDownload(object state)
+        {
+            object[] array = state as object[];
+
+            AutoResetEvent e = (AutoResetEvent)array[0];
+            OutsideInstance instanceInfo = (OutsideInstance)array[1];
+            string url = (string)array[2];
+
+            try
+            {
+                using (var webClient = new WebClient())
+                {
+                    instanceInfo.MainImage = webClient.DownloadData(url);
+                }
+            }
+            catch
+            {
+                instanceInfo.MainImage = null;
+            }
+
+            e.Set();
         }
 
         private static void ChangePages(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
@@ -184,6 +211,11 @@ namespace Lexplosion.Logic.Management
         {
             Console.WriteLine("CLICK");
             List<OutsideInstance> page;
+            if(Math.Abs(pageIndex - PageIndex) > 1)
+            {
+                PageIndex = pageIndex;
+            }
+
             if (pageIndex > PageIndex)
             {
                 page = uploadedInstances[type].Next;
