@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
@@ -30,6 +31,8 @@ namespace Lexplosion.Gui.InstanceCreator
             "FTB Offical Pack", "Skyblock"
         };
 
+        private List<string> unavailableNames = new List<string>();
+
         public InstanceCreateMainPage()
         {
             InitializeComponent();
@@ -38,6 +41,8 @@ namespace Lexplosion.Gui.InstanceCreator
                 TagsListCB.Items.Add(tag);
             }
             */
+            foreach (var instance in UserData.Instances.List.Keys)
+                unavailableNames.Add(UserData.Instances.List[instance].Name);
 
             Lexplosion.Run.ThreadRun(() => SetupMinecraftVersions());
             
@@ -69,6 +74,23 @@ namespace Lexplosion.Gui.InstanceCreator
             // FabricSelected.IsChecked = True; - фабрик радиокнопка
 
             ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, VersionCB.Text, "");
+        }
+
+        public static readonly SolidColorBrush unavalibleNameColor = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+        private void InstanceNameTB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (unavailableNames.Contains(InstanceNameTB.Text))
+            {
+                Console.WriteLine("Yes");
+                InstanceNameTB.Foreground = Brushes.Red;
+            }
+            else 
+            {
+                if (InstanceNameTB.Foreground.Equals(Brushes.Red)) 
+                {
+                    InstanceNameTB.Foreground = Brushes.White;
+                }
+            }
         }
     }
 }

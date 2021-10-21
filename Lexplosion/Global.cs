@@ -29,21 +29,24 @@ namespace Lexplosion.Global
             public static Dictionary<string, InstanceParametrs> List; // все сборки
             public static Dictionary<string, InstanceAssets> Assets; // ассетсы всех модпаков
             public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)
+            public delegate void InstaceAddHander();
+            public static event InstaceAddHander Nofity;
 
-            public static void AddInstance(string localId, InstanceParametrs parametrs, InstanceAssets asstes, string externalId = "")
+            public static void AddInstance(string localId, InstanceParametrs parametrs, InstanceAssets assets, string externalId = "")
             {
                 List[localId] = parametrs;
-                Assets[localId] = asstes;
+                Assets[localId] = assets;
 
                 if(externalId != "" && externalId != null)
                 {
                     ExternalIds[externalId] = localId;
                 }
+                Nofity.Invoke();
             }
 
-            public static void SetAssets(string id, InstanceAssets asstes)
+            public static void SetAssets(string id, InstanceAssets assets)
             {
-                Assets[id] = asstes;
+                Assets[id] = assets;
             }
         }
     }

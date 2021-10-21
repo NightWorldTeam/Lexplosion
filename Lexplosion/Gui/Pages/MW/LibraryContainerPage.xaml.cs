@@ -22,6 +22,7 @@ namespace Lexplosion.Gui.Pages.MW
 			_mainWindow = mainWindow;
 			InitializeComponent();
 			InitializeInstance();
+			UserData.Instances.Nofity += InitializeInstance;
 		}
 
 		/*
@@ -31,25 +32,28 @@ namespace Lexplosion.Gui.Pages.MW
 			public string xmx;
 			public string xms;
 		*/
-		private void InitializeInstance()
+		public void InitializeInstance()
 		{
 			List<string> instanceTags = new List<string>();
 
 			int i = 0;
+			Console.WriteLine(String.Join(",", UserData.Instances.List.Keys));
+			
 			foreach (string key in UserData.Instances.List.Keys)
 			{
 				string description;
 				BitmapImage image;
+				// обновление assets
+				description = "This modpack is not have description...";
+				image = new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
 				if (UserData.Instances.Assets.ContainsKey(key))
 				{
-					description = UserData.Instances.Assets[key].description;
-					image = new BitmapImage(new Uri(WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage));
-                }
-                else
-                {
-					description = "";
-					image = new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
-                }
+					if (UserData.Instances.Assets[key] != null) 
+					{ 
+						description = UserData.Instances.Assets[key].description;
+						image = new BitmapImage(new Uri(WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage));
+					}
+				}
 
 				BuildInstanceForm(
 					key, i,
@@ -58,8 +62,7 @@ namespace Lexplosion.Gui.Pages.MW
 					"by NightWorld",
 					description,
 					instanceTags
-					);
-
+				);
 				i++;
 			}
 		}

@@ -266,7 +266,8 @@
                     Height="40"
                     Margin="30,60,0,0"
                     VerticalAlignment="Top"
-                    HorizontalAlignment="Left"/>
+                    HorizontalAlignment="Left"
+                    TextChanged="InstanceNameTB_TextChanged"/>
 
                 <!-- Version -->
                 <TextBlock Text="Версия"
