@@ -61,12 +61,12 @@ namespace Lexplosion.Global
     {
         public struct URL
         {
-            public const string ModpacksData = "http://nw-prod/minecraft/modpacks/";
-            public const string VersionsData = "http://nw-prod/minecraft/versions/";
-            public const string Upload = "http://nw-prod/minecraft/upload/";
+            public const string ModpacksData = "https://night-world.org/minecraft/modpacks/";
+            public const string VersionsData = "https://night-world.org/minecraft/versions/";
+            public const string Upload = "https://night-world.org/minecraft/upload/";
             public const string LauncherParts = "https://night-world.org/assets/launcher/windows/";
             public const string LogicScripts = "https://night-world.org/requestProcessing/";
-            public const string DataScripts = "http://nw-prod/launcherApi/";
+            public const string DataScripts = "https://night-world.org/launcherApi/";
         }
 
         public static string gamePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Replace(@"\", "/") + "/" + "night-world";
