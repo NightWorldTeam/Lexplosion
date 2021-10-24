@@ -30,13 +30,22 @@ namespace Lexplosion.Logic.FileSystem
             public bool MinecraftJar = false;
             public bool AssetsObjects = false;
             public bool AssetsIndexes = false;
-            public bool AssetsVirtual = false;
         }
 
         private class LauncherAssets //этот класс нужен для декодирования json
         {
             public int version;
             public Dictionary<string, InstanceAssets> data;
+        }
+
+        private struct Assets
+        {
+            public struct AssetFile
+            {
+                public string hash;
+            }
+
+            public Dictionary<string, AssetFile> objects;
         }
 
         public static string directory;
@@ -306,6 +315,7 @@ namespace Lexplosion.Logic.FileSystem
             return filesUpdates;
         }
 
+        // TODO: его вызов обернуть в try
         public static BaseFilesUpdates CheckBaseFiles(VersionManifest filesInfo, string instanceId, ref Dictionary<string, int> updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
         {
             BaseFilesUpdates updatesList = new BaseFilesUpdates(); //возвращаемый список обновлений
@@ -456,11 +466,6 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //проверяем assets
-            if (!Directory.Exists(directory + "/assets/virtual/" + filesInfo.version.assetsVersion))
-            {
-                updatesList.AssetsVirtual = true;
-            }
-
             if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
             {
                 updatesList.AssetsIndexes = true;
@@ -712,7 +717,7 @@ namespace Lexplosion.Logic.FileSystem
             //скачиваем natives
             if (filesList.version.nativesUrl == null)
             {
-                addr = LaunсherSettings.URL.Upload + "natives/" + filesList.version.gameVersion + "/";
+                addr = LaunсherSettings.URL.Upload + "natives/";
             }
             else
             {
@@ -873,32 +878,12 @@ namespace Lexplosion.Logic.FileSystem
             if (!Directory.Exists(directory + "/assets"))
                 Directory.CreateDirectory(directory + "/assets");
 
-            if (updateList.AssetsObjects)
-            {
-                if (!Directory.Exists(directory + "/assets/objects"))
-                    Directory.CreateDirectory(directory + "/assets/objects");
-
-                try
-                {
-                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/objects.zip", directory + "/temp/objects.zip");
-
-                    ZipFile.ExtractToDirectory(directory + "/temp/objects.zip", directory + "/assets/objects");
-                    File.Delete(directory + "/temp/objects.zip");
-
-                    //UpdateProgressBar();
-                }
-                catch
-                {
-                    errors.Add("asstes/objects");
-                }
-            }
-
             if (updateList.AssetsIndexes)
             {
                 if (!Directory.Exists(directory + "/assets/indexes"))
                     Directory.CreateDirectory(directory + "/assets/indexes");
 
-                wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json");
+                wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
 
                 try
                 {
@@ -911,28 +896,56 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            if (updateList.AssetsVirtual)
+            if (updateList.AssetsObjects)
             {
-                if (!Directory.Exists(directory + "/assets/virtual"))
-                    Directory.CreateDirectory(directory + "/assets/virtual");
+                if (!Directory.Exists(directory + "/assets/objects"))
+                    Directory.CreateDirectory(directory + "/assets/objects");
 
-                if (!Directory.Exists(directory + "/assets/virtual/" + filesList.version.assetsVersion))
-                    Directory.CreateDirectory(directory + "/assets/virtual/" + filesList.version.assetsVersion);
+                Assets asstes = GetFile<Assets>(directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json");
 
-                try
+                if (asstes.objects != null)
                 {
-                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/" + filesList.version.assetsVersion + ".zip", directory + "/temp/" + filesList.version.assetsVersion + ".zip");
+                    foreach (string asset in asstes.objects.Keys)
+                    {
+                        string assetHash = asstes.objects[asset].hash;
+                        if (assetHash != null)
+                        {
+                            string assetPath = "/" + assetHash.Substring(0, 2);
+                            if(!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
+                            {
+                                if (!InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
+                                {
+                                    Console.WriteLine("ERROR:1 " + "http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath);
+                                }
+                            }     
+                        }
+                        else
+                        {
+                            errors.Add("asstes/objects");
+                            Console.WriteLine("ERROR:2 " + asset + " " + (assetHash == null));
+                        }
 
-                    ZipFile.ExtractToDirectory(directory + "/temp/" + filesList.version.assetsVersion + ".zip", directory + "/assets/virtual/" + filesList.version.assetsVersion);
-                    File.Delete(directory + "/temp/" + filesList.version.assetsVersion + ".zip");
+                    }
+                }
+                else
+                {
+                    errors.Add("asstes/objects");
+                    Console.WriteLine("ERROR ERROR ERROR ERROR");
+                }
+
+                /*try
+                {
+                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/objects.zip", directory + "/temp/objects.zip");
+
+                    ZipFile.ExtractToDirectory(directory + "/temp/objects.zip", directory + "/assets/objects");
+                    File.Delete(directory + "/temp/objects.zip");
 
                     //UpdateProgressBar();
-
                 }
                 catch
                 {
-                    errors.Add("asstes/virtuals");
-                }
+                    errors.Add("asstes/objects");
+                }*/
             }
 
             wc.Dispose();
