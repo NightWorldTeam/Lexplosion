@@ -346,7 +346,7 @@ namespace Lexplosion.Gui.UserControls
                 MessageBox.Show(instanceProperties.OutsideInstanceId.ToString());
                 string instanceId = ManageLogic.CreateInstance(
                     instanceProperties.InstanceTitle, InstanceSource.Curseforge, 
-                    "", "", instanceProperties.OutsideInstanceId.ToString()
+                    "", ModloaderType.None, "", instanceProperties.OutsideInstanceId.ToString()
                 );
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.UpdateInstance(instanceId);
@@ -355,7 +355,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void LaunchInstance()
         {
-            string instanceId = "test";
+            string instanceId = instanceProperties.InstanceId;
             ManageLogic.СlientManager(instanceId);
         }
 

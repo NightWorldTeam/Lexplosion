@@ -241,7 +241,17 @@ namespace Lexplosion.Logic.FileSystem
         //у каждой версии игры своё имя для файлов с информацией о либрариесах
         public static string GetLibName(string instanceId, VersionInfo version)
         {
-            return version.gameVersion + "-" + version.forgeVersion;
+            string endName = "";
+            if (version.modloaderType == ModloaderType.Fabric)
+            {
+                endName = "-Fabric-" + version.modloaderVersion;
+            }
+            else if (version.modloaderType == ModloaderType.Forge)
+            {
+                endName = "-Forge-" + version.modloaderVersion;
+            }
+
+            return version.gameVersion + endName;
         }
 
         public static void SaveManifest(string instanceId, VersionManifest data)
@@ -266,7 +276,8 @@ namespace Lexplosion.Logic.FileSystem
                     assetsVersion = data.version.assetsVersion,
                     assetsIndexes = data.version.assetsIndexes,
                     mainClass = data.version.mainClass,
-                    forgeVersion = data.version.forgeVersion
+                    modloaderVersion = data.version.modloaderVersion,
+                    modloaderType = data.version.modloaderType
                 }
             };
 

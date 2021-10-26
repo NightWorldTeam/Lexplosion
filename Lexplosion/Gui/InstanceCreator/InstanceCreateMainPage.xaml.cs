@@ -73,7 +73,7 @@ namespace Lexplosion.Gui.InstanceCreator
             // ForgeSelected.IsChecked = True; - фордж радиокнопка
             // FabricSelected.IsChecked = True; - фабрик радиокнопка
 
-            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, VersionCB.Text, "");
+            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, VersionCB.Text, ModloaderType.None, "");
         }
 
         public static readonly SolidColorBrush unavalibleNameColor = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));

@@ -60,7 +60,7 @@ namespace Lexplosion.Logic.Network
         }
 
         //функция получает манифест для майкрафт версии
-        public static VersionManifest GetVersionManifest(string version, string forgeVersion = "")
+        public static VersionManifest GetVersionManifest(string version, ModloaderType modloader, string modloaderVersion = "")
         {
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
@@ -90,12 +90,22 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string forge = "";
-                    if(!string.IsNullOrEmpty(forgeVersion))
+                    string modloaderUrl = "";
+                    if (!string.IsNullOrEmpty(modloaderVersion))
                     {
-                        forge = "/forge/" + WebUtility.UrlEncode(forgeVersion);
+                        if (modloader == ModloaderType.Fabric)
+                        {
+                            modloaderUrl = "/fabric/";
+                            modloaderUrl += modloaderVersion;
+                        }
+                        else if (modloader == ModloaderType.Forge)
+                        {
+                            modloaderUrl = "/forge/" ;
+                            modloaderUrl += modloaderVersion;
+                        }
                     }
-                    string answer = HttpPost(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + forge, data);
+                    
+                    string answer = HttpPost(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl, data);
 
                     if (answer != null)
                     {

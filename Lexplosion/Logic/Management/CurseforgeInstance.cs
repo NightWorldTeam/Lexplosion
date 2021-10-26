@@ -81,11 +81,11 @@ namespace Lexplosion.Logic.Management
 
             //ProgressHandler(20);
 
-            if (Manifest.version.forgeVersion != null && Manifest.version.forgeVersion != "")
+            if (Manifest.version.modloaderVersion != null && Manifest.version.modloaderVersion != "")
             {
                 BaseFilesIsCheckd = true;
 
-                Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+                Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
 
                 if (Manifest != null)
                 {
@@ -188,18 +188,33 @@ namespace Lexplosion.Logic.Management
 
                 if (!BaseFilesIsCheckd)
                 {
-                    //определяем приоритетную версию форджа
-                    string modLoader = "";
-                    foreach(var loader in manifest.minecraft.modLoaders)
+                    //определяем приоритетную версию модлоадера
+                    string modLoaderVersion = "";
+                    ModloaderType modloader = ModloaderType.None;
+                    foreach (var loader in manifest.minecraft.modLoaders)
                     {
                         if (loader.primary)
                         {
-                            modLoader = loader.id;
+                            modLoaderVersion = loader.id;
                             break;
                         }
                     }
-                    
-                    Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modLoader);
+
+                    if (modLoaderVersion != "")
+                    {
+                        if (modLoaderVersion.Contains("forge-"))
+                        {
+                            modloader = ModloaderType.Forge;
+                            modLoaderVersion = modLoaderVersion.Replace("forge-", "");
+                        }
+                        else if (modLoaderVersion.Contains("fabric-"))
+                        {
+                            modloader = ModloaderType.Fabric;
+                            modLoaderVersion = modLoaderVersion.Replace("fabric-", "");
+                        }
+                    }
+
+                    Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modloader, modLoaderVersion);
 
                     if (Manifest != null)
                     {

@@ -68,4 +68,11 @@
         ManifestError,
         UnknownError
     }
+
+    public enum ModloaderType
+    {
+        None,
+        Forge,
+        Fabric
+    }
 }

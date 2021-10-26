@@ -289,7 +289,7 @@ namespace Lexplosion.Logic.Management
             return false;
         } 
 
-        public static string CreateInstance(string name, InstanceSource type, string gameVersion, string forge, string externalId = "")
+        public static string CreateInstance(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion, string externalId = "")
         {
             string instanceId = GenerateInstanceId(name);
 
@@ -307,7 +307,8 @@ namespace Lexplosion.Logic.Management
                 version = new VersionInfo
                 {
                     gameVersion = gameVersion,
-                    forgeVersion = forge
+                    modloaderVersion = modloaderVersion,
+                    modloaderType = modloader
                 }
             };
             DataFilesManager.SaveManifest(instanceId, manifest);
@@ -323,6 +324,13 @@ namespace Lexplosion.Logic.Management
             }
 
             return instanceId;
+        }
+
+        public static bool InstallAddon(int projectID, int fileID, string instanceId)
+        {
+            CurseforgeApi.DownloadAddon(projectID, fileID, "/instances/" + instanceId + "/", true);
+
+            return true;
         }
     }
 }

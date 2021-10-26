@@ -29,12 +29,12 @@ namespace Lexplosion.Logic.Management
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
 
-            if(Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
+            if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
             {
                 return InstanceInit.VersionError;
             }
 
-            Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+            Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
 
             if (Manifest != null)
             {
@@ -59,6 +59,7 @@ namespace Lexplosion.Logic.Management
         {
             List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
             MessageBox.Show(string.Join(", ", errors));
+            Console.WriteLine("G " + Manifest.version.modloaderVersion + " " + Manifest.version.modloaderType);
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             InstanceInit result = InstanceInit.Successful;

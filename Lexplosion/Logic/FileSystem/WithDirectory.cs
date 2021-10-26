@@ -1172,7 +1172,8 @@ namespace Lexplosion.Logic.FileSystem
                 ["description"] = description,
                 ["name"] = UserData.Instances.List[instanceId].Name,
                 ["author"] = UserData.login,
-                ["forgeVersion"] = instanceFile.version.forgeVersion
+                ["modloaderType"] = instanceFile.version.modloaderType.ToString(),
+                ["modloaderVersion"] = instanceFile.version.modloaderVersion,
             };
 
 
@@ -1236,6 +1237,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             Dictionary<string, string> instanceInfo = GetFile<Dictionary<string, string>>(dir + "instanceInfo.json");
+            ModloaderType modloader = ModloaderType.None;
 
             if (instanceInfo == null || !instanceInfo.ContainsKey("gameVersion") || string.IsNullOrEmpty(instanceInfo["gameVersion"]))
             {
@@ -1258,12 +1260,20 @@ namespace Lexplosion.Logic.FileSystem
                 instanceInfo["description"] = "";
             }
 
-            if (!instanceInfo.ContainsKey("forgeVersion") || string.IsNullOrEmpty(instanceInfo["forgeVersion"]))
+            if (!instanceInfo.ContainsKey("modloaderVersion") || string.IsNullOrEmpty(instanceInfo["modloaderVersion"]))
             {
-                instanceInfo["forgeVersion"] = "";
+                instanceInfo["modloaderVersion"] = "";
             }
 
-            string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceSource.Local, instanceInfo["gameVersion"], instanceInfo["forgeVersion"]);
+            if (!instanceInfo.ContainsKey("modloaderType") || string.IsNullOrEmpty(instanceInfo["modloaderType"]))
+            {
+                instanceInfo["modloaderType"] = "";
+            }
+
+            Enum.TryParse(instanceInfo["modloaderType"], out modloader);
+
+
+            string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceSource.Local, instanceInfo["gameVersion"], modloader, instanceInfo["modloaderVersion"]);
             MessageBox.Show(instanceId);
 
             string addr = dir + "files/";
