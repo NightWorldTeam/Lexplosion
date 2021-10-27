@@ -45,7 +45,7 @@ namespace Lexplosion.Logic.Network
                 if(answer != null)
                 {
                     List<MCVersionInfo> data = JsonConvert.DeserializeObject<List<MCVersionInfo>>(answer);
-                    return data ?? new List<MCVersionInfo>(); ;
+                    return data ?? new List<MCVersionInfo>();
                 }
                 else
                 {
@@ -55,6 +55,42 @@ namespace Lexplosion.Logic.Network
             catch
             {
                 return new List<MCVersionInfo>();
+            }
+
+        }
+
+        public static List<string> GetModloadersList(string gameVersion, ModloaderType modloaderType)
+        {
+            string modloader;
+            if (modloaderType == ModloaderType.Fabric)
+            {
+                modloader = "/fabric/";
+            }
+            else if (modloaderType == ModloaderType.Forge)
+            {
+                modloader = "/forge/";
+            }
+            else
+            {
+                return new List<string>();
+            }
+
+            try
+            {
+                string answer = HttpGet(LaunсherSettings.URL.VersionsData + gameVersion + modloader);
+                if (answer != null)
+                {
+                    List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
+                    return data ?? new List<string>();
+                }
+                else
+                {
+                    return new List<string>();
+                }
+            }
+            catch
+            {
+                return new List<string>();
             }
 
         }
@@ -104,7 +140,7 @@ namespace Lexplosion.Logic.Network
                             modloaderUrl += modloaderVersion;
                         }
                     }
-                    
+
                     string answer = HttpPost(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl, data);
 
                     if (answer != null)
