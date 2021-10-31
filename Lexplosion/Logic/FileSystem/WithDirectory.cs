@@ -799,7 +799,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
                         {
                             int i = 1; //начинаем цикл с первого элемента, т.к нулевой - название метода
-                            while (i < obtainingMethod.Count) 
+                            while (i < obtainingMethod.Count)
                             {
                                 // получаем команду и выполняем её
                                 switch (obtainingMethod[i][0])
@@ -842,15 +842,22 @@ namespace Lexplosion.Logic.FileSystem
                                         break;
 
                                     case "moveFile":
-                                        File.Move(obtainingMethod[i][2].Replace("{DIR}", directory), obtainingMethod[i][1].Replace("{DIR}", directory));
+                                        if (File.Exists(obtainingMethod[i][2].Replace("{DIR}", directory)))
+                                        {
+                                            File.Delete(obtainingMethod[i][2].Replace("{DIR}", directory));
+                                        }
+                                        File.Move(obtainingMethod[i][1].Replace("{DIR}", directory), obtainingMethod[i][2].Replace("{DIR}", directory));
                                         break;
                                 }
                                 i++;
                             }
+                            //очищаем папку temp
+                            //Directory.Delete(directory + "/temp", true);
+                            //Directory.CreateDirectory(directory + "/temp");
                         }
 
-                        //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
-                        EndWhile: executedMethods.Add(obtainingMethod[0][0]);
+                    //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
+                    EndWhile: executedMethods.Add(obtainingMethod[0][0]);
                         if (!File.Exists(directory + "/libraries/" + lib))
                         {
                             errors.Add("libraries/" + lib);
@@ -1386,16 +1393,18 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (data != null)
                 {
-
                     foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
                     {
                         bool result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/temp/dataDownload/overrides/");
+                        Console.WriteLine(result + " " + file.projectID);
                         if (!result) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
                         {
                             errors.Add(file.projectID + " " + file.fileID);
                             return null;
                         }
                     }
+
+                    Console.WriteLine("END MODS");
 
                     string SourcePath = directory + "/temp/dataDownload/overrides/";
                     string DestinationPath = directory + "/instances/" + instanceId + "/";
@@ -1415,6 +1424,8 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         Directory.Delete(directory + "/temp/dataDownload", true);
                     }
+
+                    Console.WriteLine("Return");
 
                     return data;
                 }

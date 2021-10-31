@@ -202,6 +202,8 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
+                Console.WriteLine("dfggdfgfddgfdfg");
+
                 if (!BaseFilesIsCheckd)
                 {
                     //определяем приоритетную версию модлоадера
@@ -231,6 +233,7 @@ namespace Lexplosion.Logic.Management
                     }
 
                     Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modloader, modLoaderVersion);
+                    Console.WriteLine("dfggdfgfddgfdfg2");
 
                     if (Manifest != null)
                     {
@@ -255,7 +258,7 @@ namespace Lexplosion.Logic.Management
                         };
                     }
                 }
-
+                Console.WriteLine("dfggdfgfddgfdfg3");
                 WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
             }

@@ -389,24 +389,27 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceDownloadCompleted(InstanceInit result, List<string> downloadErrors) 
         {
-            if (result == InstanceInit.Successful) 
+            MainWindow.Obj.Dispatcher.Invoke(delegate ()
             {
-                instanceProperties.IsInstanceInstalled = true;
-                // здесь появился баг
-                FormSetup();
-                InstanceProgressBar.Visibility = Visibility.Collapsed;
-            }
-            else if (result == InstanceInit.DownloadFilesError)
-            {
-                foreach (string file in downloadErrors) 
+                if (result == InstanceInit.Successful)
                 {
-                    //MessageBox.Show("Error " + file);
+                    instanceProperties.IsInstanceInstalled = true;
+                    // здесь появился баг
+                    FormSetup();
+                    InstanceProgressBar.Visibility = Visibility.Collapsed;
                 }
-            }
-            else
-            {
-                //MessageBox.Show("Error " + result);
-            }
+                else if (result == InstanceInit.DownloadFilesError)
+                {
+                    foreach (string file in downloadErrors)
+                    {
+                        //MessageBox.Show("Error " + file);
+                    }
+                }
+                else
+                {
+                    //MessageBox.Show("Error " + result);
+                }
+            });
         }
     }
 }
