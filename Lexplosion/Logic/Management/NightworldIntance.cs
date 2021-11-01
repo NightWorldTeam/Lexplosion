@@ -87,7 +87,7 @@ namespace Lexplosion.Logic.Management
                         return InstanceInit.ServerError;
                     }
 
-                    VersionManifest tempManifest = ToServer.GetVersionManifest(manifest_.version.gameVersion, manifest_.version.forgeVersion);
+                    VersionManifest tempManifest = ToServer.GetVersionManifest(manifest_.version.gameVersion, manifest_.version.modloaderType, manifest_.version.modloaderVersion);
                     if (tempManifest == null)
                     {
                         return InstanceInit.ServerError;
@@ -102,7 +102,7 @@ namespace Lexplosion.Logic.Management
                 }
                 else
                 {
-                    VersionManifest tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+                    VersionManifest tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
                     if (tempManifest == null)
                     {
                         NInstanceManifest manifest_ = NightWorldApi.GetInstanceManifest(InfoData.id);
@@ -111,7 +111,7 @@ namespace Lexplosion.Logic.Management
                             return InstanceInit.ServerError;
                         }
 
-                        tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+                        tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
                         if (tempManifest == null)
                         {
                             return InstanceInit.ServerError;
@@ -135,7 +135,7 @@ namespace Lexplosion.Logic.Management
                     return InstanceInit.ServerError;
                 }
 
-                VersionManifest manifest_ = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+                VersionManifest manifest_ = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
                 if (manifest_ == null)
                 {
                     return InstanceInit.ServerError;

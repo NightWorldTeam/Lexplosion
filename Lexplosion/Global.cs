@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Global
@@ -41,7 +42,11 @@ namespace Lexplosion.Global
                 {
                     ExternalIds[externalId] = localId;
                 }
-                Nofity?.Invoke();
+
+                MainWindow.Obj.Dispatcher.Invoke(delegate () 
+                {
+                    Nofity?.Invoke();
+                });
             }
 
             public static void SetAssets(string id, InstanceAssets assets)

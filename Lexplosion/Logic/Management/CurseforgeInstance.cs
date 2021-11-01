@@ -81,11 +81,11 @@ namespace Lexplosion.Logic.Management
 
             //ProgressHandler(20);
 
-            if (Manifest.version.forgeVersion != null && Manifest.version.forgeVersion != "")
+            if (Manifest.version.modloaderVersion != null && Manifest.version.modloaderVersion != "" && Manifest.version.modloaderType != ModloaderType.None)
             {
                 BaseFilesIsCheckd = true;
 
-                Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.forgeVersion);
+                Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
 
                 if (Manifest != null)
                 {
@@ -123,51 +123,67 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update()
         {
-            try
-            {
-                // скачивание иконки
-                CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
-                string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
-                InstanceAssets assets = new InstanceAssets();
-
-                if (info.attachments.Count > 0)
+            // асинхронно скачиваем иконку
+            Lexplosion.Run.ThreadRun(delegate () {
+                try
                 {
-                    // TODO: написать где-то отдельную функцию для скачивания файла
-                    string[] a = info.attachments[0].thumbnailUrl.Split('/');
-                    string fileName = dir + "/" + a[a.Length - 1];
+                    CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
+                    string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
+                    InstanceAssets assets = new InstanceAssets();
 
-                    using (WebClient wc = new WebClient())
+                    if (info.attachments.Count > 0)
                     {
-                        if (!Directory.Exists(dir))
+                        // TODO: написать где-то отдельную функцию для скачивания файла
+                        string attachmentUrl = info.attachments[0].thumbnailUrl;
+                        foreach (var attachment in info.attachments)
                         {
-                            Directory.CreateDirectory(dir);
+                            if (attachment.isDefault)
+                            {
+                                attachmentUrl = attachment.thumbnailUrl;
+                            }
                         }
 
-                        // TODO: в info.attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
-                        wc.DownloadFile(info.attachments[0].thumbnailUrl, fileName);
+                        string[] a = attachmentUrl.Split('/');
+                        string fileName = dir + "/" + a[a.Length - 1];
+
+                        using (WebClient wc = new WebClient())
+                        {
+                            if (!Directory.Exists(dir))
+                            {
+                                Directory.CreateDirectory(dir);
+                            }
+
+                            if (File.Exists(fileName)) // TODO: вылетает исключение о том что файл уже используется. видимо из-за того что этот файл используется интерфейсом
+                            {
+                                File.Delete(fileName);
+                            }
+
+                            wc.DownloadFile(attachmentUrl, fileName);
+                        }
+
+                        assets.description = "";
+                        assets.mainImage = InstanceId + "/" + a[a.Length - 1];
                     }
 
-                    assets.description = "";
-                    assets.mainImage = InstanceId + "/" + a[a.Length - 1];
-                }
+                    //устанавливаем описание
+                    if (info.summary != null)
+                    {
+                        assets.description = info.summary;
+                    }
 
-                //устанавливаем описание
-                if (info.summary != null)
-                {
-                    assets.description = info.summary;
-                }
+                    //устанавливаем автора
+                    if (info.authors.Count > 0 && info.authors[0].name != null)
+                    {
+                        assets.author = info.authors[0].name;
+                    }
 
-                //устанавливаем автора
-                if (info.authors.Count > 0 && info.authors[0].name != null)
-                {
-                    assets.author = info.authors[0].name;
+                    // сохраняем асетсы модпака
+                    UserData.Instances.SetAssets(InstanceId, assets);
+                    DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.Instances.Assets[InstanceId]));
                 }
-
-                // сохраняем асетсы модпака
-                UserData.Instances.SetAssets(InstanceId, assets);
-                DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.Instances.Assets[InstanceId]));
-            }
-            catch { }
+                catch { }
+            });
+            
 
             //ProgressHandler(30);
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
@@ -186,20 +202,38 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
+                Console.WriteLine("dfggdfgfddgfdfg");
+
                 if (!BaseFilesIsCheckd)
                 {
-                    //определяем приоритетную версию форджа
-                    string modLoader = "";
-                    foreach(var loader in manifest.minecraft.modLoaders)
+                    //определяем приоритетную версию модлоадера
+                    string modLoaderVersion = "";
+                    ModloaderType modloader = ModloaderType.None;
+                    foreach (var loader in manifest.minecraft.modLoaders)
                     {
                         if (loader.primary)
                         {
-                            modLoader = loader.id;
+                            modLoaderVersion = loader.id;
                             break;
                         }
                     }
-                    
-                    Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modLoader);
+
+                    if (modLoaderVersion != "")
+                    {
+                        if (modLoaderVersion.Contains("forge-"))
+                        {
+                            modloader = ModloaderType.Forge;
+                            modLoaderVersion = modLoaderVersion.Replace("forge-", "");
+                        }
+                        else if (modLoaderVersion.Contains("fabric-"))
+                        {
+                            modloader = ModloaderType.Fabric;
+                            modLoaderVersion = modLoaderVersion.Replace("fabric-", "");
+                        }
+                    }
+
+                    Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modloader, modLoaderVersion);
+                    Console.WriteLine("dfggdfgfddgfdfg2");
 
                     if (Manifest != null)
                     {
@@ -224,7 +258,7 @@ namespace Lexplosion.Logic.Management
                         };
                     }
                 }
-
+                Console.WriteLine("dfggdfgfddgfdfg3");
                 WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
             }

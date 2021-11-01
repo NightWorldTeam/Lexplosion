@@ -68,7 +68,7 @@ namespace Lexplosion.Gui.InstanceCreator
             // ForgeSelected.IsChecked = True; - фордж радиокнопка
             // FabricSelected.IsChecked = True; - фабрик радиокнопка
 
-            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, VersionCB.Text, "");
+            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, VersionCB.Text, ModloaderType.None, "");
         }
 
         private void InstanceNameTB_TextChanged(object sender, TextChangedEventArgs e)

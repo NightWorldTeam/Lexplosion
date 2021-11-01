@@ -55,7 +55,8 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string assetsVersion;
         public string assetsIndexes;
         public string mainClass;
-        public string forgeVersion;
+        public string modloaderVersion;
+        public ModloaderType modloaderType;
     }
 
     class VersionInfo : LocalVersionInfo

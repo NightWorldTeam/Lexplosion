@@ -30,13 +30,22 @@ namespace Lexplosion.Logic.FileSystem
             public bool MinecraftJar = false;
             public bool AssetsObjects = false;
             public bool AssetsIndexes = false;
-            public bool AssetsVirtual = false;
         }
 
         private class LauncherAssets //этот класс нужен для декодирования json
         {
             public int version;
             public Dictionary<string, InstanceAssets> data;
+        }
+
+        private struct Assets
+        {
+            public struct AssetFile
+            {
+                public string hash;
+            }
+
+            public Dictionary<string, AssetFile> objects;
         }
 
         public static string directory;
@@ -306,6 +315,7 @@ namespace Lexplosion.Logic.FileSystem
             return filesUpdates;
         }
 
+        // TODO: его вызов обернуть в try
         public static BaseFilesUpdates CheckBaseFiles(VersionManifest filesInfo, string instanceId, ref Dictionary<string, int> updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
         {
             BaseFilesUpdates updatesList = new BaseFilesUpdates(); //возвращаемый список обновлений
@@ -456,11 +466,6 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //проверяем assets
-            if (!Directory.Exists(directory + "/assets/virtual/" + filesInfo.version.assetsVersion))
-            {
-                updatesList.AssetsVirtual = true;
-            }
-
             if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
             {
                 updatesList.AssetsIndexes = true;
@@ -712,7 +717,7 @@ namespace Lexplosion.Logic.FileSystem
             //скачиваем natives
             if (filesList.version.nativesUrl == null)
             {
-                addr = LaunсherSettings.URL.Upload + "natives/" + filesList.version.gameVersion + "/";
+                addr = LaunсherSettings.URL.Upload + "natives/";
             }
             else
             {
@@ -794,7 +799,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
                         {
                             int i = 1; //начинаем цикл с первого элемента, т.к нулевой - название метода
-                            while (i < obtainingMethod.Count) 
+                            while (i < obtainingMethod.Count)
                             {
                                 // получаем команду и выполняем её
                                 switch (obtainingMethod[i][0])
@@ -837,15 +842,22 @@ namespace Lexplosion.Logic.FileSystem
                                         break;
 
                                     case "moveFile":
-                                        File.Move(obtainingMethod[i][2].Replace("{DIR}", directory), obtainingMethod[i][1].Replace("{DIR}", directory));
+                                        if (File.Exists(obtainingMethod[i][2].Replace("{DIR}", directory)))
+                                        {
+                                            File.Delete(obtainingMethod[i][2].Replace("{DIR}", directory));
+                                        }
+                                        File.Move(obtainingMethod[i][1].Replace("{DIR}", directory), obtainingMethod[i][2].Replace("{DIR}", directory));
                                         break;
                                 }
                                 i++;
                             }
+                            //очищаем папку temp
+                            //Directory.Delete(directory + "/temp", true);
+                            //Directory.CreateDirectory(directory + "/temp");
                         }
 
-                        //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
-                        EndWhile: executedMethods.Add(obtainingMethod[0][0]);
+                    //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
+                    EndWhile: executedMethods.Add(obtainingMethod[0][0]);
                         if (!File.Exists(directory + "/libraries/" + lib))
                         {
                             errors.Add("libraries/" + lib);
@@ -873,32 +885,12 @@ namespace Lexplosion.Logic.FileSystem
             if (!Directory.Exists(directory + "/assets"))
                 Directory.CreateDirectory(directory + "/assets");
 
-            if (updateList.AssetsObjects)
-            {
-                if (!Directory.Exists(directory + "/assets/objects"))
-                    Directory.CreateDirectory(directory + "/assets/objects");
-
-                try
-                {
-                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/objects.zip", directory + "/temp/objects.zip");
-
-                    ZipFile.ExtractToDirectory(directory + "/temp/objects.zip", directory + "/assets/objects");
-                    File.Delete(directory + "/temp/objects.zip");
-
-                    //UpdateProgressBar();
-                }
-                catch
-                {
-                    errors.Add("asstes/objects");
-                }
-            }
-
             if (updateList.AssetsIndexes)
             {
                 if (!Directory.Exists(directory + "/assets/indexes"))
                     Directory.CreateDirectory(directory + "/assets/indexes");
 
-                wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json");
+                wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
 
                 try
                 {
@@ -911,28 +903,56 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            if (updateList.AssetsVirtual)
+            if (updateList.AssetsObjects)
             {
-                if (!Directory.Exists(directory + "/assets/virtual"))
-                    Directory.CreateDirectory(directory + "/assets/virtual");
+                if (!Directory.Exists(directory + "/assets/objects"))
+                    Directory.CreateDirectory(directory + "/assets/objects");
 
-                if (!Directory.Exists(directory + "/assets/virtual/" + filesList.version.assetsVersion))
-                    Directory.CreateDirectory(directory + "/assets/virtual/" + filesList.version.assetsVersion);
+                Assets asstes = GetFile<Assets>(directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json");
 
-                try
+                if (asstes.objects != null)
                 {
-                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/" + filesList.version.assetsVersion + ".zip", directory + "/temp/" + filesList.version.assetsVersion + ".zip");
+                    foreach (string asset in asstes.objects.Keys)
+                    {
+                        string assetHash = asstes.objects[asset].hash;
+                        if (assetHash != null)
+                        {
+                            string assetPath = "/" + assetHash.Substring(0, 2);
+                            if(!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
+                            {
+                                if (!InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
+                                {
+                                    Console.WriteLine("ERROR:1 " + "http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath);
+                                }
+                            }     
+                        }
+                        else
+                        {
+                            errors.Add("asstes/objects");
+                            Console.WriteLine("ERROR:2 " + asset + " " + (assetHash == null));
+                        }
 
-                    ZipFile.ExtractToDirectory(directory + "/temp/" + filesList.version.assetsVersion + ".zip", directory + "/assets/virtual/" + filesList.version.assetsVersion);
-                    File.Delete(directory + "/temp/" + filesList.version.assetsVersion + ".zip");
+                    }
+                }
+                else
+                {
+                    errors.Add("asstes/objects");
+                    Console.WriteLine("ERROR ERROR ERROR ERROR");
+                }
+
+                /*try
+                {
+                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/objects.zip", directory + "/temp/objects.zip");
+
+                    ZipFile.ExtractToDirectory(directory + "/temp/objects.zip", directory + "/assets/objects");
+                    File.Delete(directory + "/temp/objects.zip");
 
                     //UpdateProgressBar();
-
                 }
                 catch
                 {
-                    errors.Add("asstes/virtuals");
-                }
+                    errors.Add("asstes/objects");
+                }*/
             }
 
             wc.Dispose();
@@ -1159,7 +1179,8 @@ namespace Lexplosion.Logic.FileSystem
                 ["description"] = description,
                 ["name"] = UserData.Instances.List[instanceId].Name,
                 ["author"] = UserData.login,
-                ["forgeVersion"] = instanceFile.version.forgeVersion
+                ["modloaderType"] = instanceFile.version.modloaderType.ToString(),
+                ["modloaderVersion"] = instanceFile.version.modloaderVersion,
             };
 
 
@@ -1223,6 +1244,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             Dictionary<string, string> instanceInfo = GetFile<Dictionary<string, string>>(dir + "instanceInfo.json");
+            ModloaderType modloader = ModloaderType.None;
 
             if (instanceInfo == null || !instanceInfo.ContainsKey("gameVersion") || string.IsNullOrEmpty(instanceInfo["gameVersion"]))
             {
@@ -1245,12 +1267,20 @@ namespace Lexplosion.Logic.FileSystem
                 instanceInfo["description"] = "";
             }
 
-            if (!instanceInfo.ContainsKey("forgeVersion") || string.IsNullOrEmpty(instanceInfo["forgeVersion"]))
+            if (!instanceInfo.ContainsKey("modloaderVersion") || string.IsNullOrEmpty(instanceInfo["modloaderVersion"]))
             {
-                instanceInfo["forgeVersion"] = "";
+                instanceInfo["modloaderVersion"] = "";
             }
 
-            string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceSource.Local, instanceInfo["gameVersion"], instanceInfo["forgeVersion"]);
+            if (!instanceInfo.ContainsKey("modloaderType") || string.IsNullOrEmpty(instanceInfo["modloaderType"]))
+            {
+                instanceInfo["modloaderType"] = "";
+            }
+
+            Enum.TryParse(instanceInfo["modloaderType"], out modloader);
+
+
+            string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceSource.Local, instanceInfo["gameVersion"], modloader, instanceInfo["modloaderVersion"]);
             MessageBox.Show(instanceId);
 
             string addr = dir + "files/";
@@ -1363,16 +1393,18 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (data != null)
                 {
-
                     foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
                     {
                         bool result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/temp/dataDownload/overrides/");
+                        Console.WriteLine(result + " " + file.projectID);
                         if (!result) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
                         {
                             errors.Add(file.projectID + " " + file.fileID);
                             return null;
                         }
                     }
+
+                    Console.WriteLine("END MODS");
 
                     string SourcePath = directory + "/temp/dataDownload/overrides/";
                     string DestinationPath = directory + "/instances/" + instanceId + "/";
@@ -1392,6 +1424,8 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         Directory.Delete(directory + "/temp/dataDownload", true);
                     }
+
+                    Console.WriteLine("Return");
 
                     return data;
                 }
