@@ -349,6 +349,7 @@ namespace Lexplosion.Gui.UserControls
                 );
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.UpdateInstance(instanceId);
+
             }
         }
 
