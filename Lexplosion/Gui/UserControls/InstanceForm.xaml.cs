@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-using static Lexplosion.Logic.Objects.CurseforgeInstanceInfo;
 
 namespace Lexplosion.Gui.UserControls
 {
@@ -355,8 +354,8 @@ namespace Lexplosion.Gui.UserControls
 
         private void LaunchInstance()
         {
-            string instanceId = "test";
-            ManageLogic.СlientManager(instanceId);
+            Console.WriteLine(instanceProperties.InstanceId);
+            ManageLogic.СlientManager(instanceProperties.InstanceId);
         }
 
         private void PauseInstance() 

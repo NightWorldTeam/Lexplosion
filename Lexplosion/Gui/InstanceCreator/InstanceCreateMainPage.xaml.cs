@@ -1,21 +1,11 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Lexplosion.Gui.InstanceCreator
 {
@@ -24,31 +14,36 @@ namespace Lexplosion.Gui.InstanceCreator
     /// </summary>
     public partial class InstanceCreateMainPage : Page
     {
+        public static readonly SolidColorBrush unavalibleNameColor = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+
         private List<string> instanceTags = new List<string>() 
         { 
             "Tech", "Magic", "Sci-Fi", "Adventure and RPG", "Exploration", "Mini Game", "Quests", 
             "Hardcore", "Map Based", "Small / Light", "Extra Large", "Combat / PvP", "Multiplayer",
             "FTB Offical Pack", "Skyblock"
         };
-
         private List<string> unavailableNames = new List<string>();
 
         public InstanceCreateMainPage()
         {
             InitializeComponent();
-            /**foreach (string tag in instanceTags) 
-            {
-                TagsListCB.Items.Add(tag);
-            }
-            */
+            PreInitializePage();
+        }
+
+        private void PreInitializePage() 
+        {
+            // получаем все занятые имена модпаков
             foreach (var instance in UserData.Instances.List.Keys)
                 unavailableNames.Add(UserData.Instances.List[instance].Name);
 
+            // получаем все версии майнкрафта
             Lexplosion.Run.ThreadRun(() => SetupMinecraftVersions());
-            
+
+            // выставляем последнию версию
             VersionCB.SelectedIndex = 0;
             ModloaderVersion.Items.Add("Ну тут либо forge должен быть");
             ModloaderVersion.Items.Add("Ну или fabric. Я про их версии если чё");
+            // устанавливаем отсутсвие modloader
             NoneSelected.IsChecked = true;
         }
 
@@ -59,9 +54,9 @@ namespace Lexplosion.Gui.InstanceCreator
                 if(version.type == "release")
                 {
                     this.Dispatcher.Invoke(() => {
-                        VersionCB.Items.Add(version.id);
+                        VersionCB.Items.Add(version.type + " " + version.id);
                     });
-                } 
+                }
             }
         }
 
@@ -76,7 +71,6 @@ namespace Lexplosion.Gui.InstanceCreator
             ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, VersionCB.Text, "");
         }
 
-        public static readonly SolidColorBrush unavalibleNameColor = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
         private void InstanceNameTB_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (unavailableNames.Contains(InstanceNameTB.Text))
@@ -90,6 +84,23 @@ namespace Lexplosion.Gui.InstanceCreator
                 {
                     InstanceNameTB.Foreground = Brushes.White;
                 }
+            }
+        } 
+        
+        private void CreateInstanceRadioButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRadioButton = (RadioButton)sender;
+            if (selectedRadioButton.Name == "NoneSelected") 
+            {
+                ModloaderVersion.Visibility = Visibility.Collapsed;
+            }
+            else if (selectedRadioButton.Name == "ForgeSelected")
+            {
+                ModloaderVersion.Visibility = Visibility.Visible;
+            }
+            else if (selectedRadioButton.Name == "FabricSelected")
+            {
+                ModloaderVersion.Visibility = Visibility.Visible;
             }
         }
     }
