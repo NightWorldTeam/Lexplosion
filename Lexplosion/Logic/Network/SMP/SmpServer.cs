@@ -48,8 +48,8 @@ namespace Lexplosion.Logic.Network.SMP
             public AutoResetEvent sendingWait = new AutoResetEvent(false);
 
             public ushort lastPackage = 0; //id пакета, о доставке которого сейчас ожидается подтверждение
-            public ushort maxPackageSize = 548; //максимальный размер отправляемых пакетов
-            public ushort maxPackagesCount = 50; //количество пакетов которое можно отправить за 1 раз. В процессе работы это значение может меняться. Чем стабльнее сеть, тем оно выше
+            public ushort maxPackageSize = 540; //максимальный размер отправляемых пакетов
+            public ushort maxPackagesCount = 4; //количество пакетов которое можно отправить за 1 раз. В процессе работы это значение может меняться. Чем стабльнее сеть, тем оно выше
             public ushort successfulDeliveryCount = 1; //количество раз, когда пакеты былаи доставлены с первого раза
             public int needConfirmation = -1;
 

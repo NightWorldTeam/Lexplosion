@@ -98,7 +98,7 @@ namespace Lexplosion.Logic.Network
                     try
                     {
                         //получем данные с локального сокета и отправляем клиенту через сеть с помощью SMP
-                        byte[] data = new byte[1024];
+                        byte[] data = new byte[500];
                         int bytes = sock.Receive(data);
 
                         if (bytes == 0)
