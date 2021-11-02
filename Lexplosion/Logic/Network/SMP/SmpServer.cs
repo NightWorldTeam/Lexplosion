@@ -836,6 +836,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Send(byte[] inputData, IPEndPoint ip)
         {
+            Console.WriteLine("ХУЙНУЛ SEND");
             var client = clients[ip];
 
             //больше пакетов отправлять нельзя. Ждём когда уже отправленные пакеты дойдут чтобы отправить этот

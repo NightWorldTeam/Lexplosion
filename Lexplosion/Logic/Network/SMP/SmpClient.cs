@@ -725,6 +725,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Send(byte[] inputData)
         {
+            Console.WriteLine("ХУЙНУЛ SEND");
             //больше пакетов отправлять нельзя. Ждём когда уже отправленные пакеты дойдут чтобы поместить в буфер этот
             if (packagesInfo.Count >= maxPackagesCount)
             {
