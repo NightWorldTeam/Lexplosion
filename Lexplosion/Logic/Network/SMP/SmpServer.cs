@@ -607,7 +607,7 @@ namespace Lexplosion.Logic.Network.SMP
                                             {
                                                 //отправляем подтверждение
                                                 byte[] neEbyKakNazvat = BitConverter.GetBytes(id);
-                                                socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
+                                                socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3, client.point);
                                                 client.needConfirmation = -1;
                                                 Console.WriteLine("Подтверждение1 " + id);
                                             }
@@ -639,7 +639,7 @@ namespace Lexplosion.Logic.Network.SMP
                                                 {
                                                     //отправляем подтверждение
                                                     byte[] neEbyKakNazvat = BitConverter.GetBytes(nextId);
-                                                    socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
+                                                    socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3, client.point);
                                                     client.needConfirmation = -1;
                                                     Console.WriteLine("Подтверждение2 " + nextId);
                                                 }
@@ -695,7 +695,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                                                 if (!Enumerable.SequenceEqual(client.testarr, package))
                                                 {
-                                                    socket.Send(package, package.Length);
+                                                    socket.Send(package, package.Length, client.point);
                                                     client.testarr = package;
                                                 }
                                             }
@@ -705,7 +705,7 @@ namespace Lexplosion.Logic.Network.SMP
                                     {
                                         if (data[3] == 0x01)
                                         {
-                                            socket.Send(new byte[3] { 0x04, data[1], data[2] }, 3); //отправляем пакет подтверждающий доставку
+                                            socket.Send(new byte[3] { 0x04, data[1], data[2] }, 3, client.point); //отправляем пакет подтверждающий доставку
                                             Console.WriteLine("Подтверждение3 " + id);
                                         }
 
@@ -741,7 +741,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                                                 if (!Enumerable.SequenceEqual(client.testarr, package))
                                                 {
-                                                    socket.Send(package, package.Length);
+                                                    socket.Send(package, package.Length, client.point);
                                                     client.testarr = package;
                                                 }
                                             }

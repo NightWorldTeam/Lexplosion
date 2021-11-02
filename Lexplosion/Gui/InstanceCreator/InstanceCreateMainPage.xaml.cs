@@ -47,14 +47,15 @@ namespace Lexplosion.Gui.InstanceCreator
             NoneSelected.IsChecked = true;
         }
 
-        private void SetupMinecraftVersions() 
+        private void SetupMinecraftVersions()
         {
             foreach (var version in ToServer.GetVersionsList())
             {
-                if(version.type == "release")
+                if (version.type == "release")
                 {
                     this.Dispatcher.Invoke(() => {
-                        VersionCB.Items.Add(version.type + " " + version.id);
+                        //VersionCB.Items.Add(version.type + " " + version.id);
+                        VersionCB.Items.Add(version.id);
                     });
                 }
             }
@@ -67,8 +68,10 @@ namespace Lexplosion.Gui.InstanceCreator
             // NoneSelected.IsChecked = True; - ничего не выбрано радиокнопка
             // ForgeSelected.IsChecked = True; - фордж радиокнопка
             // FabricSelected.IsChecked = True; - фабрик радиокнопка
-
-            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, VersionCB.Text, ModloaderType.None, "");
+            // TODO: при добавление release, snapshot заменять их.
+            string instanceVersion = VersionCB.Text;
+            Console.WriteLine(instanceVersion);
+            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, instanceVersion, ModloaderType.None, "");
         }
 
         private void InstanceNameTB_TextChanged(object sender, TextChangedEventArgs e)

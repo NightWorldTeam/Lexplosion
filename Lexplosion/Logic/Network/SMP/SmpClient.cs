@@ -342,11 +342,11 @@ namespace Lexplosion.Logic.Network.SMP
                         // скорее всего сеть перегружена. поэтому отправляем только один пакет
                         if (sendData.Count > 1)
                         {
-                            socket.Send(sendData[1].Data, sendData[1].Data.Length, point);
+                            socket.Send(sendData[1].Data, sendData[1].Data.Length);
                         }
                         else
                         {
-                            socket.Send(sendData[0].Data, sendData[0].Data.Length, point);
+                            socket.Send(sendData[0].Data, sendData[0].Data.Length);
                         }
                     }
                     else
@@ -354,7 +354,7 @@ namespace Lexplosion.Logic.Network.SMP
                         i = 0;
                         while (i < sendData.Count && !successfulDelivery)
                         {
-                            socket.Send(sendData[i].Data, sendData[i].Data.Length, point);
+                            socket.Send(sendData[i].Data, sendData[i].Data.Length);
                             i++;
                         }
                     }
