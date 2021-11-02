@@ -70,7 +70,6 @@ namespace Lexplosion.Logic.Network
                 ConnectSemaphore.WaitOne();
                 List<Socket> listeningSokets = new List<Socket>(Sockets);
                 ConnectSemaphore.Release();
-                Console.WriteLine("НАЧАЛ ОТПРАВЛЯТЬ");
 
                 try
                 {
@@ -115,7 +114,6 @@ namespace Lexplosion.Logic.Network
                             data_[i] = data[i];
                         }
 
-                        Console.WriteLine("ОТПРАВИЛ БЛЯТЬ");
                         Server.Send(data_, ClientsPoints[sock]);
                     }
                     catch (SocketException e)
@@ -151,11 +149,8 @@ namespace Lexplosion.Logic.Network
             {
                 try
                 {
-                    Console.WriteLine("НАЧАЛ ПРИНИМАТЬ");
                     IPEndPoint point = Server.Receive(out byte[] data);
-                    Console.WriteLine("ПЫТАЮСЬ БЛЯТЬ ПРИНЯТЬ");
                     AcceptingBlock.WaitOne();
-                    Console.WriteLine("ПРИНЯЛ БЛЯТЬ");
                     Connections[point].Send(data, data.Length, SocketFlags.None);
                     AcceptingBlock.Release();
                 }

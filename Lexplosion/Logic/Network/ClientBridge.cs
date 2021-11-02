@@ -159,7 +159,6 @@ namespace Lexplosion.Logic.Network
             Console.WriteLine("reading begin");
 
             bool isWorking = Bridge.Receive(out byte[] buffer);
-            Console.WriteLine("ПРИНЯЛ БЛЯТЬ");
 
             try
             {
@@ -176,7 +175,6 @@ namespace Lexplosion.Logic.Network
                     }*/
                     ServerSimulator.Send(buffer, buffer.Length, SocketFlags.None);
                     isWorking = Bridge.Receive(out buffer);
-                    Console.WriteLine("ПРИНЯЛ БЛЯТЬ");
                 }
 
             }
