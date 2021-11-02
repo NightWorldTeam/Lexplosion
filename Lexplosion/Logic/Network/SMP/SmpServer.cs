@@ -652,7 +652,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                                                     Array.Copy(tempData, offset + 2, dataBlock, 0, size);
                                                     client.packagesQueue.Enqueue(dataBlock); //помещаем пакет в очередь
-
+                                                    Console.WriteLine("ПОМЕСТИЛ В ОЧЕРЕДЬ");
                                                     offset += size + 3;
                                                 }
 
@@ -900,11 +900,13 @@ namespace Lexplosion.Logic.Network.SMP
 
             if (clientQueue.Count > 0)
             {
+                Console.WriteLine("ЩА ПОЛУЧУ");
                 IPEndPoint ipPoint;
                 clientQueue.TryDequeue(out ipPoint); //получаем ip клииента от которого пришло последняя датаграмма
 
                 clients[ipPoint].packagesQueue.TryDequeue(out data);
                 ReceiveSignal.Release();
+                Console.WriteLine("ЩА ПОЛЧИЛ");
 
                 return ipPoint;
 
@@ -916,14 +918,17 @@ namespace Lexplosion.Logic.Network.SMP
                     ReceiveSignal.Release();
                     threadReset.WaitOne(); //этот поток возобновится когда появятся новые пакеты
                     ReceiveSignal.WaitOne();
+                    Console.WriteLine("ЖДУ БЛЯТЬ");
 
                     if (clientQueue.Count > 0) //если clientQueue.Count == 0 значит что прошлый пакет был принят блоком кода выше. Поэтому threadReset сохранило свое состояние, а пакет был извелчен
                     {
+                        Console.WriteLine("ДОЖДАЛСЯ БЛЯТЬ");
                         IPEndPoint ipPoint;
                         clientQueue.TryDequeue(out ipPoint); //получаем ip клиента от которого пришло последняя датаграмма
 
                         clients[ipPoint].packagesQueue.TryDequeue(out data);
                         ReceiveSignal.Release();
+                        Console.WriteLine("ПОЛУЧИЛ БЛЯТЬ НАХУЙ");
 
                         return ipPoint;
                     }
