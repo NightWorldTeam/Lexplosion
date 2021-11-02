@@ -33,6 +33,7 @@ namespace Lexplosion.Logic.Network
             string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
+            Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);
 
             {
                 byte[] buf = new byte[1];

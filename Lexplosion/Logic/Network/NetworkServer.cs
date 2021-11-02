@@ -77,6 +77,7 @@ namespace Lexplosion.Logic.Network
             string st = "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             socket.Send(sendData); //авторизируемся на упрявляющем сервере
+            Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD");
 
             while (IsWork)
             {
