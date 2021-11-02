@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -21,6 +22,7 @@ namespace Lexplosion.Logic.Network.SMP
             public ConcurrentQueue<byte[]> packagesQueue = new ConcurrentQueue<byte[]>(); //очередь обработанных пакетов
             public ConcurrentQueue<byte[]> sendingBuffer = new ConcurrentQueue<byte[]>(); //буфер пакетов на отправку
             public List<ushort> repeatDelivery = null; //список айдишников пакетов, отправку которых нужно повторить
+            public byte[] testarr = new byte[0];
 
             public ushort pointer = 0; //указатель на id следующего пакета, который нужно получить
             public ushort sendingPointer = 0; //указатель на id следующего пакета который будет отправляться
@@ -49,6 +51,7 @@ namespace Lexplosion.Logic.Network.SMP
             public ushort maxPackageSize = 548; //максимальный размер отправляемых пакетов
             public ushort maxPackagesCount = 50; //количество пакетов которое можно отправить за 1 раз. В процессе работы это значение может меняться. Чем стабльнее сеть, тем оно выше
             public ushort successfulDeliveryCount = 1; //количество раз, когда пакеты былаи доставлены с первого раза
+            public int needConfirmation = -1;
 
             public bool successfulDelivery = false;
         }
@@ -587,28 +590,38 @@ namespace Lexplosion.Logic.Network.SMP
                                 if (data.Length > 2)
                                 {
                                     ushort id = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
-                                    if (id >= client.pointer && id - client.pointer <= 20) //проверяем новый ли это пакет
+                                    Console.WriteLine("ПРИШЕЛ " + id);
+
+                                    if (id >= client.pointer && id - client.pointer <= 120) //проверяем новый ли это пакет
                                     {
+                                        Console.WriteLine("ПРИШЕЛ1 " + id);
+                                        if (client.needConfirmation == -1)
+                                        {
+                                            client.needConfirmation = BitConverter.ToUInt16(new byte[2] { data[data.Length - 1], data[data.Length - 2] }, 0);
+                                        }
+
                                         if (id == client.pointer)
                                         {
+                                            Console.WriteLine("ПРИШЕЛ2 " + id);
                                             if (data[3] == 0x01) //пакет требует подтверждение доставки
                                             {
                                                 //отправляем подтверждение
                                                 byte[] neEbyKakNazvat = BitConverter.GetBytes(id);
-                                                socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3, client.point);
+                                                socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
+                                                client.needConfirmation = -1;
+                                                Console.WriteLine("Подтверждение1 " + id);
                                             }
 
                                             //разбиваем пакет на блоки данных и кладём в очередь
                                             int offset = 4;
                                             int size; //размер первого блока данных
-                                            while (offset < data.Length)
+                                            while (offset < data.Length - 2)
                                             {
                                                 size = BitConverter.ToUInt16(new byte[2] { data[offset], data[offset + 1] }, 0);
                                                 byte[] dataBlock = new byte[size];
 
                                                 Array.Copy(data, offset + 2, dataBlock, 0, size);
                                                 client.packagesQueue.Enqueue(dataBlock); //помещаем пакет в очередь
-                                                clientQueue.Enqueue(client.point); //помещаем ip в очередь клиентов
 
                                                 offset += size + 3;
                                             }
@@ -619,24 +632,26 @@ namespace Lexplosion.Logic.Network.SMP
                                             ushort nextId = client.pointer;
                                             while (client.packagesBuffer.ContainsKey(nextId))
                                             {
-                                                client.packagesBuffer.TryRemove(nextId, out byte[] tempData); //удаляем элемент из буфера
+                                                byte[] tempData;
+                                                client.packagesBuffer.TryRemove(nextId, out tempData); //удаляем элемент из буфера
 
                                                 if (tempData[0] == 0x01) //пакет требует подтверждение доставки
                                                 {
                                                     //отправляем подтверждение
                                                     byte[] neEbyKakNazvat = BitConverter.GetBytes(nextId);
-                                                    socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3, client.point);
+                                                    socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
+                                                    client.needConfirmation = -1;
+                                                    Console.WriteLine("Подтверждение2 " + nextId);
                                                 }
 
                                                 offset = 1;
-                                                while (offset < tempData.Length)
+                                                while (offset < tempData.Length - 2)
                                                 {
                                                     size = BitConverter.ToUInt16(new byte[2] { tempData[offset], tempData[offset + 1] }, 0);
                                                     byte[] dataBlock = new byte[size];
 
                                                     Array.Copy(tempData, offset + 2, dataBlock, 0, size);
                                                     client.packagesQueue.Enqueue(dataBlock); //помещаем пакет в очередь
-                                                    clientQueue.Enqueue(client.point); //помещаем ip в очередь клиентов
 
                                                     offset += size + 3;
                                                 }
@@ -646,20 +661,92 @@ namespace Lexplosion.Logic.Network.SMP
                                             }
 
                                             threadReset.Set(); //возобнавляем ожидающий поток
-
                                         }
                                         else if (!client.packagesBuffer.ContainsKey(id)) //проверяем есть ли уже этот элемент в буфере
                                         {
                                             client.packagesBuffer[id] = new byte[data.Length - 3];
                                             Array.Copy(data, 3, client.packagesBuffer[id], 0, data.Length - 3); //убираем служебные данные и помещяем элемент в буфер
+
+                                            List<ushort> repeatDelivery = new List<ushort>();
+                                            ushort i = client.pointer;
+
+                                            while (i <= client.needConfirmation)
+                                            {
+                                                if (!client.packagesBuffer.ContainsKey(i))
+                                                {
+                                                    repeatDelivery.Add(i);
+                                                }
+                                                i++;
+                                            }
+
+                                            if (repeatDelivery.Count > 0)
+                                            {
+                                                byte[] package = new byte[repeatDelivery.Count * 2 + 1];
+                                                package[0] = 0x06;
+
+                                                int offset = 1;
+                                                foreach (ushort repeatId in repeatDelivery)
+                                                {
+                                                    byte[] repeatIdBytes = BitConverter.GetBytes(repeatId);
+                                                    package[offset] = repeatIdBytes[0];
+                                                    package[offset + 1] = repeatIdBytes[1];
+                                                    offset += 2;
+                                                }
+
+                                                if (!Enumerable.SequenceEqual(client.testarr, package))
+                                                {
+                                                    socket.Send(package, package.Length);
+                                                    client.testarr = package;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (data[3] == 0x01)
+                                        {
+                                            socket.Send(new byte[3] { 0x04, data[1], data[2] }, 3); //отправляем пакет подтверждающий доставку
+                                            Console.WriteLine("Подтверждение3 " + id);
                                         }
 
-                                    }
-                                    else if (data[3] == 0x01)
-                                    {
-                                        socket.Send(new byte[3] { 0x04, data[1], data[2] }, 3, client.point); //отправляем пакет подтверждающий доставку
-                                    }
+                                        if (client.needConfirmation != -1 && BitConverter.ToUInt16(new byte[2] { data[data.Length - 1], data[data.Length - 2] }, 0) == client.needConfirmation)
+                                        {
+                                            client.packagesBuffer[id] = new byte[data.Length - 3];
+                                            Array.Copy(data, 3, client.packagesBuffer[id], 0, data.Length - 3); //убираем служебные данные и помещяем элемент в буфер
 
+                                            List<ushort> repeatDelivery = new List<ushort>();
+                                            ushort i = client.pointer;
+                                            while (i <= client.needConfirmation)
+                                            {
+                                                if (!client.packagesBuffer.ContainsKey(i))
+                                                {
+                                                    repeatDelivery.Add(i);
+                                                }
+                                                i++;
+                                            }
+
+                                            if (repeatDelivery.Count > 0)
+                                            {
+                                                byte[] package = new byte[repeatDelivery.Count * 2 + 1];
+                                                package[0] = 0x06;
+
+                                                int offset = 1;
+                                                foreach (ushort repeatId in repeatDelivery)
+                                                {
+                                                    byte[] repeatIdBytes = BitConverter.GetBytes(repeatId);
+                                                    package[offset] = repeatIdBytes[0];
+                                                    package[offset + 1] = repeatIdBytes[1];
+                                                    offset += 2;
+                                                }
+
+                                                if (!Enumerable.SequenceEqual(client.testarr, package))
+                                                {
+                                                    socket.Send(package, package.Length);
+                                                    client.testarr = package;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 break;
 
