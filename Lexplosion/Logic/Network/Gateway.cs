@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using Lexplosion.Global;
-using Lexplosion.Logic;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Newtonsoft.Json;
@@ -66,15 +65,15 @@ namespace Lexplosion.Logic.Network
                         //раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
                         while (isServer)
                         {
-                            ToServer.HttpPost("https://night-world.org/libraries/scripts/setGameServer.php", input);
+                            ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
                             waitingInforming.WaitOne(120000);
                         }
 
-                        ToServer.HttpPost("https://night-world.org/libraries/scripts/dropGameServer.php", input);
+                        ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer.php", input);
                     });
 
                     InformingThread.Start();
-                    Server = new ServerBridge(port);
+                    Server = new ServerBridge(UserData.UUID, port);
 
                     client.Client.ReceiveTimeout = 3000;
                     while (true)
@@ -148,7 +147,7 @@ namespace Lexplosion.Logic.Network
 
         public void WaitingOpen(int pid)
         {
-            ClientBridge bridge = new ClientBridge("test");
+            ClientBridge bridge = new ClientBridge(UserData.UUID);
 
             UdpClient client = new UdpClient();
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
@@ -166,7 +165,7 @@ namespace Lexplosion.Logic.Network
                     input.Add(new List<string>() { "UUID", UserData.UUID });
                     input.Add(new List<string>() { "password", UserData.PaswordSHA });
 
-                    string data = ToServer.HttpPost("https://night-world.org/libraries/scripts/getGameServers.php", input);
+                    string data = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getGameServers.php", input);
                     List<string> servers = null;
                     try
                     {
