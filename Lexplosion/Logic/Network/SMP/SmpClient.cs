@@ -56,7 +56,7 @@ namespace Lexplosion.Logic.Network.SMP
         protected bool successfulDelivery = false;
         protected bool oldDatagramArrived = false;
 
-        protected ushort maxPackageSize = 540; //максимальный размер отправляемых пакетов
+        protected ushort maxPackageSize = 1250; //максимальный размер отправляемых пакетов
         protected ushort maxPackagesCount = 20; //количество пакетов которое можно отправить за 1 раз. В процессе работы это значение может меняться. Чем стабльнее сеть, тем оно выше
         protected const ushort maxDatagramsCount = 10; //максимальное количество пакетов, что можно отправить за один раз
         protected ushort successfulDeliveryCount = 1; //количество раз, когда пакеты былаи доставлены с первого раза
@@ -340,7 +340,7 @@ namespace Lexplosion.Logic.Network.SMP
                     if (b > 1)
                     {
                         // скорее всего сеть перегружена. поэтому отправляем только один пакет
-                        if (sendData.Count > 1)
+                        if (sendData.Count > 3)
                         {
                             socket.Send(sendData[1].Data, sendData[1].Data.Length);
                         }
