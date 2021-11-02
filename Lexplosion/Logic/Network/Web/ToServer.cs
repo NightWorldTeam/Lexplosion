@@ -95,6 +95,11 @@ namespace Lexplosion.Logic.Network
 
         }
 
+        internal static void HttpPost(object launcherSettings, string v, List<List<string>> input)
+        {
+            throw new NotImplementedException();
+        }
+
         //функция получает манифест для майкрафт версии
         public static VersionManifest GetVersionManifest(string version, ModloaderType modloader, string modloaderVersion = "")
         {

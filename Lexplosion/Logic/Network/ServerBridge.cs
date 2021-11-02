@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Network
         const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
         int Port;
 
-        public ServerBridge(int port) : base(serverType)
+        public ServerBridge(string uuid, int port) : base(uuid, serverType)
         {
             ConnectSemaphore = new Semaphore(1, 1);
             Connections = new ConcurrentDictionary<IPEndPoint, Socket>();
@@ -74,14 +74,14 @@ namespace Lexplosion.Logic.Network
                 {
                     Socket.Select(listeningSokets, null, null, -1); //слушаем все сокеты
                 }
-                catch (ArgumentNullException)
+                catch (ArgumentNullException e)
                 {
                     SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
 
                     continue;
                 }
-                catch (SocketException)
+                catch (SocketException e)
                 {
                     Console.WriteLine("SendingSocketException");
                     // TODO: тут что-то придумать

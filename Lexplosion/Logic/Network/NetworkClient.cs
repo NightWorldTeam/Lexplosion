@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.Network
 
         public virtual void Initialization(string UUID, string serverUUID)
         {
-            UdpClient bridgeUdp = new UdpClient(9655); // TODO: порт может быть занят
+            UdpClient bridgeUdp = new UdpClient(9655);
             Bridge = new SmpClient(bridgeUdp);
             Bridge.ClientClosing += Close;
 
