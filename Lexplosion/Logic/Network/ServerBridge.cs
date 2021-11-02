@@ -114,6 +114,7 @@ namespace Lexplosion.Logic.Network
                         }
 
                         Server.Send(data_, ClientsPoints[sock]);
+                        Console.WriteLine("ОТПРАВИЛ БЛЯТЬ");
                     }
                     catch (SocketException e)
                     {
@@ -151,6 +152,7 @@ namespace Lexplosion.Logic.Network
                     IPEndPoint point = Server.Receive(out byte[] data);
                     AcceptingBlock.WaitOne();
                     Connections[point].Send(data, data.Length, SocketFlags.None);
+                    Console.WriteLine("ПРИНЯЛ БЛЯТЬ");
                     AcceptingBlock.Release();
                 }
                 catch (Exception e)

@@ -507,11 +507,9 @@ namespace Lexplosion.Logic.Network.SMP
                                 if (data.Length > 2)
                                 {
                                     ushort id = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
-                                    Console.WriteLine("ПРИШЕЛ " + id);
 
                                     if (id >= pointer && id - pointer <= 120) //проверяем новый ли это пакет
                                     {
-                                        Console.WriteLine("ПРИШЕЛ1 " + id);
                                         if (needConfirmation == -1)
                                         {
                                             needConfirmation = BitConverter.ToUInt16(new byte[2] { data[data.Length - 1], data[data.Length - 2] }, 0);
@@ -519,14 +517,12 @@ namespace Lexplosion.Logic.Network.SMP
 
                                         if (id == pointer)
                                         {
-                                            Console.WriteLine("ПРИШЕЛ2 " + id);
                                             if (data[3] == 0x01) //пакет требует подтверждение доставки
                                             {
                                                 //отправляем подтверждение
                                                 byte[] neEbyKakNazvat = BitConverter.GetBytes(id);
                                                 socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
                                                 needConfirmation = -1;
-                                                Console.WriteLine("Подтверждение1 " + id);
                                             }
 
                                             //разбиваем пакет на блоки данных и кладём в очередь
@@ -558,7 +554,6 @@ namespace Lexplosion.Logic.Network.SMP
                                                     byte[] neEbyKakNazvat = BitConverter.GetBytes(nextId);
                                                     socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
                                                     needConfirmation = -1;
-                                                    Console.WriteLine("Подтверждение2 " + nextId);
                                                 }
 
                                                 offset = 1;
@@ -623,7 +618,6 @@ namespace Lexplosion.Logic.Network.SMP
                                         if (data[3] == 0x01)
                                         {
                                             socket.Send(new byte[3] { 0x04, data[1], data[2] }, 3); //отправляем пакет подтверждающий доставку
-                                            Console.WriteLine("Подтверждение3 " + id);
                                         }
 
                                         if (needConfirmation != -1 && BitConverter.ToUInt16(new byte[2] { data[data.Length - 1], data[data.Length - 2] }, 0) == needConfirmation)
@@ -675,13 +669,10 @@ namespace Lexplosion.Logic.Network.SMP
                                         lock (confirmationLocker)
                                         {
                                             ushort id = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
-                                            Console.WriteLine("Подтверждение1 " + id);
                                             if (id == lastPackage && !successfulDelivery)
                                             {
-                                                Console.WriteLine("Подтверждение2 " + id);
                                                 successfulDelivery = true;
                                                 suspensionSend.Set(); //возобновляем отправляющий цикл, ведь подтверждение пришло
-                                                Console.WriteLine("Подтверждение3 " + id);
                                             }
                                         }
 
