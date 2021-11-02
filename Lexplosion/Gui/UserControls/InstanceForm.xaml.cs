@@ -342,10 +342,10 @@ namespace Lexplosion.Gui.UserControls
 
             if (instanceProperties.OutsideInstanceId != "")
             {
-                MessageBox.Show(instanceProperties.OutsideInstanceId.ToString());
+                //MessageBox.Show(1 + " " + instanceProperties.OutsideInstanceId.ToString());
                 string instanceId = ManageLogic.CreateInstance(
                     instanceProperties.InstanceTitle, InstanceSource.Curseforge, 
-                    "", ModloaderType.None, instanceProperties.OutsideInstanceId.ToString()
+                    "", ModloaderType.None, "", instanceProperties.OutsideInstanceId.ToString()
                 );
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.UpdateInstance(instanceId);
@@ -400,12 +400,12 @@ namespace Lexplosion.Gui.UserControls
             {
                 foreach (string file in downloadErrors) 
                 {
-                    //MessageBox.Show("Error " + file);
+                    MessageBox.Show("Error " + file);
                 }
             }
             else
             {
-                //MessageBox.Show("Error " + result);
+                MessageBox.Show("Error " + result);
             }
         }
     }
