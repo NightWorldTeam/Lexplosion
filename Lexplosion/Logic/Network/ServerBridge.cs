@@ -153,6 +153,7 @@ namespace Lexplosion.Logic.Network
                 {
                     Console.WriteLine("НАЧАЛ ПРИНИМАТЬ");
                     IPEndPoint point = Server.Receive(out byte[] data);
+                    Console.WriteLine("ПЫТАЮСЬ БЛЯТЬ ПРИНЯТЬ");
                     AcceptingBlock.WaitOne();
                     Console.WriteLine("ПРИНЯЛ БЛЯТЬ");
                     Connections[point].Send(data, data.Length, SocketFlags.None);
