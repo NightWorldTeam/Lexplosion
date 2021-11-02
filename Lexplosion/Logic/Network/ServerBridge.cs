@@ -46,6 +46,7 @@ namespace Lexplosion.Logic.Network
         {
             Socket bridge = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             bridge.Connect("127.0.0.1", Port);
+            Console.WriteLine("КОННЕКТ К ЛОКАЛКЕ!!!!");
             Connections[point] = bridge;
             ClientsPoints[bridge] = point;
             AcceptingBlock.Release();
@@ -69,6 +70,7 @@ namespace Lexplosion.Logic.Network
                 ConnectSemaphore.WaitOne();
                 List<Socket> listeningSokets = new List<Socket>(Sockets);
                 ConnectSemaphore.Release();
+                Console.WriteLine("НАЧАЛ ОТПРАВЛЯТЬ");
 
                 try
                 {
@@ -113,8 +115,8 @@ namespace Lexplosion.Logic.Network
                             data_[i] = data[i];
                         }
 
-                        Server.Send(data_, ClientsPoints[sock]);
                         Console.WriteLine("ОТПРАВИЛ БЛЯТЬ");
+                        Server.Send(data_, ClientsPoints[sock]);
                     }
                     catch (SocketException e)
                     {
@@ -149,10 +151,11 @@ namespace Lexplosion.Logic.Network
             {
                 try
                 {
+                    Console.WriteLine("НАЧАЛ ПРИНИМАТЬ");
                     IPEndPoint point = Server.Receive(out byte[] data);
                     AcceptingBlock.WaitOne();
-                    Connections[point].Send(data, data.Length, SocketFlags.None);
                     Console.WriteLine("ПРИНЯЛ БЛЯТЬ");
+                    Connections[point].Send(data, data.Length, SocketFlags.None);
                     AcceptingBlock.Release();
                 }
                 catch (Exception e)
