@@ -615,6 +615,7 @@ namespace Lexplosion.Logic.Network.SMP
                                             //разбиваем пакет на блоки данных и кладём в очередь
                                             int offset = 4;
                                             int size; //размер первого блока данных
+                                            Console.WriteLine("ДОШЕЛ ДО ЦИКЛА");
                                             while (offset < data.Length - 2)
                                             {
                                                 size = BitConverter.ToUInt16(new byte[2] { data[offset], data[offset + 1] }, 0);
@@ -622,6 +623,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                                                 Array.Copy(data, offset + 2, dataBlock, 0, size);
                                                 client.packagesQueue.Enqueue(dataBlock); //помещаем пакет в очередь
+                                                Console.WriteLine("ПОМЕСТИЛ В ОЧЕРЕДЬ 0");
 
                                                 offset += size + 3;
                                             }
@@ -659,6 +661,8 @@ namespace Lexplosion.Logic.Network.SMP
                                                 client.pointer++;
                                                 nextId++;
                                             }
+
+                                            Console.WriteLine("СЕТНУЛ ЭТУ ХУЙНЮ");
 
                                             threadReset.Set(); //возобнавляем ожидающий поток
                                         }
@@ -916,9 +920,11 @@ namespace Lexplosion.Logic.Network.SMP
                 while (ServerWork)
                 {
                     ReceiveSignal.Release();
+                    Console.WriteLine("ЖДУ СЕТА");
                     threadReset.WaitOne(); //этот поток возобновится когда появятся новые пакеты
+                    Console.WriteLine("ЖДУ ReceiveSignal");
                     ReceiveSignal.WaitOne();
-                    Console.WriteLine("ЖДУ БЛЯТЬ");
+                    Console.WriteLine("ДОЖДАЛСЯ ReceiveSignal");
 
                     if (clientQueue.Count > 0) //если clientQueue.Count == 0 значит что прошлый пакет был принят блоком кода выше. Поэтому threadReset сохранило свое состояние, а пакет был извелчен
                     {
