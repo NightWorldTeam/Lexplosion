@@ -1,4 +1,7 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Gui.Pages.MW;
+using Lexplosion.Gui.UserControls;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using System;
@@ -23,10 +26,12 @@ namespace Lexplosion.Gui.InstanceCreator
             "FTB Offical Pack", "Skyblock"
         };
         private List<string> unavailableNames = new List<string>();
+        private MainWindow _mainWindow;
 
-        public InstanceCreateMainPage()
+        public InstanceCreateMainPage(MainWindow mainWindow)
         {
             InitializeComponent();
+            _mainWindow = mainWindow;
             PreInitializePage();
         }
 
@@ -38,7 +43,7 @@ namespace Lexplosion.Gui.InstanceCreator
 
             // получаем все версии майнкрафта
             Lexplosion.Run.ThreadRun(() => SetupMinecraftVersions());
-
+            
             // выставляем последнию версию
             VersionCB.SelectedIndex = 0;
             ModloaderVersion.Items.Add("Ну тут либо forge должен быть");
@@ -72,6 +77,7 @@ namespace Lexplosion.Gui.InstanceCreator
             string instanceVersion = VersionCB.Text;
             Console.WriteLine(instanceVersion);
             ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, instanceVersion, ModloaderType.None, "");
+            _mainWindow.LeftPanel.BackToInstanceContainer(LeftPanel.PageType.InstanceLibrary, null);
         }
 
         private void InstanceNameTB_TextChanged(object sender, TextChangedEventArgs e)
@@ -88,7 +94,7 @@ namespace Lexplosion.Gui.InstanceCreator
                     InstanceNameTB.Foreground = Brushes.White;
                 }
             }
-        } 
+        }
         
         private void CreateInstanceRadioButton_Click(object sender, RoutedEventArgs e)
         {

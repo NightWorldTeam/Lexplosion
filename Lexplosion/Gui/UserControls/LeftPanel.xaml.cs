@@ -73,13 +73,8 @@ namespace Lexplosion.Gui.UserControls
 
             MenuButton0.IsChecked = true;
             ReselectionButton(MenuButton0);
-            InitializeLeftMenu();
-            InstanceForm.InstanceOpened += InitializeInstancePage;
-        }
-
-        private void InitializeLeftMenu()
-        {
             InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
+            InstanceForm.InstanceOpened += InitializeInstancePage;
         }
 
         private void InitializeContent(string btn0, string btn1, string btn2, string btn3)
@@ -119,10 +114,10 @@ namespace Lexplosion.Gui.UserControls
             MenuButton2.Content = btn2;
             MenuButton3.Content = btn3;
 
-            InitializeFucntions();
+            InitializeFunctions();
         }
 
-        private void InitializeFucntions()
+        private void InitializeFunctions()
         {
             switch (Buttons[MenuButton0])
             {
@@ -207,7 +202,6 @@ namespace Lexplosion.Gui.UserControls
             ReselectionButton(MenuButton1);   
         }
 
-
         private void MultiplayerSelected(object sender, RoutedEventArgs e)
         {
             _mainWindow.PagesController("MultiplayerContainerPage", _mainWindow.RightFrame, delegate ()
@@ -259,17 +253,36 @@ namespace Lexplosion.Gui.UserControls
             ReselectionButton(MenuButton2);
         }
 
-
         private void BackSelected(object sender, RoutedEventArgs e)
         {
-            InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
-            _mainWindow.PagesController("InstanceContainerPage", _mainWindow.RightFrame, delegate ()
-            {
-                return new InstanceContainerPage(_mainWindow);
-            });
-            ReselectionButton(MenuButton0);
-            activePageType = PageType.InstanceContainer;
+            BackToInstanceContainer(PageType.InstanceContainer, null);
         }
+
+        public void BackToInstanceContainer(PageType pageType, string[] btnNames) 
+        {
+            activePageType = pageType;
+            if (btnNames == null) btnNames = new string[] { "Каталог", "Библиотека", "Сетевая игра", "Настройки" };
+            
+            switch (pageType) 
+            {
+                case PageType.InstanceContainer:
+                    _mainWindow.PagesController("InstanceContainerPage", _mainWindow.RightFrame, delegate ()
+                    {
+                        return new InstanceContainerPage(_mainWindow);
+                    });
+                    ReselectionButton(MenuButton0);
+                    break;
+                case PageType.InstanceLibrary:
+                    _mainWindow.PagesController("LibraryContainerPage", _mainWindow.RightFrame, delegate ()
+                    {
+                        return new LibraryContainerPage(_mainWindow);
+                    });
+                    ReselectionButton(MenuButton1);
+                    break;
+            }
+            InitializeContent(btnNames[0], btnNames[1], btnNames[2], btnNames[3]);
+        }
+
 
         private void ReselectionButton(ToggleButton selectedButton)
         {
