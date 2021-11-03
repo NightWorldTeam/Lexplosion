@@ -28,8 +28,7 @@ namespace Lexplosion.Logic.FileSystem
             public List<string> Natives = new List<string>();
             public Dictionary<string, LibInfo> Libraries = new Dictionary<string, LibInfo>();
             public bool MinecraftJar = false;
-            public bool AssetsObjects = false;
-            public bool AssetsIndexes = false;
+            public bool Assets = false;
         }
 
         private class LauncherAssets //этот класс нужен для декодирования json
@@ -466,14 +465,10 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //проверяем assets
+            // TODO: сделать нормальное обновление асетсов
             if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
             {
-                updatesList.AssetsIndexes = true;
-            }
-
-            if (!Directory.Exists(directory + "/assets/objects"))
-            {
-                updatesList.AssetsObjects = true;
+                updatesList.Assets = true;
             }
 
             return updatesList;
@@ -885,7 +880,7 @@ namespace Lexplosion.Logic.FileSystem
             if (!Directory.Exists(directory + "/assets"))
                 Directory.CreateDirectory(directory + "/assets");
 
-            if (updateList.AssetsIndexes)
+            if (updateList.Assets)
             {
                 if (!Directory.Exists(directory + "/assets/indexes"))
                     Directory.CreateDirectory(directory + "/assets/indexes");
@@ -901,10 +896,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     errors.Add("asstes/indexes");
                 }
-            }
 
-            if (updateList.AssetsObjects)
-            {
                 if (!Directory.Exists(directory + "/assets/objects"))
                     Directory.CreateDirectory(directory + "/assets/objects");
 
@@ -918,18 +910,17 @@ namespace Lexplosion.Logic.FileSystem
                         if (assetHash != null)
                         {
                             string assetPath = "/" + assetHash.Substring(0, 2);
-                            if(!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
+                            if (!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
                             {
                                 if (!InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
                                 {
                                     Console.WriteLine("ERROR:1 " + "http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath);
                                 }
-                            }     
+                            }
                         }
                         else
                         {
                             errors.Add("asstes/objects");
-                            Console.WriteLine("ERROR:2 " + asset + " " + (assetHash == null));
                         }
 
                     }
@@ -937,22 +928,7 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     errors.Add("asstes/objects");
-                    Console.WriteLine("ERROR ERROR ERROR ERROR");
                 }
-
-                /*try
-                {
-                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/objects.zip", directory + "/temp/objects.zip");
-
-                    ZipFile.ExtractToDirectory(directory + "/temp/objects.zip", directory + "/assets/objects");
-                    File.Delete(directory + "/temp/objects.zip");
-
-                    //UpdateProgressBar();
-                }
-                catch
-                {
-                    errors.Add("asstes/objects");
-                }*/
             }
 
             wc.Dispose();
