@@ -27,6 +27,7 @@ namespace Lexplosion.Gui.InstanceCreator
         };
         private List<string> unavailableNames = new List<string>();
         private MainWindow _mainWindow;
+        private ModloaderType selectedModloaderType = ModloaderType.None;
 
         public InstanceCreateMainPage(MainWindow mainWindow)
         {
@@ -46,8 +47,7 @@ namespace Lexplosion.Gui.InstanceCreator
             
             // выставляем последнию версию
             VersionCB.SelectedIndex = 0;
-            ModloaderVersion.Items.Add("Ну тут либо forge должен быть");
-            ModloaderVersion.Items.Add("Ну или fabric. Я про их версии если чё");
+            ModloaderVersion.Visibility = Visibility.Hidden;
             // устанавливаем отсутсвие modloader
             NoneSelected.IsChecked = true;
         }
@@ -66,6 +66,17 @@ namespace Lexplosion.Gui.InstanceCreator
             }
         }
 
+        private void SetupModloaderVersions(string minecraftVersion, ModloaderType modloaderType) 
+        {
+            var modloaderVersion = ToServer.GetModloadersList(minecraftVersion, modloaderType);
+            foreach (var version in modloaderVersion) 
+            {
+                this.Dispatcher.Invoke(() => {
+                    ModloaderVersion.Items.Add(version);
+                });
+            }
+        }
+
         private void CreateInstanceButton_Click(object sender, RoutedEventArgs e)
         {
             // InstanceNameTB.Text - Поле с название сборки
@@ -76,8 +87,9 @@ namespace Lexplosion.Gui.InstanceCreator
             // TODO: при добавление release, snapshot заменять их.
             string instanceVersion = VersionCB.Text;
             Console.WriteLine(instanceVersion);
-            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, instanceVersion, ModloaderType.None, "");
+            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, instanceVersion, selectedModloaderType, ModloaderVersion.Text);
             _mainWindow.LeftPanel.BackToInstanceContainer(LeftPanel.PageType.InstanceLibrary, null);
+
         }
 
         private void InstanceNameTB_TextChanged(object sender, TextChangedEventArgs e)
@@ -102,14 +114,19 @@ namespace Lexplosion.Gui.InstanceCreator
             if (selectedRadioButton.Name == "NoneSelected") 
             {
                 ModloaderVersion.Visibility = Visibility.Collapsed;
+                selectedModloaderType = ModloaderType.None;
             }
             else if (selectedRadioButton.Name == "ForgeSelected")
             {
                 ModloaderVersion.Visibility = Visibility.Visible;
+                selectedModloaderType = ModloaderType.Forge;
+                SetupModloaderVersions(VersionCB.Text, ModloaderType.Forge);
             }
             else if (selectedRadioButton.Name == "FabricSelected")
             {
                 ModloaderVersion.Visibility = Visibility.Visible;
+                selectedModloaderType = ModloaderType.Fabric;
+                SetupModloaderVersions(VersionCB.Text, ModloaderType.Fabric);
             }
         }
     }
