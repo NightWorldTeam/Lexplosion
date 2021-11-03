@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="244">
+
     <Grid x:Name="LeftPanelGrid" ShowGridLines="True">
         <Grid.Background>
             <SolidColorBrush Color="#18191b"/>
@@ -67,6 +68,8 @@
                 </Grid.RowDefinitions>
                 <Button Style="{StaticResource TSB}"
                     Background="Black"
+                    FontWeight="Bold"
+                    Content="Добавить Сборку"
                     Click="AddCustomModpack" 
                     Width="175" Height="30" 
                     FontSize="16"/>

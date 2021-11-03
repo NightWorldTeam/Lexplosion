@@ -320,22 +320,6 @@
     <!-- Setting Button Style 1-->
     <Style x:Key="TSB" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border" CornerRadius="2" BorderThickness="0"   Background="Transparent">
-                        <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="CBSS" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
