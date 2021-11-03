@@ -1,6 +1,8 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -409,7 +411,25 @@ namespace Lexplosion.Gui.UserControls
                     MessageBox.Show("Error " + result);
                 }
             });
-            
+        }
+
+        public void SetInstanceAssets(InstanceAssets instanceAssets)
+        {
+            InstanceLogo_Background.Fill = new ImageBrush(new BitmapImage(new Uri(
+                    WithDirectory.directory + "/instances-assets/" + instanceAssets.mainImage)
+            ));
+            TextBlockAuthor.Text = instanceAssets.author;
+            TextBlockOverview.Text = instanceAssets.description;
+            // TODO: КОГДА ПОЯВЯТСЯ ТЕГИ В InstanceAssets
+            /*
+            if (instanceProperties.InstanceTags.Count > 0 && TagsBlock.Children.Count == 0)
+            {
+                foreach (string tag in instanceProperties.InstanceTags)
+                {
+                    TagsBlock.Children.Add(SetTagsButton(tag));
+                }
+            }
+            */
         }
     }
 }
