@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
@@ -38,26 +39,26 @@ namespace Lexplosion.Gui.Pages.MW
 
 			int i = 0;
 			Console.WriteLine(String.Join(",", UserData.Instances.List.Keys));
-			
+
 			foreach (string key in UserData.Instances.List.Keys)
 			{
 				string description;
-				BitmapImage image;
+				string imageUrl;
 				// обновление assets
 				description = "This modpack is not have description...";
-				image = new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
+				imageUrl = "pack://application:,,,/assets/images/icons/non_image.png";
 				if (UserData.Instances.Assets.ContainsKey(key))
 				{
-					if (UserData.Instances.Assets[key] != null) 
-					{ 
+					if (UserData.Instances.Assets[key] != null)
+					{
 						description = UserData.Instances.Assets[key].description;
-						image = new BitmapImage(new Uri(WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage));
+						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 					}
 				}
 
 				BuildInstanceForm(
 					key, i,
-					image,
+					imageUrl,
 					UserData.Instances.List[key].Name,
 					"by NightWorld",
 					description,
@@ -68,14 +69,14 @@ namespace Lexplosion.Gui.Pages.MW
 		}
 
 
-		private void BuildInstanceForm(string id, int row, BitmapImage logo, string title, string author, string overview, List<string> tags)
+		private void BuildInstanceForm(string id, int row, string logo, string title, string author, string overview, List<string> tags)
 		{
 			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			this.Dispatcher.Invoke(() =>
 			{
 				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
-				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, id, author, overview, "", logo, tags, true, true);
+				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(_mainWindow, title, id, author, overview, "", new BitmapImage(new Uri(logo)), tags, true, true);
 				// Добавление в Столбики и Колноки в форме.
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);

@@ -43,10 +43,7 @@ namespace Lexplosion.Global
                     ExternalIds[externalId] = localId;
                 }
 
-                MainWindow.Obj.Dispatcher.Invoke(delegate () 
-                {
-                    Nofity?.Invoke();
-                });
+                Nofity?.Invoke();
             }
 
             public static void SetAssets(string id, InstanceAssets assets)

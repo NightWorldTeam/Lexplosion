@@ -1355,7 +1355,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static CurseforgeInstance.InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles)
         {
-            if(localFiles != null)
+            if (localFiles != null)
             {
                 //удаляем старые файлы
                 foreach (string file in localFiles)
