@@ -763,6 +763,11 @@ namespace Lexplosion.Logic.FileSystem
                     folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     string ff = lib.Replace(folders[folders.Length - 1], "");
 
+                    if (addr.Length > 5 && addr.Substring(addr.Length - 4) != ".jar" && addr.Substring(addr.Length - 4) != ".zip")
+                    {
+                        addr = addr + lib;
+                    }
+
                     bool isDownload;
                     if (updateList.Libraries[lib].notArchived)
                     {
