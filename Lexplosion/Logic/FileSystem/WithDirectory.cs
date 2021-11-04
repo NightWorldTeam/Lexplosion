@@ -771,11 +771,11 @@ namespace Lexplosion.Logic.FileSystem
                     bool isDownload;
                     if (updateList.Libraries[lib].notArchived)
                     {
-                        isDownload = DownloadJarLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
+                        isDownload = DownloadJarLibFiles(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
                     }
                     else
                     {
-                        isDownload = DownloadLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
+                        isDownload = DownloadLibFiles(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
                     }
 
                     if (isDownload)
