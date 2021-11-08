@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.InstanceCreator;
+﻿using Lexplosion.Global;
+using Lexplosion.Gui.InstanceCreator;
 using Lexplosion.Gui.Pages.Instance;
 using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.Windows;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace Lexplosion.Gui.UserControls
@@ -48,12 +50,12 @@ namespace Lexplosion.Gui.UserControls
             Installers,
         }
 
-        private PageType activePageType;
-        private Page pageObj;
+        private PageType _activePageType;
+        private Page _pageObj;
         private MainWindow _mainWindow;
 
-        private List<ToggleButton> toggleButtons = new List<ToggleButton>();
-        private Dictionary<ToggleButton, Functions> Buttons = new Dictionary<ToggleButton, Functions>();
+        private List<ToggleButton> _toggleButtons = new List<ToggleButton>();
+        private Dictionary<ToggleButton, Functions> _buttons = new Dictionary<ToggleButton, Functions>();
 
         public delegate void AddCustomModpackClicked();
         public static event AddCustomModpackClicked AddModpackClicked;
@@ -62,51 +64,60 @@ namespace Lexplosion.Gui.UserControls
         {
             InitializeComponent();
 
-            pageObj = obj;
-            activePageType = page;
+            _pageObj = obj;
+            _activePageType = page;
             _mainWindow = mw;
 
-            toggleButtons.Add(MenuButton0);
-            toggleButtons.Add(MenuButton1);
-            toggleButtons.Add(MenuButton2);
-            toggleButtons.Add(MenuButton3);
+            _toggleButtons.Add(MenuButton0);
+            _toggleButtons.Add(MenuButton1);
+            _toggleButtons.Add(MenuButton2);
+            _toggleButtons.Add(MenuButton3);
 
             MenuButton0.IsChecked = true;
             ReselectionButton(MenuButton0);
             InitializeContent("Каталог", "Библиотека", "Сетевая игра", "Настройки");
             InstanceForm.InstanceOpened += InitializeInstancePage;
+            SetupUserLogin();
+
+        }
+
+        private void SetupUserLogin() 
+        {
+            UserLogin.Text = UserData.login;
+            if (UserData.offline)
+                UserStatus.Fill = Brushes.Red;
         }
 
         private void InitializeContent(string btn0, string btn1, string btn2, string btn3)
         {
-            if (Buttons.Count == 0)
+            if (_buttons.Count == 0)
             {
-                Buttons.Add(MenuButton0, Functions.Initialize);
-                Buttons.Add(MenuButton1, Functions.Initialize);
-                Buttons.Add(MenuButton2, Functions.Initialize);
-                Buttons.Add(MenuButton3, Functions.Initialize);
+                _buttons.Add(MenuButton0, Functions.Initialize);
+                _buttons.Add(MenuButton1, Functions.Initialize);
+                _buttons.Add(MenuButton2, Functions.Initialize);
+                _buttons.Add(MenuButton3, Functions.Initialize);
             }
 
-            if (activePageType != PageType.OpenedInstance && activePageType != PageType.Installers)
+            if (_activePageType != PageType.OpenedInstance && _activePageType != PageType.Installers)
             {
-                Buttons[MenuButton0] = Functions.Catalog;
-                Buttons[MenuButton1] = Functions.Library;
-                Buttons[MenuButton2] = Functions.Multiplayer;
-                Buttons[MenuButton3] = Functions.LauncherSettings;
+                _buttons[MenuButton0] = Functions.Catalog;
+                _buttons[MenuButton1] = Functions.Library;
+                _buttons[MenuButton2] = Functions.Multiplayer;
+                _buttons[MenuButton3] = Functions.LauncherSettings;
             }
-            else if (activePageType == PageType.Installers) 
+            else if (_activePageType == PageType.Installers) 
             {
-                Buttons[MenuButton0] = Functions.Vanilla;
-                Buttons[MenuButton1] = Functions.AddInstance;
-                Buttons[MenuButton2] = Functions.ImportInstance;
-                Buttons[MenuButton3] = Functions.Back;
+                _buttons[MenuButton0] = Functions.Vanilla;
+                _buttons[MenuButton1] = Functions.AddInstance;
+                _buttons[MenuButton2] = Functions.ImportInstance;
+                _buttons[MenuButton3] = Functions.Back;
             }
-            else if (activePageType == PageType.OpenedInstance)
+            else if (_activePageType == PageType.OpenedInstance)
             {
-                Buttons[MenuButton0] = Functions.Instance;
-                Buttons[MenuButton1] = Functions.Export;
-                Buttons[MenuButton2] = Functions.InstanceSettings;
-                Buttons[MenuButton3] = Functions.Back;
+                _buttons[MenuButton0] = Functions.Instance;
+                _buttons[MenuButton1] = Functions.Export;
+                _buttons[MenuButton2] = Functions.InstanceSettings;
+                _buttons[MenuButton3] = Functions.Back;
             }
 
             MenuButton0.Content = btn0;
@@ -119,7 +130,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InitializeFunctions()
         {
-            switch (Buttons[MenuButton0])
+            switch (_buttons[MenuButton0])
             {
                 case Functions.Catalog:
                     MenuButton0.Click += CatalogSelected;
@@ -132,7 +143,7 @@ namespace Lexplosion.Gui.UserControls
                     break;
             }
 
-            switch (Buttons[MenuButton1])
+            switch (_buttons[MenuButton1])
             {
                 case Functions.Library:
                     MenuButton1.Click += LibrarySelected;
@@ -145,7 +156,7 @@ namespace Lexplosion.Gui.UserControls
                     break;
             }
 
-            switch (Buttons[MenuButton2])
+            switch (_buttons[MenuButton2])
             {
                 case Functions.Multiplayer:
                     MenuButton2.Click += MultiplayerSelected;
@@ -158,7 +169,7 @@ namespace Lexplosion.Gui.UserControls
                     break;
             }
 
-            switch (Buttons[MenuButton3])
+            switch (_buttons[MenuButton3])
             {
                 case Functions.LauncherSettings:
                     MenuButton3.Click += LauncherSettingsSelected;
@@ -260,7 +271,7 @@ namespace Lexplosion.Gui.UserControls
 
         public void BackToInstanceContainer(PageType pageType, string[] btnNames) 
         {
-            activePageType = pageType;
+            _activePageType = pageType;
             if (btnNames == null) btnNames = new string[] { "Каталог", "Библиотека", "Сетевая игра", "Настройки" };
             
             switch (pageType) 
@@ -286,7 +297,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void ReselectionButton(ToggleButton selectedButton)
         {
-            foreach (ToggleButton toggleButton in toggleButtons)
+            foreach (ToggleButton toggleButton in _toggleButtons)
             {
                 if (toggleButton != selectedButton)
                 {
@@ -303,7 +314,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InitializeInstancePage() 
         {
-            activePageType = PageType.OpenedInstance;
+            _activePageType = PageType.OpenedInstance;
             _mainWindow.PagesController("InstancePage", _mainWindow.RightFrame, delegate ()
             {
                 return new InstancePage(_mainWindow);
@@ -315,7 +326,7 @@ namespace Lexplosion.Gui.UserControls
         // -- DropDownMenu -- //
         private void AddCustomModpack(object sender, RoutedEventArgs e)
         {
-            activePageType = PageType.Installers;
+            _activePageType = PageType.Installers;
             _mainWindow.PagesController("InstanceMasterPage", _mainWindow.RightFrame, delegate ()
             {
                 return new InstanceMasterPage(_mainWindow);

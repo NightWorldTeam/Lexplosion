@@ -17,15 +17,17 @@ namespace Lexplosion.Gui.InstanceCreator
     /// </summary>
     public partial class InstanceCreateMainPage : Page
     {
-        public static readonly SolidColorBrush unavalibleNameColor = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+        public static readonly SolidColorBrush _unavalibleNameColor = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
 
-        private List<string> instanceTags = new List<string>() 
+        private List<string> _instanceTags = new List<string>() 
         { 
             "Tech", "Magic", "Sci-Fi", "Adventure and RPG", "Exploration", "Mini Game", "Quests", 
             "Hardcore", "Map Based", "Small / Light", "Extra Large", "Combat / PvP", "Multiplayer",
             "FTB Offical Pack", "Skyblock"
         };
-        private List<string> unavailableNames = new List<string>();
+
+        private List<string> _selectedModsList = new List<string>();
+        private List<string> _unavailableNames = new List<string>();
         private MainWindow _mainWindow;
         private ModloaderType selectedModloaderType = ModloaderType.None;
 
@@ -40,7 +42,7 @@ namespace Lexplosion.Gui.InstanceCreator
         {
             // получаем все занятые имена модпаков
             foreach (var instance in UserData.Instances.List.Keys)
-                unavailableNames.Add(UserData.Instances.List[instance].Name);
+                _unavailableNames.Add(UserData.Instances.List[instance].Name);
 
             // получаем все версии майнкрафта
             Lexplosion.Run.ThreadRun(() => SetupMinecraftVersions());
@@ -79,22 +81,19 @@ namespace Lexplosion.Gui.InstanceCreator
 
         private void CreateInstanceButton_Click(object sender, RoutedEventArgs e)
         {
-            // InstanceNameTB.Text - Поле с название сборки
-            // VersionCB - комбобокс с версиями
-            // NoneSelected.IsChecked = True; - ничего не выбрано радиокнопка
-            // ForgeSelected.IsChecked = True; - фордж радиокнопка
-            // FabricSelected.IsChecked = True; - фабрик радиокнопка
             // TODO: при добавление release, snapshot заменять их.
-            string instanceVersion = VersionCB.Text;
-            Console.WriteLine(instanceVersion);
-            ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, instanceVersion, selectedModloaderType, ModloaderVersion.Text);
-            _mainWindow.LeftPanel.BackToInstanceContainer(LeftPanel.PageType.InstanceLibrary, null);
-
+            if (InstanceNameTB.Text != "")
+            {
+                string instanceVersion = VersionCB.Text;
+                Console.WriteLine(instanceVersion);
+                ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, instanceVersion, selectedModloaderType, ModloaderVersion.Text);
+                _mainWindow.LeftPanel.BackToInstanceContainer(LeftPanel.PageType.InstanceLibrary, null);
+            }
         }
 
         private void InstanceNameTB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (unavailableNames.Contains(InstanceNameTB.Text))
+            if (_unavailableNames.Contains(InstanceNameTB.Text))
             {
                 Console.WriteLine("Yes");
                 InstanceNameTB.Foreground = Brushes.Red;
