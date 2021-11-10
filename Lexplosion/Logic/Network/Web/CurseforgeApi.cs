@@ -16,10 +16,10 @@ namespace Lexplosion.Logic.Network
     {
         public enum AddonType
         {
+            Unknown,
             Mod = 6,
             Resourcepacks = 12,
-            Maps = 17,
-            Unknown
+            Maps = 17
         }
 
         public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
