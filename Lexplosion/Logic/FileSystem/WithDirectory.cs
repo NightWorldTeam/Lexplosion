@@ -28,8 +28,7 @@ namespace Lexplosion.Logic.FileSystem
             public List<string> Natives = new List<string>();
             public Dictionary<string, LibInfo> Libraries = new Dictionary<string, LibInfo>();
             public bool MinecraftJar = false;
-            public bool AssetsObjects = false;
-            public bool AssetsIndexes = false;
+            public bool Assets = false;
         }
 
         private class LauncherAssets //этот класс нужен для декодирования json
@@ -466,14 +465,10 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //проверяем assets
+            // TODO: сделать нормальное обновление асетсов
             if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
             {
-                updatesList.AssetsIndexes = true;
-            }
-
-            if (!Directory.Exists(directory + "/assets/objects"))
-            {
-                updatesList.AssetsObjects = true;
+                updatesList.Assets = true;
             }
 
             return updatesList;
@@ -768,14 +763,19 @@ namespace Lexplosion.Logic.FileSystem
                     folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     string ff = lib.Replace(folders[folders.Length - 1], "");
 
+                    if (addr.Length > 5 && addr.Substring(addr.Length - 4) != ".jar" && addr.Substring(addr.Length - 4) != ".zip")
+                    {
+                        addr = addr + lib;
+                    }
+
                     bool isDownload;
                     if (updateList.Libraries[lib].notArchived)
                     {
-                        isDownload = DownloadJarLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
+                        isDownload = DownloadJarLibFiles(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
                     }
                     else
                     {
-                        isDownload = DownloadLibFiles(addr + lib, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
+                        isDownload = DownloadLibFiles(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
                     }
 
                     if (isDownload)
@@ -799,7 +799,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
                         {
                             int i = 1; //начинаем цикл с первого элемента, т.к нулевой - название метода
-                            while (i < obtainingMethod.Count) 
+                            while (i < obtainingMethod.Count)
                             {
                                 // получаем команду и выполняем её
                                 switch (obtainingMethod[i][0])
@@ -842,15 +842,22 @@ namespace Lexplosion.Logic.FileSystem
                                         break;
 
                                     case "moveFile":
-                                        File.Move(obtainingMethod[i][2].Replace("{DIR}", directory), obtainingMethod[i][1].Replace("{DIR}", directory));
+                                        if (File.Exists(obtainingMethod[i][2].Replace("{DIR}", directory)))
+                                        {
+                                            File.Delete(obtainingMethod[i][2].Replace("{DIR}", directory));
+                                        }
+                                        File.Move(obtainingMethod[i][1].Replace("{DIR}", directory), obtainingMethod[i][2].Replace("{DIR}", directory));
                                         break;
                                 }
                                 i++;
                             }
+                            //очищаем папку temp
+                            //Directory.Delete(directory + "/temp", true);
+                            //Directory.CreateDirectory(directory + "/temp");
                         }
 
-                        //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
-                        EndWhile: executedMethods.Add(obtainingMethod[0][0]);
+                    //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
+                    EndWhile: executedMethods.Add(obtainingMethod[0][0]);
                         if (!File.Exists(directory + "/libraries/" + lib))
                         {
                             errors.Add("libraries/" + lib);
@@ -878,7 +885,7 @@ namespace Lexplosion.Logic.FileSystem
             if (!Directory.Exists(directory + "/assets"))
                 Directory.CreateDirectory(directory + "/assets");
 
-            if (updateList.AssetsIndexes)
+            if (updateList.Assets)
             {
                 if (!Directory.Exists(directory + "/assets/indexes"))
                     Directory.CreateDirectory(directory + "/assets/indexes");
@@ -894,10 +901,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     errors.Add("asstes/indexes");
                 }
-            }
 
-            if (updateList.AssetsObjects)
-            {
                 if (!Directory.Exists(directory + "/assets/objects"))
                     Directory.CreateDirectory(directory + "/assets/objects");
 
@@ -911,18 +915,17 @@ namespace Lexplosion.Logic.FileSystem
                         if (assetHash != null)
                         {
                             string assetPath = "/" + assetHash.Substring(0, 2);
-                            if(!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
+                            if (!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
                             {
                                 if (!InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
                                 {
                                     Console.WriteLine("ERROR:1 " + "http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath);
                                 }
-                            }     
+                            }
                         }
                         else
                         {
                             errors.Add("asstes/objects");
-                            Console.WriteLine("ERROR:2 " + asset + " " + (assetHash == null));
                         }
 
                     }
@@ -930,22 +933,7 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     errors.Add("asstes/objects");
-                    Console.WriteLine("ERROR ERROR ERROR ERROR");
                 }
-
-                /*try
-                {
-                    wc.DownloadFile(LaunсherSettings.URL.Upload + "assets/" + filesList.version.assetsVersion + "/objects.zip", directory + "/temp/objects.zip");
-
-                    ZipFile.ExtractToDirectory(directory + "/temp/objects.zip", directory + "/assets/objects");
-                    File.Delete(directory + "/temp/objects.zip");
-
-                    //UpdateProgressBar();
-                }
-                catch
-                {
-                    errors.Add("asstes/objects");
-                }*/
             }
 
             wc.Dispose();
@@ -1012,99 +1000,6 @@ namespace Lexplosion.Logic.FileSystem
             SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
 
             return errors;
-        }
-
-        public static void CheckLauncherAssets()
-        {
-            bool update = false;
-            bool updateJsonFile = false;
-
-            try
-            {
-                string answer = ToServer.HttpPost("filesList/launcherAssets.json");
-                LauncherAssets data = JsonConvert.DeserializeObject<LauncherAssets>(answer);
-
-                if (!File.Exists(directory + "/launcherAssets.json")) //если нет файла launcherAssets.json, то скачиваем его
-                {
-                    SaveFile(directory + "/launcherAssets.json", JsonConvert.SerializeObject(data.data));
-                    updateJsonFile = true;
-                }
-
-
-                if (!UserData.settings.ContainsKey("launcherAssetsV") || Int32.Parse(UserData.settings["launcherAssetsV"]) < data.version)
-                {
-                    updateJsonFile = true;
-                    update = true;
-                }
-                else
-                {
-                    if (!Directory.Exists(directory + "/launcherAssets"))
-                    {
-                        updateJsonFile = true;
-                        update = true;
-                    }
-                    else
-                    {
-                        foreach (InstanceAssets instance in data.data.Values)
-                        {
-                            foreach (string file in instance.images)
-                            {
-                                if (!File.Exists(directory + "/launcherAssets/" + file))
-                                {
-                                    update = true;
-                                    goto DownloadAssets;
-                                }
-
-                            }
-
-                            if (!File.Exists(directory + "/launcherAssets/" + instance.mainImage))
-                            {
-                                update = true;
-                                goto DownloadAssets;
-                            }
-                        }
-                    }
-                }
-
-            DownloadAssets: //скачивание асетсов
-                if (update)
-                {
-                    if (!Directory.Exists(directory + "/launcherAssets"))
-                    {
-                        Directory.CreateDirectory(directory + "/launcherAssets");
-                    }
-                    else
-                    {
-                        var dirInfo = new DirectoryInfo(directory + "/launcherAssets");
-                        foreach (var file in dirInfo.GetFiles())
-                            file.Delete();
-                    }
-
-                    using (WebClient wc = new WebClient())
-                    {
-                        wc.DownloadFile(LaunсherSettings.URL.Upload + "/images.zip", directory + "/temp/launcherAssets-Images.zip");
-
-                        ZipFile.ExtractToDirectory(directory + "/temp/launcherAssets-Images.zip", directory + "/launcherAssets");
-                        File.Delete(directory + "/temp/launcherAssets-Images.zip");
-
-                        wc.DownloadFile(LaunсherSettings.URL.Upload + "/images.zip", directory + "/temp/launcherAssets-Images.zip");
-                    }
-
-                    UserData.settings["launcherAssetsV"] = data.version.ToString();
-
-                    if (!updateJsonFile)
-                        SaveSettings(UserData.settings);
-                }
-
-                if (updateJsonFile)
-                {
-                    SaveFile(directory + "/launcherAssets.json", JsonConvert.SerializeObject(data.data));
-
-                    UserData.settings["launcherAssetsV"] = data.version.ToString();
-                    SaveSettings(UserData.settings);
-                }
-            }
-            catch { }
         }
 
         public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
@@ -1348,7 +1243,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static CurseforgeInstance.InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles)
         {
-            if(localFiles != null)
+            if (localFiles != null)
             {
                 //удаляем старые файлы
                 foreach (string file in localFiles)
@@ -1386,16 +1281,18 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (data != null)
                 {
-
                     foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
                     {
                         bool result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/temp/dataDownload/overrides/");
+                        Console.WriteLine(result + " " + file.projectID);
                         if (!result) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
                         {
                             errors.Add(file.projectID + " " + file.fileID);
                             return null;
                         }
                     }
+
+                    Console.WriteLine("END MODS");
 
                     string SourcePath = directory + "/temp/dataDownload/overrides/";
                     string DestinationPath = directory + "/instances/" + instanceId + "/";
@@ -1415,6 +1312,8 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         Directory.Delete(directory + "/temp/dataDownload", true);
                     }
+
+                    Console.WriteLine("Return");
 
                     return data;
                 }

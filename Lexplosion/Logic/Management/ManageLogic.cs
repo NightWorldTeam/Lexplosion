@@ -117,10 +117,9 @@ namespace Lexplosion.Logic.Management
                         instance = null;
                         break;
                 }
-
                 InstanceInit result = instance.Check();
                 if (result == InstanceInit.Successful)
-                {
+                {                 
                     InitData res = instance.Update();
                     ComplitedDownload(res.InitResult, res.DownloadErrors);
                 }
@@ -290,9 +289,10 @@ namespace Lexplosion.Logic.Management
         } 
 
         public static string CreateInstance(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion, string externalId = "")
-        {
+        {   
+            Console.WriteLine(externalId);
             string instanceId = GenerateInstanceId(name);
-
+            
             UserData.Instances.AddInstance(instanceId, new InstanceParametrs
             {
                 Name = name,

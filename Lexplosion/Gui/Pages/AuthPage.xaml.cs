@@ -89,11 +89,6 @@ namespace Lexplosion.Gui.Pages
         void ChangeWindow(sbyte status)
         {
             authWindow.ShowMainWindow();
-
-
-            // mainWindow.NameBlock.Text = UserData.login;
-            // if (status == 0)
-            //    mainWindow.StatusBlock.Fill = Brushes.Red;
         }
 
         private void PlayOffline(object sender, RoutedEventArgs e)

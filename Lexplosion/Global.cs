@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Global
@@ -29,8 +30,11 @@ namespace Lexplosion.Global
             public static Dictionary<string, InstanceParametrs> List; // все сборки
             public static Dictionary<string, InstanceAssets> Assets; // ассетсы всех модпаков
             public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)
+
             public delegate void InstaceAddHander();
-            public static event InstaceAddHander Nofity;
+            public delegate void InstaceSetAssetsHandler(string id, InstanceAssets assets);
+            public static event InstaceAddHander AddInstanceNofity;
+            public static event InstaceSetAssetsHandler SetAssetsNofity;
 
             public static void AddInstance(string localId, InstanceParametrs parametrs, InstanceAssets assets, string externalId = "")
             {
@@ -41,12 +45,14 @@ namespace Lexplosion.Global
                 {
                     ExternalIds[externalId] = localId;
                 }
-                Nofity?.Invoke();
+
+                AddInstanceNofity?.Invoke();
             }
 
             public static void SetAssets(string id, InstanceAssets assets)
             {
                 Assets[id] = assets;
+                SetAssetsNofity?.Invoke(id, assets);
             }
         }
     }

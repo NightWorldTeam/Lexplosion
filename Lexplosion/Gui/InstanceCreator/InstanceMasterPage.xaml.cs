@@ -22,7 +22,7 @@ namespace Lexplosion.Gui.InstanceCreator
         {
             _mainWindow.PagesController("InstanceCreateMainPage", this.BottomSideFrame, delegate ()
             {
-                return new InstanceCreateMainPage();
+                return new InstanceCreateMainPage(_mainWindow);
             });
         }
 
@@ -54,7 +54,7 @@ namespace Lexplosion.Gui.InstanceCreator
         {
             _mainWindow.PagesController("InstanceCreateMainPage", this.BottomSideFrame, delegate ()
             {
-                return new InstanceCreateMainPage();
+                return new InstanceCreateMainPage(_mainWindow);
             });
         }
     }

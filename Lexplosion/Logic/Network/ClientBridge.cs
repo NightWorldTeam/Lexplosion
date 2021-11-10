@@ -130,7 +130,7 @@ namespace Lexplosion.Logic.Network
             {
                 while (Bridge.IsConnected)
                 {
-                    byte[] buffer = new byte[256];
+                    byte[] buffer = new byte[1200];
                     int bytes = ServerSimulator.Receive(buffer);
                     //Array.Resize(ref data, bytes);
 
@@ -141,6 +141,7 @@ namespace Lexplosion.Logic.Network
                     }
 
                     Bridge.Send(buffer_);
+                    Console.WriteLine("ОТПРАВИЛ БЛЯТЬ");
                 }
             }
             catch (Exception e)

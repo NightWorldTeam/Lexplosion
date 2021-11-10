@@ -188,7 +188,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
                         <Border x:Name="border" Background="#171717"
-                                BorderBrush="#121212"
+                                BorderBrush="#167FFC"
                                 BorderThickness="1.5"
                                 CornerRadius="6">
                             <ScrollViewer Margin="10,0,0,0" x:Name="PART_ContentHost" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -305,19 +305,22 @@
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
-                    Margin="30,170,0,0"/>                
+                    Margin="30,170,0,0"
+                    Click="CreateInstanceRadioButton_Click"/>                
                 <RadioButton x:Name="ForgeSelected"
                     Content="Forge" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
-                    Margin="205,170,0,0"/>                
+                    Margin="205,170,0,0"
+                    Click="CreateInstanceRadioButton_Click"/>                
                 <RadioButton x:Name="FabricSelected"
                     Content="Fabric" 
                     Height="30"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
-                    Margin="320,170,0,0"/>
+                    Margin="320,170,0,0"
+                    Click="CreateInstanceRadioButton_Click"/>
 
                 <!-- More -->
                 <ComboBox x:Name="ModloaderVersion"

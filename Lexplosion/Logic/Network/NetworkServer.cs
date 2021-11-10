@@ -28,8 +28,11 @@ namespace Lexplosion.Logic.Network
         protected List<IPEndPoint> AvailableConnections;
         protected bool IsWork = false;
 
-        public NetworkServer(string serverType)
+        protected string UUID;
+
+        public NetworkServer(string uuid, string serverType)
         {
+            UUID = uuid;
             IsWork = true;
             AcceptingBlock = new Semaphore(1, 1);
             SendingBlock = new Semaphore(1, 1);
@@ -71,9 +74,10 @@ namespace Lexplosion.Logic.Network
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 4565));
 
-            string st = "{\"UUID\" : \"344a7f427fb765610ef96eb7bce95257\", \"type\": \"" + serverType + "\"}";
+            string st = "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             socket.Send(sendData); //авторизируемся на упрявляющем сервере
+            Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD");
 
             while (IsWork)
             {
