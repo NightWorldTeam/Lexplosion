@@ -122,7 +122,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public float downloadCount;
     }
 
-    class OutsideInstance
+    public class OutsideInstance
     {
         public InstanceSource Type;
         public bool UpdateAvailable;

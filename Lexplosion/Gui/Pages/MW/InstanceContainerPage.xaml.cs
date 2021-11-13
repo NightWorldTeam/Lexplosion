@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,15 +11,15 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.Pages.MW
 {
-	/// <summary>
-	/// Interaction logic for InstanceContainerPage.xaml
-	/// </summary>
-	/// 
+    /// <summary>
+    /// Interaction logic for InstanceContainerPage.xaml
+    /// </summary>
+    /// 
 
 
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	public partial class InstanceContainerPage : Page
+    // TODO: Сделать общую страницу контейнер для Library и Catalog.
+    // TODO: Сделать общую страницу контейнер для Library и Catalog.
+    public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
 
@@ -93,12 +94,7 @@ namespace Lexplosion.Gui.Pages.MW
 				{
 					// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
 					// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
-					BuildInstanceForm(instances[j].Id.ToString(), j,
-						instances[j].MainImage,
-						instances[j].Name,
-						instances[j].Author,
-						instances[j].Description,
-						instances[j].Categories);
+					BuildInstanceForm(instances[j], j);
 					ChangeLoadingLabel("", Visibility.Collapsed);
 				}
 			}
@@ -106,7 +102,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
 
-		public void BuildInstanceForm(string instanceId, int row, byte[] logo, string title, string author, string overview, List<string> tags)
+		public void BuildInstanceForm(OutsideInstance outsideInstance, int row)
 		{
 
 			this.Dispatcher.Invoke(() =>
@@ -114,8 +110,8 @@ namespace Lexplosion.Gui.Pages.MW
 				if (InstanceGrid.RowDefinitions.Count < 10)
 					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
-					_mainWindow, title, "", author, overview, instanceId, ToImage(logo), tags, false, false
-				);
+					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.Author, outsideInstance.Description,
+					outsideInstance.Id, ToImage(outsideInstance.MainImage), new List<string> { }, outsideInstance.IsInstalled, false);
 
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);
