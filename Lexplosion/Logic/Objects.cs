@@ -134,6 +134,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public float DownloadCount;
         public string Description;
         public string Id;
+        public string LocalId;
     }
 
     class CurseforgeFileInfo

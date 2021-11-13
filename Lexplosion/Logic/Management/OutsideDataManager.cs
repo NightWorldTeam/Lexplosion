@@ -86,6 +86,7 @@ namespace Lexplosion.Logic.Management
 
                         if (instanceInfo.IsInstalled)
                         {
+                            instanceInfo.LocalId = UserData.Instances.ExternalIds[nwModpack];
                             instanceInfo.UpdateAvailable = ManageLogic.CheckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[nwModpack]].Name, InstanceSource.Nightworld);
                         }
 
@@ -139,6 +140,7 @@ namespace Lexplosion.Logic.Management
 
                     if (instanceInfo.IsInstalled)
                     {
+                        instanceInfo.LocalId = UserData.Instances.ExternalIds[instance.id.ToString()];
                         instanceInfo.UpdateAvailable = ManageLogic.CheckIntanceUpdates(UserData.Instances.List[UserData.Instances.ExternalIds[instance.id.ToString()]].Name, InstanceSource.Curseforge);
                     }
 
