@@ -175,7 +175,6 @@ namespace Lexplosion.Logic.Management
             {
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
                 InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, ProgressHandler);
-                InstallAddon(240630, 3435305, initModPack, data.VersionFile.gameVersion);
 
                 if (data.InitResult == InstanceInit.Successful)
                 {    
