@@ -22,6 +22,13 @@ namespace Lexplosion.Logic.Network
             Maps = 17
         }
 
+        public class InstalledAddonInfo
+        {
+            public int projectID;
+            public int fileID;
+            public AddonType type;
+        }
+
         public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
         {
             try
@@ -148,26 +155,50 @@ namespace Lexplosion.Logic.Network
                 public List<Dictionary<string, int>> dependencies;
             }
 
+            public class LatestFile
+            {
+                public int projectFileId;
+                public string gameVersion;
+            }
+
             public CategorySection categorySection;
             public List<FileData> files;
+            public List<LatestFile> gameVersionLatestFiles;
         }
 
-        public static bool DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false)
+        public static Dictionary<string, InstalledAddonInfo> DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false, string gameVersion = "")
         {
+            var addonsList = new Dictionary<string, InstalledAddonInfo>();
             try
             {
                 string answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID);
                 if (answer == null)
                 {
-                    return false;
+                    return null;
                 }
 
                 ProjectTypeInfo data = JsonConvert.DeserializeObject<ProjectTypeInfo>(answer);
 
+                if (fileID == -1) // если fileID == -1 значит нужно установить последнюю версию аддона
+                {
+                    foreach(var latestFile in data.gameVersionLatestFiles) // ищем последнюю версию мода для данной версии майнкрафта
+                    {
+                        if (latestFile.gameVersion == gameVersion)
+                        {
+                            fileID = latestFile.projectFileId;
+                        }
+                    }
+
+                    if (fileID == -1)
+                    {
+                        return null;
+                    }
+                }
+
                 answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/files");
                 if (answer == null)
                 {
-                    return false;
+                    return null;
                 }
 
                 data.files = JsonConvert.DeserializeObject<List<ProjectTypeInfo.FileData>>(answer);
@@ -194,12 +225,17 @@ namespace Lexplosion.Logic.Network
                         {
                             foreach (Dictionary<string, int> value in v.dependencies)
                             {
-                                if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId") && value.ContainsKey("fileId"))
+                                if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId"))
                                 {
-                                    bool res = DownloadAddon(value["addonId"], value["fileId"], path, true);
-                                    if (!res)
+                                    Dictionary<string, InstalledAddonInfo> addonsList_ = DownloadAddon(value["addonId"], value.ContainsKey("fileId") ? value["fileId"] : -1, path, true, gameVersion);
+                                    if (addonsList_ == null)
                                     {
-                                        return false;
+                                        return null;
+                                    }
+
+                                    foreach(string file in addonsList_.Keys)
+                                    {
+                                        addonsList[file] = addonsList_[file];
                                     }
                                 }
                             }
@@ -225,17 +261,33 @@ namespace Lexplosion.Logic.Network
                             folderName = "resourcepacks/";
                             break;
                         case CurseforgeApi.AddonType.Unknown:
-                            return false;
+                            return null;
                     }
 
-                    return WithDirectory.InstallFile(fileUrl, fileName, path + folderName);
+                    Console.WriteLine("Installing " + fileName);
+
+                    if (WithDirectory.InstallFile(fileUrl, fileName, path + folderName))
+                    {
+                        addonsList[fileName] = new InstalledAddonInfo
+                        {
+                            projectID = projectID,
+                            fileID = fileID
+                        };
+                        Console.WriteLine("EndInstalling " + fileName);
+
+                        return addonsList;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
 
-                return false;
+                return null;
             }
             catch
             {
-                return false;
+                return null;
             }
         }
     }

@@ -1283,9 +1283,8 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
                     {
-                        bool result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/temp/dataDownload/overrides/");
-                        Console.WriteLine(result + " " + file.projectID);
-                        if (!result) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
+                        Dictionary<string, CurseforgeApi.InstalledAddonInfo> result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/temp/dataDownload/overrides/");
+                        if (result != null) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
                         {
                             errors.Add(file.projectID + " " + file.fileID);
                             return null;

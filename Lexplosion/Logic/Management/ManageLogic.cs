@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Windows.Controls;
 using System.ComponentModel;
 using System.Threading;
+using static Lexplosion.Logic.Network.CurseforgeApi;
 
 namespace Lexplosion.Logic.Management
 {
@@ -326,11 +327,28 @@ namespace Lexplosion.Logic.Management
             return instanceId;
         }
 
-        public static bool InstallAddon(int projectID, int fileID, string instanceId)
+        public static bool InstallAddon(int projectID, int fileID, string instanceId, string gameVersion)
         {
-            CurseforgeApi.DownloadAddon(projectID, fileID, "/instances/" + instanceId + "/", true);
+            var installedAddons = DataFilesManager.GetFile<Dictionary<string, InstalledAddonInfo>>(WithDirectory.directory + "/instances/" + instanceId + "/installedAddons.json");
+            if (installedAddons == null)
+            {
+                installedAddons = new Dictionary<string, InstalledAddonInfo>();
+            }
 
-            return true;
+            Dictionary<string, InstalledAddonInfo> addonsList = CurseforgeApi.DownloadAddon(projectID, fileID, "/instances/" + instanceId + "/", true, gameVersion);
+            if (addonsList != null)
+            {
+                foreach(string file in addonsList.Keys)
+                {
+                    installedAddons[file] = addonsList[file];
+                }
+
+                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
