@@ -7,18 +7,13 @@ namespace Lexplosion.Logic
 {
     class StreamList
     {
-        public class ThreadInfo
-        {
-            public bool isImportant;
-            public Thread thread;
-        }
 
-        private Dictionary<int, ThreadInfo> data;
+        private Dictionary<int, Thread> data;
         private Semaphore sem;
 
         public StreamList()
         {
-            data = new Dictionary<int, ThreadInfo>();
+            data = new Dictionary<int, Thread>();
             sem = new Semaphore(1, 1);
         }
 
@@ -32,17 +27,12 @@ namespace Lexplosion.Logic
 
             foreach (var key in keys)
             {
-                if (!data[key].isImportant)
-                {
-                    data[key].thread.Abort();
-                }
+                data[key].Abort();
 
                 data.Remove(key);
-
             }
 
             sem.Release();
-
         }
 
         public void Wait()
@@ -65,7 +55,7 @@ namespace Lexplosion.Logic
             sem.Release();
         }
 
-        public ThreadInfo this[int index]
+        public Thread this[int index]
         {
             get
             {
@@ -78,7 +68,7 @@ namespace Lexplosion.Logic
             }
         }
 
-        public int Add(ThreadInfo obj)
+        public int Add(Thread obj)
         {
 
             Random rnd = new Random();
@@ -92,7 +82,6 @@ namespace Lexplosion.Logic
             data[key] = obj;
 
             return key;
-
         }
 
         public void RemoveAt(int index)

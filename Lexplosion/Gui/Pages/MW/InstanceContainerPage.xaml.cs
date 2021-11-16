@@ -141,7 +141,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 
-			Lexplosion.Run.ThreadRun(delegate ()
+			Lexplosion.Run.TaskRun(delegate ()
 			{
 				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
 				{

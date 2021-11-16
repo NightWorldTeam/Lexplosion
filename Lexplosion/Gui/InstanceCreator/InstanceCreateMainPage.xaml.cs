@@ -45,7 +45,7 @@ namespace Lexplosion.Gui.InstanceCreator
                 _unavailableNames.Add(UserData.Instances.List[instance].Name);
 
             // получаем все версии майнкрафта
-            Lexplosion.Run.ThreadRun(() => SetupMinecraftVersions());
+            Lexplosion.Run.TaskRun(() => SetupMinecraftVersions());
             
             // выставляем последнию версию
             VersionCB.SelectedIndex = 0;

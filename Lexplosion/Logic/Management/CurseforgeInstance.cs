@@ -124,7 +124,7 @@ namespace Lexplosion.Logic.Management
         public InitData Update()
         {
             // асинхронно скачиваем иконку
-            Lexplosion.Run.ThreadRun(delegate () {
+            Lexplosion.Run.TaskRun(delegate () {
                 try
                 {
                     CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);

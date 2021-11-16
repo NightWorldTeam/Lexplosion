@@ -25,7 +25,6 @@ namespace Lexplosion
     static class Run
     {
         public static StreamList threads = new StreamList();
-        private static bool haveImportantThread = false;
         private static App app = new App();
 
         [STAThread]
@@ -153,10 +152,7 @@ namespace Lexplosion
         public static void BeforeExit(object sender, EventArgs e)
         {
             // TODO: сохранить все данные
-            if (haveImportantThread)
-            {
-                threads.StopThreads();
-            }
+            threads.StopThreads();
         }
 
         public static void Exit()
@@ -165,19 +161,11 @@ namespace Lexplosion
             Environment.Exit(0);
         }
 
-        public static Thread ThreadRun(ThreadStart ThreadFunc, bool isImportant = false)
+        public static Thread TaskRun(ThreadStart ThreadFunc)
         {
-            haveImportantThread = haveImportantThread || isImportant;
-
             threads.Wait();
 
-            var threadInfo = new StreamList.ThreadInfo
-            {
-                isImportant = isImportant,
-                thread = null
-            };
-
-            int key = threads.Add(threadInfo);
+            int key = threads.Add(null);
 
             var thread = new Thread(delegate () 
             {
@@ -189,7 +177,7 @@ namespace Lexplosion
                 threadsList.RemoveAt(threadKey);
             });
 
-            threads[key].thread = thread;
+            threads[key] = thread;
 
             thread.Start();
             threads.Release();

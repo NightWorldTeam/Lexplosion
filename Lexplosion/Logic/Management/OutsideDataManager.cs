@@ -245,7 +245,7 @@ namespace Lexplosion.Logic.Management
                 //Console.WriteLine("B " + (page == null).ToString());
             }
 
-            Lexplosion.Run.ThreadRun(delegate ()
+            Lexplosion.Run.TaskRun(delegate ()
             {
                 ChangePages(type, pageSize, pageIndex, categoriy, searchFilter);
                 PageIndex = pageIndex;

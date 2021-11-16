@@ -98,7 +98,7 @@ namespace Lexplosion.Logic.Management
 
         public static void UpdateInstance(string instanceId)
         {
-            Lexplosion.Run.ThreadRun(delegate ()
+            Lexplosion.Run.TaskRun(delegate ()
             {
                 InstanceSource type = UserData.Instances.List[instanceId].Type;
                 IPrototypeInstance instance;
@@ -166,7 +166,7 @@ namespace Lexplosion.Logic.Management
                     MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
             }
 
-            Lexplosion.Run.ThreadRun(delegate ()
+            Lexplosion.Run.TaskRun(delegate ()
             {
                 Run(instanceId, type);
             });

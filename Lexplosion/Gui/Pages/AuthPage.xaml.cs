@@ -62,7 +62,7 @@ namespace Lexplosion.Gui.Pages
                 }
 
                 var isChecked = SaveMe.IsChecked;
-                Lexplosion.Run.ThreadRun(delegate () { 
+                Lexplosion.Run.TaskRun(delegate () { 
                     AuthCode code = ManageLogic.Auth(login, password, isChecked is true);
 
                     this.Dispatcher.Invoke(() => { 
