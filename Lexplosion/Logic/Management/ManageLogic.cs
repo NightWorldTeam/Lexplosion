@@ -175,6 +175,7 @@ namespace Lexplosion.Logic.Management
             {
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
                 InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, ProgressHandler);
+                InstallAddon(240630, 3435305, initModPack, data.VersionFile.gameVersion);
 
                 if (data.InitResult == InstanceInit.Successful)
                 {    
@@ -335,20 +336,20 @@ namespace Lexplosion.Logic.Management
                 installedAddons = new Dictionary<string, InstalledAddonInfo>();
             }
 
-            Dictionary<string, InstalledAddonInfo> addonsList = CurseforgeApi.DownloadAddon(projectID, fileID, "/instances/" + instanceId + "/", true, gameVersion);
-            if (addonsList != null)
+            Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList
+                = CurseforgeApi.DownloadAddon(projectID, fileID, "/instances/" + instanceId + "/", true, gameVersion);
+            
+            foreach (string file in addonsList.Keys)
             {
-                foreach(string file in addonsList.Keys)
+                if(addonsList[file].Item2 == DownloadAddonRes.Successful)
                 {
-                    installedAddons[file] = addonsList[file];
-                }
-
-                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
-
-                return true;
+                    installedAddons[file] = addonsList[file].Item1;
+                }    
             }
 
-            return false;
+            DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
+
+            return true;
         }
     }
 }

@@ -29,6 +29,17 @@ namespace Lexplosion.Logic.Network
             public AddonType type;
         }
 
+        public enum DownloadAddonRes
+        {
+            Successful,
+            ProjectIdError,
+            FileIdError,
+            DownloadError,
+            UncnownAddonType,
+            FileVersionError,
+            UncnownError
+        }
+
         public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
         {
             try
@@ -166,15 +177,18 @@ namespace Lexplosion.Logic.Network
             public List<LatestFile> gameVersionLatestFiles;
         }
 
-        public static Dictionary<string, InstalledAddonInfo> DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false, string gameVersion = "")
+        public static Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false, string gameVersion = "")
         {
-            var addonsList = new Dictionary<string, InstalledAddonInfo>();
+            var addonsList = new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>();
             try
             {
                 string answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID);
                 if (answer == null)
                 {
-                    return null;
+                    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> 
+                    { 
+                        [projectID.ToString()] = (null, DownloadAddonRes.ProjectIdError)
+                    };
                 }
 
                 ProjectTypeInfo data = JsonConvert.DeserializeObject<ProjectTypeInfo>(answer);
@@ -191,14 +205,20 @@ namespace Lexplosion.Logic.Network
 
                     if (fileID == -1)
                     {
-                        return null;
+                        return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                        {
+                            [projectID.ToString()] = (null, DownloadAddonRes.FileIdError)
+                        };
                     }
                 }
 
                 answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/files");
                 if (answer == null)
                 {
-                    return null;
+                    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                    {
+                        [projectID.ToString()] = (null, DownloadAddonRes.ProjectIdError)
+                    };
                 }
 
                 data.files = JsonConvert.DeserializeObject<List<ProjectTypeInfo.FileData>>(answer);
@@ -227,12 +247,7 @@ namespace Lexplosion.Logic.Network
                             {
                                 if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId"))
                                 {
-                                    Dictionary<string, InstalledAddonInfo> addonsList_ = DownloadAddon(value["addonId"], value.ContainsKey("fileId") ? value["fileId"] : -1, path, true, gameVersion);
-                                    if (addonsList_ == null)
-                                    {
-                                        return null;
-                                    }
-
+                                    Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], value.ContainsKey("fileId") ? value["fileId"] : -1, path, true, gameVersion);
                                     foreach(string file in addonsList_.Keys)
                                     {
                                         addonsList[file] = addonsList_[file];
@@ -261,33 +276,46 @@ namespace Lexplosion.Logic.Network
                             folderName = "resourcepacks/";
                             break;
                         case CurseforgeApi.AddonType.Unknown:
-                            return null;
+                            return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                            {
+                                [fileName] = (null, DownloadAddonRes.UncnownAddonType)
+                            };
                     }
 
                     Console.WriteLine("Installing " + fileName);
 
                     if (WithDirectory.InstallFile(fileUrl, fileName, path + folderName))
                     {
-                        addonsList[fileName] = new InstalledAddonInfo
+                        addonsList[fileName] = (new InstalledAddonInfo
                         {
                             projectID = projectID,
                             fileID = fileID
-                        };
+                        }, DownloadAddonRes.Successful);
                         Console.WriteLine("EndInstalling " + fileName);
 
                         return addonsList;
                     }
                     else
                     {
-                        return null;
+                        return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                        {
+                            [fileName] = (null, DownloadAddonRes.FileIdError)
+                        };
                     }
                 }
 
-                return null;
+                return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                {
+                    [fileName] = (null, DownloadAddonRes.FileVersionError)
+                };
+
             }
             catch
             {
-                return null;
+                return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                {
+                    [projectID.ToString()] = (null, DownloadAddonRes.UncnownError)
+                };
             }
         }
     }
