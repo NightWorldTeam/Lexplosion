@@ -87,8 +87,8 @@ namespace Lexplosion.Gui.UserControls
         public delegate void InstanceOpenedHandler();
         public static event InstanceOpenedHandler InstanceOpened;
 
-        public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, string outsideInstanceId,
-            BitmapImage logo, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
+        public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, 
+            string outsideInstanceId, BitmapImage logo, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
         {
             InitializeComponent();
             this._mainWindow = mainWindow;

@@ -111,7 +111,7 @@ namespace Lexplosion.Gui.Pages.MW
 					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
 					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.Author, outsideInstance.Description,
-					outsideInstance.Id, ToImage(outsideInstance.MainImage), new List<string> { }, outsideInstance.IsInstalled, false);
+					outsideInstance.Id, ToImage(outsideInstance.MainImage), outsideInstance.Categories, outsideInstance.IsInstalled, false);
 
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);
