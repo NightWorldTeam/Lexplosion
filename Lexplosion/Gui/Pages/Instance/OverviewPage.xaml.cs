@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Gui.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,7 @@ namespace Lexplosion.Gui.Pages.Instance
     /// </summary>
     public partial class OverviewPage : Page
     {
-
         public static OverviewPage instance = null;
-        private int imagesCount = 1;
-        private int lastIndex = 0;
 
         class InstanceData
         {
@@ -44,6 +42,18 @@ namespace Lexplosion.Gui.Pages.Instance
             };
             SetInstanceData(instanceData);
             SetAssets();
+            List<string> images = new List<string> { 
+                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658257_2.jpg", 
+                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_3.jpg",
+                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_3.jpg"
+            };
+            Gallery gallery = new Gallery(images)
+            {
+                Height = 216,
+                Width = 564
+            };
+            Grid.SetRow(gallery, 0);
+            Container.Children.Add(gallery);
         }
 
         private void SetInstanceData(InstanceData instanceData)
@@ -52,7 +62,7 @@ namespace Lexplosion.Gui.Pages.Instance
         }
 
         public void SetAssets()
-        {
+        { /*
             if (instanceData.description != null)
             {
                 Description.Text = instanceData.description;
@@ -61,59 +71,7 @@ namespace Lexplosion.Gui.Pages.Instance
             {
                 Description.Text = "";
             }
-        }
-
-        private void Arrow_Right_Button(object sender, RoutedEventArgs e)
-        {
-            /*string modpack = LeftSideMenuPage.instance.selectedInstance;
-            if (UserData.instancesAssets != null)
-            {
-                if (lastIndex < images_count)
-                {
-                    lastIndex += 1;
-                }
-                else
-                {
-                    lastIndex = 0;
-                }
-                SetImages(UserData.instancesAssets[modpack].images);
-            }
             */
-        }
-
-        private void Arrow_Left_Button(object sender, RoutedEventArgs e)
-        {
-            /*string modpack = LeftSideMenuPage.instance.selectedInstance;
-            if (UserData.instancesAssets != null)
-            {
-                if (lastIndex - 1 != -1)
-                {
-                    lastIndex -= 1;
-                }
-                else
-                {
-                    lastIndex = images_count;
-                }
-                SetImages(UserData.instancesAssets[modpack].images);
-            }
-            */
-        }
-
-        private void SetImages(List<string> mpAssets)
-        {
-            if (mpAssets.Count != 0)
-            {
-                try
-                {
-                    ChangeImageBrush.ImageSource = new BitmapImage(new Uri(UserData.settings["gamePath"] + "/launcherAssets/" + mpAssets[lastIndex], UriKind.Relative));
-                    ImageManagerGrid.Visibility = Visibility.Visible;
-                }
-                catch { }
-            }
-            else
-            {
-                ImageManagerGrid.Visibility = Visibility.Collapsed;
-            }
         }
     }
 }

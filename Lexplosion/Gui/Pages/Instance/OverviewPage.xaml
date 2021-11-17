@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Lexplosion.Gui.Pages.Instance"
+      xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="700"
       Title="OverviewPage">
@@ -53,30 +54,9 @@
 
     <Grid Margin="0,0,0,0">
         <ScrollViewer CanContentScroll="False" Margin="0,-5,0,0" VerticalScrollBarVisibility="Auto">
-            <ItemsControl Height="648" Width="700">
-                <TextBlock x:Name="Description" Padding="50" TextAlignment="Left" TextWrapping="Wrap" Foreground="WhiteSmoke" FontSize="14" Background="#151719" Opacity="0.74"/>
-                <TextBlock x:Name="title" Text="Галерея" HorizontalAlignment="Left" Foreground="White" Background="Transparent" FontSize="25" FontFamily="pack://application:,,,/assets/fonts/#Casper Bold" Margin="100,20,0,0"/>
-                <Grid Margin="40,20,40,40" x:Name="ImageManagerGrid" HorizontalAlignment="Center" Width="516" Height="264">
-                    <Grid.Background>
-                        <ImageBrush x:Name="ChangeImageBrush"/>
-                    </Grid.Background>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="8*"/>
-                            <ColumnDefinition Width="450"/>
-                            <ColumnDefinition Width="8*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Style="{StaticResource CIS}" Click="Arrow_Left_Button" Grid.Column="0" RenderTransformOrigin="0.5,0.5">
-                            <Button.RenderTransform>
-                                <TransformGroup>
-                                    <RotateTransform Angle="180"/>
-                                </TransformGroup>
-                            </Button.RenderTransform>
-                        </Button>
-                        <Button Style="{StaticResource CIS}" Click="Arrow_Right_Button"  Grid.Column="2"/>
-                    </Grid>
-                </Grid>
-            </ItemsControl>
+            <Grid x:Name="Container">
+                <usercontrols:Gallery Height="264" Width="516"/>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Page>

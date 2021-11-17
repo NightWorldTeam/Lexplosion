@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="Lexplosion.Gui.UserControls.Gallery"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="264" d:DesignWidth="516">
+    <Grid>
+        <Rectangle x:Name="Image">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="D:\Programming\Main Projects\Lexplosion\Lexplosion\Assets\images\background\authBG.png" />
+            </Rectangle.Fill>
+        </Rectangle>
+        <Button x:Name="PreviousImageButton" Height="40" Width="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" 
+                Background="Transparent" Content="&lt;--" Foreground="White" FontSize="20"
+                Click="PreviousImageButton_Click"/>
+        <Button x:Name="NextImageButton" Height="40" Width="40" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"
+                Background="Transparent" Content="-->" Foreground="White" FontSize="20"
+                Click="NextImageButton_Click"/>
+    </Grid>
+</UserControl>
