@@ -22,7 +22,7 @@ namespace Lexplosion.Gui.Pages.MW
 	public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
-		static object locker = new object();
+
 		private MainWindow _mainWindow;
 		private Paginator paginator;
 		private int pageSize = 10;
@@ -80,12 +80,13 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance(InstanceSource instanceSource, int pageIndex = 0, string searchBoxText = "")
 		{
-			var instances = new List<OutsideInstance>();
 			Lexplosion.Run.TaskRun(delegate () {
-				instances = OutsideDataManager.GetInstances(
+				var instances = OutsideDataManager.GetInstances(
 					instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 				);
 				paginator.ChangePaginatorVisibility(instances.Count, pageSize);
+
+				RemoveInstanceGridContent();
 
 				if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
 				else
@@ -105,15 +106,14 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public void BuildInstanceForm(OutsideInstance outsideInstance, int row)
 		{
-
 			this.Dispatcher.Invoke(() =>
 			{
+
 				if (InstanceGrid.RowDefinitions.Count < 10)
 					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
 					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.Author, outsideInstance.Description,
 					outsideInstance.Id, ToImage(outsideInstance.MainImage), outsideInstance.Categories, outsideInstance.IsInstalled, false);
-
 				Grid.SetRow(instanceForm, row);
 				InstanceGrid.Children.Add(instanceForm);
 			});
@@ -172,9 +172,23 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void ClearGrid()
 		{
-			if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(1, 10);
-			if (InstanceGrid.RowDefinitions.Count > 2)
-				InstanceGrid.RowDefinitions.RemoveRange(0, InstanceGrid.RowDefinitions.Count - 1);
+			RemoveInstanceGridContent();
+			RemoveInstanceGridRowDefinitions();
+		}
+
+		private void RemoveInstanceGridContent() 
+		{
+			this.Dispatcher.Invoke(() => { 
+				if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(1, 10);
+			});
+		}
+
+		private void RemoveInstanceGridRowDefinitions() 
+		{
+			this.Dispatcher.Invoke(() => {
+				if (InstanceGrid.RowDefinitions.Count > 2)
+					InstanceGrid.RowDefinitions.RemoveRange(0, InstanceGrid.RowDefinitions.Count - 1);
+			});
 		}
 
 		private RowDefinition GetRowDefinition(int height = 150)
