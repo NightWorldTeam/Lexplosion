@@ -75,11 +75,11 @@ namespace Lexplosion.Gui.Pages.MW
 		{
 			await Task.Run(() => InitializeInstance(instanceSource));
 			_isInitializeInstance = true;
-			ChangeLoadingLabel("", Visibility.Collapsed);
 		}
 
 		private void InitializeInstance(InstanceSource instanceSource, int pageIndex = 0, string searchBoxText = "")
 		{
+			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 			Lexplosion.Run.TaskRun(delegate () {
 				var instances = OutsideDataManager.GetInstances(
 					instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
@@ -87,7 +87,6 @@ namespace Lexplosion.Gui.Pages.MW
 				paginator.ChangePaginatorVisibility(instances.Count, pageSize);
 
 				RemoveInstanceGridContent();
-
 				if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
 				else
 				{
@@ -99,6 +98,8 @@ namespace Lexplosion.Gui.Pages.MW
 						ChangeLoadingLabel("", Visibility.Collapsed);
 					}
 				}
+
+				ChangeLoadingLabel("", Visibility.Collapsed);
 			});
 		}
 
@@ -157,7 +158,6 @@ namespace Lexplosion.Gui.Pages.MW
 				{
 					searchBox.LastRequest = searchBoxText;
 					GetInitializeInstance(selectedInstanceSource);
-					ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 				}
 			});
 		}
