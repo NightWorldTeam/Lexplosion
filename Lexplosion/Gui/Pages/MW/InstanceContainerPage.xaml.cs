@@ -84,7 +84,6 @@ namespace Lexplosion.Gui.Pages.MW
 				var instances = OutsideDataManager.GetInstances(
 					instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 				);
-				paginator.ChangePaginatorVisibility(instances.Count, pageSize);
 
 				RemoveInstanceGridContent();
 				if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
@@ -98,7 +97,7 @@ namespace Lexplosion.Gui.Pages.MW
 						ChangeLoadingLabel("", Visibility.Collapsed);
 					}
 				}
-
+				paginator.ChangePaginatorVisibility(instances.Count, pageSize);
 				ChangeLoadingLabel("", Visibility.Collapsed);
 			});
 		}
@@ -140,7 +139,7 @@ namespace Lexplosion.Gui.Pages.MW
 			var loadingLableText = LoadingLabel.Text;
 			var selectedInstanceSource = (InstanceSource)sourceBoxSelectedIndex;
 			paginator.PageIndex = 0;
-
+			paginator.ChangePaginatorVisibility(0, 1);
 			ClearGrid();
 			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 
