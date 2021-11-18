@@ -53,7 +53,6 @@ namespace Lexplosion.Gui.UserControls
 
         private void SearchTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            // if "Enter" button clicked
             if (e.Key == Key.Return)
             {
                 SearchProcess();

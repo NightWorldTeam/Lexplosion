@@ -19,7 +19,6 @@ namespace Lexplosion.Gui.UserControls
             get { return pageIndex; }
             set
             {
-                Console.WriteLine(3);
                 SelectedPageTextBox.Text = (value + 1).ToString();
                 if (pageIndex < value)
                 {
@@ -32,7 +31,6 @@ namespace Lexplosion.Gui.UserControls
                     if (value == pageLimit.max - 1) NextPageButton.Visibility = Visibility.Visible;
                 }
                 pageIndex = value;
-                
                 page.ChangePage();
             }
         }

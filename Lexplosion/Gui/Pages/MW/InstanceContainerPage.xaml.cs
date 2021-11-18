@@ -11,18 +11,18 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.Pages.MW
 {
-    /// <summary>
-    /// Interaction logic for InstanceContainerPage.xaml
-    /// </summary>
-    /// 
+	/// <summary>
+	/// Interaction logic for InstanceContainerPage.xaml
+	/// </summary>
+	/// 
 
 
-    // TODO: Сделать общую страницу контейнер для Library и Catalog.
-    // TODO: Сделать общую страницу контейнер для Library и Catalog.
-    public partial class InstanceContainerPage : Page
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage obj = null;
-
+		static object locker = new object();
 		private MainWindow _mainWindow;
 		private Paginator paginator;
 		private int pageSize = 10;
@@ -80,24 +80,25 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance(InstanceSource instanceSource, int pageIndex = 0, string searchBoxText = "")
 		{
-			Console.WriteLine("Номер страницы - " + pageIndex.ToString());
-			var instances = OutsideDataManager.GetInstances(
-				instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
-			);
-			Console.WriteLine("Количество модпаков - " + instances.Count.ToString());
-			paginator.ChangePaginatorVisibility(instances.Count, pageSize);
+			var instances = new List<OutsideInstance>();
+			Lexplosion.Run.TaskRun(delegate () {
+				instances = OutsideDataManager.GetInstances(
+					instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
+				);
+				paginator.ChangePaginatorVisibility(instances.Count, pageSize);
 
-			if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
-			else
-			{
-				for (int j = 0; j < instances.ToArray().Length; j++)
+				if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
+				else
 				{
-					// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
-					// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
-					BuildInstanceForm(instances[j], j);
-					ChangeLoadingLabel("", Visibility.Collapsed);
+					for (int j = 0; j < instances.ToArray().Length; j++)
+					{
+						// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
+						// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
+						BuildInstanceForm(instances[j], j);
+						ChangeLoadingLabel("", Visibility.Collapsed);
+					}
 				}
-			}
+			});
 		}
 
 		// TODO: Надо сделать констуктор модпака(ака либо загрузить либо по кнопкам), также сделать чёт типо формы и предпросмотр как это будет выглядить.
@@ -126,6 +127,7 @@ namespace Lexplosion.Gui.Pages.MW
 			ClearGrid();
 			// TODO: Добавить анимация для скрола.
 			ContainerPage_ScrollViewer.ScrollToVerticalOffset(0.0);
+
 			InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
 		}
 
@@ -137,8 +139,8 @@ namespace Lexplosion.Gui.Pages.MW
 			var loadingLableText = LoadingLabel.Text;
 			var selectedInstanceSource = (InstanceSource)sourceBoxSelectedIndex;
 			paginator.PageIndex = 0;
-			ClearGrid();
 
+			ClearGrid();
 			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 
 			Lexplosion.Run.TaskRun(delegate ()
@@ -146,6 +148,7 @@ namespace Lexplosion.Gui.Pages.MW
 				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
 				{
 					_isInitializeInstance = false;
+
 					InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
 					searchBox.LastRequest = searchBoxText;
 					searchBox.LastSelectedIndex = sourceBoxSelectedIndex;

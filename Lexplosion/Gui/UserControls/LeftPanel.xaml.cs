@@ -326,6 +326,7 @@ namespace Lexplosion.Gui.UserControls
         // -- DropDownMenu -- //
         private void AddCustomModpack(object sender, RoutedEventArgs e)
         {
+            HiddenDropDownMenuAnimation();
             _activePageType = PageType.Installers;
             _mainWindow.PagesController("InstanceMasterPage", _mainWindow.RightFrame, delegate ()
             {
@@ -340,30 +341,40 @@ namespace Lexplosion.Gui.UserControls
         {
             if (DropDownMenu.Margin == new Thickness(0, 286, 0, 0))
             {
-                DropDownMenuSwitcher.IsChecked = true;
-
-                ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
-                {
-                    From = DropDownMenu.Margin,
-                    To = new Thickness(0, 466, 0, 0),
-                    Duration = TimeSpan.FromSeconds(0.7),
-                };
-
-                DropDownMenu.BeginAnimation(Canvas.MarginProperty, thicknessAnimation);
+                HiddenDropDownMenuAnimation();
             }
             else if (DropDownMenu.Margin == new Thickness(0, 466, 0, 0))
             {
-                DropDownMenuSwitcher.IsChecked = false;
-
-                ThicknessAnimation animation = new ThicknessAnimation()
-                {
-                    From = DropDownMenu.Margin,
-                    To = new Thickness(0, 286, 0, 0),
-                    Duration = TimeSpan.FromSeconds(0.5)
-                };
-
-                DropDownMenu.BeginAnimation(Canvas.MarginProperty, animation);
+                ShowDropDownMenuAnimation();
             }
+        }
+
+        private void ShowDropDownMenuAnimation() 
+        {
+            DropDownMenuSwitcher.IsChecked = false;
+
+            ThicknessAnimation animation = new ThicknessAnimation()
+            {
+                From = DropDownMenu.Margin,
+                To = new Thickness(0, 286, 0, 0),
+                Duration = TimeSpan.FromSeconds(0.5)
+            };
+
+            DropDownMenu.BeginAnimation(Canvas.MarginProperty, animation);
+        }
+
+        private void HiddenDropDownMenuAnimation() 
+        {
+            DropDownMenuSwitcher.IsChecked = true;
+
+            ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+            {
+                From = DropDownMenu.Margin,
+                To = new Thickness(0, 466, 0, 0),
+                Duration = TimeSpan.FromSeconds(0.7),
+            };
+
+            DropDownMenu.BeginAnimation(Canvas.MarginProperty, thicknessAnimation);
         }
     }
 }

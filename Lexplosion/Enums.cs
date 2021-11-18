@@ -31,7 +31,8 @@
     {
         Nightworld,
         Curseforge,
-        Local
+        Local,
+        None
     }
 
     public enum ModpacksCategories
