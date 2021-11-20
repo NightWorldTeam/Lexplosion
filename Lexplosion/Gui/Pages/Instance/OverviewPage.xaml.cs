@@ -36,11 +36,7 @@ namespace Lexplosion.Gui.Pages.Instance
         {
             InitializeComponent();
             _instanceProperties = instanceProperties;
-            Gallery gallery = new Gallery(images)
-            {
-                Height = 216,
-                Width = 564
-            };
+            Gallery gallery = new Gallery(images);
             Grid.SetRow(gallery, 0);
             Console.WriteLine(1);
             Container.Children.Add(gallery);

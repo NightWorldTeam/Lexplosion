@@ -8,9 +8,6 @@
              d:DesignHeight="264" d:DesignWidth="516">
     <Grid>
         <Rectangle x:Name="Image">
-            <Rectangle.Fill>
-                <ImageBrush ImageSource="D:\Programming\Main Projects\Lexplosion\Lexplosion\Assets\images\background\authBG.png" />
-            </Rectangle.Fill>
         </Rectangle>
         <Button x:Name="PreviousImageButton" Height="40" Width="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" 
                 Background="Transparent" Content="&lt;--" Foreground="White" FontSize="20"
