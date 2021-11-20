@@ -69,10 +69,13 @@ namespace Lexplosion.Logic.Management
                         OutsideInstance instanceInfo = new OutsideInstance()
                         {
                             Name = nwInstances[nwModpack].name ?? "Uncnown name",
-                            Author = nwInstances[nwModpack].author ?? "",
+                            InstanceAssets = new InstanceAssets() 
+                            {
+                                author = nwInstances[nwModpack].author ?? "",
+                                description = nwInstances[nwModpack].description ?? "",
+                            },
                             MainImage = null,
                             Categories = nwInstances[nwModpack].categories ?? new List<string>(),
-                            Description = nwInstances[nwModpack].description ?? "",
                             DownloadCount = 0,
                             Type = InstanceSource.Nightworld,
                             Id = nwModpack
@@ -110,10 +113,13 @@ namespace Lexplosion.Logic.Management
                     OutsideInstance instanceInfo = new OutsideInstance()
                     {
                         Name = instance.name,
-                        Author = instance.authors[0].name, // TODO: тут может быть null
+                        InstanceAssets = new InstanceAssets()
+                        {
+                            author = instance.authors[0].name, // TODO: тут может быть null
+                            description = instance.summary,
+                        },
                         MainImage = null, // TODO: если картинки не найдено тут нулл и останется
                         Categories = CategoriesListConverter(instance.categories),
-                        Description = instance.summary,
                         DownloadCount = instance.downloadCount,
                         Type = InstanceSource.Curseforge,
                         Id = instance.id.ToString()

@@ -41,24 +41,6 @@ namespace Lexplosion.Gui.UserControls
             public static readonly Color MouseLeaveColor = System.Windows.Media.Color.FromArgb(255, 21, 23, 25);
         }
 
-        class InstanceProperties 
-        {
-            public string InstanceTitle;
-            public string InstanceId;
-            public string InstanceAuthor;
-            public string InstanceOverview;
-
-            public string OutsideInstanceId;
-
-            public BitmapImage Logo;
-
-            public List<string> InstanceTags;
-
-            public bool IsInstanceInstalled;
-            public bool IsInstanceAddedToLibrary;
-            public bool IsDownloadingInstance;
-        }
-
         enum UpperButtonFunctions
         {
             Download,
@@ -84,7 +66,7 @@ namespace Lexplosion.Gui.UserControls
         private InstanceProperties _instanceProperties;
         private MainWindow _mainWindow;
 
-        public delegate void InstanceOpenedHandler();
+        public delegate void InstanceOpenedHandler(InstanceProperties instanceProperties);
         public static event InstanceOpenedHandler InstanceOpened;
 
         public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview, 
@@ -94,14 +76,17 @@ namespace Lexplosion.Gui.UserControls
             this._mainWindow = mainWindow;
             InstanceProperties _instanceProperties = new InstanceProperties()
             {
-                InstanceTitle = instanceTitle,
-                InstanceId = instanceId,
-                InstanceAuthor = instanceAuthor,
-                InstanceOverview = instanceOverview,
-                OutsideInstanceId = outsideInstanceId,
+                Name = instanceTitle,
+                LocalId = instanceId,
+                InstanceAssets = new InstanceAssets() 
+                {
+                    author = instanceAuthor ,
+                    description = instanceOverview,
+                },
+                Id = outsideInstanceId,
                 Logo = logo,
                 InstanceTags = instanceTags,
-                IsInstanceInstalled = isInstanceInstalled,
+                IsInstalled = isInstanceInstalled,
                 IsInstanceAddedToLibrary = isInstanceAddedToLibrary,
                 IsDownloadingInstance = false
             };
@@ -125,9 +110,9 @@ namespace Lexplosion.Gui.UserControls
              * Setup Basic Data
              */
             InstanceLogo_Background.Fill = new ImageBrush(_instanceProperties.Logo);
-            TextBlockTitle.Text = _instanceProperties.InstanceTitle;
-            TextBlockAuthor.Text = _instanceProperties.InstanceAuthor;
-            TextBlockOverview.Text = _instanceProperties.InstanceOverview;
+            TextBlockTitle.Text = _instanceProperties.Name;
+            TextBlockAuthor.Text = _instanceProperties.InstanceAssets.author;
+            TextBlockOverview.Text = _instanceProperties.InstanceAssets.description;
 
             /*
              * Setup Instance Tags
@@ -142,7 +127,7 @@ namespace Lexplosion.Gui.UserControls
             /*
              * Setup Instance Buttons
              */
-            if (_instanceProperties.IsInstanceInstalled) 
+            if (_instanceProperties.IsInstalled) 
             {
                 
                 SetupButtons("upper", MultiButtonProperties.GeometryPlayIcon, -67, "Играть", UpperButtonFunctions.Play, _lowerButtonFunc);
@@ -331,7 +316,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceLogoClick(object sender, MouseButtonEventArgs e)
         {
-            InstanceOpened.Invoke();
+            InstanceOpened.Invoke(_instanceProperties);
         }
 
         private void DownloadInstance()
@@ -342,23 +327,22 @@ namespace Lexplosion.Gui.UserControls
             SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
             InstanceProgressBar.Visibility = Visibility.Visible;
 
-            if (_instanceProperties.OutsideInstanceId != "")
+            if (_instanceProperties.Id != "")
             {
                 //MessageBox.Show(1 + " " + _instanceProperties.OutsideInstanceId.ToString());
                 string instanceId = ManageLogic.CreateInstance(
-                    _instanceProperties.InstanceTitle, InstanceSource.Curseforge, 
-                    "", ModloaderType.None, "", _instanceProperties.OutsideInstanceId.ToString()
+                    _instanceProperties.Name, InstanceSource.Curseforge, 
+                    "", ModloaderType.None, "", _instanceProperties.Id.ToString()
                 );
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.UpdateInstance(instanceId);
-
             }
         }
 
         private void LaunchInstance()
         {
-            Console.WriteLine(_instanceProperties.InstanceId);
-            ManageLogic.СlientManager(_instanceProperties.InstanceId);
+            Console.WriteLine(_instanceProperties.Id);
+            ManageLogic.СlientManager(_instanceProperties.Id);
         }
 
         private void PauseInstance() 
@@ -386,7 +370,7 @@ namespace Lexplosion.Gui.UserControls
         private void OpenInstanceFolder() 
         {
             //MessageBox.Show(UserData.settings["gamePath"]);
-            Process.Start("explorer", @"" + UserData.settings["gamePath"].Replace("/", @"\") + @"\instances\" + _instanceProperties.InstanceId);
+            Process.Start("explorer", @"" + UserData.settings["gamePath"].Replace("/", @"\") + @"\instances\" + _instanceProperties.Id);
         }
 
         private void InstanceDownloadCompleted(InstanceInit result, List<string> downloadErrors) 
@@ -395,7 +379,7 @@ namespace Lexplosion.Gui.UserControls
             {
                 if (result == InstanceInit.Successful)
                 {
-                    _instanceProperties.IsInstanceInstalled = true;
+                    _instanceProperties.IsInstalled = true;
                     FormSetup();
                     InstanceProgressBar.Visibility = Visibility.Collapsed;
                 }

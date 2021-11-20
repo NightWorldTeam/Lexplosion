@@ -1,5 +1,7 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.UserControls;
+using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,55 +25,38 @@ namespace Lexplosion.Gui.Pages.Instance
     public partial class OverviewPage : Page
     {
         public static OverviewPage instance = null;
-
-        class InstanceData
-        {
-            public string title;
-            public string description;
-        }
-
-        private InstanceData instanceData;
-
-        public OverviewPage(string title, string description)
-        {
-            InitializeComponent();
-            this.instanceData = new InstanceData()
-            {
-                title = title,
-                description = description
-            };
-            SetInstanceData(instanceData);
-            SetAssets();
-            List<string> images = new List<string> { 
-                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658257_2.jpg", 
+        private InstanceProperties _instanceProperties;
+        private List<string> images = new List<string> {
+                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658257_2.jpg",
                 @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_3.jpg",
                 @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_3.jpg"
-            };
+        };
+
+        public OverviewPage(InstanceProperties instanceProperties)
+        {
+            InitializeComponent();
+            _instanceProperties = instanceProperties;
             Gallery gallery = new Gallery(images)
             {
                 Height = 216,
                 Width = 564
             };
             Grid.SetRow(gallery, 0);
+            Console.WriteLine(1);
             Container.Children.Add(gallery);
-        }
-
-        private void SetInstanceData(InstanceData instanceData)
-        {
-            this.instanceData = instanceData;
+            SetAssets();
         }
 
         public void SetAssets()
-        { /*
-            if (instanceData.description != null)
+        {
+            if (_instanceProperties.InstanceAssets.description != null)
             {
-                Description.Text = instanceData.description;
+                Description.Text = _instanceProperties.InstanceAssets.description;
             }
             else
             {
                 Description.Text = "";
             }
-            */
         }
     }
 }

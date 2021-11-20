@@ -3,6 +3,7 @@ using Lexplosion.Gui.InstanceCreator;
 using Lexplosion.Gui.Pages.Instance;
 using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -53,6 +54,7 @@ namespace Lexplosion.Gui.UserControls
         private PageType _activePageType;
         private Page _pageObj;
         private MainWindow _mainWindow;
+        private InstanceProperties _instanceProperties;
 
         private List<ToggleButton> _toggleButtons = new List<ToggleButton>();
         private Dictionary<ToggleButton, Functions> _buttons = new Dictionary<ToggleButton, Functions>();
@@ -193,7 +195,7 @@ namespace Lexplosion.Gui.UserControls
         {
             _mainWindow.PagesController("InstancePage", _mainWindow.RightFrame, delegate ()
             {
-                return new InstancePage(_mainWindow);
+                return new InstancePage(_mainWindow, _instanceProperties);
             });
             ReselectionButton(MenuButton0);
         }
@@ -312,13 +314,14 @@ namespace Lexplosion.Gui.UserControls
             }
         }
 
-        private void InitializeInstancePage() 
+        private void InitializeInstancePage(InstanceProperties instanceProperties) 
         {
             _activePageType = PageType.OpenedInstance;
             _mainWindow.PagesController("InstancePage", _mainWindow.RightFrame, delegate ()
             {
-                return new InstancePage(_mainWindow);
+                return new InstancePage(_mainWindow, instanceProperties);
             });
+            _instanceProperties = instanceProperties;
             InitializeContent("Модпак", "Экспорт", "Настройки", "Назад");
             ReselectionButton(MenuButton0);
         }

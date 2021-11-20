@@ -1,8 +1,11 @@
 ﻿using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.Objects;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.Pages.Instance
 {
@@ -13,18 +16,31 @@ namespace Lexplosion.Gui.Pages.Instance
     {
         public static InstancePage obj = null;
         private MainWindow _mainWindow;
-
         private List<ToggleButton> toggleButtons = new List<ToggleButton>();
+        public InstanceProperties _instanceProperties;
 
 
-        //private string title;
-        //private string description;
-
-        public InstancePage(MainWindow mainWindow)
+        public InstancePage(MainWindow mainWindow, InstanceProperties instanceProperties)
         {
             InitializeComponent();
             obj = this;
+            Console.WriteLine(obj.ToString());
             _mainWindow = mainWindow;
+            _instanceProperties = instanceProperties;
+            ActivateButtons();
+            mainWindow.PagesController("OverviewPage", this.BottomSideFrame, delegate ()
+            {
+                return new OverviewPage(instanceProperties);
+            });
+        }
+
+        public static InstanceProperties GetInstanceProperties() 
+        {
+            return obj._instanceProperties;   
+        }
+
+        private void ActivateButtons() 
+        {
             toggleButtons.Add(OverviewToggleButton);
             toggleButtons.Add(ModsToggleButton);
             toggleButtons.Add(VersionToggleButton);
@@ -35,7 +51,7 @@ namespace Lexplosion.Gui.Pages.Instance
             //MessageBox.Show(typeof(OverviewPage).ToString());
             _mainWindow.PagesController("OverviewPage", this.BottomSideFrame, delegate ()
             {
-                return new OverviewPage("title", "description");
+                return new OverviewPage(_instanceProperties);
             });
             ReselectionButton(OverviewToggleButton);
         }

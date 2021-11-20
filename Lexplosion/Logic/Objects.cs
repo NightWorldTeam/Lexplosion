@@ -4,6 +4,14 @@ using System.Windows.Media.Imaging;
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects // TODO: позаменять классы на структуры
 {
+    public class InstanceProperties : OutsideInstance
+    {
+        public BitmapImage Logo;
+        public List<string> InstanceTags;
+        public bool IsInstanceAddedToLibrary;
+        public bool IsDownloadingInstance;
+    }
+
     public class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
     {
         public string description;
@@ -125,16 +133,15 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     public class OutsideInstance
     {
         public InstanceSource Type;
-        public bool UpdateAvailable;
-        public bool IsInstalled;
+        public string Id; // id от Type
+        public string LocalId; // айди созданой в лаунчере сборки
         public string Name;
-        public string Author;
+        public InstanceAssets InstanceAssets;
         public byte[] MainImage;
+        public bool IsInstalled;
+        public bool UpdateAvailable;
         public List<string> Categories;
         public float DownloadCount;
-        public string Description;
-        public string Id;
-        public string LocalId;
     }
 
     class CurseforgeFileInfo
