@@ -22,6 +22,7 @@ namespace Lexplosion.Logic.FileSystem
 {
     static class WithDirectory
     {
+        // TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
         // этот класс возвращает метод CheckBaseFiles
         public class BaseFilesUpdates
         {
@@ -78,20 +79,43 @@ namespace Lexplosion.Logic.FileSystem
             catch { }
         }
 
+        private static string CreateTempDir()
+        {
+            string dirName = directory + "/temp";
+            string dirName_ = dirName;
+
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            
+            do
+            {
+                dirName_ = dirName + "/" + new string(Enumerable.Repeat(chars, 10).Select(s => s[random.Next(s.Length)]).ToArray());
+            } while (Directory.Exists(dirName_));
+
+            Directory.CreateDirectory(dirName_);
+
+            return dirName_ + "/";
+
+        }
+
         public static bool InstallFile(string url, string fileName, string path)
         {
             try
             {
+                string tempDir = CreateTempDir();
                 if (!Directory.Exists(directory + path))
                 {
                     Directory.CreateDirectory(directory + path);
                 }
+
                 using (WebClient wc = new WebClient())
                 {
-                    DelFile(directory + "/temp/" + fileName);
-                    wc.DownloadFile(url, directory + "/temp/" + fileName);
-                    File.Move(directory + "/temp/" + fileName, directory + "/" + path + "/" + fileName);
+                    DelFile(tempDir + fileName);
+                    wc.DownloadFile(url, tempDir + fileName);
+                    File.Move(tempDir + fileName, directory + "/" + path + "/" + fileName);
                 }
+
+                Directory.Delete(tempDir, true);
 
                 return true;
             }
@@ -101,14 +125,14 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public static bool DownloadFile(string url, string fileName)
+        public static bool DownloadFile(string url, string fileName, string tempDir)
         {
             try
             {
                 using (WebClient wc = new WebClient())
                 {
-                    DelFile(directory + "/temp/" + fileName);
-                    wc.DownloadFile(url, directory + "/temp/" + fileName);
+                    DelFile(tempDir + fileName);
+                    wc.DownloadFile(url, tempDir + fileName);
                 }
 
                 return true;
@@ -497,7 +521,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(path);
             }
 
-            string temp = directory + "/temp/";
+            string temp = CreateTempDir();
             string zipFile = file + ".zip";
 
             try
@@ -510,6 +534,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 DelFile(to + file);
                 File.Move(temp + file, to + file);
+                Directory.Delete(temp, true);
 
                 return true;
             }
@@ -517,6 +542,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 DelFile(temp + file);
                 DelFile(temp + zipFile);
+                Directory.Delete(temp, true);
 
                 return false;
             }
@@ -524,7 +550,7 @@ namespace Lexplosion.Logic.FileSystem
         }
 
         //функция для скачивания libraries и natives (в jar файле)
-        private static bool DownloadJarLibFiles(string url, string to, string file, WebClient wc)
+        private static bool DownloadJarLibFiles(string url, string to, string file, WebClient wc, string temp)
         {
             //создаем папки в соответсвии с путем к файлу из списка
             string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -536,8 +562,6 @@ namespace Lexplosion.Logic.FileSystem
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
             }
-
-            string temp = directory + "/temp/";
 
             try
             {
@@ -559,7 +583,7 @@ namespace Lexplosion.Logic.FileSystem
         //функция для скачивания файлов (кроме libraries и natives) (в zip формате)
         private static bool DownloadFile(string url, string file, string to, string sha1, int size, WebClient wc)
         {
-            string temp = directory + "/temp/";
+            string temp = CreateTempDir();
             string zipFile = file + ".zip";
 
             //создаем папки в соответсвии с путем к файлу из списка
@@ -593,12 +617,14 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             DelFile(to);
                             File.Move(temp + file, to);
+                            Directory.Delete(temp, true);
 
                             return true;
                         }
                         else
                         {
                             File.Delete(temp + file);
+                            Directory.Delete(temp, true);
                             return false;
                         }
                     }
@@ -608,6 +634,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 DelFile(temp + file);
                 DelFile(temp + zipFile);
+                Directory.Delete(temp, true);
 
                 return false;
             }
@@ -747,6 +774,7 @@ namespace Lexplosion.Logic.FileSystem
                 SaveFile(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesList.version) + ".lver", filesList.version.librariesLastUpdate.ToString());
             }
 
+            string tempDir = CreateTempDir();
             foreach (string lib in updateList.Libraries.Keys)
             {                
                 if (updateList.Libraries[lib].obtainingMethod == null)
@@ -771,7 +799,7 @@ namespace Lexplosion.Logic.FileSystem
                     bool isDownload;
                     if (updateList.Libraries[lib].notArchived)
                     {
-                        isDownload = DownloadJarLibFiles(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc);
+                        isDownload = DownloadJarLibFiles(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc, tempDir);
                     }
                     else
                     {
@@ -792,26 +820,30 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
+                    Console.WriteLine(" ");
                     try
                     {
-                        List<List<string>> obtainingMethod = updateList.Libraries[lib].obtainingMethod; // получаем метод
+                    List<List<string>> obtainingMethod = updateList.Libraries[lib].obtainingMethod; // получаем метод
 
                         if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
                         {
+                            Console.WriteLine("TEMP " + tempDir);
                             int i = 1; //начинаем цикл с первого элемента, т.к нулевой - название метода
                             while (i < obtainingMethod.Count)
                             {
-                                // получаем команду и выполняем её
-                                switch (obtainingMethod[i][0])
+                            Console.WriteLine("METHOD " + obtainingMethod[i][0]);
+                            // получаем команду и выполняем её
+                            switch (obtainingMethod[i][0])
                                 {
                                     case "downloadFile":
-                                        if (!DownloadFile(obtainingMethod[i][1], obtainingMethod[i][2]))
+                                        Console.WriteLine("download " + obtainingMethod[i][1]);
+                                        if (!DownloadFile(obtainingMethod[i][1], obtainingMethod[i][2], tempDir))
                                         {
                                             goto EndWhile; //возникла ошибка
                                         }
                                         break;
                                     case "unzipFile":
-                                        ZipFile.ExtractToDirectory(directory + "/temp/" + obtainingMethod[i][1], directory + "/temp/" + obtainingMethod[i][2]);
+                                        ZipFile.ExtractToDirectory(tempDir + obtainingMethod[i][1], tempDir + obtainingMethod[i][2]);
                                         break;
                                     case "startProcess":
                                         Utils.ProcessExecutor executord;
@@ -827,12 +859,17 @@ namespace Lexplosion.Logic.FileSystem
                                         }
                                         else
                                         {
-                                            goto EndWhile; //возникла ошибка
+                                        Console.WriteLine("ERROR");
+                                        goto EndWhile; //возникла ошибка
                                         }
 
                                         string command = obtainingMethod[i][2];
                                         command = command.Replace("{DIR}", directory);
+                                        command = command.Replace("{TEMP_DIR}", tempDir);
                                         command = command.Replace("{MINECRAFT_JAR}", directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name);
+                                        Console.WriteLine();
+                                        Console.WriteLine(command);
+
                                         if (!Utils.StartProcess(command, executord))
                                         {
                                             errors.Add("libraries/" + lib);
@@ -842,24 +879,28 @@ namespace Lexplosion.Logic.FileSystem
                                         break;
 
                                     case "moveFile":
-                                        if (File.Exists(obtainingMethod[i][2].Replace("{DIR}", directory)))
+                                        string to = obtainingMethod[i][2].Replace("{DIR}", directory).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
+                                        string from = obtainingMethod[i][1].Replace("{DIR}", directory).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
+                                        if (File.Exists(to))
                                         {
-                                            File.Delete(obtainingMethod[i][2].Replace("{DIR}", directory));
+                                            File.Delete(to);
                                         }
-                                        File.Move(obtainingMethod[i][1].Replace("{DIR}", directory), obtainingMethod[i][2].Replace("{DIR}", directory));
+                                        if (!Directory.Exists(to.Replace(Path.GetFileName(to), "")))
+                                        {
+                                            Directory.CreateDirectory(to.Replace(Path.GetFileName(to), ""));
+                                        }
+                                        File.Move(from, to);
                                         break;
                                 }
                                 i++;
                             }
-                            //очищаем папку temp
-                            //Directory.Delete(directory + "/temp", true);
-                            //Directory.CreateDirectory(directory + "/temp");
                         }
 
-                    //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
-                    EndWhile: executedMethods.Add(obtainingMethod[0][0]);
+                        //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
+                        EndWhile: executedMethods.Add(obtainingMethod[0][0]);
                         if (!File.Exists(directory + "/libraries/" + lib))
                         {
+                            Console.WriteLine(directory + "/libraries/" + lib);
                             errors.Add("libraries/" + lib);
                         }
                         else
@@ -875,7 +916,9 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            if(downloadedLibs.Count == updateList.Libraries.Count)
+            Directory.Delete(tempDir, true);
+
+            if (downloadedLibs.Count == updateList.Libraries.Count)
             {
                 //все либрариесы скачались удачно. Удаляем файл
                 DelFile(downloadedLibsAddr);
@@ -1004,7 +1047,8 @@ namespace Lexplosion.Logic.FileSystem
 
         public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
         {
-            string targetDir = directory + "/temp/" + instanceId + "-export"; //временная папка, куда будем копировать все файлы
+            // TODO: удалять временную папку в конце
+            string targetDir = CreateTempDir() + instanceId + "-export"; //временная папка, куда будем копировать все файлы
             string srcDir = directory + "/instances/" + instanceId;
 
             try
@@ -1101,7 +1145,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static ImportResult ImportInstance(string zipFile, out List<string> errors)
         {
-            string dir = directory + "/temp/import/";
+            string dir = CreateTempDir() + "import/";
             errors = new List<string>();
 
             if (!Directory.Exists(dir))
@@ -1257,34 +1301,35 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                if (File.Exists(directory + "/temp/" + fileName))
+                string tempDir = CreateTempDir();
+                if (File.Exists(tempDir + fileName))
                 {
-                    File.Delete(directory + "/temp/" + fileName);
+                    File.Delete(tempDir + fileName);
                 }
 
                 using (WebClient wc = new WebClient())
                 {
-                    DelFile(directory + "/temp/" + fileName);
-                    wc.DownloadFile(downloadUrl, directory + "/temp/" + fileName);
+                    DelFile(tempDir + fileName);
+                    wc.DownloadFile(downloadUrl, tempDir + fileName);
                 }
 
-                if (Directory.Exists(directory + "/temp/dataDownload"))
+                if (Directory.Exists(tempDir + "dataDownload"))
                 {
-                    Directory.Delete(directory + "/temp/dataDownload");
+                    Directory.Delete(tempDir + "dataDownload");
                 }
 
-                Directory.CreateDirectory(directory + "/temp/dataDownload");
-                ZipFile.ExtractToDirectory(directory + "/temp/" + fileName, directory + "/temp/dataDownload");
-                DelFile(directory + "/temp/" + fileName);
+                Directory.CreateDirectory(tempDir + "dataDownload");
+                ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
+                DelFile(tempDir + fileName);
 
-                var data = GetFile<CurseforgeInstance.InstanceManifest>(directory + "/temp/dataDownload/manifest.json");
+                var data = GetFile<CurseforgeInstance.InstanceManifest>(tempDir + "dataDownload/manifest.json");
 
                 if (data != null)
                 {
                     foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
                     {
                         Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result = 
-                            CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/temp/dataDownload/overrides/");
+                            CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
                         if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
                         {
                             errors.Add(file.projectID + " " + file.fileID);
@@ -1294,7 +1339,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     Console.WriteLine("END MODS");
 
-                    string SourcePath = directory + "/temp/dataDownload/overrides/";
+                    string SourcePath = tempDir + "dataDownload/overrides/";
                     string DestinationPath = directory + "/instances/" + instanceId + "/";
 
                     foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
@@ -1308,9 +1353,9 @@ namespace Lexplosion.Logic.FileSystem
                         localFiles.Add(newPath.Replace(SourcePath, "/"));
                     }
 
-                    if (Directory.Exists(directory + "/temp/dataDownload"))
+                    if (Directory.Exists(tempDir + "/dataDownload"))
                     {
-                        Directory.Delete(directory + "/temp/dataDownload", true);
+                        Directory.Delete(tempDir + "/dataDownload", true);
                     }
 
                     Console.WriteLine("Return");
@@ -1318,9 +1363,9 @@ namespace Lexplosion.Logic.FileSystem
                     return data;
                 }
 
-                if (Directory.Exists(directory + "/temp/dataDownload"))
+                if (Directory.Exists(tempDir + "/dataDownload"))
                 {
-                    Directory.Delete(directory + "/temp/dataDownload", true);
+                    Directory.Delete(tempDir + "/dataDownload", true);
                 }
 
                 errors.Add("curseforgeManifestError");
