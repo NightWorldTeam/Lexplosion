@@ -84,6 +84,7 @@ namespace Lexplosion.Gui.Pages.MW
 				var instances = OutsideDataManager.GetInstances(
 					instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 				);
+				Console.WriteLine(instances[0].LocalId);
 
 				RemoveInstanceGridContent();
 				if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
@@ -109,13 +110,13 @@ namespace Lexplosion.Gui.Pages.MW
 			var testingTest = "SHIBA INU цена сегодня составляет ₽0,003588 RUB с суточным объемом торгов ₽286 474 844 432 RUB. Мы обновляем нашу цену SHIB к RUB в режиме реального времени. SHIBA INU снизилась на 0,43 за последние 24 часа. Текущий рейтинг CoinMarketCap — #11 с рыночной капитализацией ₽1 969 982 178 571 RUB. Циркулирующее предложение составляет 549 055 952 729 359 SHIB монет и макс. предложение отсутствует.";
 			this.Dispatcher.Invoke(() =>
 			{
-
 				if (InstanceGrid.RowDefinitions.Count < 10)
 					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
 					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.InstanceAssets.author, testingTest,
 					outsideInstance.Id, ToImage(outsideInstance.MainImage), outsideInstance.Categories, outsideInstance.IsInstalled, false);
 				Grid.SetRow(instanceForm, row);
+				Console.WriteLine(outsideInstance.LocalId + " " + outsideInstance.Id);
 				InstanceGrid.Children.Add(instanceForm);
 			});
 		}

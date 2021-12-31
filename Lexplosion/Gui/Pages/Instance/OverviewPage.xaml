@@ -52,20 +52,5 @@
         </Style>
     </Page.Resources>
 
-    <Grid Margin="0,0,0,0">
-        <ScrollViewer CanContentScroll="False" Margin="0,-5,0,0" VerticalScrollBarVisibility="Auto" BorderBrush="#167FFC">
-            <ScrollViewer.Background>
-                <SolidColorBrush Color="#151719" Opacity="0.8"/>
-            </ScrollViewer.Background>
-            <Grid x:Name="Container">
-                <Grid.RowDefinitions> 
-                    <RowDefinition Height="200" />
-                    <RowDefinition Height="500" />
-                </Grid.RowDefinitions>
-                <Grid VerticalAlignment="Top" Grid.Row="0">
-                    <TextBlock x:Name="Description" Height="200"  Foreground="#FFF" FontSize="20"/>
-                </Grid>
-            </Grid>
-        </ScrollViewer>
-    </Grid>
+    <WebBrowser Name="webb"/>
 </Page>
