@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -28,10 +29,9 @@ namespace Lexplosion.Gui.Pages.Instance
             _mainWindow = mainWindow;
             _instanceProperties = instanceProperties;
             ActivateButtons();
-            mainWindow.PagesController("OverviewPage", this.BottomSideFrame, delegate ()
-            {
-                return new OverviewPage(instanceProperties);
-            });
+            this.BottomSideFrame.Navigate(new Uri(
+                @"https://addons-ecs.forgesvc.net/api/v2/addon/381671/description", UriKind.Absolute)
+                );
         }
 
         public static InstanceProperties GetInstanceProperties() 
@@ -89,6 +89,24 @@ namespace Lexplosion.Gui.Pages.Instance
                     selectedButton.IsEnabled = false;
                 }
             }
+        }
+    }
+
+    class HtmlPattern
+    {
+        public String Url;
+
+        public HtmlPattern(String url)
+        {
+            Url = url;
+
+            var content = File.ReadAllText(Url);
+            content = "<html><header></header><body>" + content + "</body></html>";
+        }
+
+        public Uri GetUri() 
+        {
+            return 
         }
     }
 }

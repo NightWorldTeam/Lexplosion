@@ -27,8 +27,8 @@ namespace Lexplosion.Gui.Pages.Instance
         public static OverviewPage instance = null;
         private InstanceProperties _instanceProperties;
         private List<string> images = new List<string> {
-                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658257_2.jpg",
-                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_3.jpg",
+                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658257_1.jpg",
+                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_2.jpg",
                 @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_3.jpg"
         };
 
@@ -36,14 +36,11 @@ namespace Lexplosion.Gui.Pages.Instance
         {
             InitializeComponent();
             _instanceProperties = instanceProperties;
-            Gallery gallery = new Gallery(images)
-            {
-                Height = 216,
-                Width = 564
-            };
-            Grid.SetRow(gallery, 0);
-            Console.WriteLine(1);
+            Gallery gallery = new Gallery(images);
+            Grid.SetRow(gallery, 1);
             Container.Children.Add(gallery);
+            Console.WriteLine(gallery.Width);
+            Console.WriteLine(gallery.Height);
             SetAssets();
         }
 

@@ -29,6 +29,13 @@ namespace Lexplosion.Gui.UserControls
             InitializeComponent();
             uriImages = images;
             maxNumberPage = images.Count;
+            Console.WriteLine(images[0]);
+        }
+
+        public void ShowControlParams() 
+        {
+            Console.WriteLine(Image.Width);
+            Console.WriteLine(Image.Height);
         }
 
         private void NextImageButton_Click(object sender, RoutedEventArgs e)
@@ -37,18 +44,18 @@ namespace Lexplosion.Gui.UserControls
             {
                 selectedPage++;
                 var ib = new ImageBrush();
-                ib.ImageSource = new BitmapImage(new Uri(uriImages[selectedPage], UriKind.Relative));
+                ib.ImageSource = new BitmapImage(new Uri(uriImages[selectedPage], UriKind.RelativeOrAbsolute));
                 Image.Fill = ib;
             }
         }
 
         private void PreviousImageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedPage > -1) 
+            if (selectedPage > 0) 
             {
                 selectedPage--;
                 var ib = new ImageBrush();
-                ib.ImageSource = new BitmapImage(new Uri(uriImages[selectedPage], UriKind.Relative));
+                ib.ImageSource = new BitmapImage(new Uri(uriImages[selectedPage], UriKind.RelativeOrAbsolute));
                 Image.Fill = ib;
             }
         }
