@@ -342,7 +342,7 @@ namespace Lexplosion.Gui.UserControls
         private void LaunchInstance()
         {
             Console.WriteLine(_instanceProperties.Id);
-            ManageLogic.СlientManager(_instanceProperties.Id);
+            ManageLogic.СlientManager(_instanceProperties.LocalId);
         }
 
         private void PauseInstance() 
