@@ -95,7 +95,6 @@ namespace Lexplosion.Logic.FileSystem
             Directory.CreateDirectory(dirName_);
 
             return dirName_ + "/";
-
         }
 
         public static bool InstallFile(string url, string fileName, string path)
@@ -912,6 +911,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             Directory.Delete(tempDir, true);
+            Directory.Delete(temp, true);
 
             if (downloadedLibs.Count == updateList.Libraries.Count)
             {
