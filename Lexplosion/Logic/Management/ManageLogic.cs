@@ -138,6 +138,7 @@ namespace Lexplosion.Logic.Management
 
         public static void СlientManager(string instanceId)
         {
+            instanceId = "1_14_4test";
             if (LaunchGame.runnigInstance != "")
             {
                 LaunchGame.KillProcess();

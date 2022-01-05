@@ -14,6 +14,8 @@ namespace Lexplosion.Logic
         private AutoResetEvent WaitNewTasks = new AutoResetEvent(false);
         private Thread MainThread;
 
+        private bool work = false;
+
         public void AddTask(ThreadStart ThreadFunc)
         {
             NewTasksBlock.WaitOne();
@@ -24,10 +26,11 @@ namespace Lexplosion.Logic
 
         public void Init()
         {
+            work = true;
             MainThread = new Thread(delegate ()
             {
                 List<ThreadStart> tasks;
-                while (true)
+                while (work)
                 {
                     WaitNewTasks.WaitOne();
                     tasks = new List<ThreadStart>();
@@ -53,7 +56,8 @@ namespace Lexplosion.Logic
 
         public void Stop()
         {
-
+            work = false;
+            MainThread.Join();
         }
     }
 }
