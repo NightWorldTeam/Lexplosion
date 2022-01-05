@@ -92,8 +92,8 @@ namespace Lexplosion.Logic.Management
             bool gameVisible = false;
             string consoleText = "";
 
-            try
-            {
+            //try
+            //{
                 MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
                     //MainWindow.window.InitProgressBar.Visibility = Visibility.Visible;
@@ -202,7 +202,7 @@ namespace Lexplosion.Logic.Management
                 gameGateway.Initialization(process.Id);
 
                 return true;
-            } 
+            /*} 
             catch 
             {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
@@ -215,7 +215,7 @@ namespace Lexplosion.Logic.Management
                 runnigInstance = "";
 
                 return false;
-            }
+            }*/
         }
 
         public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceSource type, ManageLogic.ProgressHandlerDelegate progressHandler)
@@ -228,8 +228,8 @@ namespace Lexplosion.Logic.Management
                 };
             }
 
-            try
-            {
+            //try
+            //{
                 SetDefaultSettings();
 
                 if (!UserData.settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
@@ -291,11 +291,11 @@ namespace Lexplosion.Logic.Management
                 }
 
                 return data;
-            } 
+            /*} 
             catch 
             {
                 return Error(InstanceInit.UnknownError);
-            }
+            }*/
         }
 
         public static void KillProcess()
