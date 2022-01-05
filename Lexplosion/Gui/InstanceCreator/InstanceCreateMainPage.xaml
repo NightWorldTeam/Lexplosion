@@ -282,6 +282,7 @@
                     Height="40"
                     Margin="304,60,0,0"
                     VerticalAlignment="Top"
+                    SelectionChanged="VersionCB_SelectionChanged"
                     HorizontalAlignment="Left"/>
 
                 <!-- Logo -->

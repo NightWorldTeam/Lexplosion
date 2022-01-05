@@ -31,6 +31,9 @@ namespace Lexplosion.Gui.InstanceCreator
         private MainWindow _mainWindow;
         private ModloaderType selectedModloaderType = ModloaderType.None;
 
+        private Dictionary<string, List<string>> ForgeVersionsList = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> FabricVersionList = new Dictionary<string, List<string>>();
+
         public InstanceCreateMainPage(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -63,15 +66,17 @@ namespace Lexplosion.Gui.InstanceCreator
                     this.Dispatcher.Invoke(() => {
                         //VersionCB.Items.Add(version.type + " " + version.id);
                         VersionCB.Items.Add(version.id);
+                        //ForgeVersionsList.Add(version.id, ToServer.GetModloadersList(version.id, ModloaderType.Forge));
+                        //FabricVersionList.Add(version.id, ToServer.GetModloadersList(version.id, ModloaderType.Fabric));
                     });
                 }
             }
         }
 
-        private void SetupModloaderVersions(string minecraftVersion, ModloaderType modloaderType) 
+        private void SetupModloaderVersions(string minecraftVersion, ModloaderType modloaderType)//, List<string> modloaderVersions) 
         {
-            var modloaderVersion = ToServer.GetModloadersList(minecraftVersion, modloaderType);
-            foreach (var version in modloaderVersion) 
+            var modloaderVersions = ToServer.GetModloadersList(minecraftVersion, modloaderType);
+            foreach (var version in modloaderVersions) 
             {
                 this.Dispatcher.Invoke(() => {
                     ModloaderVersion.Items.Add(version);
@@ -110,6 +115,7 @@ namespace Lexplosion.Gui.InstanceCreator
         private void CreateInstanceRadioButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedRadioButton = (RadioButton)sender;
+            var gameVersion = VersionCB.Text;
             if (selectedRadioButton.Name == "NoneSelected") 
             {
                 ModloaderVersion.Visibility = Visibility.Collapsed;
@@ -119,14 +125,19 @@ namespace Lexplosion.Gui.InstanceCreator
             {
                 ModloaderVersion.Visibility = Visibility.Visible;
                 selectedModloaderType = ModloaderType.Forge;
-                SetupModloaderVersions(VersionCB.Text, ModloaderType.Forge);
+                SetupModloaderVersions(gameVersion, ModloaderType.Forge);//, ForgeVersionsList[gameVersion]);
             }
             else if (selectedRadioButton.Name == "FabricSelected")
             {
                 ModloaderVersion.Visibility = Visibility.Visible;
                 selectedModloaderType = ModloaderType.Fabric;
-                SetupModloaderVersions(VersionCB.Text, ModloaderType.Fabric);
+                SetupModloaderVersions(gameVersion, ModloaderType.Fabric);//, FabricVersionList[gameVersion]);
             }
+        }
+
+        private void VersionCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show("123");
         }
     }
 }
