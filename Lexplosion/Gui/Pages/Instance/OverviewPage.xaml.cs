@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.UserControls;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
@@ -35,25 +36,53 @@ namespace Lexplosion.Gui.Pages.Instance
         public OverviewPage(InstanceProperties instanceProperties)
         {
             InitializeComponent();
-            _instanceProperties = instanceProperties;
-            Gallery gallery = new Gallery(images);
-            Grid.SetRow(gallery, 1);
-            Container.Children.Add(gallery);
-            Console.WriteLine(gallery.Width);
-            Console.WriteLine(gallery.Height);
-            SetAssets();
+
+            var hp = new HtmlPattern(instanceProperties.Id);
+            webb.NavigateToString(hp.GetHtmlPage());
+            //_instanceProperties = instanceProperties;
+            //Gallery gallery = new Gallery(images);
+            //Grid.SetRow(gallery, 1);
+            //Container.Children.Add(gallery);
+            //Console.WriteLine(gallery.Width);
+            //Console.WriteLine(gallery.Height);
+            //SetAssets();
         }
 
         public void SetAssets()
         {
-            if (_instanceProperties.InstanceAssets.description != null)
+            /*if (_instanceProperties.InstanceAssets.description != null)
             {
                 Description.Text = _instanceProperties.InstanceAssets.description;
             }
             else
             {
                 Description.Text = "";
-            }
+            }*/
+        }
+    }
+
+    class HtmlPattern
+    {
+        private String id;
+        private String htmlContent;
+        private String url = "https://addons-ecs.forgesvc.net/api/v2/addon/{0}/description";
+
+        public HtmlPattern(String id)
+        {
+            this.id = id;
+            url = String.Format(url, this.id);
+        }
+
+        public String GetHtmlPage()
+        {
+            string data = ToServer.HttpGet(url);
+            htmlContent = "<html><header></header><body>" + data + "</body></html>";
+            return htmlContent;
+        }
+
+        public String GetUri()
+        {
+            return url;
         }
     }
 }
