@@ -533,7 +533,6 @@ namespace Lexplosion.Logic.FileSystem
 
                 DelFile(to + file);
                 File.Move(temp + file, to + file);
-                Directory.Delete(temp, true);
 
                 return true;
             }
@@ -541,7 +540,6 @@ namespace Lexplosion.Logic.FileSystem
             {
                 DelFile(temp + file);
                 DelFile(temp + zipFile);
-                Directory.Delete(temp, true);
 
                 return false;
             }
@@ -584,14 +582,12 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             DelFile(to);
                             File.Move(temp + file, to);
-                            Directory.Delete(temp, true);
 
                             return true;
                         }
                         else
                         {
                             File.Delete(temp + file);
-                            Directory.Delete(temp, true);
                             return false;
                         }
                     }
@@ -601,7 +597,6 @@ namespace Lexplosion.Logic.FileSystem
             {
                 DelFile(temp + file);
                 DelFile(temp + zipFile);
-                Directory.Delete(temp, true);
 
                 return false;
             }
