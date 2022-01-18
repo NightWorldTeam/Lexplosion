@@ -11,17 +11,34 @@ namespace Lexplosion.Logic
     {
         private List<ThreadStart> NewTasks = new List<ThreadStart>();
         private Semaphore NewTasksBlock = new Semaphore(1, 1);
+        private Semaphore priorityChangedBlock = new Semaphore(1, 1);
         private AutoResetEvent WaitNewTasks = new AutoResetEvent(false);
         private Thread MainThread;
 
         private bool work = false;
 
-        public void AddTask(ThreadStart ThreadFunc)
+        private List<(int, int)> priorityChanged = new List<(int, int)>();
+
+        public delegate void TaskStatus(int id);
+        public event TaskStatus TaskBegin;
+        public event TaskStatus TaskEnd;
+
+        public int AddTask(ThreadStart ThreadFunc)
         {
             NewTasksBlock.WaitOne();
+            int key = NewTasks.Count;
             NewTasks.Add(ThreadFunc);
             WaitNewTasks.Set();
             NewTasksBlock.Release();
+
+            return key;
+        }
+
+        public void ChangePriority(int id_1, int id_2)
+        {
+            priorityChangedBlock.WaitOne();
+            priorityChanged.Add((id_1, id_2));
+            priorityChangedBlock.Release();
         }
 
         public void Init()
@@ -33,20 +50,36 @@ namespace Lexplosion.Logic
                 while (work)
                 {
                     WaitNewTasks.WaitOne();
-                    tasks = new List<ThreadStart>();
                     NewTasksBlock.WaitOne();
 
-                    foreach(ThreadStart task in NewTasks)
-                    {
-                        tasks.Add(task);
-                    }
+                    tasks = new List<ThreadStart>(NewTasks);
+                    NewTasks = new List<ThreadStart>();
 
                     NewTasksBlock.Release();
 
-                    foreach (ThreadStart task in tasks)
+                    for (int i = 0; i < tasks.Count; i++)
                     {
-                        task();
+                        TaskBegin?.Invoke(i);
+                        tasks[i]();
+                        TaskEnd?.Invoke(i);
+
+                        priorityChangedBlock.WaitOne();
+                        if (priorityChanged.Count != 0)
+                        {
+                            foreach (var parent in priorityChanged)
+                            {
+                                if (parent.Item1 > i || parent.Item2 > i)
+                                {
+                                    var temp = tasks[parent.Item1];
+                                    tasks[parent.Item1] = tasks[parent.Item2];
+                                    tasks[parent.Item2] = temp;
+                                }
+                            }
+                            priorityChanged = new List<(int, int)>();
+                        }
+                        priorityChangedBlock.Release();
                     }
+
                 }
 
             });

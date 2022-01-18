@@ -70,7 +70,7 @@ namespace Lexplosion.Logic
 
         public int Add(Thread obj)
         {
-
+            // TODO: вместо рандомной генерации можно заюзать хэш
             Random rnd = new Random();
 
             int key;
