@@ -170,25 +170,11 @@ namespace Lexplosion.Logic.Management
                     string command = LaunchGame.CreateCommand(initModPack, data, instanceSettings);
                     LaunchGame.Run(command, initModPack, ComplitedLaunch, GameExited);
                     DataFilesManager.SaveSettings(UserData.settings);
-
-                    /*MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.launchedModpack = MainWindow.Obj.selectedModpack;
-                        MainWindow.Obj.IsInstalled[MainWindow.Obj.selectedModpack] = true;
-                        //ClientManagement.Content = "Остановить";
-                    });*/
                 }
                 else
                 {
                     ComplitedDownload(data.InitResult, data.DownloadErrors, false);
-                    /*string errorsText = "\n\n" + string.Join("\n", data.Errors) + "\n";
-
-                    MainWindow.Obj.Dispatcher.Invoke(delegate {
-                        MainWindow.Obj.SetMessageBox("Не удалось загрузить следующие файлы:" + errorsText, "Ошибка 960");
-                        //InitProgressBar.Visibility = Visibility.Collapsed;
-                    });*/
                 }
-
-                //Gui.PageType.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
             }
         }
 

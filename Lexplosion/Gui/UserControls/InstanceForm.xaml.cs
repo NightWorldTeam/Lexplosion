@@ -279,27 +279,31 @@ namespace Lexplosion.Gui.UserControls
         }
 
         private void UpperButtonClick(object sender, MouseButtonEventArgs e)
-        {   if (!MainWindow.IsGameRun)
-                switch (_upperButtonFunc)
-                {
-                    case UpperButtonFunctions.Download:
-                        DownloadInstance();
-                        break;
-                    case UpperButtonFunctions.ContinueDownload:
-                        DownloadInstance();
-                        break;
-                    case UpperButtonFunctions.Play:
+        {
+            switch (_upperButtonFunc)
+            {
+                case UpperButtonFunctions.Download:
+                    DownloadInstance();
+                    break;
+                case UpperButtonFunctions.ContinueDownload:
+                    DownloadInstance();
+                    break;
+                case UpperButtonFunctions.Play:
+                    if (!MainWindow.IsGameRun)
+                    {
                         LaunchInstance();
-                        break;
-                    case UpperButtonFunctions.ProgressBar:
-                        break;
-                    case UpperButtonFunctions.Update:
-                        break;
-                    case UpperButtonFunctions.Close:
-                        LaunchGame.KillProcess();
-                        FormSetupPlay();
-                        break;
-                }
+                    }
+                    break;
+                case UpperButtonFunctions.ProgressBar:
+                    break;
+                case UpperButtonFunctions.Update:
+                    break;
+                case UpperButtonFunctions.Close:
+                    LaunchGame.KillProcess();
+                    MainWindow.IsGameRun = false;
+                    FormSetupPlay();
+                    break;
+            }
         }
 
         private void LowerButtonClick(object sender, MouseButtonEventArgs e)
@@ -372,7 +376,7 @@ namespace Lexplosion.Gui.UserControls
             TextBlockInstallStage.Visibility = Visibility.Visible;
             TextBlockInstallStage.Text = "Идет проверка целосности игровых файлов...";
             InstanceProgressBar.Visibility = Visibility.Visible;
-            ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent, 
+            ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent,
                 InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit);
         }
 
@@ -394,7 +398,6 @@ namespace Lexplosion.Gui.UserControls
         {
             FormSetupDownload();
             MainWindow.Obj.Dispatcher.Invoke(delegate {
-                Console.WriteLine(String.Format("download --> {0} {1} {2}", stagesCount, stage, procent));
                 if (stage == 0 || procent == 0)
                 {
                     // download prepare
@@ -410,20 +413,24 @@ namespace Lexplosion.Gui.UserControls
                     TextBlockInstallStage.Text = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
                 }
 
-                InstanceProgressBar.Value = procent;
-                InstallProgress.Content = procent.ToString() + "%";
+                if (stage != 0)
+                {
+                    InstanceProgressBar.Value = procent;
+                    InstallProgress.Content = procent.ToString() + "%";
+                }
+
             });
         }
 
-        private void InstanceRunCompleted(string id, bool successful) 
+        private void InstanceRunCompleted(string id, bool successful)  // TODO: что-то делать если successful == false
         {
             this.Dispatcher.Invoke(delegate
             {
+                MainWindow.IsGameRun = true;
                 InstanceProgressBar.Visibility = Visibility.Collapsed;
                 TextBlockInstallStage.Visibility = Visibility.Hidden;
                 TextBlockOverview.Visibility = Visibility.Visible;
                 TagsBlock.Visibility = Visibility.Visible;
-                MainWindow.IsGameRun = true;
                 FormSetupExitGame(); 
             });
         }
@@ -453,7 +460,7 @@ namespace Lexplosion.Gui.UserControls
                     if (IsGameRun)
                     {
 
-                        TextBlockInstallStage.Text = "Идет запуск игры...";
+                        TextBlockInstallStage.Text = "Идёт запуск игры...";
                     }
                     else
                     {
