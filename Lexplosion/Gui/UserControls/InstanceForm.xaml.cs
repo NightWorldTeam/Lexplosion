@@ -321,6 +321,10 @@ namespace Lexplosion.Gui.UserControls
 
         private void DownloadInstance()
         {
+            TextBlockOverview.Visibility = Visibility.Hidden;
+            TagsBlock.Visibility = Visibility.Hidden;
+            TextBlockInstallStage.Visibility = Visibility.Visible;
+
             InstallProgress.Visibility = Visibility.Visible;
             SetupButtons("upper", null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
             SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
@@ -341,7 +345,7 @@ namespace Lexplosion.Gui.UserControls
         private void LaunchInstance()
         {
             // TODO: тут тоже отображать скачивание и сюда нужно передавать функцию SetDownloadProcent
-            ManageLogic.СlientManager(_instanceProperties.LocalId, delegate(int i1, int i2, int i3) { });
+            ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent);
         }
 
         private void PauseInstance() 
@@ -360,6 +364,21 @@ namespace Lexplosion.Gui.UserControls
 
         public void SetDownloadProcent(int stagesCount, int stage, int procent)
         {
+            // -1 - запуск игры
+            // -2 - чёт ещё
+            if (stagesCount == 0)
+            {   
+                // download prepare
+                InstanceProgressBar.IsIndeterminate = true;
+                InstallProgress.Visibility = Visibility.Hidden;
+                TextBlockInstallStage.Text = "Идёт подготовка к скачиванию...";
+            }
+            else
+            {
+                InstanceProgressBar.IsIndeterminate = false;
+                TextBlockInstallStage.Text = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
+            }
+
             MainWindow.Obj.Dispatcher.Invoke(delegate { 
                 InstanceProgressBar.Value = procent;
                 InstallProgress.Content = procent.ToString() + "%";

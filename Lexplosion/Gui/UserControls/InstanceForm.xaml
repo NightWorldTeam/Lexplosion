@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="120" d:DesignWidth="620">
     <Grid>
-        <Canvas Margin="0,0,0,0" Width="620" Height="120">
+        <Canvas Width="620" Height="120">
             <Canvas.Background>
                 <SolidColorBrush Color="#151719" x:Name="Background"/>
             </Canvas.Background>
@@ -83,6 +83,14 @@
                             HorizontalAlignment="Left"
                             FontSize="16"
                             TextTrimming="WordEllipsis"/>
+                        <TextBlock x:Name="TextBlockInstallStage"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Foreground="#f5f5f5"
+                            HorizontalAlignment="Left"
+                            FontSize="18"
+                            TextTrimming="WordEllipsis"
+                            Visibility="Collapsed"/>
                         <WrapPanel x:Name="TagsBlock"
                             Grid.Row="1"
                             Margin="0,1,1,1"
