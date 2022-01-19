@@ -60,7 +60,6 @@ namespace Lexplosion.Logic.Management
 
         public InstanceInit Check()
         {
-            ProgressHandler(2, 0, 0);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null)

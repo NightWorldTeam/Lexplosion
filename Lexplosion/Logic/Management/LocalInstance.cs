@@ -30,8 +30,6 @@ namespace Lexplosion.Logic.Management
 
         public InstanceInit Check()
         {
-            ProgressHandler(1, 0, 0);
-
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
 
