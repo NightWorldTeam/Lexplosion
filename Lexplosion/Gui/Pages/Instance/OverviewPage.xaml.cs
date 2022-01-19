@@ -1,22 +1,8 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Gui.UserControls;
-using Lexplosion.Gui.Windows;
-using Lexplosion.Logic.Network;
+﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Lexplosion.Gui.Pages.Instance
 {
@@ -25,64 +11,13 @@ namespace Lexplosion.Gui.Pages.Instance
     /// </summary>
     public partial class OverviewPage : Page
     {
-        public static OverviewPage instance = null;
-        private InstanceProperties _instanceProperties;
-        private List<string> images = new List<string> {
-                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658257_1.jpg",
-                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_2.jpg",
-                @"https://minecraftonly.ru/uploads/posts/2016-05/1463658449_3.jpg"
-        };
-
+        private InstanceProperties instaceProperties;
         public OverviewPage(InstanceProperties instanceProperties)
         {
             InitializeComponent();
-
-            var hp = new HtmlPattern(instanceProperties.Id);
-            webb.NavigateToString(hp.GetHtmlPage());
-            //_instanceProperties = instanceProperties;
-            //Gallery gallery = new Gallery(images);
-            //Grid.SetRow(gallery, 1);
-            //Container.Children.Add(gallery);
-            //Console.WriteLine(gallery.Width);
-            //Console.WriteLine(gallery.Height);
-            //SetAssets();
+            this.instaceProperties = instaceProperties;
         }
 
-        public void SetAssets()
-        {
-            /*if (_instanceProperties.InstanceAssets.description != null)
-            {
-                Description.Text = _instanceProperties.InstanceAssets.description;
-            }
-            else
-            {
-                Description.Text = "";
-            }*/
-        }
-    }
 
-    class HtmlPattern
-    {
-        private String id;
-        private String htmlContent;
-        private String url = "https://addons-ecs.forgesvc.net/api/v2/addon/{0}/description";
-
-        public HtmlPattern(String id)
-        {
-            this.id = id;
-            url = String.Format(url, this.id);
-        }
-
-        public String GetHtmlPage()
-        {
-            string data = ToServer.HttpGet(url);
-            htmlContent = "<html><header></header><body>" + data + "</body></html>";
-            return htmlContent;
-        }
-
-        public String GetUri()
-        {
-            return url;
-        }
     }
 }

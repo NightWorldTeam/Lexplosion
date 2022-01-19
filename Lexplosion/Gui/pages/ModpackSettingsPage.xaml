@@ -8,137 +8,15 @@
       d:DesignHeight="442" d:DesignWidth="700"
       Title="ModpackSettingPage">
 
-    <Page.Resources>
-        <!-- Custom CheckBox Style-->
-        <Style x:Key="CCBS" TargetType="{x:Type CheckBox}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="FontFamily" Value="pack://application:,,,/Assets/fonts/#FuturaBookC"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type CheckBox}">
-                        <BulletDecorator Background="Transparent" Margin="0,0,-3,6">
-                            <BulletDecorator.Bullet>
-                                <Grid Width="15" Height="15" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                    <Border x:Name="Border" Background="Transparent" BorderBrush="#2c99c2" BorderThickness="2" Margin="0,0,0,1">
-                                        <Path Visibility="Collapsed"
-                                              Width="7"
-                                              Height="7"
-                                              x:Name="CheckMark"
-                                              SnapsToDevicePixels="False"
-                                              StrokeThickness="2"
-                                              Data="M 0 0 L 7 7 M 0 7 L 7 0">
-                                            <Path.Stroke>
-                                                <SolidColorBrush Color="White" />
-                                            </Path.Stroke>
-                                        </Path>
-                                    </Border>
-                                </Grid>
-                            </BulletDecorator.Bullet>
-                            <ContentPresenter Margin="4,0,0,0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                RecognizesAccessKey="True" />
-                        </BulletDecorator>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="False">
-                                <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="Transparent"/>
-                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Setting Button Style 1-->
-        <Style x:Key="TSB" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid>
-                            <Image Source="pack://application:,,,/Assets/images/icons/settings.png"/>
-                            <ContentPresenter />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Switcher Style -->
-        <Style x:Key="MWCBS1" TargetType="{x:Type ToggleButton}">
-            <!-- <Setter Property="" Value=""/> #4cb2d6-->
-            <Setter Property="Width" Value="244"/>
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Focusable" Value="False" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border x:Name="Border" Background="Transparent" BorderBrush="Transparent"  BorderThickness="10,0,0,0" Width="244"  HorizontalAlignment="Left">
-                            <ContentPresenter Margin="25,8,-57,8"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                RecognizesAccessKey="True" Width="266" />
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="BorderBrush" TargetName="Border" Value="#2c99c2"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="CSBS" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="#24b7d1"/>
-            <Setter Property="BorderBrush" Value="#14b7d1"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <ContentPresenter HorizontalAlignment="Left" Content="{TemplateBinding Content}"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Page.Resources>
-
-    <Grid >
-        <Canvas x:Name="SBShadowBackground" Background="#000000" Opacity="0.4"/>
-        <!-- озу для модпака +,
-                 галочки не загружать обновления +, 
-                 переустановить при запуске.,
-                 кнопка очистить директорию, 
-                 открыть папку -->
-
-        <Grid HorizontalAlignment="Left" Height="414" Width="700">
-            <TextBlock Width="250" Height="30" FontSize="20" Foreground="White" Text="Максимум память(Mb)" Margin="10,10,440,374" />
-            <TextBox Width="230" Height="28" x:Name="maxMem" BorderBrush="#24b7d1"  Background="#3f3f3f" Foreground="White" FontSize="14.5" Margin="265,10,205,376"/>
-            <CheckBox Style="{StaticResource CCBS}" Content="Не загружать обновления" FontSize="15" FontWeight="Bold" Margin="403,116,42,277" Foreground="Wheat" Height="Auto"/>
-            <ToggleButton Style="{StaticResource MWCBS1}" Margin="15,199,360,172" Content="Переустановить при запуске" Height="Auto" Width="Auto"/>
-            <Button Style="{StaticResource CSBS}" Margin="10,52,456,322" Content="Очистить директорию"/>
-            <Button Style="{StaticResource CSBS}" Margin="10,97,456,277" Content="Открыть папку"/>
-        </Grid>
+    <Grid Margin="0,0,0,0">
+        <Grid.Background>
+            <SolidColorBrush Color="#121212" Opacity="0.65"/>
+        </Grid.Background>
+        <TextBlock Text="InstanceSettingsPage" Foreground="White" FontSize="45"/>
+        <!-- озу для модпака,
+            галочки не загружать обновления, 
+            переустановить при запуске.,
+            кнопка очистить директорию, 
+            открыть папку -->
     </Grid>
 </Page>

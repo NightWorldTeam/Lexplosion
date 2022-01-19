@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Lexplosion">
 
+    <SolidColorBrush x:Key="PrimaryColor" Color="#167FFC" />
     <SolidColorBrush x:Key="BackgroundBrush" Color="#1f202a"/>
     <SolidColorBrush x:Key="DarkBackgroundBrush" Color="#1f202a"/>
     <SolidColorBrush x:Key="DarkDarkBackgroundBrush" Color="#1f202a"/>
@@ -27,23 +28,29 @@
                             <RowDefinition/>
                             <RowDefinition MaxHeight="7"/>
                         </Grid.RowDefinitions>
-                        <RepeatButton x:Name="PageUpButton" Grid.Row="0" Command="ScrollBar.LineUpCommand" 
+                        <RepeatButton x:Name="PageUpButton" 
+                                      Grid.Row="0" 
+                                      Command="ScrollBar.LineUpCommand" 
                                       Style="{DynamicResource RepeatButtonArrowStyle}"/>
                         <Track x:Name="PART_Track" Grid.Row="1" Orientation="Vertical" IsDirectionReversed="True">
                             <Track.Thumb>
                                 <Thumb Style="{DynamicResource ThumbStyle}"/>
                             </Track.Thumb>
                             <Track.DecreaseRepeatButton>
-                                <RepeatButton x:Name="DecreaseRepeatButton" Command="ScrollBar.PageUpCommand" 
+                                <RepeatButton x:Name="DecreaseRepeatButton" 
+                                              Command="ScrollBar.PageUpCommand" 
                                               Style="{DynamicResource RepeatButtonPageStyle}"/>
                             </Track.DecreaseRepeatButton>
                             <Track.IncreaseRepeatButton>
-                                <RepeatButton x:Name="IncreaseRepeatButton" Command="ScrollBar.PageDownCommand" 
+                                <RepeatButton x:Name="IncreaseRepeatButton" 
+                                              Command="ScrollBar.PageDownCommand" 
                                               Style="{DynamicResource RepeatButtonPageStyle}"/>
                             </Track.IncreaseRepeatButton>
                         </Track>
-                        <RepeatButton x:Name="PageDownButton" Grid.Row="2" Command="ScrollBar.LineDownCommand" 
-                                          Style="{DynamicResource RepeatButtonArrowStyle}">
+                        <RepeatButton x:Name="PageDownButton" 
+                                      Grid.Row="2" 
+                                      Command="ScrollBar.LineDownCommand" 
+                                      Style="{DynamicResource RepeatButtonArrowStyle}">
                             <RepeatButton.LayoutTransform>
                                 <RotateTransform Angle="180"/>
                             </RepeatButton.LayoutTransform>
@@ -57,10 +64,18 @@
                                 </Setter.Value>
                             </Setter>
                             <Setter TargetName="PART_Track" Property="Orientation" Value="Vertical"/>
-                            <Setter Property="Command" Value="ScrollBar.LineRightCommand" TargetName="IncreaseRepeatButton"/>
-                            <Setter Property="Command" Value="ScrollBar.LineLeftCommand" TargetName="DecreaseRepeatButton"/>
-                            <Setter Property="Command" Value="ScrollBar.PageRightCommand" TargetName="PageDownButton"/>
-                            <Setter Property="Command" Value="ScrollBar.PageLeftCommand" TargetName="PageUpButton"/>
+                            <Setter Property="Command" 
+                                    Value="ScrollBar.LineRightCommand" 
+                                    TargetName="IncreaseRepeatButton"/>
+                            <Setter Property="Command" 
+                                    Value="ScrollBar.LineLeftCommand" 
+                                    TargetName="DecreaseRepeatButton"/>
+                            <Setter Property="Command" 
+                                    Value="ScrollBar.PageRightCommand" 
+                                    TargetName="PageDownButton"/>
+                            <Setter Property="Command" 
+                                    Value="ScrollBar.PageLeftCommand" 
+                                    TargetName="PageUpButton"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -81,16 +96,25 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="RepeatButtonArrow" Property="Fill" Value="{StaticResource MouseOverBrush}"/>
-                            <Setter TargetName="RepeatButtonArrowBorder" Property="Background" 
+                            <Setter TargetName="RepeatButtonArrow" 
+                                    Property="Fill" 
+                                    Value="{StaticResource MouseOverBrush}"/>
+                            <Setter TargetName="RepeatButtonArrowBorder" 
+                                    Property="Background" 
                                     Value="{StaticResource DarkDarkBackgroundBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="RepeatButtonArrow" Property="Fill" Value="{StaticResource PressedBrush}"/>
-                            <Setter TargetName="RepeatButtonArrowBorder" Property="Background" Value="#FFD2D2D2"/>
+                            <Setter TargetName="RepeatButtonArrow" 
+                                    Property="Fill" 
+                                    Value="{StaticResource PressedBrush}"/>
+                            <Setter TargetName="RepeatButtonArrowBorder" 
+                                    Property="Background" 
+                                    Value="#FFD2D2D2"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="RepeatButtonArrow" Property="Fill" Value="{StaticResource BorderBrush}"/>
+                            <Setter TargetName="RepeatButtonArrow" 
+                                    Property="Fill" 
+                                    Value="{StaticResource BorderBrush}"/>
                             <Setter TargetName="RepeatButtonArrow" Property="Opacity" Value="0.72"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -121,11 +145,17 @@
             <Setter.Value>
                 <ControlTemplate>
                     <Border Background="{StaticResource DarkDarkBackgroundBrush}">
-                        <Rectangle x:Name="ThumbRect" RadiusX="4" RadiusY="4" Fill="#17171c" MaxWidth="13"/>
+                        <Rectangle x:Name="ThumbRect" 
+                                   RadiusX="4" 
+                                   RadiusY="4"
+                                   Fill="#17171c" 
+                                   MaxWidth="13"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="ThumbRect" Property="Fill" Value="{StaticResource MouseOverBrush}"/>
+                            <Setter TargetName="ThumbRect"
+                                    Property="Fill" 
+                                    Value="{StaticResource MouseOverBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="ThumbRect" Property="Opacity" Value="0.72"/>
@@ -212,19 +242,26 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Border" CornerRadius="2" BorderThickness="1" Background="#1c91a6" BorderBrush="#2c99c2">
-                        <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                    <Border x:Name="Border" 
+                            CornerRadius="2" 
+                            BorderThickness="1" 
+                            Background="#167FFC" 
+                            BorderBrush="#2c99c2">
+                        <ContentPresenter Margin="2" 
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center" 
+                                          RecognizesAccessKey="True"/>
                     </Border>
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
-                            <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
+                            <Setter TargetName="Border" Property="Background" Value="#167FFC"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="False">
                             <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
-                            <Setter TargetName="Border" Property="Background" Value="#2c99c2"/>
+                            <Setter TargetName="Border" Property="Background" Value="#167FFC"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -245,7 +282,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border x:Name="Border" Background="Transparent" BorderBrush="#18191b"  BorderThickness="0,0,0,3" Width="140"  HorizontalAlignment="Center">
+                    <Border x:Name="Border" 
+                            Background="Transparent" 
+                            BorderBrush="#18191b"  
+                            BorderThickness="0,0,0,3" 
+                            Width="140"  
+                            HorizontalAlignment="Center">
                         <ContentPresenter Margin="5,0,5,0"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
@@ -254,7 +296,7 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="BorderBrush" TargetName="Border" Value="#2c99c2"/>
+                            <Setter Property="BorderBrush" TargetName="Border" Value="#167FFC"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -345,7 +387,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="Foreground" Value="#b9b7b7"/>
-        <Setter Property="CaretBrush" Value="#2c99c2"/>
+        <Setter Property="CaretBrush" Value="#167FFC"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">

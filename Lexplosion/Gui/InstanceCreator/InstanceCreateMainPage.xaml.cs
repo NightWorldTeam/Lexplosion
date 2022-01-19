@@ -18,6 +18,7 @@ namespace Lexplosion.Gui.InstanceCreator
     public partial class InstanceCreateMainPage : Page
     {
         public static readonly SolidColorBrush _unavalibleNameColor = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+        private MainWindow _mainWindow;
 
         private List<string> _instanceTags = new List<string>() 
         { 
@@ -28,11 +29,13 @@ namespace Lexplosion.Gui.InstanceCreator
 
         private List<string> _selectedModsList = new List<string>();
         private List<string> _unavailableNames = new List<string>();
-        private MainWindow _mainWindow;
-        private ModloaderType selectedModloaderType = ModloaderType.None;
+        
+        private ModloaderType _selectedModloaderType = ModloaderType.None;
 
         private Dictionary<string, List<string>> ForgeVersionsList = new Dictionary<string, List<string>>();
         private Dictionary<string, List<string>> FabricVersionList = new Dictionary<string, List<string>>();
+
+        private RadioButton selectedRadioButton;
 
         public InstanceCreateMainPage(MainWindow mainWindow)
         {
@@ -43,17 +46,18 @@ namespace Lexplosion.Gui.InstanceCreator
 
         private void PreInitializePage() 
         {
+            // получаем все версии майнкрафта
+            Lexplosion.Run.TaskRun(() => SetupMinecraftVersions());
+
             // получаем все занятые имена модпаков
             foreach (var instance in UserData.Instances.List.Keys)
                 _unavailableNames.Add(UserData.Instances.List[instance].Name);
-
-            // получаем все версии майнкрафта
-            Lexplosion.Run.TaskRun(() => SetupMinecraftVersions());
             
             // выставляем последнию версию
             VersionCB.SelectedIndex = 0;
             ModloaderVersion.Visibility = Visibility.Hidden;
             // устанавливаем отсутсвие modloader
+            selectedRadioButton = NoneSelected;
             NoneSelected.IsChecked = true;
         }
 
@@ -66,16 +70,15 @@ namespace Lexplosion.Gui.InstanceCreator
                     this.Dispatcher.Invoke(() => {
                         //VersionCB.Items.Add(version.type + " " + version.id);
                         VersionCB.Items.Add(version.id);
-                        //ForgeVersionsList.Add(version.id, ToServer.GetModloadersList(version.id, ModloaderType.Forge));
-                        //FabricVersionList.Add(version.id, ToServer.GetModloadersList(version.id, ModloaderType.Fabric));
                     });
                 }
             }
         }
 
-        private void SetupModloaderVersions(string minecraftVersion, ModloaderType modloaderType)//, List<string> modloaderVersions) 
+        private void SetupModloaderVersions(string minecraftVersion, ModloaderType modloaderType) 
         {
             var modloaderVersions = ToServer.GetModloadersList(minecraftVersion, modloaderType);
+            ModloaderVersion.Items.Clear();
             foreach (var version in modloaderVersions) 
             {
                 this.Dispatcher.Invoke(() => {
@@ -91,7 +94,9 @@ namespace Lexplosion.Gui.InstanceCreator
             {
                 string instanceVersion = VersionCB.Text;
                 Console.WriteLine(instanceVersion);
-                ManageLogic.CreateInstance(InstanceNameTB.Text, InstanceSource.Local, instanceVersion, selectedModloaderType, ModloaderVersion.Text);
+                ManageLogic.CreateInstance(
+                    InstanceNameTB.Text, InstanceSource.Local, instanceVersion, _selectedModloaderType, ModloaderVersion.Text
+                );
                 _mainWindow.LeftPanel.BackToInstanceContainer(LeftPanel.PageType.InstanceLibrary, null);
             }
         }
@@ -112,32 +117,38 @@ namespace Lexplosion.Gui.InstanceCreator
             }
         }
         
-        private void CreateInstanceRadioButton_Click(object sender, RoutedEventArgs e)
+        private void SelectInstanceRadioButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedRadioButton = (RadioButton)sender;
             var gameVersion = VersionCB.Text;
             if (selectedRadioButton.Name == "NoneSelected") 
             {
                 ModloaderVersion.Visibility = Visibility.Collapsed;
-                selectedModloaderType = ModloaderType.None;
+                _selectedModloaderType = ModloaderType.None;
+                
             }
             else if (selectedRadioButton.Name == "ForgeSelected")
             {
                 ModloaderVersion.Visibility = Visibility.Visible;
-                selectedModloaderType = ModloaderType.Forge;
-                SetupModloaderVersions(gameVersion, ModloaderType.Forge);//, ForgeVersionsList[gameVersion]);
+                _selectedModloaderType = ModloaderType.Forge;
+
+                SetupModloaderVersions(gameVersion, ModloaderType.Forge);
             }
             else if (selectedRadioButton.Name == "FabricSelected")
             {
                 ModloaderVersion.Visibility = Visibility.Visible;
-                selectedModloaderType = ModloaderType.Fabric;
-                SetupModloaderVersions(gameVersion, ModloaderType.Fabric);//, FabricVersionList[gameVersion]);
+                _selectedModloaderType = ModloaderType.Fabric;
+                SetupModloaderVersions(gameVersion, ModloaderType.Fabric);
             }
         }
 
         private void VersionCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MessageBox.Show("123");
+            var gameVersion = VersionCB.Text;
+            if (selectedRadioButton.Name == "ForgeSelected")
+                SetupModloaderVersions(VersionCB.Text, ModloaderType.Forge);
+            else if (selectedRadioButton.Name == "FabricSelected")
+                SetupModloaderVersions(VersionCB.Text, ModloaderType.Forge);
         }
     }
 }
