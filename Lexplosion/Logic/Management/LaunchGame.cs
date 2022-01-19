@@ -16,7 +16,6 @@ namespace Lexplosion.Logic.Management
     {
         private static Process process = null;
         private static Gateway gameGateway = null;
-        public static string runnigInstance = "";
 
         public delegate void ComplitedLaunchDelegate(string instanceId, bool successful);
         public static event ComplitedLaunchDelegate ComplitedLaunch;
@@ -199,7 +198,6 @@ namespace Lexplosion.Logic.Management
 
                     gameGateway = null;
                     process = null;
-                    runnigInstance = "";
                 };
 
                 process.Start();
@@ -217,7 +215,6 @@ namespace Lexplosion.Logic.Management
 
                 gameGateway = null;
                 process = null;
-                runnigInstance = "";
 
                 return false;
             }
@@ -320,7 +317,6 @@ namespace Lexplosion.Logic.Management
 
             gameGateway = null;
             process = null;
-            runnigInstance = "";
         }
 
         public static void SetDefaultSettings()

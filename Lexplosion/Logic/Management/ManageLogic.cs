@@ -134,16 +134,6 @@ namespace Lexplosion.Logic.Management
 
         public static void СlientManager(string instanceId, ProgressHandlerDelegate ProgressHandler)
         {
-            if (LaunchGame.runnigInstance != "")
-            {
-                LaunchGame.KillProcess();
-                // TODO: Тут вырезал строку
-                //Gui.PageType.Right.Menu.InstanceContainerPage.obj.LaunchButtonBlock = false; //разлочиваем кнопку запуска
-
-                return;
-            }
-
-            LaunchGame.runnigInstance = instanceId;
             InstanceSource type = UserData.Instances.List[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
