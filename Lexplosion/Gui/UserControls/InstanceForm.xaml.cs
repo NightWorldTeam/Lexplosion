@@ -370,22 +370,21 @@ namespace Lexplosion.Gui.UserControls
 
         public void SetDownloadProcent(int stagesCount, int stage, int procent)
         {
-            // -1 - запуск игры
-            // -2 - чёт ещё
-            if (stagesCount == 0)
-            {   
-                // download prepare
-                InstanceProgressBar.IsIndeterminate = true;
-                InstallProgress.Visibility = Visibility.Hidden;
-                TextBlockInstallStage.Text = "Идёт подготовка к скачиванию...";
-            }
-            else
-            {
-                InstanceProgressBar.IsIndeterminate = false;
-                TextBlockInstallStage.Text = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
-            }
+            MainWindow.Obj.Dispatcher.Invoke(delegate {
+                Console.WriteLine(String.Format("download --> {0} {1} {2}", stagesCount, stage, procent));
+                if (stagesCount == 0)
+                {
+                    // download prepare
+                    InstanceProgressBar.IsIndeterminate = true;
+                    InstallProgress.Visibility = Visibility.Hidden;
+                    TextBlockInstallStage.Text = "Идёт подготовка к скачиванию...";
+                }
+                else
+                {
+                    InstanceProgressBar.IsIndeterminate = false;
+                    TextBlockInstallStage.Text = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
+                }
 
-            MainWindow.Obj.Dispatcher.Invoke(delegate { 
                 InstanceProgressBar.Value = procent;
                 InstallProgress.Content = procent.ToString() + "%";
             });
