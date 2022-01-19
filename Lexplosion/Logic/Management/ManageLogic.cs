@@ -23,7 +23,7 @@ namespace Lexplosion.Logic.Management
     {
         public delegate void ProgressHandlerDelegate(int stagesCount, int stage, int procents);
 
-        public delegate void ComplitedDownloadDelegate(InstanceInit result, List<string> downloadErrors);
+        public delegate void ComplitedDownloadDelegate(InstanceInit result, List<string> downloadErrors, bool launchGame);
         public static event ComplitedDownloadDelegate ComplitedDownload;
 
         public static AuthCode Auth(string login, string password, bool saveUser)
@@ -123,11 +123,11 @@ namespace Lexplosion.Logic.Management
                 if (result == InstanceInit.Successful)
                 {                 
                     InitData res = instance.Update();
-                    ComplitedDownload(res.InitResult, res.DownloadErrors);
+                    ComplitedDownload(res.InitResult, res.DownloadErrors, false);
                 }
                 else
                 {
-                    ComplitedDownload(result, null);
+                    ComplitedDownload(result, null, false);
                 }
             });
         }
@@ -173,10 +173,10 @@ namespace Lexplosion.Logic.Management
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
                 InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, progressHandler);
 
-                ComplitedDownload(data.InitResult, data.DownloadErrors);
-
                 if (data.InitResult == InstanceInit.Successful)
-                {    
+                {
+                    ComplitedDownload(data.InitResult, data.DownloadErrors, true);
+
                     string command = LaunchGame.CreateCommand(initModPack, data, instanceSettings);
                     LaunchGame.Run(command, initModPack);
                     DataFilesManager.SaveSettings(UserData.settings);
@@ -189,6 +189,7 @@ namespace Lexplosion.Logic.Management
                 }
                 else
                 {
+                    ComplitedDownload(data.InitResult, data.DownloadErrors, false);
                     /*string errorsText = "\n\n" + string.Join("\n", data.Errors) + "\n";
 
                     MainWindow.Obj.Dispatcher.Invoke(delegate {
