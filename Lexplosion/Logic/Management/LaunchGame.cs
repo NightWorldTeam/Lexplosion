@@ -18,6 +18,12 @@ namespace Lexplosion.Logic.Management
         private static Gateway gameGateway = null;
         public static string runnigInstance = "";
 
+        public delegate void ComplitedLaunchDelegate(string instanceId, bool successful);
+        public static event ComplitedLaunchDelegate ComplitedLaunch;
+
+        public delegate void GameExitedDelegate(string instanceId);
+        public static event GameExitedDelegate GameExited;
+
         public static string CreateCommand(string instanceId, InitData data, Dictionary<string, string> instanceSettings)
         {
             int number;
@@ -68,7 +74,7 @@ namespace Lexplosion.Logic.Management
             return command.Replace(@"\", "/");
         }
 
-        public static bool Run(string command, string instanceId, ManageLogic.ComplitedLaunchDelegate complitedLaunch)
+        public static bool Run(string command, string instanceId)
         {
             process = new Process();
             gameGateway = new Gateway();
@@ -114,7 +120,7 @@ namespace Lexplosion.Logic.Management
 
                         if (e.Data.Contains(" LWJGL Version") || e.Data.Contains("Launching target 'fmlclient' with arguments") || e.Data.Contains("Narrator library for x64 successfully loaded"))
                         {
-                            complitedLaunch(instanceId, true);
+                            ComplitedLaunch(instanceId, true);
                             MainWindow.Obj.Dispatcher.Invoke(delegate
                             {
                                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed; 
@@ -161,7 +167,7 @@ namespace Lexplosion.Logic.Management
                         MainWindow.Obj.Dispatcher.Invoke(delegate
                         {
                             //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
-                            complitedLaunch(instanceId, false);
+                            ComplitedLaunch(instanceId, false);
 
                             // TODO: перенести это в ConsoleWindow
                             if (!ConsoleWindow.isShow) 
@@ -201,11 +207,13 @@ namespace Lexplosion.Logic.Management
 
                 gameGateway.Initialization(process.Id);
 
+                GameExited(instanceId);
+
                 return true;
             } 
             catch 
             {
-                complitedLaunch(instanceId, false);
+                ComplitedLaunch(instanceId, false);
 
                 gameGateway = null;
                 process = null;
