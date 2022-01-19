@@ -322,7 +322,6 @@ namespace Lexplosion.Gui.UserControls
         private void DownloadInstance()
         {
             InstallProgress.Visibility = Visibility.Visible;
-            ManageLogic.ProgressHandler += SetDownloadProcent;
             SetupButtons("upper", null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
             SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
             InstanceProgressBar.Visibility = Visibility.Visible;
@@ -335,13 +334,14 @@ namespace Lexplosion.Gui.UserControls
                     "", ModloaderType.None, "", _instanceProperties.Id.ToString()
                 );
                 ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
-                ManageLogic.UpdateInstance(instanceId);
+                ManageLogic.UpdateInstance(instanceId, SetDownloadProcent);
             }
         }
 
         private void LaunchInstance()
         {
-            ManageLogic.СlientManager(_instanceProperties.LocalId);
+            // TODO: тут тоже отображать скачивание и сюда нужно передавать функцию SetDownloadProcent
+            ManageLogic.СlientManager(_instanceProperties.LocalId, delegate(int i1, int i2, int i3) { });
         }
 
         private void PauseInstance() 
@@ -358,7 +358,7 @@ namespace Lexplosion.Gui.UserControls
             InstanceProgressBar.Visibility = Visibility.Collapsed;
         }
 
-        public void SetDownloadProcent(int procent)
+        public void SetDownloadProcent(int stagesCount, int stage, int procent)
         {
             MainWindow.Obj.Dispatcher.Invoke(delegate { 
                 InstanceProgressBar.Value = procent;
