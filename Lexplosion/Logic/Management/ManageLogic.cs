@@ -97,6 +97,8 @@ namespace Lexplosion.Logic.Management
 
         public static void UpdateInstance(string instanceId, ProgressHandlerDelegate ProgressHandler)
         {
+            ProgressHandler(1, 0, 0);
+
             Lexplosion.Run.TaskRun(delegate ()
             {
                 InstanceSource type = UserData.Instances.List[instanceId].Type;
@@ -127,11 +129,6 @@ namespace Lexplosion.Logic.Management
                 {
                     ComplitedDownload(result, null);
                 }
-
-                foreach (Delegate d in ProgressHandler.GetInvocationList())
-                {
-                    ProgressHandler -= (ProgressHandlerDelegate)d;
-                }
             });
         }
 
@@ -150,6 +147,7 @@ namespace Lexplosion.Logic.Management
             InstanceSource type = UserData.Instances.List[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
+            ProgressHandler(1, 0, 0);
 
             Dictionary<string, string> xmx = new Dictionary<string, string>();
             xmx["eos"] = "2700";

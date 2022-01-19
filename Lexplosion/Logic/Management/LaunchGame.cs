@@ -92,8 +92,8 @@ namespace Lexplosion.Logic.Management
             bool gameVisible = false;
             string consoleText = "";
 
-            //try
-            //{
+            try
+            {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
                     //MainWindow.window.InitProgressBar.Visibility = Visibility.Visible;
@@ -202,7 +202,7 @@ namespace Lexplosion.Logic.Management
                 gameGateway.Initialization(process.Id);
 
                 return true;
-            /*} 
+            } 
             catch 
             {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
@@ -215,7 +215,7 @@ namespace Lexplosion.Logic.Management
                 runnigInstance = "";
 
                 return false;
-            }*/
+            }
         }
 
         public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceSource type, ManageLogic.ProgressHandlerDelegate progressHandler)
