@@ -72,7 +72,7 @@ namespace Lexplosion.Logic.Management
 
                 BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
                 {
-                    ProgressHandler(1, 1, (nowDataCount / totalDataCount) * 100);
+                    ProgressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                 };
             }
             else
