@@ -173,6 +173,8 @@ namespace Lexplosion.Logic.Management
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
                 InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, progressHandler);
 
+                ComplitedDownload(data.InitResult, data.DownloadErrors);
+
                 if (data.InitResult == InstanceInit.Successful)
                 {    
                     string command = LaunchGame.CreateCommand(initModPack, data, instanceSettings);
