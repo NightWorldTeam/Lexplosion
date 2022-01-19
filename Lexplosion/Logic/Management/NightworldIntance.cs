@@ -36,9 +36,9 @@ namespace Lexplosion.Logic.Management
         private bool requiresUpdates = true;
         private bool onlyBase;
         private int stagesCount = 0;
-        private ManageLogic.ProgressHandlerDelegate ProgressHandler;
+        private ManageLogic.ProgressHandlerCallback ProgressHandler;
 
-        public NightworldIntance(string instanceid, bool onlyBase_, ManageLogic.ProgressHandlerDelegate progressHandler)
+        public NightworldIntance(string instanceid, bool onlyBase_, ManageLogic.ProgressHandlerCallback progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;

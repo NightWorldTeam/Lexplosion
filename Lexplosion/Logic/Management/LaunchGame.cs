@@ -17,12 +17,6 @@ namespace Lexplosion.Logic.Management
         private static Process process = null;
         private static Gateway gameGateway = null;
 
-        public delegate void ComplitedLaunchDelegate(string instanceId, bool successful);
-        public static event ComplitedLaunchDelegate ComplitedLaunch;
-
-        public delegate void GameExitedDelegate(string instanceId);
-        public static event GameExitedDelegate GameExited;
-
         public static string CreateCommand(string instanceId, InitData data, Dictionary<string, string> instanceSettings)
         {
             int number;
@@ -73,7 +67,7 @@ namespace Lexplosion.Logic.Management
             return command.Replace(@"\", "/");
         }
 
-        public static bool Run(string command, string instanceId)
+        public static bool Run(string command, string instanceId, ManageLogic.ComplitedLaunchCallback ComplitedLaunch, ManageLogic.GameExitedCallback GameExited)
         {
             process = new Process();
             gameGateway = new Gateway();
@@ -220,7 +214,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceSource type, ManageLogic.ProgressHandlerDelegate progressHandler)
+        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceSource type, ManageLogic.ProgressHandlerCallback progressHandler)
         {
             InitData Error(InstanceInit init)
             {

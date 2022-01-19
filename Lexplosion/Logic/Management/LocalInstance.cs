@@ -20,9 +20,9 @@ namespace Lexplosion.Logic.Management
         private string InstanceId;
         private int stagesCount = 0;
 
-        private ManageLogic.ProgressHandlerDelegate ProgressHandler;
+        private ManageLogic.ProgressHandlerCallback ProgressHandler;
 
-        public LocalInstance(string instanceid, ManageLogic.ProgressHandlerDelegate progressHandler)
+        public LocalInstance(string instanceid, ManageLogic.ProgressHandlerCallback progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;

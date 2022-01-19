@@ -21,10 +21,10 @@ namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
     {
-        public delegate void ProgressHandlerDelegate(int stagesCount, int stage, int procents);
-
-        public delegate void ComplitedDownloadDelegate(InstanceInit result, List<string> downloadErrors, bool launchGame);
-        public static event ComplitedDownloadDelegate ComplitedDownload;
+        public delegate void ProgressHandlerCallback(int stagesCount, int stage, int procents);
+        public delegate void ComplitedDownloadCallback(InstanceInit result, List<string> downloadErrors, bool launchGame);
+        public delegate void ComplitedLaunchCallback(string instanceId, bool successful);
+        public delegate void GameExitedCallback(string instanceId);
 
         public static AuthCode Auth(string login, string password, bool saveUser)
         {
@@ -95,7 +95,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static void UpdateInstance(string instanceId, ProgressHandlerDelegate ProgressHandler)
+        public static void UpdateInstance(string instanceId, ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload)
         {
             ProgressHandler(1, 0, 0);
 
@@ -132,7 +132,7 @@ namespace Lexplosion.Logic.Management
             });
         }
 
-        public static void СlientManager(string instanceId, ProgressHandlerDelegate ProgressHandler)
+        public static void СlientManager(string instanceId, ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
         {
             InstanceSource type = UserData.Instances.List[instanceId].Type;
 
@@ -158,7 +158,7 @@ namespace Lexplosion.Logic.Management
                 Run(instanceId, type, ProgressHandler);
             });
 
-            void Run(string initModPack, InstanceSource instype, ProgressHandlerDelegate progressHandler)
+            void Run(string initModPack, InstanceSource instype, ProgressHandlerCallback progressHandler)
             {
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
                 InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, progressHandler);
@@ -168,7 +168,7 @@ namespace Lexplosion.Logic.Management
                     ComplitedDownload(data.InitResult, data.DownloadErrors, true);
 
                     string command = LaunchGame.CreateCommand(initModPack, data, instanceSettings);
-                    LaunchGame.Run(command, initModPack);
+                    LaunchGame.Run(command, initModPack, ComplitedLaunch, GameExited);
                     DataFilesManager.SaveSettings(UserData.settings);
 
                     /*MainWindow.Obj.Dispatcher.Invoke(delegate {
@@ -341,7 +341,7 @@ namespace Lexplosion.Logic.Management
             return true;
         }
 
-        public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerDelegate ProgressHandler)
+        public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerCallback ProgressHandler)
         {
             string instanceId;
             ImportResult res = WithDirectory.ImportInstance(zipFile, out errors, out instanceId);
