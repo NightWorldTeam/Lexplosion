@@ -92,6 +92,7 @@ namespace Lexplosion.Gui.UserControls
             };
             SetInstanceProperties(_instanceProperties);
             FormSetup();
+            ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
         }
 
         private void SetInstanceProperties(InstanceProperties _instanceProperties) 
@@ -337,7 +338,6 @@ namespace Lexplosion.Gui.UserControls
                     _instanceProperties.Name, InstanceSource.Curseforge, 
                     "", ModloaderType.None, "", _instanceProperties.Id.ToString()
                 );
-                ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
                 ManageLogic.UpdateInstance(instanceId, SetDownloadProcent);
             }
         }
@@ -345,6 +345,12 @@ namespace Lexplosion.Gui.UserControls
         private void LaunchInstance()
         {
             // TODO: тут тоже отображать скачивание и сюда нужно передавать функцию SetDownloadProcent
+            TextBlockOverview.Visibility = Visibility.Hidden;
+            TagsBlock.Visibility = Visibility.Hidden;
+            TextBlockInstallStage.Visibility = Visibility.Visible;
+            TextBlockInstallStage.Text = "Идет проверка целосности игровых файлов...";
+            InstallProgress.Visibility = Visibility.Hidden;
+            InstanceProgressBar.Visibility = Visibility.Visible;
             ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent);
         }
 
@@ -400,6 +406,8 @@ namespace Lexplosion.Gui.UserControls
                     _instanceProperties.IsInstalled = true;
                     FormSetup();
                     InstanceProgressBar.Visibility = Visibility.Collapsed;
+                    TextBlockOverview.Visibility = Visibility.Visible;
+                    TagsBlock.Visibility = Visibility.Visible;
                 }
                 else if (result == InstanceInit.DownloadFilesError)
                 {
