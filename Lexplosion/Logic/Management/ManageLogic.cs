@@ -21,8 +21,7 @@ namespace Lexplosion.Logic.Management
 {
     static class ManageLogic
     {
-        public delegate void ProgressHandlerDelegate(int procents);
-        public static event ProgressHandlerDelegate ProgressHandler;
+        public delegate void ProgressHandlerDelegate(int stagesCount, int stage, int procents);
 
         public delegate void ComplitedDownloadDelegate(InstanceInit result, List<string> downloadErrors);
         public static event ComplitedDownloadDelegate ComplitedDownload;
@@ -96,7 +95,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static void UpdateInstance(string instanceId)
+        public static void UpdateInstance(string instanceId, ProgressHandlerDelegate ProgressHandler)
         {
             Lexplosion.Run.TaskRun(delegate ()
             {
@@ -109,7 +108,7 @@ namespace Lexplosion.Logic.Management
                         instance = new NightworldIntance(instanceId, false, ProgressHandler);
                         break;
                     case InstanceSource.Local:
-                        instance = new LocalInstance(instanceId);
+                        instance = new LocalInstance(instanceId, ProgressHandler);
                         break;
                     case InstanceSource.Curseforge:
                         instance = new CurseforgeInstance(instanceId, false, ProgressHandler);
@@ -136,7 +135,7 @@ namespace Lexplosion.Logic.Management
             });
         }
 
-        public static void СlientManager(string instanceId)
+        public static void СlientManager(string instanceId, ProgressHandlerDelegate ProgressHandler)
         {
             if (LaunchGame.runnigInstance != "")
             {
@@ -168,13 +167,13 @@ namespace Lexplosion.Logic.Management
 
             Lexplosion.Run.TaskRun(delegate ()
             {
-                Run(instanceId, type);
+                Run(instanceId, type, ProgressHandler);
             });
 
-            void Run(string initModPack, InstanceSource instype)
+            void Run(string initModPack, InstanceSource instype, ProgressHandlerDelegate progressHandler)
             {
                 Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
-                InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, ProgressHandler);
+                InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, progressHandler);
 
                 if (data.InitResult == InstanceInit.Successful)
                 {    
@@ -349,6 +348,27 @@ namespace Lexplosion.Logic.Management
             DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
 
             return true;
+        }
+
+        public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerDelegate ProgressHandler)
+        {
+            string instanceId;
+            ImportResult res = WithDirectory.ImportInstance(zipFile, out errors, out instanceId);
+            LocalInstance instance = new LocalInstance(instanceId, ProgressHandler);
+
+            instance.Check(); // TODO: тут вовзращать ошибки
+            instance.Update();
+
+            // TODO: Тут вырезал строку
+            /*
+            if (Gui.PageType.Right.Menu.InstanceContainerPage.obj != null)
+            {
+                Uri logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+                Gui.PageType.Right.Menu.InstanceContainerPage.obj.BuildInstanceForm(instanceId, UserData.InstancesList.Count - 1, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", "test", new List<string>());
+            }
+            */
+
+            return res;
         }
     }
 }

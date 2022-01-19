@@ -228,8 +228,8 @@ namespace Lexplosion.Logic.Management
                 };
             }
 
-            //try
-            //{
+            try
+            {
                 SetDefaultSettings();
 
                 if (!UserData.settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
@@ -252,7 +252,7 @@ namespace Lexplosion.Logic.Management
                             instance = new NightworldIntance(instanceId, !autoUpdate, progressHandler);
                             break;
                         case InstanceSource.Local:
-                            instance = new LocalInstance(instanceId);
+                            instance = new LocalInstance(instanceId, progressHandler);
                             break;
                         case InstanceSource.Curseforge:
                             instance = new CurseforgeInstance(instanceId, !autoUpdate, progressHandler);
@@ -291,11 +291,11 @@ namespace Lexplosion.Logic.Management
                 }
 
                 return data;
-            /*} 
+            } 
             catch 
             {
                 return Error(InstanceInit.UnknownError);
-            }*/
+            }
         }
 
         public static void KillProcess()

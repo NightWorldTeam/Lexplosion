@@ -18,14 +18,20 @@ namespace Lexplosion.Logic.Management
         Dictionary<string, int> Updates;
 
         private string InstanceId;
+        private int stagesCount = 0;
 
-        public LocalInstance(string instanceid)
+        private ManageLogic.ProgressHandlerDelegate ProgressHandler;
+
+        public LocalInstance(string instanceid, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
             InstanceId = instanceid;
+            ProgressHandler = progressHandler;
         }
 
         public InstanceInit Check()
         {
+            ProgressHandler(1, 0, 0);
+
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
 
@@ -46,6 +52,11 @@ namespace Lexplosion.Logic.Management
                     return InstanceInit.GuardError;
                 }
 
+                if (BaseFiles.UpdatesCount > 0)
+                {
+                    stagesCount = 1;
+                }
+
                 return InstanceInit.Successful;
             }
             else
@@ -57,9 +68,21 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update()
         {
+            if (stagesCount == 1)
+            {
+                ProgressHandler(1, 1, 0);
+
+                BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
+                {
+                    ProgressHandler(1, 1, (nowDataCount / totalDataCount) * 100);
+                };
+            }
+            else
+            {
+                BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
+            }
+
             List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
-            MessageBox.Show(string.Join(", ", errors));
-            Console.WriteLine("G " + Manifest.version.modloaderVersion + " " + Manifest.version.modloaderType);
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             InstanceInit result = InstanceInit.Successful;

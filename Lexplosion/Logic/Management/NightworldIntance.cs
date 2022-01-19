@@ -18,6 +18,10 @@ namespace Lexplosion.Logic.Management
             public Dictionary<string, List<string>> Data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
             public List<string> OldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
             public bool Successful = true; // удачна или неудачна ли проверка
+
+            public int UpdatesCount = 0;
+            public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
+            public ProcentUpdate ProcentUpdateFunc;
         }
 
         WithDirectory.BaseFilesUpdates BaseFiles;
@@ -31,7 +35,8 @@ namespace Lexplosion.Logic.Management
 
         private bool requiresUpdates = true;
         private bool onlyBase;
-        private static event ManageLogic.ProgressHandlerDelegate ProgressHandler;
+        private int stagesCount = 0;
+        private ManageLogic.ProgressHandlerDelegate ProgressHandler;
 
         public NightworldIntance(string instanceid, bool onlyBase_, ManageLogic.ProgressHandlerDelegate progressHandler)
         {
@@ -55,14 +60,13 @@ namespace Lexplosion.Logic.Management
 
         public InstanceInit Check()
         {
-            ProgressHandler(0);
+            ProgressHandler(2, 0, 0);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null)
             {
                 return InstanceInit.NightworldIdError;
             }
-            ProgressHandler(1);
 
             int version = 0;
             if (!onlyBase)
@@ -74,7 +78,6 @@ namespace Lexplosion.Logic.Management
             {
                 requiresUpdates = false;
             }
-            ProgressHandler(2);
 
             if (!requiresUpdates)
             {
@@ -128,7 +131,6 @@ namespace Lexplosion.Logic.Management
             }
             else
             {
-                ProgressHandler(3);
                 Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
                 if (Manifest == null || Manifest.version == null)
                 {
@@ -144,7 +146,6 @@ namespace Lexplosion.Logic.Management
                 Manifest.version = manifest_.version;
                 Manifest.libraries = manifest_.libraries;
                 Manifest.natives = manifest_.natives;
-                ProgressHandler(4);
             }
 
             if (Manifest != null)
@@ -157,6 +158,11 @@ namespace Lexplosion.Logic.Management
                     return InstanceInit.GuardError; 
                 }
 
+                if(BaseFiles.UpdatesCount > 0)
+                {
+                    stagesCount++;
+                }
+
                 if (requiresUpdates || InvalidStruct())
                 {
                     VariableFiles = WithDirectory.CheckNigntworldInstance(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
@@ -164,8 +170,12 @@ namespace Lexplosion.Logic.Management
                     {
                         return InstanceInit.GuardError;
                     }
+
+                    if (VariableFiles.UpdatesCount > 0)
+                    {
+                        stagesCount++;
+                    }
                 }
-                ProgressHandler(5);
 
                 return InstanceInit.Successful;
             }
@@ -177,16 +187,35 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update()
         {
-            ProgressHandler(20);
+            if (stagesCount > 0)
+            {
+                BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
+                {
+                    ProgressHandler(stagesCount, 1, (nowDataCount / totalDataCount) * 100);
+                };
+            }
+            else
+            {
+                BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
+            }
+
+            if(BaseFiles.UpdatesCount > 0)
+            {
+                ProgressHandler(stagesCount, 1, 0);
+            }
+
             List<string> errors_ = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
             List<string> errors = null;
-            ProgressHandler(30);
 
             if (requiresUpdates)
             {
+                if (BaseFiles.UpdatesCount > 0)
+                    ProgressHandler(stagesCount, 2, 0);
+                else
+                    ProgressHandler(stagesCount, 1, 0);
+       
                 errors = WithDirectory.UpdateNightworldInstance(VariableFiles, Manifest, InstanceId, InfoData.id, ref Updates);
             }
-            ProgressHandler(40);
 
             Manifest.data = null;
             Manifest.natives = null;
@@ -204,8 +233,6 @@ namespace Lexplosion.Logic.Management
             {
                 errors = errors_;
             }
-
-            ProgressHandler(100);
 
             InstanceInit result = InstanceInit.Successful;
             if(errors.Count > 0)
