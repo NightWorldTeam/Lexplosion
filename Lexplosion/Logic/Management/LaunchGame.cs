@@ -111,9 +111,8 @@ namespace Lexplosion.Logic.Management
                     if (e.Data != null)
                     {
                         consoleText += e.Data + "\n";
-                        string[] words = e.Data.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        if (words.Length > 1 && words[words.Length - 2] == " LWJGL Version")
+                        if (e.Data.Contains(" LWJGL Version") || e.Data.Contains("Launching target 'fmlclient' with arguments"))
                         {
                             complitedLaunch(instanceId, true);
                             MainWindow.Obj.Dispatcher.Invoke(delegate
