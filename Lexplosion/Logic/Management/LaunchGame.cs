@@ -112,12 +112,12 @@ namespace Lexplosion.Logic.Management
                     {
                         consoleText += e.Data + "\n";
 
-                        if (e.Data.Contains(" LWJGL Version") || e.Data.Contains("Launching target 'fmlclient' with arguments"))
+                        if (e.Data.Contains(" LWJGL Version") || e.Data.Contains("Launching target 'fmlclient' with arguments") || e.Data.Contains("Narrator library for x64 successfully loaded"))
                         {
                             complitedLaunch(instanceId, true);
                             MainWindow.Obj.Dispatcher.Invoke(delegate
                             {
-                                //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
+                                //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed; 
                             });
 
                             if (UserData.settings["hiddenMode"] == "true")
