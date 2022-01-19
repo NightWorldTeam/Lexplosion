@@ -26,6 +26,9 @@ namespace Lexplosion.Logic.Management
         public delegate void ComplitedDownloadDelegate(InstanceInit result, List<string> downloadErrors, bool launchGame);
         public static event ComplitedDownloadDelegate ComplitedDownload;
 
+        public delegate void ComplitedLaunchDelegate(string instanceId, bool successful);
+        public static event ComplitedLaunchDelegate ComplitedLaunch;
+
         public static AuthCode Auth(string login, string password, bool saveUser)
         {
             Dictionary<string, string> response = ToServer.Authorization(login, password);
@@ -178,7 +181,7 @@ namespace Lexplosion.Logic.Management
                     ComplitedDownload(data.InitResult, data.DownloadErrors, true);
 
                     string command = LaunchGame.CreateCommand(initModPack, data, instanceSettings);
-                    LaunchGame.Run(command, initModPack);
+                    LaunchGame.Run(command, initModPack, ComplitedLaunch);
                     DataFilesManager.SaveSettings(UserData.settings);
 
                     /*MainWindow.Obj.Dispatcher.Invoke(delegate {

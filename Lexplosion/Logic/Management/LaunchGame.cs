@@ -68,7 +68,7 @@ namespace Lexplosion.Logic.Management
             return command.Replace(@"\", "/");
         }
 
-        public static bool Run(string command, string instanceId)
+        public static bool Run(string command, string instanceId, ManageLogic.ComplitedLaunchDelegate complitedLaunch)
         {
             process = new Process();
             gameGateway = new Gateway();
@@ -115,6 +115,7 @@ namespace Lexplosion.Logic.Management
 
                         if (words.Length > 1 && words[words.Length - 2] == " LWJGL Version")
                         {
+                            complitedLaunch(instanceId, true);
                             MainWindow.Obj.Dispatcher.Invoke(delegate
                             {
                                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
@@ -161,7 +162,7 @@ namespace Lexplosion.Logic.Management
                         MainWindow.Obj.Dispatcher.Invoke(delegate
                         {
                             //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
-                            MainWindow.Obj.SetMessageBox("Возникла ошибка при запуске игры.");
+                            complitedLaunch(instanceId, false);
 
                             // TODO: перенести это в ConsoleWindow
                             if (!ConsoleWindow.isShow) 
@@ -205,10 +206,7 @@ namespace Lexplosion.Logic.Management
             } 
             catch 
             {
-                MainWindow.Obj.Dispatcher.Invoke(delegate
-                {
-                    MainWindow.Obj.SetMessageBox("Сбой запуска! Не удалось запустить процесс.");
-                });
+                complitedLaunch(instanceId, false);
 
                 gameGateway = null;
                 process = null;
