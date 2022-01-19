@@ -26,6 +26,8 @@ namespace Lexplosion.Gui.Windows
         public Page SelectedPage;
         public LeftPanel LeftPanel;
 
+        public static bool IsGameRun;
+
         public delegate Page CreateObject();
 
         public MainWindow()
@@ -37,6 +39,7 @@ namespace Lexplosion.Gui.Windows
             
             SelectedPage = InstanceContainerPage.obj;
             InitializeLeftMenu();
+            IsGameRun = false;
         }
 
         private void InitializeLeftMenu() 

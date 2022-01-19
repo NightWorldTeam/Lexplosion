@@ -48,6 +48,7 @@ namespace Lexplosion.Gui.UserControls
             Play,
             ProgressBar,
             Update,
+            Close,
             NonSelected
         }
 
@@ -92,8 +93,6 @@ namespace Lexplosion.Gui.UserControls
             };
             SetInstanceProperties(_instanceProperties);
             FormSetup();
-            ManageLogic.ComplitedDownload += InstanceDownloadCompleted;
-            ManageLogic.ComplitedLaunch += InstanceRunCompleted;
         }
 
         private void SetInstanceProperties(InstanceProperties _instanceProperties)
@@ -115,6 +114,12 @@ namespace Lexplosion.Gui.UserControls
         private void FormSetupPlay()
         {
             SetupButtons("upper", MultiButtonProperties.GeometryPlayIcon, -67, "Играть", UpperButtonFunctions.Play, _lowerButtonFunc);
+            SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
+        }
+
+        private void FormSetupExitGame() 
+        {
+            SetupButtons("upper", MultiButtonProperties.GeometryCancelIcon, -67, "Закрыть Игру", UpperButtonFunctions.Close, _lowerButtonFunc);
             SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
         }
 
@@ -176,6 +181,9 @@ namespace Lexplosion.Gui.UserControls
                             UpperButtonToolTip.HorizontalOffset = horizontalOffset;
                             UpperButtonToolTipLable.Content = content;
                         }
+                        else 
+                            InstallProgress.Content = "";
+
                         UpperButtonPath.Data = geometry;
                         UpperButtonToolTip.HorizontalOffset = horizontalOffset;
                         UpperButtonToolTipLable.Content = content;
@@ -212,7 +220,7 @@ namespace Lexplosion.Gui.UserControls
             };
             tag.Click += TagButtonClick;
             return tag;
-        }
+        } 
 
         private void TagButtonClick(object sender, RoutedEventArgs e)
         {
@@ -271,23 +279,27 @@ namespace Lexplosion.Gui.UserControls
         }
 
         private void UpperButtonClick(object sender, MouseButtonEventArgs e)
-        {
-            switch (_upperButtonFunc)
-            {
-                case UpperButtonFunctions.Download:
-                    DownloadInstance();
-                    break;
-                case UpperButtonFunctions.ContinueDownload:
-                    DownloadInstance();
-                    break;
-                case UpperButtonFunctions.Play:
-                    LaunchInstance();
-                    break;
-                case UpperButtonFunctions.ProgressBar:
-                    break;
-                case UpperButtonFunctions.Update:
-                    break;
-            }
+        {   if (!MainWindow.IsGameRun)
+                switch (_upperButtonFunc)
+                {
+                    case UpperButtonFunctions.Download:
+                        DownloadInstance();
+                        break;
+                    case UpperButtonFunctions.ContinueDownload:
+                        DownloadInstance();
+                        break;
+                    case UpperButtonFunctions.Play:
+                        LaunchInstance();
+                        break;
+                    case UpperButtonFunctions.ProgressBar:
+                        break;
+                    case UpperButtonFunctions.Update:
+                        break;
+                    case UpperButtonFunctions.Close:
+                        LaunchGame.KillProcess();
+                        FormSetupPlay();
+                        break;
+                }
         }
 
         private void LowerButtonClick(object sender, MouseButtonEventArgs e)
@@ -348,7 +360,7 @@ namespace Lexplosion.Gui.UserControls
                     _instanceProperties.Name, InstanceSource.Curseforge,
                     "", ModloaderType.None, "", _instanceProperties.Id.ToString()
                 );
-                ManageLogic.UpdateInstance(instanceId, SetDownloadProcent);
+                ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
             }
         }
 
@@ -360,7 +372,8 @@ namespace Lexplosion.Gui.UserControls
             TextBlockInstallStage.Visibility = Visibility.Visible;
             TextBlockInstallStage.Text = "Идет проверка целосности игровых файлов...";
             InstanceProgressBar.Visibility = Visibility.Visible;
-            ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent);
+            ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent, 
+                InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit);
         }
 
         private void PauseInstance()
@@ -382,11 +395,12 @@ namespace Lexplosion.Gui.UserControls
             FormSetupDownload();
             MainWindow.Obj.Dispatcher.Invoke(delegate {
                 Console.WriteLine(String.Format("download --> {0} {1} {2}", stagesCount, stage, procent));
-                if (stage == 0)
+                if (stage == 0 || procent == 0)
                 {
                     // download prepare
+                    TextBlockInstallStage.Text = String.Format("Идёт подготовка к запуску...");
                     InstanceProgressBar.IsIndeterminate = true;
-                    InstallProgress.Visibility = Visibility.Hidden;
+                    InstallProgress.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -403,12 +417,14 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceRunCompleted(string id, bool successful) 
         {
-            MainWindow.Obj.Dispatcher.Invoke(delegate
+            this.Dispatcher.Invoke(delegate
             {
                 InstanceProgressBar.Visibility = Visibility.Collapsed;
                 TextBlockInstallStage.Visibility = Visibility.Hidden;
                 TextBlockOverview.Visibility = Visibility.Visible;
                 TagsBlock.Visibility = Visibility.Visible;
+                MainWindow.IsGameRun = true;
+                FormSetupExitGame(); 
             });
         }
 
@@ -458,6 +474,15 @@ namespace Lexplosion.Gui.UserControls
                 {
                     MessageBox.Show("Error " + result);
                 }
+            });
+        }
+
+        private void InstanceGameExit(string id) 
+        {
+            MainWindow.Obj.Dispatcher.Invoke(delegate
+            {
+                FormSetupPlay();
+                MainWindow.IsGameRun = false;
             });
         }
 
