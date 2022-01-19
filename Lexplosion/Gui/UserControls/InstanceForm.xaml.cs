@@ -105,6 +105,18 @@ namespace Lexplosion.Gui.UserControls
             return _instanceProperties;
         }
 
+        private void FormSetupDownload() 
+        {
+            SetupButtons("upper", null, -160, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
+            SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
+        }
+
+        private void FormSetupPlay() 
+        {
+            SetupButtons("upper", MultiButtonProperties.GeometryPlayIcon, -67, "Играть", UpperButtonFunctions.Play, _lowerButtonFunc);
+            SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
+        }
+
         private void FormSetup()
         {
             /*
@@ -129,26 +141,19 @@ namespace Lexplosion.Gui.UserControls
              * Setup Instance Buttons
              */
             if (_instanceProperties.IsInstalled) 
-            {
-                
-                SetupButtons("upper", MultiButtonProperties.GeometryPlayIcon, -67, "Играть", UpperButtonFunctions.Play, _lowerButtonFunc);
-                SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
-            }
+                FormSetupPlay();
             else
             {
-                if (_instanceProperties.IsDownloadingInstance) 
-                {
-                    SetupButtons("upper", null, -160, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
-                    SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
-                }
+                if (_instanceProperties.IsDownloadingInstance)
+                    FormSetupDownload();
                 else
-                { 
+                {
                     SetupButtons("upper", MultiButtonProperties.GeometryDownloadIcon, -120, "Скачать сборку", UpperButtonFunctions.Download, _lowerButtonFunc);
-                    if (_instanceProperties.IsInstanceAddedToLibrary) 
+                    if (_instanceProperties.IsInstanceAddedToLibrary)
                     {
                         SetupButtons("lower", MultiButtonProperties.GeometryLibraryDelete, -160, "Удалить из библиотеку", _upperButtonFunc, LowerButtonFunctions.DeleteFromLibrary);
                     }
-                    else 
+                    else
                     {
                         SetupButtons("lower", MultiButtonProperties.GeometryLibraryAdd, -160, "Добавить в библиотеку", _upperButtonFunc, LowerButtonFunctions.AddToLibrary);
                     }
@@ -156,38 +161,40 @@ namespace Lexplosion.Gui.UserControls
             }
         }
 
-
         private void SetupButtons(string type, Geometry geometry, int horizontalOffset, string content, UpperButtonFunctions upperButtonFunctions, LowerButtonFunctions lowerButtonFunctions) 
         {
-            switch (type) 
+            MainWindow.Obj.Dispatcher.Invoke(delegate
             {
-                case "upper":
-                    if (geometry == null) 
-                    {
-                        InstallProgress.Content = "0" + '%';
+                switch (type)
+                {
+                    case "upper":
+                        if (geometry == null)
+                        {
+                            InstallProgress.Content = "0" + '%';
+                            UpperButtonToolTip.HorizontalOffset = horizontalOffset;
+                            UpperButtonToolTipLable.Content = content;
+                        }
+                        UpperButtonPath.Data = geometry;
                         UpperButtonToolTip.HorizontalOffset = horizontalOffset;
                         UpperButtonToolTipLable.Content = content;
-                    }
-                    UpperButtonPath.Data = geometry;
-                    UpperButtonToolTip.HorizontalOffset = horizontalOffset;
-                    UpperButtonToolTipLable.Content = content;
-                    _upperButtonFunc = upperButtonFunctions;
-                    break;
-                case "lower":
-                    LowerButtonPath.Data = geometry;
-                    LowerButtonToolTip.HorizontalOffset = horizontalOffset;
-                    LowerButtonToolTipLable.Content = content;
-                    if (geometry == MultiButtonProperties.GeometryOpenFolder) 
-                    {
-                        LowerButtonPath.Width = 25;
-                    } 
-                    else 
-                    {
-                        LowerButtonPath.Width = 20;
-                    }
-                    _lowerButtonFunc = lowerButtonFunctions;
-                    break;
-            }
+                        _upperButtonFunc = upperButtonFunctions;
+                        break;
+                    case "lower":
+                        LowerButtonPath.Data = geometry;
+                        LowerButtonToolTip.HorizontalOffset = horizontalOffset;
+                        LowerButtonToolTipLable.Content = content;
+                        if (geometry == MultiButtonProperties.GeometryOpenFolder)
+                        {
+                            LowerButtonPath.Width = 25;
+                        }
+                        else
+                        {
+                            LowerButtonPath.Width = 20;
+                        }
+                        _lowerButtonFunc = lowerButtonFunctions;
+                        break;
+                }
+            });
         }
         
         /*
@@ -370,6 +377,7 @@ namespace Lexplosion.Gui.UserControls
 
         public void SetDownloadProcent(int stagesCount, int stage, int procent)
         {
+            FormSetupDownload();
             MainWindow.Obj.Dispatcher.Invoke(delegate {
                 Console.WriteLine(String.Format("download --> {0} {1} {2}", stagesCount, stage, procent));
                 if (stagesCount == 0)
@@ -381,7 +389,9 @@ namespace Lexplosion.Gui.UserControls
                 }
                 else
                 {
+                    DownloadInstance();
                     InstanceProgressBar.IsIndeterminate = false;
+                    InstanceProgressBar.Visibility = Visibility.Visible;
                     TextBlockInstallStage.Text = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
                 }
 

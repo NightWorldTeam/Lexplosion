@@ -228,8 +228,8 @@ namespace Lexplosion.Logic.Management
                 };
             }
 
-            try
-            {
+            //try
+            //{
                 SetDefaultSettings();
 
                 if (!UserData.settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
@@ -291,11 +291,11 @@ namespace Lexplosion.Logic.Management
                 }
 
                 return data;
-            } 
-            catch 
-            {
-                return Error(InstanceInit.UnknownError);
-            }
+            //} 
+            //catch 
+            //{
+            //    return Error(InstanceInit.UnknownError);
+            //}
         }
 
         public static void KillProcess()
