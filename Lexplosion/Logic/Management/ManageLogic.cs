@@ -99,37 +99,34 @@ namespace Lexplosion.Logic.Management
         {
             ProgressHandler(1, 0, 0);
 
-            Lexplosion.Run.TaskRun(delegate ()
-            {
-                InstanceSource type = UserData.Instances.List[instanceId].Type;
-                IPrototypeInstance instance;
+            InstanceSource type = UserData.Instances.List[instanceId].Type;
+            IPrototypeInstance instance;
 
-                switch (type)
-                {
-                    case InstanceSource.Nightworld:
-                        instance = new NightworldIntance(instanceId, false, ProgressHandler);
-                        break;
-                    case InstanceSource.Local:
-                        instance = new LocalInstance(instanceId, ProgressHandler);
-                        break;
-                    case InstanceSource.Curseforge:
-                        instance = new CurseforgeInstance(instanceId, false, ProgressHandler);
-                        break;
-                    default:
-                        instance = null;
-                        break;
-                }
-                InstanceInit result = instance.Check();
-                if (result == InstanceInit.Successful)
-                {                 
-                    InitData res = instance.Update();
-                    ComplitedDownload(res.InitResult, res.DownloadErrors, false);
-                }
-                else
-                {
-                    ComplitedDownload(result, null, false);
-                }
-            });
+            switch (type)
+            {
+                case InstanceSource.Nightworld:
+                    instance = new NightworldIntance(instanceId, false, ProgressHandler);
+                    break;
+                case InstanceSource.Local:
+                    instance = new LocalInstance(instanceId, ProgressHandler);
+                    break;
+                case InstanceSource.Curseforge:
+                    instance = new CurseforgeInstance(instanceId, false, ProgressHandler);
+                    break;
+                default:
+                    instance = null;
+                    break;
+            }
+            InstanceInit result = instance.Check();
+            if (result == InstanceInit.Successful)
+            {
+                InitData res = instance.Update();
+                ComplitedDownload(res.InitResult, res.DownloadErrors, false);
+            }
+            else
+            {
+                ComplitedDownload(result, null, false);
+            }
         }
 
         public static void СlientManager(string instanceId, ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
@@ -153,28 +150,20 @@ namespace Lexplosion.Logic.Management
                     MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
             }
 
-            Lexplosion.Run.TaskRun(delegate ()
+            Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(instanceId);
+            InitData data = LaunchGame.Initialization(instanceId, instanceSettings, type, ProgressHandler);
+
+            if (data.InitResult == InstanceInit.Successful)
             {
-                Run(instanceId, type, ProgressHandler);
-            });
+                ComplitedDownload(data.InitResult, data.DownloadErrors, true);
 
-            void Run(string initModPack, InstanceSource instype, ProgressHandlerCallback progressHandler)
+                string command = LaunchGame.CreateCommand(instanceId, data, instanceSettings);
+                LaunchGame.Run(command, instanceId, ComplitedLaunch, GameExited);
+                DataFilesManager.SaveSettings(UserData.settings);
+            }
+            else
             {
-                Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(initModPack);
-                InitData data = LaunchGame.Initialization(initModPack, instanceSettings, instype, progressHandler);
-
-                if (data.InitResult == InstanceInit.Successful)
-                {
-                    ComplitedDownload(data.InitResult, data.DownloadErrors, true);
-
-                    string command = LaunchGame.CreateCommand(initModPack, data, instanceSettings);
-                    LaunchGame.Run(command, initModPack, ComplitedLaunch, GameExited);
-                    DataFilesManager.SaveSettings(UserData.settings);
-                }
-                else
-                {
-                    ComplitedDownload(data.InitResult, data.DownloadErrors, false);
-                }
+                ComplitedDownload(data.InitResult, data.DownloadErrors, false);
             }
         }
 
