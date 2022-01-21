@@ -84,7 +84,6 @@ namespace Lexplosion.Gui.Pages.MW
 				var instances = OutsideDataManager.GetInstances(
 					instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 				);
-				Console.WriteLine(instances[0].LocalId);
 
 				RemoveInstanceGridContent();
 				if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);

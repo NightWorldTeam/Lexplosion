@@ -349,29 +349,38 @@ namespace Lexplosion.Gui.UserControls
 
         private void DownloadInstance()
         {
+
             TextBlockOverview.Visibility = Visibility.Hidden;
             TagsBlock.Visibility = Visibility.Hidden;
             TextBlockInstallStage.Visibility = Visibility.Visible;
-
-            InstallProgress.Visibility = Visibility.Visible;
-            SetupButtons("upper", null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
-            SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
+            TextBlockInstallStage.Text = "В очереди...";
             InstanceProgressBar.Visibility = Visibility.Visible;
+            InstanceProgressBar.IsIndeterminate = true;
 
-            if (_instanceProperties.Id != "")
+            TasksManager.AddTask(delegate
             {
-                //MessageBox.Show(1 + " " + _instanceProperties.OutsideInstanceId.ToString());
-                string instanceId = ManageLogic.CreateInstance(
-                    _instanceProperties.Name, InstanceSource.Curseforge,
-                    "", ModloaderType.None, "", _instanceProperties.Id.ToString()
-                );
+                MainWindow.Obj.Dispatcher.Invoke(delegate { 
+                    TextBlockOverview.Visibility = Visibility.Hidden;
+                    TagsBlock.Visibility = Visibility.Hidden;
+                    TextBlockInstallStage.Visibility = Visibility.Visible;
 
-                TasksManager.AddTask(delegate
-                {
-                    ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
+                    InstallProgress.Visibility = Visibility.Visible;
+                    SetupButtons("upper", null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
+                    SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
                 });
-            }
+                if (_instanceProperties.Id != "")
+                {
+                    //MessageBox.Show(1 + " " + _instanceProperties.OutsideInstanceId.ToString());
+                    string instanceId = ManageLogic.CreateInstance(
+                        _instanceProperties.Name, InstanceSource.Curseforge,
+                        "", ModloaderType.None, "", _instanceProperties.Id.ToString()
+                    );
 
+                
+                    ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
+                
+                }
+            });
         }
 
             private void LaunchInstance()
