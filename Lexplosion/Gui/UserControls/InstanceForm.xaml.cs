@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
@@ -364,11 +365,13 @@ namespace Lexplosion.Gui.UserControls
                     _instanceProperties.Name, InstanceSource.Curseforge,
                     "", ModloaderType.None, "", _instanceProperties.Id.ToString()
                 );
+
                 ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
             }
+
         }
 
-        private void LaunchInstance()
+            private void LaunchInstance()
         {
             // TODO: тут тоже отображать скачивание и сюда нужно передавать функцию SetDownloadProcent
             TextBlockOverview.Visibility = Visibility.Hidden;

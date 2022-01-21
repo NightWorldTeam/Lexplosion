@@ -420,6 +420,7 @@
   <ItemGroup>
     <Content Include="DLL\LumiSoft.Net.dll" />
     <Content Include="DLL\NewtonsoftJson.dll" />
+    <Resource Include="launcher_loading.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
