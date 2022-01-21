@@ -301,8 +301,8 @@ namespace Lexplosion.Logic.FileSystem
                 errors = new List<string>();
                 localFiles = new List<string>();
 
-                //try
-                //{
+                try
+                {
                     string tempDir = CreateTempDir();
                     if (File.Exists(tempDir + fileName))
                     {
@@ -379,13 +379,12 @@ namespace Lexplosion.Logic.FileSystem
                     errors.Add("curseforgeManifestError");
 
                     return null;
-                /*}
+                }
                 catch
                 {
-                    MessageBox.Show("cath-");
                     errors.Add("uncnowError");
                     return null;
-                }*/
+                }
             }
         }
 
