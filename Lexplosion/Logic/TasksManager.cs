@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic
 {
-    class TasksManager
+    static class TasksManager
     {
-        private List<ThreadStart> NewTasks = new List<ThreadStart>();
-        private Semaphore NewTasksBlock = new Semaphore(1, 1);
-        private Semaphore priorityChangedBlock = new Semaphore(1, 1);
-        private AutoResetEvent WaitNewTasks = new AutoResetEvent(false);
-        private Thread MainThread;
+        private static List<ThreadStart> NewTasks = new List<ThreadStart>();
+        private static Semaphore NewTasksBlock = new Semaphore(1, 1);
+        private static Semaphore priorityChangedBlock = new Semaphore(1, 1);
+        private static AutoResetEvent WaitNewTasks = new AutoResetEvent(false);
+        private static Thread MainThread;
 
-        private bool work = false;
+        private static bool work = false;
 
-        private List<(int, int)> priorityChanged = new List<(int, int)>();
+        private static List<(int, int)> priorityChanged = new List<(int, int)>();
 
-        public delegate void TaskStatus(int id);
-        public event TaskStatus TaskBegin;
-        public event TaskStatus TaskEnd;
+        public static delegate void TaskStatus(int id);
+        public static event TaskStatus TaskBegin;
+        public static event TaskStatus TaskEnd;
 
-        public int AddTask(ThreadStart ThreadFunc)
+        public static int AddTask(ThreadStart ThreadFunc)
         {
             NewTasksBlock.WaitOne();
             int key = NewTasks.Count;
@@ -34,14 +34,14 @@ namespace Lexplosion.Logic
             return key;
         }
 
-        public void ChangePriority(int id_1, int id_2)
+        public static void ChangePriority(int id_1, int id_2)
         {
             priorityChangedBlock.WaitOne();
             priorityChanged.Add((id_1, id_2));
             priorityChangedBlock.Release();
         }
 
-        public void Init()
+        public static void Init()
         {
             work = true;
             MainThread = new Thread(delegate ()
@@ -87,7 +87,7 @@ namespace Lexplosion.Logic
             MainThread.Start();
         }
 
-        public void Stop()
+        public static void Stop()
         {
             work = false;
             MainThread.Join();
