@@ -742,7 +742,6 @@ namespace Lexplosion.Logic.FileSystem
                         updatesList.Assets.objects[asset] = asstes.objects[asset];
                         updatesList.UpdatesCount++;
                     }
-
                 }
             }
             else

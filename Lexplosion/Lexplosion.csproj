@@ -381,9 +381,6 @@
     <Resource Include="Assets\images\background\authBG.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Logic\dll\NewtonsoftJson.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.6.1 %28x86 и x64%29</ProductName>
@@ -415,17 +412,14 @@
     <Resource Include="Assets\images\icons\non_image.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="launcher_loading.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Logic\dll\LumiSoft.Net.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\images\icons\hide_password.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\icons\visible_password.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="DLL\LumiSoft.Net.dll" />
+    <Content Include="DLL\NewtonsoftJson.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
