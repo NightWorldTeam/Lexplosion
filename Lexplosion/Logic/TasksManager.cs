@@ -19,7 +19,7 @@ namespace Lexplosion.Logic
 
         private static List<(int, int)> priorityChanged = new List<(int, int)>();
 
-        public static delegate void TaskStatus(int id);
+        public delegate void TaskStatus(int id);
         public static event TaskStatus TaskBegin;
         public static event TaskStatus TaskEnd;
 
