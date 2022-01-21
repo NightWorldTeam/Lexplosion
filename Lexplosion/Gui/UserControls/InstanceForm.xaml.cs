@@ -366,7 +366,10 @@ namespace Lexplosion.Gui.UserControls
                     "", ModloaderType.None, "", _instanceProperties.Id.ToString()
                 );
 
-                ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
+                TasksManager.AddTask(delegate
+                {
+                    ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
+                });
             }
 
         }
