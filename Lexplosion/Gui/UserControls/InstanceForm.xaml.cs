@@ -117,7 +117,7 @@ namespace Lexplosion.Gui.UserControls
             SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
         }
 
-        private void FormSetupExitGame() 
+        private void FormSetupExitGame()
         {
             SetupButtons("upper", MultiButtonProperties.GeometryCancelIcon, -67, "Закрыть Игру", UpperButtonFunctions.Close, _lowerButtonFunc);
             SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
@@ -181,7 +181,7 @@ namespace Lexplosion.Gui.UserControls
                             UpperButtonToolTip.HorizontalOffset = horizontalOffset;
                             UpperButtonToolTipLable.Content = content;
                         }
-                        else 
+                        else
                             InstallProgress.Content = "";
 
                         UpperButtonPath.Data = geometry;
@@ -220,7 +220,7 @@ namespace Lexplosion.Gui.UserControls
             };
             tag.Click += TagButtonClick;
             return tag;
-        } 
+        }
 
         private void TagButtonClick(object sender, RoutedEventArgs e)
         {
@@ -398,7 +398,7 @@ namespace Lexplosion.Gui.UserControls
         {
             FormSetupDownload();
             MainWindow.Obj.Dispatcher.Invoke(delegate {
-                if (stage == 0 || procent == 0)
+                if (stage == 0)
                 {
                     // download prepare
                     TextBlockInstallStage.Text = String.Format("Идёт подготовка к запуску...");
@@ -407,18 +407,13 @@ namespace Lexplosion.Gui.UserControls
                 }
                 else
                 {
-                    DownloadInstance();
                     InstanceProgressBar.IsIndeterminate = false;
                     InstanceProgressBar.Visibility = Visibility.Visible;
                     TextBlockInstallStage.Text = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
-                }
 
-                if (stage != 0)
-                {
                     InstanceProgressBar.Value = procent;
                     InstallProgress.Content = procent.ToString() + "%";
                 }
-
             });
         }
 
@@ -431,7 +426,7 @@ namespace Lexplosion.Gui.UserControls
                 TextBlockInstallStage.Visibility = Visibility.Hidden;
                 TextBlockOverview.Visibility = Visibility.Visible;
                 TagsBlock.Visibility = Visibility.Visible;
-                FormSetupExitGame(); 
+                FormSetupExitGame();
             });
         }
 
@@ -484,7 +479,7 @@ namespace Lexplosion.Gui.UserControls
             });
         }
 
-        private void InstanceGameExit(string id) 
+        private void InstanceGameExit(string id)
         {
             MainWindow.Obj.Dispatcher.Invoke(delegate
             {

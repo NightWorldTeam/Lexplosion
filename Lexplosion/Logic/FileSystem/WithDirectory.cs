@@ -15,14 +15,18 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Linq;
 using Lexplosion.Logic.Management;
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using System.Diagnostics;
+using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
     static class WithDirectory
     {
         // TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
+
+        // Делегат для обновления процентов загрузки
+        public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
+
         // этот класс возвращает метод CheckBaseFiles
         public class BaseFilesUpdates
         {
@@ -32,10 +36,10 @@ namespace Lexplosion.Logic.FileSystem
             public bool Assets = false;
 
             public int UpdatesCount = 0;
-            public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
             public ProcentUpdate ProcentUpdateFunc;
         }
 
+        // TODO: тут ссылок 0
         private class LauncherAssets //этот класс нужен для декодирования json
         {
             public int version;
@@ -53,6 +57,337 @@ namespace Lexplosion.Logic.FileSystem
         }
 
         public static string directory;
+
+        public static class NightWorld
+        {
+            public static List<string> UpdateInstance(NightworldIntance.ModpackFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref Dictionary<string, int> updates)
+            {
+                int updatesCount = 0;
+                WebClient wc = new WebClient();
+                string tempDir = CreateTempDir();
+
+                string[] folders;
+                string addr;
+                List<string> errors = new List<string>();
+
+                //скачивание файлов из списка data
+                foreach (string dir in updatesList.Data.Keys)
+                {
+                    foreach (string file in updatesList.Data[dir])
+                    {
+                        folders = file.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (filesList.data[dir].objects[file].url == null)
+                        {
+                            addr = LaunсherSettings.URL.Upload + "modpacks/" + externalId + "/" + dir + "/" + file;
+                        }
+                        else
+                        {
+                            addr = filesList.data[dir].objects[file].url;
+                        }
+
+                        if (!SaveDownloadZip(addr, folders[folders.Length - 1], directory + "/instances/" + instanceId + "/" + dir + "/" + file, tempDir, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size, wc))
+                        {
+                            errors.Add(dir + "/" + file);
+                        }
+                        else
+                        {
+                            updates[dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
+                        }
+
+                        updatesCount++;
+                        updatesList.ProcentUpdateFunc(updatesList.UpdatesCount, updatesCount);
+
+                        // TODO: где-то тут записывать что файл был обновлен, чтобы если загрузка была первана она началась с того же места
+                    }
+                }
+
+                wc.Dispose();
+
+                //удаляем старые файлы
+                foreach (string file in updatesList.OldFiles)
+                {
+                    if (File.Exists(directory + "/instances/" + instanceId + "/" + file))
+                    {
+                        File.Delete(directory + "/instances/" + instanceId + "/" + file);
+                        if (updates.ContainsKey(file))
+                        {
+                            updates.Remove(file);
+
+                            updatesCount++;
+                            updatesList.ProcentUpdateFunc(updatesList.UpdatesCount, updatesCount);
+                        }
+                    }
+                }
+
+                //сохарняем updates
+                SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+
+                Directory.Delete(tempDir, true);
+
+                return errors;
+            }
+
+            public static NightworldIntance.ModpackFilesUpdates CheckInstance(NInstanceManifest filesInfo, string instanceId, ref Dictionary<string, int> updates)
+            {
+                var filesUpdates = new NightworldIntance.ModpackFilesUpdates();
+
+                //Проходимся по списку папок(data) из класса instanceFiles
+                foreach (string dir in filesInfo.data.Keys)
+                {
+                    string folder = directory + "/instances/" + instanceId + "/" + dir;
+
+                    try
+                    {
+                        if (!updates.ContainsKey(dir) || updates[dir] < filesInfo.data[dir].folderVersion) //проверяем версию папки. если она старая - очищаем
+                        {
+                            if (Directory.Exists(folder))
+                            {
+                                Directory.Delete(folder, true);
+                                Directory.CreateDirectory(folder);
+                            }
+
+                            updates[dir] = filesInfo.data[dir].folderVersion;
+                            filesUpdates.UpdatesCount += filesInfo.data[dir].objects.Count;
+                        }
+
+                        // TODO: тут из lastUpdates удалить все файлы из этой папки
+
+                        //отрываем файл с последними обновлениями и записываем туда updates, который уже содержит последнюю версию папки. Папка сейчас будет пустой, поэтому метод Update в любом случае скачает нужные файлы
+                        using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
+                        {
+                            byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
+                            fstream.Write(bytes, 0, bytes.Length);
+                            fstream.Close();
+                        }
+                    }
+                    catch { }
+
+                    if (Directory.Exists(folder))
+                    {
+                        //Получаем список всех файлов в папке
+                        string[] files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+
+                        foreach (string file in files) //проходимся по папке
+                        {
+                            string fileName = file.Replace(folder, "").Remove(0, 1).Replace(@"\", "/");
+
+                            if (filesInfo.data[dir].security) //при включенной защите данной папки удалем левые файлы
+                            {
+                                try
+                                {
+                                    using (FileStream fstream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл на чтение
+                                    {
+                                        byte[] bytes = new byte[fstream.Length];
+                                        fstream.Read(bytes, 0, bytes.Length);
+                                        fstream.Close();
+
+                                        if (filesInfo.data[dir].objects.ContainsKey(fileName)) // проверяем есть ли этот файл в списке
+                                        {
+                                            using (SHA1 sha = new SHA1Managed())
+                                            {
+                                                if (Convert.ToBase64String(sha.ComputeHash(bytes)) != filesInfo.data[dir].objects[fileName].sha1 || bytes.Length != filesInfo.data[dir].objects[fileName].size)
+                                                {
+                                                    File.Delete(file); //удаляем файл, если не сходится хэш или размер
+
+                                                    if (!filesUpdates.Data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
+                                                    {
+                                                        filesUpdates.Data.Add(dir, new List<string>());
+                                                    }
+
+                                                    filesUpdates.Data[dir].Add(fileName); //добавляем файл в список на обновление
+                                                    filesUpdates.UpdatesCount++;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            File.Delete(file);
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    //чтение одного из файлов не удалось, стопаем весь процесс
+                                    filesUpdates.Successful = false; // проверка неудачна
+                                    return filesUpdates;
+                                }
+                            }
+
+                            //сверяем версию файла с его версией в списке, если версия старая, то отправляем файл на обновление
+                            if (filesInfo.data[dir].objects.ContainsKey(fileName))
+                            {
+                                if (!updates.ContainsKey(dir + "/" + fileName) || updates[dir + "/" + fileName] != filesInfo.data[dir].objects[fileName].lastUpdate)
+                                {
+                                    if (!filesUpdates.Data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
+                                    {
+                                        filesUpdates.Data.Add(dir, new List<string>());
+                                        filesUpdates.UpdatesCount++;
+                                    }
+
+                                    if (!filesUpdates.Data[dir].Contains(fileName))
+                                    {
+                                        filesUpdates.Data[dir].Add(fileName);
+                                        filesUpdates.UpdatesCount++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    //ищем отсутвующие файлы
+                    foreach (string file in filesInfo.data[dir].objects.Keys)
+                    {
+
+                        if (!File.Exists(folder + "/" + file))
+                        {
+                            if (!filesUpdates.Data.ContainsKey(dir))
+                            {
+                                filesUpdates.Data.Add(dir, new List<string>());
+                                filesUpdates.UpdatesCount++;
+                            }
+
+                            if (!filesUpdates.Data[dir].Contains(file))
+                            {
+                                filesUpdates.Data[dir].Add(file);
+                                filesUpdates.UpdatesCount++;
+                            }
+                        }
+                    }
+                }
+
+                //ищем старые файлы
+                foreach (string folder in filesInfo.data.Keys)
+                {
+                    foreach (string file in filesInfo.data[folder].oldFiles)
+                    {
+                        try
+                        {
+                            if (File.Exists(directory + "/instances/" + instanceId + "/" + folder + "/" + file))
+                            {
+                                filesUpdates.OldFiles.Add(folder + "/" + file);
+                                filesUpdates.UpdatesCount++;
+                            }
+
+                        }
+                        catch { }
+                    }
+                }
+
+                return filesUpdates;
+            }
+        }
+
+        public static class CurseForge
+        {
+            public struct ProgressFunctions
+            {
+                public ProcentUpdate MainFileDownload;
+                public ProcentUpdate AddonsDownload;
+            }
+
+            public static CurseforgeInstance.InstanceManifest DownloadInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles, ProgressFunctions progressFunctions)
+            {
+                if (localFiles != null)
+                {
+                    // TODO: возможно тут не удалять все файлы, а сначала проверить какие из них нужно удалить, чтобы повторно не скачивать
+                    //удаляем старые файлы
+                    foreach (string file in localFiles)
+                    {
+                        DelFile(directory + "/instances/" + instanceId + file);
+                    }
+                }
+
+                errors = new List<string>();
+                localFiles = new List<string>();
+
+                //try
+                //{
+                    string tempDir = CreateTempDir();
+                    if (File.Exists(tempDir + fileName))
+                    {
+                        File.Delete(tempDir + fileName);
+                    }
+
+                    // скачивание архива
+                    using (WebClient wc = new WebClient())
+                    {
+                        progressFunctions.MainFileDownload(1, 0);
+                        DelFile(tempDir + fileName);
+                        wc.DownloadFile(downloadUrl, tempDir + fileName);
+                        progressFunctions.MainFileDownload(1, 1);
+                    }
+
+                    if (Directory.Exists(tempDir + "dataDownload"))
+                    {
+                        Directory.Delete(tempDir + "dataDownload", true);
+                    }
+
+                    Directory.CreateDirectory(tempDir + "dataDownload");
+                    ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
+                    DelFile(tempDir + fileName);
+
+                    var data = GetFile<CurseforgeInstance.InstanceManifest>(tempDir + "dataDownload/manifest.json");
+
+                    if (data != null)
+                    {
+                        int i = 0;
+                        int addonsCount = data.files.Count;
+                        progressFunctions.AddonsDownload(addonsCount, i);
+
+                        foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
+                        {
+                            Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
+                                CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
+                            if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
+                            {
+                                errors.Add(file.projectID + " " + file.fileID);
+                                return null;
+                            }
+
+                            i++;
+                            progressFunctions.AddonsDownload(addonsCount, i);
+                        }
+
+                        string SourcePath = tempDir + "dataDownload/overrides/";
+                        string DestinationPath = directory + "/instances/" + instanceId + "/";
+
+                        foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
+                        {
+                            Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
+                        }
+
+                        foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
+                        {
+                            File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+                            localFiles.Add(newPath.Replace(SourcePath, "/"));
+                        }
+
+                        if (Directory.Exists(tempDir + "/dataDownload"))
+                        {
+                            Directory.Delete(tempDir + "/dataDownload", true);
+                        }
+
+                        return data;
+                    }
+
+                    if (Directory.Exists(tempDir + "/dataDownload"))
+                    {
+                        Directory.Delete(tempDir + "/dataDownload", true);
+                    }
+
+                    errors.Add("curseforgeManifestError");
+
+                    return null;
+                /*}
+                catch
+                {
+                    MessageBox.Show("cath-");
+                    errors.Add("uncnowError");
+                    return null;
+                }*/
+            }
+        }
 
         public static void Create(string path)
         {
@@ -197,155 +532,6 @@ namespace Lexplosion.Logic.FileSystem
             catch { }
 
             return updates;
-        }
-
-        public static NightworldIntance.ModpackFilesUpdates CheckNigntworldInstance(NInstanceManifest filesInfo, string instanceId, ref Dictionary<string, int> updates)
-        {
-            var filesUpdates = new NightworldIntance.ModpackFilesUpdates();
-
-            //Проходимся по списку папок(data) из класса instanceFiles
-            foreach (string dir in filesInfo.data.Keys)
-            {
-                string folder = directory + "/instances/" + instanceId + "/" + dir;
-
-                try
-                {
-                    if (!updates.ContainsKey(dir) || updates[dir] < filesInfo.data[dir].folderVersion) //проверяем версию папки. если она старая - очищаем
-                    {
-                        if (Directory.Exists(folder))
-                        {
-                            Directory.Delete(folder, true);
-                            Directory.CreateDirectory(folder);
-                        }
-
-                        updates[dir] = filesInfo.data[dir].folderVersion;
-                        filesUpdates.UpdatesCount += filesInfo.data[dir].objects.Count;
-                    }
-
-                    // TODO: тут из lastUpdates удалить все файлы из этой папки
-
-                    //отрываем файл с последними обновлениями и записываем туда updates, который уже содержит последнюю версию папки. Папка сейчас будет пустой, поэтому метод Update в любом случае скачает нужные файлы
-                    using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
-                    {
-                        byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
-                        fstream.Write(bytes, 0, bytes.Length);
-                        fstream.Close();
-                    }
-                }
-                catch { }
-
-                if (Directory.Exists(folder))
-                {
-                    //Получаем список всех файлов в папке
-                    string[] files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
-
-                    foreach (string file in files) //проходимся по папке
-                    {
-                        string fileName = file.Replace(folder, "").Remove(0, 1).Replace(@"\", "/");
-
-                        if (filesInfo.data[dir].security) //при включенной защите данной папки удалем левые файлы
-                        {
-                            try
-                            {
-                                using (FileStream fstream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл на чтение
-                                {
-                                    byte[] bytes = new byte[fstream.Length];
-                                    fstream.Read(bytes, 0, bytes.Length);
-                                    fstream.Close();
-
-                                    if (filesInfo.data[dir].objects.ContainsKey(fileName)) // проверяем есть ли этот файл в списке
-                                    {
-                                        using(SHA1 sha = new SHA1Managed())
-                                        {
-                                            if (Convert.ToBase64String(sha.ComputeHash(bytes)) != filesInfo.data[dir].objects[fileName].sha1 || bytes.Length != filesInfo.data[dir].objects[fileName].size)
-                                            {
-                                                File.Delete(file); //удаляем файл, если не сходится хэш или размер
-
-                                                if (!filesUpdates.Data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
-                                                {
-                                                    filesUpdates.Data.Add(dir, new List<string>());
-                                                }
-
-                                                filesUpdates.Data[dir].Add(fileName); //добавляем файл в список на обновление
-                                                filesUpdates.UpdatesCount++;
-                                            }
-                                        }       
-                                    }
-                                    else
-                                    {
-                                        File.Delete(file);
-                                    }
-                                }
-                            }
-                            catch
-                            {
-                                //чтение одного из файлов не удалось, стопаем весь процесс
-                                filesUpdates.Successful = false; // проверка неудачна
-                                return filesUpdates;
-                            }
-                        }
-
-                        //сверяем версию файла с его версией в списке, если версия старая, то отправляем файл на обновление
-                        if (filesInfo.data[dir].objects.ContainsKey(fileName))
-                        {
-                            if (!updates.ContainsKey(dir + "/" + fileName) || updates[dir + "/" + fileName] != filesInfo.data[dir].objects[fileName].lastUpdate)
-                            {
-                                if (!filesUpdates.Data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
-                                {
-                                    filesUpdates.Data.Add(dir, new List<string>());
-                                    filesUpdates.UpdatesCount++;
-                                }
-
-                                if (!filesUpdates.Data[dir].Contains(fileName))
-                                {
-                                    filesUpdates.Data[dir].Add(fileName);
-                                    filesUpdates.UpdatesCount++;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //ищем отсутвующие файлы
-                foreach (string file in filesInfo.data[dir].objects.Keys)
-                {
-
-                    if (!File.Exists(folder + "/" + file))
-                    {
-                        if (!filesUpdates.Data.ContainsKey(dir))
-                        {
-                            filesUpdates.Data.Add(dir, new List<string>());
-                            filesUpdates.UpdatesCount++;
-                        }    
-
-                        if (!filesUpdates.Data[dir].Contains(file))
-                        {
-                            filesUpdates.Data[dir].Add(file);
-                            filesUpdates.UpdatesCount++;
-                        }
-                    }
-                }
-            }
-
-            //ищем старые файлы
-            foreach (string folder in filesInfo.data.Keys)
-            {
-                foreach (string file in filesInfo.data[folder].oldFiles)
-                {
-                    try
-                    {
-                        if (File.Exists(directory + "/instances/" + instanceId + "/" + folder + "/" + file))
-                        {
-                            filesUpdates.OldFiles.Add(folder + "/" + file);
-                            filesUpdates.UpdatesCount++;
-                        }
-
-                    }
-                    catch { }
-                }
-            }
-
-            return filesUpdates;
         }
 
         // TODO: его вызов обернуть в try
@@ -1014,74 +1200,6 @@ namespace Lexplosion.Logic.FileSystem
             return errors;
         }
 
-        public static List<string> UpdateNightworldInstance(NightworldIntance.ModpackFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref Dictionary<string, int> updates)
-        {
-            int updatesCount = 0;
-            WebClient wc = new WebClient();
-            string tempDir = CreateTempDir();
-
-            string[] folders;
-            string addr;
-            List<string> errors = new List<string>();
-
-            //скачивание файлов из списка data
-            foreach (string dir in updatesList.Data.Keys)
-            {
-                foreach (string file in updatesList.Data[dir])
-                {
-                    folders = file.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (filesList.data[dir].objects[file].url == null)
-                    {
-                        addr = LaunсherSettings.URL.Upload + "modpacks/" + externalId + "/" + dir + "/" + file;
-                    }
-                    else
-                    {
-                        addr = filesList.data[dir].objects[file].url;
-                    }
-
-                    if (!SaveDownloadZip(addr, folders[folders.Length - 1], directory + "/instances/" + instanceId + "/" + dir + "/" + file, tempDir, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size, wc))
-                    {
-                        errors.Add(dir + "/" + file);
-                    }
-                    else
-                    {
-                        updates[dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
-                    }
-
-                    updatesCount++;
-                    updatesList.ProcentUpdateFunc(updatesList.UpdatesCount, updatesCount);
-
-                    // TODO: где-то тут записывать что файл был обновлен, чтобы если загрузка была первана она началась с того же места
-                }
-            }     
-
-            wc.Dispose();
-
-            //удаляем старые файлы
-            foreach (string file in updatesList.OldFiles)
-            {
-                if (File.Exists(directory + "/instances/" + instanceId + "/" + file))
-                {
-                    File.Delete(directory + "/instances/" + instanceId + "/" + file);
-                    if (updates.ContainsKey(file))
-                    {
-                        updates.Remove(file);
-
-                        updatesCount++;
-                        updatesList.ProcentUpdateFunc(updatesList.UpdatesCount, updatesCount);
-                    }
-                }
-            }
-
-            //сохарняем updates
-            SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
-
-            Directory.Delete(tempDir, true);
-
-            return errors;
-        }
-
         public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
         {
             // TODO: удалять временную папку в конце
@@ -1312,101 +1430,6 @@ namespace Lexplosion.Logic.FileSystem
             {
                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
             });
-        }
-
-        public static CurseforgeInstance.InstanceManifest DownloadCurseforgeInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles)
-        {
-            if (localFiles != null)
-            {
-                //удаляем старые файлы
-                foreach (string file in localFiles)
-                {
-                    DelFile(directory + "/instances/" + instanceId + file);
-                }
-            }
-
-            errors = new List<string>();
-            localFiles = new List<string>();
-
-            try
-            {
-                string tempDir = CreateTempDir();
-                if (File.Exists(tempDir + fileName))
-                {
-                    File.Delete(tempDir + fileName);
-                }
-
-                using (WebClient wc = new WebClient())
-                {
-                    DelFile(tempDir + fileName);
-                    wc.DownloadFile(downloadUrl, tempDir + fileName);
-                }
-
-                if (Directory.Exists(tempDir + "dataDownload"))
-                {
-                    Directory.Delete(tempDir + "dataDownload", true);
-                }
-
-                Directory.CreateDirectory(tempDir + "dataDownload");
-                ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
-                DelFile(tempDir + fileName);
-
-                var data = GetFile<CurseforgeInstance.InstanceManifest>(tempDir + "dataDownload/manifest.json");
-
-                if (data != null)
-                {
-                    foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
-                    {
-                        Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result = 
-                            CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
-                        if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
-                        {
-                            errors.Add(file.projectID + " " + file.fileID);
-                            return null;
-                        }
-                    }
-
-                    Console.WriteLine("END MODS");
-
-                    string SourcePath = tempDir + "dataDownload/overrides/";
-                    string DestinationPath = directory + "/instances/" + instanceId + "/";
-
-                    foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
-                    {
-                        Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
-                    }
-
-                    foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
-                    {
-                        File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
-                        localFiles.Add(newPath.Replace(SourcePath, "/"));
-                    }
-
-                    if (Directory.Exists(tempDir + "/dataDownload"))
-                    {
-                        Directory.Delete(tempDir + "/dataDownload", true);
-                    }
-
-                    Console.WriteLine("Return");
-
-                    return data;
-                }
-
-                if (Directory.Exists(tempDir + "/dataDownload"))
-                {
-                    Directory.Delete(tempDir + "/dataDownload", true);
-                }
-
-                errors.Add("curseforgeManifestError");
-
-                return null;
-            }
-            catch
-            {
-                MessageBox.Show("cath-");
-                errors.Add("uncnowError");
-                return null;
-            }
         }
     }
 }

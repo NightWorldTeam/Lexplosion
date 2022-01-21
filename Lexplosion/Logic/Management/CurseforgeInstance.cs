@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Management
 
         public InstanceInit Check()
         {
-            //ProgressHandler(10);
+            ProgressHandler(1, 0, 0);
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
 
@@ -78,8 +78,6 @@ namespace Lexplosion.Logic.Management
             {
                 return InstanceInit.VersionError;
             }
-
-            //ProgressHandler(20);
 
             if (Manifest.version.modloaderVersion != null && Manifest.version.modloaderVersion != "" && Manifest.version.modloaderType != ModloaderType.None)
             {
@@ -185,12 +183,38 @@ namespace Lexplosion.Logic.Management
             });
             
 
-            //ProgressHandler(30);
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
             {
+                var progressFunctions = new WithDirectory.CurseForge.ProgressFunctions
+                {
+                    MainFileDownload = delegate (int totalDataCount, int nowDataCount)
+                    {
+                        if (nowDataCount != 0)
+                        {
+                            ProgressHandler(3, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        }
+                        else
+                        {
+                            ProgressHandler(3, 1, 0);
+                        }
+                    },
+
+                    AddonsDownload = delegate (int totalDataCount, int nowDataCount)
+                    {
+                        if (nowDataCount != 0)
+                        {
+                            ProgressHandler(3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        }
+                        else
+                        {
+                            ProgressHandler(3, 2, 0);
+                        }
+                    }
+                };
+
                 List<string> localFiles = DataFilesManager.GetFile<List<string>>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
-                InstanceManifest manifest = WithDirectory.DownloadCurseforgeInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref localFiles);
+                InstanceManifest manifest = WithDirectory.CurseForge.DownloadInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref localFiles, progressFunctions);
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json", JsonConvert.SerializeObject(localFiles)); // функция DownloadCurseforgeInstance изменила этот список. сохраняем его
 
                 if (error.Count > 0)
@@ -202,7 +226,7 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
-                Console.WriteLine("dfggdfgfddgfdfg");
+                ProgressHandler(3, 3, 0);
 
                 if (!BaseFilesIsCheckd)
                 {
@@ -232,8 +256,9 @@ namespace Lexplosion.Logic.Management
                         }
                     }
 
+                    Console.WriteLine("modLoaderVersion " + modLoaderVersion);
+
                     Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modloader, modLoaderVersion);
-                    Console.WriteLine("dfggdfgfddgfdfg2");
 
                     if (Manifest != null)
                     {
@@ -242,7 +267,6 @@ namespace Lexplosion.Logic.Management
 
                         if (BaseFiles == null)
                         {
-                            //ProgressHandler(97);
                             return new InitData
                             {
                                 InitResult = InstanceInit.GuardError,
@@ -251,21 +275,45 @@ namespace Lexplosion.Logic.Management
                     }
                     else
                     {
-                        //ProgressHandler(99);
                         return new InitData
                         {
                             InitResult = InstanceInit.ServerError,
                         };
                     }
                 }
-                Console.WriteLine("dfggdfgfddgfdfg3");
+
+                if (BaseFiles.UpdatesCount > 0)
+                {
+                    BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
+                    {
+                        ProgressHandler(3, 3, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    };
+                }
+                else
+                {
+                    BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
+                }
+
                 WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
+                ProgressHandler(3, 3, 100);
             }
             else
             {
-                if(BaseFilesIsCheckd)
+                if (BaseFilesIsCheckd)
                 {
+                    if (BaseFiles.UpdatesCount > 0)
+                    {
+                        BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
+                        {
+                            ProgressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        };
+                    }
+                    else
+                    {
+                        BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
+                    }
+
                     WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
                 }
                 else
@@ -278,7 +326,6 @@ namespace Lexplosion.Logic.Management
             }
 
             DataFilesManager.SaveManifest(InstanceId, Manifest);
-            //ProgressHandler(100);
 
             return new InitData
             {

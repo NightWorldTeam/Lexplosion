@@ -164,7 +164,7 @@ namespace Lexplosion.Logic.Management
 
                 if (requiresUpdates || InvalidStruct())
                 {
-                    VariableFiles = WithDirectory.CheckNigntworldInstance(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
+                    VariableFiles = WithDirectory.NightWorld.CheckInstance(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
                     if (!VariableFiles.Successful)
                     {
                         return InstanceInit.GuardError;
@@ -213,7 +213,7 @@ namespace Lexplosion.Logic.Management
                 else
                     ProgressHandler(stagesCount, 1, 0);
        
-                errors = WithDirectory.UpdateNightworldInstance(VariableFiles, Manifest, InstanceId, InfoData.id, ref Updates);
+                errors = WithDirectory.NightWorld.UpdateInstance(VariableFiles, Manifest, InstanceId, InfoData.id, ref Updates);
             }
 
             Manifest.data = null;
