@@ -27,13 +27,25 @@ namespace Lexplosion.Logic.FileSystem
         // Делегат для обновления процентов загрузки
         public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
 
+        public static string directory;
+
+        public struct Assets
+        {
+            public struct AssetFile
+            {
+                public string hash;
+            }
+
+            public Dictionary<string, AssetFile> objects;
+        }
+
         // этот класс возвращает метод CheckBaseFiles
         public class BaseFilesUpdates
         {
             public List<string> Natives = new List<string>();
             public Dictionary<string, LibInfo> Libraries = new Dictionary<string, LibInfo>();
             public bool MinecraftJar = false;
-            public bool Assets = false;
+            public Assets Assets;
 
             public int UpdatesCount = 0;
             public ProcentUpdate ProcentUpdateFunc;
@@ -45,18 +57,6 @@ namespace Lexplosion.Logic.FileSystem
             public int version;
             public Dictionary<string, InstanceAssets> data;
         }
-
-        private struct Assets
-        {
-            public struct AssetFile
-            {
-                public string hash;
-            }
-
-            public Dictionary<string, AssetFile> objects;
-        }
-
-        public static string directory;
 
         public static class NightWorld
         {
@@ -693,12 +693,61 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            //проверяем assets
-            // TODO: сделать нормальное обновление асетсов
-            if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
+            // Проверяем assets
+
+            // Пытаемся получить список всех асетсов из json файла
+            Assets asstes = GetFile<Assets>(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json");
+
+            // Файла нет, или он битый. Перекачиваем его
+            if (asstes.objects == null)
             {
-                updatesList.Assets = true;
-                updatesList.UpdatesCount++;
+                if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
+                {
+                    if (!Directory.Exists(directory + "/assets/indexes"))
+                        Directory.CreateDirectory(directory + "/assets/indexes");
+
+                    using (WebClient wc = new WebClient())
+                    {
+                        try
+                        {
+                            wc.DownloadFile(filesInfo.version.assetsIndexes, directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
+                            // Снова пытаемся получить список всех асетсов из json файла
+                            asstes = GetFile<Assets>(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json");
+                        }
+                        catch { }
+                    }
+                }
+            }
+
+            if (asstes.objects != null) // проверяем не возникла ли ошибка
+            {
+                updatesList.Assets.objects = new Dictionary<string, Assets.AssetFile>();
+
+                foreach (string asset in asstes.objects.Keys)
+                {
+                    string assetHash = asstes.objects[asset].hash;
+                    if (assetHash != null)
+                    {
+                        // проверяем существует ли файл. Если нет - отправляем на обновление
+                        string assetPath = "/" + assetHash.Substring(0, 2);
+                        if (!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
+                        {
+                            updatesList.Assets.objects[asset] = asstes.objects[asset];
+                            updatesList.UpdatesCount++;
+                        }
+                    }
+                    else
+                    {
+                        // С этим файлом возникла ошибка. Добавляем его в список на обновление. Метод обновления законет его в список ошибок
+                        updatesList.Assets.objects[asset] = asstes.objects[asset];
+                        updatesList.UpdatesCount++;
+                    }
+
+                }
+            }
+            else
+            {
+                updatesList.Assets.objects = null;
             }
 
             return updatesList;
@@ -1135,61 +1184,35 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //скачиваем assets
-            if (!Directory.Exists(directory + "/assets"))
-                Directory.CreateDirectory(directory + "/assets");
-
-            if (updateList.Assets)
+            if (updateList.Assets.objects != null)
             {
-                if (!Directory.Exists(directory + "/assets/indexes"))
-                    Directory.CreateDirectory(directory + "/assets/indexes");
-
-                wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
-
-                try
+                foreach (string asset in updateList.Assets.objects.Keys)
                 {
-                    wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json");
-                }
-                catch
-                {
-                    errors.Add("asstes/indexes");
-                }
-
-                // TODO: со скачиванием асетсов разобраться надо. я сейчас не ебу куда тут прцент скачивания пихать.
-                updatesCount++;
-                updateList.ProcentUpdateFunc(updateList.UpdatesCount, updatesCount);
-
-                if (!Directory.Exists(directory + "/assets/objects"))
-                    Directory.CreateDirectory(directory + "/assets/objects");
-
-                Assets asstes = GetFile<Assets>(directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json");
-
-                if (asstes.objects != null)
-                {
-                    foreach (string asset in asstes.objects.Keys)
+                    string assetHash = updateList.Assets.objects[asset].hash;
+                    if (assetHash != null)
                     {
-                        string assetHash = asstes.objects[asset].hash;
-                        if (assetHash != null)
+                        string assetPath = "/" + assetHash.Substring(0, 2);
+                        if (!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
                         {
-                            string assetPath = "/" + assetHash.Substring(0, 2);
-                            if (!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
+                            if (!InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
                             {
-                                if (!InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
-                                {
-                                    Console.WriteLine("ERROR:1 " + "http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath);
-                                }
+                                errors.Add("asstes: " + asset);
                             }
-                        }
-                        else
-                        {
-                            errors.Add("asstes/objects");
-                        }
 
+                            updatesCount++;
+                            updateList.ProcentUpdateFunc(updateList.UpdatesCount, updatesCount);
+                        }
                     }
+                    else
+                    {
+                        errors.Add("asstes: " + asset);
+                    }
+
                 }
-                else
-                {
-                    errors.Add("asstes/objects");
-                }
+            }
+            else
+            {
+                errors.Add("asstes/objects");
             }
 
             wc.Dispose();
