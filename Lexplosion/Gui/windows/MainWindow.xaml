@@ -34,10 +34,6 @@
             </Setter>
         </Style>
     </Window.Resources>
-
-    <Window.Triggers>
-    </Window.Triggers>
-
     <Window.Background>
         <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/mainBG.png"/>
     </Window.Background>

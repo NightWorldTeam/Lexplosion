@@ -1,7 +1,4 @@
-﻿using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
-using System;
-using System.Collections.Generic;
+﻿using Lexplosion.Logic.Objects;
 using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Pages.Instance
@@ -11,13 +8,11 @@ namespace Lexplosion.Gui.Pages.Instance
     /// </summary>
     public partial class OverviewPage : Page
     {
-        private InstanceProperties instaceProperties;
+        private InstanceProperties _instaceProperties;
         public OverviewPage(InstanceProperties instanceProperties)
         {
             InitializeComponent();
-            this.instaceProperties = instaceProperties;
+            _instaceProperties = instanceProperties;
         }
-
-
     }
 }

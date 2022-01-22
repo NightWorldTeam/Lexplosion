@@ -17,8 +17,6 @@ namespace Lexplosion.Gui.UserControls
     /// <summary>
     /// Interaction logic for LeftPanel.xaml
     /// </summary>
-
-
     public partial class LeftPanel : UserControl
     {
         enum Functions
@@ -140,9 +138,6 @@ namespace Lexplosion.Gui.UserControls
                 case Functions.Instance:
                     MenuButton0.Click += InstanceSelected;
                     break;
-                case Functions.Vanilla:
-                    MenuButton0.Click += AddVanilla;
-                    break;
             }
 
             switch (_buttons[MenuButton1])
@@ -226,7 +221,10 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceSettingsSelected(object sender, RoutedEventArgs e)
         {
-            //_mainWindow.PagesController<InstanceSettingsPage>("InstanceExportPage", _mainWindow.RightFrame);
+            _mainWindow.PagesController("InstanceSettingsPage", _mainWindow.RightFrame, delegate ()
+            {
+                return new InstanceSettingsPage(_mainWindow);
+            });
             ReselectionButton(MenuButton2);
         }
 
@@ -237,15 +235,6 @@ namespace Lexplosion.Gui.UserControls
                 return new SettingsContainerPage(_mainWindow);
             });
             ReselectionButton(MenuButton3);
-        }
-
-        private void AddVanilla(object sender, RoutedEventArgs e)
-        {
-            _mainWindow.PagesController("AddVanillaPage", _mainWindow.RightFrame, delegate ()
-            {
-                return new AddVanillaPage(_mainWindow);
-            });
-            ReselectionButton(MenuButton0);
         }
 
         private void AddNewInstance(object sender, RoutedEventArgs e)

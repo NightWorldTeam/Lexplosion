@@ -35,7 +35,7 @@ namespace Lexplosion.Gui.InstanceCreator
         private Dictionary<string, List<string>> ForgeVersionsList = new Dictionary<string, List<string>>();
         private Dictionary<string, List<string>> FabricVersionList = new Dictionary<string, List<string>>();
 
-        private RadioButton selectedRadioButton;
+        private RadioButton _selectedRadioButton;
 
         public InstanceCreateMainPage(MainWindow mainWindow)
         {
@@ -57,7 +57,7 @@ namespace Lexplosion.Gui.InstanceCreator
             VersionCB.SelectedIndex = 0;
             ModloaderVersion.Visibility = Visibility.Hidden;
             // устанавливаем отсутсвие modloader
-            selectedRadioButton = NoneSelected;
+            _selectedRadioButton = NoneSelected;
             NoneSelected.IsChecked = true;
         }
 
@@ -145,9 +145,9 @@ namespace Lexplosion.Gui.InstanceCreator
         private void VersionCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var gameVersion = VersionCB.Text;
-            if (selectedRadioButton.Name == "ForgeSelected")
+            if (_selectedRadioButton.Name == "ForgeSelected")
                 SetupModloaderVersions(VersionCB.Text, ModloaderType.Forge);
-            else if (selectedRadioButton.Name == "FabricSelected")
+            else if (_selectedRadioButton.Name == "FabricSelected")
                 SetupModloaderVersions(VersionCB.Text, ModloaderType.Forge);
         }
     }

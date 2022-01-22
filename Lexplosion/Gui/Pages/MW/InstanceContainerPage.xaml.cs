@@ -3,7 +3,6 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,30 +10,30 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.Pages.MW
 {
-	/// <summary>
-	/// Interaction logic for InstanceContainerPage.xaml
-	/// </summary>
-	/// 
+    /// <summary>
+    /// Interaction logic for InstanceContainerPage.xaml
+    /// </summary>
+    /// 
 
 
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	// TODO: Сделать общую страницу контейнер для Library и Catalog.
-	public partial class InstanceContainerPage : Page
+    // TODO: Сделать общую страницу контейнер для Library и Catalog.
+    // TODO: Сделать общую страницу контейнер для Library и Catalog.
+    public partial class InstanceContainerPage : Page
 	{
-		public static InstanceContainerPage obj = null;
+		public static InstanceContainerPage Obj = null;
 
 		private MainWindow _mainWindow;
-		private Paginator paginator;
-		private int pageSize = 10;
+		private Paginator _paginator;
+		private int _pageSize = 10;
 
 		public bool _isInitializeInstance = false;
-		public SearchBox searchBox;
+		public SearchBox SearchBox;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
 			InitializeComponent();
 
-			obj = this;
+			Obj = this;
 			_mainWindow = mainWindow;
 
 			InitializeControlElements();
@@ -54,21 +53,21 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeControlElements()
 		{
-			searchBox = new SearchBox(this)
+			SearchBox = new SearchBox(this)
 			{
 				Margin = new Thickness(0, 14, 0, 0),
 				Width = 400,
 				HorizontalAlignment = HorizontalAlignment.Center
 			};
 
-			paginator = new Paginator(this);
-			paginator.Visibility = Visibility.Hidden;
+			_paginator = new Paginator(this);
+			_paginator.Visibility = Visibility.Hidden;
 
-			Grid.SetRow(searchBox, 0);
-			Grid.SetRow(paginator, 2);
+			Grid.SetRow(SearchBox, 0);
+			Grid.SetRow(_paginator, 2);
 
-			ControlElementsGrid.Children.Add(searchBox);
-			ControlElementsGrid.Children.Add(paginator);
+			ControlElementsGrid.Children.Add(SearchBox);
+			ControlElementsGrid.Children.Add(_paginator);
 		}
 
 		public async void GetInitializeInstance(InstanceSource instanceSource)
@@ -82,7 +81,7 @@ namespace Lexplosion.Gui.Pages.MW
 			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 			Lexplosion.Run.TaskRun(delegate () {
 				var instances = OutsideDataManager.GetInstances(
-					instanceSource, pageSize, pageIndex, ModpacksCategories.All, searchBoxText
+					instanceSource, _pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 				);
 
 				RemoveInstanceGridContent();
@@ -97,7 +96,7 @@ namespace Lexplosion.Gui.Pages.MW
 						ChangeLoadingLabel("", Visibility.Collapsed);
 					}
 				}
-				paginator.ChangePaginatorVisibility(instances.Count, pageSize);
+				_paginator.ChangePaginatorVisibility(instances.Count, _pageSize);
 				ChangeLoadingLabel("", Visibility.Collapsed);
 			});
 		}
@@ -110,9 +109,11 @@ namespace Lexplosion.Gui.Pages.MW
 			{
 				if (InstanceGrid.RowDefinitions.Count < 10)
 					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
-				UserControls.InstanceForm instanceForm = new UserControls.InstanceForm(
-					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.InstanceAssets.author, outsideInstance.InstanceAssets.description,
-					outsideInstance.Id, ToImage(outsideInstance.MainImage), outsideInstance.Categories, outsideInstance.IsInstalled, false);
+				InstanceForm instanceForm = new UserControls.InstanceForm(
+					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.InstanceAssets.author, 
+					outsideInstance.InstanceAssets.description, outsideInstance.Id, ToImage(outsideInstance.MainImage),
+					outsideInstance.Categories, outsideInstance.IsInstalled, false
+				);
 				Grid.SetRow(instanceForm, row);
 				Console.WriteLine(outsideInstance.LocalId + " " + outsideInstance.Id);
 				InstanceGrid.Children.Add(instanceForm);
@@ -121,41 +122,41 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public void ChangePage()
 		{
-			var selectedInstanceSource = (InstanceSource)searchBox.SourceBox.SelectedIndex;
-			var searchBoxText = searchBox.SearchTextBox.Text;
+			var selectedInstanceSource = (InstanceSource)SearchBox.SourceBox.SelectedIndex;
+			var searchBoxText = SearchBox.SearchTextBox.Text;
 
 			ClearGrid();
 			// TODO: Добавить анимация для скрола.
 			ContainerPage_ScrollViewer.ScrollToVerticalOffset(0.0);
 
-			InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
+			InitializeInstance(selectedInstanceSource, _paginator.PageIndex, searchBoxText);
 		}
 
 		public void SearchInstances()
 		{
-			var searchBoxTextLength = searchBox.SearchTextBox.Text.Length;
-			var sourceBoxSelectedIndex = searchBox.SourceBox.SelectedIndex;
-			var searchBoxText = searchBox.SearchTextBox.Text;
+			var searchBoxTextLength = SearchBox.SearchTextBox.Text.Length;
+			var sourceBoxSelectedIndex = SearchBox.SourceBox.SelectedIndex;
+			var searchBoxText = SearchBox.SearchTextBox.Text;
 			var loadingLableText = LoadingLabel.Text;
 			var selectedInstanceSource = (InstanceSource)sourceBoxSelectedIndex;
-			paginator.PageIndex = 0;
-			paginator.ChangePaginatorVisibility(0, 1);
+			_paginator.PageIndex = 0;
+			_paginator.ChangePaginatorVisibility(0, 1);
 			ClearGrid();
 			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
 
 			Lexplosion.Run.TaskRun(delegate ()
 			{
-				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != searchBox.LastSelectedIndex)
+				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != SearchBox.LastSelectedIndex)
 				{
 					_isInitializeInstance = false;
 
-					InitializeInstance(selectedInstanceSource, paginator.PageIndex, searchBoxText);
-					searchBox.LastRequest = searchBoxText;
-					searchBox.LastSelectedIndex = sourceBoxSelectedIndex;
+					InitializeInstance(selectedInstanceSource, _paginator.PageIndex, searchBoxText);
+					SearchBox.LastRequest = searchBoxText;
+					SearchBox.LastSelectedIndex = sourceBoxSelectedIndex;
 				}
 				else
 				{
-					searchBox.LastRequest = searchBoxText;
+					SearchBox.LastRequest = searchBoxText;
 					GetInitializeInstance(selectedInstanceSource);
 				}
 			});

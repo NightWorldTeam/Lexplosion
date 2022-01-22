@@ -14,7 +14,7 @@ namespace Lexplosion.Gui.Pages.MW
     /// </summary>
     public partial class SettingsContainerPage : Page
     {
-        private string sysPath;
+        private string _sysPath;
         private MainWindow _mainWindow;
 
         private List<string> _screenResolutions = new List<string>()
@@ -37,8 +37,8 @@ namespace Lexplosion.Gui.Pages.MW
             WidthTextBox.Text = UserData.settings["windowWidth"];
             HeightTextBox.Text = UserData.settings["windowHeight"];
 
-            sysPath = UserData.settings["gamePath"].Replace("/", @"\");
-            InstanceFolderPath.Text = sysPath;
+            _sysPath = UserData.settings["gamePath"].Replace("/", @"\");
+            InstanceFolderPath.Text = _sysPath;
 
             foreach (string resolution in _screenResolutions)
             {
@@ -50,12 +50,12 @@ namespace Lexplosion.Gui.Pages.MW
         {
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
-                dialog.SelectedPath = sysPath;
+                dialog.SelectedPath = _sysPath;
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    sysPath = dialog.SelectedPath;
-                    InstanceFolderPath.Text = sysPath;
-                    UserData.settings["gamePath"] = sysPath.Replace(@"\", "/");
+                    _sysPath = dialog.SelectedPath;
+                    InstanceFolderPath.Text = _sysPath;
+                    UserData.settings["gamePath"] = _sysPath.Replace(@"\", "/");
                 }
             }
         }
@@ -101,8 +101,8 @@ namespace Lexplosion.Gui.Pages.MW
         private void GameFolderPath_LostFocus(object sender, RoutedEventArgs e)
         {
             UserData.settings["gamePath"] = GameFolderPath.Text.Replace(@"\", "/");
-            sysPath = UserData.settings["gamePath"].Replace("/", @"\");
-            InstanceFolderPath.Text = sysPath;
+            _sysPath = UserData.settings["gamePath"].Replace("/", @"\");
+            InstanceFolderPath.Text = _sysPath;
             DataFilesManager.SaveSettings(UserData.settings);
         }
 

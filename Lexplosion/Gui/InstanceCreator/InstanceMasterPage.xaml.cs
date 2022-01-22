@@ -18,14 +18,8 @@ namespace Lexplosion.Gui.InstanceCreator
             LeftPanel.AddModpackClicked += SetDefaultPage;
         }
 
-        private void Main_Click(object sender, RoutedEventArgs e)
-        {
-            _mainWindow.PagesController("InstanceCreateMainPage", this.BottomSideFrame, delegate ()
-            {
-                return new InstanceCreateMainPage(_mainWindow);
-            });
-        }
-
+        private void Main_Click(object sender, RoutedEventArgs e) => SetDefaultPage();
+        
         private void Mods_Click(object sender, RoutedEventArgs e)
         {
             _mainWindow.PagesController("InstanceCreateModsPage", this.BottomSideFrame, delegate ()

@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,23 +13,23 @@ namespace Lexplosion.Gui.Pages
     public partial class AuthPage : Page
     {
 
-        private string login = "";
-        private string password = "";
+        private string _login;
+        private string _password;
 
         // Переменные для хранения значения водных знаков
-        private const string Login_WaterMark = "Логин";
-        private const string Password_WaterMark = "Пароль";
-        private AuthWindow authWindow = null;
+        private const string _loginWaterMark = "Логин";
+        private const string _passwordWaterMark = "Пароль";
+        private AuthWindow _authWindow = null;
         public AuthPage(AuthWindow aw)
         {
             InitializeComponent();
-            authWindow = aw;
+            _authWindow = aw;
             // Установка водного знака для поля
             if (TBLogin.Text == string.Empty && TBPassword.Password == string.Empty)
             {
                 // Устанавливаем водяные знаки для полей Логин и Пароль
-                TBLogin.Text = Login_WaterMark;
-                PasswordBoxWaterMark.Text = Password_WaterMark;
+                TBLogin.Text = _loginWaterMark;
+                PasswordBoxWaterMark.Text = _passwordWaterMark;
             }
 
             if (UserData.settings != null && UserData.settings.ContainsKey("login") && UserData.settings.ContainsKey("password"))
@@ -40,22 +41,26 @@ namespace Lexplosion.Gui.Pages
             }
         }
 
-        private void Register(object sender, RoutedEventArgs e)
+        private void Register(object sender, RoutedEventArgs e) => _authWindow.ShowRegisterPage();
+
+        private bool CheckAuthData(string str, string waterMark="") 
         {
-            authWindow.ShowRegisterPage();
+            return str != waterMark || str != null || str.Trim() != string.Empty;
         }
 
         private void Auth(object sender, RoutedEventArgs e)
         {
-
             if (!UserData.isAuthorized) //на всякий случай проверяем не авторизирован ли пользователь уже
             {
-                login = TBLogin.Text.ToString();
+                var inputLogin = TBLogin.Text.ToString();
+                var inputPassword = TBPassword.Password.ToString();
 
-                if (TBPassword.Password.ToString() != "" && TBPassword.Password.ToString() != null && TBPassword.Password.ToString().Trim() != string.Empty)
-                    password = TBPassword.Password.ToString();
-
-                if (password == Password_WaterMark || password == null || password.Trim() == string.Empty || login == Login_WaterMark || login == null || login.Trim() == string.Empty)
+                if (CheckAuthData(inputPassword, _passwordWaterMark) && CheckAuthData(inputLogin, _loginWaterMark)) 
+                {
+                    _login = inputLogin;
+                    _password = inputPassword;
+                }
+                else
                 {
                     SetMessageBox("Заполните все поля!");
                     return;
@@ -63,7 +68,7 @@ namespace Lexplosion.Gui.Pages
 
                 var isChecked = SaveMe.IsChecked;
                 Lexplosion.Run.TaskRun(delegate () { 
-                    AuthCode code = ManageLogic.Auth(login, password, isChecked is true);
+                    AuthCode code = ManageLogic.Auth(_login, _password, isChecked is true);
 
                     this.Dispatcher.Invoke(() => { 
                         switch (code)
@@ -83,13 +88,9 @@ namespace Lexplosion.Gui.Pages
                     });
                 });
             }
-
         }
 
-        void ChangeWindow(sbyte status)
-        {
-            authWindow.ShowMainWindow();
-        }
+        void ChangeWindow(sbyte status) => _authWindow.ShowMainWindow();
 
         private void PlayOffline(object sender, RoutedEventArgs e)
         {
@@ -102,7 +103,6 @@ namespace Lexplosion.Gui.Pages
                 UserData.isAuthorized = true;
 
                 ChangeWindow(0);
-
             }
             else
             {
@@ -114,7 +114,7 @@ namespace Lexplosion.Gui.Pages
         private void Login_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            if (textbox.Text == Login_WaterMark)
+            if (textbox.Text == _loginWaterMark)
             {
                 textbox.Text = string.Empty;
                 textbox.GotFocus -= Login_GotFocus;
@@ -152,7 +152,7 @@ namespace Lexplosion.Gui.Pages
             TextBox textbox = (TextBox)sender;
             if (textbox.Text.Trim().Equals(string.Empty))
             {
-                textbox.Text = Login_WaterMark;
+                textbox.Text = _loginWaterMark;
                 textbox.GotFocus += Login_GotFocus;
             }
         }
@@ -163,7 +163,7 @@ namespace Lexplosion.Gui.Pages
             if (passwordBox.Password.Trim().Equals(string.Empty))
             {
                 PasswordBoxWaterMark.Visibility = Visibility.Visible;
-                PasswordBoxWaterMark.Text = Password_WaterMark;
+                PasswordBoxWaterMark.Text = _passwordWaterMark;
                 passwordBox.GotFocus += Password_GotFocus;
             }
         }
@@ -174,14 +174,14 @@ namespace Lexplosion.Gui.Pages
             TextBox passwordVisibile = (TextBox)sender;
             if (passwordVisibile.Text.Trim().Equals(string.Empty))
             {
-                passwordVisibile.Text = Password_WaterMark;
+                passwordVisibile.Text = _passwordWaterMark;
                 passwordVisibile.GotFocus += Login_GotFocus;
             }
         }
 
         private void ShowPassword_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool)ShowPassword.IsChecked)
+            if (ShowPassword.IsChecked.Value)
             {
                 TBPassword.Visibility = Visibility.Visible;
                 PasswordVisible.Visibility = Visibility.Hidden;
@@ -196,10 +196,7 @@ namespace Lexplosion.Gui.Pages
         }
 
         /* <-- Функционал MessageBox --> */
-        private void Okey(object sender, RoutedEventArgs e)
-        {
-            this.GridMessageBox.Visibility = Visibility.Collapsed;
-        }
+        private void Okey(object sender, RoutedEventArgs e) => this.GridMessageBox.Visibility = Visibility.Collapsed;
 
         public void SetMessageBox(string message, string title = "Ошибка")
         {

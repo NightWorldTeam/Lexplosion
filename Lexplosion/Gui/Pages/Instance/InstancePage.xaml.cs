@@ -1,14 +1,9 @@
 ﻿using Lexplosion.Gui.Windows;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.Pages.Instance
 {
@@ -17,17 +12,16 @@ namespace Lexplosion.Gui.Pages.Instance
     /// </summary>
     public partial class InstancePage : Page
     {
-        public static InstancePage obj = null;
+        public static InstancePage Obj = null;
         private MainWindow _mainWindow;
-        private List<ToggleButton> toggleButtons = new List<ToggleButton>();
+        private List<ToggleButton> _toggleButtons = new List<ToggleButton>();
         public InstanceProperties _instanceProperties;
 
 
         public InstancePage(MainWindow mainWindow, InstanceProperties instanceProperties)
         {
             InitializeComponent();
-            obj = this;
-            Console.WriteLine(obj.ToString());
+            Obj = this;
             _mainWindow = mainWindow;
             _instanceProperties = instanceProperties;
             ActivateButtons();
@@ -39,16 +33,13 @@ namespace Lexplosion.Gui.Pages.Instance
             });
         }
 
-        public static InstanceProperties GetInstanceProperties() 
-        {
-            return obj._instanceProperties;   
-        }
+        public static InstanceProperties GetInstanceProperties() => Obj._instanceProperties;   
 
         private void ActivateButtons() 
         {
-            toggleButtons.Add(OverviewToggleButton);
-            toggleButtons.Add(ModsToggleButton);
-            toggleButtons.Add(VersionToggleButton);
+            _toggleButtons.Add(OverviewToggleButton);
+            _toggleButtons.Add(ModsToggleButton);
+            _toggleButtons.Add(VersionToggleButton);
         }
 
         private void ClickedOverview(object sender, RoutedEventArgs e)
@@ -81,7 +72,7 @@ namespace Lexplosion.Gui.Pages.Instance
 
         private void ReselectionButton(ToggleButton selectedButton)
         {
-            foreach (ToggleButton toggleButton in toggleButtons)
+            foreach (ToggleButton toggleButton in _toggleButtons)
             {
                 if (toggleButton != selectedButton)
                 {

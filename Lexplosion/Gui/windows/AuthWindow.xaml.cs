@@ -1,13 +1,6 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Lexplosion.Global;
 using Lexplosion.Gui.Pages;
-using Lexplosion.Logic;
-using Lexplosion.Logic.Management;
 
 namespace Lexplosion.Gui.Windows
 {
@@ -20,19 +13,13 @@ namespace Lexplosion.Gui.Windows
         public AuthWindow()
         {
             InitializeComponent();
+            MouseDown += delegate { try { DragMove(); } catch { } };
             ShowAuthPage();
-            MouseDown += delegate { try { DragMove(); } catch { } };    
         }
 
-        public void ShowAuthPage() 
-        {
-            AuthFrame.Navigate(new AuthPage(this));
-        }
+        public void ShowAuthPage() => AuthFrame.Navigate(new AuthPage(this));
 
-        public void ShowRegisterPage() 
-        {
-            AuthFrame.Navigate(new RegisterPage(this));
-        }
+        public void ShowRegisterPage() => AuthFrame.Navigate(new RegisterPage(this));
 
         public void ShowMainWindow() 
         {

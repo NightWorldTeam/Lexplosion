@@ -11,19 +11,19 @@ namespace Lexplosion.Gui.UserControls
     /// </summary>
     public partial class SearchBox : UserControl
     {
-        public static readonly SolidColorBrush MouseDownColor = new SolidColorBrush(Color.FromArgb(255, 44, 153, 194));
-        public static readonly SolidColorBrush MouseUpColor = new SolidColorBrush(Color.FromArgb(255, 19, 21, 19));
+        private static readonly SolidColorBrush MouseDownColor = new SolidColorBrush(Color.FromArgb(255, 44, 153, 194));
+        private static readonly SolidColorBrush MouseUpColor = new SolidColorBrush(Color.FromArgb(255, 19, 21, 19));
 
-        private InstanceContainerPage page;
-        private bool isForcedIndex = true;
+        private InstanceContainerPage _page;
+        private bool _isForcedIndex = true;
 
         public string LastRequest = "";
         public int LastSelectedIndex = 2;
 
-        public SearchBox(InstanceContainerPage _page)
+        public SearchBox(InstanceContainerPage page)
         {
             InitializeComponent();
-            page = _page;
+            _page = page;
             SourceBox.SelectedIndex = 1;
         }
 
@@ -33,7 +33,7 @@ namespace Lexplosion.Gui.UserControls
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    page.SearchInstances();
+                    _page.SearchInstances();
                 });
             }
         }
@@ -45,8 +45,8 @@ namespace Lexplosion.Gui.UserControls
 
         private void SourceBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isForcedIndex)
-                isForcedIndex = false;
+            if (_isForcedIndex)
+                _isForcedIndex = false;
             else
                 SearchProcess();
         }

@@ -52,7 +52,6 @@ namespace Lexplosion.Gui.UserControls
 
         private void PrevPageButton_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine(PageIndex);
             if (PageIndex > 0) PageIndex--;
         }
 

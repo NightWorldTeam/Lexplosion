@@ -63,6 +63,20 @@ namespace Lexplosion.Gui.UserControls
             NonSelected
         }
 
+        enum ButtonPos 
+        {
+            UPPER,
+            LOWER
+        }
+
+        enum SwitchButtonsType 
+        {
+            DOWNLOAD,
+            DOWNLOADING,
+            PLAY,
+            EXIT,
+        }
+
         private UpperButtonFunctions _upperButtonFunc;
         private LowerButtonFunctions _lowerButtonFunc;
         private InstanceProperties _instanceProperties;
@@ -75,7 +89,7 @@ namespace Lexplosion.Gui.UserControls
             string outsideInstanceId, BitmapImage logo, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
         {
             InitializeComponent();
-            this._mainWindow = mainWindow;
+            _mainWindow = mainWindow;
             InstanceProperties _instanceProperties = new InstanceProperties()
             {
                 Name = instanceTitle,
@@ -93,7 +107,7 @@ namespace Lexplosion.Gui.UserControls
                 IsDownloadingInstance = false
             };
             SetInstanceProperties(_instanceProperties);
-            FormSetup();
+            SwitchButtons();
         }
 
         private void SetInstanceProperties(InstanceProperties _instanceProperties)
@@ -101,107 +115,75 @@ namespace Lexplosion.Gui.UserControls
             this._instanceProperties = _instanceProperties;
         }
 
-        private InstanceProperties GetInstanceProperties()
+        private void SwitchButtons(SwitchButtonsType type)
         {
-            return _instanceProperties;
-        }
-
-        private void FormSetupDownload()
-        {
-            SetupButtons("upper", null, -160, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
-            SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
-        }
-
-        private void FormSetupPlay()
-        {
-            SetupButtons("upper", MultiButtonProperties.GeometryPlayIcon, -67, "Играть", UpperButtonFunctions.Play, _lowerButtonFunc);
-            SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
-        }
-
-        private void FormSetupExitGame()
-        {
-            SetupButtons("upper", MultiButtonProperties.GeometryCancelIcon, -67, "Закрыть Игру", UpperButtonFunctions.Close, _lowerButtonFunc);
-            SetupButtons("lower", MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
-        }
-
-        private void FormSetup()
-        {
-            /*
-             * Setup Basic Data
-             */
-            InstanceLogo_Background.Fill = new ImageBrush(_instanceProperties.Logo);
-            TextBlockTitle.Text = _instanceProperties.Name;
-            TextBlockAuthor.Text = _instanceProperties.InstanceAssets.author;
-            TextBlockOverview.Text = _instanceProperties.InstanceAssets.description;
-
-            /*
-             * Setup Instance Tags
-             */
-            if (_instanceProperties.InstanceTags.Count > 0 && TagsBlock.Children.Count == 0)
-            {
-                foreach (string tag in _instanceProperties.InstanceTags)
-                {
-                    TagsBlock.Children.Add(SetTagsButton(tag));
-                }
+            switch (type) {
+                case SwitchButtonsType.DOWNLOAD:
+                    SetupButtons(ButtonPos.UPPER, MultiButtonProperties.GeometryDownloadIcon, -120, "Скачать сборку", UpperButtonFunctions.Download, _lowerButtonFunc);
+                    if (_instanceProperties.IsInstanceAddedToLibrary)
+                        SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryLibraryDelete, -160, "Удалить из библиотеку", _upperButtonFunc, LowerButtonFunctions.DeleteFromLibrary);
+                    else
+                        SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryLibraryAdd, -160, "Добавить в библиотеку", _upperButtonFunc, LowerButtonFunctions.AddToLibrary);
+                    break;
+                case SwitchButtonsType.DOWNLOADING:
+                    SetupButtons(ButtonPos.UPPER, null, -160, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
+                    SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryPauseIcon, -160, "Отменить скачивание", _upperButtonFunc, LowerButtonFunctions.CancelDownload);
+                    break;
+                case SwitchButtonsType.PLAY:
+                    SetupButtons(ButtonPos.UPPER, MultiButtonProperties.GeometryPlayIcon, -67, "Играть", UpperButtonFunctions.Play, _lowerButtonFunc);
+                    SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
+                    break;
+                case SwitchButtonsType.EXIT:
+                    SetupButtons(ButtonPos.UPPER, MultiButtonProperties.GeometryCancelIcon, -67, "Закрыть Игру", UpperButtonFunctions.Close, _lowerButtonFunc);
+                    SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryOpenFolder, -160, "Открыть папку с игрой", _upperButtonFunc, LowerButtonFunctions.OpenFolder);
+                    break;
             }
+        }
 
-            /*
-             * Setup Instance Buttons
-             */
-            if (_instanceProperties.IsInstalled)
-                FormSetupPlay();
+        private void SwitchButtons()
+        {
+            SetGlobalInstanceAssets();
+
+            if (_instanceProperties.IsInstalled) 
+                SwitchButtons(SwitchButtonsType.PLAY);
             else
             {
                 if (_instanceProperties.IsDownloadingInstance)
-                    FormSetupDownload();
-                else
-                {
-                    SetupButtons("upper", MultiButtonProperties.GeometryDownloadIcon, -120, "Скачать сборку", UpperButtonFunctions.Download, _lowerButtonFunc);
-                    if (_instanceProperties.IsInstanceAddedToLibrary)
-                    {
-                        SetupButtons("lower", MultiButtonProperties.GeometryLibraryDelete, -160, "Удалить из библиотеку", _upperButtonFunc, LowerButtonFunctions.DeleteFromLibrary);
-                    }
-                    else
-                    {
-                        SetupButtons("lower", MultiButtonProperties.GeometryLibraryAdd, -160, "Добавить в библиотеку", _upperButtonFunc, LowerButtonFunctions.AddToLibrary);
-                    }
-                }
+                    SwitchButtons(SwitchButtonsType.DOWNLOADING);
+                else 
+                    SwitchButtons(SwitchButtonsType.DOWNLOAD);
             }
         }
 
-        private void SetupButtons(string type, Geometry geometry, int horizontalOffset, string content, UpperButtonFunctions upperButtonFunctions, LowerButtonFunctions lowerButtonFunctions)
+        private void SetupButtons(ButtonPos pos, Geometry geometry, int horizontalOffset, string content, UpperButtonFunctions upperButtonFunctions, LowerButtonFunctions lowerButtonFunctions)
         {
             MainWindow.Obj.Dispatcher.Invoke(delegate
             {
-                switch (type)
+                switch (pos)
                 {
-                    case "upper":
+                    case ButtonPos.UPPER:
                         if (geometry == null)
                         {
                             InstallProgress.Content = "0" + '%';
                             UpperButtonToolTip.HorizontalOffset = horizontalOffset;
                             UpperButtonToolTipLable.Content = content;
                         }
-                        else
-                            InstallProgress.Content = "";
+                        else InstallProgress.Content = "";
 
                         UpperButtonPath.Data = geometry;
                         UpperButtonToolTip.HorizontalOffset = horizontalOffset;
                         UpperButtonToolTipLable.Content = content;
                         _upperButtonFunc = upperButtonFunctions;
                         break;
-                    case "lower":
+                    case ButtonPos.LOWER:
+                        if (geometry == MultiButtonProperties.GeometryOpenFolder)
+                            LowerButtonPath.Width = 25;
+                        else
+                            LowerButtonPath.Width = 20;
+
                         LowerButtonPath.Data = geometry;
                         LowerButtonToolTip.HorizontalOffset = horizontalOffset;
                         LowerButtonToolTipLable.Content = content;
-                        if (geometry == MultiButtonProperties.GeometryOpenFolder)
-                        {
-                            LowerButtonPath.Width = 25;
-                        }
-                        else
-                        {
-                            LowerButtonPath.Width = 20;
-                        }
                         _lowerButtonFunc = lowerButtonFunctions;
                         break;
                 }
@@ -226,7 +208,6 @@ namespace Lexplosion.Gui.UserControls
         private void TagButtonClick(object sender, RoutedEventArgs e)
         {
             string tagName = ((Button)sender).Name;
-            //MessageBox.Show(tagName);
         }
 
         private void UpperButton_MouseEnter(object sender, MouseEventArgs e)
@@ -290,10 +271,7 @@ namespace Lexplosion.Gui.UserControls
                     DownloadInstance();
                     break;
                 case UpperButtonFunctions.Play:
-                    if (!MainWindow.IsGameRun)
-                    {
-                        LaunchInstance();
-                    }
+                    LaunchInstance();
                     break;
                 case UpperButtonFunctions.ProgressBar:
                     break;
@@ -301,8 +279,7 @@ namespace Lexplosion.Gui.UserControls
                     break;
                 case UpperButtonFunctions.Close:
                     LaunchGame.KillProcess();
-                    MainWindow.IsGameRun = false;
-                    FormSetupPlay();
+                    SwitchButtons(SwitchButtonsType.PLAY);
                     break;
             }
         }
@@ -311,17 +288,12 @@ namespace Lexplosion.Gui.UserControls
         {
             switch (_lowerButtonFunc)
             {
-                case LowerButtonFunctions.AddToLibrary:
-                    //MessageBox.Show("Add To Library");
+                case LowerButtonFunctions.AddToLibrary:   
                     break;
                 case LowerButtonFunctions.DeleteFromLibrary:
-                    //MessageBox.Show("Delete From Library");
                     break;
                 case LowerButtonFunctions.OpenFolder:
                     OpenInstanceFolder();
-                    break;
-                case LowerButtonFunctions.PauseDownload:
-                    PauseInstance();
                     break;
                 case LowerButtonFunctions.CancelDownload:
                     CancelInstanceDownload();
@@ -349,69 +321,69 @@ namespace Lexplosion.Gui.UserControls
 
         private void DownloadInstance()
         {
-
-            TextBlockOverview.Visibility = Visibility.Hidden;
-            TagsBlock.Visibility = Visibility.Hidden;
-            TextBlockInstallStage.Visibility = Visibility.Visible;
-            TextBlockInstallStage.Text = "В очереди...";
-            InstanceProgressBar.Visibility = Visibility.Visible;
-            InstanceProgressBar.IsIndeterminate = true;
-
-            TasksManager.AddTask(delegate
+            if (!MainWindow.IsGameRun)
             {
-                MainWindow.Obj.Dispatcher.Invoke(delegate { 
-                    TextBlockOverview.Visibility = Visibility.Hidden;
-                    TagsBlock.Visibility = Visibility.Hidden;
-                    TextBlockInstallStage.Visibility = Visibility.Visible;
+                TextBlockOverview.Visibility = Visibility.Hidden;
+                TagsBlock.Visibility = Visibility.Hidden;
+                TextBlockInstallStage.Visibility = Visibility.Visible;
+                TextBlockInstallStage.Text = "В очереди...";
+                InstanceProgressBar.Visibility = Visibility.Visible;
+                InstanceProgressBar.IsIndeterminate = true;
 
-                    InstallProgress.Visibility = Visibility.Visible;
-                    SetupButtons("upper", null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
-                    SetupButtons("lower", MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", _upperButtonFunc, LowerButtonFunctions.PauseDownload);
-                });
-                if (_instanceProperties.Id != "")
+                TasksManager.AddTask(delegate
                 {
-                    //MessageBox.Show(1 + " " + _instanceProperties.OutsideInstanceId.ToString());
-                    string instanceId = ManageLogic.CreateInstance(
-                        _instanceProperties.Name, InstanceSource.Curseforge,
-                        "", ModloaderType.None, "", _instanceProperties.Id.ToString()
-                    );
+                    MainWindow.Obj.Dispatcher.Invoke(delegate
+                    {
+                        TextBlockOverview.Visibility = Visibility.Hidden;
+                        TagsBlock.Visibility = Visibility.Hidden;
+                        TextBlockInstallStage.Visibility = Visibility.Visible;
 
-                
-                    ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
-                
-                }
-            });
+                        InstallProgress.Visibility = Visibility.Visible;
+                        SetupButtons(ButtonPos.UPPER, null, -180, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
+                        SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryPauseIcon, -160, "Остановить скачивание", 
+                            _upperButtonFunc, LowerButtonFunctions.PauseDownload);
+                    });
+                    if (_instanceProperties.Id != "")
+                    {
+                        string instanceId = ManageLogic.CreateInstance(
+                            _instanceProperties.Name, InstanceSource.Curseforge,
+                            "", ModloaderType.None, "", _instanceProperties.Id.ToString()
+                        );
+                        ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
+                    }
+                });
+            }
         }
 
-            private void LaunchInstance()
+        private void LaunchInstance()
         {
-            // TODO: тут тоже отображать скачивание и сюда нужно передавать функцию SetDownloadProcent
-            TextBlockOverview.Visibility = Visibility.Hidden;
-            TagsBlock.Visibility = Visibility.Hidden;
-            TextBlockInstallStage.Visibility = Visibility.Visible;
-            TextBlockInstallStage.Text = "Идет проверка целосности игровых файлов...";
-            InstanceProgressBar.Visibility = Visibility.Visible;
-            ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent,
-                InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit);
-        }
-
-        private void PauseInstance()
-        {
-            InstanceProgressBar.Visibility = Visibility.Collapsed;
-            InstallProgress.Visibility = Visibility.Hidden;
-            SetupButtons("upper", MultiButtonProperties.GeometryDownloadIcon, -180, "Продолжить скачивание", UpperButtonFunctions.Download, _lowerButtonFunc);
-            SetupButtons("lower", MultiButtonProperties.GeometryCancelIcon, -160, "Отменить скачивание", _upperButtonFunc, LowerButtonFunctions.CancelDownload);
+            if (!MainWindow.IsGameRun)
+            {
+                // TODO: тут тоже отображать скачивание и сюда нужно передавать функцию SetDownloadProcent
+                // elements hidden
+                TextBlockOverview.Visibility = Visibility.Hidden;
+                TagsBlock.Visibility = Visibility.Hidden;
+                // elements visible
+                TextBlockInstallStage.Visibility = Visibility.Visible;
+                InstanceProgressBar.Visibility = Visibility.Visible;
+                // set content
+                TextBlockInstallStage.Text = "Идет проверка целосности игровых файлов...";
+                // game start
+                ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent,
+                    InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit);
+            }
         }
 
         private void CancelInstanceDownload()
         {
-            FormSetup();
+            // TODO: доделать функцию отмены скачивания.
+            SwitchButtons();
             InstanceProgressBar.Visibility = Visibility.Collapsed;
         }
 
         public void SetDownloadProcent(int stagesCount, int stage, int procent)
         {
-            FormSetupDownload();
+            SwitchButtons(SwitchButtonsType.DOWNLOAD);
             MainWindow.Obj.Dispatcher.Invoke(delegate {
                 if (stage == 0)
                 {
@@ -434,25 +406,21 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceRunCompleted(string id, bool successful)  // TODO: что-то делать если successful == false
         {
-            this.Dispatcher.Invoke(delegate
+            MainWindow.Obj.Dispatcher.Invoke(delegate
             {
-                MainWindow.IsGameRun = true;
+                // elements hidden
                 InstanceProgressBar.Visibility = Visibility.Collapsed;
                 TextBlockInstallStage.Visibility = Visibility.Hidden;
+                // elements visible
                 TextBlockOverview.Visibility = Visibility.Visible;
                 TagsBlock.Visibility = Visibility.Visible;
-                FormSetupExitGame();
+                // change button functions
+                SwitchButtons(SwitchButtonsType.EXIT);
             });
-        }
-
-        private string МетодПоРусски()
-        {
-            return "ЯГоворитьПоРусски";
         }
 
         private void OpenInstanceFolder()
         {
-            //MessageBox.Show(UserData.settings["gamePath"]);
             Process.Start("explorer", @"" + UserData.settings["gamePath"].Replace("/", @"\") + @"\instances\" + _instanceProperties.Id);
         }
 
@@ -463,13 +431,12 @@ namespace Lexplosion.Gui.UserControls
                 if (result == InstanceInit.Successful)
                 {
                     _instanceProperties.IsInstalled = true;
-                    FormSetup();
+                    SwitchButtons();
 
                     // hidden progress bar and TBinstanceStage
                     // showing overview, tagslist.
                     if (IsGameRun)
                     {
-
                         TextBlockInstallStage.Text = "Идёт запуск игры...";
                     }
                     else
@@ -481,16 +448,10 @@ namespace Lexplosion.Gui.UserControls
                     }
                 }
                 else if (result == InstanceInit.DownloadFilesError)
-                {
                     foreach (string file in downloadErrors)
-                    {
                         MessageBox.Show("Error " + file);
-                    }
-                }
                 else
-                {
                     MessageBox.Show("Error " + result);
-                }
             });
         }
 
@@ -498,12 +459,26 @@ namespace Lexplosion.Gui.UserControls
         {
             MainWindow.Obj.Dispatcher.Invoke(delegate
             {
-                FormSetupPlay();
+                SwitchButtons(SwitchButtonsType.PLAY);
                 MainWindow.IsGameRun = false;
             });
         }
 
-        public void SetInstanceAssets(InstanceAssets instanceAssets)
+        private void SetGlobalInstanceAssets() 
+        {
+            InstanceLogo_Background.Fill = new ImageBrush(_instanceProperties.Logo);
+            TextBlockTitle.Text = _instanceProperties.Name;
+            TextBlockAuthor.Text = _instanceProperties.InstanceAssets.author;
+            TextBlockOverview.Text = _instanceProperties.InstanceAssets.description;
+
+            if (_instanceProperties.InstanceTags.Count > 0 && TagsBlock.Children.Count == 0)
+            {
+                foreach (var tag in _instanceProperties.InstanceTags)
+                    TagsBlock.Children.Add(SetTagsButton(tag));
+            }
+        }
+
+        public void SetLocalInstanceAssets(InstanceAssets instanceAssets)
         {
             InstanceLogo_Background.Fill = new ImageBrush(new BitmapImage(new Uri(
                     WithDirectory.directory + "/instances-assets/" + instanceAssets.mainImage)
@@ -511,15 +486,6 @@ namespace Lexplosion.Gui.UserControls
             TextBlockAuthor.Text = instanceAssets.author;
             TextBlockOverview.Text = instanceAssets.description;
             // TODO: КОГДА ПОЯВЯТСЯ ТЕГИ В InstanceAssets
-            /*
-            if (_instanceProperties.InstanceTags.Count > 0 && TagsBlock.Children.Count == 0)
-            {
-                foreach (string tag in _instanceProperties.InstanceTags)
-                {
-                    TagsBlock.Children.Add(SetTagsButton(tag));
-                }
-            }
-            */
         }
     }
 }

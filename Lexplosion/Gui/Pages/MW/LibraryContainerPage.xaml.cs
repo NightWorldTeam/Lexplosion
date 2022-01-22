@@ -8,14 +8,13 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using static Lexplosion.Logic.Objects.CurseforgeInstanceInfo;
 
 namespace Lexplosion.Gui.Pages.MW
 {
-	// <summary>
-	/// Interaction logic for LibraryContainerPage.xaml
-	/// </summary>
-	public partial class LibraryContainerPage : Page
+    // <summary>
+    /// Interaction logic for LibraryContainerPage.xaml
+    /// </summary>
+    public partial class LibraryContainerPage : Page
 	{
 		private MainWindow _mainWindow;
 		private Dictionary<string, UserControls.InstanceForm> instances = new Dictionary<string, InstanceForm>();
@@ -38,21 +37,20 @@ namespace Lexplosion.Gui.Pages.MW
 		*/
 		public void InitializeInstance()
 		{
-			List<string> instanceTags = new List<string>();
-
 			int i = 0;
+			// обновление assets
+			string description;
+			string imageUrl;
+			List<string> instanceTags = new List<string>();
+			
 			Console.WriteLine(String.Join(",", UserData.Instances.List.Keys));
 
 			instances.Clear();
 
 			foreach (string key in UserData.Instances.List.Keys)
 			{
-				string description;
-				string imageUrl;
-				// обновление assets
 				description = "This modpack is not have description...";
 				imageUrl = "pack://application:,,,/assets/images/icons/non_image.png";
-
 				if (UserData.Instances.Assets.ContainsKey(key))
 				{
 					if (UserData.Instances.Assets[key] != null)
@@ -64,9 +62,9 @@ namespace Lexplosion.Gui.Pages.MW
 
 				this.Dispatcher.Invoke(() =>
 				{
-					UserControls.InstanceForm instance = BuildInstanceForm (key, i, imageUrl,
-						UserData.Instances.List[key].Name, "by NightWorld", description, instanceTags);
-
+					UserControls.InstanceForm instance = BuildInstanceForm (
+						key, i, imageUrl, UserData.Instances.List[key].Name, "by NightWorld", description, instanceTags
+					);
 					instances[key] = instance;
 				});
 
@@ -74,12 +72,12 @@ namespace Lexplosion.Gui.Pages.MW
 			}
 		}
 
-		private UserControls.InstanceForm BuildInstanceForm(string id, int row, string logo, string title, string author, string overview, List<string> tags)
+		private InstanceForm BuildInstanceForm(string id, int row, string logo, string title, string author, string overview, List<string> tags)
 		{
 			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
+			var instanceForm = new InstanceForm(_mainWindow, title, id, author, overview, "", new BitmapImage(new Uri(logo)), tags, true, true);
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
-			var instanceForm = new UserControls.InstanceForm(_mainWindow, title, id, author, overview, "", new BitmapImage(new Uri(logo)), tags, true, true);
 			// Добавление в Столбики и Колноки в форме.
 			Grid.SetRow(instanceForm, row);
 			InstanceGrid.Children.Add(instanceForm);
@@ -98,9 +96,9 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public void SetInstanceAssets(string id, InstanceAssets assets) 
 		{
-			this.Dispatcher.Invoke(delegate () 
+			this.Dispatcher.Invoke(delegate
 			{
-				instances[id].SetInstanceAssets(assets);
+				instances[id].SetLocalInstanceAssets(assets);
 			});
 		}
 	}

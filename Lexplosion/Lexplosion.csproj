@@ -104,9 +104,6 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Global.cs" />
-    <Compile Include="Gui\InstanceCreator\AddVanillaPage.xaml.cs">
-      <DependentUpon>AddVanillaPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Gui\InstanceCreator\InstanceCreateMainPage.xaml.cs">
       <DependentUpon>InstanceCreateMainPage.xaml</DependentUpon>
     </Compile>
@@ -124,6 +121,9 @@
     </Compile>
     <Compile Include="Gui\InstanceCreator\InstanceMasterPage.xaml.cs">
       <DependentUpon>InstanceMasterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\InstanceCreator\InstanceSettingsPage.xaml.cs">
+      <DependentUpon>InstanceSettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Pages\AuthPage.xaml.cs">
       <DependentUpon>AuthPage.xaml</DependentUpon>
@@ -185,9 +185,6 @@
     <Compile Include="Gui\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Pages\ModpackSettingsPage.xaml.cs">
-      <DependentUpon>ModpackSettingsPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Gui\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
@@ -224,10 +221,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Gui\InstanceCreator\AddVanillaPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Gui\InstanceCreator\InstanceCreateMainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -249,6 +242,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\InstanceCreator\InstanceMasterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\InstanceCreator\InstanceSettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -329,10 +326,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Windows\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Gui\Pages\ModpackSettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -88,6 +88,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="2" 
+                        x:Name="InstanceRun"
                         Grid.Row="1" 
                         Width="120"
                         Height="30"
