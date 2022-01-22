@@ -37,6 +37,8 @@ namespace Lexplosion.Logic.Network
             DownloadError,
             UncnownAddonType,
             FileVersionError,
+            UrlError,
+            FileNameError,
             UncnownError
         }
 
@@ -173,7 +175,6 @@ namespace Lexplosion.Logic.Network
             }
 
             public CategorySection categorySection;
-            public List<FileData> files;
             public List<LatestFile> gameVersionLatestFiles;
         }
 
@@ -195,6 +196,7 @@ namespace Lexplosion.Logic.Network
 
                 if (fileID == -1) // если fileID == -1 значит нужно установить последнюю версию аддона
                 {
+                    // TODO: тут еещ учитывать тип модлоадера
                     foreach(var latestFile in data.gameVersionLatestFiles) // ищем последнюю версию мода для данной версии майнкрафта
                     {
                         if (latestFile.gameVersion == gameVersion)
@@ -212,7 +214,8 @@ namespace Lexplosion.Logic.Network
                     }
                 }
 
-                answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/files");
+                // получем информацию о файле
+                answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/file/" + fileID);
                 if (answer == null)
                 {
                     return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
@@ -221,47 +224,43 @@ namespace Lexplosion.Logic.Network
                     };
                 }
 
-                data.files = JsonConvert.DeserializeObject<List<ProjectTypeInfo.FileData>>(answer);
+                ProjectTypeInfo.FileData fileData = JsonConvert.DeserializeObject<ProjectTypeInfo.FileData>(answer);
 
-                string fileUrl = "";
-                string fileName = "";
-
-                foreach (ProjectTypeInfo.FileData v in data.files)
+                if (!String.IsNullOrWhiteSpace(fileData.downloadUrl) && !String.IsNullOrWhiteSpace(fileData.fileName))
                 {
-                    if (v.id == fileID && !String.IsNullOrWhiteSpace(v.downloadUrl) && !String.IsNullOrWhiteSpace(v.fileName))
+                    // проверяем имя файла на валидность
+
+                    char[] invalidFileChars = Path.GetInvalidFileNameChars();
+                    bool isInvalidFilename = invalidFileChars.Any(s => fileData.fileName.Contains(s));
+
+                    if (isInvalidFilename)
                     {
-                        char[] invalidFileChars = Path.GetInvalidFileNameChars();
-                        bool isInvalidFilename = invalidFileChars.Any(s => v.fileName.Contains(s));
-
-                        if (isInvalidFilename)
+                        return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
                         {
-                            continue;
-                        }
+                            [projectID.ToString()] = (null, DownloadAddonRes.FileNameError)
+                        };
+                    }
 
-                        fileUrl = v.downloadUrl;
-                        fileName = v.fileName;
+                    string fileUrl = fileData.downloadUrl;
+                    string fileName = fileData.fileName;
 
-                        if (downloadDependencies && v.dependencies.Count > 0)
+                    // скачиваем связанные файлы, если это нужно
+                    if (downloadDependencies && fileData.dependencies.Count > 0)
+                    {
+                        foreach (Dictionary<string, int> value in fileData.dependencies)
                         {
-                            foreach (Dictionary<string, int> value in v.dependencies)
+                            if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId"))
                             {
-                                if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId"))
+                                Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], value.ContainsKey("fileId") ? value["fileId"] : -1, path, true, gameVersion);
+                                foreach (string file in addonsList_.Keys)
                                 {
-                                    Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], value.ContainsKey("fileId") ? value["fileId"] : -1, path, true, gameVersion);
-                                    foreach(string file in addonsList_.Keys)
-                                    {
-                                        addonsList[file] = addonsList_[file];
-                                    }
+                                    addonsList[file] = addonsList_[file];
                                 }
                             }
                         }
-
-                        break;
                     }
-                }
 
-                if (fileUrl != "")
-                {
+                    // определяем папку в которую будет установлен данный аддон
                     string folderName = "";
                     AddonType addonType = (AddonType)data.categorySection.packageType;
                     switch (addonType)
@@ -284,6 +283,7 @@ namespace Lexplosion.Logic.Network
 
                     Console.WriteLine("Installing " + fileName);
 
+                    // устанавливаем
                     if (WithDirectory.InstallFile(fileUrl, fileName, path + folderName))
                     {
                         addonsList[fileName] = (new InstalledAddonInfo
@@ -299,15 +299,17 @@ namespace Lexplosion.Logic.Network
                     {
                         return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
                         {
-                            [fileName] = (null, DownloadAddonRes.FileIdError)
+                            [fileName] = (null, DownloadAddonRes.DownloadError)
                         };
                     }
                 }
-
-                return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                else
                 {
-                    [fileName] = (null, DownloadAddonRes.FileVersionError)
-                };
+                    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                    {
+                        [projectID.ToString()] = (null, DownloadAddonRes.UrlError)
+                    };
+                }
 
             }
             catch

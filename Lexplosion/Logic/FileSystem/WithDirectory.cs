@@ -45,6 +45,7 @@ namespace Lexplosion.Logic.FileSystem
             public List<string> Natives = new List<string>();
             public Dictionary<string, LibInfo> Libraries = new Dictionary<string, LibInfo>();
             public bool MinecraftJar = false;
+            public bool AssetsIndexes = false;
             public Assets Assets;
 
             public int UpdatesCount = 0;
@@ -301,8 +302,8 @@ namespace Lexplosion.Logic.FileSystem
                 errors = new List<string>();
                 localFiles = new List<string>();
 
-                //try
-                //{
+                try
+                {
                     string tempDir = CreateTempDir();
                     if (File.Exists(tempDir + fileName))
                     {
@@ -379,13 +380,12 @@ namespace Lexplosion.Logic.FileSystem
                     errors.Add("curseforgeManifestError");
 
                     return null;
-                /*}
+                }
                 catch
                 {
-                    MessageBox.Show("cath-");
                     errors.Add("uncnowError");
                     return null;
-                }*/
+                }
             }
         }
 
@@ -698,24 +698,20 @@ namespace Lexplosion.Logic.FileSystem
             // Пытаемся получить список всех асетсов из json файла
             Assets asstes = GetFile<Assets>(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json");
 
-            // Файла нет, или он битый. Перекачиваем его
+            // Файла нет, или он битый. Получаем асетсы с сервера
             if (asstes.objects == null)
             {
+                updatesList.AssetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
+                updatesList.UpdatesCount++;
+
                 if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
                 {
-                    if (!Directory.Exists(directory + "/assets/indexes"))
-                        Directory.CreateDirectory(directory + "/assets/indexes");
-
-                    using (WebClient wc = new WebClient())
+                    try
                     {
-                        try
-                        {
-                            wc.DownloadFile(filesInfo.version.assetsIndexes, directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
-                            // Снова пытаемся получить список всех асетсов из json файла
-                            asstes = GetFile<Assets>(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json");
-                        }
-                        catch { }
+                        // Получем асетсы с сервера
+                        asstes = JsonConvert.DeserializeObject<Assets>(ToServer.HttpGet(filesInfo.version.assetsIndexes));
                     }
+                    catch { }
                 }
             }
 
@@ -1183,6 +1179,8 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //скачиваем assets
+
+            // скачиваем файлы objects
             if (updateList.Assets.objects != null)
             {
                 foreach (string asset in updateList.Assets.objects.Keys)
@@ -1212,6 +1210,22 @@ namespace Lexplosion.Logic.FileSystem
             else
             {
                 errors.Add("asstes/objects");
+            }
+
+            //скачиваем json файл
+            if (updateList.AssetsIndexes)
+            {
+                if (!File.Exists(directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json"))
+                {
+                    if (!Directory.Exists(directory + "/assets/indexes"))
+                        Directory.CreateDirectory(directory + "/assets/indexes");
+
+                    try
+                    {
+                        wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
+                    }
+                    catch { }
+                }
             }
 
             wc.Dispose();

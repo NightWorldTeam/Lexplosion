@@ -117,6 +117,7 @@ namespace Lexplosion.Logic.Management
                     instance = null;
                     break;
             }
+
             InstanceInit result = instance.Check();
             if (result == InstanceInit.Successful)
             {
