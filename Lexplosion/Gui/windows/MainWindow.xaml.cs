@@ -15,14 +15,14 @@ namespace Lexplosion.Gui.Windows
         // хранит объект этого окна
         public static MainWindow Obj = null;
 
-        public string instanceTitle;
-        public string instanceId;
-        public string instanceDescription;
-        public string instanceAuthor;
-        public string outsideInstanceId;
-        public Uri instanceLogoPath;
+        public string InstanceTitle;
+        public string InstanceId;
+        public string InstanceDescription;
+        public string InstanceAuthor;
+        public string OutsideInstanceId;
+        public Uri InstanceLogoPath;
 
-        private Dictionary<string, Page> Pages = new Dictionary<string, Page>();
+        private Dictionary<string, Page> _pages = new Dictionary<string, Page>();
         public Page SelectedPage;
         public LeftPanel LeftPanel;
 
@@ -34,21 +34,17 @@ namespace Lexplosion.Gui.Windows
         {
             InitializeComponent();
             MainWindow.Obj = this;
-
             MouseDown += delegate { try { DragMove(); } catch { } };
-            
-            SelectedPage = InstanceContainerPage.obj;
+            SelectedPage = InstanceContainerPage.Obj;
             InitializeLeftMenu();
             IsGameRun = false;
         }
 
         private void InitializeLeftMenu() 
         {
-            LeftPanel leftPanel = new LeftPanel(SelectedPage, LeftPanel.PageType.InstanceContainer, this);
-            LeftPanel = leftPanel;
-            Grid.SetColumn(leftPanel, 0);
-            MainColumns.Children.Add(leftPanel);
-            //this.PagesController<InstanceContainerPage>("InstanceContainerPage", this.RightFrame);
+            LeftPanel = new LeftPanel(SelectedPage, LeftPanel.PageType.InstanceContainer, this);
+            Grid.SetColumn(LeftPanel, 0);
+            MainColumns.Children.Add(LeftPanel);
 
             this.PagesController("InstanceContainerPage", this.RightFrame, delegate ()
             {
@@ -59,29 +55,24 @@ namespace Lexplosion.Gui.Windows
         public void PagesController(string page, Frame frame, CreateObject createObject)
         {
             Page obj;
-            if (!Pages.ContainsKey(page))
+            if (!_pages.ContainsKey(page))
             {
                 obj = createObject();
-                Pages[page] = obj;
+                _pages[page] = obj;
             }
             else
-            {
-                obj = Pages[page];
-            }
+                obj = _pages[page];
 
             frame.Navigate(obj);
         }
 
         /* <-- Функционал MessageBox --> */
-        private void Okey(object sender, RoutedEventArgs e)
+        private void Okay(object sender, RoutedEventArgs e)
         {
 
         }
 
-        public void SetMessageBox(string message, string title = "Ошибка")
-        {
-            MessageBox.Show(message + " " + title);
-        }
+        public void SetMessageBox(string message, string title = "Ошибка") => MessageBox.Show(message + " " + title);
 
         private void CloseWindow(object sender, RoutedEventArgs e) => Run.Exit();
         private void HideWindow(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;
