@@ -7,7 +7,8 @@
       xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="700"
-      Title="OverviewPage">
+      Title="OverviewPage"
+      >
 
     <Page.Resources>
         <!-- Resource brushes -->
@@ -52,5 +53,9 @@
         </Style>
     </Page.Resources>
 
-    <WebBrowser Name="webb"/>
+    <WebBrowser Name="webb" OverridesDefaultStyle="False"
+            ScrollViewer.CanContentScroll="True"
+            ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+            ScrollViewer.VerticalScrollBarVisibility="Hidden">
+    </WebBrowser>
 </Page>

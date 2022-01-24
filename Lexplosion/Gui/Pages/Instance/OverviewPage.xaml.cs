@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Objects;
+﻿using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
 using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Pages.Instance
@@ -13,6 +14,8 @@ namespace Lexplosion.Gui.Pages.Instance
         {
             InitializeComponent();
             _instaceProperties = instanceProperties;
+            var x = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/429793/description");
+            webb.NavigateToString(x);
         }
     }
 }
