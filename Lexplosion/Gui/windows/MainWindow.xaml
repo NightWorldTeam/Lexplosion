@@ -7,7 +7,7 @@
         Width="944" Height="528"
         ResizeMode="NoResize" Icon="pack://application:,,,/Assets/images/icons/nw.ico"
         Title="NightWorld"
-        AllowsTransparency="True" WindowStyle="None">
+        AllowsTransparency="False" WindowStyle="None">
 
     <Window.Resources>
         <!-- Custom Top Menu Style -->
