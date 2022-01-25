@@ -181,8 +181,8 @@ namespace Lexplosion.Logic.Network
         public static Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false, string gameVersion = "")
         {
             var addonsList = new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>();
-            try
-            {
+            //try
+            //{
                 string answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID);
                 if (answer == null)
                 {
@@ -281,7 +281,7 @@ namespace Lexplosion.Logic.Network
                             };
                     }
 
-                    Console.WriteLine("Installing " + fileName);
+                    //Console.WriteLine("Installing " + fileName);
 
                     // устанавливаем
                     if (WithDirectory.InstallFile(fileUrl, fileName, path + folderName))
@@ -291,7 +291,7 @@ namespace Lexplosion.Logic.Network
                             projectID = projectID,
                             fileID = fileID
                         }, DownloadAddonRes.Successful);
-                        Console.WriteLine("EndInstalling " + fileName);
+                        //Console.WriteLine("EndInstalling " + fileName);
 
                         return addonsList;
                     }
@@ -311,14 +311,14 @@ namespace Lexplosion.Logic.Network
                     };
                 }
 
-            }
+            /*}
             catch
             {
                 return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
                 {
                     [projectID.ToString()] = (null, DownloadAddonRes.UncnownError)
                 };
-            }
+            }*/
         }
     }
 }

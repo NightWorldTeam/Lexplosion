@@ -15,34 +15,7 @@ using System.Windows;
 namespace Lexplosion.Logic.Management
 {
     class CurseforgeInstance : IPrototypeInstance
-    {
-        public class InstanceManifest
-        {
-            public class McVersionInfo
-            {
-                public string version;
-                public List<ModLoaders> modLoaders;
-            }
-
-            public class ModLoaders
-            {
-                public string id;
-                public bool primary;
-            }
-
-            public class FileData
-            {
-                public int projectID;
-                public int fileID;
-            }
-
-            public McVersionInfo minecraft;
-            public string name;
-            public string version;
-            public string author;
-            public List<FileData> files;
-        }
-
+    {       
         WithDirectory.BaseFilesUpdates BaseFiles;
 
         VersionManifest Manifest;
@@ -54,7 +27,7 @@ namespace Lexplosion.Logic.Management
 
         private bool BaseFilesIsCheckd = false;
         private bool onlyBase;
-        private static event ManageLogic.ProgressHandlerCallback ProgressHandler;
+        private ManageLogic.ProgressHandlerCallback ProgressHandler;
 
         public CurseforgeInstance(string instanceid, bool onlyBase_, ManageLogic.ProgressHandlerCallback progressHandler)
         {
@@ -214,7 +187,7 @@ namespace Lexplosion.Logic.Management
                 };
 
                 List<string> localFiles = DataFilesManager.GetFile<List<string>>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
-                InstanceManifest manifest = WithDirectory.CurseForge.DownloadInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref localFiles, progressFunctions);
+                WithDirectory.CurseForge.InstanceManifest manifest = WithDirectory.CurseForge.DownloadInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref localFiles, progressFunctions);
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json", JsonConvert.SerializeObject(localFiles)); // функция DownloadCurseforgeInstance изменила этот список. сохраняем его
 
                 if (error.Count > 0)

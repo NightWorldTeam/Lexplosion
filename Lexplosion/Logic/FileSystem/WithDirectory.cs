@@ -61,7 +61,17 @@ namespace Lexplosion.Logic.FileSystem
 
         public static class NightWorld
         {
-            public static List<string> UpdateInstance(NightworldIntance.ModpackFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref Dictionary<string, int> updates)
+            public class ModpackFilesUpdates
+            {
+                public Dictionary<string, List<string>> Data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
+                public List<string> OldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
+                public bool Successful = true; // удачна или неудачна ли проверка
+
+                public int UpdatesCount = 0;
+                public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
+                public ProcentUpdate ProcentUpdateFunc;
+            }
+            public static List<string> UpdateInstance(ModpackFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref Dictionary<string, int> updates)
             {
                 int updatesCount = 0;
                 WebClient wc = new WebClient();
@@ -129,9 +139,9 @@ namespace Lexplosion.Logic.FileSystem
                 return errors;
             }
 
-            public static NightworldIntance.ModpackFilesUpdates CheckInstance(NInstanceManifest filesInfo, string instanceId, ref Dictionary<string, int> updates)
+            public static ModpackFilesUpdates CheckInstance(NInstanceManifest filesInfo, string instanceId, ref Dictionary<string, int> updates)
             {
-                var filesUpdates = new NightworldIntance.ModpackFilesUpdates();
+                var filesUpdates = new ModpackFilesUpdates();
 
                 //Проходимся по списку папок(data) из класса instanceFiles
                 foreach (string dir in filesInfo.data.Keys)
@@ -281,13 +291,40 @@ namespace Lexplosion.Logic.FileSystem
 
         public static class CurseForge
         {
+            public class InstanceManifest
+            {
+                public class McVersionInfo
+                {
+                    public string version;
+                    public List<ModLoaders> modLoaders;
+                }
+
+                public class ModLoaders
+                {
+                    public string id;
+                    public bool primary;
+                }
+
+                public class FileData
+                {
+                    public int projectID;
+                    public int fileID;
+                }
+
+                public McVersionInfo minecraft;
+                public string name;
+                public string version;
+                public string author;
+                public List<FileData> files;
+            }
+
             public struct ProgressFunctions
             {
                 public ProcentUpdate MainFileDownload;
                 public ProcentUpdate AddonsDownload;
             }
 
-            public static CurseforgeInstance.InstanceManifest DownloadInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles, ProgressFunctions progressFunctions)
+            public static InstanceManifest DownloadInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles, ProgressFunctions progressFunctions)
             {
                 if (localFiles != null)
                 {
@@ -302,7 +339,7 @@ namespace Lexplosion.Logic.FileSystem
                 errors = new List<string>();
                 localFiles = new List<string>();
 
-                try
+                //try
                 {
                     string tempDir = CreateTempDir();
                     if (File.Exists(tempDir + fileName))
@@ -328,7 +365,7 @@ namespace Lexplosion.Logic.FileSystem
                     ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
                     DelFile(tempDir + fileName);
 
-                    var data = GetFile<CurseforgeInstance.InstanceManifest>(tempDir + "dataDownload/manifest.json");
+                    var data = GetFile<InstanceManifest>(tempDir + "dataDownload/manifest.json");
 
                     if (data != null)
                     {
@@ -336,19 +373,80 @@ namespace Lexplosion.Logic.FileSystem
                         int addonsCount = data.files.Count;
                         progressFunctions.AddonsDownload(addonsCount, i);
 
-                        foreach (CurseforgeInstance.InstanceManifest.FileData file in data.files)
-                        {
-                            Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
-                                CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
-                            if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось. Добавляем его данные в список ошибок и выходим
-                            {
-                                errors.Add(file.projectID + " " + file.fileID);
-                                return null;
-                            }
+                        int a1 = 0;
+                        int a2 = 0;
+                        int a3 = 0;
 
-                            i++;
-                            progressFunctions.AddonsDownload(addonsCount, i);
+                        int threadsCount = 0;
+
+                        Semaphore sem = new Semaphore(15, 15);
+                        foreach (InstanceManifest.FileData file in data.files)
+                        {
+                            sem.WaitOne();
+                            new Thread(delegate()
+                            {
+                                a1++;
+                                sem.WaitOne();
+                                a3++;
+                                threadsCount++;
+
+                                Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
+                                CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
+
+                                if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
+                                {
+                                    Console.WriteLine("ERROR " + result[result.First().Key].Item2 + " " + result.First().Key);
+
+                                    // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
+                                    if (result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.ProjectIdError || result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.DownloadError)
+                                    {
+                                        int j = 0;
+                                        while (j < 4 && result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                        {
+                                            Console.WriteLine("REPEAT DOWNLOAD");
+                                            result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
+                                            j++;
+                                        }
+
+                                        // все попытки были неудачными. возвращаем ошибку
+                                        if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                        {
+                                            a2++;
+                                            sem.Release();
+                                            //errors.Add(file.projectID + " " + file.fileID);
+                                            return;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        a2++;
+                                        sem.Release();
+                                        //errors.Add(file.projectID + " " + file.fileID);
+                                        return;
+                                    }
+                                }
+
+                                i++;
+                                progressFunctions.AddonsDownload(addonsCount, i);
+
+                                a2++;
+                                threadsCount--;
+                                sem.Release();
+                            }).Start();
+
+                            sem.Release();
                         }
+
+                        Console.WriteLine("ЖДЁМ КОНЦА " + a1 + " " + a2 + " " + a3);
+
+                        do
+                        {
+                            sem.WaitOne();
+
+                        } while (threadsCount > 0);
+
+                        
+                        Console.WriteLine("КОНЕЦ " + a1 + " " + a2 + " " +  a3 + " " + threadsCount);
 
                         string SourcePath = tempDir + "dataDownload/overrides/";
                         string DestinationPath = directory + "/instances/" + instanceId + "/";
@@ -364,28 +462,32 @@ namespace Lexplosion.Logic.FileSystem
                             localFiles.Add(newPath.Replace(SourcePath, "/"));
                         }
 
-                        if (Directory.Exists(tempDir + "/dataDownload"))
+                        try
                         {
-                            Directory.Delete(tempDir + "/dataDownload", true);
+                            if (Directory.Exists(tempDir))
+                            {
+                                Directory.Delete(tempDir, true);
+                            }
                         }
+                        catch { }
 
                         return data;
                     }
 
-                    if (Directory.Exists(tempDir + "/dataDownload"))
+                    if (Directory.Exists(tempDir))
                     {
-                        Directory.Delete(tempDir + "/dataDownload", true);
+                        Directory.Delete(tempDir, true);
                     }
 
                     errors.Add("curseforgeManifestError");
 
                     return null;
                 }
-                catch
+                /*catch
                 {
                     errors.Add("uncnowError");
                     return null;
-                }
+                }*/
             }
         }
 
@@ -438,9 +540,12 @@ namespace Lexplosion.Logic.FileSystem
 
         public static bool InstallFile(string url, string fileName, string path)
         {
+            string tempDir = null;
+
             try
             {
-                string tempDir = CreateTempDir();
+                tempDir = CreateTempDir();
+
                 if (!Directory.Exists(directory + path))
                 {
                     Directory.CreateDirectory(directory + path);
@@ -448,8 +553,8 @@ namespace Lexplosion.Logic.FileSystem
 
                 using (WebClient wc = new WebClient())
                 {
-                    DelFile(tempDir + fileName);
                     wc.DownloadFile(url, tempDir + fileName);
+                    DelFile(directory + "/" + path + "/" + fileName);
                     File.Move(tempDir + fileName, directory + "/" + path + "/" + fileName);
                 }
 
@@ -459,6 +564,12 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch
             {
+                if (tempDir != null)
+                {
+                    DelFile(tempDir + fileName);
+                    DelFile(directory + "/" + path + "/" + fileName);
+                }
+
                 return false;
             }
         }

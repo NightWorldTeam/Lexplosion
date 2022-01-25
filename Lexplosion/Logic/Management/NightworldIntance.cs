@@ -13,19 +13,8 @@ namespace Lexplosion.Logic.Management
 {
     class NightworldIntance : IPrototypeInstance
     {
-        public class ModpackFilesUpdates
-        {
-            public Dictionary<string, List<string>> Data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
-            public List<string> OldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
-            public bool Successful = true; // удачна или неудачна ли проверка
-
-            public int UpdatesCount = 0;
-            public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
-            public ProcentUpdate ProcentUpdateFunc;
-        }
-
         WithDirectory.BaseFilesUpdates BaseFiles;
-        ModpackFilesUpdates VariableFiles;
+        WithDirectory.NightWorld.ModpackFilesUpdates VariableFiles;
 
         NInstanceManifest Manifest;
         Dictionary<string, int> Updates;
