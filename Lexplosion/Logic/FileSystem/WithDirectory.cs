@@ -373,22 +373,17 @@ namespace Lexplosion.Logic.FileSystem
                         int addonsCount = data.files.Count;
                         progressFunctions.AddonsDownload(addonsCount, i);
 
-                        int a1 = 0;
-                        int a2 = 0;
-                        int a3 = 0;
-
-                        int threadsCount = 0;
+                        int filesCount = data.files.Count;
 
                         Semaphore sem = new Semaphore(15, 15);
+                        ManualResetEvent endEvent = new ManualResetEvent(false);
+
                         foreach (InstanceManifest.FileData file in data.files)
                         {
                             sem.WaitOne();
                             new Thread(delegate()
                             {
-                                a1++;
                                 sem.WaitOne();
-                                a3++;
-                                threadsCount++;
 
                                 Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
                                 CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
@@ -411,7 +406,6 @@ namespace Lexplosion.Logic.FileSystem
                                         // все попытки были неудачными. возвращаем ошибку
                                         if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
                                         {
-                                            a2++;
                                             sem.Release();
                                             //errors.Add(file.projectID + " " + file.fileID);
                                             return;
@@ -419,7 +413,6 @@ namespace Lexplosion.Logic.FileSystem
                                     }
                                     else
                                     {
-                                        a2++;
                                         sem.Release();
                                         //errors.Add(file.projectID + " " + file.fileID);
                                         return;
@@ -429,24 +422,21 @@ namespace Lexplosion.Logic.FileSystem
                                 i++;
                                 progressFunctions.AddonsDownload(addonsCount, i);
 
-                                a2++;
-                                threadsCount--;
+                                filesCount--;
+                                if(filesCount == 0)
+                                {
+                                    endEvent.Set();
+                                }
+
                                 sem.Release();
                             }).Start();
 
                             sem.Release();
                         }
 
-                        Console.WriteLine("ЖДЁМ КОНЦА " + a1 + " " + a2 + " " + a3);
-
-                        do
-                        {
-                            sem.WaitOne();
-
-                        } while (threadsCount > 0);
-
-                        
-                        Console.WriteLine("КОНЕЦ " + a1 + " " + a2 + " " +  a3 + " " + threadsCount);
+                        Console.WriteLine("ЖДЁМ КОНЦА ");
+                        endEvent.WaitOne();
+                        Console.WriteLine("КОНЕЦ ");
 
                         string SourcePath = tempDir + "dataDownload/overrides/";
                         string DestinationPath = directory + "/instances/" + instanceId + "/";
