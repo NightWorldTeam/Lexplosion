@@ -7,13 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="120" d:DesignWidth="620">
     <Grid>
-        <Canvas Width="620" Height="120">
-            <Canvas.Background>
+        <Border Width="620" Height="120" CornerRadius="10">
+            <Border.Background>
                 <SolidColorBrush Color="#151719" x:Name="Background"/>
-            </Canvas.Background>
-            <Canvas.Effect>
-                <DropShadowEffect ShadowDepth="3" Color="#151719" Opacity="0.3"/>
-            </Canvas.Effect>
+            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="10" Color="#151719" Opacity="0.1"/>
+            </Border.Effect>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
@@ -27,7 +27,7 @@
                     MouseEnter="InstanceLogo_MouseEnter"
                     MouseLeave="InstanceLogo_MouseLeave"
                     MouseLeftButtonDown="InstanceLogoClick">
-                    <Rectangle x:Name="InstanceLogo_Background"/>
+                    <Border x:Name="InstanceLogo_Background" CornerRadius="10"/>
                     <Label x:Name="InstanceLogo_Text"
                         Foreground="White"
                         FontWeight="Bold"
@@ -103,13 +103,13 @@
                         <RowDefinition Height="60"/>
                     </Grid.RowDefinitions>
                     <Grid x:Name="UpperButton" Grid.Row="0">
-                        <Rectangle
+                        <Border
                             Width="60" 
-                            Height="60">
-                            <Rectangle.Fill>
+                            Height="60" CornerRadius="0,10,0,0">
+                            <Border.Background>
                                 <SolidColorBrush x:Name="UpperButtonBackground"/>
-                            </Rectangle.Fill>
-                        </Rectangle>
+                            </Border.Background>
+                        </Border>
                         <Path x:Name="UpperButtonPath"
                             Stretch="Fill" 
                             Fill="White"
@@ -141,13 +141,13 @@
                         </Rectangle>
                     </Grid>
                     <Grid x:Name="LowerButton" Grid.Row="1">
-                        <Rectangle 
+                        <Border 
                             Width="60" 
-                            Height="60">
-                            <Rectangle.Fill>
+                            Height="60" CornerRadius="0,0,10,0">
+                            <Border.Background>
                                 <SolidColorBrush x:Name="LowerButtonBackground"/>
-                            </Rectangle.Fill>
-                        </Rectangle>
+                            </Border.Background>
+                        </Border>
                         <Path x:Name="LowerButtonPath"
                             Stretch="Fill" 
                             Fill="White"
@@ -175,7 +175,7 @@
                     </Grid>
                 </Grid>
             </Grid>
-        </Canvas>
+        </Border>
         <ProgressBar x:Name="InstanceProgressBar"
             Value="100"
             Minimum="0" 

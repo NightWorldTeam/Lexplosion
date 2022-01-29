@@ -64,14 +64,14 @@ namespace Lexplosion.Logic.Management
 
         public static void DefineListInstances()
         {
-            UserData.Instances.List = DataFilesManager.GetInstancesList();
+            UserData.Instances.Record = DataFilesManager.GetInstancesList();
             UserData.Instances.ExternalIds = new Dictionary<string, string>();
             UserData.Instances.Assets = new Dictionary<string, InstanceAssets>();
 
-            foreach (string instance in UserData.Instances.List.Keys)
+            foreach (string instance in UserData.Instances.Record.Keys)
             {
                 //получаем внешние айдишники всех не локальных модпаков
-                if(UserData.Instances.List[instance].Type != InstanceSource.Local)
+                if(UserData.Instances.Record[instance].Type != InstanceSource.Local)
                 {
                     InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
                     if (data != null && data.id != null)
@@ -99,7 +99,7 @@ namespace Lexplosion.Logic.Management
         {
             ProgressHandler(1, 0, 0);
 
-            InstanceSource type = UserData.Instances.List[instanceId].Type;
+            InstanceSource type = UserData.Instances.Record[instanceId].Type;
             IPrototypeInstance instance;
 
             switch (type)
@@ -132,7 +132,7 @@ namespace Lexplosion.Logic.Management
 
         public static void СlientManager(string instanceId, ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
         {
-            InstanceSource type = UserData.Instances.List[instanceId].Type;
+            InstanceSource type = UserData.Instances.Record[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
             ProgressHandler(1, 0, 0);
@@ -189,7 +189,7 @@ namespace Lexplosion.Logic.Management
                         j++;
                     }
 
-                    if (UserData.Instances.List.ContainsKey(instanceId))
+                    if (UserData.Instances.Record.ContainsKey(instanceId))
                     {
                         string instanceId_ = instanceId;
                         int i = 0;
@@ -201,11 +201,11 @@ namespace Lexplosion.Logic.Management
                             }
                             i++;
                         }
-                        while (UserData.Instances.List.ContainsKey(instanceId_));
+                        while (UserData.Instances.Record.ContainsKey(instanceId_));
                         instanceId = instanceId_;
                     }
                 } 
-                else if (UserData.Instances.List.ContainsKey(instanceId))
+                else if (UserData.Instances.Record.ContainsKey(instanceId))
                 {
                     string instanceId_ = instanceId;
                     int i = 0;
@@ -214,7 +214,7 @@ namespace Lexplosion.Logic.Management
                         instanceId_ = instanceId + "_" + i;
                         i++;
                     }
-                    while (UserData.Instances.List.ContainsKey(instanceId_));
+                    while (UserData.Instances.Record.ContainsKey(instanceId_));
 
                     instanceId = instanceId_;
                 }
@@ -266,7 +266,7 @@ namespace Lexplosion.Logic.Management
                 Type = type
             }, null, externalId);
 
-            DataFilesManager.SaveInstancesList(UserData.Instances.List);
+            DataFilesManager.SaveInstancesList(UserData.Instances.Record);
             Directory.CreateDirectory(WithDirectory.directory + "/instances/" + instanceId);
 
             VersionManifest manifest = new VersionManifest

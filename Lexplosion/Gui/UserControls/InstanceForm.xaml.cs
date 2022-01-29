@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
-using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
@@ -168,8 +167,8 @@ namespace Lexplosion.Gui.UserControls
                             UpperButtonToolTip.HorizontalOffset = horizontalOffset;
                             UpperButtonToolTipLable.Content = content;
                         }
-                        else 
-                        {  
+                        else
+                        {
                             InstallProgress.Content = "";
                             UpperButtonPath.Data = geometry;
                             UpperButtonToolTip.HorizontalOffset = horizontalOffset;
@@ -329,35 +328,41 @@ namespace Lexplosion.Gui.UserControls
 
             if (_instanceProperties.Id != "")
             {
-                var instanceId = ManageLogic.CreateInstance(
-                    _instanceProperties.Name, InstanceSource.Curseforge,
-                    "", ModloaderType.None, "", _instanceProperties.Id.ToString()
-                );
+                if (UserData.Instances.IsExistId(_instanceProperties.Id))
+                {
+                    _instanceProperties.LocalId = UserData.Instances.ExternalIds[_instanceProperties.Id];
+                }
+                else
+                {
+                    _instanceProperties.LocalId = ManageLogic.CreateInstance(
+                        _instanceProperties.Name, InstanceSource.Curseforge,
+                        "", ModloaderType.None, "", _instanceProperties.Id.ToString());
+                }
 
                 Lexplosion.Run.TaskRun(delegate
                 {
-                    ManageLogic.UpdateInstance(instanceId, SetDownloadProcent, InstanceDownloadCompleted);
+                    ManageLogic.UpdateInstance(_instanceProperties.LocalId, SetDownloadProcent, InstanceDownloadCompleted);
                 });
             }
         }
 
         private void LaunchInstance()
         {
-                // TODO: тут тоже отображать скачивание и сюда нужно передавать функцию SetDownloadProcent
-                // elements hidden
-                TextBlockOverview.Visibility = Visibility.Hidden;
-                TagsBlock.Visibility = Visibility.Hidden;
-                // elements visible
-                TextBlockInstallStage.Visibility = Visibility.Visible;
-                InstanceProgressBar.Visibility = Visibility.Visible;
-                // set content
-                TextBlockInstallStage.Text = "Идет проверка целосности игровых файлов...";
-                // game start
-                Lexplosion.Run.TaskRun(delegate
-                {
-                    ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent,
-                        InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit);
-                });
+            // TODO: тут тоже отображать скачивание и сюда нужно передавать функцию SetDownloadProcent
+            // elements hidden
+            TextBlockOverview.Visibility = Visibility.Hidden;
+            TagsBlock.Visibility = Visibility.Hidden;
+            // elements visible
+            TextBlockInstallStage.Visibility = Visibility.Visible;
+            InstanceProgressBar.Visibility = Visibility.Visible;
+            // set content
+            TextBlockInstallStage.Text = "Идет проверка целосности игровых файлов...";
+            // game start
+            Lexplosion.Run.TaskRun(delegate
+            {
+                ManageLogic.СlientManager(_instanceProperties.LocalId, SetDownloadProcent,
+                    InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit);
+            });
         }
 
         private void CancelInstanceDownload()
@@ -370,7 +375,8 @@ namespace Lexplosion.Gui.UserControls
         public void SetDownloadProcent(int stagesCount, int stage, int procent)
         {
             SwitchButtons(SwitchButtonsType.DOWNLOADING);
-            MainWindow.Obj.Dispatcher.Invoke(delegate {
+            MainWindow.Obj.Dispatcher.Invoke(delegate
+            {
                 if (stage == 0)
                 {
                     // download prepare
@@ -439,15 +445,15 @@ namespace Lexplosion.Gui.UserControls
                         MessageBox.Show("Error " + file);
                     DefaultView();
                 }
-                else 
-                { 
+                else
+                {
                     MessageBox.Show("Error " + result);
                     DefaultView();
                 }
             });
         }
 
-        private void DefaultView() 
+        private void DefaultView()
         {
             SwitchButtons(SwitchButtonsType.DOWNLOAD);
             InstanceProgressBar.Visibility = Visibility.Collapsed;
@@ -467,7 +473,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void SetGlobalInstanceAssets()
         {
-            InstanceLogo_Background.Fill = new ImageBrush(_instanceProperties.Logo);
+            InstanceLogo_Background.Background = new ImageBrush(_instanceProperties.Logo);
             TextBlockTitle.Text = _instanceProperties.Name;
             TextBlockAuthor.Text = _instanceProperties.InstanceAssets.author;
             TextBlockOverview.Text = _instanceProperties.InstanceAssets.description;
@@ -481,7 +487,7 @@ namespace Lexplosion.Gui.UserControls
 
         public void SetLocalInstanceAssets(InstanceAssets instanceAssets)
         {
-            InstanceLogo_Background.Fill = new ImageBrush(new BitmapImage(new Uri(
+            InstanceLogo_Background.Background = new ImageBrush(new BitmapImage(new Uri(
                     WithDirectory.directory + "/instances-assets/" + instanceAssets.mainImage)
             ));
             TextBlockAuthor.Text = instanceAssets.author;

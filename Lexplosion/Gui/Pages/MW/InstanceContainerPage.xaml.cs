@@ -10,15 +10,15 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.Pages.MW
 {
-    /// <summary>
-    /// Interaction logic for InstanceContainerPage.xaml
-    /// </summary>
-    /// 
+	/// <summary>
+	/// Interaction logic for InstanceContainerPage.xaml
+	/// </summary>
+	/// 
 
 
-    // TODO: Сделать общую страницу контейнер для Library и Catalog.
-    // TODO: Сделать общую страницу контейнер для Library и Catalog.
-    public partial class InstanceContainerPage : Page
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	// TODO: Сделать общую страницу контейнер для Library и Catalog.
+	public partial class InstanceContainerPage : Page
 	{
 		public static InstanceContainerPage Obj = null;
 
@@ -28,6 +28,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public bool _isInitializeInstance = false;
 		public SearchBox SearchBox;
+		private InstanceLoadingForm _instanceLoadingForm;
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
@@ -78,7 +79,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		private void InitializeInstance(InstanceSource instanceSource, int pageIndex = 0, string searchBoxText = "")
 		{
-			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
+			LoadingForm();
 			Lexplosion.Run.TaskRun(delegate () {
 				var instances = OutsideDataManager.GetInstances(
 					instanceSource, _pageSize, pageIndex, ModpacksCategories.All, searchBoxText
@@ -93,11 +94,10 @@ namespace Lexplosion.Gui.Pages.MW
 						// TODO: размер curseforgeInstances[j].attachments или curseforgeInstances[j].authors может быть равен нулю и тогда будет исключение
 						// TODO: в curseforgeInstances[j].attachments нужно брать не первый элемент, а тот у котрого isDefault стоит на true
 						BuildInstanceForm(instances[j], j);
-						ChangeLoadingLabel("", Visibility.Collapsed);
+						ChangeLoadingLabel();
 					}
 				}
 				_paginator.ChangePaginatorVisibility(instances.Count, _pageSize);
-				ChangeLoadingLabel("", Visibility.Collapsed);
 			});
 		}
 
@@ -105,12 +105,13 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public void BuildInstanceForm(OutsideInstance outsideInstance, int row)
 		{
+			
 			this.Dispatcher.Invoke(() =>
 			{
 				if (InstanceGrid.RowDefinitions.Count < 10)
 					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 				InstanceForm instanceForm = new UserControls.InstanceForm(
-					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.InstanceAssets.author, 
+					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.InstanceAssets.author,
 					outsideInstance.InstanceAssets.description, outsideInstance.Id, ToImage(outsideInstance.MainImage),
 					outsideInstance.Categories, outsideInstance.IsInstalled, false
 				);
@@ -142,7 +143,7 @@ namespace Lexplosion.Gui.Pages.MW
 			_paginator.PageIndex = 0;
 			_paginator.ChangePaginatorVisibility(0, 1);
 			ClearGrid();
-			ChangeLoadingLabel("Идёт загрузка. Пожалуйста подождите...", Visibility.Visible);
+			LoadingForm();
 
 			Lexplosion.Run.TaskRun(delegate ()
 			{
@@ -162,7 +163,7 @@ namespace Lexplosion.Gui.Pages.MW
 			});
 		}
 
-		private void ChangeLoadingLabel(string content, Visibility visibility)
+		private void ChangeLoadingLabel(string content="", Visibility visibility=Visibility.Hidden)
 		{
 			this.Dispatcher.Invoke(() => {
 				LoadingLabel.Text = content;
@@ -176,14 +177,14 @@ namespace Lexplosion.Gui.Pages.MW
 			RemoveInstanceGridRowDefinitions();
 		}
 
-		private void RemoveInstanceGridContent() 
+		private void RemoveInstanceGridContent()
 		{
-			this.Dispatcher.Invoke(() => { 
+			this.Dispatcher.Invoke(() => {
 				if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(1, 10);
 			});
 		}
 
-		private void RemoveInstanceGridRowDefinitions() 
+		private void RemoveInstanceGridRowDefinitions()
 		{
 			this.Dispatcher.Invoke(() => {
 				if (InstanceGrid.RowDefinitions.Count > 2)
@@ -198,6 +199,21 @@ namespace Lexplosion.Gui.Pages.MW
 				Height = new GridLength(height, GridUnitType.Pixel)
 			};
 			return rowDefinition;
+		}
+
+		private void LoadingForm()
+		{
+			this.Dispatcher.Invoke(delegate
+			{
+				for (int i = 0; i < 10; i++)
+				{
+					if (InstanceGrid.RowDefinitions.Count < 10)
+						InstanceGrid.RowDefinitions.Add(GetRowDefinition());
+					_instanceLoadingForm = new InstanceLoadingForm();
+					Grid.SetRow(_instanceLoadingForm, i);
+					InstanceGrid.Children.Add(_instanceLoadingForm);
+				}
+			});
 		}
 	}
 }

@@ -43,11 +43,11 @@ namespace Lexplosion.Gui.Pages.MW
 			string imageUrl;
 			List<string> instanceTags = new List<string>();
 			
-			Console.WriteLine(String.Join(",", UserData.Instances.List.Keys));
+			Console.WriteLine(String.Join(",", UserData.Instances.Record.Keys));
 
 			instances.Clear();
 
-			foreach (string key in UserData.Instances.List.Keys)
+			foreach (string key in UserData.Instances.Record.Keys)
 			{
 				description = "This modpack is not have description...";
 				imageUrl = "pack://application:,,,/assets/images/icons/non_image.png";
@@ -63,7 +63,7 @@ namespace Lexplosion.Gui.Pages.MW
 				this.Dispatcher.Invoke(() =>
 				{
 					UserControls.InstanceForm instance = BuildInstanceForm (
-						key, i, imageUrl, UserData.Instances.List[key].Name, "by NightWorld", description, instanceTags
+						key, i, imageUrl, UserData.Instances.Record[key].Name, "by NightWorld", description, instanceTags
 					);
 					instances[key] = instance;
 				});
