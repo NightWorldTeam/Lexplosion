@@ -154,7 +154,12 @@ namespace Lexplosion.Logic.Management
                 }
                 catch { }
             });
-            
+
+            return new InitData
+            {
+                InitResult = InstanceInit.ServerError,
+            };
+
 
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
