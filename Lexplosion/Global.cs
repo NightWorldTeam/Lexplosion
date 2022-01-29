@@ -27,7 +27,7 @@ namespace Lexplosion.Global
 
         public static class Instances
         {
-            public static Dictionary<string, InstanceParametrs> List; // все сборки
+            public static Dictionary<string, InstanceParametrs> Record; // все сборки
             public static Dictionary<string, InstanceAssets> Assets; // ассетсы всех модпаков
             public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)
 
@@ -38,7 +38,7 @@ namespace Lexplosion.Global
 
             public static void AddInstance(string localId, InstanceParametrs parametrs, InstanceAssets assets, string externalId = "")
             {
-                List[localId] = parametrs;
+                Record[localId] = parametrs;
                 Assets[localId] = assets;
 
                 if(externalId != "" && externalId != null)
@@ -54,6 +54,8 @@ namespace Lexplosion.Global
                 Assets[id] = assets;
                 SetAssetsNofity?.Invoke(id, assets);
             }
+
+            public static bool IsExistId(string id) => ExternalIds.ContainsKey(id);
         }
     }
 

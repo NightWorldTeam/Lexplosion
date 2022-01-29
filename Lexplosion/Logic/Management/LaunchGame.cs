@@ -8,7 +8,6 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using System.Windows;
 
 namespace Lexplosion.Logic.Management
 {

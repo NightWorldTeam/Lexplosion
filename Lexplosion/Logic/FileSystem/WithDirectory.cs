@@ -1401,7 +1401,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 ["gameVersion"] = instanceFile.version.gameVersion,
                 ["description"] = description,
-                ["name"] = UserData.Instances.List[instanceId].Name,
+                ["name"] = UserData.Instances.Record[instanceId].Name,
                 ["author"] = UserData.login,
                 ["modloaderType"] = instanceFile.version.modloaderType.ToString(),
                 ["modloaderVersion"] = instanceFile.version.modloaderVersion,

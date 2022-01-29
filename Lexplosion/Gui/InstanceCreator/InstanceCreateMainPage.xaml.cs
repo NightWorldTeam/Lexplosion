@@ -50,8 +50,8 @@ namespace Lexplosion.Gui.InstanceCreator
             Lexplosion.Run.TaskRun(() => SetupMinecraftVersions());
 
             // получаем все занятые имена модпаков
-            foreach (var instance in UserData.Instances.List.Keys)
-                _unavailableNames.Add(UserData.Instances.List[instance].Name);
+            foreach (var instance in UserData.Instances.Record.Keys)
+                _unavailableNames.Add(UserData.Instances.Record[instance].Name);
             
             // выставляем последнию версию
             VersionCB.SelectedIndex = 0;
