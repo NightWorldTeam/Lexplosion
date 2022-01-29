@@ -10,23 +10,13 @@
       Title="LibraryContainerPage">
 
     <Grid x:Name="MainGrid">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
             <ScrollViewer.Background>
                 <!-- #1313131 0.8-->
                 <!-- "Black" 0.64 -->
                 <SolidColorBrush Color="#121212" Opacity="0.65"/>
             </ScrollViewer.Background>
-            <Grid ShowGridLines="False" x:Name="InstanceGrid" Margin="40, 0, 0, 0">
-                <!-- Grid Border Padding-->
-                <Grid.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="Padding" Value="10" />
-                    </Style>
-                </Grid.Resources>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="600"/>
-                </Grid.ColumnDefinitions>
-            </Grid>
+            <Grid ShowGridLines="False" x:Name="InstanceGrid" Margin="0, 0, 0, 0"/>
         </ScrollViewer>
     </Grid>
 </Page>
