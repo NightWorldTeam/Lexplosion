@@ -434,11 +434,26 @@ namespace Lexplosion.Gui.UserControls
                     }
                 }
                 else if (result == InstanceInit.DownloadFilesError)
+                {
                     foreach (string file in downloadErrors)
                         MessageBox.Show("Error " + file);
-                else
+                    DefaultView();
+                }
+                else 
+                { 
                     MessageBox.Show("Error " + result);
+                    DefaultView();
+                }
             });
+        }
+
+        private void DefaultView() 
+        {
+            SwitchButtons(SwitchButtonsType.DOWNLOAD);
+            InstanceProgressBar.Visibility = Visibility.Collapsed;
+            TextBlockInstallStage.Visibility = Visibility.Hidden;
+            TextBlockOverview.Visibility = Visibility.Visible;
+            TagsBlock.Visibility = Visibility.Visible;
         }
 
         private void InstanceGameExit(string id)
