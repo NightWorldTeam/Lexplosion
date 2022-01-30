@@ -324,7 +324,7 @@ namespace Lexplosion.Gui.UserControls
             {
                 return new InstanceMasterPage(_mainWindow);
             });
-            InitializeContent("Vanilla", "Создать сборку", "Импорт сборки", "Назад");
+            InitializeContent("Создать сборку", "...", "Импорт сборки", "Назад");
             ReselectionButton(MenuButton0);
             AddModpackClicked.Invoke();
         }
