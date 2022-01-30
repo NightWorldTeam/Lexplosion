@@ -19,7 +19,6 @@ namespace Lexplosion.Gui.Pages.Instance
 
         private void CurseforgeUrl_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Console.WriteLine(1);
             System.Diagnostics.Process.Start("https://www.curseforge.com/minecraft/modpacks/rlcraft");
         }
     }

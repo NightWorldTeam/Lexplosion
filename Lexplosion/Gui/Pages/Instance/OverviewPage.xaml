@@ -21,8 +21,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="250" />
         </Grid.ColumnDefinitions>
-        <Grid ShowGridLines="False">
+        <Grid ShowGridLines="False" Grid.Column="2">
             <Grid.Background>
                 <SolidColorBrush Color="#151515" />
             </Grid.Background>
