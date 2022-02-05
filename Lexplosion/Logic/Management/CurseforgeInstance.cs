@@ -11,6 +11,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using CurseforgeLogic = Lexplosion.Logic.FileSystem.WithDirectory.CurseForge;
 
 namespace Lexplosion.Logic.Management
 {
@@ -158,7 +159,7 @@ namespace Lexplosion.Logic.Management
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
             if (Info != null) 
             {
-                var progressFunctions = new WithDirectory.CurseForge.ProgressFunctions
+                var progressFunctions = new CurseforgeLogic.ProgressFunctions
                 {
                     MainFileDownload = delegate (int totalDataCount, int nowDataCount)
                     {
@@ -185,8 +186,8 @@ namespace Lexplosion.Logic.Management
                     }
                 };
 
-                List<string> localFiles = DataFilesManager.GetFile<List<string>>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
-                WithDirectory.CurseForge.InstanceManifest manifest = WithDirectory.CurseForge.DownloadInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref localFiles, progressFunctions);
+                var localFiles = DataFilesManager.GetFile<CurseforgeLogic.LocalFiles>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
+                CurseforgeLogic.InstanceManifest manifest = CurseforgeLogic.DownloadInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref localFiles, progressFunctions);
                 DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json", JsonConvert.SerializeObject(localFiles)); // функция DownloadCurseforgeInstance изменила этот список. сохраняем его
 
                 if (error.Count > 0)
