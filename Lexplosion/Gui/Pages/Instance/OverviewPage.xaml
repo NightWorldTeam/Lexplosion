@@ -11,51 +11,47 @@
       >
 
     <Page.Resources>
-        <!-- Resource brushes -->
-        <Style x:Key="CFS" TargetType="{x:Type Frame}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Border BorderBrush="Black" BorderThickness="2" Opacity="0.2">
-                            <ContentPresenter/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="CIS" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid Background="Transparent">
-                            <Path x:Name="Arrow"
-                                Stretch="Fill"
-                                Width="16" Height="16" StrokeLineJoin="Miter"
-                                Data="M 0 -5 L 10 -5 M 5 0 L 10 -5 L 5 -10" 
-                                Stroke="White"
-                                StrokeThickness="3" 
-                                RenderTransformOrigin="0.5,0.5">
-                            </Path>
-                            <ContentPresenter></ContentPresenter>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Arrow" Property="Opacity" Value="1"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="False">
-                                <Setter TargetName="Arrow" Property="Opacity" Value="0.3"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="WhiteSmoke" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Padding" Value="10" />
         </Style>
     </Page.Resources>
-
-    <WebBrowser Name="webb" OverridesDefaultStyle="False"
-            ScrollViewer.CanContentScroll="True"
-            ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
-            ScrollViewer.VerticalScrollBarVisibility="Hidden">
-    </WebBrowser>
+    <Grid ShowGridLines="False">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="250" />
+        </Grid.ColumnDefinitions>
+        <Grid ShowGridLines="False" Grid.Column="2">
+            <Grid.Background>
+                <SolidColorBrush Color="#151515" />
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition Height="180" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="TestModpackName" FontSize="25" Grid.Row="0"/>
+            <StackPanel Orientation="Vertical" Grid.Row="1" Background="#171717">
+                <Border BorderThickness="0,2,0,2" BorderBrush="#167FFC">
+                    <TextBlock Text="Created: Jan 10, 2018"/>
+                </Border>
+                <Border BorderThickness="0,0,0,2" BorderBrush="#167FFC">
+                <TextBlock Text="Updated: Jan 22, 2022"/>
+                    </Border>
+                <Border BorderThickness="0,0,0,2" BorderBrush="#167FFC">
+                <TextBlock Text="Total: Downloads 10,877,594"/>
+                    </Border>
+                <Border BorderThickness="0,0,0,2" BorderBrush="#167FFC">
+                    <TextBlock Text="License: All Rights Reserved"/>
+                </Border>
+            </StackPanel>
+            <TextBlock Text="Curseforge offical page." 
+                   Grid.Row="5"
+                   Name="CurseforgeUrl" 
+                   MouseLeftButtonDown="CurseforgeUrl_Click">
+            </TextBlock>
+        </Grid>
+    </Grid>
 </Page>

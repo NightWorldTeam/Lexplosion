@@ -11,43 +11,45 @@ namespace Lexplosion.Gui.UserControls
     /// </summary>
     public partial class Paginator : UserControl
     {
-        public int pageIndex = 0;
-        public (int min, int max) pageLimit = (0, 1638);
+        private int _pageIndex = 0;
+        public (int min, int max) PageLimit = (0, 1638);
 
         public int PageIndex
         {
-            get { return pageIndex; }
+            get { return _pageIndex; }
             set
             {
                 SelectedPageTextBox.Text = (value + 1).ToString();
-                if (pageIndex < value)
+
+                if (_pageIndex < value)
                 {
-                    if (value == pageLimit.max) NextPageButton.Visibility = Visibility.Hidden;
                     if (value > 0) PrevPageButton.Visibility = Visibility.Visible;
+                    if (value == PageLimit.max) NextPageButton.Visibility = Visibility.Hidden;
                 }
-                else if (pageIndex > value) 
+                else if (_pageIndex > value) 
                 {
                     if (value == 0) PrevPageButton.Visibility = Visibility.Hidden;
-                    if (value == pageLimit.max - 1) NextPageButton.Visibility = Visibility.Visible;
+                    if (value == PageLimit.max - 1) NextPageButton.Visibility = Visibility.Visible;
                 }
-                pageIndex = value;
-                page.ChangePage();
+
+                _pageIndex = value;
+                _page.ChangePage();
             }
         }
 
-        private InstanceContainerPage page;
+        private InstanceContainerPage _page;
 
-        public Paginator(InstanceContainerPage _page)
+        public Paginator(InstanceContainerPage page)
         {
             InitializeComponent();
-            page = _page;
+            _page = page;
             SelectedPageTextBox.Text = (PageIndex + 1).ToString();
             PrevPageButton.Visibility = Visibility.Hidden;
         }
-        
+
         private void NextPageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PageIndex < pageLimit.max) PageIndex++;
+            if (PageIndex < PageLimit.max) PageIndex++;
         }
 
         private void PrevPageButton_Click(object sender, RoutedEventArgs e)
@@ -60,7 +62,10 @@ namespace Lexplosion.Gui.UserControls
             // if "Enter" button clicked
             if (e.Key == Key.Return)
             {
-                PageIndex = Int32.Parse(SelectedPageTextBox.Text) - 1;
+                var val = Int32.Parse(SelectedPageTextBox.Text) - 1;
+                if (val <= PageLimit.max)
+                    PageIndex = val;
+                else PageIndex = PageLimit.max - 10;
                 e.Handled = true;
             }
         }
