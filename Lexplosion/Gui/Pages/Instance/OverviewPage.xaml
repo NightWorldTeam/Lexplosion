@@ -17,24 +17,26 @@
             <Setter Property="Padding" Value="10" />
         </Style>
     </Page.Resources>
-    <Grid ShowGridLines="False">
+    <Grid ShowGridLines="False" Opacity="0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="250" />
         </Grid.ColumnDefinitions>
-        <Grid ShowGridLines="False" Grid.Column="2">
+        <Grid>
+            <Image Source="pack://application:,,,/launcher_loading.png" Width="400"/>
+        </Grid>
+
+        <Grid ShowGridLines="False" Grid.Column="2" >
             <Grid.Background>
-                <SolidColorBrush Color="#151515" />
+                <SolidColorBrush Color="#151515" Opacity="0.3"/>
             </Grid.Background>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60" />
                 <RowDefinition Height="180" />
+                <RowDefinition Height="60" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock Text="TestModpackName" FontSize="25" Grid.Row="0"/>
-            <StackPanel Orientation="Vertical" Grid.Row="1" Background="#171717">
-                <Border BorderThickness="0,2,0,2" BorderBrush="#167FFC">
+            <StackPanel Margin="10,0,10,0" Orientation="Vertical" Grid.Row="0">
+                <Border BorderThickness="0,0,0,2" BorderBrush="#167FFC">
                     <TextBlock Text="Created: Jan 10, 2018"/>
                 </Border>
                 <Border BorderThickness="0,0,0,2" BorderBrush="#167FFC">
@@ -50,8 +52,9 @@
             <TextBlock Text="Curseforge offical page." 
                    Grid.Row="5"
                    Name="CurseforgeUrl" 
-                   MouseLeftButtonDown="CurseforgeUrl_Click">
-            </TextBlock>
+                   MouseLeftButtonDown="CurseforgeUrl_Click"
+                   Foreground="Blue"
+                   Height="40"/>
         </Grid>
     </Grid>
 </Page>

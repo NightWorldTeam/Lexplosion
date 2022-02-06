@@ -31,74 +31,76 @@
 
     <Grid x:Name="MainGrid">
         <Grid ShowGridLines="False" Focusable="False">
-            <Grid.Background>
-                <SolidColorBrush Color="#202020" Opacity="0.74"/>
-            </Grid.Background>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="98"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Focusable="False">
                 <Grid.Background>
-                    <SolidColorBrush Color="#191919" Opacity="0.8"/>
+                <SolidColorBrush Color="##191919"/>
                 </Grid.Background>
-            </Grid>
-            <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="400"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock x:Name="InstanceTitle"
-                        FontSize="24"
-                        Margin="8,0,0,0"
-                        FontStyle="Italic"
-                        VerticalAlignment="Center" 
-                        FontWeight="SemiBold"
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Foreground="White"/>
-                    <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
-                        <ToggleButton x:Name="OverviewToggleButton"
-                            Content="Overview" 
-                            Click="ClickedOverview" 
-                            Style="{StaticResource MWCBS}" />
-                        <ToggleButton x:Name="ModsToggleButton"
-                            Content="Mods"
-                            Click="ClickedModsList" 
-                            Style="{StaticResource MWCBS}" />
-                        <ToggleButton x:Name="VersionToggleButton"
-                            Content="Version" 
-                            Click="ClickedVersion" 
-                            Style="{StaticResource MWCBS}" />
-                    </WrapPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="98"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Focusable="False">
+                    <Grid.Background>
+                        <SolidColorBrush Color="#191919"/>
+                    </Grid.Background>
                 </Grid>
-                <Grid Grid.Column="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="2" 
-                        x:Name="InstanceRun"
-                        Grid.Row="1" 
-                        Width="120"
-                        Height="30"
-                        Style="{StaticResource CBS}"
-                        Content="Играть"
-                        FontSize="16"
-                        FontWeight="Bold"/>
-                </Grid>
+                <Border BorderThickness="0,0,0,1" BorderBrush="#282a2e">
+                    <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="430"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="InstanceTitle"
+                                Text="Instance Name"
+                                FontSize="22"
+                                Margin="4,0,0,20"
+                                VerticalAlignment="Center" 
+                                FontWeight="SemiBold"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Foreground="WhiteSmoke"/>
+                            <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
+                                <ToggleButton x:Name="OverviewToggleButton"
+                                    Content="Overview" 
+                                    Click="ClickedOverview" 
+                                    Style="{StaticResource MWCBS}" />
+                                <ToggleButton x:Name="ModsToggleButton"
+                                    Content="Mods"
+                                    Click="ClickedModsList" 
+                                    Style="{StaticResource MWCBS}" />
+                                <ToggleButton x:Name="VersionToggleButton"
+                                    Content="Version" 
+                                    Click="ClickedVersion" 
+                                    Style="{StaticResource MWCBS}" />
+                            </WrapPanel>
+                        </Grid>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="2" 
+                                x:Name="InstanceRun"
+                                Grid.Row="1" 
+                                Width="120"
+                                Height="30"
+                                Style="{StaticResource CBS}"
+                                Content="Играть"
+                                FontSize="16"
+                                FontWeight="Bold"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Frame x:Name="BottomSideFrame" Grid.Row="1"/>
             </Grid>
-            <Frame x:Name="BottomSideFrame" Grid.Row="1"/>
-        </Grid>
     </Grid>
 </Page>
