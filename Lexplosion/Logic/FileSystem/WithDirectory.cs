@@ -324,20 +324,22 @@ namespace Lexplosion.Logic.FileSystem
                 public ProcentUpdate AddonsDownload;
             }
 
-            public static InstanceManifest DownloadInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref List<string> localFiles, ProgressFunctions progressFunctions)
+            public class InstalledAddon
             {
-                if (localFiles != null)
-                {
-                    // TODO: возможно тут не удалять все файлы, а сначала проверить какие из них нужно удалить, чтобы повторно не скачивать
-                    //удаляем старые файлы
-                    foreach (string file in localFiles)
-                    {
-                        DelFile(directory + "/instances/" + instanceId + file);
-                    }
-                }
+                public string Path;
+                public int FileID;
+            }
 
+            public class LocalFiles
+            {
+                public Dictionary<int, InstalledAddon> InstalledAddons;
+                public List<string> Files;
+            }
+
+            public static InstanceManifest DownloadInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref LocalFiles localFiles, ProgressFunctions progressFunctions)
+            {
+                Dictionary<int, InstalledAddon> installedAddons = localFiles.InstalledAddons;
                 errors = new List<string>();
-                localFiles = new List<string>();
 
                 //try
                 {
@@ -369,6 +371,45 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (data != null)
                     {
+                        List<string> delList = new List<string>();
+                        List<InstanceManifest.FileData> downloadList = new List<InstanceManifest.FileData>();
+
+                        if (installedAddons != null)
+                        {
+                            List<int> tempList = new List<int>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
+                            foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
+                            {
+                                if (!installedAddons.ContainsKey(file.projectID)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
+                                {
+                                    downloadList.Add(file);
+                                }
+                                else
+                                {
+                                    tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
+
+                                    if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(installedAddons[file.projectID].Path))
+                                    {
+                                        downloadList.Add(file);
+                                    }
+                                }
+                            }
+
+                            foreach (int addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
+                            {
+                                if (!tempList.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа. Поэтому удаляем
+                                {
+                                    if (installedAddons[addonId].Path != null)
+                                    {
+                                        DelFile(directory + "/instances/" + instanceId + installedAddons[addonId].Path);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            downloadList = data.files;
+                        }
+
                         int i = 0;
                         int addonsCount = data.files.Count;
                         progressFunctions.AddonsDownload(addonsCount, i);
@@ -449,7 +490,7 @@ namespace Lexplosion.Logic.FileSystem
                         foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
                         {
                             File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
-                            localFiles.Add(newPath.Replace(SourcePath, "/"));
+                            //localFiles.Add(newPath.Replace(SourcePath, "/"));
                         }
 
                         try
@@ -852,10 +893,14 @@ namespace Lexplosion.Logic.FileSystem
         //функция для удаления файла при его существовании 
         private static void DelFile(string file)
         {
-            if (File.Exists(file))
+            try
             {
-                File.Delete(file);
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
             }
+            catch { }
         }
 
         //функция для скачивания файлов клиента в zip формате, без проверки хеша
@@ -1170,18 +1215,15 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    Console.WriteLine(" ");
                     try
                     {
                         List<List<string>> obtainingMethod = updateList.Libraries[lib].obtainingMethod; // получаем метод
 
                         if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
                         {
-                            Console.WriteLine("TEMP " + tempDir);
                             int i = 1; //начинаем цикл с первого элемента, т.к нулевой - название метода
                             while (i < obtainingMethod.Count)
                             {
-                                Console.WriteLine("METHOD " + obtainingMethod[i][0]);
                                 // получаем команду и выполняем её
                                 switch (obtainingMethod[i][0])
                                 {
@@ -1209,7 +1251,6 @@ namespace Lexplosion.Logic.FileSystem
                                         }
                                         else
                                         {
-                                            Console.WriteLine("ERROR");
                                             goto EndWhile; //возникла ошибка
                                         }
 
@@ -1240,7 +1281,6 @@ namespace Lexplosion.Logic.FileSystem
                                             Directory.CreateDirectory(to.Replace(Path.GetFileName(to), ""));
                                         }
                                         File.Move(from, to);
-                                    Console.WriteLine(to + " " + from);
                                         break;
                                 }
                                 i++;
