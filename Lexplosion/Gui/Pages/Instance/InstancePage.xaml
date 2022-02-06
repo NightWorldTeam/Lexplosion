@@ -32,7 +32,7 @@
     <Grid x:Name="MainGrid">
         <Grid ShowGridLines="False" Focusable="False">
                 <Grid.Background>
-                <SolidColorBrush Color="##191919"/>
+                <SolidColorBrush Color="#191919"/>
                 </Grid.Background>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="98"/>
