@@ -47,7 +47,7 @@
                     <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="430"/>
+                            <ColumnDefinition Width="300"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="1">
@@ -79,7 +79,7 @@
                                     Style="{StaticResource MWCBS}" />
                             </WrapPanel>
                         </Grid>
-                        <Grid Grid.Column="2">
+                        <Grid Grid.Column="2" ShowGridLines="False">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="40" />
                                 <RowDefinition Height="*"/>
@@ -87,6 +87,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="140"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="140"/>
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="2" 
                                 x:Name="InstanceRun"

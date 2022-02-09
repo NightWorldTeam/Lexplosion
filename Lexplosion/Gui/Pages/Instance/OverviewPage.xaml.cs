@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Pages.Instance
@@ -17,7 +18,7 @@ namespace Lexplosion.Gui.Pages.Instance
             _instaceProperties = instanceProperties;
         }
 
-        private void CurseforgeUrl_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void CurseforgeUrl_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://www.curseforge.com/minecraft/modpacks/rlcraft");
         }

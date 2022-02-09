@@ -243,7 +243,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Border" 
-                            CornerRadius="2" 
+                            CornerRadius="5" 
                             BorderThickness="1" 
                             Background="#167FFC" 
                             BorderBrush="#2c99c2">

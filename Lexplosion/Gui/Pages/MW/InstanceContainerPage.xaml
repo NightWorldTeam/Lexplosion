@@ -12,7 +12,7 @@
             <ScrollViewer.Background>
                 <!-- #1313131 0.8-->
                 <!-- "Black" 0.64 -->
-                <SolidColorBrush Color="#121212" Opacity="0.65"/>
+                <SolidColorBrush Color="#121212" Opacity="0.70"/>
             </ScrollViewer.Background>
             <Grid x:Name="ControlElementsGrid" ShowGridLines="False">
                 <Grid.RowDefinitions>
@@ -20,6 +20,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
+                <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="#282a2e"/>
                 <Grid ShowGridLines="False" x:Name="InstanceGrid" Grid.Row="1" Margin="0, 0, 0, 0">
                     <TextBlock x:Name="LoadingLabel" 
                                Text="Идёт загрузка. Пожалуйста подождите..." 
