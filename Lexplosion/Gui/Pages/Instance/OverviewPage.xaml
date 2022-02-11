@@ -12,25 +12,28 @@
 
     <Page.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="WhiteSmoke" />
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="14" />
             <Setter Property="Padding" Value="10" />
         </Style>
     </Page.Resources>
-    <ScrollViewer>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid ShowGridLines="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="240"/>
-                <RowDefinition Height="15"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="1" ShowGridLines="False">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="230" />
                 </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Source="pack://application:,,,/Assets/images/background/regBG.png" Width="450"/>
+                <!-- Width="450" Height="240" -->
+                <Image Margin="20,0,0,0" Source="pack://application:,,,/Assets/images/background/regBG.png" 
+                    Grid.Column="0" Width="450" Stretch="Fill"/>
                 <Grid Grid.Column="1" ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="180" />
@@ -39,41 +42,86 @@
 
                     <StackPanel Grid.Column="1" Margin="10,0,10,0" 
                                 Orientation="Vertical" Grid.Row="0">
-                        <Border BorderThickness="0,0,0,1"
-                                BorderBrush="LightGray">
-                            <TextBlock Foreground="#ededed" 
-                                       x:Name="VersionTB" 
-                                       Text="Version: 1.16.5"/>
+                        <Border BorderThickness="0,0,0,0.5">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#f5f5f5" Opacity="0.6" />
+                            </Border.BorderBrush>
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="#f5f5f5" Opacity="0.8" Grid.Column="0" Text="Version"/>
+                                <TextBlock Foreground="White" HorizontalAlignment="Right" 
+                                           Grid.Column="1" Text="1.16.5"/>
+                            </Grid>
                         </Border>
-                        <Border BorderThickness="0,0,0,1" 
-                                BorderBrush="LightGray">
-                            <TextBlock Foreground="#ededed" Text="Updated: Jan 22, 2022"/>
+                        <Border BorderThickness="0,0,0,0.5">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#f5f5f5" Opacity="0.6" />
+                            </Border.BorderBrush>
+                            
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="#f5f5f5" Opacity="0.8" Grid.Column="0" Text="Updated"/>
+                                <TextBlock Foreground="White" Grid.Column="1" 
+                                           Text="Jan 22, 2022" HorizontalAlignment="Right"/>
+                            </Grid>
                         </Border>
-                        <Border BorderThickness="0,0,0,1" 
-                                BorderBrush="LightGray">
-                            <TextBlock Foreground="#ededed" Text="Total: Downloads 10,877,594"/>
+                        <Border BorderThickness="0,0,0,0.5">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#f5f5f5" Opacity="0.6" />
+                            </Border.BorderBrush>
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="#f5f5f5" Opacity="0.8" Grid.Column="0" Text="Total Downloads"/>
+                                <TextBlock Foreground="White" Grid.Column="1" 
+                                           Text="10,877,594" HorizontalAlignment="Right"/>
+                            </Grid>
                         </Border>
-                        <Border BorderThickness="0,0,0,1" 
-                                BorderBrush="LightGray">
-                            <TextBlock Foreground="#ededed" Text="Core: Fabric"/>
+                        <Border BorderThickness="0,0,0,0.5">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#f5f5f5" Opacity="0.6" />
+                            </Border.BorderBrush>
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="#f5f5f5" Opacity="0.8" Grid.Column="0" Text="Core"/>
+                                <TextBlock Foreground="White" Grid.Column="1" 
+                                           Text="Fabric" HorizontalAlignment="Right"/>
+                            </Grid>
                         </Border>
                     </StackPanel>
                     <Button Content="Вебсайт" 
-                           Grid.Row="1"
-                           FontSize="14"
-                           Width="130"
-                           Style="{StaticResource CBS}" 
-                           Name="CurseforgeUrl" 
-                           Click="CurseforgeUrl_Click"
+                           Grid.Row="1" FontSize="14"
+                           Width="100" Style="{StaticResource CBS}" 
+                           Name="CurseforgeUrl"  Click="CurseforgeUrl_Click"
                            Height="29" Margin="60,10,59.6,21"/>
                 </Grid>
             </Grid>
-            <Border Grid.Row="4" BorderThickness="0,0,0,0" BorderBrush="#212326">
-                <TextBlock Text="Тут короткое описание, которое находится в миниатюре." 
-                       Grid.Row="2"
-                       Width="690"
-                       TextWrapping="Wrap" />
+            <TextBlock Text="Тут короткое описание, которое находится в миниатюре." 
+                       FontSize="16" Width="690"
+                       Foreground="WhiteSmoke"
+                       Margin="10,0,0,0"
+                       FontWeight="Regular" Grid.Row="2"
+                       TextWrapping="Wrap"/>
+            <Border Grid.Row="3" BorderThickness="0,0,0,0" 
+                    Margin="10,20,0,0" BorderBrush="#212326">
+                <Grid>
+                    <TextBlock Text="Описание" FontSize="14" FontWeight="Medium"/>
+                    <TextBlock Margin="0,30,0,0" Text="The ultimate skyblock modpack! Watch development at: darkosto.tv/SkyFactoryLive Back again for more modded skyblock fun! SkyFactory 4 offers a brand-new experience never before seen in the series. Full automation, tech, magic, and bacon resources! This iteration offers over 30+ world types so you can play the pack like never before! While some world types are based on the classic tree on dirt others are designed with unique recipes and advancements." 
+                               FontSize="14" Foreground="#f5f5f5" Opacity="0.8" TextWrapping="Wrap"/>
+                </Grid>
             </Border>
         </Grid>
     </ScrollViewer>
 </Page>
+    
