@@ -31,31 +31,31 @@
 
     <Grid x:Name="MainGrid">
         <Grid ShowGridLines="False" Focusable="False">
-                <Grid.Background>
+            <Grid.Background>
                 <SolidColorBrush Color="#191919"/>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="98"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Focusable="False">
+                <Grid.Background>
+                    <SolidColorBrush Color="#191919"/>
                 </Grid.Background>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="98"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Focusable="False">
-                    <Grid.Background>
-                        <SolidColorBrush Color="#191919"/>
-                    </Grid.Background>
-                </Grid>
-                <Border BorderThickness="0,0,0,1" BorderBrush="#282a2e">
-                    <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="300"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="60"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="InstanceTitle"
+            </Grid>
+            <Border BorderThickness="0,0,0,1" BorderBrush="#282a2e">
+                <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="InstanceTitle"
                                 Text="Instance Name"
                                 FontSize="22"
                                 Margin="4,0,0,20"
@@ -64,44 +64,44 @@
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Foreground="WhiteSmoke"/>
-                            <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
-                                <ToggleButton x:Name="OverviewToggleButton"
+                        <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
+                            <ToggleButton x:Name="OverviewToggleButton"
                                     Content="Overview" 
                                     Click="ClickedOverview" 
                                     Style="{StaticResource MWCBS}" />
-                                <ToggleButton x:Name="ModsToggleButton"
+                            <ToggleButton x:Name="ModsToggleButton"
                                     Content="Mods"
                                     Click="ClickedModsList" 
                                     Style="{StaticResource MWCBS}" />
-                                <ToggleButton x:Name="VersionToggleButton"
+                            <ToggleButton x:Name="VersionToggleButton"
                                     Content="Version" 
                                     Click="ClickedVersion" 
                                     Style="{StaticResource MWCBS}" />
-                            </WrapPanel>
-                        </Grid>
-                        <Grid Grid.Column="2" ShowGridLines="False">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="40" />
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="140"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="140"/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="2" 
+                        </WrapPanel>
+                    </Grid>
+                    <Grid Grid.Column="2" ShowGridLines="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="140"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="2" 
                                 x:Name="InstanceRun"
                                 Grid.Row="1" 
-                                Width="120"
-                                Height="30"
+                                Width="106"
+                                Height="26"
                                 Style="{StaticResource CBS}"
                                 Content="Играть"
-                                FontSize="16"
-                                FontWeight="Bold"/>
-                        </Grid>
+                                FontSize="14"
+                                FontWeight="Bold" Margin="10,22,24,8.8"/>
                     </Grid>
-                </Border>
-                <Frame x:Name="BottomSideFrame" Grid.Row="1"/>
-            </Grid>
+                </Grid>
+            </Border>
+            <Frame x:Name="BottomSideFrame" Grid.Row="1"/>
+        </Grid>
     </Grid>
 </Page>
