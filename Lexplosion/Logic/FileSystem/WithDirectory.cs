@@ -322,11 +322,12 @@ namespace Lexplosion.Logic.FileSystem
             {
                 public Dictionary<int, CurseforgeApi.InstalledAddonInfo> InstalledAddons;
                 public List<string> Files;
+                public bool FullClient = false;
             }
 
             public static bool InvalidStruct(string instanceId, LocalFiles localFiles)
             {
-                if(localFiles.Files == null || localFiles.InstalledAddons == null)
+                if (localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
                 {
                     return true;
                 }
@@ -451,21 +452,26 @@ namespace Lexplosion.Logic.FileSystem
                     List<string> delList = new List<string>();
                     List<InstanceManifest.FileData> downloadList = new List<InstanceManifest.FileData>();
 
+                    int test = 0;
+
                     if (installedAddons != null)
                     {
+                        Console.WriteLine("fdsv " + installedAddons.Count);
                         List<int> tempList = new List<int>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
                         foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
                         {
                             if (!installedAddons.ContainsKey(file.projectID)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
                             {
+                                test++;
                                 downloadList.Add(file);
                             }
                             else
                             {
                                 tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
 
-                                if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(directory + "/instances/" + instanceId + installedAddons[file.projectID].Path))
+                                if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(directory + "/instances/" + instanceId + "/" + installedAddons[file.projectID].Path))
                                 {
+                                    test++;
                                     downloadList.Add(file);
                                 }
                             }
@@ -491,83 +497,95 @@ namespace Lexplosion.Logic.FileSystem
                         downloadList = data.files;
                     }
 
+                    Console.WriteLine("qweqwe " + test);
+
                     int i = 0;
-                    int addonsCount = data.files.Count;
+                    int addonsCount = downloadList.Count;
                     progressFunction(addonsCount, i);
 
-                    int filesCount = data.files.Count;
+                    int filesCount = downloadList.Count;
 
-                    Semaphore sem = new Semaphore(15, 15); // этот семафор нужен чтобы за раз не запустилось более 15 потоков
-                    ManualResetEvent endEvent = new ManualResetEvent(false); // эта хуйня сработает когда все потоки завершат работу и все аддоны будут скачаны
-                    Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с фалом localFiles.json
-
-                    Console.WriteLine("СКАЧАТЬ БЛЯТЬ НАДО " + data.files + " ЗЛОЕБУЧИХ МОДОВ");
-                    foreach (InstanceManifest.FileData file in data.files)
+                    if(filesCount != 0)
                     {
-                        sem.WaitOne();
-                        new Thread(delegate ()
+                        Semaphore sem = new Semaphore(15, 15); // этот семафор нужен чтобы за раз не запустилось более 15 потоков
+                        ManualResetEvent endEvent = new ManualResetEvent(false); // эта хуйня сработает когда все потоки завершат работу и все аддоны будут скачаны
+                        Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с фалом localFiles.json
+
+                        Console.WriteLine("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
+                        foreach (InstanceManifest.FileData file in downloadList)
                         {
                             sem.WaitOne();
-
-                            Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
-                            CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
-
-                            if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
+                            new Thread(delegate ()
                             {
-                                Console.WriteLine("ERROR " + result[result.First().Key].Item2 + " " + result.First().Key);
+                                sem.WaitOne();
 
-                                // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
-                                if (result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.ProjectIdError || result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.DownloadError)
+                                Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
+                                CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
+
+                                if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
                                 {
-                                    int j = 0;
-                                    while (j < 4 && result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
-                                    {
-                                        Console.WriteLine("REPEAT DOWNLOAD");
-                                        result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
-                                        j++;
-                                    }
+                                    Console.WriteLine("ERROR " + result[result.First().Key].Item2 + " " + result.First().Key);
 
-                                    // все попытки были неудачными. возвращаем ошибку
-                                    if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                    // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
+                                    if (result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.ProjectIdError || result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.DownloadError)
+                                    {
+                                        int j = 0;
+                                        while (j < 4 && result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                        {
+                                            Console.WriteLine("REPEAT DOWNLOAD");
+                                            result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
+                                            j++;
+                                        }
+
+                                        // все попытки были неудачными. возвращаем ошибку
+                                        if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                        {
+                                            sem.Release();
+                                            Console.WriteLine("GFDGS пизда");
+                                            //errors.Add(file.projectID + " " + file.fileID);
+                                            return;
+                                        }
+                                    }
+                                    else
                                     {
                                         sem.Release();
-                                        Console.WriteLine("GFDGS пизда");
                                         //errors.Add(file.projectID + " " + file.fileID);
                                         return;
                                     }
                                 }
-                                else
+
+                                fileBlock.WaitOne();
+                                compliteDownload.InstalledAddons[file.projectID] = result[result.First().Key].Item1;
+                                Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
+                                DataFilesManager.SaveFile(directory + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
+                                fileBlock.Release();
+
+                                i++;
+                                progressFunction(addonsCount, i);
+
+                                filesCount--;
+                                if (filesCount == 0)
                                 {
-                                    sem.Release();
-                                    //errors.Add(file.projectID + " " + file.fileID);
-                                    return;
+                                    endEvent.Set();
                                 }
-                            }
 
-                            fileBlock.WaitOne();
-                            compliteDownload.InstalledAddons[file.projectID] = result[result.First().Key].Item1;
-                            Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
-                            DataFilesManager.SaveFile(directory + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
-                            fileBlock.Release();
-
-                            i++;
-                            progressFunction(addonsCount, i);
-
-                            filesCount--;
-                            if (filesCount == 0)
-                            {
-                                endEvent.Set();
-                            }
+                                sem.Release();
+                            }).Start();
 
                             sem.Release();
-                        }).Start();
+                        }
 
-                        sem.Release();
+                        Console.WriteLine("ЖДЁМ КОНЦА ");
+                        endEvent.WaitOne();
+                        Console.WriteLine("КОНЕЦ ");
                     }
 
-                    Console.WriteLine("ЖДЁМ КОНЦА ");
-                    endEvent.WaitOne();
-                    Console.WriteLine("КОНЕЦ ");
+                    if(errors.Count == 0)
+                    {
+                        compliteDownload.FullClient = true; // TODO: учитывать ошибки
+                    }
+
+                    DataFilesManager.SaveFile(directory + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
 
                     return errors;
                 }
