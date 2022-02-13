@@ -418,6 +418,8 @@
     <Resource Include="Assets\images\icons\visible_password.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\images\icons\more_blue.png" />
+    <Resource Include="Assets\images\icons\more_gradient.png" />
     <Content Include="DLL\LumiSoft.Net.dll" />
     <Content Include="DLL\NewtonsoftJson.dll" />
     <Resource Include="launcher_loading.png" />
