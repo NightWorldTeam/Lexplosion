@@ -324,21 +324,32 @@ namespace Lexplosion.Logic.FileSystem
                 public ProcentUpdate AddonsDownload;
             }
 
-            public class InstalledAddon
-            {
-                public string Path;
-                public int FileID;
-            }
-
             public class LocalFiles
             {
-                public Dictionary<int, InstalledAddon> InstalledAddons;
-                public List<string> Files;
+                public Dictionary<int, CurseforgeApi.InstalledAddonInfo> InstalledAddons;
             }
 
-            public static InstanceManifest DownloadInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, ref LocalFiles localFiles, ProgressFunctions progressFunctions)
+            public static bool InvalidStruct(string instanceId, LocalFiles localFiles)
             {
-                Dictionary<int, InstalledAddon> installedAddons = localFiles.InstalledAddons;
+                foreach (CurseforgeApi.InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
+                {
+                    if (!File.Exists(directory + "/instances/" + instanceId + addon.Path))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public static InstanceManifest DownloadInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, LocalFiles localFiles, ProgressFunctions progressFunctions)
+            {
+                Dictionary<int, CurseforgeApi.InstalledAddonInfo> installedAddons = null;
+                if (localFiles != null)
+                {
+                    installedAddons = localFiles.InstalledAddons;
+                }
+
                 errors = new List<string>();
 
                 //try
@@ -387,7 +398,7 @@ namespace Lexplosion.Logic.FileSystem
                                 {
                                     tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
 
-                                    if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(installedAddons[file.projectID].Path))
+                                    if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(directory + "/instances/" + instanceId + installedAddons[file.projectID].Path))
                                     {
                                         downloadList.Add(file);
                                     }
@@ -416,8 +427,14 @@ namespace Lexplosion.Logic.FileSystem
 
                         int filesCount = data.files.Count;
 
-                        Semaphore sem = new Semaphore(15, 15);
-                        ManualResetEvent endEvent = new ManualResetEvent(false);
+                        Semaphore sem = new Semaphore(15, 15); // этот семафор нужен чтобы за раз не запустилось более 15 потоков
+                        ManualResetEvent endEvent = new ManualResetEvent(false); // эта хуйня сработает когда все потоки завершат работу и все аддоны будут скачаны
+                        Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с фалом localFiles.json
+
+                        LocalFiles compliteDownload = new LocalFiles
+                        {
+                            InstalledAddons = new Dictionary<int, CurseforgeApi.InstalledAddonInfo>()
+                        };
 
                         foreach (InstanceManifest.FileData file in data.files)
                         {
@@ -427,7 +444,7 @@ namespace Lexplosion.Logic.FileSystem
                                 sem.WaitOne();
 
                                 Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
-                                CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
+                                CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
 
                                 if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
                                 {
@@ -440,7 +457,7 @@ namespace Lexplosion.Logic.FileSystem
                                         while (j < 4 && result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
                                         {
                                             Console.WriteLine("REPEAT DOWNLOAD");
-                                            result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, tempDir.Replace(directory, "") + "dataDownload/overrides/");
+                                            result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
                                             j++;
                                         }
 
@@ -448,6 +465,7 @@ namespace Lexplosion.Logic.FileSystem
                                         if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
                                         {
                                             sem.Release();
+                                            Console.WriteLine("GFDGS пизда");
                                             //errors.Add(file.projectID + " " + file.fileID);
                                             return;
                                         }
@@ -459,6 +477,11 @@ namespace Lexplosion.Logic.FileSystem
                                         return;
                                     }
                                 }
+
+                                fileBlock.WaitOne();
+                                compliteDownload.InstalledAddons[file.projectID] = result[result.First().Key].Item1;
+                                DataFilesManager.SaveFile(directory + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
+                                fileBlock.Release();
 
                                 i++;
                                 progressFunctions.AddonsDownload(addonsCount, i);
@@ -484,7 +507,11 @@ namespace Lexplosion.Logic.FileSystem
 
                         foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
                         {
-                            Directory.CreateDirectory(dirPath.Replace(SourcePath, DestinationPath));
+                            string dir = dirPath.Replace(SourcePath, DestinationPath);
+                            if (!Directory.Exists(dir))
+                            {
+                                Directory.CreateDirectory(dir);
+                            } 
                         }
 
                         foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
@@ -573,7 +600,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             string tempDir = null;
 
-            try
+            //try
             {
                 tempDir = CreateTempDir();
 
@@ -593,7 +620,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 return true;
             }
-            catch
+            /*catch
             {
                 if (tempDir != null)
                 {
@@ -602,7 +629,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 return false;
-            }
+            }*/
         }
 
         public static bool DownloadFile(string url, string fileName, string tempDir)

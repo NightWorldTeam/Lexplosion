@@ -187,8 +187,7 @@ namespace Lexplosion.Logic.Management
                 };
 
                 var localFiles = DataFilesManager.GetFile<CurseforgeLogic.LocalFiles>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
-                CurseforgeLogic.InstanceManifest manifest = CurseforgeLogic.DownloadInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, ref localFiles, progressFunctions);
-                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json", JsonConvert.SerializeObject(localFiles)); // функция DownloadCurseforgeInstance изменила этот список. сохраняем его
+                CurseforgeLogic.InstanceManifest manifest = CurseforgeLogic.DownloadInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, localFiles, progressFunctions);
 
                 if (error.Count > 0)
                 {
