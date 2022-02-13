@@ -280,7 +280,7 @@ namespace Lexplosion.Logic.Management
             };
             DataFilesManager.SaveManifest(instanceId, manifest);
 
-            if(type != InstanceSource.Local)
+            if (type != InstanceSource.Local)
             {
                 var instanceData = new InstancePlatformData
                 {

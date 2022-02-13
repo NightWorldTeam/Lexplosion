@@ -318,22 +318,30 @@ namespace Lexplosion.Logic.FileSystem
                 public List<FileData> files;
             }
 
-            public struct ProgressFunctions
-            {
-                public ProcentUpdate MainFileDownload;
-                public ProcentUpdate AddonsDownload;
-            }
-
             public class LocalFiles
             {
                 public Dictionary<int, CurseforgeApi.InstalledAddonInfo> InstalledAddons;
+                public List<string> Files;
             }
 
             public static bool InvalidStruct(string instanceId, LocalFiles localFiles)
             {
+                if(localFiles.Files == null || localFiles.InstalledAddons == null)
+                {
+                    return true;
+                }
+
                 foreach (CurseforgeApi.InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
                 {
-                    if (!File.Exists(directory + "/instances/" + instanceId + addon.Path))
+                    if (!File.Exists(directory + "/instances/" + instanceId + "/" + addon.Path))
+                    {
+                        return true;
+                    }
+                }
+
+                foreach (string file in localFiles.Files)
+                {
+                    if (!File.Exists(directory + "/instances/" + instanceId + file))
                     {
                         return true;
                     }
@@ -342,18 +350,21 @@ namespace Lexplosion.Logic.FileSystem
                 return false;
             }
 
-            public static InstanceManifest DownloadInstance(string downloadUrl, string fileName, string instanceId, out List<string> errors, LocalFiles localFiles, ProgressFunctions progressFunctions)
+            public static InstanceManifest DownloadInstance(string downloadUrl, string instanceId, string fileName, ProcentUpdate progressFunction, ref LocalFiles localFiles)
             {
-                Dictionary<int, CurseforgeApi.InstalledAddonInfo> installedAddons = null;
-                if (localFiles != null)
-                {
-                    installedAddons = localFiles.InstalledAddons;
-                }
-
-                errors = new List<string>();
-
                 //try
                 {
+                    //удаляем старые файлы
+                    if(localFiles.Files != null)
+                    {
+                        foreach (string file in localFiles.Files)
+                        {
+                            DelFile(directory + "/instances/" + instanceId + file);
+                        }
+                    }
+
+                    List<string> files = new List<string>();
+
                     string tempDir = CreateTempDir();
                     if (File.Exists(tempDir + fileName))
                     {
@@ -363,183 +374,202 @@ namespace Lexplosion.Logic.FileSystem
                     // скачивание архива
                     using (WebClient wc = new WebClient())
                     {
-                        progressFunctions.MainFileDownload(1, 0);
+                        progressFunction(1, 0);
                         DelFile(tempDir + fileName);
                         wc.DownloadFile(downloadUrl, tempDir + fileName);
-                        progressFunctions.MainFileDownload(1, 1);
+                        progressFunction(1, 1);
                     }
 
                     if (Directory.Exists(tempDir + "dataDownload"))
                     {
                         Directory.Delete(tempDir + "dataDownload", true);
                     }
-
+                    
+                    // Извлекаем содержимое этого архима
                     Directory.CreateDirectory(tempDir + "dataDownload");
                     ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
                     DelFile(tempDir + fileName);
 
                     var data = GetFile<InstanceManifest>(tempDir + "dataDownload/manifest.json");
 
-                    if (data != null)
-                    {
-                        List<string> delList = new List<string>();
-                        List<InstanceManifest.FileData> downloadList = new List<InstanceManifest.FileData>();
+                    // тут переосим нужные файлы из этого архива
 
-                        if (installedAddons != null)
+                    string SourcePath = tempDir + "dataDownload/overrides/";
+                    string DestinationPath = directory + "/instances/" + instanceId + "/";
+
+                    foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
+                    {
+                        string dir = dirPath.Replace(SourcePath, DestinationPath);
+                        if (!Directory.Exists(dir))
                         {
-                            List<int> tempList = new List<int>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
-                            foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
+                            Directory.CreateDirectory(dir);
+                        }
+                    }
+
+                    foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
+                    {
+                        File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
+                        files.Add(newPath.Replace(SourcePath, "/").Replace("\\", "/"));
+                    }
+
+                    try
+                    {
+                        if (Directory.Exists(tempDir))
+                        {
+                            Directory.Delete(tempDir, true);
+                        }
+                    }
+                    catch { }
+
+                    localFiles.Files = files;
+
+                    return data;
+                }
+                /*catch
+                {
+                    return null;
+                }*/
+            }
+
+            public static List<string> InstallInstance(string instanceId, InstanceManifest data, LocalFiles localFiles, ProcentUpdate progressFunction)
+            {
+                // Во-первых: нужно сделать флаг полностью ли скачан клиент. Ибо после аварийного завершения работы он думает что скачано всё
+                // Во-вторых: если удалить одну из папко вроде config он блять почему то начинает перекачивать большую часть модов
+                Dictionary<int, CurseforgeApi.InstalledAddonInfo> installedAddons = null;
+                installedAddons = localFiles.InstalledAddons;
+
+                var errors = new List<string>();
+
+                //try
+                {
+                    LocalFiles compliteDownload = new LocalFiles
+                    {
+                        InstalledAddons = new Dictionary<int, CurseforgeApi.InstalledAddonInfo>(),
+                        Files = localFiles.Files
+                    };
+
+                    List<string> delList = new List<string>();
+                    List<InstanceManifest.FileData> downloadList = new List<InstanceManifest.FileData>();
+
+                    if (installedAddons != null)
+                    {
+                        List<int> tempList = new List<int>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
+                        foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
+                        {
+                            if (!installedAddons.ContainsKey(file.projectID)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
                             {
-                                if (!installedAddons.ContainsKey(file.projectID)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
+                                downloadList.Add(file);
+                            }
+                            else
+                            {
+                                tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
+
+                                if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(directory + "/instances/" + instanceId + installedAddons[file.projectID].Path))
                                 {
                                     downloadList.Add(file);
                                 }
-                                else
-                                {
-                                    tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
-
-                                    if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(directory + "/instances/" + instanceId + installedAddons[file.projectID].Path))
-                                    {
-                                        downloadList.Add(file);
-                                    }
-                                }
                             }
+                        }
 
-                            foreach (int addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
+                        foreach (int addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
+                        {
+                            if (!tempList.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа. Поэтому удаляем
                             {
-                                if (!tempList.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа. Поэтому удаляем
+                                if (installedAddons[addonId].Path != null)
                                 {
-                                    if (installedAddons[addonId].Path != null)
-                                    {
-                                        DelFile(directory + "/instances/" + instanceId + installedAddons[addonId].Path);
-                                    }
+                                    DelFile(directory + "/instances/" + instanceId + installedAddons[addonId].Path);
                                 }
                             }
+                            else
+                            {
+                                compliteDownload.InstalledAddons[addonId] = installedAddons[addonId];
+                            }
                         }
-                        else
-                        {
-                            downloadList = data.files;
-                        }
+                    }
+                    else
+                    {
+                        downloadList = data.files;
+                    }
 
-                        int i = 0;
-                        int addonsCount = data.files.Count;
-                        progressFunctions.AddonsDownload(addonsCount, i);
+                    int i = 0;
+                    int addonsCount = data.files.Count;
+                    progressFunction(addonsCount, i);
 
-                        int filesCount = data.files.Count;
+                    int filesCount = data.files.Count;
 
-                        Semaphore sem = new Semaphore(15, 15); // этот семафор нужен чтобы за раз не запустилось более 15 потоков
-                        ManualResetEvent endEvent = new ManualResetEvent(false); // эта хуйня сработает когда все потоки завершат работу и все аддоны будут скачаны
-                        Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с фалом localFiles.json
+                    Semaphore sem = new Semaphore(15, 15); // этот семафор нужен чтобы за раз не запустилось более 15 потоков
+                    ManualResetEvent endEvent = new ManualResetEvent(false); // эта хуйня сработает когда все потоки завершат работу и все аддоны будут скачаны
+                    Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с фалом localFiles.json
 
-                        LocalFiles compliteDownload = new LocalFiles
-                        {
-                            InstalledAddons = new Dictionary<int, CurseforgeApi.InstalledAddonInfo>()
-                        };
-
-                        foreach (InstanceManifest.FileData file in data.files)
+                    Console.WriteLine("СКАЧАТЬ БЛЯТЬ НАДО " + data.files + " ЗЛОЕБУЧИХ МОДОВ");
+                    foreach (InstanceManifest.FileData file in data.files)
+                    {
+                        sem.WaitOne();
+                        new Thread(delegate ()
                         {
                             sem.WaitOne();
-                            new Thread(delegate()
+
+                            Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
+                            CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
+
+                            if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
                             {
-                                sem.WaitOne();
+                                Console.WriteLine("ERROR " + result[result.First().Key].Item2 + " " + result.First().Key);
 
-                                Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
-                                CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
-
-                                if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
+                                // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
+                                if (result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.ProjectIdError || result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.DownloadError)
                                 {
-                                    Console.WriteLine("ERROR " + result[result.First().Key].Item2 + " " + result.First().Key);
-
-                                    // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
-                                    if (result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.ProjectIdError || result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.DownloadError)
+                                    int j = 0;
+                                    while (j < 4 && result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
                                     {
-                                        int j = 0;
-                                        while (j < 4 && result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
-                                        {
-                                            Console.WriteLine("REPEAT DOWNLOAD");
-                                            result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
-                                            j++;
-                                        }
-
-                                        // все попытки были неудачными. возвращаем ошибку
-                                        if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
-                                        {
-                                            sem.Release();
-                                            Console.WriteLine("GFDGS пизда");
-                                            //errors.Add(file.projectID + " " + file.fileID);
-                                            return;
-                                        }
+                                        Console.WriteLine("REPEAT DOWNLOAD");
+                                        result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
+                                        j++;
                                     }
-                                    else
+
+                                    // все попытки были неудачными. возвращаем ошибку
+                                    if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
                                     {
                                         sem.Release();
+                                        Console.WriteLine("GFDGS пизда");
                                         //errors.Add(file.projectID + " " + file.fileID);
                                         return;
                                     }
                                 }
-
-                                fileBlock.WaitOne();
-                                compliteDownload.InstalledAddons[file.projectID] = result[result.First().Key].Item1;
-                                DataFilesManager.SaveFile(directory + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
-                                fileBlock.Release();
-
-                                i++;
-                                progressFunctions.AddonsDownload(addonsCount, i);
-
-                                filesCount--;
-                                if(filesCount == 0)
+                                else
                                 {
-                                    endEvent.Set();
+                                    sem.Release();
+                                    //errors.Add(file.projectID + " " + file.fileID);
+                                    return;
                                 }
+                            }
 
-                                sem.Release();
-                            }).Start();
+                            fileBlock.WaitOne();
+                            compliteDownload.InstalledAddons[file.projectID] = result[result.First().Key].Item1;
+                            Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
+                            DataFilesManager.SaveFile(directory + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
+                            fileBlock.Release();
+
+                            i++;
+                            progressFunction(addonsCount, i);
+
+                            filesCount--;
+                            if (filesCount == 0)
+                            {
+                                endEvent.Set();
+                            }
 
                             sem.Release();
-                        }
+                        }).Start();
 
-                        Console.WriteLine("ЖДЁМ КОНЦА ");
-                        endEvent.WaitOne();
-                        Console.WriteLine("КОНЕЦ ");
-
-                        string SourcePath = tempDir + "dataDownload/overrides/";
-                        string DestinationPath = directory + "/instances/" + instanceId + "/";
-
-                        foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
-                        {
-                            string dir = dirPath.Replace(SourcePath, DestinationPath);
-                            if (!Directory.Exists(dir))
-                            {
-                                Directory.CreateDirectory(dir);
-                            } 
-                        }
-
-                        foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories))
-                        {
-                            File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
-                            //localFiles.Add(newPath.Replace(SourcePath, "/"));
-                        }
-
-                        try
-                        {
-                            if (Directory.Exists(tempDir))
-                            {
-                                Directory.Delete(tempDir, true);
-                            }
-                        }
-                        catch { }
-
-                        return data;
+                        sem.Release();
                     }
 
-                    if (Directory.Exists(tempDir))
-                    {
-                        Directory.Delete(tempDir, true);
-                    }
+                    Console.WriteLine("ЖДЁМ КОНЦА ");
+                    endEvent.WaitOne();
+                    Console.WriteLine("КОНЕЦ ");
 
-                    errors.Add("curseforgeManifestError");
-
-                    return null;
+                    return errors;
                 }
                 /*catch
                 {
@@ -578,7 +608,7 @@ namespace Lexplosion.Logic.FileSystem
             catch { }
         }
 
-        private static string CreateTempDir()
+        private static string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова
         {
             string dirName = directory + "/temp";
             string dirName_ = dirName;
@@ -600,7 +630,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             string tempDir = null;
 
-            //try
+            try
             {
                 tempDir = CreateTempDir();
 
@@ -614,13 +644,12 @@ namespace Lexplosion.Logic.FileSystem
                     wc.DownloadFile(url, tempDir + fileName);
                     DelFile(directory + "/" + path + "/" + fileName);
                     File.Move(tempDir + fileName, directory + "/" + path + "/" + fileName);
+                    Directory.Delete(tempDir, true);
                 }
-
-                Directory.Delete(tempDir, true);
 
                 return true;
             }
-            /*catch
+            catch
             {
                 if (tempDir != null)
                 {
@@ -629,7 +658,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 return false;
-            }*/
+            }
         }
 
         public static bool DownloadFile(string url, string fileName, string tempDir)

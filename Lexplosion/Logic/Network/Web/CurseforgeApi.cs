@@ -122,6 +122,39 @@ namespace Lexplosion.Logic.Network
             }
         }
 
+        public static CurseforgeFileInfo GetInstanceInfo(string id, int fileId)
+        {
+            try
+            {
+                string answer;
+
+                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/" + id + "/file/" + fileId);
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                if (answer != null)
+                {
+                    return JsonConvert.DeserializeObject<CurseforgeFileInfo>(answer);
+                }
+                else
+                {
+                    return new CurseforgeFileInfo();
+                }
+            }
+            catch
+            {
+                return new CurseforgeFileInfo();
+            }
+        }
+
         public static CurseforgeInstanceInfo GetInstance(string id)
         {
             try

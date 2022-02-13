@@ -48,6 +48,7 @@ namespace Lexplosion.Logic.Management
                 return InstanceInit.CursforgeIdError;
             }
 
+            // TODO: думаю, если манифест равен null, вполне можно продолжить работу скачав всё заново 
             if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
             {
                 return InstanceInit.VersionError;
@@ -89,6 +90,8 @@ namespace Lexplosion.Logic.Management
                     }
                 }
             }
+
+            DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
 
             return InstanceInit.Successful;
         }
@@ -156,51 +159,58 @@ namespace Lexplosion.Logic.Management
                 catch { }
             });
 
-            //нашелся id, который больше id установленной версии. Значит доступно обновление. Обновляем
-            if (Info != null) 
-            {
-                var progressFunctions = new CurseforgeLogic.ProgressFunctions
-                {
-                    MainFileDownload = delegate (int totalDataCount, int nowDataCount)
-                    {
-                        if (nowDataCount != 0)
-                        {
-                            ProgressHandler(3, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
-                        }
-                        else
-                        {
-                            ProgressHandler(3, 1, 0);
-                        }
-                    },
+            var localFiles = DataFilesManager.GetFile<CurseforgeLogic.LocalFiles>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
 
-                    AddonsDownload = delegate (int totalDataCount, int nowDataCount)
+            if (localFiles == null)
+            {
+                localFiles = new CurseforgeLogic.LocalFiles();
+            }
+
+            //нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
+            if (Info != null || CurseforgeLogic.InvalidStruct(InstanceId, localFiles)) 
+            {
+                if(Info == null)
+                {
+                    Info = CurseforgeApi.GetInstanceInfo(InfoData.id, InfoData.instanceVersion); //получем информацию об этом модпаке
+
+                    if (Info == null || Info.downloadUrl == null || Info.fileName == null)
                     {
-                        if (nowDataCount != 0)
+                        return new InitData
                         {
-                            ProgressHandler(3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
-                        }
-                        else
-                        {
-                            ProgressHandler(3, 2, 0);
-                        }
+                            InitResult = InstanceInit.CursforgeIdError,
+                        };
+                    }
+                }
+
+                WithDirectory.ProcentUpdate MainFileDownload = delegate (int totalDataCount, int nowDataCount)
+                {
+                    if (nowDataCount != 0)
+                    {
+                        ProgressHandler(3, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    }
+                    else
+                    {
+                        ProgressHandler(3, 1, 0);
                     }
                 };
 
-                var localFiles = DataFilesManager.GetFile<CurseforgeLogic.LocalFiles>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
-                CurseforgeLogic.InstanceManifest manifest = CurseforgeLogic.DownloadInstance(Info.downloadUrl, Info.fileName, InstanceId, out List<string> error, localFiles, progressFunctions);
+                // скачиваем архив модпака и из него получаем манифест
+                CurseforgeLogic.InstanceManifest manifest = CurseforgeLogic.DownloadInstance(Info.downloadUrl, InstanceId, Info.fileName, MainFileDownload, ref localFiles);
 
-                if (error.Count > 0)
+                if (manifest == null || manifest.minecraft == null || manifest.minecraft.modLoaders == null || manifest.minecraft.version == null)
                 {
                     return new InitData
                     {
-                        InitResult = InstanceInit.DownloadFilesError,
-                        DownloadErrors = error,
+                        InitResult = InstanceInit.ManifestError,
                     };
                 }
 
-                ProgressHandler(3, 3, 0);
+                ProgressHandler(3, 2, 0);
 
-                if (!BaseFilesIsCheckd)
+                // Скачиваем основные файлы майкнрафта
+
+                // если BaseFilesIsCheckd равно true, то это значтт что в манифесте уже была версия форджа
+                if (!BaseFilesIsCheckd) // в данном случае в манифесте версии форджа не была и нам надо её получить
                 {
                     //определяем приоритетную версию модлоадера
                     string modLoaderVersion = "";
@@ -260,7 +270,7 @@ namespace Lexplosion.Logic.Management
                 {
                     BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
                     {
-                        ProgressHandler(3, 3, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        ProgressHandler(3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     };
                 }
                 else
@@ -269,8 +279,31 @@ namespace Lexplosion.Logic.Management
                 }
 
                 WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
-                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
-                ProgressHandler(3, 3, 100);
+                ProgressHandler(3, 2, 100);
+
+                WithDirectory.ProcentUpdate AddonsDownload = delegate (int totalDataCount, int nowDataCount)
+                {
+                    if (nowDataCount != 0)
+                    {
+                        ProgressHandler(3, 3, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    }
+                    else
+                    {
+                        ProgressHandler(3, 3, 0);
+                    }
+                };
+
+                // скачиваем аддоны
+                List<string> errors = CurseforgeLogic.InstallInstance(InstanceId, manifest, localFiles, AddonsDownload);
+
+                if (errors.Count > 0)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.DownloadFilesError,
+                        DownloadErrors = errors,
+                    };
+                }
             }
             else
             {
