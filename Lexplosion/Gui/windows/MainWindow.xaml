@@ -11,24 +11,19 @@
 
     <Window.Resources>
         <!-- Custom Top Menu Style -->
-        <Style x:Key="CBSG" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+        <Style x:Key="CBSG" TargetType="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border>
-                            <Border.Style>
-                                <Style TargetType="{x:Type Border}">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Gray"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
-                            <Grid Background="Transparent">
-                                <ContentPresenter></ContentPresenter>
-                            </Grid>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border" BorderBrush="Transparent" 
+                                Background="Transparent" BorderThickness="0">
+                            <ContentPresenter />
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -71,27 +66,17 @@
                 <TextBlock FontSize="16"  Grid.Column="2" Foreground="White" Text="Lexplosion" Margin="4,2,0,0"/>
                 <Button Grid.Column="4" Click="HideWindow" Style="{StaticResource CBSG}" 
                         Width="28" 
-                        Height="28" 
-                        Background="#36393a" 
-                        BorderBrush="#36393f"  
-                        Foreground="White"
-                        FontSize="10"
-                        FontWeight="Bold">
+                        Height="28" >
                     <Canvas>
-                        <Line X1="0" Y1="0" Y2="0" X2="12.5" Canvas.Left="8" Canvas.Top="15" Stroke="White"/>
+                        <Line X1="0" Y1="0" Y2="0" X2="12.5" Canvas.Left="8" Canvas.Top="15" Stroke="LightGray" StrokeThickness="0.5"/>
                     </Canvas>
                 </Button>
                 <Button Grid.Column="5" Click="CloseWindow" Style="{StaticResource CBSG}"
                         Width="28"
-                        Height="28" 
-                        BorderBrush="#36393f"
-                        Background="#36393a"
-                        FontWeight="Bold"
-                        Foreground="White"
-                        FontSize="10">
+                        Height="28">
                     <Canvas>
-                        <Line X1="1" Y1="0" X2="13" Y2="13" Canvas.Left="7" Canvas.Top="8" Stroke="White"/>
-                        <Line X1="1" Y1="13" X2="13" Y2="0" Canvas.Left="7" Canvas.Top="8" Stroke="White"/>
+                        <Line X1="1" Y1="0" X2="13" Y2="13" Canvas.Left="7" Canvas.Top="8" Stroke="LightGray" StrokeThickness="0.5"/>
+                        <Line X1="1" Y1="13" X2="13" Y2="0" Canvas.Left="7" Canvas.Top="8" Stroke="LightGray" StrokeThickness="0.5"/>
                     </Canvas>
                 </Button>
             </Grid>
