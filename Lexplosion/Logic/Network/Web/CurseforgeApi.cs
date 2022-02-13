@@ -24,9 +24,10 @@ namespace Lexplosion.Logic.Network
 
         public class InstalledAddonInfo
         {
-            public int projectID;
-            public int fileID;
-            public AddonType type;
+            public int ProjectID;
+            public int FileID;
+            public AddonType Type;
+            public string Path;
         }
 
         public enum DownloadAddonRes
@@ -182,7 +183,7 @@ namespace Lexplosion.Logic.Network
         {
             var addonsList = new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>();
             //try
-            //{
+            {
                 string answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID);
                 if (answer == null)
                 {
@@ -288,8 +289,9 @@ namespace Lexplosion.Logic.Network
                     {
                         addonsList[fileName] = (new InstalledAddonInfo
                         {
-                            projectID = projectID,
-                            fileID = fileID
+                            ProjectID = projectID,
+                            FileID = fileID,
+                            Path = folderName + fileName
                         }, DownloadAddonRes.Successful);
                         //Console.WriteLine("EndInstalling " + fileName);
 
@@ -311,8 +313,8 @@ namespace Lexplosion.Logic.Network
                     };
                 }
 
-            /*}
-            catch
+            }
+            /*catch
             {
                 return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
                 {
