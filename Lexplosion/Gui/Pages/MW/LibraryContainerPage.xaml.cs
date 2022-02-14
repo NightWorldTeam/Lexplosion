@@ -39,8 +39,7 @@ namespace Lexplosion.Gui.Pages.MW
 		{
 			int i = 0;
 			// обновление assets
-			string description;
-			string imageUrl;
+			string description, imageUrl;
 			List<string> instanceTags = new List<string>();
 			
 			Console.WriteLine(String.Join(",", UserData.Instances.Record.Keys));
@@ -59,15 +58,17 @@ namespace Lexplosion.Gui.Pages.MW
 						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 					}
 				}
+				else 
+				{ 
 
-				this.Dispatcher.Invoke(() =>
-				{
-					UserControls.InstanceForm instance = BuildInstanceForm (
-						key, i, imageUrl, UserData.Instances.Record[key].Name, "by NightWorld", description, instanceTags
-					);
-					instances[key] = instance;
-				});
-
+					this.Dispatcher.Invoke(() =>
+					{
+						UserControls.InstanceForm instance = BuildInstanceForm (
+							key, i, imageUrl, UserData.Instances.Record[key].Name, "by NightWorld", description, instanceTags
+						);
+						instances[key] = instance;
+					});
+				}
 				i++;
 			}
 		}
@@ -75,12 +76,27 @@ namespace Lexplosion.Gui.Pages.MW
 		private InstanceForm BuildInstanceForm(string id, int row, string logo, string title, string author, string overview, List<string> tags)
 		{
 			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
-			var instanceForm = new InstanceForm(_mainWindow, title, id, author, overview, "", new BitmapImage(new Uri(logo)), tags, true, true);
+			var instanceForm = new InstanceForm(
+				_mainWindow, title, id, author, overview, "", new BitmapImage(new Uri(logo)), tags, true, true
+			);
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 			// Добавление в Столбики и Колноки в форме.
 			Grid.SetRow(instanceForm, row);
 			InstanceGrid.Children.Add(instanceForm);
+
+			if (!_mainWindow.ActiveInstanceForm.ContainsKey(id))
+			{
+				MainWindow.MultiPageInstanceForm multiPageInstanceForm = new MainWindow.MultiPageInstanceForm();
+				multiPageInstanceForm._catalogInstanceForm = instanceForm;
+				_mainWindow.ActiveInstanceForm.Add(id, multiPageInstanceForm);
+			}
+			else
+			{
+				var multiPageInstanceForm = _mainWindow.ActiveInstanceForm[id];
+				multiPageInstanceForm._catalogInstanceForm = instanceForm;
+				_mainWindow.ActiveInstanceForm.Add(id, multiPageInstanceForm);
+			}
 
 			return instanceForm;
 		}

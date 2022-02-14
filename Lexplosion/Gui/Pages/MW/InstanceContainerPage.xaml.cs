@@ -3,6 +3,7 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,6 +30,7 @@ namespace Lexplosion.Gui.Pages.MW
 		public bool _isInitializeInstance = false;
 		public SearchBox SearchBox;
 		private InstanceLoadingForm _instanceLoadingForm;
+		private Dictionary<string, InstanceForm> _instanceForms = new Dictionary<string, InstanceForm>();
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
@@ -105,7 +107,6 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public void BuildInstanceForm(OutsideInstance outsideInstance, int row)
 		{
-			
 			this.Dispatcher.Invoke(() =>
 			{
 				if (InstanceGrid.RowDefinitions.Count < 10)
@@ -117,6 +118,21 @@ namespace Lexplosion.Gui.Pages.MW
 				);
 				Grid.SetRow(instanceForm, row);
 				Console.WriteLine(outsideInstance.LocalId + " " + outsideInstance.Id);
+				_instanceForms.Add(outsideInstance.Id, instanceForm);
+
+				if (!_mainWindow.ActiveInstanceForm.ContainsKey(outsideInstance.Id))
+				{
+					MainWindow.MultiPageInstanceForm multiPageInstanceForm = new MainWindow.MultiPageInstanceForm();
+					multiPageInstanceForm._catalogInstanceForm = instanceForm;
+					_mainWindow.ActiveInstanceForm.Add(outsideInstance.Id, multiPageInstanceForm);
+				}
+				else 
+				{
+					var multiPageInstanceForm = _mainWindow.ActiveInstanceForm[outsideInstance.Id];
+					multiPageInstanceForm._catalogInstanceForm = instanceForm;
+					_mainWindow.ActiveInstanceForm.Add(outsideInstance.Id, multiPageInstanceForm);
+				}
+
 				InstanceGrid.Children.Add(instanceForm);
 			});
 		}

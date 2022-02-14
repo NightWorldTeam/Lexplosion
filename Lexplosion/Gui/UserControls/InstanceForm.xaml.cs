@@ -74,6 +74,10 @@ namespace Lexplosion.Gui.UserControls
             EXIT,
         }
 
+        private int _downloadProgress;
+        private int _stage;
+        private int _stagesCount;
+
         private UpperButtonFunctions _upperButtonFunc;
         private LowerButtonFunctions _lowerButtonFunc;
         private InstanceProperties _instanceProperties;
@@ -339,6 +343,8 @@ namespace Lexplosion.Gui.UserControls
                         "", ModloaderType.None, "", _instanceProperties.Id.ToString());
                 }
 
+                _mainWindow.DownloadingInstanceForms.Add(_instanceProperties.Id, this);
+
                 Lexplosion.Run.TaskRun(delegate
                 {
                     ManageLogic.UpdateInstance(_instanceProperties.LocalId, SetDownloadProcent, InstanceDownloadCompleted);
@@ -374,6 +380,10 @@ namespace Lexplosion.Gui.UserControls
 
         public void SetDownloadProcent(int stagesCount, int stage, int procent)
         {
+            _stagesCount = stagesCount;
+            _stage = stage;
+            _downloadProgress = procent;
+
             SwitchButtons(SwitchButtonsType.DOWNLOADING);
             MainWindow.Obj.Dispatcher.Invoke(delegate
             {
@@ -450,6 +460,7 @@ namespace Lexplosion.Gui.UserControls
                     MessageBox.Show("Error " + result);
                     DefaultView();
                 }
+                _mainWindow.DownloadingInstanceForms.Remove(_instanceProperties.Id);
             });
         }
 

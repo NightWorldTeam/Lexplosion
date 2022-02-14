@@ -125,6 +125,7 @@
     <Compile Include="Gui\InstanceCreator\InstanceSettingsPage.xaml.cs">
       <DependentUpon>InstanceSettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\Login\InstanceFormsController.cs" />
     <Compile Include="Gui\Pages\AuthPage.xaml.cs">
       <DependentUpon>AuthPage.xaml</DependentUpon>
     </Compile>
