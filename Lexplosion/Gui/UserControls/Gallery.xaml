@@ -5,15 +5,62 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Lexplosion.Gui.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="264" d:DesignWidth="516">
+             d:DesignHeight="240" d:DesignWidth="450">
+    <UserControl.Resources>
+        <Style x:Key="ImageSwitch" TargetType="{x:Type Button}">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Height" Value="240"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border" BorderBrush="Transparent" 
+                                BorderThickness="0">
+                            <Border.Background>
+                                <LinearGradientBrush Opacity="0.1" StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#111111" Offset="1"/>
+                                    <GradientStop Color="Transparent" Offset="3"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Rectangle x:Name="Image">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/regBG.png" />
+            </Rectangle.Fill>
         </Rectangle>
-        <Button x:Name="PreviousImageButton" Height="40" Width="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10" 
-                Background="Transparent" Content="&lt;--" Foreground="White" FontSize="20"
-                Click="PreviousImageButton_Click"/>
-        <Button x:Name="NextImageButton" Height="40" Width="40" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10"
-                Background="Transparent" Content="-->" Foreground="White" FontSize="20"
-                Click="NextImageButton_Click"/>
+        <Button x:Name="PreviousImageButton" 
+                Style="{StaticResource ImageSwitch}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Click="PreviousImageButton_Click">
+            <Path Stroke="White" Data="M1 1l3 3.5L1 8" Margin="0" 
+                  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Path.RenderTransform>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                </Path.RenderTransform>
+                <Path.LayoutTransform>
+                    <RotateTransform Angle="180" />
+                </Path.LayoutTransform>
+            </Path>
+        </Button>
+        <Button x:Name="NextImageButton" 
+                Style="{StaticResource ImageSwitch}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Click="PreviousImageButton_Click">
+            <Path Stroke="White" Data="M1 1l3 3.5L1 8" Margin="0" 
+                  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Path.RenderTransform>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                </Path.RenderTransform>
+            </Path>
+        </Button>
     </Grid>
 </UserControl>

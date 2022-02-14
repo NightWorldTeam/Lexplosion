@@ -33,8 +33,9 @@
                     <ColumnDefinition Width="230" />
                 </Grid.ColumnDefinitions>
                 <!-- Width="450" Height="240" -->
-                <Image Margin="20,0,0,0" Source="pack://application:,,,/Assets/images/background/regBG.png" 
-                    Grid.Column="0" Width="450" Stretch="Fill"/>
+                <usercontrols:Gallery Margin="20,0,0,0"/>
+                <!--Image Margin="20,0,0,0" Source="pack://application:,,,/Assets/images/background/regBG.png" 
+                    Grid.Column="0" Width="450" Stretch="Fill"/-->
                 <Grid Grid.Column="1" ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="180" />
@@ -102,11 +103,10 @@
                     </StackPanel>
                     <Button Content="Вебсайт" 
                            Grid.Row="1" FontSize="14"
-                           Width="100"
-                           Foreground="White"
+                           Width="100" Foreground="White"
                            Name="CurseforgeUrl"  Click="CurseforgeUrl_Click"
                            Height="29" Margin="60,10,59.6,21" FontWeight="Medium"
-                            BorderBrush="#167FFC">
+                           BorderBrush="#167FFC">
                         <Button.Background>
                             <SolidColorBrush Color="#f5f5f5" Opacity="0.2" />
                         </Button.Background>
@@ -125,7 +125,8 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Border BorderThickness="1.5,0,0,0"
-                        Margin="20,0,0,0" Padding="1">
+                        Margin="20,0,0,0" Padding="1"
+                        Grid.Column="0">
                     <Border.BorderBrush>
                         <SolidColorBrush Color="#167FFC"/>
                     </Border.BorderBrush>
@@ -134,8 +135,8 @@
                             <RowDefinition Height="20" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Категории" FontWeight="Medium" Foreground="#ababab"
-                                   Padding="5,0,0,0"/>
+                        <TextBlock Grid.Row="0" Text="Категории" FontWeight="Medium" 
+                                   Foreground="#ababab" Padding="5,0,0,0"/>
                         <WrapPanel Grid.Row="1" Orientation="Horizontal">
                             <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="Tech" FontWeight="Medium"/>
                             <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="Magic" FontWeight="Medium"/>
@@ -146,7 +147,32 @@
                         </WrapPanel>
                     </Grid>
                 </Border>
+                <Border BorderThickness="1.5,0,0,0"
+                        Margin="20,0,0,0" Padding="1"
+                        Grid.Column="1">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="#167FFC"/>
+                    </Border.BorderBrush>
+                    <Grid ShowGridLines="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Авторы" FontWeight="Medium" 
+                                   Foreground="#ababab" Padding="5,0,0,0"/>
+                        <WrapPanel Grid.Row="1" Orientation="Horizontal">
+                            <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="Shivaxi," FontWeight="Medium"/>
+                            <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="Icebelly," FontWeight="Medium"/>
+                            <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="fonnymunkey," FontWeight="Medium"/>
+                            <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="Charles445," FontWeight="Medium"/>
+                            <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="0x281," FontWeight="Medium"/>
+                            <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="Forge_User_83249163," FontWeight="Medium"/>
+                            <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="Titan_WuKong" FontWeight="Medium"/>
+                        </WrapPanel>
+                    </Grid>
+                </Border>
             </Grid>
+            
             <Border Grid.Row="4" BorderThickness="0,0,0,0" 
                     Margin="10,10,0,0" BorderBrush="#212326">
                 <Grid>

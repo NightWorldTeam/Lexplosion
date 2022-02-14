@@ -16,12 +16,12 @@ namespace Lexplosion.Gui.UserControls
         private int maxNumberPage;
         private List<string> uriImages;
 
-        public Gallery(List<string> images)
+        public Gallery() // List<string> images
         {
             InitializeComponent();
-            uriImages = images;
-            maxNumberPage = images.Count;
-            Console.WriteLine(images[0]);
+            //uriImages = images;
+            //maxNumberPage = images.Count;
+            //Console.WriteLine(images[0]);
         }
 
         public void ShowControlParams() 

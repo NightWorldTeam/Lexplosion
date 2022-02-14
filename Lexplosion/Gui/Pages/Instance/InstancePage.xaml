@@ -29,8 +29,8 @@
         </Style>
         <ControlTemplate x:Key="ImageButton" TargetType="{x:Type Button}">
             <Border x:Name="Border" Background="{TemplateBinding Background}"
-                    BorderThickness="0"
-                    BorderBrush="Transparent">
+                    BorderThickness="0" BorderBrush="Transparent"
+                    CornerRadius="6">
                 <ContentPresenter />
             </Border>
         </ControlTemplate>
@@ -103,11 +103,19 @@
                                 FontWeight="Bold"/>
                             <Button Template="{StaticResource ImageButton}"
                                     Height="28" Width="28" Margin="5,0,0,0"
-                                    FontSize="6.5" 
-                                    HorizontalContentAlignment="Stretch"
-                                    Background="Transparent"
-                                    Content="     &#x26AB;&#xa;     &#x26AB;&#xa;     &#x26AB;"
-                                    Foreground="#167FFC">
+                                    FontSize="5" Background="#202020"
+                                    Foreground="#167FFC" Focusable="False">
+                                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
+                                    <Path Stroke="White" StrokeThickness="5" 
+                                          Data="M -1,0 A 1,1 0 1 1 1,0 M -1,0 A 1,1 0 1 0 1,0"
+                                          Margin="2,5.5,0,0"/>
+                                    <Path Stroke="White" StrokeThickness="5" 
+                                          Data="M -1,0 A 1,1 0 1 1 1,0 M -1,0 A 1,1 0 1 0 1,0"
+                                          Margin="2,5,0,0"/>
+                                    <Path Stroke="White" StrokeThickness="5" 
+                                          Data="M -1,0 A 1,1 0 1 1 1,0 M -1,0 A 1,1 0 1 0 1,0"
+                                          Margin="2,5,0,0"/>
+                                </StackPanel>
                             </Button>
                         </StackPanel>
                     </Grid>
