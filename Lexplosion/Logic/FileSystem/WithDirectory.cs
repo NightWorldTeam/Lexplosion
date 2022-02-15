@@ -434,8 +434,6 @@ namespace Lexplosion.Logic.FileSystem
 
             public static List<string> InstallInstance(string instanceId, InstanceManifest data, LocalFiles localFiles, ProcentUpdate progressFunction)
             {
-                // Во-первых: нужно сделать флаг полностью ли скачан клиент. Ибо после аварийного завершения работы он думает что скачано всё
-                // Во-вторых: если удалить одну из папко вроде config он блять почему то начинает перекачивать большую часть модов
                 Dictionary<int, CurseforgeApi.InstalledAddonInfo> installedAddons = null;
                 installedAddons = localFiles.InstalledAddons;
 

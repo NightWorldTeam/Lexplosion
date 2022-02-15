@@ -71,7 +71,7 @@ namespace Lexplosion.Logic.Management
             foreach (string instance in UserData.Instances.Record.Keys)
             {
                 //получаем внешние айдишники всех не локальных модпаков
-                if(UserData.Instances.Record[instance].Type != InstanceSource.Local)
+                if (UserData.Instances.Record[instance].Type != InstanceSource.Local)
                 {
                     InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
                     if (data != null && data.id != null)

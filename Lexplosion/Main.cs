@@ -60,7 +60,6 @@ namespace Lexplosion
             UserData.settings = DataFilesManager.GetSettings();
             LaunchGame.SetDefaultSettings();
             WithDirectory.Create(UserData.settings["gamePath"]);
-            TasksManager.Init();
 
             if (ToServer.CheckLauncherUpdates())
             {
