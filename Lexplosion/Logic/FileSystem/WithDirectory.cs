@@ -505,7 +505,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     int filesCount = downloadList.Count;
 
-                    if(filesCount != 0)
+                    if (filesCount != 0)
                     {
                         Semaphore sem = new Semaphore(15, 15); // этот семафор нужен чтобы за раз не запустилось более 15 потоков
                         ManualResetEvent endEvent = new ManualResetEvent(false); // эта хуйня сработает когда все потоки завершат работу и все аддоны будут скачаны

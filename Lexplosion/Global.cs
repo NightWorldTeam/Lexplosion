@@ -41,7 +41,7 @@ namespace Lexplosion.Global
                 Record[localId] = parametrs;
                 Assets[localId] = assets;
 
-                if(externalId != "" && externalId != null)
+                if (externalId != "" && externalId != null)
                 {
                     ExternalIds[externalId] = localId;
                 }
