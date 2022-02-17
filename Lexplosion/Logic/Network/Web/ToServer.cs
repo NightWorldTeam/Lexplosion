@@ -42,7 +42,7 @@ namespace Lexplosion.Logic.Network
             try
             {
                 string answer = HttpGet(LaunсherSettings.URL.VersionsData);
-                if(answer != null)
+                if (answer != null)
                 {
                     List<MCVersionInfo> data = JsonConvert.DeserializeObject<List<MCVersionInfo>>(answer);
                     return data ?? new List<MCVersionInfo>();

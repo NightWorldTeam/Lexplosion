@@ -169,7 +169,7 @@ namespace Lexplosion.Logic.Management
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
             if (Info != null || CurseforgeLogic.InvalidStruct(InstanceId, localFiles)) 
             {
-                if(Info == null)
+                if (Info == null)
                 {
                     Info = CurseforgeApi.GetInstanceInfo(InfoData.id, InfoData.instanceVersion); //получем информацию об этом модпаке
 

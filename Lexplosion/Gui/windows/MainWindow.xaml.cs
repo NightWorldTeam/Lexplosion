@@ -12,6 +12,12 @@ namespace Lexplosion.Gui.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
+        public class MultiPageInstanceForm
+        {
+            public InstanceForm _libraryInstanceForm;
+            public InstanceForm _catalogInstanceForm;
+        }
+
         // хранит объект этого окна
         public static MainWindow Obj = null;
 
@@ -23,6 +29,10 @@ namespace Lexplosion.Gui.Windows
         public Uri InstanceLogoPath;
 
         private Dictionary<string, Page> _pages = new Dictionary<string, Page>();
+
+        public Dictionary<string, MultiPageInstanceForm> ActiveInstanceForm = new Dictionary<string, MultiPageInstanceForm>();
+        public Dictionary<string, InstanceForm> DownloadingInstanceForms = new Dictionary<string, InstanceForm>();
+
         public Page SelectedPage;
         public LeftPanel LeftPanel;
 
@@ -40,7 +50,7 @@ namespace Lexplosion.Gui.Windows
             IsGameRun = false;
         }
 
-        private void InitializeLeftMenu() 
+        private void InitializeLeftMenu()
         {
             LeftPanel = new LeftPanel(SelectedPage, LeftPanel.PageType.InstanceContainer, this);
             Grid.SetColumn(LeftPanel, 0);
@@ -49,7 +59,7 @@ namespace Lexplosion.Gui.Windows
             this.PagesController("InstanceContainerPage", this.RightFrame, delegate ()
             {
                 return new InstanceContainerPage(this);
-            });   
+            });
         }
 
         public void PagesController(string page, Frame frame, CreateObject createObject)

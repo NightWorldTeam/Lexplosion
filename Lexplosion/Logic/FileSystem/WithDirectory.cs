@@ -356,7 +356,7 @@ namespace Lexplosion.Logic.FileSystem
                 //try
                 {
                     //удаляем старые файлы
-                    if(localFiles.Files != null)
+                    if (localFiles.Files != null)
                     {
                         foreach (string file in localFiles.Files)
                         {
@@ -578,7 +578,7 @@ namespace Lexplosion.Logic.FileSystem
                         Console.WriteLine("КОНЕЦ ");
                     }
 
-                    if(errors.Count == 0)
+                    if (errors.Count == 0)
                     {
                         compliteDownload.FullClient = true; // TODO: учитывать ошибки
                     }

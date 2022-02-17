@@ -226,7 +226,7 @@ namespace Lexplosion.Logic.Management
         public static bool CheckIntanceUpdates(string instanceId, InstanceSource type)
         {
             var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json");
-            if(infoData == null || infoData.id == null)
+            if (infoData == null || infoData.id == null)
             {
                 return true;
             }
@@ -234,7 +234,7 @@ namespace Lexplosion.Logic.Management
             switch (type)
             {
                 case InstanceSource.Curseforge:
-                    if(!Int32.TryParse(infoData.id, out _))
+                    if (!Int32.TryParse(infoData.id, out _))
                     {
                         return true;
                     }
@@ -306,7 +306,7 @@ namespace Lexplosion.Logic.Management
             
             foreach (string file in addonsList.Keys)
             {
-                if(addonsList[file].Item2 == DownloadAddonRes.Successful)
+                if (addonsList[file].Item2 == DownloadAddonRes.Successful)
                 {
                     installedAddons[file] = addonsList[file].Item1;
                 }    

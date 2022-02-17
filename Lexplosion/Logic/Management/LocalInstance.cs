@@ -45,7 +45,7 @@ namespace Lexplosion.Logic.Management
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
                 BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
 
-                if(BaseFiles == null)
+                if (BaseFiles == null)
                 {
                     return InstanceInit.GuardError;
                 }
