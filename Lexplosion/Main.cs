@@ -26,6 +26,7 @@ namespace Lexplosion
     {
         public static StreamList threads = new StreamList();
         private static App app = new App();
+        public delegate void StopTask();
 
         [STAThread]
         static void Main()
@@ -161,7 +162,7 @@ namespace Lexplosion
             Environment.Exit(0);
         }
 
-        public static Thread TaskRun(ThreadStart ThreadFunc)
+        public static StopTask TaskRun(ThreadStart ThreadFunc)
         {
             threads.Wait();
 
@@ -169,12 +170,11 @@ namespace Lexplosion
 
             var thread = new Thread(delegate () 
             {
-                ref StreamList threadsList = ref threads; // TODO: это не нужно
                 int threadKey = key;
 
                 ThreadFunc();
 
-                threadsList.RemoveAt(threadKey);
+                threads.RemoveAt(threadKey);
             });
 
             threads[key] = thread;
@@ -182,7 +182,12 @@ namespace Lexplosion
             thread.Start();
             threads.Release();
 
-            return thread;
+            return delegate ()
+            {
+                thread.Abort();
+                int threadKey = key;
+                threads.RemoveAt(threadKey);
+            };
         }
     }
 }
