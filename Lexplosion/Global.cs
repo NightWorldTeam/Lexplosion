@@ -14,15 +14,6 @@ namespace Lexplosion.Global
         public static bool isAuthorized = false;
         public static bool offline = false;
         public static bool noUpdate = false;
-        /*
-        javaPath, gamePath, 
-        xmx, xms, 
-        windowWidth, windowHeight, 
-        noUpdate, showConsole, 
-        hiddenMode, gameArgs, 
-        selectedModpack, launcherAssetsV, 
-        login, password
-        */
         public static Dictionary<string, string> settings; //общие настройки
 
         public static class Instances

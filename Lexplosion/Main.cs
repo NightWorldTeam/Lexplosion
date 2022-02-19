@@ -153,6 +153,7 @@ namespace Lexplosion
         public static void BeforeExit(object sender, EventArgs e)
         {
             // TODO: сохранить все данные
+            UserStatusSetter.Exit();
             threads.StopThreads();
         }
 

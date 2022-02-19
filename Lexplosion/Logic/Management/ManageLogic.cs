@@ -49,6 +49,8 @@ namespace Lexplosion.Logic.Management
 
                     UserData.isAuthorized = true;
 
+                    UserStatusSetter.SetBaseStatus(UserStatusSetter.Statuses.Online);
+
                     return AuthCode.Successfully;
                 }
                 else
