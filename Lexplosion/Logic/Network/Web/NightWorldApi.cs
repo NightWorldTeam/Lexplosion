@@ -92,7 +92,7 @@ namespace Lexplosion.Logic.Network
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
                             Dictionary<string, LibInfo> libraries = null;
-                            if(filesData.libraries != null)
+                            if (filesData.libraries != null)
                             {
                                 libraries = new Dictionary<string, LibInfo>();
                                 foreach (string lib in filesData.libraries.Keys)

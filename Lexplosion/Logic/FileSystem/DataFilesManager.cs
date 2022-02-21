@@ -282,7 +282,7 @@ namespace Lexplosion.Logic.FileSystem
             };
 
             SaveFile(directory + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(dataLocal));
-            if(data.libraries != null)
+            if (data.libraries != null)
             {
                 SaveFile(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
             }    

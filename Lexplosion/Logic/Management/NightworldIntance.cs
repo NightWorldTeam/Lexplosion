@@ -146,7 +146,7 @@ namespace Lexplosion.Logic.Management
                     return InstanceInit.GuardError; 
                 }
 
-                if(BaseFiles.UpdatesCount > 0)
+                if (BaseFiles.UpdatesCount > 0)
                 {
                     stagesCount++;
                 }
@@ -187,7 +187,7 @@ namespace Lexplosion.Logic.Management
                 BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
             }
 
-            if(BaseFiles.UpdatesCount > 0)
+            if (BaseFiles.UpdatesCount > 0)
             {
                 ProgressHandler(stagesCount, 1, 0);
             }
@@ -210,7 +210,7 @@ namespace Lexplosion.Logic.Management
 
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
-            if(errors != null)
+            if (errors != null)
             {
                 foreach (string error in errors_)
                 {
@@ -223,7 +223,7 @@ namespace Lexplosion.Logic.Management
             }
 
             InstanceInit result = InstanceInit.Successful;
-            if(errors.Count > 0)
+            if (errors.Count > 0)
             {
                 result = InstanceInit.DownloadFilesError;
             }

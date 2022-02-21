@@ -49,6 +49,8 @@ namespace Lexplosion.Logic.Management
 
                     UserData.isAuthorized = true;
 
+                    UserStatusSetter.SetBaseStatus(UserStatusSetter.Statuses.Online);
+
                     return AuthCode.Successfully;
                 }
                 else
@@ -71,7 +73,7 @@ namespace Lexplosion.Logic.Management
             foreach (string instance in UserData.Instances.Record.Keys)
             {
                 //получаем внешние айдишники всех не локальных модпаков
-                if(UserData.Instances.Record[instance].Type != InstanceSource.Local)
+                if (UserData.Instances.Record[instance].Type != InstanceSource.Local)
                 {
                     InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
                     if (data != null && data.id != null)
@@ -226,7 +228,7 @@ namespace Lexplosion.Logic.Management
         public static bool CheckIntanceUpdates(string instanceId, InstanceSource type)
         {
             var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json");
-            if(infoData == null || infoData.id == null)
+            if (infoData == null || infoData.id == null)
             {
                 return true;
             }
@@ -234,7 +236,7 @@ namespace Lexplosion.Logic.Management
             switch (type)
             {
                 case InstanceSource.Curseforge:
-                    if(!Int32.TryParse(infoData.id, out _))
+                    if (!Int32.TryParse(infoData.id, out _))
                     {
                         return true;
                     }
@@ -306,7 +308,7 @@ namespace Lexplosion.Logic.Management
             
             foreach (string file in addonsList.Keys)
             {
-                if(addonsList[file].Item2 == DownloadAddonRes.Successful)
+                if (addonsList[file].Item2 == DownloadAddonRes.Successful)
                 {
                     installedAddons[file] = addonsList[file].Item1;
                 }    

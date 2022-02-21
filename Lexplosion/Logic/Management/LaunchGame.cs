@@ -71,6 +71,8 @@ namespace Lexplosion.Logic.Management
             process = new Process();
             gameGateway = new Gateway();
 
+            UserStatusSetter.GameStart(UserData.Instances.Record[instanceId].Name);
+
             if (UserData.settings["showConsole"] == "true")
             {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
@@ -154,6 +156,8 @@ namespace Lexplosion.Logic.Management
 
                 process.Exited += (sender, ea) =>
                 {
+                    UserStatusSetter.GameStop();
+
                     if (!gameVisible)
                     {
                         MainWindow.Obj.Dispatcher.Invoke(delegate
@@ -186,8 +190,17 @@ namespace Lexplosion.Logic.Management
                         //MainWindow.window.ClientManagement.IsEnabled = true;
                     });
 
-                    process.Dispose();
-                    gameGateway.StopWork();
+                    try
+                    {
+                        process.Dispose();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        gameGateway.StopWork();
+                    }
+                    catch { }
 
                     gameGateway = null;
                     process = null;
@@ -295,6 +308,8 @@ namespace Lexplosion.Logic.Management
 
         public static void KillProcess()
         {
+            UserStatusSetter.GameStop();
+
             try
             {
                 process.Kill(); // TODO: тут иногда крашится (ввроде если ошибка скачивания была)

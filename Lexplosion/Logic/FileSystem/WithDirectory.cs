@@ -356,7 +356,7 @@ namespace Lexplosion.Logic.FileSystem
                 //try
                 {
                     //удаляем старые файлы
-                    if(localFiles.Files != null)
+                    if (localFiles.Files != null)
                     {
                         foreach (string file in localFiles.Files)
                         {
@@ -434,8 +434,6 @@ namespace Lexplosion.Logic.FileSystem
 
             public static List<string> InstallInstance(string instanceId, InstanceManifest data, LocalFiles localFiles, ProcentUpdate progressFunction)
             {
-                // Во-первых: нужно сделать флаг полностью ли скачан клиент. Ибо после аварийного завершения работы он думает что скачано всё
-                // Во-вторых: если удалить одну из папко вроде config он блять почему то начинает перекачивать большую часть модов
                 Dictionary<int, CurseforgeApi.InstalledAddonInfo> installedAddons = null;
                 installedAddons = localFiles.InstalledAddons;
 
@@ -505,7 +503,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     int filesCount = downloadList.Count;
 
-                    if(filesCount != 0)
+                    if (filesCount != 0)
                     {
                         Semaphore sem = new Semaphore(15, 15); // этот семафор нужен чтобы за раз не запустилось более 15 потоков
                         ManualResetEvent endEvent = new ManualResetEvent(false); // эта хуйня сработает когда все потоки завершат работу и все аддоны будут скачаны
@@ -580,7 +578,7 @@ namespace Lexplosion.Logic.FileSystem
                         Console.WriteLine("КОНЕЦ ");
                     }
 
-                    if(errors.Count == 0)
+                    if (errors.Count == 0)
                     {
                         compliteDownload.FullClient = true; // TODO: учитывать ошибки
                     }

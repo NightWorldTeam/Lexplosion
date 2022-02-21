@@ -219,7 +219,7 @@ namespace Lexplosion.Logic.Management
         {
             Console.WriteLine("CLICK");
             List<OutsideInstance> page;
-            if(Math.Abs(pageIndex - PageIndex) > 1)
+            if (Math.Abs(pageIndex - PageIndex) > 1)
             {
                 PageIndex = pageIndex;
             }
