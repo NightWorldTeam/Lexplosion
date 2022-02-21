@@ -78,6 +78,26 @@ namespace Lexplosion.Gui.UserControls
         private int _stage;
         private int _stagesCount;
 
+        public int DownloadProgress
+        {
+            get { return _downloadProgress; }
+            set { _downloadProgress = value; }
+        }
+
+        public int Stage 
+        {
+            get { return _stage; }
+            set { _stage = value; }
+        }
+
+        public int StagesCount 
+        {
+            get { return _stagesCount; }
+            set { _stagesCount = value; }
+        }
+
+        public static bool IsDownloading = false;
+
         private UpperButtonFunctions _upperButtonFunc;
         private LowerButtonFunctions _lowerButtonFunc;
         private InstanceProperties _instanceProperties;
@@ -344,6 +364,7 @@ namespace Lexplosion.Gui.UserControls
                 }
 
                 _mainWindow.DownloadingInstanceForms.Add(_instanceProperties.Id, this);
+                IsDownloading = true;
 
                 Lexplosion.Run.TaskRun(delegate
                 {
@@ -380,9 +401,9 @@ namespace Lexplosion.Gui.UserControls
 
         public void SetDownloadProcent(int stagesCount, int stage, int procent)
         {
-            _stagesCount = stagesCount;
-            _stage = stage;
-            _downloadProgress = procent;
+            StagesCount = stagesCount;
+            Stage = stage;
+            DownloadProgress = procent;
 
             SwitchButtons(SwitchButtonsType.DOWNLOADING);
             MainWindow.Obj.Dispatcher.Invoke(delegate
@@ -461,6 +482,7 @@ namespace Lexplosion.Gui.UserControls
                     DefaultView();
                 }
                 _mainWindow.DownloadingInstanceForms.Remove(_instanceProperties.Id);
+                IsDownloading = false;
             });
         }
 
@@ -505,5 +527,6 @@ namespace Lexplosion.Gui.UserControls
             TextBlockOverview.Text = instanceAssets.description;
             // TODO: КОГДА ПОЯВЯТСЯ ТЕГИ В InstanceAssets
         }
+
     }
 }
