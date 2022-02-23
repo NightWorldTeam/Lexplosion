@@ -17,7 +17,7 @@ namespace Lexplosion.Gui.Pages.MW
     public partial class LibraryContainerPage : Page
 	{
 		private MainWindow _mainWindow;
-		private Dictionary<string, UserControls.InstanceForm> instances = new Dictionary<string, InstanceForm>();
+		private Dictionary<string, InstanceForm> instances = new Dictionary<string, InstanceForm>();
 
 		public LibraryContainerPage(MainWindow mainWindow)
 		{
@@ -58,12 +58,17 @@ namespace Lexplosion.Gui.Pages.MW
 						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 					}
 				}
-				else 
-				{ 
+				else if (_mainWindow.DownloadingInstanceForms.ContainsKey(key)) 
+				{
+					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
+					Grid.SetRow(_mainWindow.DownloadingInstanceForms[key], i);
+				}
+				else
+				{
 
 					this.Dispatcher.Invoke(() =>
 					{
-						UserControls.InstanceForm instance = BuildInstanceForm (
+						UserControls.InstanceForm instance = BuildInstanceForm(
 							key, i, imageUrl, UserData.Instances.Record[key].Name, "by NightWorld", description, instanceTags
 						);
 						instances[key] = instance;
