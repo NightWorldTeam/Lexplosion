@@ -231,7 +231,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    answer = HttpPost(LaunсherSettings.URL.DataScripts + "authorization.php", data);
+                    answer = HttpPost(LaunсherSettings.URL.Base + "/lexplosionAuth", data);
 
                     if (answer == null)
                     {

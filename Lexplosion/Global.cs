@@ -65,7 +65,7 @@ namespace Lexplosion.Global
             public const string Upload = "https://night-world.org/minecraft/upload/";
             public const string LauncherParts = "https://night-world.org/assets/launcher/windows/";
             public const string LogicScripts = "https://night-world.org/requestProcessing/";
-            public const string DataScripts = "https://night-world.org/launcherApi/";
+            public const string Base = "https://night-world.org/";
         }
 
         public static string gamePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Replace(@"\", "/") + "/" + "night-world";
