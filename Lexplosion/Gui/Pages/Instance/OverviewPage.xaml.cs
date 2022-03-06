@@ -65,8 +65,8 @@ namespace Lexplosion.Gui.Pages.Instance
             var urls = new List<string>();
             foreach (var item in _instanceInfo.attachments) 
             {
-                if (!item.isDefault && !item.thumbnailUrl.Contains("avatars"))
-                    urls.Add(item.thumbnailUrl);
+                if (!item.isDefault && !item.url.Contains("avatars"))
+                    urls.Add(item.url);
             }
             return urls;
         }
