@@ -30,7 +30,6 @@ namespace Lexplosion.Gui.Pages.MW
 		public bool _isInitializeInstance = false;
 		public SearchBox SearchBox;
 		private InstanceLoadingForm _instanceLoadingForm;
-		private Dictionary<string, InstanceForm> _instanceForms = new Dictionary<string, InstanceForm>();
 
 		public InstanceContainerPage(MainWindow mainWindow)
 		{
@@ -118,23 +117,6 @@ namespace Lexplosion.Gui.Pages.MW
 				);
 				Grid.SetRow(instanceForm, row);
 				Console.WriteLine(outsideInstance.LocalId + " " + outsideInstance.Id);
-				if (_instanceForms.ContainsKey(outsideInstance.Id))
-					return;
-				_instanceForms.Add(outsideInstance.Id, instanceForm);
-
-				if (!_mainWindow.ActiveInstanceForm.ContainsKey(outsideInstance.Id))
-				{
-					MainWindow.MultiPageInstanceForm multiPageInstanceForm = new MainWindow.MultiPageInstanceForm();
-					multiPageInstanceForm._catalogInstanceForm = instanceForm;
-					_mainWindow.ActiveInstanceForm.Add(outsideInstance.Id, multiPageInstanceForm);
-				}
-				else 
-				{
-					var multiPageInstanceForm = _mainWindow.ActiveInstanceForm[outsideInstance.Id];
-					multiPageInstanceForm._catalogInstanceForm = instanceForm;
-					_mainWindow.ActiveInstanceForm.Add(outsideInstance.Id, multiPageInstanceForm);
-				}
-
 				InstanceGrid.Children.Add(instanceForm);
 			});
 		}

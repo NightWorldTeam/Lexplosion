@@ -16,6 +16,7 @@ namespace Lexplosion.Gui.Pages.Instance
         {
             InitializeComponent();
             _instaceProperties = instanceProperties;
+            Gallery.LoadImages(instanceProperties.InstanceAssets.images);
         }
 
         private void CurseforgeUrl_Click(object sender, RoutedEventArgs e)

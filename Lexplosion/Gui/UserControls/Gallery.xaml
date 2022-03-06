@@ -24,6 +24,34 @@
                             </Border.Background>
                             <ContentPresenter />
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation To="100" From="0" 
+                                                         Duration="0:0:0.5"
+                                                         Storyboard.TargetProperty="(Button.Opacity)">
+                                            <DoubleAnimation.EasingFunction>
+                                                <ElasticEase EasingMode="EaseInOut" Oscillations="10000000" Springiness="10" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation To="0" From="100" 
+                                                         Duration="0:0:0.5"
+                                                         Storyboard.TargetProperty="(Button.Opacity)">
+                                            <DoubleAnimation.EasingFunction>
+                                                <ElasticEase EasingMode="EaseInOut" Oscillations="10000000" Springiness="10" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -35,7 +63,7 @@
                 <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/regBG.png" />
             </Rectangle.Fill>
         </Rectangle>
-        <Button x:Name="PreviousImageButton" 
+        <Button x:Name="PreviousImageButton"
                 Style="{StaticResource ImageSwitch}"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"

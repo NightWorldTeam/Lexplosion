@@ -33,7 +33,7 @@
                     <ColumnDefinition Width="230" />
                 </Grid.ColumnDefinitions>
                 <!-- Width="450" Height="240" -->
-                <usercontrols:Gallery Margin="20,0,0,0"/>
+                <usercontrols:Gallery x:Name="Gallery" Margin="20,0,0,0"/>
                 <!--Image Margin="20,0,0,0" Source="pack://application:,,,/Assets/images/background/regBG.png" 
                     Grid.Column="0" Width="450" Stretch="Fill"/-->
                 <Grid Grid.Column="1" ShowGridLines="False">
@@ -147,7 +147,7 @@
                         </WrapPanel>
                     </Grid>
                 </Border>
-                <Border BorderThickness="1.5,0,0,0"
+                <!--Border BorderThickness="1.5,0,0,0"
                         Margin="20,0,0,0" Padding="1"
                         Grid.Column="1">
                     <Border.BorderBrush>
@@ -170,7 +170,7 @@
                             <TextBlock Padding="5,0,3,0" Foreground="LightGray" Text="Titan_WuKong" FontWeight="Medium"/>
                         </WrapPanel>
                     </Grid>
-                </Border>
+                </Border-->
             </Grid>
             
             <Border Grid.Row="4" BorderThickness="0,0,0,0" 
