@@ -54,7 +54,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Assets/images/icons/nw.ico</ApplicationIcon>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
@@ -405,7 +405,6 @@
     <Resource Include="Assets\images\icons\add_profile.png" />
     <Resource Include="Assets\images\icons\leave.png" />
     <Resource Include="Assets\images\icons\network.png" />
-    <Resource Include="Assets\images\icons\nw.ico" />
     <Resource Include="Assets\images\icons\profile.png" />
     <Resource Include="Assets\images\icons\settings.png" />
   </ItemGroup>
@@ -419,8 +418,10 @@
     <Resource Include="Assets\images\icons\visible_password.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="logo.ico" />
     <Resource Include="Assets\images\icons\more_blue.png" />
     <Resource Include="Assets\images\icons\more_gradient.png" />
+    <Resource Include="Assets\images\icons\logo.ico" />
     <Content Include="DLL\LumiSoft.Net.dll" />
     <Content Include="DLL\NewtonsoftJson.dll" />
     <Resource Include="launcher_loading.png" />

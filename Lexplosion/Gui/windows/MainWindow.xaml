@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Width="944" Height="528"
-        ResizeMode="NoResize" Icon="pack://application:,,,/Assets/images/icons/nw.ico"
+        ResizeMode="NoResize" Icon="pack://application:,,,/Assets/images/icons/logo.ico"
         Title="NightWorld"
         AllowsTransparency="False" WindowStyle="None">
 
@@ -54,15 +54,15 @@
                     <SolidColorBrush Color="#151719" />
                 </Grid.Background>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="0" />
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="28" />
                     <ColumnDefinition Width="28" />
                 </Grid.ColumnDefinitions>
 
-                <Image Width="20" Height="20" Grid.Column="1" Source="pack://application:,,,/Assets/images/icons/nw.ico"/>
+                <Image Width="24" Height="24" Grid.Column="0" Source="pack://application:,,,/Assets/images/icons/logo.ico" Grid.ColumnSpan="3" Margin="3,2,97.8,1.2"/>
                 <TextBlock FontSize="16"  Grid.Column="2" Foreground="White" Text="Lexplosion" Margin="4,2,0,0"/>
                 <Button Grid.Column="4" Click="HideWindow" Style="{StaticResource CBSG}" 
                         Width="28" 
