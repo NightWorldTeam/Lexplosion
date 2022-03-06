@@ -118,6 +118,8 @@ namespace Lexplosion.Gui.Pages.MW
 				);
 				Grid.SetRow(instanceForm, row);
 				Console.WriteLine(outsideInstance.LocalId + " " + outsideInstance.Id);
+				if (_instanceForms.ContainsKey(outsideInstance.Id))
+					return;
 				_instanceForms.Add(outsideInstance.Id, instanceForm);
 
 				if (!_mainWindow.ActiveInstanceForm.ContainsKey(outsideInstance.Id))
