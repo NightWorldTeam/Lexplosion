@@ -175,6 +175,7 @@ namespace Lexplosion.Logic.Network
 
                 if (answer != null)
                 {
+                    Console.WriteLine(answer);
                     return JsonConvert.DeserializeObject<CurseforgeInstanceInfo>(answer);
                 }
 

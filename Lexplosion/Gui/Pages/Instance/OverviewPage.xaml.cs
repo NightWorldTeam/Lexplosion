@@ -35,8 +35,8 @@ namespace Lexplosion.Gui.Pages.Instance
 
         private void SetRightPanelInfo() 
         {
-            Verison.Text = "1.16.5"; 
-            LastUpdate.Text = _instanceInfo.dataModified; 
+            Verison.Text = "1.16.5";
+            LastUpdate.Text = _instanceInfo.dateModified; 
             TotalDownloads.Text = ((Int32)_instanceInfo.downloadCount).ToString("##,#"); 
             Core.Text = "Forge"; 
         }
@@ -54,8 +54,8 @@ namespace Lexplosion.Gui.Pages.Instance
             var urls = new List<string>();
             foreach (var item in _instanceInfo.attachments) 
             {
-                if (!item.isDefault && !item.thumbnailUrl.Contains("avatars"))
-                    urls.Add(item.thumbnailUrl);
+                if (!item.isDefault && !item.url.Contains("avatars"))
+                    urls.Add(item.url);
             }
             return urls;
         }
