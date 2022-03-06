@@ -35,11 +35,22 @@ namespace Lexplosion.Gui.Pages.Instance
 
         private void SetRightPanelInfo() 
         {
-            Verison.Text = "1.16.5"; 
-            LastUpdate.Text = _instanceInfo.dataModified; 
-            TotalDownloads.Text = ((Int32)_instanceInfo.downloadCount).ToString("##,#"); 
-            Core.Text = "Forge"; 
-        }
+            Verison.Text = _instanceInfo.gameVersionLatestFiles[0].gameVersion; 
+            LastUpdate.Text = _instanceInfo.dateModified; 
+            TotalDownloads.Text = ((Int32)_instanceInfo.downloadCount).ToString("##,#");
+            if (_instanceInfo.modLoaders != null)
+            {
+                for (var i = 0; i < _instanceInfo.modLoaders.Count; i++)
+                {
+                    Core.Text += _instanceInfo.modLoaders[i].ToString();
+                    if (i < _instanceInfo.modLoaders.Count - 1) Core.Text += ", ";
+                }
+            }
+            else 
+            {
+                Core.Text = "Vanilla";
+            }
+        } 
 
         private TextBlock GetCategery(string categery) => new TextBlock()
         {
