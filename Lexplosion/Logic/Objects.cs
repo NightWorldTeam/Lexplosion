@@ -138,7 +138,6 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public float downloadCount;
         public string dataModified;
         public string websiteUrl;
-        public string wikiUrl;
     }
 
     public class OutsideInstance
