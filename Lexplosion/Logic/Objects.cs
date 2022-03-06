@@ -122,11 +122,18 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
             public string url;
         }
 
+        public class GameVersion
+        {
+            public string gameVersion;
+        }
+
         public int id;
         public string name;
         public List<Attachment> attachments;
         public List<Category> categories;
         public List<Author> authors;
+        public List<GameVersion> gameVersionLatestFiles;
+        public List<string> modLoaders;
         public string summary;
         public float downloadCount;
         public string dataModified;
