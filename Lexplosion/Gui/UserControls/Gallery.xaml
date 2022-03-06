@@ -82,7 +82,7 @@
                 Style="{StaticResource ImageSwitch}"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
-                Click="PreviousImageButton_Click">
+                Click="NextImageButton_Click">
             <Path Stroke="White" Data="M1 1l3 3.5L1 8" Margin="0" 
                   VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Path.RenderTransform>

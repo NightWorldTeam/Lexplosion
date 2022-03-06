@@ -1,8 +1,10 @@
 ﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Lexplosion.Gui.Pages.Instance
 {
@@ -11,17 +13,69 @@ namespace Lexplosion.Gui.Pages.Instance
     /// </summary>
     public partial class OverviewPage : Page
     {
-        private InstanceProperties _instaceProperties;
+        private InstanceProperties _instanceProperties;
+        private CurseforgeInstanceInfo _instanceInfo;
+        private InstanceSource source = InstanceSource.Curseforge;
         public OverviewPage(InstanceProperties instanceProperties)
         {
             InitializeComponent();
-            _instaceProperties = instanceProperties;
-            Gallery.LoadImages(instanceProperties.InstanceAssets.images);
+            _instanceProperties = instanceProperties;
+            GetInstance();
+
+            Gallery.LoadImages(GetUrls());
+
+            description.Text = _instanceInfo.summary;
+            shortDescription.Text = _instanceInfo.summary;
+
+            SetRightPanelInfo();
+
+            foreach (var item in _instanceInfo.categories) 
+                CategoryPanel.Children.Add(GetCategery(item.name));
+        }
+
+        private void SetRightPanelInfo() 
+        {
+            Verison.Text = "1.16.5"; 
+            LastUpdate.Text = _instanceInfo.dataModified; 
+            TotalDownloads.Text = ((Int32)_instanceInfo.downloadCount).ToString("##,#"); 
+            Core.Text = "Forge"; 
+        }
+
+        private TextBlock GetCategery(string categery) => new TextBlock()
+        {
+            FontWeight = FontWeights.Medium,
+            Foreground = new SolidColorBrush(Colors.LightGray),
+            Padding = new Thickness(5, 0, 3, 0),
+            Text = categery
+        };
+
+        private List<string> GetUrls()
+        {
+            var urls = new List<string>();
+            foreach (var item in _instanceInfo.attachments) 
+            {
+                if (!item.isDefault && !item.thumbnailUrl.Contains("avatars"))
+                    urls.Add(item.thumbnailUrl);
+            }
+            return urls;
+        }
+
+        private void GetInstance() 
+        {
+            switch (source) {
+                case InstanceSource.Curseforge:
+                    _instanceInfo = CurseforgeApi.GetInstance(_instanceProperties.Id);
+                    break;
+                case InstanceSource.Nightworld:
+                    break;
+                case InstanceSource.Local:
+                    break;
+            }
         }
 
         private void CurseforgeUrl_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.curseforge.com/minecraft/modpacks/rlcraft");
+            System.Diagnostics.Process.Start(_instanceInfo.websiteUrl);
         }
     }
 }

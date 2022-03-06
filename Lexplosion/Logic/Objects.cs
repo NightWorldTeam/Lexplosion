@@ -119,6 +119,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
             public int id;
             public bool isDefault;
             public string thumbnailUrl;
+            public string url;
         }
 
         public int id;
@@ -128,6 +129,9 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public List<Author> authors;
         public string summary;
         public float downloadCount;
+        public string dataModified;
+        public string websiteUrl;
+        public string wikiUrl;
     }
 
     public class OutsideInstance
@@ -171,5 +175,4 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string type;
         public string id;
     }
-
 }

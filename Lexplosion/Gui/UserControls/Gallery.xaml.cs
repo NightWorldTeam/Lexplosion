@@ -12,57 +12,57 @@ namespace Lexplosion.Gui.UserControls
     /// </summary>
     public partial class Gallery : UserControl
     {
-        private int selectedPage = 0;
         private int maxNumberPage;
+        private int selectedPage = 0;
         private List<string> uriImages;
 
-        public Gallery() // List<string> images
+        public Gallery()
         {
             InitializeComponent();
-            //uriImages = images;
-            //maxNumberPage = images.Count;
-            //Console.WriteLine(images[0]);
-        }
-
-        public void ShowControlParams() 
-        {
-            Console.WriteLine(Image.Width);
-            Console.WriteLine(Image.Height);
-        }
-
-        public void LoadImages(List<string> uris) 
-        {
-            uriImages = uris;
-            maxNumberPage = uris.Count;
-            var ib = new ImageBrush();
-            ib.ImageSource = new BitmapImage(new Uri(uriImages[0], UriKind.RelativeOrAbsolute));
-            Image.Fill = ib;
-            if (maxNumberPage > 1) { 
-                NextImageButton.IsEnabled = true;
-                PreviousImageButton.IsEnabled = true;
-            }
         }
 
         private void NextImageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedPage + 1 != maxNumberPage) 
+            Console.WriteLine("++");
+            if(selectedPage + 1 < maxNumberPage)
             {
                 selectedPage++;
-                var ib = new ImageBrush();
-                ib.ImageSource = new BitmapImage(new Uri(uriImages[selectedPage], UriKind.RelativeOrAbsolute));
-                Image.Fill = ib;
+                Image.Fill = new ImageBrush(new BitmapImage(new Uri(uriImages[selectedPage], UriKind.RelativeOrAbsolute)));
             }
         }
 
         private void PreviousImageButton_Click(object sender, RoutedEventArgs e)
         {
-            if (selectedPage > 0) 
+            Console.WriteLine("--");
+            if (selectedPage > 0)
             {
                 selectedPage--;
-                var ib = new ImageBrush();
-                ib.ImageSource = new BitmapImage(new Uri(uriImages[selectedPage], UriKind.RelativeOrAbsolute));
-                Image.Fill = ib;
+                Image.Fill = new ImageBrush(new BitmapImage(new Uri(uriImages[selectedPage], UriKind.RelativeOrAbsolute)));
             }
+        }
+
+        public void LoadImages(List<string> uris)
+        {
+            if(uris == null || uris.Count == 0)
+                return;
+
+            uriImages = uris;
+
+            maxNumberPage = uris.Count;
+            var ib = new ImageBrush();
+            ib.ImageSource = new BitmapImage(new Uri(uriImages[0], UriKind.RelativeOrAbsolute));
+            Image.Fill = ib;
+            if(maxNumberPage > 1)
+            {
+                NextImageButton.IsEnabled = true;
+                PreviousImageButton.IsEnabled = true;
+            }
+        }
+
+        public void ShowControlParams()
+        {
+            Console.WriteLine(Image.Width);
+            Console.WriteLine(Image.Height);
         }
     }
 }
