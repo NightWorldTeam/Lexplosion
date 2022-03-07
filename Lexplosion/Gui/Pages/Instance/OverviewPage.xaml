@@ -151,7 +151,7 @@
                 </Grid>
             </Grid>
             <TextBlock
-                x:Name="shortDescription"
+                x:Name="ShortDescription"
                 Grid.Row="2"
                 Width="690"
                 Margin="10,0,0,0"
@@ -226,7 +226,7 @@
                         FontWeight="Medium"
                         Text="Описание" />
                     <TextBlock
-                        x:Name="description"
+                        x:Name="Description"
                         Margin="0,30,0,0"
                         FontSize="14"
                         Foreground="#f5f5f5"
