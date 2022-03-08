@@ -22,7 +22,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="20" />
                 <RowDefinition Height="240" />
-                <RowDefinition Height="60" />
+                <RowDefinition x:Name="ShortDescriptionRow"  Height="60" />
                 <RowDefinition Height="67" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
@@ -33,7 +33,8 @@
                     <ColumnDefinition Width="230" />
                 </Grid.ColumnDefinitions>
                 <!-- Width="450" Height="240" -->
-                <usercontrols:Gallery x:Name="Gallery" Margin="20,0,0,0" />
+                <usercontrols:Gallery Grid.Column="0" x:Name="Gallery" Margin="20,0,0,0" Visibility="Hidden"/>
+                <Border x:Name="LoadingGallery" Grid.Column="0" Background="#232323" Visibility="Visible" Margin="20,0,0,0"  CornerRadius="10"/>
                 <!--Image Margin="20,0,0,0" Source="pack://application:,,,/Assets/images/background/regBG.png" 
                     Grid.Column="0" Width="450" Stretch="Fill"/-->
                 <Grid Grid.Column="1" ShowGridLines="False">
@@ -65,6 +66,9 @@
                                     HorizontalAlignment="Right"
                                     Foreground="White"
                                     Text="1.16.5" />
+
+                                <Border x:Name="LoadingVersion1" Grid.Column="0" Background="#202020" CornerRadius="10" Margin="0,7,5,7" />
+                                <Border x:Name="LoadingVersion2" Grid.Column="1" Background="#232323" CornerRadius="10" Margin="5,7,0,7" />
                             </Grid>
                         </Border>
                         <Border BorderThickness="0,0,0,0.5">
@@ -86,7 +90,9 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Foreground="White"
-                                    Text="Jan 22, 2022" />
+                                    Text="Jan 22, 2022" Visibility="Hidden"/>
+                                <Border x:Name="LoadingLastUpdate1" Grid.Column="0" Background="#202020" CornerRadius="10" Margin="0,7,5,7" />
+                                <Border x:Name="LoadingLastUpdate2" Grid.Column="1" Background="#232323" CornerRadius="10" Margin="5,7,0,7" />
                             </Grid>
                         </Border>
                         <Border BorderThickness="0,0,0,0.5">
@@ -107,7 +113,9 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Foreground="White"
-                                    Text="10,877,594" />
+                                    Text="10,877,594" Visibility="Hidden"/>
+                                <Border x:Name="LoadingTotalDownloads1" Grid.Column="0" Background="#202020" CornerRadius="10" Margin="0,7,5,7" />
+                                <Border x:Name="LoadingTotalDownloads2" Grid.Column="1" Background="#232323" CornerRadius="10" Margin="5,7,0,7" />
                             </Grid>
                         </Border>
                         <Border BorderThickness="0,0,0,0.5">
@@ -129,6 +137,8 @@
                                     HorizontalAlignment="Right"
                                     Foreground="White"
                                     Text="Fabric" />
+                                <Border x:Name="LoadingCore1" Grid.Column="0" Background="#202020" CornerRadius="10" Margin="0,7,5,7" />
+                                <Border x:Name="LoadingCore2" Grid.Column="1" Background="#232323" CornerRadius="10" Margin="5,7,0,7" />
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -148,6 +158,9 @@
                             <SolidColorBrush Color="#f5f5f5" Opacity="0.2" />
                         </Button.Background>
                     </Button>
+                    <Border Grid.Row="1" Width="120" Height="40" 
+                            Margin="0,0,0,10" CornerRadius="7" 
+                            x:Name="LoadingWebsiteButton" Background="#202020"/>
                 </Grid>
             </Grid>
             <TextBlock
@@ -159,17 +172,24 @@
                 FontWeight="Regular"
                 Foreground="WhiteSmoke"
                 Text="Тут короткое описание, которое находится в миниатюре."
-                TextWrapping="Wrap" />
+                TextWrapping="Wrap" Visibility="Hidden"/>
+            <Border x:Name="LoadingShortDescription" 
+                    Grid.Row="2"
+                    Margin="20,10,10,10"
+                    CornerRadius="10"
+                    Background="#202020"
+                    />
             <Grid Grid.Row="3" ShowGridLines="False">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="350" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Border
+                <Border x:Name="CategoryPanelBorder"
                     Grid.Column="0"
                     Margin="20,0,0,0"
                     BorderThickness="1.5,0,0,0"
-                    Padding="1">
+                    Padding="1"
+                    Visibility="Hidden">
                     <Border.BorderBrush>
                         <SolidColorBrush Color="#167FFC" />
                     </Border.BorderBrush>
@@ -184,11 +204,11 @@
                             Foreground="#ababab"
                             Padding="5,0,0,0"
                             Text="Категории" />
-                        <WrapPanel x:Name="CategoryPanel" Grid.Row="1" Orientation="Horizontal">
-                            
+                        <WrapPanel x:Name="CategoryPanel" Grid.Row="1" Orientation="Horizontal" Visibility="Hidden">
                         </WrapPanel>
                     </Grid>
                 </Border>
+                <Border x:Name="LoadingCategoryPanel" Margin="20,0,0,0" Background="#232323" CornerRadius="10"/>
                 <!--Border BorderThickness="1.5,0,0,0"
                         Margin="20,0,0,0" Padding="1"
                         Grid.Column="1">
@@ -225,14 +245,23 @@
                         FontSize="14"
                         FontWeight="Medium"
                         Text="Описание" />
+                    <Border x:Name="LoadingDescriptionTitle" 
+                            Background="#202020" 
+                            CornerRadius="10" 
+                            Width="120" Height="25" 
+                            VerticalAlignment="Top" 
+                            HorizontalAlignment="Left" 
+                            Margin="10,9,0,0"/>
                     <TextBlock
                         x:Name="Description"
                         Margin="0,30,0,0"
                         FontSize="14"
                         Foreground="#f5f5f5"
                         Opacity="0.8"
-                        Text="The ultimate skyblock modpack! Watch development at: darkosto.tv/SkyFactoryLive Back again for more modded skyblock fun! SkyFactory 4 offers a brand-new experience never before seen in the series. Full automation, tech, magic, and bacon resources! This iteration offers over 30+ world types so you can play the pack like never before! While some world types are based on the classic tree on dirt others are designed with unique recipes and advancements."
-                        TextWrapping="Wrap" />
+                        Text=""
+                        TextWrapping="Wrap" Visibility="Hidden"/>
+                    <Border x:Name="LoadingDescription" Background="#232323" Margin="10,45,20,0" CornerRadius="5"/>
+                    <Border />
                 </Grid>
             </Border>
         </Grid>

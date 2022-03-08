@@ -90,19 +90,6 @@ namespace Lexplosion.Gui.Pages.MW
 			Grid.SetRow(instanceForm, row);
 			InstanceGrid.Children.Add(instanceForm);
 
-			if (!_mainWindow.ActiveInstanceForm.ContainsKey(id))
-			{
-				MainWindow.MultiPageInstanceForm multiPageInstanceForm = new MainWindow.MultiPageInstanceForm();
-				multiPageInstanceForm._catalogInstanceForm = instanceForm;
-				_mainWindow.ActiveInstanceForm.Add(id, multiPageInstanceForm);
-			}
-			else
-			{
-				var multiPageInstanceForm = _mainWindow.ActiveInstanceForm[id];
-				multiPageInstanceForm._catalogInstanceForm = instanceForm;
-				_mainWindow.ActiveInstanceForm.Add(id, multiPageInstanceForm);
-			}
-
 			return instanceForm;
 		}
 

@@ -27,7 +27,7 @@ namespace Lexplosion.Gui.Pages.Instance
             ActivateButtons();
 
 
-            mainWindow.PagesController("OverviewPage", this.BottomSideFrame, delegate ()
+            mainWindow.PagesController("OverviewPage" + instanceProperties.Id, this.BottomSideFrame, delegate ()
             {
                 return new OverviewPage(instanceProperties);
             });
@@ -45,7 +45,7 @@ namespace Lexplosion.Gui.Pages.Instance
         private void ClickedOverview(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show(typeof(OverviewPage).ToString());
-            _mainWindow.PagesController("OverviewPage", this.BottomSideFrame, delegate ()
+            _mainWindow.PagesController("OverviewPage" + _instanceProperties.Id, this.BottomSideFrame, delegate ()
             {
                 return new OverviewPage(_instanceProperties);
             });

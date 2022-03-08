@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Lexplosion.Gui.Pages.Instance;
 using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.UserControls;
 
@@ -21,14 +22,8 @@ namespace Lexplosion.Gui.Windows
         // хранит объект этого окна
         public static MainWindow Obj = null;
 
-        public string InstanceTitle;
-        public string InstanceId;
-        public string InstanceDescription;
-        public string InstanceAuthor;
-        public string OutsideInstanceId;
-        public Uri InstanceLogoPath;
-
         private Dictionary<string, Page> _pages = new Dictionary<string, Page>();
+        private Dictionary<string, Page> _instancePages = new Dictionary<string, Page>();
 
         public Dictionary<string, MultiPageInstanceForm> ActiveInstanceForm = new Dictionary<string, MultiPageInstanceForm>();
         public Dictionary<string, InstanceForm> DownloadingInstanceForms = new Dictionary<string, InstanceForm>();
@@ -65,6 +60,8 @@ namespace Lexplosion.Gui.Windows
         public void PagesController(string page, Frame frame, CreateObject createObject)
         {
             Page obj;
+            if (!page.Contains("InstancePage"))
+                frame.Navigate(createObject());
             if (!_pages.ContainsKey(page))
             {
                 obj = createObject();

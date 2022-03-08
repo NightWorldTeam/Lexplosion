@@ -188,7 +188,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController("InstancePage", _mainWindow.RightFrame, delegate ()
+            _mainWindow.PagesController("InstancePage" + _instanceProperties.Id, _mainWindow.RightFrame, delegate ()
             {
                 return new InstancePage(_mainWindow, _instanceProperties);
             });
@@ -262,9 +262,9 @@ namespace Lexplosion.Gui.UserControls
 
         public void BackToInstanceContainer(PageType pageType, string[] btnNames) 
         {
+            GC.Collect();
             _activePageType = pageType;
             if (btnNames == null) btnNames = new string[] { "Каталог", "Библиотека", "Сетевая игра", "Настройки" };
-            
             switch (pageType) 
             {
                 case PageType.InstanceContainer:
@@ -306,12 +306,13 @@ namespace Lexplosion.Gui.UserControls
         private void InitializeInstancePage(InstanceProperties instanceProperties) 
         {
             _activePageType = PageType.OpenedInstance;
-            _mainWindow.PagesController("InstancePage", _mainWindow.RightFrame, delegate ()
+            Console.WriteLine("InstancePage" + instanceProperties.Id);
+            _mainWindow.PagesController("InstancePage" + instanceProperties.Id, _mainWindow.RightFrame, delegate ()
             {
                 return new InstancePage(_mainWindow, instanceProperties);
             });
             _instanceProperties = instanceProperties;
-            InitializeContent("Модпак", "Экспорт", "Настройки", "Назад");
+            InitializeContent("Modpack", "Экспорт", "Настройки", "Назад");
             ReselectionButton(MenuButton0);
         }
 

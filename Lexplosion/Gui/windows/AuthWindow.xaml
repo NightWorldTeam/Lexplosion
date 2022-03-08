@@ -39,23 +39,37 @@
             <RowDefinition Height="28*"></RowDefinition>
             <RowDefinition Height="499*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Canvas Grid.Row="0" Margin="0 0 0 635" Height="28" Width="944" Background="#151719">
-            <Image Width="24" Height="24" Source="pack://application:,,,/Assets/images/icons/logo.ico" Canvas.Left="5" Canvas.Top="2"/>
-            <TextBlock FontSize="16" Foreground="White" Text="Lexplosion" Canvas.Left="31" Canvas.Top="2"/>
+        <Grid ShowGridLines="False">
+            <Grid.Background>
+                <SolidColorBrush Color="#151719" />
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="0" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="28" />
+                <ColumnDefinition Width="28" />
+            </Grid.ColumnDefinitions>
 
-            <Button Click="CloseWindow" FontWeight="Bold" BorderBrush="#36393f" Background="#36393a" Foreground="White" FontSize="10" Width="28" Height="28" Canvas.Left="916" Style="{StaticResource CBSG}">
+            <Image Grid.Column="0" Width="20" Height="20" Source="pack://application:,,,/Assets/images/icons/logo.ico"/>
+            <TextBlock FontSize="16"  Grid.Column="2" Foreground="White" Text="Lexplosion" Margin="4,2,0,0"/>
+            <Button Grid.Column="4" Click="HideWindow" Style="{StaticResource CBSG}" 
+                        Width="28" 
+                        Height="28" >
                 <Canvas>
-                    <Line X1="1" Y1="0" X2="13" Y2="13" Stroke="White" Canvas.Left="7" Canvas.Top="8" />
-                    <Line X1="1" Y1="13" X2="13" Y2="0" Stroke="White" Canvas.Left="7" Canvas.Top="8" />
+                    <Line X1="0" Y1="0" Y2="0" X2="12.5" Canvas.Left="8" Canvas.Top="15" Stroke="LightGray" StrokeThickness="0.5"/>
                 </Canvas>
             </Button>
-
-            <Button Click="HideWindow" FontWeight="Bold" BorderBrush="#36393f" Background="#36393a" Foreground="White" FontSize="10" Width="28" Height="28" Canvas.Left="888" Style="{StaticResource CBSG}">
+            <Button Grid.Column="5" Click="CloseWindow" Style="{StaticResource CBSG}"
+                        Width="28"
+                        Height="28">
                 <Canvas>
-                    <Line X1="0" Y1="0" Y2="0" X2="12.5" Stroke="White" Canvas.Left="8" Canvas.Top="15" />
+                    <Line X1="1" Y1="0" X2="13" Y2="13" Canvas.Left="7" Canvas.Top="8" Stroke="LightGray" StrokeThickness="0.5"/>
+                    <Line X1="1" Y1="13" X2="13" Y2="0" Canvas.Left="7" Canvas.Top="8" Stroke="LightGray" StrokeThickness="0.5"/>
                 </Canvas>
             </Button>
-        </Canvas>
+        </Grid>
         <Frame Grid.Row="1" x:Name="AuthFrame" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

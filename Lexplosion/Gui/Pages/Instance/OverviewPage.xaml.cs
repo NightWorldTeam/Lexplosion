@@ -20,17 +20,27 @@ namespace Lexplosion.Gui.Pages.Instance
         {
             InitializeComponent();
             _instanceProperties = instanceProperties;
-            GetInstance();
+            Lexplosion.Run.TaskRun(delegate ()
+            {
+                GetInstance();
+                this.Dispatcher.Invoke(delegate () 
+                {
+                    Gallery.LoadImages(GetUrls());
+                    Description.Text = _instanceInfo.summary;
+                    Console.WriteLine(_instanceInfo.summary.Length / 90);
+                    var factor = Math.Round(_instanceInfo.summary.Length / 90.0);
+                    ShortDescriptionRow.Height = new GridLength(40 * factor, GridUnitType.Pixel);
 
-            Gallery.LoadImages(GetUrls());
+                    ShortDescription.Text = _instanceInfo.summary;
 
-            Description.Text = _instanceInfo.summary;
-            ShortDescription.Text = _instanceInfo.summary;
+                    SetRightPanelInfo();
 
-            SetRightPanelInfo();
-
-            foreach (var item in _instanceInfo.categories) 
-                CategoryPanel.Children.Add(GetCategery(item.name));
+                    foreach (var item in _instanceInfo.categories)
+                        CategoryPanel.Children.Add(GetCategery(item.name));
+  
+                    LoadingOver();
+                });
+            });
         }
 
         private void SetRightPanelInfo() 
@@ -75,6 +85,31 @@ namespace Lexplosion.Gui.Pages.Instance
         private void CurseforgeUrl_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(_instanceInfo.websiteUrl);
+        }
+
+        private void LoadingOver() 
+        {
+            var skeletonElems = new Border[] 
+            {
+                LoadingGallery, LoadingVersion1, LoadingVersion2, LoadingLastUpdate1, LoadingLastUpdate2,
+                LoadingTotalDownloads1, LoadingTotalDownloads2, LoadingCore1, LoadingCore2, LoadingShortDescription,
+                LoadingCategoryPanel, LoadingDescriptionTitle, LoadingDescription, LoadingWebsiteButton
+            };
+
+            var otherElems = new UIElement[]
+            {
+                Description, Gallery, LastUpdate, TotalDownloads, ShortDescription, CategoryPanelBorder, CategoryPanel
+            };
+
+            foreach (var elem in skeletonElems) 
+            {
+                elem.Visibility = Visibility.Hidden; 
+            }
+
+            foreach (var elem in otherElems) 
+            {
+                elem.Visibility = Visibility.Visible;
+            }
         }
     }
 }
