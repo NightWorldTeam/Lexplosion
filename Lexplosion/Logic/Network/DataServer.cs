@@ -17,6 +17,7 @@ namespace Lexplosion.Logic.Network
         protected Dictionary<IPEndPoint, int> OffsetsList; // соответсвие клиента и оффсета в отправляемом ему файле
 
         protected List<IPEndPoint> NotAuthorized;
+        protected List<IPEndPoint> AvailableConnections;
 
         protected Semaphore FilesListSemaphore; //блокировка для метода AddFile
 
@@ -32,11 +33,15 @@ namespace Lexplosion.Logic.Network
 
             NotAuthorized = new List<IPEndPoint>();
             FilesListSemaphore = new Semaphore(1, 1);
+            AvailableConnections = new List<IPEndPoint>();
         }
 
-        protected override void BeforeConnect(IPEndPoint point)
+        protected override bool BeforeConnect(IPEndPoint point)
         {
+            AvailableConnections.Add(point);
             NotAuthorized.Add(point);
+
+            return true;
         }
 
         protected override void Sending()
