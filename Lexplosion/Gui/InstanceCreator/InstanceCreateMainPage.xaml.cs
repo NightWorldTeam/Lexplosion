@@ -15,6 +15,8 @@ namespace Lexplosion.Gui.InstanceCreator
     /// <summary>
     /// Interaction logic for InstanceCreateMainPage.xaml
     /// </summary>
+    /// 
+
     public partial class InstanceCreateMainPage : Page
     {
         public static readonly SolidColorBrush _unavalibleNameColor = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
@@ -32,8 +34,8 @@ namespace Lexplosion.Gui.InstanceCreator
         
         private ModloaderType _selectedModloaderType = ModloaderType.None;
 
-        private Dictionary<string, List<string>> ForgeVersionsList = new Dictionary<string, List<string>>();
-        private Dictionary<string, List<string>> FabricVersionList = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> ForgeVersions = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> FabricVersions = new Dictionary<string, List<string>>();
 
         private RadioButton _selectedRadioButton;
 
@@ -42,6 +44,7 @@ namespace Lexplosion.Gui.InstanceCreator
             InitializeComponent();
             _mainWindow = mainWindow;
             PreInitializePage();
+            InstanceNameTB.Text = "New Modpack";
         }
 
         private void PreInitializePage() 
@@ -75,15 +78,30 @@ namespace Lexplosion.Gui.InstanceCreator
             }
         }
 
-        private void SetupModloaderVersions(string minecraftVersion, ModloaderType modloaderType) 
+        private void SetupModloaderVersions(string mcVersion, ModloaderType modloaderType)
         {
-            var modloaderVersions = ToServer.GetModloadersList(minecraftVersion, modloaderType);
             ModloaderVersion.Items.Clear();
-            foreach (var version in modloaderVersions) 
+            foreach (var version in LoadingModloaderVersion(mcVersion, modloaderType)) 
             {
                 this.Dispatcher.Invoke(() => {
                     ModloaderVersion.Items.Add(version);
                 });
+            }
+        }
+
+        private List<string> LoadingModloaderVersion(string mcVersion, ModloaderType modloaderType)
+        {
+            if (modloaderType == ModloaderType.Forge)
+            {
+                if (ForgeVersions.ContainsKey(mcVersion)) return ForgeVersions[mcVersion];
+                ForgeVersions.Add(mcVersion, ToServer.GetModloadersList(mcVersion, modloaderType));
+                return ForgeVersions[mcVersion];
+            }
+            else
+            { 
+                if (FabricVersions.ContainsKey(mcVersion)) return FabricVersions[mcVersion];
+                FabricVersions.Add(mcVersion, ToServer.GetModloadersList(mcVersion, modloaderType));
+                return FabricVersions[mcVersion];
             }
         }
 
@@ -148,7 +166,7 @@ namespace Lexplosion.Gui.InstanceCreator
             if (_selectedRadioButton.Name == "ForgeSelected")
                 SetupModloaderVersions(VersionCB.Text, ModloaderType.Forge);
             else if (_selectedRadioButton.Name == "FabricSelected")
-                SetupModloaderVersions(VersionCB.Text, ModloaderType.Forge);
+                SetupModloaderVersions(VersionCB.Text, ModloaderType.Fabric);
         }
     }
 }

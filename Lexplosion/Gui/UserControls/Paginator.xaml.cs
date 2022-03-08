@@ -33,6 +33,7 @@ namespace Lexplosion.Gui.UserControls
                 }
 
                 _pageIndex = value;
+                Console.WriteLine(_pageIndex);
                 _page.ChangePage();
             }
         }

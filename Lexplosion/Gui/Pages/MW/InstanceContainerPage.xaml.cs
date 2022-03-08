@@ -74,6 +74,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public async void GetInitializeInstance(InstanceSource instanceSource)
 		{
+			Console.WriteLine("GetInitializeInstance Working");
 			await Task.Run(() => InitializeInstance(instanceSource));
 			_isInitializeInstance = true;
 		}
@@ -129,7 +130,7 @@ namespace Lexplosion.Gui.Pages.MW
 			ClearGrid();
 			// TODO: Добавить анимация для скрола.
 			ContainerPage_ScrollViewer.ScrollToVerticalOffset(0.0);
-
+			Console.WriteLine("Paginator Working");
 			InitializeInstance(selectedInstanceSource, _paginator.PageIndex, searchBoxText);
 		}
 
@@ -147,10 +148,10 @@ namespace Lexplosion.Gui.Pages.MW
 
 			Lexplosion.Run.TaskRun(delegate ()
 			{
+				Console.WriteLine("Search Working");
 				if (searchBoxTextLength != 0 || sourceBoxSelectedIndex != SearchBox.LastSelectedIndex)
 				{
 					_isInitializeInstance = false;
-
 					InitializeInstance(selectedInstanceSource, _paginator.PageIndex, searchBoxText);
 					SearchBox.LastRequest = searchBoxText;
 					SearchBox.LastSelectedIndex = sourceBoxSelectedIndex;

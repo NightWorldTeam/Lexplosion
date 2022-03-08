@@ -262,7 +262,6 @@ namespace Lexplosion.Gui.UserControls
 
         public void BackToInstanceContainer(PageType pageType, string[] btnNames) 
         {
-            GC.Collect();
             _activePageType = pageType;
             if (btnNames == null) btnNames = new string[] { "Каталог", "Библиотека", "Сетевая игра", "Настройки" };
             switch (pageType) 

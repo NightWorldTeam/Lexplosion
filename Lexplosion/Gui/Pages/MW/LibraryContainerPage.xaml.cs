@@ -58,14 +58,8 @@ namespace Lexplosion.Gui.Pages.MW
 						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 					}
 				}
-				else if (_mainWindow.DownloadingInstanceForms.ContainsKey(key)) 
-				{
-					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
-					Grid.SetRow(_mainWindow.DownloadingInstanceForms[key], i);
-				}
 				else
 				{
-
 					this.Dispatcher.Invoke(() =>
 					{
 						UserControls.InstanceForm instance = BuildInstanceForm(
