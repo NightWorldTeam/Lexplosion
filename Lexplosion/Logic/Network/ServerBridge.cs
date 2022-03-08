@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Network
         const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
         int Port;
 
-        public ServerBridge(string uuid, int port) : base(uuid, serverType)
+        public ServerBridge(string uuid, int port, bool directConnection, string server) : base(uuid, serverType, directConnection, server)
         {
             ConnectSemaphore = new Semaphore(1, 1);
             Connections = new ConcurrentDictionary<IPEndPoint, Socket>();
@@ -31,6 +31,7 @@ namespace Lexplosion.Logic.Network
             Console.WriteLine("clientAbort");
             AcceptingBlock.WaitOne();
             SendingBlock.WaitOne();
+            Console.WriteLine("ABORT IN SENDING");
 
             //удаляем клиента везде
             Sockets.Remove(Connections[point]);
@@ -39,6 +40,7 @@ namespace Lexplosion.Logic.Network
             sock.Close(); //зыкрываем соединение
 
             AcceptingBlock.Release();
+            Console.WriteLine("ABORT NOT IN SENDING");
             SendingBlock.Release();
         }
 
@@ -61,7 +63,7 @@ namespace Lexplosion.Logic.Network
         {
             SendingWait.WaitOne(); //ждём первого подключения
 
-            List<Socket> isDisconected = new List<Socket>();
+            List<IPEndPoint> isDisconected = new List<IPEndPoint>();
 
             while (IsWork)
             {
@@ -75,14 +77,14 @@ namespace Lexplosion.Logic.Network
                 {
                     Socket.Select(listeningSokets, null, null, -1); //слушаем все сокеты
                 }
-                catch (ArgumentNullException e)
+                catch (ArgumentNullException)
                 {
                     SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
 
                     continue;
                 }
-                catch (SocketException e)
+                catch (SocketException)
                 {
                     Console.WriteLine("SendingSocketException");
                     // TODO: тут что-то придумать
@@ -99,13 +101,14 @@ namespace Lexplosion.Logic.Network
                     try
                     {
                         //получем данные с локального сокета и отправляем клиенту через сеть с помощью SMP
-                        byte[] data = new byte[1200];
+                        byte[] data = new byte[1200]; // TODO: думаю тут можно заюзать sock.Available вместо 1200
                         int bytes = sock.Receive(data);
 
                         if (bytes == 0)
                         {
-                            Console.WriteLine("Bytes is 0");
-                            // TODO: закрывать соединение
+                            Console.WriteLine("BYTES 0");
+                            isDisconected.Add(ClientsPoints[sock]); //добавляем клиента в список чтобы потом отключить
+                            continue;
                         }
 
                         byte[] data_ = new byte[bytes]; // TODO: тут хуевый перенос массива
@@ -116,25 +119,25 @@ namespace Lexplosion.Logic.Network
 
                         Server.Send(data_, ClientsPoints[sock]);
                     }
-                    catch (SocketException e)
-                    {
-                        Console.WriteLine("sending1 ");
-                        isDisconected.Add(sock); //добавляем клиента в список чтобы потом отключить
-                    }
                     catch (Exception e)
                     {
-                        Console.WriteLine("sending2 " + e);
-                        // TODO: подумать че делать
+                        Console.WriteLine("sending1 " + e);
+                        isDisconected.Add(ClientsPoints[sock]); //добавляем клиента в список чтобы потом отключить
                     }
                 }
 
                 SendingBlock.Release();
 
                 // отключаем клиентов которые попали в isDisconected
-                foreach (Socket sock in isDisconected)
+                foreach (IPEndPoint point in isDisconected)
                 {
-                    IPEndPoint point = ClientsPoints[sock];
+                    Console.WriteLine("DISCONECTED");
                     Server.Close(point); // при отключении клиента еще будет вызван метод ClientAbort
+                }
+
+                if (isDisconected.Count > 0)
+                {
+                    isDisconected.Clear();
                 }
 
             }
@@ -147,18 +150,27 @@ namespace Lexplosion.Logic.Network
 
             while (IsWork)
             {
+                IPEndPoint point = Server.Receive(out byte[] data);
+
                 try
                 {
-                    IPEndPoint point = Server.Receive(out byte[] data);
-                    AcceptingBlock.WaitOne();
-                    Connections[point].Send(data, data.Length, SocketFlags.None);
-                    AcceptingBlock.Release();
+                    if (data.Length != 0)
+                    {
+                        AcceptingBlock.WaitOne();
+                        Connections[point].Send(data, data.Length, SocketFlags.None);
+                        AcceptingBlock.Release();
+                    }
+                    else // Количество байт 0 - значит соединение было обрвано
+                    {
+                        Console.WriteLine("SERVER CLOSE 1");
+                        Server.Close(point);
+                    }
+
                 }
-                catch (Exception e)
+                catch // Обрываем соединение с этми клиентом нахуй
                 {
-                    Console.WriteLine("reading " + e);
-                    break;
-                    // TODO: тут че-то сделать
+                    Console.WriteLine("SERVER CLOSE 2");
+                    Server.Close(point);
                 }
             }
         }

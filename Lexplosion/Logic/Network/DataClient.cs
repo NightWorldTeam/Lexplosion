@@ -11,7 +11,7 @@ namespace Lexplosion.Logic.Network
         const string clientType = "data-client"; // эта строка нужна при подключении к управляющему серверу
         string UUID = "";
 
-        public DataClient(string uuid) : base(clientType)
+        public DataClient(string uuid, string server) : base(clientType, server)
         {
             UUID = uuid;
         }

@@ -69,7 +69,7 @@ namespace Lexplosion.Logic.Management
         public static bool Run(string command, string instanceId, ManageLogic.ComplitedLaunchCallback ComplitedLaunch, ManageLogic.GameExitedCallback GameExited)
         {
             process = new Process();
-            gameGateway = new Gateway();
+            gameGateway = new Gateway(UserData.UUID, UserData.accessToken, "194.61.2.176");
 
             UserStatusSetter.GameStart(UserData.Instances.Record[instanceId].Name);
 

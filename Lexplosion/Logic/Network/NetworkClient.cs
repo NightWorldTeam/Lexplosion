@@ -8,26 +8,29 @@ using System.Threading;
 namespace Lexplosion.Logic.Network
 {
     using SMP;
+    using TURN;
 
     abstract class NetworkClient // TODO: вложенные потоки нужно сделать нефоновыми. ну чтобы они давали программе закрыться
     {
-        protected SmpClient Bridge;
+        protected IClientTransmitter Bridge;
         protected string ClientType;
+        protected string ControlServer;
+        protected bool DirectConnection;
 
-        public NetworkClient(string clientType)
+        protected Thread readingThread;
+        protected Thread sendingThread;
+
+        public NetworkClient(string clientType, string controlServer)
         {
             ClientType = clientType;
+            ControlServer = controlServer;
         }
 
         public virtual void Initialization(string UUID, string serverUUID)
         {
-            UdpClient bridgeUdp = new UdpClient(9655);
-            Bridge = new SmpClient(bridgeUdp);
-            Bridge.ClientClosing += Close;
-
             //подключаемся к управляющему серверу
             TcpClient client = new TcpClient();
-            client.Connect("194.61.2.176", 4565);
+            client.Connect(ControlServer, 4565);
 
             NetworkStream stream = client.GetStream();
             string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\"}";
@@ -36,20 +39,36 @@ namespace Lexplosion.Logic.Network
             Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);
 
             {
-                byte[] buf = new byte[1];
+                byte[] buf = new byte[2];
                 int bytes = stream.Read(buf, 0, buf.Length);
 
                 if (buf[0] == 98) // сервер согласился, а управляющий сервер запрашивает порт
                 {
-                    STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, bridgeUdp.Client); //получем наш внешний адрес
-                    Console.WriteLine(result.NetType);
+                    byte[] portData;
+                    if (buf[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
+                    {
+                        Bridge = new SmpClient(9655);
 
-                    //парсим и получаем порт
-                    string externalPort = result.PublicEndPoint.ToString();
-                    externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
-                    byte[] portData = Encoding.UTF8.GetBytes(externalPort);
+                        STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, ((SmpClient)Bridge).GetUdp.Client); //получем наш внешний адрес
+                        Console.WriteLine(result.NetType);
+
+                        //парсим и получаем порт
+                        string externalPort = result.PublicEndPoint.ToString();
+                        externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
+                        portData = Encoding.UTF8.GetBytes(externalPort);
+
+                        DirectConnection = true;
+                    }
+                    else
+                    {
+                        Bridge = new TurnBridgeClient();
+                        portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
+                        DirectConnection = false;
+                    }
 
                     stream.Write(portData, 0, portData.Length); //отправяем управляющему серверу наш порт
+
+                    Bridge.ClientClosing += Close;
                 }
                 else
                 {
@@ -60,7 +79,7 @@ namespace Lexplosion.Logic.Network
             byte[] data = new byte[21];
             byte[] resp;
 
-            {
+            { // TODO: данные могут прийти не полностью, tcp их может разбить
                 int bytes = stream.Read(data, 0, data.Length);
                 resp = new byte[bytes];
 
@@ -70,22 +89,32 @@ namespace Lexplosion.Logic.Network
                 }
             }
 
-            string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
-            string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-            string hostIp = str.Replace(":" + hostPort, "");
+            bool isConected;
 
-            if (Bridge.Connect(Int32.Parse(hostPort), hostIp)) // TODO: было исключени о неверном формате строки
+            if (DirectConnection)
             {
-                Console.WriteLine("Ping " + Bridge.ping);
+                string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
+                string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
+                string hostIp = str.Replace(":" + hostPort, "");
+                isConected = ((SmpClient)Bridge).Connect(Int32.Parse(hostPort), hostIp);
+            }
+            else
+            {
+                isConected = ((TurnBridgeClient)Bridge).Connect(UUID, serverUUID);
+            }
+
+            if (isConected) // TODO: было исключени о неверном формате строки
+            {
+                //Console.WriteLine("Ping " + Bridge.ping);
                 stream.Close();
                 client.Close();
 
-                Thread readingThread = new Thread(delegate ()
+                readingThread = new Thread(delegate ()
                 {
                     Reading();
                 });
 
-                Thread sendingThread = new Thread(delegate ()
+                sendingThread = new Thread(delegate ()
                 {
                     Sending();
                 });

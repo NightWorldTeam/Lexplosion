@@ -208,11 +208,15 @@
     <Compile Include="Logic\Network\DataClient.cs" />
     <Compile Include="Logic\Network\DataServer.cs" />
     <Compile Include="Logic\Network\Gateway.cs" />
+    <Compile Include="Logic\Network\IClientTransmitter.cs" />
+    <Compile Include="Logic\Network\IServerTransmitter.cs" />
     <Compile Include="Logic\Network\NetworkClient.cs" />
     <Compile Include="Logic\Network\NetworkServer.cs" />
     <Compile Include="Logic\Network\ServerBridge.cs" />
     <Compile Include="Logic\Network\SMP\SmpClient.cs" />
     <Compile Include="Logic\Network\SMP\SmpServer.cs" />
+    <Compile Include="Logic\Network\TURN\TurnBridgeClient.cs" />
+    <Compile Include="Logic\Network\TURN\TurnBridgeServer.cs" />
     <Compile Include="Logic\Network\Web\CurseforgeApi.cs" />
     <Compile Include="Logic\Network\Web\NightWorldApi.cs" />
     <Compile Include="Logic\Objects.cs" />

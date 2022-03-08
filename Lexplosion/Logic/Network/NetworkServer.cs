@@ -1,4 +1,5 @@
 ﻿using LumiSoft.Net.STUN.Client;
+using System.Collections.Generic;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -8,7 +9,7 @@ using System.Threading;
 namespace Lexplosion.Logic.Network
 {
     using SMP;
-    using System.Collections.Generic;
+    using TURN;
 
     abstract class NetworkServer // TODO: на стороне сервера проверять есть один у дркгого в списке друзей
     {
@@ -22,26 +23,37 @@ namespace Lexplosion.Logic.Network
         protected AutoResetEvent SendingWait;
         protected AutoResetEvent ReadingWait;
 
-        protected SmpServer Server;
+        protected IServerTransmitter Server;
         protected UdpClient ServerUdp;
 
         protected List<IPEndPoint> AvailableConnections;
         protected bool IsWork = false;
 
         protected string UUID;
+        protected bool DirectConnection;
+        protected string ControlServer;
 
-        public NetworkServer(string uuid, string serverType)
+        public NetworkServer(string uuid, string serverType, bool directConnection, string controlServer)
         {
             UUID = uuid;
             IsWork = true;
+            ControlServer = controlServer;
+            DirectConnection = directConnection;
             AcceptingBlock = new Semaphore(1, 1);
             SendingBlock = new Semaphore(1, 1);
 
             SendingWait = new AutoResetEvent(false);
             ReadingWait = new AutoResetEvent(false);
 
-            ServerUdp = new UdpClient(9654);
-            Server = new SmpServer(ServerUdp);
+            if (DirectConnection)
+            {
+                ServerUdp = new UdpClient(9654);
+                Server = new SmpServer(ServerUdp);
+            }
+            else
+            {
+                Server = new TurnBridgeServer();
+            }
 
             AvailableConnections = new List<IPEndPoint>();
 
@@ -68,41 +80,53 @@ namespace Lexplosion.Logic.Network
 
         }
 
-        protected virtual void Accepting(string serverType) // TODO: нужно избегать повторного подключения
+        protected void Accepting(string serverType) // TODO: нужно избегать повторного подключения
         {
             //подключаемся к управляющему серверу
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 4565));
+            socket.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
 
-            string st = "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\"}";
+            string st =
+                "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             socket.Send(sendData); //авторизируемся на упрявляющем сервере
             Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD");
 
             while (IsWork)
             {
+                string clientUUID;
+
                 {
-                    byte[] data = new byte[1];
+                    byte[] data = new byte[33];
 
                     int bytes = socket.Receive(data);
 
-                    if (bytes == 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
+                    if (bytes > 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
                     {
+                        clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
                         socket.Send(new byte[1] { 97 }); //отправляем серверу соглашение
 
                         bytes = socket.Receive(data);
                         if (bytes == 1 && data[0] == 98) //сервер запрашивает мой порт
                         {
-                            // TODO: сделать получения списка stun серверов с нашего сервера
-                            Server.ReciveStop.WaitOne(); // это нужно чтобы не было коллизий с работающем методом Recive
-                            STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, ServerUdp.Client); //получем наш внешний адрес
-                            Server.ReciveStop.Release();
+                            byte[] portData;
+                            if (DirectConnection)
+                            {
+                                // TODO: сделать получения списка stun серверов с нашего сервера
+                                ((SmpServer)Server).ReciveStop.WaitOne(); // это нужно чтобы не было коллизий с работающем методом Recive
+                                STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, ServerUdp.Client); //получем наш внешний адрес
+                                ((SmpServer)Server).ReciveStop.Release();
 
-                            //парсим порт
-                            string externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
-                            externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
-                            byte[] portData = Encoding.UTF8.GetBytes(externalPort.ToString());
-
+                                //парсим порт
+                                string externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
+                                externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
+                                portData = Encoding.UTF8.GetBytes(externalPort.ToString());
+                            }
+                            else
+                            {
+                                portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
+                            }
+                            
                             socket.Send(portData); //отправляем серверу наш порт
                         }
                         else
@@ -129,15 +153,25 @@ namespace Lexplosion.Logic.Network
                         resp[i] = data[i];
                     }
 
-                    string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
-                    string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-                    string hostIp = str.Replace(":" + hostPort, "");
+                    bool isConected;
+                    IPEndPoint point;
+                    if (DirectConnection)
+                    {
+                        string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
+                        string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
+                        string hostIp = str.Replace(":" + hostPort, "");
 
-                    IPEndPoint point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
+                        point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
+                        AcceptingBlock.WaitOne();
+                        isConected = ((SmpServer)Server).Connect(point);
+                    }
+                    else
+                    {
+                        AcceptingBlock.WaitOne();
+                        isConected = ((TurnBridgeServer)Server).Connect(UUID, clientUUID, out point);
+                    }
 
-                    AcceptingBlock.WaitOne();
-
-                    if (Server.Connect(point))
+                    if (isConected)
                     {
                         Console.WriteLine("КОННЕКТ!!!");
                         AvailableConnections.Add(point);

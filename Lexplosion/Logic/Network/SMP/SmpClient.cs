@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Network.SMP
 {
-    class SmpClient
+    class SmpClient : IClientTransmitter
     {
         protected class PackageInfo
         {
@@ -77,15 +77,6 @@ namespace Lexplosion.Logic.Network.SMP
         public SmpClient(int port)
         {
             socket = new UdpClient(port);
-        }
-
-        public SmpClient(int port, string addr)
-        {
-            socket = new UdpClient(new IPEndPoint(IPAddress.Parse(addr), port));
-        }
-        public SmpClient(UdpClient s)
-        {
-            socket = s;
 
             var sioUdpConnectionReset = -1744830452;
             var inValue = new byte[] { 0 };
@@ -94,14 +85,15 @@ namespace Lexplosion.Logic.Network.SMP
             socket.Ttl = 128;
         }
 
-        public SmpClient(IPEndPoint addr)
+        public UdpClient GetUdp
         {
-            socket = new UdpClient(addr);
+            get
+            {
+                return socket;
+            }
         }
 
-        public delegate void Closing(IPEndPoint ip);
-
-        public event Closing ClientClosing;
+        public event PointHandle ClientClosing;
 
         public bool Connect(int port, string addr)
         {
@@ -363,7 +355,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     if (!successfulDelivery)
                     {
-                    Begin: suspensionSend.WaitOne((int)delay); //после отправки пакета стопаем цикл пока не придет подвтерждение или запрос на повторную отправку. Но максимальное время остановки == delay.
+                        Begin: suspensionSend.WaitOne((int)delay); //после отправки пакета стопаем цикл пока не придет подвтерждение или запрос на повторную отправку. Но максимальное время остановки == delay.
 
                         if (!successfulDelivery)
                         {

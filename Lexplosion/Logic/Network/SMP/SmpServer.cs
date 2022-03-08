@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Network.SMP
 {
-    class SmpServer
+    class SmpServer : IServerTransmitter
     {
         protected class Client
         {
@@ -191,9 +191,7 @@ namespace Lexplosion.Logic.Network.SMP
             return ipEndPoints;
         }
 
-        public delegate void Closing(IPEndPoint ip);
-
-        public event Closing ClientClosing;
+        public event PointHandle ClientClosing;
 
         public long Ping(IPEndPoint ip)
         {
@@ -397,7 +395,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     if (!client.successfulDelivery)
                     {
-                    Begin: client.suspensionSend.WaitOne((int)delay); //после отправки пакета стопаем цикл пока не придет подвтерждение или запрос на повторную отправку. Но максимальное время остановки == delay.
+                        Begin: client.suspensionSend.WaitOne((int)delay); //после отправки пакета стопаем цикл пока не придет подвтерждение или запрос на повторную отправку. Но максимальное время остановки == delay.
 
                         if (!client.successfulDelivery)
                         {

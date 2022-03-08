@@ -17,13 +17,12 @@ namespace Lexplosion.Logic.Network
         protected AutoResetEvent SendingWait = new AutoResetEvent(false);
         protected AutoResetEvent ReadingWait = new AutoResetEvent(false);
 
-        public bool IsInitialized { get; private set; } = true;
         private bool IsConnected = false; // когда будет подключен майкнрафт клиент эта переменная будет true
         string UUID = "";
 
         const string clientType = "game-client"; // эта строка нужна при подключении к управляющему серверу
 
-        public ClientBridge(string uuid) : base(clientType)
+        public ClientBridge(string uuid, string server) : base(clientType, server)
         {
             UUID = uuid;
         }
@@ -72,43 +71,43 @@ namespace Lexplosion.Logic.Network
         // этот метод срабатывает при подключении клиента
         private void AcceptHandler(IAsyncResult data)
         {
+            Console.WriteLine("AcceptHandler1");
             AcceptingBlock.WaitOne();
 
-            if (IsInitialized)
+            Socket listener = (Socket)data.AsyncState;
+
+            // если майкнрафт клиент уже подключен то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
+            if (IsConnected)
             {
-                Socket listener = (Socket)data.AsyncState;
+                AcceptingBlock.Release();
+                Socket sock = listener.EndAccept(data);
+                sock.Close();
+                Console.WriteLine("AcceptHandler1.1");
 
-                // если майкнрафт клиент уже подключен то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
-                if (IsConnected)
-                {
-                    AcceptingBlock.Release();
-                    Socket sock = listener.EndAccept(data);
-                    sock.Close();
-
-                    return;
-                }
-
-                // TODO: тут проверить тот ли клиент подключился
-                string serverUUID = AvailableServers[listener];
-                base.Initialization(UUID, serverUUID);
-
-                Socket serverSimulator_ = listener.EndAccept(data);
-                ServerSimulator = serverSimulator_;
-
-                ReadingWait.Set();
-                SendingWait.Set();
-
-                //закрываем другие сокеты
-                foreach (Socket sock in AvailableServers.Keys)
-                {
-                    if (AvailableServers[listener] != serverUUID)
-                    {
-                        sock.Close();
-                    }
-                }
-
-                IsConnected = true;
+                return;
             }
+
+            // TODO: тут проверить тот ли клиент подключился
+            string serverUUID = AvailableServers[listener];
+            Console.WriteLine("AcceptHandler2");
+            base.Initialization(UUID, serverUUID);
+
+            Socket serverSimulator_ = listener.EndAccept(data);
+            ServerSimulator = serverSimulator_;
+
+            ReadingWait.Set();
+            SendingWait.Set();
+
+            //закрываем другие сокеты
+            foreach (Socket sock in AvailableServers.Keys)
+            {
+                if (AvailableServers[listener] != serverUUID)
+                {
+                    sock.Close();
+                }
+            }
+
+            IsConnected = true;
 
             AcceptingBlock.Release();
         }
@@ -116,9 +115,8 @@ namespace Lexplosion.Logic.Network
         public override void Close(IPEndPoint point)
         {
             Console.WriteLine("Close");
-            IsInitialized = false;
             IsConnected = false;
-            ServerSimulator.Close(); //закрываем соединение с клиентом
+            ServerSimulator.Close(); //закрываем соединение с клиентом     
         }
 
         override protected void Sending() //отправляет данные с майнкрафт клиента в сеть
@@ -141,7 +139,6 @@ namespace Lexplosion.Logic.Network
                     }
 
                     Bridge.Send(buffer_);
-                    Console.WriteLine("ОТПРАВИЛ БЛЯТЬ");
                 }
             }
             catch (Exception e)
@@ -149,6 +146,7 @@ namespace Lexplosion.Logic.Network
                 Console.WriteLine("Sending " + e);
                 Bridge.Close();
                 Close(null);
+                readingThread.Abort();
             }
 
         }
@@ -162,17 +160,8 @@ namespace Lexplosion.Logic.Network
 
             try
             {
-                while (isWorking && Bridge.IsConnected)
+                while (isWorking && Bridge.IsConnected && buffer.Length > 0)
                 {
-                    /*try
-                    {        
-                        Client.Send(buffer, buffer.Length, SocketFlags.None);
-                        isWorking = Bridge.Receive(out buffer);
-                    }
-                    catch
-                    {
-                        break;
-                    }*/
                     ServerSimulator.Send(buffer, buffer.Length, SocketFlags.None);
                     isWorking = Bridge.Receive(out buffer);
                 }
@@ -187,7 +176,7 @@ namespace Lexplosion.Logic.Network
 
             Bridge.Close();
             Close(null);
-
+            sendingThread.Abort();
         }
 
     }
