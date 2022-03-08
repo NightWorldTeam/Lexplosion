@@ -27,10 +27,6 @@ namespace Lexplosion.Gui.Pages.Instance
                 {
                     Gallery.LoadImages(GetUrls());
                     Description.Text = _instanceInfo.summary;
-                    Console.WriteLine(_instanceInfo.summary.Length / 90);
-                    var factor = Math.Round(_instanceInfo.summary.Length / 90.0);
-                    ShortDescriptionRow.Height = new GridLength(40 * factor, GridUnitType.Pixel);
-
                     ShortDescription.Text = _instanceInfo.summary;
 
                     SetRightPanelInfo();
@@ -41,6 +37,11 @@ namespace Lexplosion.Gui.Pages.Instance
                     LoadingOver();
                 });
             });
+        }
+
+        public void ClearGallery() 
+        {
+            Gallery.Clear();
         }
 
         private void SetRightPanelInfo() 

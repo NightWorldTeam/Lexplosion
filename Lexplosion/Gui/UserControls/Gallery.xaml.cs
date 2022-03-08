@@ -59,6 +59,12 @@ namespace Lexplosion.Gui.UserControls
             }
         }
 
+        public void Clear() 
+        {
+            uriImages.Clear();
+            Image.Fill = null;
+        }
+
         public void ShowControlParams()
         {
             Console.WriteLine(Image.Width);

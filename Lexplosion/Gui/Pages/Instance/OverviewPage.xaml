@@ -22,7 +22,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="20" />
                 <RowDefinition Height="240" />
-                <RowDefinition x:Name="ShortDescriptionRow"  Height="60" />
+                <RowDefinition x:Name="ShortDescriptionRow"  Height="Auto" />
                 <RowDefinition Height="67" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
