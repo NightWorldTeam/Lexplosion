@@ -26,7 +26,6 @@ namespace Lexplosion.Logic.Network
         protected IServerTransmitter Server;
         protected UdpClient ServerUdp;
 
-        protected List<IPEndPoint> AvailableConnections;
         protected bool IsWork = false;
 
         protected string UUID;
@@ -54,8 +53,6 @@ namespace Lexplosion.Logic.Network
             {
                 Server = new TurnBridgeServer();
             }
-
-            AvailableConnections = new List<IPEndPoint>();
 
             Server.ClientClosing += ClientAbort;
 
@@ -126,7 +123,7 @@ namespace Lexplosion.Logic.Network
                             {
                                 portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                             }
-                            
+
                             socket.Send(portData); //отправляем серверу наш порт
                         }
                         else
@@ -174,11 +171,16 @@ namespace Lexplosion.Logic.Network
                     if (isConected)
                     {
                         Console.WriteLine("КОННЕКТ!!!");
-                        AvailableConnections.Add(point);
-                        BeforeConnect(point);
-
-                        SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
-                        ReadingWait.Set();
+                        if (BeforeConnect(point))
+                        {
+                            SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
+                            ReadingWait.Set();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Пиздец");
+                            AcceptingBlock.Release();
+                        }
                     }
                     else
                     {
@@ -204,7 +206,7 @@ namespace Lexplosion.Logic.Network
 
         protected virtual void ClientAbort(IPEndPoint point) { } // мeтод который вызывается при обрыве соединения
 
-        protected virtual void BeforeConnect(IPEndPoint point) { } // это метод который запускается после установления соединения
+        protected abstract bool BeforeConnect(IPEndPoint point); // это метод который запускается после установления соединения
 
         protected virtual void Sending() { } // тут получаем данные от клиентов
 

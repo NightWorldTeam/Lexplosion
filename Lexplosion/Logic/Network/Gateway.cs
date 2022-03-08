@@ -73,7 +73,8 @@ namespace Lexplosion.Logic.Network
                         // раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
                         while (isServer)
                         {
-                            ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
+                            string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
+                            Console.WriteLine(ans);
                             waitingInforming.WaitOne(120000);
                         }
 
@@ -147,7 +148,7 @@ namespace Lexplosion.Logic.Network
                         }
                     }
                     else // пришел пакет от другого клиента, кторый с нами никак не связан
-                    { 
+                    {
                         // если это бесконечное ожидание, то мы просто оступаем на шаг назад, чтобы цикл не закночился
                         if (endlesswaiting)
                         {
@@ -158,7 +159,7 @@ namespace Lexplosion.Logic.Network
                         {
                             Thread.Sleep(3000); // если оно не бесконечное, засыпаем на время таймаута
                         }
-                        
+
                     }
                 }
                 catch { }
@@ -211,7 +212,7 @@ namespace Lexplosion.Logic.Network
                             client.Send(_data, _data.Length, new IPEndPoint(IPAddress.Parse("224.0.2.60"), 4445));
                         }
                     }
-                } 
+                }
                 else if (!portContains)
                 {
                     isClient = false;

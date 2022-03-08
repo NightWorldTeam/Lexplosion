@@ -44,19 +44,32 @@ namespace Lexplosion.Logic.Network
             SendingBlock.Release();
         }
 
-        protected override void BeforeConnect(IPEndPoint point)
+        protected override bool BeforeConnect(IPEndPoint point)
         {
+            bool value = true;
             Socket bridge = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            bridge.Connect("127.0.0.1", Port);
-            Console.WriteLine("КОННЕКТ К ЛОКАЛКЕ!!!!");
-            Connections[point] = bridge;
-            ClientsPoints[bridge] = point;
+            try
+            {
+                bridge.Connect("127.0.0.1", Port);
+                Console.WriteLine("КОННЕКТ К ЛОКАЛКЕ!!!!");
+                Connections[point] = bridge;
+                ClientsPoints[bridge] = point;
+            }
+            catch
+            {
+                value = false;
+            }
             AcceptingBlock.Release();
 
-            //добавляем клиента
-            ConnectSemaphore.WaitOne();
-            Sockets.Add(bridge);
-            ConnectSemaphore.Release();
+            if (value)
+            {
+                //добавляем клиента
+                ConnectSemaphore.WaitOne();
+                Sockets.Add(bridge);
+                ConnectSemaphore.Release();
+            }
+
+            return value;
         }
 
         protected override void Sending() //отправляем данные с майнкрафт клиентов в сеть
