@@ -35,6 +35,7 @@ namespace Lexplosion.Gui.Pages.Instance
                         CategoryPanel.Children.Add(GetCategery(item.name));
   
                     LoadingOver();
+
                 });
             });
         }
