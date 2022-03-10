@@ -385,7 +385,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         Directory.Delete(tempDir + "dataDownload", true);
                     }
-                    
+
                     // Извлекаем содержимое этого архима
                     Directory.CreateDirectory(tempDir + "dataDownload");
                     ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
@@ -631,7 +631,7 @@ namespace Lexplosion.Logic.FileSystem
 
             Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            
+
             do
             {
                 dirName_ = dirName + "/" + new string(Enumerable.Repeat(chars, 10).Select(s => s[random.Next(s.Length)]).ToArray());
@@ -858,7 +858,7 @@ namespace Lexplosion.Logic.FileSystem
                     }
 
                     //ищем недостающие файлы
-                    foreach (string lib in filesInfo.libraries.Keys) 
+                    foreach (string lib in filesInfo.libraries.Keys)
                     {
                         if ((downloadedFiles == null && fileExided) || !File.Exists(directory + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
                         {
@@ -1077,7 +1077,7 @@ namespace Lexplosion.Logic.FileSystem
             //создаем папки в соответсвии с путем к файлу из списка
             string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            string path = directory; 
+            string path = directory;
             for (int i = 0; i < foldersPath.Length - 1; i++)
             {
                 path += "/" + foldersPath[i];
@@ -1241,7 +1241,7 @@ namespace Lexplosion.Logic.FileSystem
 
             string tempDir = CreateTempDir();
             foreach (string lib in updateList.Libraries.Keys)
-            {                
+            {
                 if (updateList.Libraries[lib].obtainingMethod == null)
                 {
                     if (updateList.Libraries[lib].url == null)
@@ -1359,8 +1359,8 @@ namespace Lexplosion.Logic.FileSystem
                             }
                         }
 
-                    //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
-                    EndWhile: executedMethods.Add(obtainingMethod[0][0]);
+                        //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
+                        EndWhile: executedMethods.Add(obtainingMethod[0][0]);
                         if (!File.Exists(directory + "/libraries/" + lib))
                         {
                             Console.WriteLine(directory + "/libraries/" + lib);
@@ -1462,7 +1462,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.Delete(targetDir, true);
                 }
             }
-            catch 
+            catch
             {
                 return ExportResult.TempPathError;
             }
@@ -1654,7 +1654,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch { }
 
-           
+
             return ImportResult.Successful;
         }
 
