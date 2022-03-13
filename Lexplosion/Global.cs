@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Global

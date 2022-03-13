@@ -31,6 +31,7 @@ namespace Lexplosion.Gui.Pages.Instance
             {
                 return new OverviewPage(instanceProperties);
             });
+            OverviewToggleButton.IsChecked = true;
         }
 
         public static InstanceProperties GetInstanceProperties() => Obj._instanceProperties;   

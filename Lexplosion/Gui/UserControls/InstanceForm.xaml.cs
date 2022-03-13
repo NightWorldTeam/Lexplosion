@@ -362,8 +362,6 @@ namespace Lexplosion.Gui.UserControls
                         _instanceProperties.Name, InstanceSource.Curseforge,
                         "", ModloaderType.None, "", _instanceProperties.Id.ToString());
                 }
-
-                _mainWindow.DownloadingInstanceForms.Add(_instanceProperties.Id, this);
                 IsDownloading = true;
 
                 Lexplosion.Run.TaskRun(delegate
@@ -481,7 +479,6 @@ namespace Lexplosion.Gui.UserControls
                     MessageBox.Show("Error " + result);
                     DefaultView();
                 }
-                _mainWindow.DownloadingInstanceForms.Remove(_instanceProperties.Id);
                 IsDownloading = false;
             });
         }

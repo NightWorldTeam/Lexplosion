@@ -50,7 +50,6 @@ namespace Lexplosion.Gui.UserControls
         }
 
         private PageType _activePageType;
-        private Page _pageObj;
         private MainWindow _mainWindow;
         private InstanceProperties _instanceProperties;
 
@@ -64,7 +63,6 @@ namespace Lexplosion.Gui.UserControls
         {
             InitializeComponent();
 
-            _pageObj = obj;
             _activePageType = page;
             _mainWindow = mw;
 
@@ -255,10 +253,7 @@ namespace Lexplosion.Gui.UserControls
             ReselectionButton(MenuButton2);
         }
 
-        private void BackSelected(object sender, RoutedEventArgs e)
-        {
-            BackToInstanceContainer(PageType.InstanceContainer, null);
-        }
+        private void BackSelected(object sender, RoutedEventArgs e) => BackToInstanceContainer(PageType.InstanceContainer, null);
 
         public void BackToInstanceContainer(PageType pageType, string[] btnNames) 
         {

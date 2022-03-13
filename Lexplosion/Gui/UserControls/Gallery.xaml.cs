@@ -61,8 +61,10 @@ namespace Lexplosion.Gui.UserControls
 
         public void Clear() 
         {
-            uriImages.Clear();
-            Image.Fill = null;
+            if (uriImages != null && uriImages.Count > 0) { 
+                uriImages.Clear();
+                Image.Fill = null;
+            }
         }
 
         public void ShowControlParams()
