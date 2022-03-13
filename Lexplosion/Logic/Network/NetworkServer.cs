@@ -91,6 +91,7 @@ namespace Lexplosion.Logic.Network
 
             while (IsWork)
             {
+                Console.WriteLine("BVC1");
                 string clientUUID;
 
                 {
@@ -123,7 +124,7 @@ namespace Lexplosion.Logic.Network
                             {
                                 portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                             }
-
+                            
                             socket.Send(portData); //отправляем серверу наш порт
                         }
                         else
@@ -139,6 +140,8 @@ namespace Lexplosion.Logic.Network
                         continue;
                     }
                 }
+
+                Console.WriteLine("BVC2");
 
                 {
                     byte[] data = new byte[21];
@@ -159,20 +162,24 @@ namespace Lexplosion.Logic.Network
                         string hostIp = str.Replace(":" + hostPort, "");
 
                         point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
-                        AcceptingBlock.WaitOne();
                         isConected = ((SmpServer)Server).Connect(point);
                     }
                     else
                     {
-                        AcceptingBlock.WaitOne();
+                        Console.WriteLine("BVC3");
                         isConected = ((TurnBridgeServer)Server).Connect(UUID, clientUUID, out point);
+                        Console.WriteLine("BVC4");
                     }
+
+                    Console.WriteLine("BVC5");
+                    AcceptingBlock.WaitOne();
 
                     if (isConected)
                     {
                         Console.WriteLine("КОННЕКТ!!!");
                         if (BeforeConnect(point))
                         {
+                            Console.WriteLine("КОННЕКТ2!!!");
                             SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
                             ReadingWait.Set();
                         }

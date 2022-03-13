@@ -130,7 +130,15 @@ namespace Lexplosion.Logic.Network
                 {
                     byte[] buffer = new byte[1200];
                     int bytes = ServerSimulator.Receive(buffer);
-                    //Array.Resize(ref data, bytes);
+
+                    if (bytes == 0)
+                    {
+                        Console.WriteLine("CLOSE. BYTES IS 0");
+                        Bridge.Close();
+                        Close(null);
+                        readingThread.Abort();
+                        break;
+                    }
 
                     byte[] buffer_ = new byte[bytes]; // TODO: что-то придумать с копированием
                     for (int i = 0; i < bytes; i++)

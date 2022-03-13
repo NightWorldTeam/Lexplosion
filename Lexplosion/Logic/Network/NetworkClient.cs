@@ -100,6 +100,7 @@ namespace Lexplosion.Logic.Network
             }
             else
             {
+                Console.WriteLine("FFHNHBGHJCMGCHM,VHJ,HJ,HJ");
                 isConected = ((TurnBridgeClient)Bridge).Connect(UUID, serverUUID);
             }
 

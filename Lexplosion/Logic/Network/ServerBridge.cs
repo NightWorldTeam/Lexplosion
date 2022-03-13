@@ -30,14 +30,19 @@ namespace Lexplosion.Logic.Network
         {
             Console.WriteLine("clientAbort");
             AcceptingBlock.WaitOne();
+            Console.WriteLine("clientAbort1");
             SendingBlock.WaitOne();
             Console.WriteLine("ABORT IN SENDING");
 
             //удаляем клиента везде
-            Sockets.Remove(Connections[point]);
-            ClientsPoints.TryRemove(Connections[point], out _);
-            Connections.TryRemove(point, out Socket sock);
-            sock.Close(); //зыкрываем соединение
+            if (Connections.ContainsKey(point)) // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
+            {
+                Console.WriteLine("Sockets " + Sockets.Count);
+                Sockets.Remove(Connections[point]);
+                ClientsPoints.TryRemove(Connections[point], out _);
+                Connections.TryRemove(point, out Socket sock);
+                sock.Close(); //зыкрываем соединение
+            }
 
             AcceptingBlock.Release();
             Console.WriteLine("ABORT NOT IN SENDING");
@@ -52,10 +57,14 @@ namespace Lexplosion.Logic.Network
             {
                 bridge.Connect("127.0.0.1", Port);
                 Console.WriteLine("КОННЕКТ К ЛОКАЛКЕ!!!!");
+                Console.WriteLine("Connections " + Connections.Count + " " + string.Join(", ", Connections.Keys));
                 Connections[point] = bridge;
+                Console.WriteLine("Connections1 " + Connections.Count + " " + string.Join(", ", Connections.Keys));
+                Console.WriteLine("ClientsPoints " + ClientsPoints.Count + " " + string.Join(", ", ClientsPoints.Keys));
                 ClientsPoints[bridge] = point;
+                Console.WriteLine("ClientsPoints1 " + ClientsPoints.Count + " " + string.Join(", ", ClientsPoints.Keys));
             }
-            catch
+            catch 
             {
                 value = false;
             }
@@ -83,7 +92,9 @@ namespace Lexplosion.Logic.Network
                 SendingBlock.WaitOne();
 
                 ConnectSemaphore.WaitOne();
+                //Console.WriteLine("Sokets count " + Sockets.Count);
                 List<Socket> listeningSokets = new List<Socket>(Sockets);
+                //Console.WriteLine("listeningSokets count " + listeningSokets.Count);
                 ConnectSemaphore.Release();
 
                 try
@@ -92,6 +103,7 @@ namespace Lexplosion.Logic.Network
                 }
                 catch (ArgumentNullException)
                 {
+                    Console.WriteLine("WAIT GDFGFDGFD");
                     SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
 
@@ -163,6 +175,7 @@ namespace Lexplosion.Logic.Network
 
             while (IsWork)
             {
+                Console.WriteLine("Reading");
                 IPEndPoint point = Server.Receive(out byte[] data);
 
                 try
@@ -180,9 +193,9 @@ namespace Lexplosion.Logic.Network
                     }
 
                 }
-                catch // Обрываем соединение с этми клиентом нахуй
+                catch (Exception e) // Обрываем соединение с этми клиентом нахуй
                 {
-                    Console.WriteLine("SERVER CLOSE 2");
+                    Console.WriteLine("SERVER CLOSE 2 " + e);
                     Server.Close(point);
                 }
             }

@@ -54,7 +54,7 @@ namespace Lexplosion.Gui.Windows
         public void PagesController(string page, Frame frame, CreateObject createObject)
         {
             Page obj;
-            if (page.Contains("InstancePage"))
+            if (!page.Contains("InstancePage"))
                 frame.Navigate(createObject());
             if (!_pages.ContainsKey(page))
             {
