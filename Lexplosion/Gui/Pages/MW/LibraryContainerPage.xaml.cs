@@ -26,15 +26,10 @@ namespace Lexplosion.Gui.Pages.MW
 			InitializeInstance();
 			UserData.Instances.AddInstanceNofity += InitializeInstance;
 			UserData.Instances.SetAssetsNofity += SetInstanceAssets;
+
+			// TODO: Сделать различного рода сортировки - по времени создания, по версии, по наиграности
 		}
 
-		/*
-			public string description;
-			public List<string> images;
-			public string mainImage;
-			public string xmx;
-			public string xms;
-		*/
 		public void InitializeInstance()
 		{
 			int i = 0;
@@ -58,16 +53,11 @@ namespace Lexplosion.Gui.Pages.MW
 						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 					}
 				}
-				else
-				{
-					this.Dispatcher.Invoke(() =>
-					{
-						UserControls.InstanceForm instance = BuildInstanceForm(
-							key, i, imageUrl, UserData.Instances.Record[key].Name, "by NightWorld", description, instanceTags
-						);
-						instances[key] = instance;
-					});
-				}
+
+				UserControls.InstanceForm instance = BuildInstanceForm(
+					key, i, imageUrl, UserData.Instances.Record[key].Name, "by NightWorld", description, instanceTags
+				);
+				instances[key] = instance;
 				i++;
 			}
 		}
@@ -79,7 +69,9 @@ namespace Lexplosion.Gui.Pages.MW
 				_mainWindow, title, id, author, overview, "", new BitmapImage(new Uri(logo)), tags, true, true
 			);
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
-			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
+			if (InstanceGrid.RowDefinitions.Count < row) { 
+				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
+			}
 			// Добавление в Столбики и Колноки в форме.
 			Grid.SetRow(instanceForm, row);
 			InstanceGrid.Children.Add(instanceForm);

@@ -16,6 +16,7 @@ namespace Lexplosion.Gui.Pages.Instance
         private InstanceProperties _instanceProperties;
         private CurseforgeInstanceInfo _instanceInfo;
         private InstanceSource source = InstanceSource.Curseforge;
+
         public OverviewPage(InstanceProperties instanceProperties)
         {
             InitializeComponent();
@@ -34,8 +35,7 @@ namespace Lexplosion.Gui.Pages.Instance
                     foreach (var item in _instanceInfo.categories)
                         CategoryPanel.Children.Add(GetCategery(item.name));
   
-                    LoadingOver();
-
+                    LoadedPage();
                 });
             });
         }
@@ -89,9 +89,19 @@ namespace Lexplosion.Gui.Pages.Instance
             System.Diagnostics.Process.Start(_instanceInfo.websiteUrl);
         }
 
-        private void LoadingOver() 
+        private void LoadingPage() 
         {
-            var skeletonElems = new Border[] 
+            var skeletonElems = new Border[]
+            {
+                LoadingGallery, LoadingVersion1, LoadingVersion2, LoadingLastUpdate1, LoadingLastUpdate2,
+                LoadingTotalDownloads1, LoadingTotalDownloads2, LoadingCore1, LoadingCore2, LoadingShortDescription,
+                LoadingCategoryPanel, LoadingDescriptionTitle, LoadingDescription, LoadingWebsiteButton
+            };
+        }
+
+        private void LoadedPage()
+        {
+            var skeletonElems = new Border[]
             {
                 LoadingGallery, LoadingVersion1, LoadingVersion2, LoadingLastUpdate1, LoadingLastUpdate2,
                 LoadingTotalDownloads1, LoadingTotalDownloads2, LoadingCore1, LoadingCore2, LoadingShortDescription,

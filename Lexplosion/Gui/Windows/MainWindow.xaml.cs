@@ -70,7 +70,7 @@ namespace Lexplosion.Gui.Windows
             else
                 obj = _pages[page];
 
-            frame.Navigate(obj);
+            frame.Navigate(obj);       
         }
 
         /* <-- Функционал MessageBox --> */
