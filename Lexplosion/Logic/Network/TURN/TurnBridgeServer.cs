@@ -37,12 +37,12 @@ namespace Lexplosion.Logic.Network.TURN
             sock.Send(data);
 
             WaitDeletingConnection.WaitOne();
-            pointsSockets[(IPEndPoint)sock.RemoteEndPoint] = sock;
+            pointsSockets[(IPEndPoint)sock.LocalEndPoint] = sock;
             sockets.Add(sock);
             WaitDeletingConnection.Release();
             WaitConnections.Set();
 
-            point = (IPEndPoint)sock.RemoteEndPoint;
+            point = (IPEndPoint)sock.LocalEndPoint;
 
             Console.WriteLine("CONNECTED FGDSGFSD");
 
@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Network.TURN
                 // Полученный из select сокет может быть отключенны и тогда RemoteEndPoint выкинет исключение. В этом случае мы продалжаем цикл и снова пытаемся считать данные
                 try
                 {
-                    point = (IPEndPoint)sock.RemoteEndPoint;
+                    point = (IPEndPoint)sock.LocalEndPoint;
                 }
                 catch
                 {
@@ -99,12 +99,12 @@ namespace Lexplosion.Logic.Network.TURN
 
         public bool Close(IPEndPoint point)
         {
-            Console.WriteLine("TURN CLOSE");
+            Console.WriteLine("TURN CLOSE ");
             WaitDeletingConnection.WaitOne();
             // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
             if (pointsSockets.ContainsKey(point))
             {
-                ClientClosing?.Invoke(point); //Вызываем событие закрытия
+                Console.WriteLine("TRUN CLOSE GSFSDGF");
                 pointsSockets.TryRemove(point, out Socket sock);
                 sockets.Remove(sock);
                 if (sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
@@ -112,7 +112,8 @@ namespace Lexplosion.Logic.Network.TURN
                     WaitConnections.Reset();
                 }
                 sock.Close();
-            }       
+            }
+            ClientClosing?.Invoke(point); //Вызываем событие закрытия
             WaitDeletingConnection.Release();
 
             return true;
