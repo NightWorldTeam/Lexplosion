@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace Lexplosion.Gui.Pages.Instance
 {
@@ -26,12 +27,15 @@ namespace Lexplosion.Gui.Pages.Instance
             _instanceProperties = instanceProperties;
             ActivateButtons();
 
+            InstanceName.Text = instanceProperties.Name;
+            InstanceLogo.Fill = new ImageBrush(_instanceProperties.Logo);
 
             mainWindow.PagesController("OverviewPage" + instanceProperties.Id, this.BottomSideFrame, delegate ()
             {
                 return new OverviewPage(instanceProperties);
             });
             OverviewToggleButton.IsChecked = true;
+            OverviewToggleButton.IsEnabled = true;
         }
 
         public static InstanceProperties GetInstanceProperties() => Obj._instanceProperties;   

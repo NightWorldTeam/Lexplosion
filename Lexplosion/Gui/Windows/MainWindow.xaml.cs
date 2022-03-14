@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Lexplosion.Gui.Pages.Instance;
 using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.UserControls;
 
@@ -21,6 +23,10 @@ namespace Lexplosion.Gui.Windows
         public static MainWindow Obj = null;
 
         private Dictionary<string, Page> _pages = new Dictionary<string, Page>();
+        private Dictionary<string, Page> _instancePages = new Dictionary<string, Page>();
+
+        public Dictionary<string, MultiPageInstanceForm> ActiveInstanceForm = new Dictionary<string, MultiPageInstanceForm>();
+        public Dictionary<string, InstanceForm> DownloadingInstanceForms = new Dictionary<string, InstanceForm>();
 
         public Page SelectedPage;
         public LeftPanel LeftPanel;
@@ -64,7 +70,7 @@ namespace Lexplosion.Gui.Windows
             else
                 obj = _pages[page];
 
-            frame.Navigate(obj);       
+            frame.Navigate(obj);
         }
 
         /* <-- Функционал MessageBox --> */

@@ -51,10 +51,10 @@
                 </Grid.Background>
             </Grid>
             <Border BorderThickness="0,0,0,1" BorderBrush="#282a2e">
-                <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False">
+                <Grid x:Name="Header" Grid.Row="0" ShowGridLines="False" Margin="0,2,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="450"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="1" ShowGridLines="False">
@@ -62,28 +62,39 @@
                             <RowDefinition Height="60"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="InstanceTitle"
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle x:Name="InstanceLogo" Width="60" Height="60" RadiusX="2" RadiusY="2">
+                                <Rectangle.Fill>
+                                    <SolidColorBrush Color="#222222" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <TextBlock x:Name="InstanceName"
                                 Text="Instance Name"
                                 FontSize="22"
-                                Margin="4,0,0,20"
+                                Margin="4,5,0,25"
                                 VerticalAlignment="Center" 
                                 FontWeight="SemiBold"
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Foreground="WhiteSmoke"/>
+                                Foreground="WhiteSmoke" Grid.ColumnSpan="2"/>
+                        </Grid>
                         <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
                             <ToggleButton x:Name="OverviewToggleButton"
                                     Content="Overview" 
                                     Click="ClickedOverview" 
-                                    Style="{StaticResource MWCBS}" />
+                                    Style="{StaticResource MWCBS}" Height="35" />
                             <ToggleButton x:Name="ModsToggleButton"
                                     Content="Mods"
                                     Click="ClickedModsList" 
-                                    Style="{StaticResource MWCBS}" />
+                                    Style="{StaticResource MWCBS}" Height="35" />
                             <ToggleButton x:Name="VersionToggleButton"
                                     Content="Version" 
                                     Click="ClickedVersion" 
-                                    Style="{StaticResource MWCBS}" />
+                                    Style="{StaticResource MWCBS}" Height="35" />
                         </WrapPanel>
                     </Grid>
                     <Grid Grid.Column="2" ShowGridLines="False">
