@@ -62,26 +62,15 @@
                             <RowDefinition Height="60"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="60" />
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Rectangle x:Name="InstanceLogo" Width="60" Height="60" RadiusX="2" RadiusY="2">
-                                <Rectangle.Fill>
-                                    <SolidColorBrush Color="#222222" />
-                                </Rectangle.Fill>
-                            </Rectangle>
-                            <TextBlock x:Name="InstanceName"
+                        <TextBlock x:Name="InstanceName"
                                 Text="Instance Name"
                                 FontSize="22"
-                                Margin="4,5,0,25"
+                                Margin="4,10,0,25"
                                 VerticalAlignment="Center" 
                                 FontWeight="SemiBold"
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Foreground="WhiteSmoke" Grid.ColumnSpan="2"/>
-                        </Grid>
                         <WrapPanel Grid.Column="1" Grid.Row="1"  Orientation="Horizontal">
                             <ToggleButton x:Name="OverviewToggleButton"
                                     Content="Overview" 

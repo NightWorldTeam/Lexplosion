@@ -28,7 +28,6 @@ namespace Lexplosion.Gui.Pages.Instance
             ActivateButtons();
 
             InstanceName.Text = instanceProperties.Name;
-            InstanceLogo.Fill = new ImageBrush(_instanceProperties.Logo);
 
             mainWindow.PagesController("OverviewPage" + instanceProperties.Id, this.BottomSideFrame, delegate ()
             {
@@ -71,6 +70,9 @@ namespace Lexplosion.Gui.Pages.Instance
 
         private void СlientManager(object sender, RoutedEventArgs e)
         {
+            // TODO: надо менять кнопки на скачивание, если сборка не скачена.
+            // Также убирать настройки, если сборка не скачена.
+
             //if (LeftSideMenuPage.instance.selectedInstance != "")
             //    ManageLogic.СlientManager(LeftSideMenuPage.instance.selectedInstance);
         }

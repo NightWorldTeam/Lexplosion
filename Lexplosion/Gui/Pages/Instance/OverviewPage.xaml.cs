@@ -21,10 +21,16 @@ namespace Lexplosion.Gui.Pages.Instance
         {
             InitializeComponent();
             _instanceProperties = instanceProperties;
+            LoadingOutsideInstance();
+            // TODO: сборка созданая в лаунчере описываться тут не будет
+        }
+
+        public void LoadingOutsideInstance() 
+        {
             Lexplosion.Run.TaskRun(delegate ()
             {
                 GetInstance();
-                this.Dispatcher.Invoke(delegate () 
+                this.Dispatcher.Invoke(delegate ()
                 {
                     Gallery.LoadImages(GetUrls());
                     Description.Text = _instanceInfo.summary;
@@ -34,7 +40,7 @@ namespace Lexplosion.Gui.Pages.Instance
 
                     foreach (var item in _instanceInfo.categories)
                         CategoryPanel.Children.Add(GetCategery(item.name));
-  
+
                     LoadedPage();
                 });
             });

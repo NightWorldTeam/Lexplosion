@@ -87,7 +87,7 @@ namespace Lexplosion.Gui.Pages.MW
 					instanceSource, _pageSize, pageIndex, ModpacksCategories.All, searchBoxText
 				);
 
-				RemoveInstanceGridContent();
+				ClearGrid();
 				if (instances.Count == 0) ChangeLoadingLabel("Результаты не найдены.", Visibility.Visible);
 				else
 				{
@@ -181,15 +181,14 @@ namespace Lexplosion.Gui.Pages.MW
 		private void RemoveInstanceGridContent()
 		{
 			this.Dispatcher.Invoke(() => {
-				if (InstanceGrid.Children.Count > 2) InstanceGrid.Children.RemoveRange(1, 10);
+				InstanceGrid.Children.RemoveRange(1, InstanceGrid.Children.Count);
 			});
 		}
 
 		private void RemoveInstanceGridRowDefinitions()
 		{
 			this.Dispatcher.Invoke(() => {
-				if (InstanceGrid.RowDefinitions.Count > 2)
-					InstanceGrid.RowDefinitions.RemoveRange(0, InstanceGrid.RowDefinitions.Count - 1);
+				InstanceGrid.RowDefinitions.RemoveRange(0, InstanceGrid.RowDefinitions.Count);
 			});
 		}
 
