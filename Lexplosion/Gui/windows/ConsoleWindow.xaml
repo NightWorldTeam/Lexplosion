@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" 
         Width="785" Height="392" 
-        Icon="pack://application:,,,/Assets/images/icons/nw.ico" 
+        Icon="pack://application:,,,/Assets/images/icons/logo.ico" 
         Title="NightWorld"
         AllowsTransparency="True" WindowStyle="None">
 

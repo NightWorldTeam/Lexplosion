@@ -181,14 +181,16 @@ namespace Lexplosion.Gui.Pages.MW
 		private void RemoveInstanceGridContent()
 		{
 			this.Dispatcher.Invoke(() => {
-				InstanceGrid.Children.RemoveRange(1, InstanceGrid.Children.Count);
+				if (InstanceGrid.Children.Count > 1)
+					InstanceGrid.Children.RemoveRange(1, InstanceGrid.Children.Count);
 			});
 		}
 
 		private void RemoveInstanceGridRowDefinitions()
 		{
 			this.Dispatcher.Invoke(() => {
-				InstanceGrid.RowDefinitions.RemoveRange(0, InstanceGrid.RowDefinitions.Count);
+				if (InstanceGrid.RowDefinitions.Count > 0)
+					InstanceGrid.RowDefinitions.RemoveRange(0, InstanceGrid.RowDefinitions.Count);
 			});
 		}
 
