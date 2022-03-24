@@ -32,44 +32,55 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public void InitializeInstance()
 		{
-			int i = 0;
+			var i = 0;
 			// обновление assets
-			string description, imageUrl;
-			List<string> instanceTags = new List<string>();
-			
+			string description, imageUrl, author, outsideInstanceId;
+			var instanceTags = new List<string>();
+
 			Console.WriteLine(String.Join(",", UserData.Instances.Record.Keys));
 
 			instances.Clear();
 
 			foreach (string key in UserData.Instances.Record.Keys)
 			{
+				Console.WriteLine("LibraryContainerPage -> Record Key: " + key + "; row index: " + i);
 				description = "This modpack is not have description...";
 				imageUrl = "pack://application:,,,/assets/images/icons/non_image.png";
+				author = "by NightWorld";
+				outsideInstanceId = string.Empty;
 				if (UserData.Instances.Assets.ContainsKey(key))
 				{
 					if (UserData.Instances.Assets[key] != null)
 					{
 						description = UserData.Instances.Assets[key].description;
 						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
+						author = UserData.Instances.Assets[key].author;
+						//Console.WriteLine("UserData.Instances.Record.Key -> " + key);
+						foreach (var key1 in UserData.Instances.ExternalIds.Keys)
+						{
+							if (UserData.Instances.ExternalIds[key1] == key)
+								outsideInstanceId = key1;
+						}
 					}
-				}
 
-				UserControls.InstanceForm instance = BuildInstanceForm(
-					key, i, imageUrl, UserData.Instances.Record[key].Name, "by NightWorld", description, instanceTags
-				);
-				instances[key] = instance;
-				i++;
+					UserControls.InstanceForm instance = BuildInstanceForm(
+						key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags
+					);
+					instances[key] = instance;
+					i++;
+				}
+				Console.WriteLine("LibraryContainerPage -> Initialize Instance has been finished");
 			}
 		}
 
-		private InstanceForm BuildInstanceForm(string id, int row, string logo, string title, string author, string overview, List<string> tags)
+		private InstanceForm BuildInstanceForm(string id, int row, string logo, string title, string author, string overview, string outsideInstanceId, List<string> tags)
 		{
 			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			var instanceForm = new InstanceForm(
-				_mainWindow, title, id, author, overview, "", new BitmapImage(new Uri(logo)), tags, true, true
+				_mainWindow, title, id, author, overview, outsideInstanceId, new BitmapImage(new Uri(logo)), tags, true, true
 			);
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
-			if (InstanceGrid.RowDefinitions.Count < row) { 
+			if (InstanceGrid.RowDefinitions.Count <= row) {
 				InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 			}
 			// Добавление в Столбики и Колноки в форме.
