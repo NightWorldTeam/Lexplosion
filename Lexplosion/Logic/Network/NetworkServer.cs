@@ -24,13 +24,14 @@ namespace Lexplosion.Logic.Network
         protected AutoResetEvent ReadingWait;
 
         protected IServerTransmitter Server;
-        protected UdpClient ServerUdp;
 
         protected bool IsWork = false;
 
         protected string UUID;
         protected bool DirectConnection;
         protected string ControlServer;
+
+        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9654);
 
         public NetworkServer(string uuid, string serverType, bool directConnection, string controlServer)
         {
@@ -46,8 +47,7 @@ namespace Lexplosion.Logic.Network
 
             if (DirectConnection)
             {
-                ServerUdp = new UdpClient(9654);
-                Server = new SmpServer(ServerUdp);
+                Server = new SmpServer(localPoint);
             }
             else
             {
@@ -110,21 +110,26 @@ namespace Lexplosion.Logic.Network
                             byte[] portData;
                             if (DirectConnection)
                             {
+                                UdpClient sock = new UdpClient();
+                                sock.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                                sock.Client.Bind(localPoint);
+
                                 // TODO: сделать получения списка stun серверов с нашего сервера
-                                ((SmpServer)Server).ReciveStop.WaitOne(); // это нужно чтобы не было коллизий с работающем методом Recive
-                                STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, ServerUdp.Client); //получем наш внешний адрес
-                                ((SmpServer)Server).ReciveStop.Release();
+                                STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, sock.Client); //получем наш внешний адрес
+                                sock.Close();
 
                                 //парсим порт
                                 string externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
                                 externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
                                 portData = Encoding.UTF8.GetBytes(externalPort.ToString());
+
+                                Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
                             }
                             else
                             {
                                 portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                             }
-                            
+
                             socket.Send(portData); //отправляем серверу наш порт
                         }
                         else
@@ -162,6 +167,7 @@ namespace Lexplosion.Logic.Network
                         string hostIp = str.Replace(":" + hostPort, "");
 
                         point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
+                        Console.WriteLine("Host EndPoint " + point);
                         isConected = ((SmpServer)Server).Connect(point);
                     }
                     else
@@ -211,13 +217,13 @@ namespace Lexplosion.Logic.Network
             Server.StopWork();
         }
 
-        protected virtual void ClientAbort(IPEndPoint point) { } // мeтод который вызывается при обрыве соединения
+        protected abstract void ClientAbort(IPEndPoint point); // мeтод который вызывается при обрыве соединения
 
         protected abstract bool BeforeConnect(IPEndPoint point); // это метод который запускается после установления соединения
 
-        protected virtual void Sending() { } // тут получаем данные от клиентов
+        protected abstract void Sending(); // тут получаем данные от клиентов
 
-        protected virtual void Reading() { } // тут получаем данные из сети
+        protected abstract void Reading(); // тут получаем данные из сети
 
     }
 }

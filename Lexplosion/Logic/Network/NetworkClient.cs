@@ -20,6 +20,8 @@ namespace Lexplosion.Logic.Network
         protected Thread readingThread;
         protected Thread sendingThread;
 
+        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9655);
+
         public NetworkClient(string clientType, string controlServer)
         {
             ClientType = clientType;
@@ -44,13 +46,21 @@ namespace Lexplosion.Logic.Network
 
                 if (buf[0] == 98) // сервер согласился, а управляющий сервер запрашивает порт
                 {
+                    Console.WriteLine("BUF " + buf[1]);
                     byte[] portData;
                     if (buf[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
                     {
-                        Bridge = new SmpClient(9655);
+                        UdpClient sock = new UdpClient();
+                        sock.Client.Bind(localPoint);
+                        Bridge = new SmpClient(sock);
 
-                        STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, ((SmpClient)Bridge).GetUdp.Client); //получем наш внешний адрес
-                        Console.WriteLine(result.NetType);
+                        /*UdpClient sock = new UdpClient();
+                        sock.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                        sock.Client.Bind(localPoint);
+
+                        STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, sock.Client);*/ //получем наш внешний адрес
+                        STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, sock.Client);
+                        Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
 
                         //парсим и получаем порт
                         string externalPort = result.PublicEndPoint.ToString();
@@ -96,7 +106,8 @@ namespace Lexplosion.Logic.Network
                 string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
                 string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                 string hostIp = str.Replace(":" + hostPort, "");
-                isConected = ((SmpClient)Bridge).Connect(Int32.Parse(hostPort), hostIp);
+                Console.WriteLine("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
+                isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
             }
             else
             {
@@ -129,11 +140,11 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public virtual void Close(IPEndPoint point) { }
+        public abstract void Close(IPEndPoint point);
 
-        protected virtual void Sending() { }
+        protected abstract void Sending();
 
-        protected virtual void Reading() { }
+        protected abstract void Reading();
 
     }
 }
