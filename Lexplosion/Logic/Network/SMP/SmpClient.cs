@@ -40,7 +40,7 @@ namespace SMP
         private int lastPackage = -1;
         private List<ushort> repeatDeliveryList = null;
 
-        private int maxPackagesCount = 50;
+        private int maxPackagesCount = 100;
         private long rtt = -1; // пинг в обе стороны (время ожидание ответа)
         private int mtu = 68; //68
 
@@ -158,7 +158,7 @@ namespace SMP
 
                 serviceReceive.Start();
                 mtu = CalculateMTU(); // измеряем mtu
-                //mtu = 1372; // 1372
+                mtu = 1372; // 1372
                 Console.WriteLine("MTU " + mtu);
                 serviceSend.Start();
                 connectionControl.Start();
@@ -188,7 +188,7 @@ namespace SMP
                 data[1] = packageId;
 
                 int j;
-                for (j = 0; j < 5; j++) // пробуем отправить 5 раз
+                for (j = 0; j < 2; j++) // пробуем отправить 2 раза
                 {
                     try
                     {
@@ -489,6 +489,7 @@ namespace SMP
                         case 0: // пришел пакет с вычислением mtu
                             if (data.Length > 2)
                             {
+                                Console.WriteLine("MtuPackage " + data.Length);
                                 socket.Send(new byte[2] { 0x07, data[1] }, 2);
                             }
                             break;
