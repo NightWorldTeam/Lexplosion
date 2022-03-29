@@ -198,11 +198,11 @@ namespace SMP
         {
             socket.Client.DontFragment = true;
 
-            int thisData = 68;
+            int thisData = 10;
             int lostData = 1500;
 
             byte packageId = 0;
-            int difference = 1432;
+            int difference = 1490;
             while (difference > 1)
             {
                 difference = lostData - thisData;
@@ -431,8 +431,8 @@ namespace SMP
                     Begin:
                     if (!deliveryWait.WaitOne(delay)) // истекло время ожидания
                     {
-                        attemptCounts++;
                         delay *= delayMultipliers[attemptCounts];
+                        attemptCounts++;
                     }
                     else // либо пришло подтверждение доставки, либо пришел запрос на повторную доставку
                     {

@@ -115,7 +115,7 @@ namespace Lexplosion.Logic.Network
                                 sock.Client.Bind(localPoint);
 
                                 // TODO: сделать получения списка stun серверов с нашего сервера
-                                STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, sock.Client); //получем наш внешний адрес
+                                STUN_Result result = STUN_Client.Query("stun.l.google.com", 19305, sock.Client); //получем наш внешний адрес
                                 sock.Close();
 
                                 //парсим порт
