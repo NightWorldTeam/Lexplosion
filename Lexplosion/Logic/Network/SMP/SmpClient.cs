@@ -18,14 +18,14 @@ namespace SMP
             public bool lastSegmentIsFull = true;
         }
 
-        private class Message
+        public class Message
         {
             public byte[] data;
             public bool IsFull;
         }
 
         private readonly ConcurrentQueue<List<Package>> sendingBuffer = new ConcurrentQueue<List<Package>>(); // Буфер пакетов на отправку
-        private readonly ConcurrentQueue<Message> receivingBuffer = new ConcurrentQueue<Message>();
+        public readonly ConcurrentQueue<Message> receivingBuffer = new ConcurrentQueue<Message>();
         private readonly ConcurrentDictionary<ushort, byte[]> packagesBuffer = new ConcurrentDictionary<ushort, byte[]>(); //буфер принятых пакетов
 
         private readonly Semaphore sendBlock = new Semaphore(1, 1);
@@ -40,9 +40,10 @@ namespace SMP
         private int lastPackage = -1;
         private List<ushort> repeatDeliveryList = null;
 
-        private int maxPackagesCount = 100;
+        private int maxPackagesCount = 50;
         private long rtt = -1; // пинг в обе стороны (время ожидание ответа)
         private int mtu = 68; //68
+        private int hostMtu = -1; // mtu удалённого хоста
 
         private IPEndPoint point = null;
         private readonly UdpClient socket = null;
@@ -56,8 +57,11 @@ namespace SMP
         private long pingPackagesDelay = 0;
         private readonly AutoResetEvent pingWait = new AutoResetEvent(false);
 
-        private readonly AutoResetEvent mtuWait = new AutoResetEvent(false); // ожидание ответ при вычислении mtu
+        private readonly AutoResetEvent mtuWait = new AutoResetEvent(false); // ожидание ответа при вычислении mtu
         private int mtuPackageId = -1; // айди mtu пакета
+
+        private readonly AutoResetEvent mtuInfoWait = new AutoResetEvent(false); // ожидание ответа при отправке своего mtu
+        private readonly Semaphore calculateMtuBlock = new Semaphore(1, 1);
 
         public delegate void ReceiveHandle(bool isFull);
         public event ReceiveHandle MessageReceived;
@@ -157,13 +161,30 @@ namespace SMP
                 connectionControl = new Thread(ConnectionControl);
 
                 serviceReceive.Start();
+
                 mtu = CalculateMTU(); // измеряем mtu
-                mtu = 1372; // 1372
-                Console.WriteLine("MTU " + mtu);
+                SendMTUInfo(); // отправляем наш mtu хосту
+                calculateMtuBlock.WaitOne();
+                if (hostMtu != -1) // пакет с инфой об mtu хоста уже был получен
+                {
+                    // если mtu хоста меньше, то обновляем наш mtu
+                    if (hostMtu < mtu)
+                    {
+                        mtu = hostMtu;
+                    }
+                }
+                else
+                {
+                    hostMtu = -2; // устанавливаем -2 чтобы при получении пакета с инфой наш mtu был обновлён
+                }
+                calculateMtuBlock.Release();
+
                 serviceSend.Start();
                 connectionControl.Start();
 
                 lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() + 10000;
+
+                Console.WriteLine("MTU " + mtu);
 
                 return true;
             }
@@ -181,14 +202,17 @@ namespace SMP
             int lostData = 1500;
 
             byte packageId = 0;
-            while ((lostData - thisData) / 2 != 0)
+            int difference = 1432;
+            while (difference > 1)
             {
+                difference = lostData - thisData;
+
                 mtuPackageId = packageId;
                 byte[] data = new byte[thisData];
                 data[1] = packageId;
 
                 int j;
-                for (j = 0; j < 2; j++) // пробуем отправить 2 раза
+                for (j = 0; j < 5; j++) // пробуем отправить 5 раз
                 {
                     try
                     {
@@ -204,13 +228,14 @@ namespace SMP
 
                 if (j == 5) // пакет не дошёл 
                 {
+                    // TODO: если первый пакет не дойдёт, то наверное закрывать соединение
                     int thisData_ = thisData;
-                    thisData -= (lostData - thisData_) / 2;
+                    thisData -= (difference / 2) + (difference % 2);
                     lostData = thisData_;
                 }
                 else // покет дошёл
                 {
-                    thisData += (lostData - thisData) / 2;
+                    thisData += difference / 2;
                 }
 
                 packageId++;
@@ -222,7 +247,30 @@ namespace SMP
             return thisData;
         }
 
-        public long CalculateRTT()
+        private void SendMTUInfo()
+        {
+            byte[] payload = BitConverter.GetBytes((ushort)mtu);
+            byte[] data = new byte[3];
+
+            Array.Copy(payload, 0, data, 1, 2);
+            data[0] = 0x08;
+
+            for (int j = 0; j < 5; j++) // пробуем отправить 5 раз
+            {
+                try
+                {
+                    socket.Send(data, data.Length);
+
+                    if (mtuInfoWait.WaitOne((int)rtt))
+                    {
+                        break;
+                    }
+                }
+                catch { }
+            }
+        }
+
+        private long CalculateRTT()
         {
             long rttSum = 0;
 
@@ -591,6 +639,7 @@ namespace SMP
                                             {
                                                 byte[] array = package.ToArray();
                                                 socket.Send(array, array.Length);
+                                                Console.WriteLine("RETAT");
                                             }
 
                                             attemptSendCounts = data[data.Length - 3];
@@ -622,6 +671,7 @@ namespace SMP
 
                                             byte[] array = package.ToArray();
                                             socket.Send(array, array.Length);
+                                            Console.WriteLine("RETAT");
                                         }
                                         else
                                         {
@@ -685,7 +735,6 @@ namespace SMP
                                     deliveryWait.Set();
                                 }
                             }
-
                             break;
                         case 7: // пришел ответ на вычисление mtu
                             if (data.Length == 2)
@@ -693,6 +742,31 @@ namespace SMP
                                 mtuPackageId = data[1];
                                 mtuWait.Set();
                             }
+                            break;
+                        case 8: // пришёл пакет с инфой об mtu
+                            if (data.Length == 3)
+                            {
+                                ushort hostMtu_ = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
+                                socket.Send(new byte[1] { 0x09 }, 1);
+
+                                calculateMtuBlock.WaitOne();
+                                if (hostMtu == -1) // метод Connect ещё не отработал
+                                {
+                                    hostMtu = hostMtu_;
+                                }
+                                else // connect уже отработал, можно обновлять mtu
+                                {
+                                    // если mtu, отправленный хостом меньше, который вычислили мы, то обновляем его
+                                    if (hostMtu_ < mtu)
+                                    {
+                                        mtu = hostMtu_;
+                                    }
+                                }
+                                calculateMtuBlock.Release();
+                            }
+                            break;
+                        case 9: // пришёл ответ на пакет с инфой об mtu
+                            mtuInfoWait.Set();
                             break;
 
                     }
@@ -917,11 +991,11 @@ namespace SMP
                     {
                         socket.Send(new byte[1] { 0x05 }, 1); // TODO: было исключение доступ к ликвидированному объекту запрещен
                     }
+
+                    StopWork();
                 }
             }
             catch { }
-
-            StopWork();
         }
 
         public event PointHandle ClientClosing;
