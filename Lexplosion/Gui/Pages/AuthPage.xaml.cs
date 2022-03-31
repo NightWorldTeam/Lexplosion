@@ -32,10 +32,10 @@ namespace Lexplosion.Gui.Pages
                 PasswordBoxWaterMark.Text = _passwordWaterMark;
             }
 
-            if (UserData.settings != null && UserData.settings.ContainsKey("login") && UserData.settings.ContainsKey("password"))
+            if (UserData.Settings != null && UserData.Settings.ContainsKey("login") && UserData.Settings.ContainsKey("password"))
             {
-                TBLogin.Text = UserData.settings["login"];
-                TBPassword.Password = UserData.settings["password"];
+                TBLogin.Text = UserData.Settings["login"];
+                TBPassword.Password = UserData.Settings["password"];
                 PasswordBoxWaterMark.Text = "";
                 SaveMe.IsChecked = true;
             }
@@ -50,7 +50,7 @@ namespace Lexplosion.Gui.Pages
 
         private void Auth(object sender, RoutedEventArgs e)
         {
-            if (!UserData.isAuthorized) //на всякий случай проверяем не авторизирован ли пользователь уже
+            if (!UserData.IsAuthorized) //на всякий случай проверяем не авторизирован ли пользователь уже
             {
                 var inputLogin = TBLogin.Text.ToString();
                 var inputPassword = TBPassword.Password.ToString();
@@ -98,9 +98,9 @@ namespace Lexplosion.Gui.Pages
 
             if (login != null && login.Trim() != string.Empty)
             {
-                UserData.offline = true;
-                UserData.login = login;
-                UserData.isAuthorized = true;
+                UserData.Offline = true;
+                UserData.Login = login;
+                UserData.IsAuthorized = true;
 
                 ChangeWindow(0);
             }

@@ -36,7 +36,7 @@ namespace Lexplosion.Logic.Management
                             _status = (int)status;
                         }
 
-                        ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setUserActivity.php?status=" + _status + "&UUID=" + UserData.UUID + "&accessToken=" + UserData.accessToken + "&gameClientName=" + clientName);
+                        ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setUserActivity.php?status=" + _status + "&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken + "&gameClientName=" + clientName);
                         Thread.Sleep(54000); // Ждём 9 минут
                     }
                 });
@@ -49,7 +49,7 @@ namespace Lexplosion.Logic.Management
             {
                 clientName = clientName_;
                 status = Statuses.InGame;
-                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setUserActivity.php?status=2&UUID=" + UserData.UUID + "&accessToken=" + UserData.accessToken + "&gameClientName=" + clientName);
+                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setUserActivity.php?status=2&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken + "&gameClientName=" + clientName);
             }
         }
 
@@ -58,13 +58,13 @@ namespace Lexplosion.Logic.Management
             if (baseStatus == Statuses.Online)
             {
                 status = baseStatus;
-                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setUserActivity.php?status=1&UUID=" + UserData.UUID + "&accessToken=" + UserData.accessToken);
+                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setUserActivity.php?status=1&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken);
             }
         }
 
         public static void Exit()
         {
-            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setUserActivity.php?status=0&UUID=" + UserData.UUID + "&accessToken=" + UserData.accessToken);
+            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setUserActivity.php?status=0&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken);
         }
 
         public enum Statuses

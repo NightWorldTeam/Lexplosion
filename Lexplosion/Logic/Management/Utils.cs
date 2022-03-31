@@ -126,7 +126,7 @@ namespace Lexplosion.Logic.Management
             }
             else if (executor == ProcessExecutor.Java)
             {
-                fileName = UserData.settings["javaPath"];
+                fileName = UserData.Settings["javaPath"];
             }
             else
             {
@@ -140,7 +140,7 @@ namespace Lexplosion.Logic.Management
                 process.StartInfo.FileName = fileName;
                 process.StartInfo.Arguments = command;
                 process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.WorkingDirectory = UserData.settings["gamePath"];
+                process.StartInfo.WorkingDirectory = UserData.Settings["gamePath"];
                 process.Start();
                 return process.WaitForExit(300000); // ждём 5 минут
             }

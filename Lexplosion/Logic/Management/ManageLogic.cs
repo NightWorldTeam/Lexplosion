@@ -34,20 +34,20 @@ namespace Lexplosion.Logic.Management
             {
                 if (response["status"] == "OK")
                 {
-                    UserData.login = response["login"];
+                    UserData.Login = response["login"];
                     UserData.UUID = response["UUID"];
-                    UserData.accessToken = response["accesToken"];
+                    UserData.AccessToken = response["accesToken"];
                     UserData.PaswordSHA = Сryptography.Sha256(password);
 
                     if (saveUser)
                     {
-                        UserData.settings["login"] = login;
-                        UserData.settings["password"] = password;
+                        UserData.Settings["login"] = login;
+                        UserData.Settings["password"] = password;
 
-                        DataFilesManager.SaveSettings(UserData.settings);
+                        DataFilesManager.SaveSettings(UserData.Settings);
                     }
 
-                    UserData.isAuthorized = true;
+                    UserData.IsAuthorized = true;
 
                     UserStatusSetter.SetBaseStatus(UserStatusSetter.Statuses.Online);
 
@@ -147,7 +147,7 @@ namespace Lexplosion.Logic.Management
 
             int k = 0;
             int c = 0;
-            if (xmx.ContainsKey(instanceId) && int.TryParse(xmx[instanceId], out k) && int.TryParse(UserData.settings["xmx"], out c))
+            if (xmx.ContainsKey(instanceId) && int.TryParse(xmx[instanceId], out k) && int.TryParse(UserData.Settings["xmx"], out c))
             {
                 if (c < k)
                     MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
@@ -162,7 +162,7 @@ namespace Lexplosion.Logic.Management
 
                 string command = LaunchGame.CreateCommand(instanceId, data, instanceSettings);
                 LaunchGame.Run(command, instanceId, ComplitedLaunch, GameExited);
-                DataFilesManager.SaveSettings(UserData.settings);
+                DataFilesManager.SaveSettings(UserData.Settings);
             }
             else
             {

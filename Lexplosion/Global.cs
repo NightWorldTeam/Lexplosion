@@ -6,14 +6,14 @@ namespace Lexplosion.Global
 {
     static class UserData
     {
-        public static string login = "";
+        public static string Login = "";
         public static string UUID = "00000000-0000-0000-0000-000000000000";
         public static string PaswordSHA = "";
-        public static string accessToken = "null";
-        public static bool isAuthorized = false;
-        public static bool offline = false;
-        public static bool noUpdate = false;
-        public static Dictionary<string, string> settings; //общие настройки
+        public static string AccessToken = "null";
+        public static bool IsAuthorized = false;
+        public static bool Offline = false;
+        public static bool NoUpdate = false;
+        public static Dictionary<string, string> Settings; //общие настройки
 
         public static class Instances
         {

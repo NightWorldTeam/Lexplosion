@@ -21,47 +21,47 @@ namespace Lexplosion.Logic.Management
             int number;
             if (!instanceSettings.ContainsKey("xmx") || !Int32.TryParse(instanceSettings["xmx"], out number))
             {
-                instanceSettings["xmx"] = UserData.settings["xmx"];
+                instanceSettings["xmx"] = UserData.Settings["xmx"];
             }
 
             if (!instanceSettings.ContainsKey("xms") || !Int32.TryParse(instanceSettings["xms"], out number))
             {
-                instanceSettings["xms"] = UserData.settings["xms"];
+                instanceSettings["xms"] = UserData.Settings["xms"];
             }
 
             string command;
-            string versionPath = UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/" + data.VersionFile.minecraftJar.name;
+            string versionPath = UserData.Settings["gamePath"] + "/instances/" + instanceId + "/version/" + data.VersionFile.minecraftJar.name;
 
             if (!instanceSettings.ContainsKey("gameArgs"))
-                instanceSettings["gameArgs"] = UserData.settings["gameArgs"];
+                instanceSettings["gameArgs"] = UserData.Settings["gameArgs"];
 
             if (instanceSettings["gameArgs"].Length > 0 && instanceSettings["gameArgs"][instanceSettings["gameArgs"].Length - 1] != ' ')
                 instanceSettings["gameArgs"] += " ";
 
-            command = @" -Djava.library.path=" + UserData.settings["gamePath"] + "/instances/" + instanceId + "/version/natives -cp ";
+            command = @" -Djava.library.path=" + UserData.Settings["gamePath"] + "/instances/" + instanceId + "/version/natives -cp ";
 
             //Не ебу в чём проблема, но если guava-17.0.jar в списках либраресов на последних местах, то 1.7.10 тупа не запускается. Что за шиза, не понимаю
             //Но этот костыль решает проблему
             if (data.Libraries.ContainsKey("com/google/guava/guava/17.0/guava-17.0.jar"))
             {
-                command += UserData.settings["gamePath"] + "/libraries/com/google/guava/guava/17.0/guava-17.0.jar;";
+                command += UserData.Settings["gamePath"] + "/libraries/com/google/guava/guava/17.0/guava-17.0.jar;";
                 data.Libraries.Remove("com/google/guava/guava/17.0/guava-17.0.jar");
             }
 
             foreach (string lib in data.Libraries.Keys)
             {
-                command += UserData.settings["gamePath"] + "/libraries/" + lib + ";";
+                command += UserData.Settings["gamePath"] + "/libraries/" + lib + ";";
             }
 
             command += versionPath + @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Xmx" + instanceSettings["xmx"] + "M -Xms" + instanceSettings["xms"] + "M " + instanceSettings["gameArgs"];
-            command += data.VersionFile.mainClass + " --username " + UserData.login + " --version " + data.VersionFile.gameVersion;
-            command += " --gameDir " + UserData.settings["gamePath"] + "/instances/" + instanceId;
-            command += " --assetsDir " + UserData.settings["gamePath"] + "/assets";
+            command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion;
+            command += " --gameDir " + UserData.Settings["gamePath"] + "/instances/" + instanceId;
+            command += " --assetsDir " + UserData.Settings["gamePath"] + "/assets";
             command += " --assetIndex " + data.VersionFile.assetsVersion;
-            command += " --uuid " + UserData.UUID + " --accessToken " + UserData.accessToken + " --userProperties [] --userType legacy ";
+            command += " --uuid " + UserData.UUID + " --accessToken " + UserData.AccessToken + " --userProperties [] --userType legacy ";
             command += data.VersionFile.arguments;
-            command += " --width " + UserData.settings["windowWidth"] + " --height " + UserData.settings["windowHeight"];
+            command += " --width " + UserData.Settings["windowWidth"] + " --height " + UserData.Settings["windowHeight"];
 
             return command.Replace(@"\", "/");
         }
@@ -69,11 +69,11 @@ namespace Lexplosion.Logic.Management
         public static bool Run(string command, string instanceId, ManageLogic.ComplitedLaunchCallback ComplitedLaunch, ManageLogic.GameExitedCallback GameExited)
         {
             process = new Process();
-            gameGateway = new Gateway(UserData.UUID, UserData.accessToken, "194.61.2.176");
+            gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
 
             UserStatusSetter.GameStart(UserData.Instances.Record[instanceId].Name);
 
-            if (UserData.settings["showConsole"] == "true")
+            if (UserData.Settings["showConsole"] == "true")
             {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
@@ -99,8 +99,8 @@ namespace Lexplosion.Logic.Management
                     //MainWindow.window.InitProgressBar.Visibility = Visibility.Visible;
                 });
 
-                process.StartInfo.FileName = UserData.settings["javaPath"];
-                process.StartInfo.WorkingDirectory = UserData.settings["gamePath"] + "/instances/" + instanceId;
+                process.StartInfo.FileName = UserData.Settings["javaPath"];
+                process.StartInfo.WorkingDirectory = UserData.Settings["gamePath"] + "/instances/" + instanceId;
                 process.StartInfo.Arguments = command;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.UseShellExecute = false;
@@ -120,7 +120,7 @@ namespace Lexplosion.Logic.Management
                                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed; 
                             });
 
-                            if (UserData.settings["hiddenMode"] == "true")
+                            if (UserData.Settings["hiddenMode"] == "true")
                             {
                                 MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
                                 launcherVisible = false;
@@ -151,7 +151,7 @@ namespace Lexplosion.Logic.Management
 
                 process.OutputDataReceived += BeforeLaunch;
 
-                if (UserData.settings["showConsole"] == "true")
+                if (UserData.Settings["showConsole"] == "true")
                     process.OutputDataReceived += WriteToConsole;
 
                 process.Exited += (sender, ea) =>
@@ -240,18 +240,18 @@ namespace Lexplosion.Logic.Management
             //{
                 SetDefaultSettings();
 
-                if (!UserData.settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
+                if (!UserData.Settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
                     return null;
 
-                WithDirectory.Create(UserData.settings["gamePath"]);
+                WithDirectory.Create(UserData.Settings["gamePath"]);
                 InitData data = null;
 
-                if (!UserData.settings.ContainsKey("gamePath") || !Directory.Exists(UserData.settings["gamePath"]) || !UserData.settings["gamePath"].Contains(":"))
+                if (!UserData.Settings.ContainsKey("gamePath") || !Directory.Exists(UserData.Settings["gamePath"]) || !UserData.Settings["gamePath"].Contains(":"))
                     return Error(InstanceInit.GamePathError);
 
                 bool autoUpdate = instanceSettings.ContainsKey("autoUpdate") && instanceSettings["autoUpdate"] == "true";
 
-                if (!UserData.offline)
+                if (!UserData.Offline)
                 {
                     IPrototypeInstance instance;
                     switch (type)
@@ -330,63 +330,63 @@ namespace Lexplosion.Logic.Management
         public static void SetDefaultSettings()
         {
             /*<!-- получение директории до джавы -->*/
-            if (!UserData.settings.ContainsKey("javaPath") || string.IsNullOrWhiteSpace(UserData.settings["javaPath"]))
+            if (!UserData.Settings.ContainsKey("javaPath") || string.IsNullOrWhiteSpace(UserData.Settings["javaPath"]))
             {
                 try
                 {
                     using (RegistryKey jre = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                     {
                         RegistryKey java = jre.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
-                        UserData.settings["javaPath"] = (java.OpenSubKey(java.GetValue("CurrentVersion").ToString()).GetValue("JavaHome").ToString() + @"/bin/javaw.exe").Replace(@"\", "/");
+                        UserData.Settings["javaPath"] = (java.OpenSubKey(java.GetValue("CurrentVersion").ToString()).GetValue("JavaHome").ToString() + @"/bin/javaw.exe").Replace(@"\", "/");
                     }
 
                 } catch {
-                    UserData.settings["javaPath"] = "";
+                    UserData.Settings["javaPath"] = "";
                 }
             }
 
             //определение директории игры
-            if (!UserData.settings.ContainsKey("gamePath"))
-                UserData.settings["gamePath"] = LaunсherSettings.gamePath;
+            if (!UserData.Settings.ContainsKey("gamePath"))
+                UserData.Settings["gamePath"] = LaunсherSettings.gamePath;
 
             //установка озу для процесса
-            if (!UserData.settings.ContainsKey("xmx"))
+            if (!UserData.Settings.ContainsKey("xmx"))
             {
-                if (UserData.settings["javaPath"].Contains("Program Files (x86)"))
-                    UserData.settings["xmx"] = "512";
+                if (UserData.Settings["javaPath"].Contains("Program Files (x86)"))
+                    UserData.Settings["xmx"] = "512";
                 else
-                    UserData.settings["xmx"] = "1024";
+                    UserData.Settings["xmx"] = "1024";
             }
 
-            if (!UserData.settings.ContainsKey("xms"))
-                UserData.settings["xms"] = "256";
+            if (!UserData.Settings.ContainsKey("xms"))
+                UserData.Settings["xms"] = "256";
 
             //установка размера окна 
-            if (!UserData.settings.ContainsKey("windowWidth"))
-                UserData.settings["windowWidth"] = "854";
+            if (!UserData.Settings.ContainsKey("windowWidth"))
+                UserData.Settings["windowWidth"] = "854";
 
-            if (!UserData.settings.ContainsKey("windowHeight"))
-                UserData.settings["windowHeight"] = "480";
+            if (!UserData.Settings.ContainsKey("windowHeight"))
+                UserData.Settings["windowHeight"] = "480";
 
             //режим скачивания обновлений 
-            if (!UserData.settings.ContainsKey("noUpdate"))
-                UserData.settings["noUpdate"] = "false";
+            if (!UserData.Settings.ContainsKey("noUpdate"))
+                UserData.Settings["noUpdate"] = "false";
 
             //скрытие консоли
-            if (!UserData.settings.ContainsKey("showConsole"))
-                UserData.settings["showConsole"] = "false";
+            if (!UserData.Settings.ContainsKey("showConsole"))
+                UserData.Settings["showConsole"] = "false";
 
             //скрытие лаунчера при запуске
-            if (!UserData.settings.ContainsKey("hiddenMode"))
-                UserData.settings["hiddenMode"] = "false";
+            if (!UserData.Settings.ContainsKey("hiddenMode"))
+                UserData.Settings["hiddenMode"] = "false";
 
             //java Args
-            if (!UserData.settings.ContainsKey("gameArgs"))
-                UserData.settings["gameArgs"] = "";
+            if (!UserData.Settings.ContainsKey("gameArgs"))
+                UserData.Settings["gameArgs"] = "";
 
             //выбранный модпак
-            if (!UserData.settings.ContainsKey("selectedModpack"))
-                UserData.settings["selectedModpack"] = "";
+            if (!UserData.Settings.ContainsKey("selectedModpack"))
+                UserData.Settings["selectedModpack"] = "";
         }
     }
 }

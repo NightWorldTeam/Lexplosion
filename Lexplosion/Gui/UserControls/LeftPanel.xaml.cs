@@ -81,8 +81,8 @@ namespace Lexplosion.Gui.UserControls
 
         private void SetupUserLogin() 
         {
-            UserLogin.Text = UserData.login;
-            if (UserData.offline)
+            UserLogin.Text = UserData.Login;
+            if (UserData.Offline)
                 UserStatus.Fill = Brushes.Red;
         }
 
