@@ -1,10 +1,9 @@
-﻿using Lexplosion.Logic.Network;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Threading;
 
-namespace SMP
+namespace Lexplosion.Logic.Network.SMP
 {
     class SmpServer : IServerTransmitter
     {
