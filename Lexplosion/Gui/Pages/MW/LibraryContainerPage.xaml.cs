@@ -62,13 +62,12 @@ namespace Lexplosion.Gui.Pages.MW
 								outsideInstanceId = key1;
 						}
 					}
-
-					UserControls.InstanceForm instance = BuildInstanceForm(
-						key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags
-					);
-					instances[key] = instance;
-					i++;
 				}
+
+				UserControls.InstanceForm instance = BuildInstanceForm(
+					key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags
+				);
+				i++;
 				Console.WriteLine("LibraryContainerPage -> Initialize Instance has been finished");
 			}
 		}
