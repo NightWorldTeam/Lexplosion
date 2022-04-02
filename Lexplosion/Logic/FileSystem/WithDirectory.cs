@@ -1231,8 +1231,11 @@ namespace Lexplosion.Logic.FileSystem
             //скачиваем libraries
             folders = null;
             List<string> executedMethods = new List<string>();
-            List<string> downloadedLibs = new List<string>(); // сюда мы пихаем файлы, которые удачно скачались. При каждом удачном скачивании сохраняем список в файл. Если все файлы скачались удачно - удаляем этот список
             string downloadedLibsAddr = directory + "/versions/libraries/" + GetLibName(instanceId, filesList.version) + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
+            // TODO: список downloadedLibs мы получаем в методе проверки. брать от туда, а не подгружать опять
+            List<string> downloadedLibs = GetFile<List<string>>(downloadedLibsAddr); // сюда мы пихаем файлы, которые удачно скачались. При каждом удачном скачивании сохраняем список в файл. Если все файлы скачались удачно - удаляем этот список
+            if (downloadedLibs == null) downloadedLibs = new List<string>();
+            int startDownloadedLibsCount = downloadedLibs.Count;
 
             if (updateList.Libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
             {
@@ -1275,6 +1278,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         downloadedLibs.Add(lib);
                         SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
+                        Console.WriteLine("SAVE DOWNLOADED");
                     }
                     else
                     {
@@ -1385,7 +1389,7 @@ namespace Lexplosion.Logic.FileSystem
             Directory.Delete(tempDir, true);
             Directory.Delete(temp, true);
 
-            if (downloadedLibs.Count == updateList.Libraries.Count)
+            if (downloadedLibs.Count - startDownloadedLibsCount == updateList.Libraries.Count)
             {
                 //все либрариесы скачались удачно. Удаляем файл
                 DelFile(downloadedLibsAddr);
