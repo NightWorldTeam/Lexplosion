@@ -1,10 +1,10 @@
-﻿using SMP;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using Lexplosion.Logic.Network.SMP;
 
 namespace Lexplosion.Logic.Network
 {
