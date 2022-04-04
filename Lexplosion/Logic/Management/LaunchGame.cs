@@ -53,6 +53,7 @@ namespace Lexplosion.Logic.Management
                 command += UserData.Settings["gamePath"] + "/libraries/" + lib + ";";
             }
 
+            command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += versionPath + @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Xmx" + instanceSettings["xmx"] + "M -Xms" + instanceSettings["xms"] + "M " + instanceSettings["gameArgs"];
             command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion;
