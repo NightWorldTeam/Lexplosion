@@ -114,8 +114,8 @@ namespace Lexplosion.Gui.Pages.MW
 
         private void XmxTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["xmx"] = WidthTextBox.Text;
-            WidthTextBox.Text = UserData.Settings["xmx"];
+            UserData.Settings["xmx"] = XmxTextBox.Text;
+            XmxTextBox.Text = UserData.Settings["xmx"];
             DataFilesManager.SaveSettings(UserData.Settings);
         }
 
