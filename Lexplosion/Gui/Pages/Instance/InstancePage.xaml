@@ -83,7 +83,7 @@
                             <ToggleButton x:Name="VersionToggleButton"
                                     Content="Version" 
                                     Click="ClickedVersion" 
-                                    Style="{StaticResource MWCBS}" Height="35" />
+                                    Style="{StaticResource MWCBS}" Height="35" /> 
                         </WrapPanel>
                     </Grid>
                     <Grid Grid.Column="2" ShowGridLines="False">

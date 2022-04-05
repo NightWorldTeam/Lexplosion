@@ -36,6 +36,7 @@ namespace Lexplosion.Gui.Pages.MW
         {
             WidthTextBox.Text = UserData.Settings["windowWidth"];
             HeightTextBox.Text = UserData.Settings["windowHeight"];
+            XmxTextBox.Text = UserData.Settings["xmx"];
 
             _sysPath = UserData.Settings["gamePath"].Replace("/", @"\");
             InstanceFolderPath.Text = _sysPath;
@@ -77,7 +78,7 @@ namespace Lexplosion.Gui.Pages.MW
         private void WidthTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             WidthTextBox.Text = Regex.Match(WidthTextBox.Text, @"[0-9]+").ToString();
-            HeightTextBox.Select(WidthTextBox.Text.Length, 0);
+            WidthTextBox.Select(WidthTextBox.Text.Length, 0);
         }
 
         private void HeightTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -109,6 +110,19 @@ namespace Lexplosion.Gui.Pages.MW
         private void InstanceFolderPath_TextChanged(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+        private void XmxTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            UserData.Settings["xmx"] = WidthTextBox.Text;
+            WidthTextBox.Text = UserData.Settings["xmx"];
+            DataFilesManager.SaveSettings(UserData.Settings);
+        }
+
+        private void XmxTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            XmxTextBox.Text = Regex.Match(XmxTextBox.Text, @"[0-9]+").ToString();
+            XmxTextBox.Select(XmxTextBox.Text.Length, 0);
         }
     }
 }

@@ -106,7 +106,7 @@ namespace Lexplosion.Gui.InstanceCreator
         }
 
         private void CreateInstanceButton_Click(object sender, RoutedEventArgs e)
-        {
+        { 
             // TODO: при добавление release, snapshot заменять их.
             if (InstanceNameTB.Text != "")
             {
@@ -137,6 +137,7 @@ namespace Lexplosion.Gui.InstanceCreator
         
         private void SelectInstanceRadioButton_Click(object sender, RoutedEventArgs e)
         {
+            //TODO: Перезагружать форму после перевыбора версии
             var selectedRadioButton = (RadioButton)sender;
             var gameVersion = VersionCB.Text;
             if (selectedRadioButton.Name == "NoneSelected") 

@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.InstanceCreator;
+using Lexplosion.Gui.Pages;
 using Lexplosion.Gui.Pages.Instance;
 using Lexplosion.Gui.Pages.MW;
 using Lexplosion.Gui.Windows;
@@ -228,9 +229,13 @@ namespace Lexplosion.Gui.UserControls
 
         private void LauncherSettingsSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController("SettingsContainerPage", _mainWindow.RightFrame, delegate ()
+            var content = new Dictionary<string, ToggleItem>();
+            content.Add("General", new ToggleItem("Основное", "SettingsContainerPage", new SettingsContainerPage(_mainWindow)));
+            content.Add("Account", new ToggleItem("Учетная запись", "MultiplayerContainerPage", new MultiplayerContainerPage(_mainWindow)));
+            content.Add("About", new ToggleItem("О программе", "MultiplayerContainerPage", new MultiplayerContainerPage(_mainWindow)));
+            _mainWindow.PagesController("LancherSettingsSelected", _mainWindow.RightFrame, delegate ()
             {
-                return new SettingsContainerPage(_mainWindow);
+                return new SwitcherPage("Настройки", content, _mainWindow);
             });
             ReselectionButton(MenuButton3);
         }

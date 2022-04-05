@@ -13,7 +13,7 @@
         <Grid.Background>
             <!-- #131313 0.7 -->
             <!-- "Black" 0.64 -->
-            <SolidColorBrush Color="#121212" Opacity="0.65" />
+            <SolidColorBrush Color="#191919" Opacity="0.65" />
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -29,7 +29,7 @@
                    FontWeight="Bold" 
                    Text="Сервера" />
         <TextBlock Text="КАК ИГРАТЬ??? СМОТРИ ТУТ!
-                   БЕЗ РЕГИСТРАЦИИ И СМС БЕСПЛАТНО" 
+                   БЕЗ РЕГИСТРАЦИИ И СМС БЕСПЛАТНО ОРНО" 
                    FontSize="30" 
                    TextWrapping="Wrap"
                    FontWeight="Bold" 
