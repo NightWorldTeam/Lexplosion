@@ -67,6 +67,10 @@ namespace Lexplosion.Gui.Pages
                 { 
                     toggleBtn.IsChecked = flag;
                     flag = false;
+                    mainWindow.PagesController(content[key].PageName, ContentFrame, delegate ()
+                    {
+                        return content[key].Page;
+                    });
                 }
 
                 toggleBtn.Click += HeaderClick;
