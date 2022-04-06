@@ -32,7 +32,13 @@ namespace Lexplosion.Gui.Pages.Instance
                 GetInstance();
                 this.Dispatcher.Invoke(delegate ()
                 {
-                    Gallery.LoadImages(GetUrls());
+                    var uris = GetUrls();
+                    
+                    foreach (var ur in uris) 
+                    {
+                        Console.WriteLine(ur);
+                    }
+                    Gallery.LoadImages(uris);
                     Description.Text = _instanceInfo.summary;
                     ShortDescription.Text = _instanceInfo.summary;
 
@@ -74,6 +80,7 @@ namespace Lexplosion.Gui.Pages.Instance
                 if (!item.isDefault && !item.url.Contains("avatars"))
                     urls.Add(item.url);
             }
+            Console.WriteLine(urls.Count);
             return urls;
         }
 

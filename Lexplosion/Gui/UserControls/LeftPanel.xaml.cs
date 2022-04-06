@@ -187,9 +187,14 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceSelected(object sender, RoutedEventArgs e)
         {
+            var content = new Dictionary<string, ToggleItem>();
+            content.Add("Overview", new ToggleItem("Overview", "OverviewPage", new OverviewPage(_instanceProperties)));
+            content.Add("Mods", new ToggleItem("Mods", "ModsListPage", new ModsListPage()));
+            content.Add("Version", new ToggleItem("Version", "VersionPage", new VersionPage()));
+
             _mainWindow.PagesController("InstancePage" + _instanceProperties.Id, _mainWindow.RightFrame, delegate ()
             {
-                return new InstancePage(_mainWindow, _instanceProperties);
+                return new SwitcherPage(_instanceProperties.Name, content, _mainWindow);
             });
             ReselectionButton(MenuButton0);
         }
@@ -305,12 +310,17 @@ namespace Lexplosion.Gui.UserControls
         private void InitializeInstancePage(InstanceProperties instanceProperties) 
         {
             _activePageType = PageType.OpenedInstance;
-            Console.WriteLine("InstancePage" + instanceProperties.Id);
-            _mainWindow.PagesController("InstancePage" + instanceProperties.Id, _mainWindow.RightFrame, delegate ()
-            {
-                return new InstancePage(_mainWindow, instanceProperties);
-            });
             _instanceProperties = instanceProperties;
+            var content = new Dictionary<string, ToggleItem>();
+            content.Add("Overview", new ToggleItem("Overview", "OverviewPage", new OverviewPage(_instanceProperties)));
+            content.Add("Mods", new ToggleItem("Mods", "ModsListPage", new ModsListPage()));
+            content.Add("Version", new ToggleItem("Version", "VersionPage", new VersionPage()));
+
+            _mainWindow.PagesController("InstancePage" + _instanceProperties.Id, _mainWindow.RightFrame, delegate ()
+            {
+                return new SwitcherPage(_instanceProperties.Name, content, _mainWindow);
+            });
+            
             InitializeContent("Modpack", "Экспорт", "Настройки", "Назад");
             ReselectionButton(MenuButton0);
         }

@@ -43,20 +43,19 @@ namespace Lexplosion.Gui.UserControls
 
         public void LoadImages(List<string> uris)
         {
-            if(uris == null || uris.Count == 0)
+            if (uris == null || uris.Count == 0)
                 return;
 
             uriImages = uris;
-
-            maxNumberPage = uris.Count;
             var ib = new ImageBrush();
             ib.ImageSource = new BitmapImage(new Uri(uriImages[0], UriKind.RelativeOrAbsolute));
             Image.Fill = ib;
-            if(maxNumberPage > 1)
+            if(uris.Count > 1)
             {
                 NextImageButton.IsEnabled = true;
                 PreviousImageButton.IsEnabled = true;
             }
+            Console.WriteLine("Gallery loaded");
         }
 
         public void Clear() 

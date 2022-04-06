@@ -1,20 +1,9 @@
-﻿using Lexplosion.Gui.Pages.Instance;
-using Lexplosion.Gui.Windows;
+﻿using Lexplosion.Gui.Windows;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Lexplosion.Gui.Pages
 {
@@ -43,6 +32,7 @@ namespace Lexplosion.Gui.Pages
         public SwitcherPage(string pageTitle, Dictionary<string, ToggleItem> content, MainWindow mainWindow)
         {
             InitializeComponent();
+            Console.WriteLine("SwitcherPage init");
             PageTitle.Text = pageTitle;
             this.content = content;
             this.mainWindow = mainWindow;
@@ -59,7 +49,7 @@ namespace Lexplosion.Gui.Pages
                     Content = content[key].Header,
                     Name = key,
                     Height = 35,
-                    Width = content[key].Header.Length * 10,
+                    Width = double.NaN - content[key].Header.Length * 20,
                     Style = (Style)Application.Current.FindResource("MWCBS"),
                 };
 
