@@ -112,8 +112,7 @@ namespace Lexplosion.Logic.Network
                             {
                                 data = filesData.data,
                                 version = filesData.version,
-                                libraries = libraries,
-                                natives = filesData.natives
+                                libraries = libraries
                             };
 
                             return ret;

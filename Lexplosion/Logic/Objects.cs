@@ -27,12 +27,13 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public bool notArchived;
         public string url;
         public List<List<string>> obtainingMethod;
+        public bool isNative;
     }
 
     class VersionManifest
     {
         public VersionInfo version;
-        public Dictionary<string, string> natives;
+        //public Dictionary<string, string> natives;
         public Dictionary<string, LibInfo> libraries;
     }
 

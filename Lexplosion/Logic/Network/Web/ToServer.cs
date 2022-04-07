@@ -124,7 +124,7 @@ namespace Lexplosion.Logic.Network
                 data.Add(new List<string>() { "str2", str2 });
                 data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
 
-                try
+                //try
                 {
                     string modloaderUrl = "";
                     if (!string.IsNullOrEmpty(modloaderVersion))
@@ -141,6 +141,7 @@ namespace Lexplosion.Logic.Network
                         }
                     }
 
+                    Console.WriteLine("URL " + LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
                     string answer = HttpPost(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl, data);
 
                     if (answer != null)
@@ -160,7 +161,8 @@ namespace Lexplosion.Logic.Network
                                     {
                                         notArchived = filesData.libraries[lib].notArchived,
                                         url = filesData.libraries[lib].url,
-                                        obtainingMethod = filesData.libraries[lib].obtainingMethod
+                                        obtainingMethod = filesData.libraries[lib].obtainingMethod,
+                                        isNative = filesData.libraries[lib].isNative
                                     };
                                 }
                             }
@@ -168,8 +170,7 @@ namespace Lexplosion.Logic.Network
                             VersionManifest ret = new VersionManifest
                             {
                                 version = filesData.version,
-                                libraries = libraries,
-                                natives = filesData.natives
+                                libraries = libraries
                             };
 
                             return ret;
@@ -186,11 +187,11 @@ namespace Lexplosion.Logic.Network
                         return null;
                     }
                 }
-                catch
+                /*catch
                 {
                     MessageBox.Show("null3");
                     return null;
-                }
+                }*/
             }
         }
 

@@ -42,7 +42,6 @@ namespace Lexplosion.Logic.FileSystem
         // этот класс возвращает метод CheckBaseFiles
         public class BaseFilesUpdates
         {
-            public List<string> Natives = new List<string>();
             public Dictionary<string, LibInfo> Libraries = new Dictionary<string, LibInfo>();
             public bool MinecraftJar = false;
             public bool AssetsIndexes = false;
@@ -860,7 +859,23 @@ namespace Lexplosion.Logic.FileSystem
                     //ищем недостающие файлы
                     foreach (string lib in filesInfo.libraries.Keys)
                     {
-                        if ((downloadedFiles == null && fileExided) || !File.Exists(directory + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
+                        string fileDir = "";
+                        if (!filesInfo.libraries[lib].isNative)
+                        {
+                            fileDir = directory + "/libraries/" + lib;
+                        }
+                        else
+                        {
+                            try
+                            {
+                                string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                                string name = folders[folders.Length - 1];
+                                fileDir = directory + "/natives/" + filesInfo.version.gameVersion + "/" + name;
+                            }
+                            catch { }
+                        }
+
+                        if ((downloadedFiles == null && fileExided) || !File.Exists(fileDir) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
                         {
                             updatesList.Libraries[lib] = filesInfo.libraries[lib];
                             updatesList.UpdatesCount++;
@@ -869,40 +884,14 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            //проверяем natives
-            if (!Directory.Exists(directory + "/instances/" + instanceId + "/version/natives/"))
+            if (!Directory.Exists(directory + "/natives/" + filesInfo.version.gameVersion))
             {
-                foreach (string key in filesInfo.natives.Keys) //добавляем natives в обновления
+                foreach (string lib in filesInfo.libraries.Keys)
                 {
-                    updatesList.Natives.Add(key);
-                    updatesList.UpdatesCount++;
-                }
-            }
-            else
-            {
-                if (!updates.ContainsKey("natives") || filesInfo.version.nativesLastUpdate != updates["natives"]) //если версия natives старая, то отправляем на обновления
-                {
-                    foreach (string key in filesInfo.natives.Keys)
+                    if (filesInfo.libraries[lib].isNative)
                     {
-                        if (filesInfo.natives[key] == "windows" || filesInfo.natives[key] == "all")
-                        {
-                            updatesList.Natives.Add(key);
-                            updatesList.UpdatesCount++;
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (string n in filesInfo.natives.Keys) //ищем недостающие файлы
-                    {
-                        if (filesInfo.natives[n] == "windows" || filesInfo.natives[n] == "all")
-                        {
-                            if (!File.Exists(directory + "/instances/" + instanceId + "/version/natives/" + n))
-                            {
-                                updatesList.Natives.Add(n);
-                                updatesList.UpdatesCount++;
-                            }
-                        }
+                        updatesList.Libraries[lib] = filesInfo.libraries[lib];
+                        updatesList.UpdatesCount++;
                     }
                 }
             }
@@ -982,6 +971,7 @@ namespace Lexplosion.Logic.FileSystem
             string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
             string path = directory;
+            // TODO: какой-то ебанутый метод создания директорий
             for (int i = 0; i < foldersPath.Length - 1; i++)
             {
                 path += "/" + foldersPath[i];
@@ -1202,32 +1192,6 @@ namespace Lexplosion.Logic.FileSystem
 
             }
 
-            //скачиваем natives
-            if (filesList.version.nativesUrl == null)
-            {
-                addr = LaunсherSettings.URL.Upload + "natives/";
-            }
-            else
-            {
-                addr = filesList.version.nativesUrl;
-            }
-
-            foreach (string native in updateList.Natives)
-            {
-
-                if (!UnsafeDownloadZip(addr + native, directory + "/instances/" + instanceId + "/version/natives/", native, temp, wc))
-                {
-                    //скачивание не удалось
-                    errors.Add("natives/" + native);
-                    DelFile(directory + "/instances/" + instanceId + "/version/natives/" + native);
-                }
-
-                updatesCount++;
-                updateList.ProcentUpdateFunc(updateList.UpdatesCount, updatesCount);
-            }
-
-            updates["natives"] = filesList.version.nativesLastUpdate;
-
             //скачиваем libraries
             folders = null;
             List<string> executedMethods = new List<string>();
@@ -1265,13 +1229,55 @@ namespace Lexplosion.Logic.FileSystem
                     }
 
                     bool isDownload;
-                    if (updateList.Libraries[lib].notArchived)
+                    if (!updateList.Libraries[lib].isNative)
                     {
-                        isDownload = UnsafeDownloadJar(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc, tempDir);
+                        if (updateList.Libraries[lib].notArchived)
+                        {
+                            isDownload = UnsafeDownloadJar(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc, tempDir);
+                        }
+                        else
+                        {
+                            isDownload = UnsafeDownloadZip(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], tempDir, wc);
+                        }
                     }
                     else
                     {
-                        isDownload = UnsafeDownloadZip(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], temp, wc);
+                        string name = folders[folders.Length - 1];
+                        string fileDir = directory + "/natives/" + filesList.version.gameVersion + "/";
+                        if (updateList.Libraries[lib].notArchived)
+                        {
+                            isDownload = UnsafeDownloadJar(addr, fileDir, name, wc, tempDir);
+                        }
+                        else
+                        {
+                            isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, wc);
+                        }
+
+                        //try
+                        {
+                            string tempFolder = CreateTempDir();
+                            // извлекаем во временную папку
+                            ZipFile.ExtractToDirectory(fileDir + "/" + name, tempFolder);
+
+                            //Скопировать все файлы. И перезаписать(если такие существуют)
+                            foreach (string newPath in Directory.GetFiles(tempFolder, "*.*", SearchOption.AllDirectories))
+                            {
+                                if (!newPath.Contains("META-INF"))
+                                {
+                                    File.Copy(newPath, newPath.Replace(tempFolder, fileDir), true);
+                                }
+                            }
+
+                            Directory.Delete(tempFolder, true);
+                        }
+                        /*catch (IOException) // TODO: подумать над этой хуйней
+                        {
+                            isDownload = true;
+                        }
+                        catch
+                        {
+                            isDownload = false;
+                        }*/
                     }
 
                     if (isDownload)
@@ -1285,6 +1291,7 @@ namespace Lexplosion.Logic.FileSystem
                         errors.Add("libraries/" + lib);
                         DelFile(directory + "/libraries/" + lib);
                     }
+
 
                     updatesCount++;
                     updateList.ProcentUpdateFunc(updateList.UpdatesCount, updatesCount);

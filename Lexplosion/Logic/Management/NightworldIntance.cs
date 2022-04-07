@@ -87,7 +87,6 @@ namespace Lexplosion.Logic.Management
                     Manifest = new NInstanceManifest 
                     {
                         libraries = tempManifest.libraries,
-                        natives = tempManifest.natives,
                         version = tempManifest.version
                     };
                 }
@@ -112,7 +111,6 @@ namespace Lexplosion.Logic.Management
                     Manifest = new NInstanceManifest
                     {
                         libraries = tempManifest.libraries,
-                        natives = tempManifest.natives,
                         version = tempManifest.version
                     };
                 }
@@ -133,7 +131,6 @@ namespace Lexplosion.Logic.Management
 
                 Manifest.version = manifest_.version;
                 Manifest.libraries = manifest_.libraries;
-                Manifest.natives = manifest_.natives;
             }
 
             if (Manifest != null)
@@ -206,7 +203,6 @@ namespace Lexplosion.Logic.Management
             }
 
             Manifest.data = null;
-            Manifest.natives = null;
 
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
