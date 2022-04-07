@@ -21,8 +21,8 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public LibraryContainerPage(MainWindow mainWindow)
 		{
-			_mainWindow = mainWindow;
 			InitializeComponent();
+			_mainWindow = mainWindow;
 			InitializeInstance();
 			UserData.Instances.AddInstanceNofity += InitializeInstance;
 			UserData.Instances.SetAssetsNofity += SetInstanceAssets;
@@ -43,7 +43,6 @@ namespace Lexplosion.Gui.Pages.MW
 
 			foreach (string key in UserData.Instances.Record.Keys)
 			{
-				Console.WriteLine("LibraryContainerPage -> Record Key: " + key + "; row index: " + i);
 				description = "This modpack is not have description...";
 				imageUrl = "pack://application:,,,/assets/images/icons/non_image.png";
 				author = "by NightWorld";
@@ -67,8 +66,8 @@ namespace Lexplosion.Gui.Pages.MW
 				UserControls.InstanceForm instance = BuildInstanceForm(
 					key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags
 				);
+				instances[key] = instance;
 				i++;
-				Console.WriteLine("LibraryContainerPage -> Initialize Instance has been finished");
 			}
 		}
 

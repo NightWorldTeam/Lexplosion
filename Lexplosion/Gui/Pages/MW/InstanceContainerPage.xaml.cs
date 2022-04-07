@@ -159,7 +159,7 @@ namespace Lexplosion.Gui.Pages.MW
 				else
 				{
 					SearchBox.LastRequest = searchBoxText;
-					GetInitializeInstance(selectedInstanceSource);
+					InitializeInstance(selectedInstanceSource);
 				}
 			});
 		}
