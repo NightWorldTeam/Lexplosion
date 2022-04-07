@@ -326,7 +326,7 @@ namespace Lexplosion.Gui.UserControls
         }
 
         // -- DropDownMenu -- //
-        private void AddCustomModpack(object sender, RoutedEventArgs e)
+        public void AddCustomModpack()
         {
             HiddenDropDownMenuAnimation();
             _activePageType = PageType.Installers;
@@ -337,6 +337,11 @@ namespace Lexplosion.Gui.UserControls
             InitializeContent("Создать сборку", "...", "Импорт сборки", "Назад");
             ReselectionButton(MenuButton0);
             AddModpackClicked.Invoke();
+        }
+
+        private void AddCustomModpack_Click(object sender, RoutedEventArgs e) 
+        {
+            AddCustomModpack();
         }
 
         private void MenuArrow(object sender, RoutedEventArgs e)

@@ -41,6 +41,11 @@ namespace Lexplosion.Gui.Pages.MW
 
 			instances.Clear();
 
+			if (UserData.Instances.Record.Keys.Count == 0)
+				return;
+
+			AddInstanceBtn.Visibility = Visibility.Hidden;
+
 			foreach (string key in UserData.Instances.Record.Keys)
 			{
 				description = "This modpack is not have description...";
@@ -104,5 +109,10 @@ namespace Lexplosion.Gui.Pages.MW
 				instances[id].SetLocalInstanceAssets(assets);
 			});
 		}
-	}
+
+        private void AddInstanceBtn_Click(object sender, RoutedEventArgs e)
+        {
+			_mainWindow.LeftPanel.AddCustomModpack();
+        }
+    }
 }

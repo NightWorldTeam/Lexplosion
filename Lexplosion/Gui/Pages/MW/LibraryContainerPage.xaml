@@ -9,6 +9,45 @@
       d:DesignHeight="450" d:DesignWidth="700"
       Title="LibraryContainerPage">
 
+    <Page.Resources>
+        <Style x:Key="AddBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="FontFamily" Value="pack://application:,,,/assets/fonts/#Casper Bold"/>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderBrush="WhiteSmoke" BorderThickness="1">
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="500" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <Border x:Name="Border" 
+                                        BorderBrush="White" BorderThickness="1">
+                                        <TextBlock Text="+"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="50"/>
+                                    </Border>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <ContentPresenter Margin="2" 
+                                              HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center" 
+                                              RecognizesAccessKey="True"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid x:Name="MainGrid">
         <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
             <ScrollViewer.Background>
@@ -16,7 +55,15 @@
                 <!-- "Black" 0.64 -->
                 <SolidColorBrush Color="#121212" Opacity="0.65"/>
             </ScrollViewer.Background>
-            <Grid ShowGridLines="False" x:Name="InstanceGrid" Margin="0, 0, 0, 0">
+            <Grid ShowGridLines="False" x:Name="InstanceGrid" Margin="0,0,0,0">
+                <Button x:Name="AddInstanceBtn" Height="120" 
+                        Width="620"
+                        Margin="0,15,0,0"
+                        VerticalAlignment="Top"
+                        Click="AddInstanceBtn_Click"
+                        Style="{StaticResource AddBtn}">
+                    Добавить сборку
+                </Button>
             </Grid>
         </ScrollViewer>
     </Grid>

@@ -72,7 +72,7 @@
                             Background="Black"
                             FontWeight="Bold"
                             Content="Добавить Сборку"
-                            Click="AddCustomModpack" 
+                            Click="AddCustomModpack_Click" 
                             Width="175" Height="30" 
                             FontSize="16"/>
                     </Grid>
