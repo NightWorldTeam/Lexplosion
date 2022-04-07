@@ -859,23 +859,7 @@ namespace Lexplosion.Logic.FileSystem
                     //ищем недостающие файлы
                     foreach (string lib in filesInfo.libraries.Keys)
                     {
-                        string fileDir = "";
-                        if (!filesInfo.libraries[lib].isNative)
-                        {
-                            fileDir = directory + "/libraries/" + lib;
-                        }
-                        else
-                        {
-                            try
-                            {
-                                string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                                string name = folders[folders.Length - 1];
-                                fileDir = directory + "/natives/" + filesInfo.version.gameVersion + "/" + name;
-                            }
-                            catch { }
-                        }
-
-                        if ((downloadedFiles == null && fileExided) || !File.Exists(fileDir) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
+                        if ((downloadedFiles == null && fileExided) || !File.Exists(directory + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
                         {
                             updatesList.Libraries[lib] = filesInfo.libraries[lib];
                             updatesList.UpdatesCount++;
@@ -1229,51 +1213,42 @@ namespace Lexplosion.Logic.FileSystem
                     }
 
                     bool isDownload;
-                    if (!updateList.Libraries[lib].isNative)
+                    string name = folders[folders.Length - 1];
+                    string fileDir = directory + "/libraries/" + ff;
+                    if (updateList.Libraries[lib].notArchived)
                     {
-                        if (updateList.Libraries[lib].notArchived)
-                        {
-                            isDownload = UnsafeDownloadJar(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], wc, tempDir);
-                        }
-                        else
-                        {
-                            isDownload = UnsafeDownloadZip(addr, directory + "/libraries/" + ff, folders[folders.Length - 1], tempDir, wc);
-                        }
+                        isDownload = UnsafeDownloadJar(addr, fileDir, name, wc, tempDir);
                     }
                     else
                     {
-                        string name = folders[folders.Length - 1];
-                        string fileDir = directory + "/natives/" + filesList.version.gameVersion + "/";
-                        if (updateList.Libraries[lib].notArchived)
-                        {
-                            isDownload = UnsafeDownloadJar(addr, fileDir, name, wc, tempDir);
-                        }
-                        else
-                        {
-                            isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, wc);
-                        }
+                        isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, wc);
+                    }
 
+                    if (updateList.Libraries[lib].isNative)
+                    {
                         //try
                         {
                             string tempFolder = CreateTempDir();
                             // извлекаем во временную папку
                             ZipFile.ExtractToDirectory(fileDir + "/" + name, tempFolder);
 
+                            if(!Directory.Exists(directory + "/natives/" + filesList.version.gameVersion + "/"))
+                            {
+                                Directory.CreateDirectory(directory + "/natives/" + filesList.version.gameVersion + "/");
+                            }
+
                             //Скопировать все файлы. И перезаписать(если такие существуют)
                             foreach (string newPath in Directory.GetFiles(tempFolder, "*.*", SearchOption.AllDirectories))
                             {
                                 if (!newPath.Contains("META-INF"))
                                 {
-                                    File.Copy(newPath, newPath.Replace(tempFolder, fileDir), true);
+                                    File.Copy(newPath, newPath.Replace(tempFolder, directory + "/natives/" + filesList.version.gameVersion + "/"), true);
                                 }
                             }
 
                             Directory.Delete(tempFolder, true);
                         }
-                        /*catch (IOException) // TODO: подумать над этой хуйней
-                        {
-                            isDownload = true;
-                        }
+                        /*
                         catch
                         {
                             isDownload = false;

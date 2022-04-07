@@ -50,7 +50,10 @@ namespace Lexplosion.Logic.Management
 
             foreach (string lib in data.Libraries.Keys)
             {
-                command += "\"" + UserData.Settings["gamePath"] + "/libraries/" + lib + "\";";
+                //if (!data.Libraries[lib].isNative)
+                {
+                    command += "\"" + UserData.Settings["gamePath"] + "/libraries/" + lib + "\";";
+                }
             }
 
             command += "\"" + versionPath + "\"";
