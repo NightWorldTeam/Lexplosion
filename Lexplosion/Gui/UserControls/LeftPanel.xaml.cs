@@ -225,9 +225,12 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceSettingsSelected(object sender, RoutedEventArgs e)
         {
-            _mainWindow.PagesController("InstanceSettingsPage", _mainWindow.RightFrame, delegate ()
+            var content = new Dictionary<string, ToggleItem>();
+            content.Add("General", new ToggleItem("Основное", "SettingsPage", new SettingsPage(_mainWindow)));
+            content.Add("Instance", new ToggleItem("Профиль", "OverviewPage", new SettingsPage(_mainWindow)));
+            _mainWindow.PagesController("SwitcherPage", _mainWindow.RightFrame, delegate ()
             {
-                return new InstanceSettingsPage(_mainWindow);
+                return new SwitcherPage("Настройки сборки", content, _mainWindow);
             });
             ReselectionButton(MenuButton2);
         }

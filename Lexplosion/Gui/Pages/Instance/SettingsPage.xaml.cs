@@ -1,23 +1,34 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.FileSystem;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
-namespace Lexplosion.Gui.Pages.MW
+namespace Lexplosion.Gui.Pages.Instance
 {
     /// <summary>
-    /// Interaction logic for SettingsContainerPage.xaml
+    /// Логика взаимодействия для SettingsPage.xaml
     /// </summary>
-    public partial class SettingsContainerPage : Page
+    public partial class SettingsPage : Page
     {
         private string _sysPath;
         private MainWindow _mainWindow;
 
-        public SettingsContainerPage(MainWindow mainWindow)
+        public SettingsPage(MainWindow mainWindow)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
