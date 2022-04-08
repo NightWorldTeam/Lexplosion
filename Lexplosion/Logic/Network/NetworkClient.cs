@@ -42,7 +42,9 @@ namespace Lexplosion.Logic.Network
 
             {
                 byte[] buf = new byte[2];
+                Console.WriteLine("ControlServerWait");
                 int bytes = stream.Read(buf, 0, buf.Length);
+                Console.WriteLine("ControlServerEndWait");
 
                 if (buf[0] == 98) // сервер согласился, а управляющий сервер запрашивает порт
                 {

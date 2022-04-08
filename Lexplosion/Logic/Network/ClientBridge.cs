@@ -10,15 +10,15 @@ namespace Lexplosion.Logic.Network
     {
         protected Socket ServerSimulator;
 
-        protected List<Socket> Sockets = new List<Socket>();
         protected Dictionary<Socket, string> AvailableServers = new Dictionary<Socket, string>();
+        private readonly Semaphore AvailableServersBlock = new Semaphore(1, 1);
 
         protected Semaphore AcceptingBlock = new Semaphore(1, 1); //блокировка на время работы метода AcceptHandler
         protected AutoResetEvent SendingWait = new AutoResetEvent(false);
         protected AutoResetEvent ReadingWait = new AutoResetEvent(false);
 
         private bool IsConnected = false; // когда будет подключен майкнрафт клиент эта переменная будет true
-        string UUID = "";
+        private readonly string UUID = "";
 
         const string clientType = "game-client"; // эта строка нужна при подключении к управляющему серверу
 
@@ -27,43 +27,47 @@ namespace Lexplosion.Logic.Network
             UUID = uuid;
         }
 
-        public List<int> SetServers(List<string> servers)
+        public Dictionary<string, int> SetServers(List<string> servers)
         {
-            List<int> ports = new List<int>();
+            Dictionary<string, int> ports = new Dictionary<string, int>();
+
+            //убираем сервера, которых нет в списке
+
+            AvailableServersBlock.WaitOne();
+            Socket[] values = new Socket[AvailableServers.Count];
+            AvailableServers.Keys.CopyTo(values, 0);
+
+            foreach (Socket serverSocket in values)
+            {
+                string uuid = AvailableServers[serverSocket];
+                if (!servers.Contains(uuid))
+                {
+                    AvailableServers.Remove(serverSocket);
+                    serverSocket.Close();
+                }
+                else
+                {
+                    ports[uuid] = ((IPEndPoint)serverSocket.LocalEndPoint).Port; //добавояем порт сокета в список
+                }
+            }
 
             //добавляем новые сервера
             foreach (string server_uuid in servers)
             {
-                if (!AvailableServers.ContainsValue(server_uuid))
+                if (!ports.ContainsKey(server_uuid))
                 {
                     Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sock.Bind(new IPEndPoint(IPAddress.Any, 0));
                     sock.Listen(1);
 
                     AvailableServers[sock] = server_uuid;
-                    Sockets.Add(sock);
+
+                    ports[server_uuid] = ((IPEndPoint)sock.LocalEndPoint).Port; //добавояем порт сокета в список
+                    sock.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), sock); // запусакаем асинхронный асепт
                 }
             }
 
-            //убираем сервера, которых нет в списке
-
-            Socket[] values = new Socket[AvailableServers.Count];
-            AvailableServers.Keys.CopyTo(values, 0);
-
-            foreach (Socket serverSocket in values)
-            {
-                if (!servers.Contains(AvailableServers[serverSocket]))
-                {
-                    Sockets.Remove(serverSocket);
-                    AvailableServers.Remove(serverSocket);
-                    serverSocket.Close();
-                }
-                else
-                {
-                    ports.Add(((IPEndPoint)serverSocket.LocalEndPoint).Port); //добавояем порт сокета в список
-                    serverSocket.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), serverSocket); // запусакаем асинхронный асепт
-                }
-            }
+            AvailableServersBlock.Release();
 
             return ports;
         }
@@ -83,33 +87,40 @@ namespace Lexplosion.Logic.Network
                 Socket sock = listener.EndAccept(data);
                 sock.Close();
                 Console.WriteLine("AcceptHandler1.1");
+                listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
 
                 return;
             }
 
             // TODO: тут проверить тот ли клиент подключился
+            AvailableServersBlock.WaitOne();
             string serverUUID = AvailableServers[listener];
             Console.WriteLine("AcceptHandler2");
             base.Initialization(UUID, serverUUID);
 
             Socket serverSimulator_ = listener.EndAccept(data);
             ServerSimulator = serverSimulator_;
+            IsConnected = true;
 
             ReadingWait.Set();
             SendingWait.Set();
 
             //закрываем другие сокеты
-            foreach (Socket sock in AvailableServers.Keys)
+            Socket[] values = new Socket[AvailableServers.Count];
+            AvailableServers.Keys.CopyTo(values, 0);
+            foreach (Socket sock in values)
             {
-                if (AvailableServers[listener] != serverUUID)
+                if (AvailableServers[sock] != serverUUID)
                 {
+                    AvailableServers.Remove(sock);
                     sock.Close();
                 }
             }
 
-            IsConnected = true;
-
+            AvailableServersBlock.Release();
             AcceptingBlock.Release();
+
+            listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
         }
 
         public override void Close(IPEndPoint point)

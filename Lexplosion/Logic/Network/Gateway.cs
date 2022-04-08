@@ -17,8 +17,8 @@ namespace Lexplosion.Logic.Network
         public ManualResetEvent clientModeWaiting = new ManualResetEvent(false);
         private AutoResetEvent waitingInforming = new AutoResetEvent(false);
 
-        private Thread WaitingOpenThread;
-        private Thread WorkThread;
+        private Thread ServerSimulatorThread;
+        private Thread ClientSimulatorThread;
         private Thread InformingThread;
 
         ServerBridge Server = null;
@@ -36,73 +36,19 @@ namespace Lexplosion.Logic.Network
 
         public void Initialization(int pid)
         {
-            WaitingOpenThread = new Thread(delegate ()
+            ServerSimulatorThread = new Thread(delegate ()
             {
-                WaitingOpen(pid);
+                ServerSimulator(pid);
             });
 
-            WaitingOpenThread.Start();
+            ServerSimulatorThread.Start();
 
-            WorkThread = new Thread(delegate ()
+            ClientSimulatorThread = new Thread(delegate ()
             {
-                UdpClient client = new UdpClient();
-                client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-
-                client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
-                client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
-
-                while (true)
-                {
-                    client.Client.ReceiveTimeout = -1; // убираем таймоут, чтобы этот метод мог ждать бесконечно
-                    bool successful = ListenGameSrvers(client, out string name, out int port, pid, true);
-
-                    if (!successful) // TODO: из всего алгоритма выходить не надо, надо только перевести всё в ручной режим
-                    {
-                        return;
-                    }
-
-                    isServer = true;
-
-                    InformingThread = new Thread(delegate ()
-                    {
-                        List<List<string>> input = new List<List<string>>();
-
-                        input.Add(new List<string>() { "UUID", UUID });
-                        input.Add(new List<string>() { "accessToken", accessToken });
-
-                        // раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
-                        while (isServer)
-                        {
-                            string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
-                            Console.WriteLine(ans);
-                            waitingInforming.WaitOne(120000);
-                        }
-
-                        ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer.php", input);
-                    });
-
-                    InformingThread.Start();
-                    Server = new ServerBridge(UUID, port, true, ControlServer);
-
-                    client.Client.ReceiveTimeout = 3000; // ставим таймаут, чтобы если пакетов небыло, ListenGameSrvers вернул false
-                    while (true)
-                    {
-                        bool result = ListenGameSrvers(client, out string name_, out int port_, pid, false);
-                        if (!result || name_ != name || port != port_) // если функция вернула false или изменилось имя или изменился порт - значит серер был закрыт
-                        {
-                            isServer = false;
-                            waitingInforming.Set(); // вызвобождаем поток InformingThread чтобы он не ждал лишнее время
-                            Server.StopWork();
-                            break;
-                        }
-
-                        Thread.Sleep(3000);
-                    }
-                }
-
+                ClientSimulator(pid);
             });
 
-            WorkThread.Start();
+            ClientSimulatorThread.Start();
         }
 
         public bool ListenGameSrvers(UdpClient client, out string name, out int port, int pid, bool endlesswaiting)
@@ -148,7 +94,7 @@ namespace Lexplosion.Logic.Network
                         }
                     }
                     else // пришел пакет от другого клиента, кторый с нами никак не связан
-                    { 
+                    {
                         // если это бесконечное ожидание, то мы просто оступаем на шаг назад, чтобы цикл не закночился
                         if (endlesswaiting)
                         {
@@ -159,7 +105,7 @@ namespace Lexplosion.Logic.Network
                         {
                             Thread.Sleep(3000); // если оно не бесконечное, засыпаем на время таймаута
                         }
-                        
+
                     }
                 }
                 catch { }
@@ -168,7 +114,73 @@ namespace Lexplosion.Logic.Network
             return false;
         }
 
-        public void WaitingOpen(int pid)
+        // Симуляция майнкрафт клиента. То есть используется если наш макрафт является сервером
+        public void ClientSimulator(int pid)
+        {
+            UdpClient client = new UdpClient();
+            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+
+            client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
+            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
+
+            while (true)
+            {
+                client.Client.ReceiveTimeout = -1; // убираем таймоут, чтобы этот метод мог ждать бесконечно
+                bool successful = ListenGameSrvers(client, out string name, out int port, pid, true);
+
+                if (!successful) // TODO: из всего алгоритма выходить не надо, надо только перевести всё в ручной режим
+                {
+                    return;
+                }
+
+                isServer = true;
+
+                InformingThread = new Thread(delegate ()
+                {
+                    List<List<string>> input = new List<List<string>>();
+
+                    input.Add(new List<string>() { "UUID", UUID });
+                    input.Add(new List<string>() { "accessToken", accessToken });
+
+                    // раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
+                    while (isServer)
+                    {
+                        string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
+                        Console.WriteLine(ans);
+                        waitingInforming.WaitOne(120000);
+                    }
+
+                    ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer.php", input);
+                });
+
+                InformingThread.Start();
+                Server = new ServerBridge(UUID, port, false, ControlServer);
+
+                client.Client.ReceiveTimeout = 3000; // ставим таймаут, чтобы если пакетов небыло, ListenGameSrvers вернул false
+                while (true)
+                {
+                    bool result = ListenGameSrvers(client, out string name_, out int port_, pid, false);
+                    if (!result || name_ != name || port != port_) // если функция вернула false или изменилось имя или изменился порт - значит серер был закрыт
+                    {
+                        isServer = false;
+                        waitingInforming.Set(); // высвобождаем поток InformingThread чтобы он не ждал лишнее время
+                        Server.StopWork();
+                        break;
+                    }
+
+                    Thread.Sleep(3000);
+                }
+            }
+        }
+
+        struct OnlineUserInfo
+        {
+            public string login;
+            public string gameClientName;
+        }
+
+        // Симуляция майнкрафт сервера. То есть используется если наш макрафт является клиентом
+        public void ServerSimulator(int pid)
         {
             ClientBridge bridge = new ClientBridge(UUID, ControlServer);
 
@@ -192,10 +204,10 @@ namespace Lexplosion.Logic.Network
                     };
 
                     string data = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getGameServers.php", input);
-                    List<string> servers = null;
+                    Dictionary<string, OnlineUserInfo> servers = null;
                     try
                     {
-                        servers = JsonConvert.DeserializeObject<List<string>>(data);
+                        servers = JsonConvert.DeserializeObject<Dictionary<string, OnlineUserInfo>>(data);
                     }
                     catch { }
 
@@ -203,16 +215,21 @@ namespace Lexplosion.Logic.Network
                     {
                         isClient = true;
                         clientModeWaiting.Reset();
-                        List<int> ports = bridge.SetServers(servers);
+                        Dictionary<string, int> ports = bridge.SetServers(new List<string>(servers.Keys));
 
                         //Отправляем пакеты сервера для отображения в локальных мирах
-                        foreach (int port in ports)
+                        foreach (string uuid in ports.Keys)
                         {
-                            byte[] _data = Encoding.UTF8.GetBytes("[MOTD]§3Епёта, твой друг Editor играет §l§n§o§m§k§kkizyak[/MOTD][AD]" + port + "[/AD]");
+                            string text = servers[uuid].login + " играет";
+                            if (servers[uuid].gameClientName != null)
+                            {
+                                text += " в " + servers[uuid].gameClientName;
+                            }
+                            byte[] _data = Encoding.UTF8.GetBytes("[MOTD]§3" + text + "[/MOTD][AD]" + ports[uuid] + "[/AD]");
                             client.Send(_data, _data.Length, new IPEndPoint(IPAddress.Parse("224.0.2.60"), 4445));
                         }
                     }
-                } 
+                }
                 else if (!portContains)
                 {
                     isClient = false;
@@ -227,8 +244,8 @@ namespace Lexplosion.Logic.Network
         {
             isServer = false;
 
-            WaitingOpenThread.Abort();
-            WorkThread.Abort();
+            ServerSimulatorThread.Abort();
+            ClientSimulatorThread.Abort();
 
             if (Server != null)
             {
