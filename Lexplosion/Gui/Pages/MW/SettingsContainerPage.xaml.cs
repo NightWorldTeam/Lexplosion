@@ -116,5 +116,17 @@ namespace Lexplosion.Gui.Pages.MW
             XmxTextBox.Text = Regex.Match(XmxTextBox.Text, @"[0-9]+").ToString();
             XmxTextBox.Select(XmxTextBox.Text.Length, 0);
         }
+
+        private void ShowConsoleCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            UserData.Settings["showConsole"] = "true";
+            DataFilesManager.SaveSettings(UserData.Settings);
+        }
+
+        private void ShowConsoleCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UserData.Settings["showConsole"] = "false";
+            DataFilesManager.SaveSettings(UserData.Settings);
+        }
     }
 }

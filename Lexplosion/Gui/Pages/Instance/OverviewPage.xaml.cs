@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Network;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
@@ -20,12 +21,15 @@ namespace Lexplosion.Gui.Pages.Instance
         public OverviewPage(InstanceProperties instanceProperties)
         {
             InitializeComponent();
+            source = UserData.Instances.Record[instanceProperties.LocalId].Type;
+            Console.WriteLine(source.ToString());
             _instanceProperties = instanceProperties;
-            LoadingOutsideInstance();
+            if (source == InstanceSource.Curseforge || source == InstanceSource.Nightworld)
+                LoadingOutsideInstance();
             // TODO: сборка созданая в лаунчере описываться тут не будет
         }
 
-        public void LoadingOutsideInstance() 
+        public void LoadingOutsideInstance()
         {
             Lexplosion.Run.TaskRun(delegate ()
             {
@@ -33,8 +37,8 @@ namespace Lexplosion.Gui.Pages.Instance
                 this.Dispatcher.Invoke(delegate ()
                 {
                     var uris = GetUrls();
-                    
-                    foreach (var ur in uris) 
+
+                    foreach (var ur in uris)
                     {
                         Console.WriteLine(ur);
                     }
@@ -52,17 +56,17 @@ namespace Lexplosion.Gui.Pages.Instance
             });
         }
 
-        public void ClearGallery() 
+        public void ClearGallery()
         {
             Gallery.Clear();
         }
 
-        private void SetRightPanelInfo() 
+        private void SetRightPanelInfo()
         {
-            Verison.Text = _instanceInfo.gameVersionLatestFiles[0].gameVersion; 
-            LastUpdate.Text = DateTime.Parse(_instanceInfo.dateModified).ToString("dd MMM yyyy"); 
+            Verison.Text = _instanceInfo.gameVersionLatestFiles[0].gameVersion;
+            LastUpdate.Text = DateTime.Parse(_instanceInfo.dateModified).ToString("dd MMM yyyy");
             TotalDownloads.Text = ((Int32)_instanceInfo.downloadCount).ToString("##,#");
-        } 
+        }
 
         private TextBlock GetCategery(string categery) => new TextBlock()
         {
@@ -75,18 +79,18 @@ namespace Lexplosion.Gui.Pages.Instance
         private List<string> GetUrls()
         {
             var urls = new List<string>();
-            foreach (var item in _instanceInfo.attachments) 
+            foreach (var item in _instanceInfo.attachments)
             {
                 if (!item.isDefault && !item.url.Contains("avatars"))
                     urls.Add(item.url);
             }
-            Console.WriteLine(urls.Count);
             return urls;
         }
 
-        private void GetInstance() 
+        private void GetInstance()
         {
-            switch (source) {
+            switch (source)
+            {
                 case InstanceSource.Curseforge:
                     _instanceInfo = CurseforgeApi.GetInstance(_instanceProperties.Id);
                     break;
@@ -102,7 +106,7 @@ namespace Lexplosion.Gui.Pages.Instance
             System.Diagnostics.Process.Start(_instanceInfo.websiteUrl);
         }
 
-        private void LoadingPage() 
+        private void LoadingPage()
         {
             var skeletonElems = new Border[]
             {
@@ -126,12 +130,12 @@ namespace Lexplosion.Gui.Pages.Instance
                 Description, Gallery, LastUpdate, TotalDownloads, ShortDescription, CategoryPanelBorder, CategoryPanel
             };
 
-            foreach (var elem in skeletonElems) 
+            foreach (var elem in skeletonElems)
             {
-                elem.Visibility = Visibility.Hidden; 
+                elem.Visibility = Visibility.Hidden;
             }
 
-            foreach (var elem in otherElems) 
+            foreach (var elem in otherElems)
             {
                 elem.Visibility = Visibility.Visible;
             }

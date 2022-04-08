@@ -17,6 +17,9 @@ namespace Lexplosion.Global
 
         public static class Instances
         {
+            /// <summary>
+            /// string - 
+            /// </summary>
             public static Dictionary<string, InstanceParametrs> Record; // все сборки
             public static Dictionary<string, InstanceAssets> Assets; // ассетсы всех модпаков
             public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)

@@ -6,7 +6,7 @@
 	xmlns:local="clr-namespace:Lexplosion.Gui.Pages.MW"
 	xmlns:usercontrols="clr-namespace:Lexplosion.Gui.UserControls"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="700"
+      d:DesignHeight="500" d:DesignWidth="700"
       Title="SettingsContainerPage">
     <Page.Resources>
         <Style TargetType="{x:Type TextBox}">
@@ -165,7 +165,7 @@
     </Page.Resources>
     <Grid x:Name="MainGrid">
         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <Grid ShowGridLines="False"
+            <Grid ShowGridLines="False" Height="460"
 >
                 <Grid.Background>
                     <!-- "Black" 0.64 -->
@@ -338,6 +338,14 @@
                               Content="Скрывать лаунчер при запуске игры"
                               Foreground="#eee" 
                               FontSize="14" 
+                              FontWeight="Medium"
+                              Margin="0,0,0,0"/>
+                    <CheckBox x:Name="ShowConsoleCheckBox"
+                              Content="Показывать консоль"
+                              Foreground="#eee" 
+                              FontSize="14" 
+                              Checked="ShowConsoleCheckBox_Checked"
+                              Unchecked="ShowConsoleCheckBox_Unchecked"
                               FontWeight="Medium"
                               Margin="0,0,0,0"/>
                 </StackPanel>

@@ -117,12 +117,6 @@
     <Compile Include="Gui\InstanceCreator\InstanceCreateShaderspacksPage.xaml.cs">
       <DependentUpon>InstanceCreateShaderspacksPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\InstanceCreator\InstanceImportPage.xaml.cs">
-      <DependentUpon>InstanceImportPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\InstanceCreator\InstanceMasterPage.xaml.cs">
-      <DependentUpon>InstanceMasterPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Gui\InstanceCreator\InstanceSettingsPage.xaml.cs">
       <DependentUpon>InstanceSettingsPage.xaml</DependentUpon>
     </Compile>
@@ -171,9 +165,12 @@
     <Compile Include="Gui\UserControls\InstanceLoadingForm.xaml.cs">
       <DependentUpon>InstanceLoadingForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\UserControls\LeftPanel.xaml.cs">
+    <Compile Include="Gui\UserControls\LeftPanel\ClickMethods.cs" />
+    <Compile Include="Gui\UserControls\LeftPanel\DropDownMenu.cs" />
+    <Compile Include="Gui\UserControls\LeftPanel\LeftPanel.xaml.cs">
       <DependentUpon>LeftPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\UserControls\LeftPanel\PreparationMethods.cs" />
     <Compile Include="Gui\UserControls\Paginator.xaml.cs">
       <DependentUpon>Paginator.xaml</DependentUpon>
     </Compile>
@@ -248,14 +245,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\InstanceCreator\InstanceImportPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Gui\InstanceCreator\InstanceMasterPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Gui\InstanceCreator\InstanceSettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -320,7 +309,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\UserControls\LeftPanel.xaml">
+    <Page Include="Gui\UserControls\LeftPanel\LeftPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
