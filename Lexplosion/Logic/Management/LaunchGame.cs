@@ -40,14 +40,6 @@ namespace Lexplosion.Logic.Management
 
             command = " -Djava.library.path=\"" + UserData.Settings["gamePath"] + "/natives/" + data.VersionFile.gameVersion + "\" -cp ";
 
-            /*//Не ебу в чём проблема, но если guava-17.0.jar в списках либраресов на последних местах, то 1.7.10 тупа не запускается. Что за шиза, не понимаю
-            //Но этот костыль решает проблему
-            if (data.Libraries.ContainsKey("com/google/guava/guava/17.0/guava-17.0.jar"))
-            {
-                command += UserData.Settings["gamePath"] + "/libraries/com/google/guava/guava/17.0/guava-17.0.jar;";
-                data.Libraries.Remove("com/google/guava/guava/17.0/guava-17.0.jar");
-            }*/
-
             foreach (string lib in data.Libraries.Keys)
             {
                 //if (!data.Libraries[lib].isNative)
@@ -99,11 +91,6 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-                MainWindow.Obj.Dispatcher.Invoke(delegate
-                {
-                    //MainWindow.window.InitProgressBar.Visibility = Visibility.Visible;
-                });
-
                 process.StartInfo.FileName = UserData.Settings["javaPath"];
                 process.StartInfo.WorkingDirectory = UserData.Settings["gamePath"] + "/instances/" + instanceId;
                 process.StartInfo.Arguments = command;
@@ -120,10 +107,6 @@ namespace Lexplosion.Logic.Management
                         if (e.Data.Contains(" LWJGL Version") || e.Data.Contains("Launching target 'fmlclient' with arguments") || e.Data.Contains("Narrator library for x64 successfully loaded"))
                         {
                             ComplitedLaunch(instanceId, true);
-                            MainWindow.Obj.Dispatcher.Invoke(delegate
-                            {
-                                //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed; 
-                            });
 
                             if (UserData.Settings["hiddenMode"] == "true")
                             {
@@ -167,7 +150,6 @@ namespace Lexplosion.Logic.Management
                     {
                         MainWindow.Obj.Dispatcher.Invoke(delegate
                         {
-                            //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
                             ComplitedLaunch(instanceId, false);
 
                             // TODO: перенести это в ConsoleWindow
@@ -188,13 +170,6 @@ namespace Lexplosion.Logic.Management
                         MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Show(); });
                     }
 
-                    MainWindow.Obj.Dispatcher.Invoke(delegate
-                    {
-                        //MainWindow.window.ClientManagement.Content = "Играть";
-                        //MainWindow.window.launchedModpack = "";
-                        //MainWindow.window.ClientManagement.IsEnabled = true;
-                    });
-
                     try
                     {
                         process.Dispose();
@@ -207,16 +182,16 @@ namespace Lexplosion.Logic.Management
                     }
                     catch { }
 
-                    gameGateway = null;
+                    GameExited(instanceId);
+
                     process = null;
+                    gameGateway = null;
                 };
 
                 process.Start();
                 process.BeginOutputReadLine();
 
                 gameGateway.Initialization(process.Id);
-
-                GameExited(instanceId);
 
                 return true;
             } 

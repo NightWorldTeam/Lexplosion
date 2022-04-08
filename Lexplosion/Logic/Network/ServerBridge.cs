@@ -64,7 +64,7 @@ namespace Lexplosion.Logic.Network
                 ClientsPoints[bridge] = point;
                 Console.WriteLine("ClientsPoints1 " + ClientsPoints.Count + " " + string.Join(", ", ClientsPoints.Keys));
             }
-            catch 
+            catch
             {
                 value = false;
             }
@@ -106,6 +106,7 @@ namespace Lexplosion.Logic.Network
                     Console.WriteLine("WAIT GDFGFDGFD");
                     SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
+                    Console.WriteLine("WAIT GDFGFDGFD1");
 
                     continue;
                 }
