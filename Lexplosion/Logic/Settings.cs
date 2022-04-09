@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic
 {
+    [Serializable]
     public class Settings
     {
         public string JavaPath = null;
