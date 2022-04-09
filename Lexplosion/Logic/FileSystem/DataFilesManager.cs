@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.FileSystem
         public static void SaveAccount(string login, string password)
         {
             password = Convert.ToBase64String(AesСryp.Encode(password, Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
-            SaveFile("", JsonConvert.SerializeObject(new Dictionary<string, string>
+            SaveFile(LaunсherSettings.LauncherDataPath + "/account.json", JsonConvert.SerializeObject(new Dictionary<string, string>
             {
                 ["login"] = login,
                 ["password"] = password
