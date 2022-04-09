@@ -442,7 +442,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void OpenInstanceFolder()
         {
-            Process.Start("explorer", @"" + UserData.Settings["gamePath"].Replace("/", @"\") + @"\instances\" + _instanceProperties.Id);
+            Process.Start("explorer", @"" + UserData.GeneralSettings.GamePath.Replace("/", @"\") + @"\instances\" + _instanceProperties.Id);
         }
 
         private void InstanceDownloadCompleted(InstanceInit result, List<string> downloadErrors, bool IsGameRun)

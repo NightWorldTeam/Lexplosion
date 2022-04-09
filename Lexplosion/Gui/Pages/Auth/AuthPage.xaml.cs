@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using System;
 using System.Windows;
@@ -32,10 +33,12 @@ namespace Lexplosion.Gui.Pages
                 PasswordBoxWaterMark.Text = _passwordWaterMark;
             }
 
-            if (UserData.Settings != null && UserData.Settings.ContainsKey("login") && UserData.Settings.ContainsKey("password"))
+            DataFilesManager.GetAccount(out _login, out _password);
+
+            if (_login != null && _password != null)
             {
-                TBLogin.Text = UserData.Settings["login"];
-                TBPassword.Password = UserData.Settings["password"];
+                TBLogin.Text = _login;
+                TBPassword.Password = _password;
                 PasswordBoxWaterMark.Text = "";
                 SaveMe.IsChecked = true;
             }
