@@ -99,7 +99,7 @@ namespace Lexplosion.Logic.FileSystem
             string file;
             if (instanceId == "")
             {
-                file = LaunсherSettings.LauncherDataPath;
+                file = LaunсherSettings.LauncherDataPath + "/settings.json";
             }
             else
             {

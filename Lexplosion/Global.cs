@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic;
+using Lexplosion.Logic.FileSystem;
 
 namespace Lexplosion.Global
 {
@@ -19,6 +20,7 @@ namespace Lexplosion.Global
         public static void InitSetting()
         {
             GeneralSettings = Settings.GetDefault();
+            GeneralSettings.Merge(DataFilesManager.GetSettings());
         }
 
         public static class Instances
