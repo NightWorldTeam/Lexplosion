@@ -163,16 +163,15 @@
         </Style>
     </Page.Resources>
     <Grid x:Name="MainGrid">
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <Grid ShowGridLines="False"
->
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+            <Grid ShowGridLines="False">
                 <Grid.Background>
                     <!-- "Black" 0.64 -->
                     <SolidColorBrush Color="#191919"  Opacity="0.65"/>
                 </Grid.Background>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
@@ -182,13 +181,7 @@
                     <ColumnDefinition Width="25" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Row="0" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                </Grid>
-                <Grid Grid.Row="2" Grid.Column="1" ShowGridLines="False">
+                <Grid Grid.Row="1" Grid.Column="1" ShowGridLines="False">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="160" />
@@ -247,7 +240,7 @@
                                 Height="42" Width="125"/>
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="3" Grid.Column="1" ShowGridLines="False">
+                <Grid Grid.Row="2" Grid.Column="1" ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20"/>
                         <RowDefinition Height="60"/>
@@ -273,7 +266,7 @@
                              LostFocus="XmxTextBox_LostFocus"
                              TextChanged="XmxTextBox_TextChanged" />
                 </Grid>
-                <Grid Grid.Row="4" Grid.Column="1" ShowGridLines="False">
+                <Grid Grid.Row="3" Grid.Column="1" ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20"/>
                         <RowDefinition Height="60"/>
@@ -309,7 +302,7 @@
                                 Click="OpenFolderBrowser" />
                     </Grid>
                 </Grid>
-                <StackPanel Grid.Row="5" Grid.Column="1" Margin="5,0,0,0">
+                <StackPanel Grid.Row="4" Grid.Column="1">
                     <CheckBox x:Name="AutoInstanceUpdateCheckBox"
                               Content="Обновлять автоматически"
                               Foreground="#eee" 
