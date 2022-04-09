@@ -26,12 +26,12 @@ namespace Lexplosion.Gui.Pages.MW
 
         private void SetSettings()
         {
-            WidthTextBox.Text = UserData.Settings["windowWidth"];
-            HeightTextBox.Text = UserData.Settings["windowHeight"];
-            XmxTextBox.Text = UserData.Settings["xmx"];
-            ShowConsoleCheckBox.IsChecked = bool.Parse(UserData.Settings["showConsole"]);
+            WidthTextBox.Text = UserData.GeneralSettings.WindowWidth.ToString();
+            HeightTextBox.Text = UserData.GeneralSettings.WindowHeight.ToString();
+            XmxTextBox.Text = UserData.GeneralSettings.Xmx.ToString();
+            ShowConsoleCheckBox.IsChecked = UserData.GeneralSettings.ShowConsole;
 
-            _sysPath = UserData.Settings["gamePath"].Replace("/", @"\");
+            _sysPath = UserData.GeneralSettings.GamePath.Replace("/", @"\");
             InstanceFolderPath.Text = _sysPath;
 
             foreach (string resolution in MainWindow.ScreenResolutions)
@@ -49,23 +49,23 @@ namespace Lexplosion.Gui.Pages.MW
                 {
                     _sysPath = dialog.SelectedPath;
                     InstanceFolderPath.Text = _sysPath;
-                    UserData.Settings["gamePath"] = _sysPath.Replace(@"\", "/");
+                    UserData.GeneralSettings.GamePath = _sysPath.Replace(@"\", "/");
                 }
             }
         }
 
         private void HeightTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["windowHeight"] = HeightTextBox.Text;
-            HeightTextBox.Text = UserData.Settings["windowHeight"];
-            DataFilesManager.SaveSettings(UserData.Settings);
+            UserData.GeneralSettings.WindowHeight = uint.Parse(HeightTextBox.Text);
+            HeightTextBox.Text = UserData.GeneralSettings.WindowHeight.ToString();
+            DataFilesManager.SaveSettings(UserData.GeneralSettings);
         }
 
         private void WidthTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["windowWidth"] = WidthTextBox.Text;
-            WidthTextBox.Text = UserData.Settings["windowWidth"];
-            DataFilesManager.SaveSettings(UserData.Settings);
+            UserData.GeneralSettings.WindowWidth = uint.Parse(WidthTextBox.Text);
+            WidthTextBox.Text = UserData.GeneralSettings.WindowWidth.ToString();
+            DataFilesManager.SaveSettings(UserData.GeneralSettings);
         }
 
         private void WidthTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -85,19 +85,19 @@ namespace Lexplosion.Gui.Pages.MW
             string[] resolution;
             resolution = ScreenResolutions.SelectedItem.ToString().Split('x');
 
-            UserData.Settings["windowWidth"] = resolution[0];
-            UserData.Settings["windowHeight"] = resolution[1];
+            UserData.GeneralSettings.WindowWidth = uint.Parse(resolution[0]);
+            UserData.GeneralSettings.WindowHeight = uint.Parse(resolution[1]);
 
-            WidthTextBox.Text = UserData.Settings["windowWidth"];
-            HeightTextBox.Text = UserData.Settings["windowHeight"];
+            WidthTextBox.Text = UserData.GeneralSettings.WindowWidth.ToString();
+            HeightTextBox.Text = UserData.GeneralSettings.WindowHeight.ToString();
         }
 
         private void GameFolderPath_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["gamePath"] = GameFolderPath.Text.Replace(@"\", "/");
-            _sysPath = UserData.Settings["gamePath"].Replace("/", @"\");
+            UserData.GeneralSettings.GamePath = GameFolderPath.Text.Replace(@"\", "/");
+            _sysPath = UserData.GeneralSettings.GamePath.Replace("/", @"\");
             InstanceFolderPath.Text = _sysPath;
-            DataFilesManager.SaveSettings(UserData.Settings);
+            DataFilesManager.SaveSettings(UserData.GeneralSettings);
         }
 
         private void InstanceFolderPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -107,9 +107,9 @@ namespace Lexplosion.Gui.Pages.MW
 
         private void XmxTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["xmx"] = XmxTextBox.Text;
-            XmxTextBox.Text = UserData.Settings["xmx"];
-            DataFilesManager.SaveSettings(UserData.Settings);
+            UserData.GeneralSettings.Xmx = uint.Parse(XmxTextBox.Text);
+            XmxTextBox.Text = UserData.GeneralSettings.Xmx.ToString();
+            DataFilesManager.SaveSettings(UserData.GeneralSettings);
         }
 
         private void XmxTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -120,14 +120,14 @@ namespace Lexplosion.Gui.Pages.MW
 
         private void ShowConsoleCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["showConsole"] = "true";
-            DataFilesManager.SaveSettings(UserData.Settings);
+            UserData.GeneralSettings.ShowConsole = true;
+            DataFilesManager.SaveSettings(UserData.GeneralSettings);
         }
 
         private void ShowConsoleCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["showConsole"] = "false";
-            DataFilesManager.SaveSettings(UserData.Settings);
+            UserData.GeneralSettings.ShowConsole = false;
+            DataFilesManager.SaveSettings(UserData.GeneralSettings);
         }
     }
 }
