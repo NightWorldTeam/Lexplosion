@@ -27,21 +27,30 @@ namespace Lexplosion.Gui.Pages.Instance
     {
         private string _sysPath;
         private MainWindow _mainWindow;
-
-        public SettingsPage(MainWindow mainWindow)
+        private Dictionary<string, string> _settings;
+        private string _instanceId;
+        
+        public SettingsPage(MainWindow mainWindow, string instanceId)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
+            _instanceId = instanceId;
+            _settings = DataFilesManager.GetSettings(instanceId);
+            if (_settings.Keys.Count == 0) 
+            {
+                _settings = UserData.Settings;
+                DataFilesManager.SaveSettings(_settings, instanceId);
+            }
             SetSettings();
         }
 
         private void SetSettings()
         {
-            WidthTextBox.Text = UserData.Settings["windowWidth"];
-            HeightTextBox.Text = UserData.Settings["windowHeight"];
-            XmxTextBox.Text = UserData.Settings["xmx"];
+            WidthTextBox.Text = _settings["windowWidth"];
+            HeightTextBox.Text = _settings["windowHeight"];
+            XmxTextBox.Text = _settings["xmx"];
 
-            _sysPath = UserData.Settings["gamePath"].Replace("/", @"\");
+            _sysPath = _settings["gamePath"].Replace("/", @"\");
             InstanceFolderPath.Text = _sysPath;
 
             foreach (string resolution in MainWindow.ScreenResolutions)
@@ -59,23 +68,24 @@ namespace Lexplosion.Gui.Pages.Instance
                 {
                     _sysPath = dialog.SelectedPath;
                     InstanceFolderPath.Text = _sysPath;
-                    UserData.Settings["gamePath"] = _sysPath.Replace(@"\", "/");
+                    _settings["gamePath"] = _sysPath.Replace(@"\", "/");
+                    DataFilesManager.SaveSettings(_settings, _instanceId);
                 }
             }
         }
 
         private void HeightTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["windowHeight"] = HeightTextBox.Text;
-            HeightTextBox.Text = UserData.Settings["windowHeight"];
-            DataFilesManager.SaveSettings(UserData.Settings);
+            _settings["windowHeight"] = HeightTextBox.Text;
+            HeightTextBox.Text = _settings["windowHeight"];
+            DataFilesManager.SaveSettings(_settings, _instanceId);
         }
 
         private void WidthTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["windowWidth"] = WidthTextBox.Text;
-            WidthTextBox.Text = UserData.Settings["windowWidth"];
-            DataFilesManager.SaveSettings(UserData.Settings);
+            _settings["windowWidth"] = WidthTextBox.Text;
+            WidthTextBox.Text = _settings["windowWidth"];
+            DataFilesManager.SaveSettings(_settings, _instanceId);
         }
 
         private void WidthTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -95,19 +105,21 @@ namespace Lexplosion.Gui.Pages.Instance
             string[] resolution;
             resolution = ScreenResolutions.SelectedItem.ToString().Split('x');
 
-            UserData.Settings["windowWidth"] = resolution[0];
-            UserData.Settings["windowHeight"] = resolution[1];
+            _settings["windowWidth"] = resolution[0];
+            _settings["windowHeight"] = resolution[1];
 
-            WidthTextBox.Text = UserData.Settings["windowWidth"];
-            HeightTextBox.Text = UserData.Settings["windowHeight"];
+            WidthTextBox.Text = _settings["windowWidth"];
+            HeightTextBox.Text = _settings["windowHeight"];
+
+            DataFilesManager.SaveSettings(_settings, _instanceId);
         }
 
         private void GameFolderPath_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["gamePath"] = GameFolderPath.Text.Replace(@"\", "/");
-            _sysPath = UserData.Settings["gamePath"].Replace("/", @"\");
+            _settings["gamePath"] = GameFolderPath.Text.Replace(@"\", "/");
+            _sysPath = _settings["gamePath"].Replace("/", @"\");
             InstanceFolderPath.Text = _sysPath;
-            DataFilesManager.SaveSettings(UserData.Settings);
+            DataFilesManager.SaveSettings(_settings);
         }
 
         private void InstanceFolderPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -117,9 +129,9 @@ namespace Lexplosion.Gui.Pages.Instance
 
         private void XmxTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.Settings["xmx"] = XmxTextBox.Text;
-            XmxTextBox.Text = UserData.Settings["xmx"];
-            DataFilesManager.SaveSettings(UserData.Settings);
+            _settings["xmx"] = XmxTextBox.Text;
+            XmxTextBox.Text = _settings["xmx"];
+            DataFilesManager.SaveSettings(_settings, _instanceId);
         }
 
         private void XmxTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -130,12 +142,12 @@ namespace Lexplosion.Gui.Pages.Instance
 
         private void ShowConsoleCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            //UserData.Settings["showConsole"] = "true";
+            //_settings["showConsole"] = "true";
         }
 
         private void ShowConsoleCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            //UserData.Settings["showConsole"] = "false";
+            //_settings["showConsole"] = "false";
         }
     }
 }

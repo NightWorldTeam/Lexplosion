@@ -70,8 +70,8 @@ namespace Lexplosion.Gui.UserControls
         private void InstanceSettingsSelected(object sender, RoutedEventArgs e)
         {
             var content = new Dictionary<string, ToggleItem>();
-            content.Add("General", new ToggleItem("Основное", "SettingsPage", new SettingsPage(_mainWindow)));
-            content.Add("Instance", new ToggleItem("Профиль", "OverviewPage", new SettingsPage(_mainWindow)));
+            content.Add("General", new ToggleItem("Основное", "SettingsPage", new SettingsPage(_mainWindow, _instanceProperties.LocalId)));
+            content.Add("Instance", new ToggleItem("Профиль", "OverviewPage", new SettingsPage(_mainWindow, _instanceProperties.LocalId)));
             _mainWindow.PagesController("SettingsPageSeleced", _mainWindow.RightFrame, delegate ()
             {
                 return new SwitcherPage("Настройки сборки", content, _mainWindow);
@@ -83,9 +83,9 @@ namespace Lexplosion.Gui.UserControls
         {
             var content = new Dictionary<string, ToggleItem>();
             content.Add("General", new ToggleItem("Основное", "InstanceCreateMainPage", new InstanceCreateMainPage(_mainWindow)));
-            content.Add("Mods", new ToggleItem("Моды", "InstanceCreateMainPage", new SettingsPage(_mainWindow)));
-            content.Add("Resourcepacks", new ToggleItem("Текстуры", "InstanceCreateMainPage", new SettingsPage(_mainWindow)));
-            content.Add("Shaderspacks", new ToggleItem("Шейдеры", "InstanceCreateMainPage", new SettingsPage(_mainWindow)));
+            content.Add("Mods", new ToggleItem("Моды", "InstanceCreateMainPage", new SettingsPage(_mainWindow, _instanceProperties.LocalId)));
+            content.Add("Resourcepacks", new ToggleItem("Текстуры", "InstanceCreateMainPage", new SettingsPage(_mainWindow, _instanceProperties.LocalId)));
+            content.Add("Shaderspacks", new ToggleItem("Шейдеры", "InstanceCreateMainPage", new SettingsPage(_mainWindow, _instanceProperties.LocalId)));
             _mainWindow.PagesController("AddInstanceSelected", _mainWindow.RightFrame, delegate ()
             {
                 return new SwitcherPage("Добавление сборки", content, _mainWindow);

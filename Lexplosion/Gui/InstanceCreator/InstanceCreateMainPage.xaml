@@ -249,7 +249,7 @@
 
     <Grid>
         <ScrollViewer>
-            <Grid ShowGridLines="False">
+            <Grid ShowGridLines="True" Height="450">
                 <Grid.Background>
                     <SolidColorBrush Color="#171717" Opacity="0.60"/>
                 </Grid.Background>
@@ -338,7 +338,7 @@
                         FontWeight="DemiBold"
                         Content="Создать"
                         HorizontalAlignment="Left"
-                        Margin="26,360,0,0"
+                        Margin="26,250,0,0"
                         Width="105"
                         Height="35"
                         Click="CreateInstanceButton_Click"/> 
@@ -352,7 +352,7 @@
                         Width="105"
                         Height="35"
                         HorizontalAlignment="Left"
-                        Margin="150,360,0,0"/> 
+                        Margin="150,250,0,0"/> 
             </Grid>
         </ScrollViewer>
     </Grid>

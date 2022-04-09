@@ -32,9 +32,9 @@ namespace Lexplosion.Gui.UserControls
 
             var content = new Dictionary<string, ToggleItem>();
             content.Add("General", new ToggleItem("Основное", "InstanceCreateMainPage", new InstanceCreateMainPage(_mainWindow)));
-            content.Add("Mods", new ToggleItem("Моды", "InstanceCreateMainPage", new SettingsPage(_mainWindow)));
-            content.Add("Resourcepacks", new ToggleItem("Текстуры", "InstanceCreateMainPage", new SettingsPage(_mainWindow)));
-            content.Add("Shaderspacks", new ToggleItem("Шейдеры", "InstanceCreateMainPage", new SettingsPage(_mainWindow)));
+            content.Add("Mods", new ToggleItem("Моды", "InstanceCreateMainPage", new InstanceCreateMainPage(_mainWindow)));
+            content.Add("Resourcepacks", new ToggleItem("Текстуры", "InstanceCreateMainPage", new InstanceCreateMainPage(_mainWindow)));
+            content.Add("Shaderspacks", new ToggleItem("Шейдеры", "InstanceCreateMainPage", new InstanceCreateMainPage(_mainWindow)));
             _mainWindow.PagesController("SwitcherPage", _mainWindow.RightFrame, delegate ()
             {
                 return new SwitcherPage("Добавление сборки", content, _mainWindow);
