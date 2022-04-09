@@ -21,8 +21,8 @@ namespace Lexplosion.Gui.Pages.Instance
         public OverviewPage(InstanceProperties instanceProperties)
         {
             InitializeComponent();
-            source = UserData.Instances.Record[instanceProperties.LocalId].Type;
-            Console.WriteLine(source.ToString());
+            if (instanceProperties.LocalId != null && UserData.Instances.Record.ContainsKey(instanceProperties.LocalId))
+                source = UserData.Instances.Record[instanceProperties.LocalId].Type;
             _instanceProperties = instanceProperties;
             if (source == InstanceSource.Curseforge || source == InstanceSource.Nightworld)
                 LoadingOutsideInstance();

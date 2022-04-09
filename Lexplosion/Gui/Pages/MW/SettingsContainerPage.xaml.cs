@@ -29,6 +29,7 @@ namespace Lexplosion.Gui.Pages.MW
             WidthTextBox.Text = UserData.Settings["windowWidth"];
             HeightTextBox.Text = UserData.Settings["windowHeight"];
             XmxTextBox.Text = UserData.Settings["xmx"];
+            ShowConsoleCheckBox.IsChecked = bool.Parse(UserData.Settings["showConsole"]);
 
             _sysPath = UserData.Settings["gamePath"].Replace("/", @"\");
             InstanceFolderPath.Text = _sysPath;
