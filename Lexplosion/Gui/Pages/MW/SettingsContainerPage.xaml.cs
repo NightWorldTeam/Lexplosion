@@ -50,6 +50,7 @@ namespace Lexplosion.Gui.Pages.MW
                     _sysPath = dialog.SelectedPath;
                     InstanceFolderPath.Text = _sysPath;
                     UserData.GeneralSettings.GamePath = _sysPath.Replace(@"\", "/");
+                    DataFilesManager.SaveSettings(UserData.GeneralSettings);
                 }
             }
         }
@@ -107,7 +108,8 @@ namespace Lexplosion.Gui.Pages.MW
 
         private void XmxTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            UserData.GeneralSettings.Xmx = uint.Parse(XmxTextBox.Text);
+            var x = uint.Parse(XmxTextBox.Text);
+            UserData.GeneralSettings.Xmx = x;
             XmxTextBox.Text = UserData.GeneralSettings.Xmx.ToString();
             DataFilesManager.SaveSettings(UserData.GeneralSettings);
         }
