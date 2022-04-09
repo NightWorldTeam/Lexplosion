@@ -16,61 +16,46 @@ namespace Lexplosion.Logic.Management
         private static Process process = null;
         private static Gateway gameGateway = null;
 
-        public static string CreateCommand(string instanceId, InitData data, Dictionary<string, string> instanceSettings)
+        public static string CreateCommand(string instanceId, InitData data, Settings instanceSettings)
         {
-            int number;
-            if (!instanceSettings.ContainsKey("xmx") || !Int32.TryParse(instanceSettings["xmx"], out number))
-            {
-                instanceSettings["xmx"] = UserData.Settings["xmx"];
-            }
-
-            if (!instanceSettings.ContainsKey("xms") || !Int32.TryParse(instanceSettings["xms"], out number))
-            {
-                instanceSettings["xms"] = UserData.Settings["xms"];
-            }
+            instanceSettings.Merge(UserData.GeneralSettings, true);
 
             string command;
-            string versionPath = UserData.Settings["gamePath"] + "/instances/" + instanceId + "/version/" + data.VersionFile.minecraftJar.name;
+            string versionPath = instanceSettings.GamePath + "/instances/" + instanceId + "/version/" + data.VersionFile.minecraftJar.name;
 
-            if (!instanceSettings.ContainsKey("gameArgs"))
-                instanceSettings["gameArgs"] = UserData.Settings["gameArgs"];
+            if (instanceSettings.GameArgs.Length > 0 && instanceSettings.GameArgs[instanceSettings.GameArgs.Length - 1] != ' ')
+                instanceSettings.GameArgs += " ";
 
-            if (instanceSettings["gameArgs"].Length > 0 && instanceSettings["gameArgs"][instanceSettings["gameArgs"].Length - 1] != ' ')
-                instanceSettings["gameArgs"] += " ";
-
-            command = " -Djava.library.path=\"" + UserData.Settings["gamePath"] + "/natives/" + data.VersionFile.gameVersion + "\" -cp ";
+            command = " -Djava.library.path=\"" + instanceSettings.GamePath + "/natives/" + data.VersionFile.gameVersion + "\" -cp ";
 
             foreach (string lib in data.Libraries.Keys)
             {
-                //if (!data.Libraries[lib].isNative)
-                {
-                    command += "\"" + UserData.Settings["gamePath"] + "/libraries/" + lib + "\";";
-                }
+                command += "\"" + instanceSettings.GamePath + "/libraries/" + lib + "\";";
             }
 
             command += "\"" + versionPath + "\"";
             command +=  @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
-            command += " -Xmx" + instanceSettings["xmx"] + "M -Xms" + instanceSettings["xms"] + "M " + instanceSettings["gameArgs"];
+            command += " -Xmx" + instanceSettings.Xmx + "M -Xms" + instanceSettings.Xms + "M " + instanceSettings.GameArgs;
             command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion;
-            command += " --gameDir \"" + UserData.Settings["gamePath"] + "/instances/" + instanceId + "\"";
-            command += " --assetsDir \"" + UserData.Settings["gamePath"] + "/assets" + "\"";
+            command += " --gameDir \"" + instanceSettings.GamePath + "/instances/" + instanceId + "\"";
+            command += " --assetsDir \"" + instanceSettings.GamePath + "/assets" + "\"";
             command += " --assetIndex " + data.VersionFile.assetsVersion;
             command += " --uuid " + UserData.UUID + " --accessToken " + UserData.AccessToken + " --userProperties [] --userType legacy ";
             command += data.VersionFile.arguments;
-            command += " --width " + UserData.Settings["windowWidth"] + " --height " + UserData.Settings["windowHeight"];
+            command += " --width " + instanceSettings.WindowWidth + " --height " + instanceSettings.WindowHeight;
 
             return command.Replace(@"\", "/");
         }
 
-        public static bool Run(string command, string instanceId, ManageLogic.ComplitedLaunchCallback ComplitedLaunch, ManageLogic.GameExitedCallback GameExited)
+        public static bool Run(string command, string instanceId, ManageLogic.ComplitedLaunchCallback ComplitedLaunch, ManageLogic.GameExitedCallback GameExited, Settings instanceSettings)
         {
             process = new Process();
             gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
 
             UserStatusSetter.GameStart(UserData.Instances.Record[instanceId].Name);
 
-            if (UserData.Settings["showConsole"] == "true")
+            if (instanceSettings.ShowConsole == true)
             {
                 MainWindow.Obj.Dispatcher.Invoke(delegate
                 {
@@ -91,8 +76,8 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-                process.StartInfo.FileName = UserData.Settings["javaPath"];
-                process.StartInfo.WorkingDirectory = UserData.Settings["gamePath"] + "/instances/" + instanceId;
+                process.StartInfo.FileName = instanceSettings.JavaPath;
+                process.StartInfo.WorkingDirectory = instanceSettings.GamePath + "/instances/" + instanceId;
                 process.StartInfo.Arguments = command;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.UseShellExecute = false;
@@ -108,7 +93,7 @@ namespace Lexplosion.Logic.Management
                         {
                             ComplitedLaunch(instanceId, true);
 
-                            if (UserData.Settings["hiddenMode"] == "true")
+                            if (instanceSettings.HiddenMode == true)
                             {
                                 MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
                                 launcherVisible = false;
@@ -139,7 +124,7 @@ namespace Lexplosion.Logic.Management
 
                 process.OutputDataReceived += BeforeLaunch;
 
-                if (UserData.Settings["showConsole"] == "true")
+                if (instanceSettings.ShowConsole == true)
                     process.OutputDataReceived += WriteToConsole;
 
                 process.Exited += (sender, ea) =>
@@ -206,7 +191,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static InitData Initialization(string instanceId, Dictionary<string, string> instanceSettings, InstanceSource type, ManageLogic.ProgressHandlerCallback progressHandler)
+        public static InitData Initialization(string instanceId, Settings instanceSettings, InstanceSource type, ManageLogic.ProgressHandlerCallback progressHandler)
         {
             InitData Error(InstanceInit init)
             {
@@ -217,19 +202,16 @@ namespace Lexplosion.Logic.Management
             }
 
             //try
-            //{
-                SetDefaultSettings();
+            {
+                instanceSettings.Merge(UserData.GeneralSettings, true);
 
-                if (!UserData.Settings.ContainsKey("javaPath")) // TODO: тут скачивать джаву
-                    return null;
-
-                WithDirectory.Create(UserData.Settings["gamePath"]);
+                WithDirectory.Create(instanceSettings.GamePath);
                 InitData data = null;
 
-                if (!UserData.Settings.ContainsKey("gamePath") || !Directory.Exists(UserData.Settings["gamePath"]) || !UserData.Settings["gamePath"].Contains(":"))
+                if (!Directory.Exists(instanceSettings.GamePath) || !instanceSettings.GamePath.Contains(":"))
                     return Error(InstanceInit.GamePathError);
 
-                bool autoUpdate = instanceSettings.ContainsKey("autoUpdate") && instanceSettings["autoUpdate"] == "true";
+                bool autoUpdate = (instanceSettings.AutoUpdate == true);
 
                 if (!UserData.Offline)
                 {
@@ -279,7 +261,7 @@ namespace Lexplosion.Logic.Management
                 }
 
                 return data;
-            //} 
+            } 
             //catch 
             //{
             //    return Error(InstanceInit.UnknownError);
@@ -305,68 +287,6 @@ namespace Lexplosion.Logic.Management
 
             gameGateway = null;
             process = null;
-        }
-
-        public static void SetDefaultSettings()
-        {
-            /*<!-- получение директории до джавы -->*/
-            if (!UserData.Settings.ContainsKey("javaPath") || string.IsNullOrWhiteSpace(UserData.Settings["javaPath"]))
-            {
-                try
-                {
-                    using (RegistryKey jre = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-                    {
-                        RegistryKey java = jre.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
-                        UserData.Settings["javaPath"] = (java.OpenSubKey(java.GetValue("CurrentVersion").ToString()).GetValue("JavaHome").ToString() + @"/bin/javaw.exe").Replace(@"\", "/");
-                    }
-
-                } catch {
-                    UserData.Settings["javaPath"] = "";
-                }
-            }
-
-            //определение директории игры
-            if (!UserData.Settings.ContainsKey("gamePath"))
-                UserData.Settings["gamePath"] = LaunсherSettings.gamePath;
-
-            //установка озу для процесса
-            if (!UserData.Settings.ContainsKey("xmx"))
-            {
-                if (UserData.Settings["javaPath"].Contains("Program Files (x86)"))
-                    UserData.Settings["xmx"] = "512";
-                else
-                    UserData.Settings["xmx"] = "1024";
-            }
-
-            if (!UserData.Settings.ContainsKey("xms"))
-                UserData.Settings["xms"] = "256";
-
-            //установка размера окна 
-            if (!UserData.Settings.ContainsKey("windowWidth"))
-                UserData.Settings["windowWidth"] = "854";
-
-            if (!UserData.Settings.ContainsKey("windowHeight"))
-                UserData.Settings["windowHeight"] = "480";
-
-            //режим скачивания обновлений 
-            if (!UserData.Settings.ContainsKey("noUpdate"))
-                UserData.Settings["noUpdate"] = "false";
-
-            //скрытие консоли
-            if (!UserData.Settings.ContainsKey("showConsole"))
-                UserData.Settings["showConsole"] = "false";
-
-            //скрытие лаунчера при запуске
-            if (!UserData.Settings.ContainsKey("hiddenMode"))
-                UserData.Settings["hiddenMode"] = "false";
-
-            //java Args
-            if (!UserData.Settings.ContainsKey("gameArgs"))
-                UserData.Settings["gameArgs"] = "";
-
-            //выбранный модпак
-            if (!UserData.Settings.ContainsKey("selectedModpack"))
-                UserData.Settings["selectedModpack"] = "";
         }
     }
 }

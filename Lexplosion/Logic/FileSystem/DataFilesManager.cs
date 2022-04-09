@@ -18,13 +18,23 @@ namespace Lexplosion.Logic.FileSystem
             public LocalVersionInfo version;
         }
 
-        public static void SaveSettings(Dictionary<string, string> data, string instanceId = "")
+        public static void SaveAccount(string login, string password)
+        {
+            password = Convert.ToBase64String(AesСryp.Encode(password, Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
+            SaveFile("", JsonConvert.SerializeObject(new Dictionary<string, string>
+            {
+                ["login"] = login,
+                ["password"] = password
+            }));
+        }
+
+        public static void SaveSettings(Settings data, string instanceId = "")
         {
             string file;
 
             if (instanceId == "")
             {
-                string path = Environment.ExpandEnvironmentVariables("%appdata%") + "/night-world";
+                string path = LaunсherSettings.LauncherDataPath;
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
@@ -41,23 +51,18 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                Dictionary<string, string> settings = GetSettings(instanceId);
+                Settings settings = GetSettings(instanceId);
                 if (settings != null)
                 {
-                    foreach (string key in data.Keys)
-                    {
-                        settings[key] = data[key];
-
-                    }
-                        
+                    settings.Merge(data);
                 }
                 else
                 {
                     settings = data;
                 }
 
-                if (settings.ContainsKey("password"))
-                    settings["password"] = Convert.ToBase64String(AesСryp.Encode(settings["password"], Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
+                //if (settings.ContainsKey("password"))
+                    //settings["password"] = 
 
                 using (FileStream fstream = new FileStream(file, FileMode.Create))
                 {
@@ -70,12 +75,12 @@ namespace Lexplosion.Logic.FileSystem
             catch { }
         }
 
-        public static Dictionary<string, string> GetSettings(string instanceId = "")
+        public static Settings GetSettings(string instanceId = "")
         {
             string file;
             if (instanceId == "")
             {
-                file = Environment.ExpandEnvironmentVariables("%appdata%") + "/night-world/settings.json";
+                file = LaunсherSettings.LauncherDataPath;
             }
             else
             {
@@ -83,7 +88,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (!File.Exists(file))
                 {
-                    return new Dictionary<string, string>();
+                    return new Settings();
                 }
             }
 
@@ -95,10 +100,10 @@ namespace Lexplosion.Logic.FileSystem
                     fstream.Read(fileBytes, 0, fileBytes.Length);
                     fstream.Close();
 
-                    Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(Encoding.UTF8.GetString(fileBytes));
+                    Settings settings = JsonConvert.DeserializeObject<Settings>(Encoding.UTF8.GetString(fileBytes));
 
-                    if (settings.ContainsKey("password"))
-                        settings["password"] = AesСryp.Decode(Convert.FromBase64String(settings["password"]), Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                    //if (settings.ContainsKey("password"))
+                        //settings["password"] = AesСryp.Decode(Convert.FromBase64String(settings["password"]), Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
 
                     return settings;
                 }
@@ -106,7 +111,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch
             {
-                return new Dictionary<string, string>();
+                return new Settings();
             }
 
         }

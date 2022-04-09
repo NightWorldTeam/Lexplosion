@@ -58,9 +58,8 @@ namespace Lexplosion
             //app.Exit += BeforeExit;
 
             // инициализация
-            UserData.Settings = DataFilesManager.GetSettings();
-            LaunchGame.SetDefaultSettings();
-            WithDirectory.Create(UserData.Settings["gamePath"]);
+            UserData.InitSetting();
+            WithDirectory.Create(UserData.GeneralSettings.GamePath);
 
             if (ToServer.CheckLauncherUpdates())
             {
@@ -102,20 +101,21 @@ namespace Lexplosion
             try
             {
                 int upgradeToolVersion = Int32.Parse(ToServer.HttpPost("windows/upgradeToolVersion.html"));
+                string gamePath = UserData.GeneralSettings.GamePath;
 
                 // скачивание и проверка версии UpgradeTool.exe
                 using (WebClient wc = new WebClient())
                 {
-                    if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(UserData.Settings["gamePath"] + "/UpgradeTool.exe"))
+                    if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(gamePath + "/UpgradeTool.exe"))
                     {
-                        File.Delete(UserData.Settings["gamePath"] + "/UpgradeTool.exe");
-                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe", UserData.Settings["gamePath"] + "/UpgradeTool.exe");
+                        File.Delete(gamePath + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe", gamePath + "/UpgradeTool.exe");
                         DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
 
                     }
-                    else if (!File.Exists(UserData.Settings["gamePath"] + "/UpgradeTool.exe"))
+                    else if (!File.Exists(gamePath + "/UpgradeTool.exe"))
                     {
-                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe", UserData.Settings["gamePath"] + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe", gamePath + "/UpgradeTool.exe");
                         DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
                     }
 
@@ -123,7 +123,7 @@ namespace Lexplosion
 
                 // запуск UpgradeTool.exe
                 Process proc = new Process();
-                proc.StartInfo.FileName = UserData.Settings["gamePath"] + "/UpgradeTool.exe";
+                proc.StartInfo.FileName = gamePath + "/UpgradeTool.exe";
                 proc.StartInfo.Arguments = Assembly.GetExecutingAssembly().Location + " " + LaunсherSettings.URL.LauncherParts + "NightWorld.exe" + " " + Process.GetCurrentProcess().ProcessName;
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;

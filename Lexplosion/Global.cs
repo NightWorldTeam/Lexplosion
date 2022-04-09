@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic;
 
 namespace Lexplosion.Global
 {
@@ -8,18 +9,20 @@ namespace Lexplosion.Global
     {
         public static string Login = "";
         public static string UUID = "00000000-0000-0000-0000-000000000000";
-        public static string PaswordSHA = "";
         public static string AccessToken = "null";
         public static bool IsAuthorized = false;
         public static bool Offline = false;
         public static bool NoUpdate = false;
-        public static Dictionary<string, string> Settings; //общие настройки
+
+        public static Settings GeneralSettings { get; private set; } // инициализируется в методе Main
+
+        public static void InitSetting()
+        {
+            GeneralSettings = Settings.GetDefault();
+        }
 
         public static class Instances
         {
-            /// <summary>
-            /// string - 
-            /// </summary>
             public static Dictionary<string, InstanceParametrs> Record; // все сборки
             public static Dictionary<string, InstanceAssets> Assets; // ассетсы всех модпаков
             public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)
@@ -70,6 +73,7 @@ namespace Lexplosion.Global
             public const string Base = "https://night-world.org/";
         }
 
+        public static string LauncherDataPath = Environment.ExpandEnvironmentVariables("%appdata%") + "/night-world";
         public static string gamePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Replace(@"\", "/") + "/" + "night-world";
         public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ";
         public const string passwordKey = "ZEmMJ0ZaXQXuHu8tUnfdaCLCQaFgRjOP";

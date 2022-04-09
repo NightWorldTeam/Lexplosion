@@ -37,7 +37,6 @@ namespace Lexplosion.Logic.Management
                     UserData.Login = response["login"];
                     UserData.UUID = response["UUID"];
                     UserData.AccessToken = response["accesToken"];
-                    UserData.PaswordSHA = Сryptography.Sha256(password);
 
                     if (saveUser)
                     {
@@ -145,15 +144,15 @@ namespace Lexplosion.Logic.Management
             xmx["oth"] = "2048";
             xmx["lt"] = "512";
 
-            int k = 0;
+            /*int k = 0;
             int c = 0;
             if (xmx.ContainsKey(instanceId) && int.TryParse(xmx[instanceId], out k) && int.TryParse(UserData.Settings["xmx"], out c))
             {
                 if (c < k)
                     MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
-            }
+            }*/
 
-            Dictionary<string, string> instanceSettings = DataFilesManager.GetSettings(instanceId);
+            Settings instanceSettings = DataFilesManager.GetSettings(instanceId);
             InitData data = LaunchGame.Initialization(instanceId, instanceSettings, type, ProgressHandler);
 
             if (data.InitResult == InstanceInit.Successful)
@@ -161,8 +160,8 @@ namespace Lexplosion.Logic.Management
                 ComplitedDownload(data.InitResult, data.DownloadErrors, true);
 
                 string command = LaunchGame.CreateCommand(instanceId, data, instanceSettings);
-                LaunchGame.Run(command, instanceId, ComplitedLaunch, GameExited);
-                DataFilesManager.SaveSettings(UserData.Settings);
+                LaunchGame.Run(command, instanceId, ComplitedLaunch, GameExited, instanceSettings);
+                DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
             else
             {
