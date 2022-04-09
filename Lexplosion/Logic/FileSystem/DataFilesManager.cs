@@ -28,6 +28,28 @@ namespace Lexplosion.Logic.FileSystem
             }));
         }
 
+        public static void GetAccount(out string login, out string password)
+        {
+            var data = GetFile<Dictionary<string, string>>(LaunсherSettings.LauncherDataPath + "/account.json");
+            if (data.ContainsKey("login"))
+            {
+                login = data["login"];
+            }
+            else
+            {
+                login = null;
+            }
+
+            if (data.ContainsKey("password") && data["password"] != null)
+            {
+                password = AesСryp.Decode(Convert.FromBase64String(data["password"]), Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+            }
+            else
+            {
+                password = null;
+            }
+        }
+
         public static void SaveSettings(Settings data, string instanceId = "")
         {
             string file;
@@ -60,9 +82,6 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     settings = data;
                 }
-
-                //if (settings.ContainsKey("password"))
-                    //settings["password"] = 
 
                 using (FileStream fstream = new FileStream(file, FileMode.Create))
                 {
@@ -101,9 +120,6 @@ namespace Lexplosion.Logic.FileSystem
                     fstream.Close();
 
                     Settings settings = JsonConvert.DeserializeObject<Settings>(Encoding.UTF8.GetString(fileBytes));
-
-                    //if (settings.ContainsKey("password"))
-                        //settings["password"] = AesСryp.Decode(Convert.FromBase64String(settings["password"]), Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
 
                     return settings;
                 }

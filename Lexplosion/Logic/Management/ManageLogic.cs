@@ -40,14 +40,10 @@ namespace Lexplosion.Logic.Management
 
                     if (saveUser)
                     {
-                        UserData.Settings["login"] = login;
-                        UserData.Settings["password"] = password;
-
-                        DataFilesManager.SaveSettings(UserData.Settings);
+                        DataFilesManager.SaveAccount(login, password);
                     }
 
                     UserData.IsAuthorized = true;
-
                     UserStatusSetter.SetBaseStatus(UserStatusSetter.Statuses.Online);
 
                     return AuthCode.Successfully;
