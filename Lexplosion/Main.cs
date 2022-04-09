@@ -12,7 +12,6 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using System.Threading;
 using Lexplosion.Gui.Windows;
-using System.Collections.Generic;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -30,8 +29,10 @@ namespace Lexplosion
 
         [STAThread]
         static void Main()
-        {   
-            Thread thread = new Thread(new ThreadStart(InitializedSystem));
+        {
+            app.Exit += BeforeExit;
+
+            Thread thread = new Thread(InitializedSystem);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             StartSplashW();
@@ -55,7 +56,6 @@ namespace Lexplosion
 
             // Встраивание dll в exe
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
-            //app.Exit += BeforeExit;
 
             // инициализация
             UserData.InitSetting();

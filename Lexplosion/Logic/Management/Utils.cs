@@ -123,7 +123,7 @@ namespace Lexplosion.Logic.Management
             }
             else if (executor == ProcessExecutor.Java)
             {
-                fileName = UserData.GeneralSettings.GamePath;
+                fileName = UserData.GeneralSettings.JavaPath;
             }
             else
             {

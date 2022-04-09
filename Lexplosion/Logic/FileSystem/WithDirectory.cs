@@ -1246,7 +1246,7 @@ namespace Lexplosion.Logic.FileSystem
                                 }
                             }
 
-                            Directory.Delete(tempFolder, true);
+                            Directory.Delete(tempFolder, true); // TODO: тут выползало исключение папка не пуста
                         }
                         /*
                         catch
@@ -1368,8 +1368,8 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            Directory.Delete(tempDir, true);
-            Directory.Delete(temp, true);
+            //Directory.Delete(tempDir, true);
+            //Directory.Delete(temp, true);
 
             if (downloadedLibs.Count - startDownloadedLibsCount == updateList.Libraries.Count)
             {

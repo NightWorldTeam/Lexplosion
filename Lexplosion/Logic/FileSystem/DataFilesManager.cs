@@ -64,6 +64,8 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
+                data.GamePath = null;
+
                 string path = directory + "/instances/" + instanceId;
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
@@ -120,6 +122,7 @@ namespace Lexplosion.Logic.FileSystem
                     fstream.Close();
 
                     Settings settings = JsonConvert.DeserializeObject<Settings>(Encoding.UTF8.GetString(fileBytes));
+                    if (instanceId != "") settings.GamePath = null;
 
                     return settings;
                 }
