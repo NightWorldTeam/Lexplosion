@@ -17,7 +17,7 @@ namespace Lexplosion.Gui.Pages.MW
     public partial class LibraryContainerPage : Page
 	{
 		private MainWindow _mainWindow;
-		private Dictionary<string, InstanceForm> instances = new Dictionary<string, InstanceForm>();
+		private Dictionary<string, InstanceForm> _instances = new Dictionary<string, InstanceForm>();
 
 		public LibraryContainerPage(MainWindow mainWindow)
 		{
@@ -32,19 +32,15 @@ namespace Lexplosion.Gui.Pages.MW
 
 		public void InitializeInstance()
 		{
+			if (UserData.Instances.Record.Keys.Count == 0)
+				return;
+
 			var i = 0;
 			// обновление assets
 			string description, imageUrl, author, outsideInstanceId;
 			var instanceTags = new List<string>();
 
-			Console.WriteLine(String.Join(",", UserData.Instances.Record.Keys));
-
-			instances.Clear();
-
-			if (UserData.Instances.Record.Keys.Count == 0)
-				return;
-
-			AddInstanceBtn.Visibility = Visibility.Hidden;
+			_instances.Clear();
 
 			foreach (string key in UserData.Instances.Record.Keys)
 			{
@@ -71,9 +67,12 @@ namespace Lexplosion.Gui.Pages.MW
 				UserControls.InstanceForm instance = BuildInstanceForm(
 					key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags
 				);
-				instances[key] = instance;
+				_instances[key] = instance;
 				i++;
 			}
+			InstanceGrid.RowDefinitions.Add(GetRowDefinition());
+			Grid.SetRow(AddInstanceBtn, i);
+			i++;
 		}
 
 		private InstanceForm BuildInstanceForm(string id, int row, string logo, string title, string author, string overview, string outsideInstanceId, List<string> tags)
@@ -106,7 +105,7 @@ namespace Lexplosion.Gui.Pages.MW
 		{
 			this.Dispatcher.Invoke(delegate
 			{
-				instances[id].SetLocalInstanceAssets(assets);
+				_instances[id].SetLocalInstanceAssets(assets);
 			});
 		}
 
