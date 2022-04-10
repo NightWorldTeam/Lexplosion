@@ -57,12 +57,6 @@ namespace Lexplosion.Global
         }
     }
 
-    class InstanceParametrs
-    {
-        public string Name;
-        public InstanceSource Type;
-    }
-
     static class LaunсherSettings
     {
         public struct URL

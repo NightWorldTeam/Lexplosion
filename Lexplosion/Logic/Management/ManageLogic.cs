@@ -260,7 +260,8 @@ namespace Lexplosion.Logic.Management
             UserData.Instances.AddInstance(instanceId, new InstanceParametrs
             {
                 Name = name,
-                Type = type
+                Type = type,
+                UpdateAvailable = false
             }, null, externalId);
 
             DataFilesManager.SaveInstancesList(UserData.Instances.Record);

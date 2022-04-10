@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using Newtonsoft.Json;
 using System;
@@ -341,13 +342,13 @@ namespace Lexplosion.Logic.FileSystem
 
             if (baseList != null)
             {
-                foreach (string key in baseList.Keys)
+                foreach (string id in baseList.Keys)
                 {
-                    //MessageBox.Show((!Regex.IsMatch(key.Replace("_", ""), @"[^a-zA-Z0-9]")).ToString() + " " + key);
                     //проверяем установлен ли этот модпак и не содержит ли его id запрещенных символов
-                    if (Directory.Exists(directory + "/instances/" + key) && !Regex.IsMatch(key.Replace("_", ""), @"[^a-zA-Z0-9]"))
+                    if (Directory.Exists(directory + "/instances/" + id) && !Regex.IsMatch(id.Replace("_", ""), @"[^a-zA-Z0-9]"))
                     {
-                        list[key] = baseList[key];
+                        list[id] = baseList[id];
+                        list[id].UpdateAvailable = ManageLogic.CheckIntanceUpdates(id, baseList[id].Type);
                     }
                 }
             }

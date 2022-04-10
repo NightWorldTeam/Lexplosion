@@ -140,16 +140,20 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string websiteUrl;
     }
 
-    public class OutsideInstance
+    public class InstanceParametrs
     {
+        public string Name;
         public InstanceSource Type;
+        public bool UpdateAvailable;
+    }
+
+    public class OutsideInstance : InstanceParametrs
+    {
         public string Id; // id от Type
         public string LocalId; // айди созданой в лаунчере сборки
-        public string Name;
         public InstanceAssets InstanceAssets;
         public byte[] MainImage;
         public bool IsInstalled;
-        public bool UpdateAvailable;
         public List<string> Categories;
         public float DownloadCount;
     }
