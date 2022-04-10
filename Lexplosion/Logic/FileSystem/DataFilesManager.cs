@@ -43,7 +43,14 @@ namespace Lexplosion.Logic.FileSystem
 
             if (data != null && data.ContainsKey("password") && data["password"] != null)
             {
-                password = AesСryp.Decode(Convert.FromBase64String(data["password"]), Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                try
+                {
+                    password = AesСryp.Decode(Convert.FromBase64String(data["password"]), Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                }
+                catch
+                {
+                    password = null;
+                }
             }
             else
             {
