@@ -14,12 +14,12 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="FontFamily" Value="pack://application:,,,/assets/fonts/#Casper Bold"/>
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="#eee" />
             <Setter Property="FontSize" Value="20" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border BorderBrush="WhiteSmoke" BorderThickness="1">
+                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="10">
                             <Grid ShowGridLines="False">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="120" />
@@ -27,7 +27,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
                                     <Border x:Name="Border" 
-                                        BorderBrush="White" BorderThickness="1">
+                                        BorderBrush="Gray" BorderThickness="0,0,1,0">
                                         <TextBlock Text="+"
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"
