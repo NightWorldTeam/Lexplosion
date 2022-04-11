@@ -66,6 +66,17 @@ namespace Lexplosion.Gui.Pages.Instance
             Verison.Text = _instanceInfo.gameVersionLatestFiles[0].gameVersion;
             LastUpdate.Text = DateTime.Parse(_instanceInfo.dateModified).ToString("dd MMM yyyy");
             TotalDownloads.Text = ((Int32)_instanceInfo.downloadCount).ToString("##,#");
+            switch (_instanceInfo.Modloader) {
+                case ModloaderType.None:
+                    Core.Text = "Vanilla";
+                    break;
+                case ModloaderType.Forge:
+                    Core.Text = "Forge";
+                    break;
+                case ModloaderType.Fabric:
+                    Core.Text = "Fabric";
+                    break;
+            }
         }
 
         private TextBlock GetCategery(string categery) => new TextBlock()

@@ -135,8 +135,7 @@
                                 <TextBlock x:Name="Core"
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
-                                    Foreground="White"
-                                    Text="Fabric" />
+                                    Foreground="White" />
                                 <Border x:Name="LoadingCore1" Grid.Column="0" Background="#202020" CornerRadius="10" Margin="0,7,5,7" />
                                 <Border x:Name="LoadingCore2" Grid.Column="1" Background="#232323" CornerRadius="10" Margin="5,7,0,7" />
                             </Grid>
