@@ -128,6 +128,11 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
             public string gameVersion;
         }
 
+        public class LatestFile
+        {
+            public List<string> gameVersion;
+        }
+
         public int id;
         public string name;
         public List<Attachment> attachments;
@@ -138,6 +143,9 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public float downloadCount;
         public string dateModified;
         public string websiteUrl;
+        public List<LatestFile> LatestFiles;
+
+        public ModloaderType Modloader;
     }
 
     public class InstanceParametrs
