@@ -175,8 +175,33 @@ namespace Lexplosion.Logic.Network
 
                 if (answer != null)
                 {
-                    //Console.WriteLine(answer);
-                    return JsonConvert.DeserializeObject<CurseforgeInstanceInfo>(answer);
+                    var data = JsonConvert.DeserializeObject<CurseforgeInstanceInfo>(answer);
+
+                    if (data.LatestFiles != null && data.LatestFiles.Count > 0)
+                    {
+                        long maxId = data.LatestFiles[0].id;
+                        foreach (var value in data.LatestFiles)
+                        {
+                            if (value.id > maxId || data.Modloader == ModloaderType.None)
+                            {
+                                if (value.gameVersion.Contains("Forge"))
+                                {
+                                    data.Modloader = ModloaderType.Forge;
+                                }
+                                else if (value.gameVersion.Contains("Fabric"))
+                                {
+                                    data.Modloader = ModloaderType.Fabric;
+                                }
+
+                                if (value.id > maxId)
+                                {
+                                    maxId = value.id;
+                                }
+                            }
+                        }
+                    }
+
+                    return data;
                 }
                 else 
                 {

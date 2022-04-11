@@ -130,6 +130,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
 
         public class LatestFile
         {
+            public long id;
             public List<string> gameVersion;
         }
 
