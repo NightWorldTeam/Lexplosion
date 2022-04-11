@@ -55,7 +55,7 @@ namespace Lexplosion.Gui.Pages.MW
 						description = UserData.Instances.Assets[key].description;
 						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 						author = UserData.Instances.Assets[key].author;
-						//Console.WriteLine("UserData.Instances.Record.Key -> " + key);
+
 						foreach (var key1 in UserData.Instances.ExternalIds.Keys)
 						{
 							if (UserData.Instances.ExternalIds[key1] == key)
@@ -65,7 +65,8 @@ namespace Lexplosion.Gui.Pages.MW
 				}
 
 				UserControls.InstanceForm instance = BuildInstanceForm(
-					key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags
+					key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags,
+					false, true
 				);
 				_instances[key] = instance;
 				i++;
@@ -75,11 +76,20 @@ namespace Lexplosion.Gui.Pages.MW
 			i++;
 		}
 
-		private InstanceForm BuildInstanceForm(string id, int row, string logo, string title, string author, string overview, string outsideInstanceId, List<string> tags)
+		private InstanceForm BuildInstanceForm(string id, 
+			int row, 
+			string logo, 
+			string title, 
+			string author, 
+			string overview, 
+			string outsideInstanceId, 
+			List<string> tags, 
+			bool isInstalled,
+			bool isUpdateAvailable)
 		{
 			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			var instanceForm = new InstanceForm(
-				_mainWindow, title, id, author, overview, outsideInstanceId, new BitmapImage(new Uri(logo)), tags, true, true
+				_mainWindow, title, id, author, overview, outsideInstanceId, new BitmapImage(new Uri(logo)), tags, true, isInstalled, isUpdateAvailable
 			);
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			if (InstanceGrid.RowDefinitions.Count <= row) {

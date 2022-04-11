@@ -21,7 +21,7 @@ namespace Lexplosion.Gui.UserControls
     /// </summary>
     public partial class InstanceForm : UserControl
     {
-        static class MultiButtonProperties
+        class MultiButtonProperties
         {
             /**
              * Pathes (Images on button)
@@ -33,13 +33,14 @@ namespace Lexplosion.Gui.UserControls
             public static readonly Geometry GeometryLibraryAdd = Geometry.Parse("M0 3.5C0 2.57174 0.368749 1.6815 1.02513 1.02513C1.6815 0.368749 2.57174 0 3.5 0H5.83333C6.76159 0 7.65183 0.368749 8.30821 1.02513C8.96458 1.6815 9.33333 2.57174 9.33333 3.5V5.83333C9.33333 6.76159 8.96458 7.65183 8.30821 8.30821C7.65183 8.96458 6.76159 9.33333 5.83333 9.33333H3.5C2.57174 9.33333 1.6815 8.96458 1.02513 8.30821C0.368749 7.65183 0 6.76159 0 5.83333V3.5ZM0 15.1667C0 14.2384 0.368749 13.3482 1.02513 12.6918C1.6815 12.0354 2.57174 11.6667 3.5 11.6667H5.83333C6.76159 11.6667 7.65183 12.0354 8.30821 12.6918C8.96458 13.3482 9.33333 14.2384 9.33333 15.1667V17.5C9.33333 18.4283 8.96458 19.3185 8.30821 19.9749C7.65183 20.6313 6.76159 21 5.83333 21H3.5C2.57174 21 1.6815 20.6313 1.02513 19.9749C0.368749 19.3185 0 18.4283 0 17.5V15.1667ZM11.6667 3.5C11.6667 2.57174 12.0354 1.6815 12.6918 1.02513C13.3482 0.368749 14.2384 0 15.1667 0H17.5C18.4283 0 19.3185 0.368749 19.9749 1.02513C20.6313 1.6815 21 2.57174 21 3.5V5.83333C21 6.76159 20.6313 7.65183 19.9749 8.30821C19.3185 8.96458 18.4283 9.33333 17.5 9.33333H15.1667C14.2384 9.33333 13.3482 8.96458 12.6918 8.30821C12.0354 7.65183 11.6667 6.76159 11.6667 5.83333V3.5ZM17.5 12.8333C17.5 12.5239 17.3771 12.2272 17.1583 12.0084C16.9395 11.7896 16.6428 11.6667 16.3333 11.6667C16.0239 11.6667 15.7272 11.7896 15.5084 12.0084C15.2896 12.2272 15.1667 12.5239 15.1667 12.8333V15.1667H12.8333C12.5239 15.1667 12.2272 15.2896 12.0084 15.5084C11.7896 15.7272 11.6667 16.0239 11.6667 16.3333C11.6667 16.6428 11.7896 16.9395 12.0084 17.1583C12.2272 17.3771 12.5239 17.5 12.8333 17.5H15.1667V19.8333C15.1667 20.1428 15.2896 20.4395 15.5084 20.6583C15.7272 20.8771 16.0239 21 16.3333 21C16.6428 21 16.9395 20.8771 17.1583 20.6583C17.3771 20.4395 17.5 20.1428 17.5 19.8333V17.5H19.8333C20.1428 17.5 20.4395 17.3771 20.6583 17.1583C20.8771 16.9395 21 16.6428 21 16.3333C21 16.0239 20.8771 15.7272 20.6583 15.5084C20.4395 15.2896 20.1428 15.1667 19.8333 15.1667H17.5V12.8333Z");
             public static readonly Geometry GeometryLibraryDelete = Geometry.Parse("M19.1667 8.66667H12.1667V21.5H2.83333C2.21449 21.5 1.621 21.2542 1.18342 20.8166C0.745833 20.379 0.5 19.7855 0.5 19.1667V2.83333C0.5 2.21449 0.745833 1.621 1.18342 1.18342C1.621 0.745833 2.21449 0.5 2.83333 0.5H19.1667C19.7855 0.5 20.379 0.745833 20.8166 1.18342C21.2542 1.621 21.5 2.21449 21.5 2.83333V12.1667H19.1667V8.66667ZM9.83333 8.66667H2.83333V13.3333H9.83333V8.66667ZM9.83333 19.1667V15.6667H2.83333V19.1667H9.83333ZM12.1667 2.83333V6.33333H19.1667V2.83333H12.1667ZM9.83333 2.83333H2.83333V6.33333H9.83333V2.83333Z");
             public static readonly Geometry GeometryOpenFolder = Geometry.Parse("M0.804492 13.2924C0.959492 13.5258 1.22033 13.6666 1.50033 13.6666H14.0003C14.3337 13.6666 14.6353 13.4683 14.7662 13.1616L17.2662 7.32825C17.3209 7.20153 17.3433 7.06317 17.3313 6.92564C17.3192 6.78812 17.2731 6.65575 17.1971 6.54049C17.1211 6.42523 17.0177 6.3307 16.896 6.26542C16.7744 6.20015 16.6384 6.16618 16.5003 6.16659H15.667V3.66659C15.667 2.74742 14.9195 1.99992 14.0003 1.99992H8.45449L6.32449 0.333252H2.33366C1.41449 0.333252 0.666992 1.08075 0.666992 1.99992V12.8333H0.672825C0.670968 12.9959 0.716738 13.1555 0.804492 13.2924V13.2924ZM14.0003 3.66659V6.16659H4.00033C3.66699 6.16659 3.36533 6.36492 3.23449 6.67159L2.33366 8.77408V3.66659H14.0003Z");
-
+            //public static readonly Geom
             /**
              * Colors when user Enter and Leave to button
              */
             public static readonly Color MouseEnterColor = System.Windows.Media.Color.FromArgb(255, 44, 153, 194);
             public static readonly Color MouseLeaveColor = System.Windows.Media.Color.FromArgb(255, 21, 23, 25);
         }
+
 
         enum UpperButtonFunctions
         {
@@ -70,6 +71,7 @@ namespace Lexplosion.Gui.UserControls
         {
             DOWNLOAD,
             DOWNLOADING,
+            UPDATE,
             PLAY,
             EXIT,
         }
@@ -103,15 +105,25 @@ namespace Lexplosion.Gui.UserControls
         private InstanceProperties _instanceProperties;
         private MainWindow _mainWindow;
 
+        private Dictionary<UpperButtonFunctions, string> uBtnContent = new Dictionary<UpperButtonFunctions, string>
+        {
+            { UpperButtonFunctions.Update, "Обновить сборку" },
+            { UpperButtonFunctions.Play, "Запустить сборку" },
+            { UpperButtonFunctions.Download, "Загрузить сборку" },
+            { UpperButtonFunctions.ProgressBar, "Скачивание завершено на" },
+            { UpperButtonFunctions.Close, "Закрыть Игру" },
+        };
+
         public delegate void InstanceOpenedHandler(InstanceProperties instanceProperties);
         public static event InstanceOpenedHandler InstanceOpened;
 
         public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview,
-            string outsideInstanceId, BitmapImage logo, List<string> instanceTags, bool isInstanceInstalled, bool isInstanceAddedToLibrary)
+            string outsideInstanceId, BitmapImage logo, List<string> instanceTags, 
+            bool isInstanceAddedToLibrary, bool isInstanceInstalled, bool isUpdateAvailable)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
-            InstanceProperties _instanceProperties = new InstanceProperties()
+            this._instanceProperties = new InstanceProperties()
             {
                 Name = instanceTitle,
                 LocalId = instanceId,
@@ -123,17 +135,12 @@ namespace Lexplosion.Gui.UserControls
                 Id = outsideInstanceId,
                 Logo = logo,
                 InstanceTags = instanceTags,
-                IsInstalled = isInstanceInstalled,
                 IsInstanceAddedToLibrary = isInstanceAddedToLibrary,
+                IsInstalled = isInstanceInstalled,
+                UpdateAvailable = isUpdateAvailable,
                 IsDownloadingInstance = false
             };
-            SetInstanceProperties(_instanceProperties);
             SwitchButtons();
-        }
-
-        private void SetInstanceProperties(InstanceProperties _instanceProperties)
-        {
-            this._instanceProperties = _instanceProperties;
         }
 
         private void SwitchButtons(SwitchButtonsType type)
@@ -143,9 +150,12 @@ namespace Lexplosion.Gui.UserControls
                 case SwitchButtonsType.DOWNLOAD:
                     SetupButtons(ButtonPos.UPPER, MultiButtonProperties.GeometryDownloadIcon, -120, "Скачать сборку", UpperButtonFunctions.Download, _lowerButtonFunc);
                     if (_instanceProperties.IsInstanceAddedToLibrary)
-                        SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryLibraryDelete, -160, "Удалить из библиотеку", _upperButtonFunc, LowerButtonFunctions.DeleteFromLibrary);
+                        SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryLibraryDelete, -160, "Удалить из библиотеки", _upperButtonFunc, LowerButtonFunctions.DeleteFromLibrary);
                     else
                         SetupButtons(ButtonPos.LOWER, MultiButtonProperties.GeometryLibraryAdd, -160, "Добавить в библиотеку", _upperButtonFunc, LowerButtonFunctions.AddToLibrary);
+                    break;
+                case SwitchButtonsType.UPDATE:
+                    SetupButtons(ButtonPos.UPPER, MultiButtonProperties.GeometryDownloadIcon, -120, uBtnContent[UpperButtonFunctions.Update], UpperButtonFunctions.Update, _lowerButtonFunc);
                     break;
                 case SwitchButtonsType.DOWNLOADING:
                     SetupButtons(ButtonPos.UPPER, Geometry.Empty, -160, "Скачивание завершено на", UpperButtonFunctions.ProgressBar, _lowerButtonFunc);
@@ -166,7 +176,10 @@ namespace Lexplosion.Gui.UserControls
         {
             SetGlobalInstanceAssets();
 
-            if (_instanceProperties.IsInstalled)
+            if (_instanceProperties.IsInstalled && _instanceProperties.UpdateAvailable)
+                SwitchButtons(SwitchButtonsType.UPDATE);
+            // TODO: сделать event на смену состояний
+            else if (_instanceProperties.IsInstalled)
                 SwitchButtons(SwitchButtonsType.PLAY);
             else
             {

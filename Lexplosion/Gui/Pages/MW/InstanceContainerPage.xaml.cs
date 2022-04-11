@@ -114,7 +114,7 @@ namespace Lexplosion.Gui.Pages.MW
 				InstanceForm instanceForm = new UserControls.InstanceForm(
 					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.InstanceAssets.author,
 					outsideInstance.InstanceAssets.description, outsideInstance.Id, ToImage(outsideInstance.MainImage),
-					outsideInstance.Categories, outsideInstance.IsInstalled, false
+					outsideInstance.Categories, outsideInstance.IsInstalled, false, outsideInstance.UpdateAvailable
 				);
 				Grid.SetRow(instanceForm, row);
 				Console.WriteLine(outsideInstance.LocalId + " " + outsideInstance.Id);
