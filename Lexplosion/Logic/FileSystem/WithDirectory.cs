@@ -11,11 +11,9 @@ using Lexplosion.Global;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Linq;
 using Lexplosion.Logic.Management;
-using System.Diagnostics;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
