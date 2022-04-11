@@ -57,10 +57,7 @@ namespace Lexplosion.Gui.Pages
                 { 
                     toggleBtn.IsChecked = flag;
                     flag = false;
-                    mainWindow.PagesController(content[key].PageName, ContentFrame, delegate ()
-                    {
-                        return content[key].Page;
-                    });
+                    ContentFrame.Navigate(content[key].Page);
                 }
 
                 toggleBtn.Click += HeaderClick;
@@ -73,10 +70,7 @@ namespace Lexplosion.Gui.Pages
         {
             var btn = (ToggleButton)sender;
             RecheckedToggleBtn(btn);
-            mainWindow.PagesController(content[btn.Name].PageName, ContentFrame, delegate ()
-            {
-                return content[btn.Name].Page;
-            });
+            ContentFrame.Navigate(content[btn.Name].Page);
         }
 
         private void RecheckedToggleBtn(ToggleButton btn)
