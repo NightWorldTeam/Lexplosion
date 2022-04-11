@@ -66,7 +66,7 @@ namespace Lexplosion.Gui.Pages.MW
 
 				UserControls.InstanceForm instance = BuildInstanceForm(
 					key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags,
-					false, true
+					true, true
 				);
 				_instances[key] = instance;
 				i++;

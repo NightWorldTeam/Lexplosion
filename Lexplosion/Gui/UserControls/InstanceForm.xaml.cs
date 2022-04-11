@@ -176,10 +176,10 @@ namespace Lexplosion.Gui.UserControls
         {
             SetGlobalInstanceAssets();
 
-            if (_instanceProperties.IsInstalled && _instanceProperties.UpdateAvailable)
-                SwitchButtons(SwitchButtonsType.UPDATE);
+            //if (_instanceProperties.IsInstalled && _instanceProperties.UpdateAvailable)
+            //    SwitchButtons(SwitchButtonsType.UPDATE);
             // TODO: сделать event на смену состояний
-            else if (_instanceProperties.IsInstalled)
+            /*else */if (_instanceProperties.IsInstalled)
                 SwitchButtons(SwitchButtonsType.PLAY);
             else
             {
