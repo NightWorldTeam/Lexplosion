@@ -38,7 +38,7 @@ namespace Lexplosion.Gui.UserControls
             }
         }
 
-        private InstanceContainerPage _page;
+        private readonly InstanceContainerPage _page;
 
         public Paginator(InstanceContainerPage page)
         {

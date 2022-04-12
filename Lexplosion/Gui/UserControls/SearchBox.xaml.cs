@@ -14,7 +14,7 @@ namespace Lexplosion.Gui.UserControls
         private static readonly SolidColorBrush MouseDownColor = new SolidColorBrush(Color.FromArgb(255, 44, 153, 194));
         private static readonly SolidColorBrush MouseUpColor = new SolidColorBrush(Color.FromArgb(255, 19, 21, 19));
 
-        private InstanceContainerPage _page;
+        private readonly InstanceContainerPage _page;
         private bool _isForcedIndex = true;
 
         public string LastRequest = "";
