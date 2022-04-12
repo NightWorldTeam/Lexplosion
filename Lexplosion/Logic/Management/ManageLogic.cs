@@ -1,20 +1,13 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using System.Windows;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System;
-using System.Text;
 using Newtonsoft.Json;
-using System.Reflection;
-using System.Windows.Controls;
-using System.ComponentModel;
-using System.Threading;
 using static Lexplosion.Logic.Network.CurseforgeApi;
 
 namespace Lexplosion.Logic.Management

@@ -16,7 +16,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     {
         public string description;
         public string author;
-        public List<string> images;
+        public List<byte[]> images;
         public string mainImage;
         public string xmx;
         public string xms;

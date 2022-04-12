@@ -38,7 +38,6 @@ namespace Lexplosion.Gui.Pages.MW
 			var i = 0;
 			// обновление assets
 			string description, imageUrl, author, outsideInstanceId;
-			var instanceTags = new List<string>();
 			InstanceSource type;
 
 			_instances.Clear();
@@ -50,6 +49,8 @@ namespace Lexplosion.Gui.Pages.MW
 				author = "by NightWorld";
 				outsideInstanceId = string.Empty;
 				type = InstanceSource.Local;
+
+				var instanceTags = new List<string>();
 
 				if (UserData.Instances.Assets.ContainsKey(key))
 				{
@@ -63,7 +64,7 @@ namespace Lexplosion.Gui.Pages.MW
 						if (UserData.Instances.Assets[key].categories != null)
 							foreach (var tag in UserData.Instances.Assets[key].categories)
 								instanceTags.Add(tag.name);
-						Console.WriteLine("XF " + string.Join(", ", instanceTags));
+
 
 						foreach (var key1 in UserData.Instances.ExternalIds.Keys)
 						{

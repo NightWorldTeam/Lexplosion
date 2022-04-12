@@ -137,15 +137,11 @@ namespace Lexplosion.Logic.Management
                             wc.DownloadFile(attachmentUrl, fileName);
                         }
 
-                        assets.description = "";
                         assets.mainImage = InstanceId + "/" + a[a.Length - 1];
                     }
 
                     //устанавливаем описание
-                    if (info.summary != null)
-                    {
-                        assets.description = info.summary;
-                    }
+                    assets.description = (info.summary != null) ? info.summary : "";
 
                     //устанавливаем автора
                     if (info.authors.Count > 0 && info.authors[0].name != null)
@@ -154,7 +150,6 @@ namespace Lexplosion.Logic.Management
                     }
 
                     assets.categories = info.categories; // устанавливаем теги
-                    Console.WriteLine("TESTGFHGFHJGFJGHJGHJGHJGHJGH");
 
                     // сохраняем асетсы модпака
                     UserData.Instances.SetAssets(InstanceId, assets);

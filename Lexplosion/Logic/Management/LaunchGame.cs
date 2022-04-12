@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using Microsoft.Win32;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
