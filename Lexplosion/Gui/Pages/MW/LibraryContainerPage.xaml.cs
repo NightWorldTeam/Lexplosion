@@ -56,10 +56,14 @@ namespace Lexplosion.Gui.Pages.MW
 					if (UserData.Instances.Assets[key] != null)
 					{
 						description = UserData.Instances.Assets[key].description;
-						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
+						imageUrl = WithDirectory.DirectoryPath + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 						author = UserData.Instances.Assets[key].author;
 						type = UserData.Instances.Record[key].Type;
-						//instanceTags = UserData.Instances.Assets[key].Tags;
+
+						if (UserData.Instances.Assets[key].categories != null)
+							foreach (var tag in UserData.Instances.Assets[key].categories)
+								instanceTags.Add(tag.name);
+						Console.WriteLine("XF " + string.Join(", ", instanceTags));
 
 						foreach (var key1 in UserData.Instances.ExternalIds.Keys)
 						{

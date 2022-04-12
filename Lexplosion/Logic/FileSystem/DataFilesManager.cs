@@ -74,7 +74,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 data.GamePath = null;
 
-                string path = directory + "/instances/" + instanceId;
+                string path = DirectoryPath + "/instances/" + instanceId;
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
@@ -113,7 +113,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-                file = directory + "/instances/" + instanceId + "/instanceSettings.json";
+                file = DirectoryPath + "/instances/" + instanceId + "/instanceSettings.json";
 
                 if (!File.Exists(file))
                 {
@@ -147,7 +147,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                return Directory.Exists(directory + "/instances/" + instanceId);
+                return Directory.Exists(DirectoryPath + "/instances/" + instanceId);
             }
             catch
             {
@@ -159,9 +159,9 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                if (File.Exists(directory + "/instances/" + instanceId + "/lastUpdates.json"))
+                if (File.Exists(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json"))
                 {
-                    File.Delete(directory + "/instances/" + instanceId + "/lastUpdates.json");
+                    File.Delete(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json");
                 }
 
                 return true;
@@ -173,12 +173,12 @@ namespace Lexplosion.Logic.FileSystem
         public static int GetUpgradeToolVersion()
         {
 
-            if (!File.Exists(directory + "/up-version.txt"))
+            if (!File.Exists(DirectoryPath + "/up-version.txt"))
                 return -1;
 
             try
             {
-                using (FileStream fstream = File.OpenRead(directory + "/up-version.txt"))
+                using (FileStream fstream = File.OpenRead(DirectoryPath + "/up-version.txt"))
                 {
                     byte[] fileBytes = new byte[fstream.Length];
                     fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -197,10 +197,10 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                if (!File.Exists(directory + "/up-version.txt"))
-                    File.Create(directory + "/up-version.txt").Close();
+                if (!File.Exists(DirectoryPath + "/up-version.txt"))
+                    File.Create(DirectoryPath + "/up-version.txt").Close();
 
-                using (FileStream fstream = new FileStream(directory + "/up-version.txt", FileMode.Create))
+                using (FileStream fstream = new FileStream(DirectoryPath + "/up-version.txt", FileMode.Create))
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(version.ToString());
                     fstream.Write(bytes, 0, bytes.Length);
@@ -313,16 +313,16 @@ namespace Lexplosion.Logic.FileSystem
                 }
             };
 
-            SaveFile(directory + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(dataLocal));
+            SaveFile(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(dataLocal));
             if (data.libraries != null)
             {
-                SaveFile(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
+                SaveFile(DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
             }    
         }
 
         public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
         {
-            VersionManifest data = GetFile<VersionManifest>(directory + "/instances/" + instanceId + "/" + "manifest.json");
+            VersionManifest data = GetFile<VersionManifest>(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json");
             if (data == null)
             {
                 return null;
@@ -330,7 +330,7 @@ namespace Lexplosion.Logic.FileSystem
 
             if (includingLibraries)
             {
-                Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(directory + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json");
+                Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json");
                 if (librariesData == null)
                 {
                     librariesData = new Dictionary<string, LibInfo>();
@@ -344,7 +344,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static Dictionary<string, InstanceParametrs> GetInstancesList()
         {
-            var baseList = GetFile<Dictionary<string, InstanceParametrs>>(directory + "/instanesList.json");
+            var baseList = GetFile<Dictionary<string, InstanceParametrs>>(DirectoryPath + "/instanesList.json");
             var list = new Dictionary<string, InstanceParametrs>();
 
             if (baseList != null)
@@ -352,7 +352,7 @@ namespace Lexplosion.Logic.FileSystem
                 foreach (string id in baseList.Keys)
                 {
                     //проверяем установлен ли этот модпак и не содержит ли его id запрещенных символов
-                    if (Directory.Exists(directory + "/instances/" + id) && !Regex.IsMatch(id.Replace("_", ""), @"[^a-zA-Z0-9]"))
+                    if (Directory.Exists(DirectoryPath + "/instances/" + id) && !Regex.IsMatch(id.Replace("_", ""), @"[^a-zA-Z0-9]"))
                     {
                         list[id] = baseList[id];
                         list[id].UpdateAvailable = ManageLogic.CheckIntanceUpdates(id, baseList[id].Type);
@@ -365,7 +365,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static void SaveInstancesList(Dictionary<string, InstanceParametrs> content)
         {
-            SaveFile(directory + "/instanesList.json", JsonConvert.SerializeObject(content));
+            SaveFile(DirectoryPath + "/instanesList.json", JsonConvert.SerializeObject(content));
         }
 
     }

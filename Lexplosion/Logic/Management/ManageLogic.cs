@@ -70,7 +70,7 @@ namespace Lexplosion.Logic.Management
                 //получаем внешние айдишники всех не локальных модпаков
                 if (UserData.Instances.Record[instance].Type != InstanceSource.Local)
                 {
-                    InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instance + "/instancePlatformData.json");
+                    InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + instance + "/instancePlatformData.json");
                     if (data != null && data.id != null)
                     {
                         UserData.Instances.ExternalIds[data.id] = instance;
@@ -78,16 +78,13 @@ namespace Lexplosion.Logic.Management
                 }
 
                 //получаем асетсы модпаков
-                InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.directory + "/instances-assets/" + instance + "/assets.json");
+                InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.DirectoryPath + "/instances-assets/" + instance + "/assets.json");
 
-                if (assetsData != null && File.Exists(WithDirectory.directory + "/instances-assets/" + assetsData.mainImage))
+                if (assetsData != null && File.Exists(WithDirectory.DirectoryPath + "/instances-assets/" + assetsData.mainImage))
                 {
-                    UserData.Instances.Assets[instance] = new InstanceAssets
-                    {
-                        mainImage = "/" + assetsData.mainImage, // TODO: если эти значения null то заменять на пустую строку 
-                        description = assetsData.description,
-                        author = assetsData.author
-                    };
+                    assetsData.mainImage = "/" + assetsData.mainImage;
+                    // TODO: если значения в этом классе null то заменять на пустую строку 
+                    UserData.Instances.Assets[instance] = assetsData;
                 }
             }
         }
@@ -222,7 +219,7 @@ namespace Lexplosion.Logic.Management
 
         public static bool CheckIntanceUpdates(string instanceId, InstanceSource type)
         {
-            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json");
+            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instancePlatformData.json");
             if (infoData == null || infoData.id == null)
             {
                 return true;
@@ -265,7 +262,7 @@ namespace Lexplosion.Logic.Management
             }, null, externalId);
 
             DataFilesManager.SaveInstancesList(UserData.Instances.Record);
-            Directory.CreateDirectory(WithDirectory.directory + "/instances/" + instanceId);
+            Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + instanceId);
 
             VersionManifest manifest = new VersionManifest
             {
@@ -285,7 +282,7 @@ namespace Lexplosion.Logic.Management
                     id = externalId
                 };
 
-                DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
+                DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
             }
 
             return instanceId;
@@ -293,7 +290,7 @@ namespace Lexplosion.Logic.Management
 
         public static bool InstallAddon(int projectID, int fileID, string instanceId, string gameVersion)
         {
-            var installedAddons = DataFilesManager.GetFile<Dictionary<string, InstalledAddonInfo>>(WithDirectory.directory + "/instances/" + instanceId + "/installedAddons.json");
+            var installedAddons = DataFilesManager.GetFile<Dictionary<string, InstalledAddonInfo>>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
             if (installedAddons == null)
             {
                 installedAddons = new Dictionary<string, InstalledAddonInfo>();
@@ -310,7 +307,7 @@ namespace Lexplosion.Logic.Management
                 }    
             }
 
-            DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
 
             return true;
         }

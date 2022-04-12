@@ -532,7 +532,7 @@ namespace Lexplosion.Gui.UserControls
         public void SetLocalInstanceAssets(InstanceAssets instanceAssets)
         {
             InstanceLogo_Background.Background = new ImageBrush(new BitmapImage(new Uri(
-                    WithDirectory.directory + "/instances-assets/" + instanceAssets.mainImage)
+                    WithDirectory.DirectoryPath + "/instances-assets/" + instanceAssets.mainImage)
             ));
             TextBlockAuthor.Text = instanceAssets.author;
             TextBlockOverview.Text = instanceAssets.description;

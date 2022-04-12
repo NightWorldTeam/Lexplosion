@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.FileSystem
         // Делегат для обновления процентов загрузки
         public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
 
-        public static string directory;
+        public static string DirectoryPath;
 
         public struct Assets
         {
@@ -94,7 +94,7 @@ namespace Lexplosion.Logic.FileSystem
                             addr = filesList.data[dir].objects[file].url;
                         }
 
-                        if (!SaveDownloadZip(addr, folders[folders.Length - 1], directory + "/instances/" + instanceId + "/" + dir + "/" + file, tempDir, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size, wc))
+                        if (!SaveDownloadZip(addr, folders[folders.Length - 1], DirectoryPath + "/instances/" + instanceId + "/" + dir + "/" + file, tempDir, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size, wc))
                         {
                             errors.Add(dir + "/" + file);
                         }
@@ -115,9 +115,9 @@ namespace Lexplosion.Logic.FileSystem
                 //удаляем старые файлы
                 foreach (string file in updatesList.OldFiles)
                 {
-                    if (File.Exists(directory + "/instances/" + instanceId + "/" + file))
+                    if (File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + file))
                     {
-                        File.Delete(directory + "/instances/" + instanceId + "/" + file);
+                        File.Delete(DirectoryPath + "/instances/" + instanceId + "/" + file);
                         if (updates.ContainsKey(file))
                         {
                             updates.Remove(file);
@@ -129,7 +129,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 //сохарняем updates
-                SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+                SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
 
                 Directory.Delete(tempDir, true);
 
@@ -143,7 +143,7 @@ namespace Lexplosion.Logic.FileSystem
                 //Проходимся по списку папок(data) из класса instanceFiles
                 foreach (string dir in filesInfo.data.Keys)
                 {
-                    string folder = directory + "/instances/" + instanceId + "/" + dir;
+                    string folder = DirectoryPath + "/instances/" + instanceId + "/" + dir;
 
                     try
                     {
@@ -162,7 +162,7 @@ namespace Lexplosion.Logic.FileSystem
                         // TODO: тут из lastUpdates удалить все файлы из этой папки
 
                         //отрываем файл с последними обновлениями и записываем туда updates, который уже содержит последнюю версию папки. Папка сейчас будет пустой, поэтому метод Update в любом случае скачает нужные файлы
-                        using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
+                        using (FileStream fstream = new FileStream(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
                         {
                             byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updates));
                             fstream.Write(bytes, 0, bytes.Length);
@@ -271,7 +271,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         try
                         {
-                            if (File.Exists(directory + "/instances/" + instanceId + "/" + folder + "/" + file))
+                            if (File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + folder + "/" + file))
                             {
                                 filesUpdates.OldFiles.Add(folder + "/" + file);
                                 filesUpdates.UpdatesCount++;
@@ -331,7 +331,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 foreach (CurseforgeApi.InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
                 {
-                    if (!File.Exists(directory + "/instances/" + instanceId + "/" + addon.Path))
+                    if (!File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + addon.Path))
                     {
                         return true;
                     }
@@ -339,7 +339,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 foreach (string file in localFiles.Files)
                 {
-                    if (!File.Exists(directory + "/instances/" + instanceId + file))
+                    if (!File.Exists(DirectoryPath + "/instances/" + instanceId + file))
                     {
                         return true;
                     }
@@ -357,7 +357,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         foreach (string file in localFiles.Files)
                         {
-                            DelFile(directory + "/instances/" + instanceId + file);
+                            DelFile(DirectoryPath + "/instances/" + instanceId + file);
                         }
                     }
 
@@ -393,7 +393,7 @@ namespace Lexplosion.Logic.FileSystem
                     // тут переосим нужные файлы из этого архива
 
                     string SourcePath = tempDir + "dataDownload/overrides/";
-                    string DestinationPath = directory + "/instances/" + instanceId + "/";
+                    string DestinationPath = DirectoryPath + "/instances/" + instanceId + "/";
 
                     foreach (string dirPath in Directory.GetDirectories(SourcePath, "*", SearchOption.AllDirectories))
                     {
@@ -464,7 +464,7 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
 
-                                if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(directory + "/instances/" + instanceId + "/" + installedAddons[file.projectID].Path))
+                                if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[file.projectID].Path))
                                 {
                                     test++;
                                     downloadList.Add(file);
@@ -478,7 +478,7 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 if (installedAddons[addonId].Path != null)
                                 {
-                                    DelFile(directory + "/instances/" + instanceId + installedAddons[addonId].Path);
+                                    DelFile(DirectoryPath + "/instances/" + instanceId + installedAddons[addonId].Path);
                                 }
                             }
                             else
@@ -552,7 +552,7 @@ namespace Lexplosion.Logic.FileSystem
                                 fileBlock.WaitOne();
                                 compliteDownload.InstalledAddons[file.projectID] = result[result.First().Key].Item1;
                                 Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
-                                DataFilesManager.SaveFile(directory + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
+                                DataFilesManager.SaveFile(DirectoryPath + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
                                 fileBlock.Release();
 
                                 i++;
@@ -580,7 +580,7 @@ namespace Lexplosion.Logic.FileSystem
                         compliteDownload.FullClient = true; // TODO: учитывать ошибки
                     }
 
-                    DataFilesManager.SaveFile(directory + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
+                    DataFilesManager.SaveFile(DirectoryPath + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
 
                     return errors;
                 }
@@ -596,11 +596,11 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                directory = path.Replace(@"\", "/");
+                DirectoryPath = path.Replace(@"\", "/");
 
-                if (!Directory.Exists(directory))
+                if (!Directory.Exists(DirectoryPath))
                 {
-                    string[] folders = directory.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] folders = DirectoryPath.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     string ff = folders[0];
                     for (int i = 1; i < folders.Length - 1; i++)
                     {
@@ -610,11 +610,11 @@ namespace Lexplosion.Logic.FileSystem
                         ff += "/" + folders[i];
                     }
 
-                    Directory.CreateDirectory(directory + "/temp");
+                    Directory.CreateDirectory(DirectoryPath + "/temp");
                 }
-                else if (!Directory.Exists(directory + "/temp"))
+                else if (!Directory.Exists(DirectoryPath + "/temp"))
                 {
-                    Directory.CreateDirectory(directory + "/temp");
+                    Directory.CreateDirectory(DirectoryPath + "/temp");
                 }
 
             }
@@ -623,7 +623,7 @@ namespace Lexplosion.Logic.FileSystem
 
         private static string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова
         {
-            string dirName = directory + "/temp";
+            string dirName = DirectoryPath + "/temp";
             string dirName_ = dirName;
 
             Random random = new Random();
@@ -647,16 +647,16 @@ namespace Lexplosion.Logic.FileSystem
             {
                 tempDir = CreateTempDir();
 
-                if (!Directory.Exists(directory + path))
+                if (!Directory.Exists(DirectoryPath + path))
                 {
-                    Directory.CreateDirectory(directory + path);
+                    Directory.CreateDirectory(DirectoryPath + path);
                 }
 
                 using (WebClient wc = new WebClient())
                 {
                     wc.DownloadFile(url, tempDir + fileName);
-                    DelFile(directory + "/" + path + "/" + fileName);
-                    File.Move(tempDir + fileName, directory + "/" + path + "/" + fileName);
+                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
+                    File.Move(tempDir + fileName, DirectoryPath + "/" + path + "/" + fileName);
                     Directory.Delete(tempDir, true);
                 }
 
@@ -667,7 +667,7 @@ namespace Lexplosion.Logic.FileSystem
                 if (tempDir != null)
                 {
                     DelFile(tempDir + fileName);
-                    DelFile(directory + "/" + path + "/" + fileName);
+                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
                 }
 
                 return false;
@@ -697,7 +697,7 @@ namespace Lexplosion.Logic.FileSystem
             try
             {
 
-                using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
+                using (FileStream fstream = new FileStream(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
                 {
                     fstream.Write(new byte[0], 0, 0);
                     fstream.Close();
@@ -712,15 +712,15 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                if (!File.Exists(directory + "/instances/" + instanceId + "/" + "lastUpdates.json"))
+                if (!File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + "lastUpdates.json"))
                 {
-                    if (!Directory.Exists(directory + "/instances/" + instanceId))
+                    if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId))
                     {
-                        Directory.CreateDirectory(directory + "/instances/" + instanceId); //создаем папку с модпаком, если её нет
+                        Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId); //создаем папку с модпаком, если её нет
                     }
                 }
 
-                using (FileStream fstream = new FileStream(directory + "/instances/" + instanceId + "/lastUpdates.json", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с последними обновлениями
+                using (FileStream fstream = new FileStream(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с последними обновлениями
                 {
                     byte[] fileBytes = new byte[fstream.Length];
                     fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -735,7 +735,7 @@ namespace Lexplosion.Logic.FileSystem
                     }
                     catch
                     {
-                        File.Delete(directory + "/instances/" + instanceId + "/lastUpdates.json");
+                        File.Delete(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json");
                     }
                 }
 
@@ -751,15 +751,15 @@ namespace Lexplosion.Logic.FileSystem
             BaseFilesUpdates updatesList = new BaseFilesUpdates(); //возвращаемый список обновлений
 
             //проверяем файл версии
-            if (!Directory.Exists(directory + "/instances/" + instanceId + "/version"))
+            if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/version"))
             {
-                Directory.CreateDirectory(directory + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
+                Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
                 updatesList.MinecraftJar = true; //сразу же добавляем minecraftJar в обновления
                 updatesList.UpdatesCount++;
             }
             else
             {
-                string minecraftJarFile = directory + "/instances/" + instanceId + "/version/" + filesInfo.version.minecraftJar.name;
+                string minecraftJarFile = DirectoryPath + "/instances/" + instanceId + "/version/" + filesInfo.version.minecraftJar.name;
                 if (updates.ContainsKey("version") && File.Exists(minecraftJarFile) && filesInfo.version.minecraftJar.lastUpdate == updates["version"]) //проверяем его наличие и версию
                 {
                     if (filesInfo.version.security) //если включена защита файла версии, то проверяем его 
@@ -797,11 +797,11 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //получаем версию libraries
-            if (File.Exists(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver"))
+            if (File.Exists(DirectoryPath + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver"))
             {
                 try
                 {
-                    using (FileStream fstream = new FileStream(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
+                    using (FileStream fstream = new FileStream(DirectoryPath + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
                     {
                         byte[] fileBytes = new byte[fstream.Length];
                         fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -819,12 +819,12 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver", "0");
+                SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver", "0");
                 updates["libraries"] = 0;
             }
 
             //проверяем папку libraries
-            if (!Directory.Exists(directory + "/libraries"))
+            if (!Directory.Exists(DirectoryPath + "/libraries"))
             {
                 foreach (string lib in filesInfo.libraries.Keys)
                 {
@@ -846,7 +846,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     // получем файл, в ктором хранятси список либрариесов, которые удачно скачались в прошлый раз
                     List<string> downloadedFiles = new List<string>();
-                    string downloadedInfoAddr = directory + "/versions/libraries/" + GetLibName(instanceId, filesInfo.version) + "-downloaded.json";
+                    string downloadedInfoAddr = DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, filesInfo.version) + "-downloaded.json";
                     bool fileExided = false;
                     if (File.Exists(downloadedInfoAddr))
                     {
@@ -857,7 +857,7 @@ namespace Lexplosion.Logic.FileSystem
                     //ищем недостающие файлы
                     foreach (string lib in filesInfo.libraries.Keys)
                     {
-                        if ((downloadedFiles == null && fileExided) || !File.Exists(directory + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
+                        if ((downloadedFiles == null && fileExided) || !File.Exists(DirectoryPath + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
                         {
                             updatesList.Libraries[lib] = filesInfo.libraries[lib];
                             updatesList.UpdatesCount++;
@@ -866,7 +866,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            if (!Directory.Exists(directory + "/natives/" + filesInfo.version.gameVersion))
+            if (!Directory.Exists(DirectoryPath + "/natives/" + filesInfo.version.gameVersion))
             {
                 foreach (string lib in filesInfo.libraries.Keys)
                 {
@@ -881,7 +881,7 @@ namespace Lexplosion.Logic.FileSystem
             // Проверяем assets
 
             // Пытаемся получить список всех асетсов из json файла
-            Assets asstes = GetFile<Assets>(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json");
+            Assets asstes = GetFile<Assets>(DirectoryPath + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json");
 
             // Файла нет, или он битый. Получаем асетсы с сервера
             if (asstes.objects == null)
@@ -889,7 +889,7 @@ namespace Lexplosion.Logic.FileSystem
                 updatesList.AssetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
                 updatesList.UpdatesCount++;
 
-                if (!File.Exists(directory + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
+                if (!File.Exists(DirectoryPath + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
                 {
                     try
                     {
@@ -911,7 +911,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         // проверяем существует ли файл. Если нет - отправляем на обновление
                         string assetPath = "/" + assetHash.Substring(0, 2);
-                        if (!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
+                        if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                         {
                             updatesList.Assets.objects[asset] = asstes.objects[asset];
                             updatesList.UpdatesCount++;
@@ -950,9 +950,9 @@ namespace Lexplosion.Logic.FileSystem
         private static bool UnsafeDownloadZip(string url, string to, string file, string temp, WebClient wc)
         {
             //создаем папки в соответсвии с путем к файлу из списка
-            string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] foldersPath = (to + file).Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            string path = directory;
+            string path = DirectoryPath;
             // TODO: какой-то ебанутый метод создания директорий
             for (int i = 0; i < foldersPath.Length - 1; i++)
             {
@@ -992,9 +992,9 @@ namespace Lexplosion.Logic.FileSystem
             string zipFile = file + ".zip";
 
             //создаем папки в соответсвии с путем к файлу из списка
-            string[] foldersPath = to.Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
+            string[] foldersPath = to.Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
 
-            string path = directory;
+            string path = DirectoryPath;
             for (int i = 0; i < foldersPath.Length - 1; i++)
             {
                 path += "/" + foldersPath[i];
@@ -1047,9 +1047,9 @@ namespace Lexplosion.Logic.FileSystem
         {
             // TODO: сделать нормальное создание входящих директорий
             //создаем папки в соответсвии с путем к файлу из списка
-            string[] foldersPath = (to + file).Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] foldersPath = (to + file).Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            string path = directory;
+            string path = DirectoryPath;
             for (int i = 0; i < foldersPath.Length - 1; i++)
             {
                 path += "/" + foldersPath[i];
@@ -1078,9 +1078,9 @@ namespace Lexplosion.Logic.FileSystem
         private static bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, int size, WebClient wc)
         {
             //создаем папки в соответсвии с путем к файлу из списка
-            string[] foldersPath = to.Replace(directory, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
+            string[] foldersPath = to.Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
 
-            string path = directory;
+            string path = DirectoryPath;
             for (int i = 0; i < foldersPath.Length - 1; i++)
             {
                 path += "/" + foldersPath[i];
@@ -1153,11 +1153,11 @@ namespace Lexplosion.Logic.FileSystem
                 bool isDownload;
                 if (minecraftJar.notArchived)
                 {
-                    isDownload = SaveDownloadJar(addr, minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + minecraftJar.name, temp, minecraftJar.sha1, minecraftJar.size, wc);
+                    isDownload = SaveDownloadJar(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/" + minecraftJar.name, temp, minecraftJar.sha1, minecraftJar.size, wc);
                 }
                 else
                 {
-                    isDownload = SaveDownloadZip(addr, minecraftJar.name, directory + "/instances/" + instanceId + "/version/" + minecraftJar.name, temp, minecraftJar.sha1, minecraftJar.size, wc);
+                    isDownload = SaveDownloadZip(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/" + minecraftJar.name, temp, minecraftJar.sha1, minecraftJar.size, wc);
                 }
 
                 if (isDownload)
@@ -1177,7 +1177,7 @@ namespace Lexplosion.Logic.FileSystem
             //скачиваем libraries
             folders = null;
             List<string> executedMethods = new List<string>();
-            string downloadedLibsAddr = directory + "/versions/libraries/" + GetLibName(instanceId, filesList.version) + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
+            string downloadedLibsAddr = DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, filesList.version) + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
             // TODO: список downloadedLibs мы получаем в методе проверки. брать от туда, а не подгружать опять
             List<string> downloadedLibs = GetFile<List<string>>(downloadedLibsAddr); // сюда мы пихаем файлы, которые удачно скачались. При каждом удачном скачивании сохраняем список в файл. Если все файлы скачались удачно - удаляем этот список
             if (downloadedLibs == null) downloadedLibs = new List<string>();
@@ -1185,7 +1185,7 @@ namespace Lexplosion.Logic.FileSystem
 
             if (updateList.Libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
             {
-                SaveFile(directory + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesList.version) + ".lver", filesList.version.librariesLastUpdate.ToString());
+                SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesList.version) + ".lver", filesList.version.librariesLastUpdate.ToString());
             }
 
             string tempDir = CreateTempDir();
@@ -1212,7 +1212,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     bool isDownload;
                     string name = folders[folders.Length - 1];
-                    string fileDir = directory + "/libraries/" + ff;
+                    string fileDir = DirectoryPath + "/libraries/" + ff;
                     if (updateList.Libraries[lib].notArchived)
                     {
                         isDownload = UnsafeDownloadJar(addr, fileDir, name, wc, tempDir);
@@ -1230,9 +1230,9 @@ namespace Lexplosion.Logic.FileSystem
                             // извлекаем во временную папку
                             ZipFile.ExtractToDirectory(fileDir + "/" + name, tempFolder);
 
-                            if(!Directory.Exists(directory + "/natives/" + filesList.version.gameVersion + "/"))
+                            if(!Directory.Exists(DirectoryPath + "/natives/" + filesList.version.gameVersion + "/"))
                             {
-                                Directory.CreateDirectory(directory + "/natives/" + filesList.version.gameVersion + "/");
+                                Directory.CreateDirectory(DirectoryPath + "/natives/" + filesList.version.gameVersion + "/");
                             }
 
                             //Скопировать все файлы. И перезаписать(если такие существуют)
@@ -1240,7 +1240,7 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 if (!newPath.Contains("META-INF"))
                                 {
-                                    File.Copy(newPath, newPath.Replace(tempFolder, directory + "/natives/" + filesList.version.gameVersion + "/"), true);
+                                    File.Copy(newPath, newPath.Replace(tempFolder, DirectoryPath + "/natives/" + filesList.version.gameVersion + "/"), true);
                                 }
                             }
 
@@ -1262,7 +1262,7 @@ namespace Lexplosion.Logic.FileSystem
                     else
                     {
                         errors.Add("libraries/" + lib);
-                        DelFile(directory + "/libraries/" + lib);
+                        DelFile(DirectoryPath + "/libraries/" + lib);
                     }
 
 
@@ -1311,9 +1311,9 @@ namespace Lexplosion.Logic.FileSystem
                                         }
 
                                         string command = obtainingMethod[i][2];
-                                        command = command.Replace("{DIR}", directory);
+                                        command = command.Replace("{DIR}", DirectoryPath);
                                         command = command.Replace("{TEMP_DIR}", tempDir);
-                                        command = command.Replace("{MINECRAFT_JAR}", directory + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name);
+                                        command = command.Replace("{MINECRAFT_JAR}", DirectoryPath + "/instances/" + instanceId + "/version/" + filesList.version.minecraftJar.name);
                                         Console.WriteLine();
                                         Console.WriteLine(command);
 
@@ -1326,8 +1326,8 @@ namespace Lexplosion.Logic.FileSystem
                                         break;
 
                                     case "moveFile":
-                                        string to = obtainingMethod[i][2].Replace("{DIR}", directory).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
-                                        string from = obtainingMethod[i][1].Replace("{DIR}", directory).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
+                                        string to = obtainingMethod[i][2].Replace("{DIR}", DirectoryPath).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
+                                        string from = obtainingMethod[i][1].Replace("{DIR}", DirectoryPath).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
                                         if (File.Exists(to))
                                         {
                                             File.Delete(to);
@@ -1345,9 +1345,9 @@ namespace Lexplosion.Logic.FileSystem
 
                         //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
                         EndWhile: executedMethods.Add(obtainingMethod[0][0]);
-                        if (!File.Exists(directory + "/libraries/" + lib))
+                        if (!File.Exists(DirectoryPath + "/libraries/" + lib))
                         {
-                            Console.WriteLine(directory + "/libraries/" + lib);
+                            Console.WriteLine(DirectoryPath + "/libraries/" + lib);
                             errors.Add("libraries/" + lib);
                         }
                         else
@@ -1386,7 +1386,7 @@ namespace Lexplosion.Logic.FileSystem
                     if (assetHash != null)
                     {
                         string assetPath = "/" + assetHash.Substring(0, 2);
-                        if (!File.Exists(directory + "/assets/objects/" + assetPath + "/" + assetHash))
+                        if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                         {
                             if (!InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
                             {
@@ -1412,14 +1412,14 @@ namespace Lexplosion.Logic.FileSystem
             //скачиваем json файл
             if (updateList.AssetsIndexes)
             {
-                if (!File.Exists(directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json"))
+                if (!File.Exists(DirectoryPath + "/assets/indexes/" + filesList.version.assetsVersion + ".json"))
                 {
-                    if (!Directory.Exists(directory + "/assets/indexes"))
-                        Directory.CreateDirectory(directory + "/assets/indexes");
+                    if (!Directory.Exists(DirectoryPath + "/assets/indexes"))
+                        Directory.CreateDirectory(DirectoryPath + "/assets/indexes");
 
                     try
                     {
-                        wc.DownloadFile(filesList.version.assetsIndexes, directory + "/assets/indexes/" + filesList.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
+                        wc.DownloadFile(filesList.version.assetsIndexes, DirectoryPath + "/assets/indexes/" + filesList.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
                     }
                     catch { }
                 }
@@ -1428,7 +1428,7 @@ namespace Lexplosion.Logic.FileSystem
             wc.Dispose();
 
             //сохраняем lastUpdates
-            SaveFile(directory + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+            SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
 
             return errors;
         }
@@ -1437,7 +1437,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             // TODO: удалять временную папку в конце
             string targetDir = CreateTempDir() + instanceId + "-export"; //временная папка, куда будем копировать все файлы
-            string srcDir = directory + "/instances/" + instanceId;
+            string srcDir = DirectoryPath + "/instances/" + instanceId;
 
             try
             {
@@ -1607,7 +1607,7 @@ namespace Lexplosion.Logic.FileSystem
             MessageBox.Show(instanceId);
 
             string addr = dir + "files/";
-            string targetDir = directory + "/instances/" + instanceId + "/";
+            string targetDir = DirectoryPath + "/instances/" + instanceId + "/";
 
             try
             {
@@ -1646,9 +1646,9 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
-                if (Directory.Exists(directory + "/instances/" + instanceId))
+                if (Directory.Exists(DirectoryPath + "/instances/" + instanceId))
                 {
-                    Directory.Delete(directory + "/instances/" + instanceId, true);
+                    Directory.Delete(DirectoryPath + "/instances/" + instanceId, true);
                 }
             }
             catch

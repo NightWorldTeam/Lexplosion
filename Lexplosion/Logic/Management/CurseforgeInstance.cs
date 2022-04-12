@@ -41,7 +41,7 @@ namespace Lexplosion.Logic.Management
         {
             ProgressHandler(1, 0, 0);
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
-            InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json");
+            InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null || !Int32.TryParse(InfoData.id, out _))
             {
@@ -91,7 +91,7 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            DataFilesManager.SaveFile(WithDirectory.directory + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
 
             return InstanceInit.Successful;
         }
@@ -103,7 +103,7 @@ namespace Lexplosion.Logic.Management
                 try
                 {
                     CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
-                    string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
+                    string dir = WithDirectory.DirectoryPath + "/instances-assets/" + InstanceId;
                   
                     InstanceAssets assets = new InstanceAssets();
 
@@ -163,7 +163,7 @@ namespace Lexplosion.Logic.Management
                 catch { }
             });
 
-            var localFiles = DataFilesManager.GetFile<CurseforgeLogic.LocalFiles>(WithDirectory.directory + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
+            var localFiles = DataFilesManager.GetFile<CurseforgeLogic.LocalFiles>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
 
             if (localFiles == null)
             {
