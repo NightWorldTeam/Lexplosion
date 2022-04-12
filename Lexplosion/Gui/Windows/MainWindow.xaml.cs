@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static List<string> ScreenResolutions = new List<string>()
+        public readonly static List<string> ScreenResolutions = new List<string>()
         {
             "1920x1080", "1768x992", "1680x1050",  "1600x1024", "1600x900", "1440x900", "1280x1024",
             "1280x960", "1366x768", "1360x768", "1280x800", "1280x768", "1152x864", "1280x720", "1176x768",
@@ -27,7 +27,7 @@ namespace Lexplosion.Gui.Windows
         }
 
         // хранит объект этого окна
-        public static MainWindow Obj = null;
+        public static MainWindow Obj;
 
         private Dictionary<string, Page> _pages = new Dictionary<string, Page>();
         private Dictionary<string, Page> _instancePages = new Dictionary<string, Page>();

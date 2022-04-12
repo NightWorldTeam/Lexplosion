@@ -102,8 +102,8 @@ namespace Lexplosion.Gui.UserControls
 
         private UpperButtonFunctions _upperButtonFunc;
         private LowerButtonFunctions _lowerButtonFunc;
-        private InstanceProperties _instanceProperties;
-        private MainWindow _mainWindow;
+        private readonly InstanceProperties _instanceProperties;
+        private readonly MainWindow _mainWindow;
 
         private Dictionary<UpperButtonFunctions, string> uBtnContent = new Dictionary<UpperButtonFunctions, string>
         {
@@ -117,8 +117,8 @@ namespace Lexplosion.Gui.UserControls
         public delegate void InstanceOpenedHandler(InstanceProperties instanceProperties);
         public static event InstanceOpenedHandler InstanceOpened;
 
-        public InstanceForm(MainWindow mainWindow, string instanceTitle, string instanceId, string instanceAuthor, string instanceOverview,
-            string outsideInstanceId, BitmapImage logo, List<string> instanceTags, 
+        public InstanceForm(MainWindow mainWindow, string instanceTitle, InstanceSource type, string instanceId, string instanceAuthor, 
+            string instanceOverview, string outsideInstanceId, BitmapImage logo, List<string> instanceTags, 
             bool isInstanceAddedToLibrary, bool isInstanceInstalled, bool isUpdateAvailable)
         {
             InitializeComponent();
@@ -126,6 +126,7 @@ namespace Lexplosion.Gui.UserControls
             this._instanceProperties = new InstanceProperties()
             {
                 Name = instanceTitle,
+                Type = type,
                 LocalId = instanceId,
                 InstanceAssets = new InstanceAssets()
                 {

@@ -23,7 +23,7 @@ namespace Lexplosion.Gui.Pages.MW
 	{
 		public static InstanceContainerPage Obj = null;
 
-		private MainWindow _mainWindow;
+		private readonly MainWindow _mainWindow;
 		private Paginator _paginator;
 		private int _pageSize = 10;
 
@@ -112,7 +112,7 @@ namespace Lexplosion.Gui.Pages.MW
 				if (InstanceGrid.RowDefinitions.Count < 10)
 					InstanceGrid.RowDefinitions.Add(GetRowDefinition());
 				InstanceForm instanceForm = new UserControls.InstanceForm(
-					_mainWindow, outsideInstance.Name, outsideInstance.LocalId, outsideInstance.InstanceAssets.author,
+					_mainWindow, outsideInstance.Name, outsideInstance.Type, outsideInstance.LocalId, outsideInstance.InstanceAssets.author,
 					outsideInstance.InstanceAssets.description, outsideInstance.Id, ToImage(outsideInstance.MainImage),
 					outsideInstance.Categories, outsideInstance.IsInstalled, false, outsideInstance.UpdateAvailable
 				);

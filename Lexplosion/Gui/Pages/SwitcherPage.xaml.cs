@@ -27,12 +27,11 @@ namespace Lexplosion.Gui.Pages
 
     public partial class SwitcherPage : Page
     {
-        private Dictionary<string, ToggleItem> content = new Dictionary<string, ToggleItem>();
-        private MainWindow mainWindow;
+        private readonly Dictionary<string, ToggleItem> content = new Dictionary<string, ToggleItem>();
+        private readonly MainWindow mainWindow;
         public SwitcherPage(string pageTitle, Dictionary<string, ToggleItem> content, MainWindow mainWindow)
         {
             InitializeComponent();
-            Console.WriteLine("SwitcherPage init");
             PageTitle.Text = pageTitle;
             this.content = content;
             this.mainWindow = mainWindow;

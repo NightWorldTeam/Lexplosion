@@ -16,7 +16,7 @@ namespace Lexplosion.Gui.Pages.MW
     /// </summary>
     public partial class LibraryContainerPage : Page
 	{
-		private MainWindow _mainWindow;
+		private readonly MainWindow _mainWindow;
 		private Dictionary<string, InstanceForm> _instances = new Dictionary<string, InstanceForm>();
 
 		public LibraryContainerPage(MainWindow mainWindow)
@@ -39,6 +39,7 @@ namespace Lexplosion.Gui.Pages.MW
 			// обновление assets
 			string description, imageUrl, author, outsideInstanceId;
 			var instanceTags = new List<string>();
+			InstanceSource type;
 
 			_instances.Clear();
 
@@ -48,6 +49,8 @@ namespace Lexplosion.Gui.Pages.MW
 				imageUrl = "pack://application:,,,/assets/images/icons/non_image.png";
 				author = "by NightWorld";
 				outsideInstanceId = string.Empty;
+				type = InstanceSource.Local;
+
 				if (UserData.Instances.Assets.ContainsKey(key))
 				{
 					if (UserData.Instances.Assets[key] != null)
@@ -55,6 +58,8 @@ namespace Lexplosion.Gui.Pages.MW
 						description = UserData.Instances.Assets[key].description;
 						imageUrl = WithDirectory.directory + "/instances-assets/" + UserData.Instances.Assets[key].mainImage;
 						author = UserData.Instances.Assets[key].author;
+						type = UserData.Instances.Record[key].Type;
+						//instanceTags = UserData.Instances.Assets[key].Tags;
 
 						foreach (var key1 in UserData.Instances.ExternalIds.Keys)
 						{
@@ -65,7 +70,7 @@ namespace Lexplosion.Gui.Pages.MW
 				}
 
 				UserControls.InstanceForm instance = BuildInstanceForm(
-					key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags,
+					type, key, i, imageUrl, UserData.Instances.Record[key].Name, author, description, outsideInstanceId, instanceTags,
 					true, true
 				);
 				_instances[key] = instance;
@@ -76,7 +81,9 @@ namespace Lexplosion.Gui.Pages.MW
 			i++;
 		}
 
-		private InstanceForm BuildInstanceForm(string id, 
+		private InstanceForm BuildInstanceForm(
+			InstanceSource type,
+			string id, 
 			int row, 
 			string logo, 
 			string title, 
@@ -89,7 +96,7 @@ namespace Lexplosion.Gui.Pages.MW
 		{
 			/// "EOS", 0, logo_path1, "Energy of Space", "NightWorld", "Our offical testing launcher modpack...", _instanceTags1
 			var instanceForm = new InstanceForm(
-				_mainWindow, title, id, author, overview, outsideInstanceId, new BitmapImage(new Uri(logo)), tags, true, isInstalled, isUpdateAvailable
+				_mainWindow,  title, type, id, author, overview, outsideInstanceId, new BitmapImage(new Uri(logo)), tags, true, isInstalled, isUpdateAvailable
 			);
 			// Добавляем строчку размером 150 px для нашего блока со сборкой.
 			if (InstanceGrid.RowDefinitions.Count <= row) {
