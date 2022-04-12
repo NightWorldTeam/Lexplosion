@@ -104,6 +104,7 @@ namespace Lexplosion.Logic.Management
                 {
                     CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
                     string dir = WithDirectory.directory + "/instances-assets/" + InstanceId;
+                  
                     InstanceAssets assets = new InstanceAssets();
 
                     if (info.attachments.Count > 0)
@@ -151,6 +152,9 @@ namespace Lexplosion.Logic.Management
                     {
                         assets.author = info.authors[0].name;
                     }
+
+                    assets.categories = info.categories; // устанавливаем теги
+                    Console.WriteLine("TESTGFHGFHJGFJGHJGHJGHJGHJGH");
 
                     // сохраняем асетсы модпака
                     UserData.Instances.SetAssets(InstanceId, assets);

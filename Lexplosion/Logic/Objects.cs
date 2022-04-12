@@ -20,6 +20,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string mainImage;
         public string xmx;
         public string xms;
+        public List<Category> categories;
     }
 
     public class LibInfo
@@ -95,20 +96,14 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public Dictionary<string, LibInfo> Libraries;
     }
 
-    /*public class Category
+    public class Category
     {
         public int categoryId;
         public string name;
-    }*/
+    }
 
     public class CurseforgeInstanceInfo
     {
-        public class Category
-        {
-            public int categoryId;
-            public string name;
-        }
-
         public class Author
         {
             public string name;

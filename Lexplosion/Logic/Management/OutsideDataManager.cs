@@ -42,7 +42,7 @@ namespace Lexplosion.Logic.Management
         private static List<OutsideInstance> UploadInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
             Console.WriteLine("UploadInstances " + pageIndex);
-            List<string> CategoriesListConverter(List<CurseforgeInstanceInfo.Category> categories)
+            List<string> CategoriesListConverter(List<Category> categories)
             {
                 List<string> znfvrdfga = new List<string>();
                 foreach (var c in categories)
