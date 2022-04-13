@@ -65,7 +65,6 @@ namespace Lexplosion.Gui.Pages.MW
 							foreach (var tag in UserData.Instances.Assets[key].categories)
 								instanceTags.Add(tag.name);
 
-
 						foreach (var key1 in UserData.Instances.ExternalIds.Keys)
 						{
 							if (UserData.Instances.ExternalIds[key1] == key)
