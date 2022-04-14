@@ -8,7 +8,6 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System;
 using Newtonsoft.Json;
-using static Lexplosion.Logic.Network.CurseforgeApi;
 
 namespace Lexplosion.Logic.Management
 {
@@ -140,7 +139,6 @@ namespace Lexplosion.Logic.Management
 
             Settings instanceSettings = DataFilesManager.GetSettings(instanceId);
             InitData data = LaunchGame.Initialization(instanceId, instanceSettings, type, ProgressHandler);
-            //InstallAddon(248370, -1, instanceId, data.VersionFile.gameVersion);
 
             if (data.InitResult == InstanceInit.Successful)
             {
@@ -280,34 +278,6 @@ namespace Lexplosion.Logic.Management
             }
 
             return instanceId;
-        }
-
-        public static bool InstallAddon(int projectID, int fileID, string instanceId, string gameVersion)
-        {
-            var installedAddons = DataFilesManager.GetFile<Dictionary<string, InstalledAddonInfo>>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
-            if (installedAddons == null)
-            {
-                installedAddons = new Dictionary<string, InstalledAddonInfo>();
-            }
-
-            Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList
-                = CurseforgeApi.DownloadAddon(projectID, fileID, "instances/" + instanceId + "/", true, gameVersion);
-            foreach(var test in addonsList.Keys)
-            {
-                Console.WriteLine(test + " " + addonsList[test].Item2);
-            }
-            
-            foreach (string file in addonsList.Keys)
-            {
-                if (addonsList[file].Item2 == DownloadAddonRes.Successful)
-                {
-                    installedAddons[file] = addonsList[file].Item1;
-                }    
-            }
-
-            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
-
-            return true;
         }
 
         public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerCallback ProgressHandler)

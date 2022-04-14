@@ -4,6 +4,11 @@ using System.Windows.Media.Imaging;
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects // TODO: позаменять классы на структуры
 {
+    /// <summary>
+    /// Структура файла, в котором хранятся установленные аддоны
+    /// </summary>
+    class InstalledAddons : Dictionary<int, InstalledAddonInfo> { }
+
     public class InstanceProperties : OutsideInstance
     {
         public BitmapImage Logo;
@@ -12,7 +17,10 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public bool IsDownloadingInstance;
     }
 
-    public class InstanceAssets //Асесты модпака на главной странице (описание, картинки)
+    /// <summary>
+    /// Асесты модпака на главной странице (описание, картинки)
+    /// </summary>
+    public class InstanceAssets
     {
         public string description;
         public string author;
@@ -188,5 +196,27 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     {
         public string type;
         public string id;
+    }
+
+    /// <summary>
+    /// Этот класс хранят инфу об установленном с курсфорджа аддоне
+    /// </summary>
+    public class InstalledAddonInfo
+    {
+        public int ProjectID;
+        public int FileID;
+        public AddonType Type;
+        public string Path;
+        public bool IsDisable = false;
+
+        public string ActualPath
+        {
+            get
+            {
+                if (IsDisable && Path != null)
+                    return Path + ".disable";
+                return Path;
+            }
+        }
     }
 }

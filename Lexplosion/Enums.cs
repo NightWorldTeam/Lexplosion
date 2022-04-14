@@ -76,4 +76,15 @@
         Forge,
         Fabric
     }
+
+    /// <summary>
+    /// Типа аддонов с курсфорджа
+    /// </summary>
+    public enum AddonType
+    {
+        Unknown,
+        Mod = 6,
+        Resourcepacks = 12,
+        Maps = 17
+    }
 }

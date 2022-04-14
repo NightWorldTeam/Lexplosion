@@ -317,7 +317,7 @@ namespace Lexplosion.Logic.FileSystem
 
             public class LocalFiles
             {
-                public Dictionary<int, CurseforgeApi.InstalledAddonInfo> InstalledAddons;
+                public InstalledAddons InstalledAddons;
                 public List<string> Files;
                 public bool FullClient = false;
             }
@@ -329,9 +329,11 @@ namespace Lexplosion.Logic.FileSystem
                     return true;
                 }
 
-                foreach (CurseforgeApi.InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
+                foreach (InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
                 {
-                    if (!File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + addon.Path))
+                    string filePath = DirectoryPath + "/instances/" + instanceId + "/" + addon.ActualPath;
+
+                    if (!File.Exists(filePath))
                     {
                         return true;
                     }
@@ -431,7 +433,7 @@ namespace Lexplosion.Logic.FileSystem
 
             public static List<string> InstallInstance(string instanceId, InstanceManifest data, LocalFiles localFiles, ProcentUpdate progressFunction)
             {
-                Dictionary<int, CurseforgeApi.InstalledAddonInfo> installedAddons = null;
+                InstalledAddons installedAddons = null;
                 installedAddons = localFiles.InstalledAddons;
 
                 var errors = new List<string>();
@@ -440,7 +442,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     LocalFiles compliteDownload = new LocalFiles
                     {
-                        InstalledAddons = new Dictionary<int, CurseforgeApi.InstalledAddonInfo>(),
+                        InstalledAddons = new InstalledAddons(),
                         Files = localFiles.Files
                     };
 
@@ -464,7 +466,7 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
 
-                                if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[file.projectID].Path))
+                                if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[file.projectID].ActualPath))
                                 {
                                     test++;
                                     downloadList.Add(file);
@@ -476,9 +478,9 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if (!tempList.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа. Поэтому удаляем
                             {
-                                if (installedAddons[addonId].Path != null)
+                                if (installedAddons[addonId].ActualPath != null)
                                 {
-                                    DelFile(DirectoryPath + "/instances/" + instanceId + installedAddons[addonId].Path);
+                                    DelFile(DirectoryPath + "/instances/" + instanceId + installedAddons[addonId].ActualPath);
                                 }
                             }
                             else
@@ -514,8 +516,7 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 sem.WaitOne();
 
-                                Dictionary<string, (CurseforgeApi.InstalledAddonInfo, CurseforgeApi.DownloadAddonRes)> result =
-                                CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
+                                var result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
 
                                 if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
                                 {

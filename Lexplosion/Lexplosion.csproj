@@ -185,6 +185,7 @@
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
     <Compile Include="Logic\Management\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\LocalInstance.cs" />
+    <Compile Include="Logic\Management\McAddonsManager.cs" />
     <Compile Include="Logic\Management\NightworldIntance.cs" />
     <Compile Include="Logic\Management\IPrototypeInstance.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />

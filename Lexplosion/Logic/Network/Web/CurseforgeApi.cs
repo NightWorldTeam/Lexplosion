@@ -14,22 +14,6 @@ namespace Lexplosion.Logic.Network
 {
     static class CurseforgeApi
     {
-        public enum AddonType
-        {
-            Unknown,
-            Mod = 6,
-            Resourcepacks = 12,
-            Maps = 17
-        }
-
-        public class InstalledAddonInfo
-        {
-            public int ProjectID;
-            public int FileID;
-            public AddonType Type;
-            public string Path;
-        }
-
         public enum DownloadAddonRes
         {
             Successful,
@@ -247,7 +231,7 @@ namespace Lexplosion.Logic.Network
             Console.WriteLine("");
             Console.WriteLine("PR ID " + projectID);
             var addonsList = new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>();
-            //try
+            try
             {
                 string answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID);
                 if (answer == null)
@@ -340,7 +324,7 @@ namespace Lexplosion.Logic.Network
                             if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId"))
                             {
                                 Console.WriteLine("download " + value["addonId"]);
-                                Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], /*value.ContainsKey("fileId") ? value["fileId"] :*/ -1, path, true, gameVersion);
+                                Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], -1, path, true, gameVersion);
                                 foreach (string file in addonsList_.Keys)
                                 {
                                     addonsList[file] = addonsList_[file];
@@ -354,16 +338,16 @@ namespace Lexplosion.Logic.Network
                     AddonType addonType = (AddonType)data.categorySection.packageType;
                     switch (addonType)
                     {
-                        case CurseforgeApi.AddonType.Mod:
+                        case AddonType.Mod:
                             folderName = "mods";
                             break;
-                        case CurseforgeApi.AddonType.Maps:
+                        case AddonType.Maps:
                             folderName = "saves";
                             break;
-                        case CurseforgeApi.AddonType.Resourcepacks:
+                        case AddonType.Resourcepacks:
                             folderName = "resourcepacks";
                             break;
-                        case CurseforgeApi.AddonType.Unknown:
+                        case AddonType.Unknown:
                             return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
                             {
                                 [fileName] = (null, DownloadAddonRes.UncnownAddonType)
@@ -378,7 +362,7 @@ namespace Lexplosion.Logic.Network
                         {
                             ProjectID = projectID,
                             FileID = fileID,
-                            Path = folderName + fileName
+                            Path = folderName + "/" + fileName
                         }, DownloadAddonRes.Successful);
 
                         return addonsList;
@@ -400,13 +384,13 @@ namespace Lexplosion.Logic.Network
                 }
 
             }
-            /*catch
+            catch
             {
                 return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
                 {
                     [projectID.ToString()] = (null, DownloadAddonRes.UncnownError)
                 };
-            }*/
+            }
         }
     }
 }
