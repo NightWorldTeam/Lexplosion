@@ -140,6 +140,7 @@ namespace Lexplosion.Logic.Management
 
             Settings instanceSettings = DataFilesManager.GetSettings(instanceId);
             InitData data = LaunchGame.Initialization(instanceId, instanceSettings, type, ProgressHandler);
+            //InstallAddon(248370, -1, instanceId, data.VersionFile.gameVersion);
 
             if (data.InitResult == InstanceInit.Successful)
             {
@@ -290,7 +291,11 @@ namespace Lexplosion.Logic.Management
             }
 
             Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList
-                = CurseforgeApi.DownloadAddon(projectID, fileID, "/instances/" + instanceId + "/", true, gameVersion);
+                = CurseforgeApi.DownloadAddon(projectID, fileID, "instances/" + instanceId + "/", true, gameVersion);
+            foreach(var test in addonsList.Keys)
+            {
+                Console.WriteLine(test + " " + addonsList[test].Item2);
+            }
             
             foreach (string file in addonsList.Keys)
             {

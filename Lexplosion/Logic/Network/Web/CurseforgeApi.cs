@@ -244,6 +244,8 @@ namespace Lexplosion.Logic.Network
 
         public static Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false, string gameVersion = "")
         {
+            Console.WriteLine("");
+            Console.WriteLine("PR ID " + projectID);
             var addonsList = new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>();
             //try
             {
@@ -261,8 +263,9 @@ namespace Lexplosion.Logic.Network
                 if (fileID == -1) // если fileID == -1 значит нужно установить последнюю версию аддона
                 {
                     // TODO: тут еещ учитывать тип модлоадера
-                    foreach(var latestFile in data.gameVersionLatestFiles) // ищем последнюю версию мода для данной версии майнкрафта
+                    foreach (var latestFile in data.gameVersionLatestFiles) // ищем последнюю версию мода для данной версии майнкрафта
                     {
+                        // TODO: там вроде был параметр defaultFileId, можно его заюзать
                         if (latestFile.gameVersion == gameVersion)
                         {
                             fileID = latestFile.projectFileId;
@@ -280,15 +283,34 @@ namespace Lexplosion.Logic.Network
 
                 // получем информацию о файле
                 answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/file/" + fileID);
+                ProjectTypeInfo.FileData fileData;
                 if (answer == null)
                 {
-                    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                    Console.WriteLine("GFDSGFSHGFHGFHGFHFG " + "https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/file/" + fileID + "/download-url");
+                    answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/file/" + fileID + "/download-url");
+                    Console.WriteLine("ANSWER " + answer);
+
+                    if (answer == null)
                     {
-                        [projectID.ToString()] = (null, DownloadAddonRes.ProjectIdError)
+                        return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                        {
+                            [projectID.ToString()] = (null, DownloadAddonRes.ProjectIdError)
+                        };
+                    }
+
+                    fileData = new ProjectTypeInfo.FileData
+                    {
+                        dependencies = new List<Dictionary<string, int>>(),
+                        downloadUrl = answer,
+                        fileName = Path.GetFileName(answer)
                     };
                 }
+                else
+                {
+                    fileData = JsonConvert.DeserializeObject<ProjectTypeInfo.FileData>(answer);
+                }
 
-                ProjectTypeInfo.FileData fileData = JsonConvert.DeserializeObject<ProjectTypeInfo.FileData>(answer);
+                Console.WriteLine("fileData " + fileData.downloadUrl);
 
                 if (!String.IsNullOrWhiteSpace(fileData.downloadUrl) && !String.IsNullOrWhiteSpace(fileData.fileName))
                 {
@@ -308,6 +330,8 @@ namespace Lexplosion.Logic.Network
                     string fileUrl = fileData.downloadUrl;
                     string fileName = fileData.fileName;
 
+                    Console.WriteLine("dependencies.Count " + fileData.dependencies.Count);
+
                     // скачиваем связанные файлы, если это нужно
                     if (downloadDependencies && fileData.dependencies.Count > 0)
                     {
@@ -315,7 +339,8 @@ namespace Lexplosion.Logic.Network
                         {
                             if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId"))
                             {
-                                Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], value.ContainsKey("fileId") ? value["fileId"] : -1, path, true, gameVersion);
+                                Console.WriteLine("download " + value["addonId"]);
+                                Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], /*value.ContainsKey("fileId") ? value["fileId"] :*/ -1, path, true, gameVersion);
                                 foreach (string file in addonsList_.Keys)
                                 {
                                     addonsList[file] = addonsList_[file];
@@ -330,13 +355,13 @@ namespace Lexplosion.Logic.Network
                     switch (addonType)
                     {
                         case CurseforgeApi.AddonType.Mod:
-                            folderName = "mods/";
+                            folderName = "mods";
                             break;
                         case CurseforgeApi.AddonType.Maps:
-                            folderName = "saves/";
+                            folderName = "saves";
                             break;
                         case CurseforgeApi.AddonType.Resourcepacks:
-                            folderName = "resourcepacks/";
+                            folderName = "resourcepacks";
                             break;
                         case CurseforgeApi.AddonType.Unknown:
                             return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
@@ -345,18 +370,16 @@ namespace Lexplosion.Logic.Network
                             };
                     }
 
-                    //Console.WriteLine("Installing " + fileName);
-
                     // устанавливаем
                     if (WithDirectory.InstallFile(fileUrl, fileName, path + folderName))
                     {
+                        Console.WriteLine("SYS " + fileUrl);
                         addonsList[fileName] = (new InstalledAddonInfo
                         {
                             ProjectID = projectID,
                             FileID = fileID,
                             Path = folderName + fileName
                         }, DownloadAddonRes.Successful);
-                        //Console.WriteLine("EndInstalling " + fileName);
 
                         return addonsList;
                     }

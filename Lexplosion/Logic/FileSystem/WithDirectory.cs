@@ -598,35 +598,23 @@ namespace Lexplosion.Logic.FileSystem
             {
                 DirectoryPath = path.Replace(@"\", "/");
 
-                if (!Directory.Exists(DirectoryPath))
+                if (Directory.Exists(DirectoryPath + "/temp"))
                 {
-                    string[] folders = DirectoryPath.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    string ff = folders[0];
-                    for (int i = 1; i < folders.Length - 1; i++)
-                    {
-                        if (!Directory.Exists(ff))
-                            Directory.CreateDirectory(ff);
-
-                        ff += "/" + folders[i];
-                    }
-
-                    Directory.CreateDirectory(DirectoryPath + "/temp");
-                }
-                else if (!Directory.Exists(DirectoryPath + "/temp"))
-                {
-                    Directory.CreateDirectory(DirectoryPath + "/temp");
+                    Directory.Delete(DirectoryPath + "/temp", true);
                 }
 
+                Directory.CreateDirectory(DirectoryPath + "/temp");
             }
             catch { }
         }
+
+        private static Random random = new Random();
 
         private static string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова
         {
             string dirName = DirectoryPath + "/temp";
             string dirName_ = dirName;
-
-            Random random = new Random();
+            
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
             do
