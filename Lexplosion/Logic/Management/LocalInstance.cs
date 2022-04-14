@@ -10,7 +10,7 @@ namespace Lexplosion.Logic.Management
         WithDirectory.BaseFilesUpdates BaseFiles;
 
         VersionManifest Manifest;
-        Dictionary<string, int> Updates;
+        LastUpdates Updates;
 
         private string InstanceId;
         private int stagesCount = 0;

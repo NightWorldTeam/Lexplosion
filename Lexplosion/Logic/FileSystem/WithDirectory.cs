@@ -68,7 +68,8 @@ namespace Lexplosion.Logic.FileSystem
                 public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
                 public ProcentUpdate ProcentUpdateFunc;
             }
-            public static List<string> UpdateInstance(ModpackFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref Dictionary<string, int> updates)
+
+            public static List<string> UpdateInstance(ModpackFilesUpdates updatesList, NInstanceManifest filesList, string instanceId, string externalId, ref LastUpdates updates)
             {
                 int updatesCount = 0;
                 WebClient wc = new WebClient();
@@ -136,7 +137,7 @@ namespace Lexplosion.Logic.FileSystem
                 return errors;
             }
 
-            public static ModpackFilesUpdates CheckInstance(NInstanceManifest filesInfo, string instanceId, ref Dictionary<string, int> updates)
+            public static ModpackFilesUpdates CheckInstance(NInstanceManifest filesInfo, string instanceId, ref LastUpdates updates)
             {
                 var filesUpdates = new ModpackFilesUpdates();
 
@@ -695,9 +696,9 @@ namespace Lexplosion.Logic.FileSystem
             catch { }
         }
 
-        public static Dictionary<string, int> GetLastUpdates(string instanceId)
+        public static LastUpdates GetLastUpdates(string instanceId)
         {
-            Dictionary<string, int> updates = new Dictionary<string, int>();
+            LastUpdates updates = new LastUpdates();
 
             try
             {
@@ -717,9 +718,10 @@ namespace Lexplosion.Logic.FileSystem
 
                     try
                     {
-                        if (JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes)) != null)
+                        var data = JsonConvert.DeserializeObject<LastUpdates>(Encoding.UTF8.GetString(fileBytes));
+                        if (data != null)
                         {
-                            updates = JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(fileBytes));
+                            updates = data;
                         }
                     }
                     catch
@@ -735,7 +737,7 @@ namespace Lexplosion.Logic.FileSystem
         }
 
         // TODO: его вызов обернуть в try
-        public static BaseFilesUpdates CheckBaseFiles(VersionManifest filesInfo, string instanceId, ref Dictionary<string, int> updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
+        public static BaseFilesUpdates CheckBaseFiles(VersionManifest filesInfo, string instanceId, ref LastUpdates updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
         {
             BaseFilesUpdates updatesList = new BaseFilesUpdates(); //возвращаемый список обновлений
 
@@ -796,8 +798,8 @@ namespace Lexplosion.Logic.FileSystem
                         fstream.Read(fileBytes, 0, fileBytes.Length);
                         fstream.Close();
 
-                        int ver = 0;
-                        Int32.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
+                        long ver = 0;
+                        Int64.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
                         updates["libraries"] = ver;
                     }
                 }
@@ -976,7 +978,7 @@ namespace Lexplosion.Logic.FileSystem
         }
 
         //функция для скачивания файлов клиента в zip формате, со сравнением хеша
-        private static bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, int size, WebClient wc)
+        private static bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, long size, WebClient wc)
         {
             string zipFile = file + ".zip";
 
@@ -1060,11 +1062,10 @@ namespace Lexplosion.Logic.FileSystem
                 DelFile(temp + file);
                 return false;
             }
-
         }
 
         //функция для скачивания файлов в jar формате, со сравнением хэша
-        private static bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, int size, WebClient wc)
+        private static bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, WebClient wc)
         {
             //создаем папки в соответсвии с путем к файлу из списка
             string[] foldersPath = to.Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
@@ -1076,7 +1077,6 @@ namespace Lexplosion.Logic.FileSystem
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
-
                 }
             }
 
@@ -1115,7 +1115,7 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public static List<string> UpdateBaseFiles(BaseFilesUpdates updateList, VersionManifest filesList, string instanceId, ref Dictionary<string, int> updates)
+        public static List<string> UpdateBaseFiles(BaseFilesUpdates updateList, VersionManifest filesList, string instanceId, ref LastUpdates updates)
         {
             string addr;
             string[] folders;

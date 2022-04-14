@@ -12,7 +12,7 @@ namespace Lexplosion.Logic.Management
         WithDirectory.NightWorld.ModpackFilesUpdates VariableFiles;
 
         NInstanceManifest Manifest;
-        Dictionary<string, int> Updates;
+        LastUpdates Updates;
 
         private string InstanceId;
         public InstancePlatformData InfoData;

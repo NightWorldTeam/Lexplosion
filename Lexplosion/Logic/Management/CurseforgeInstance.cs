@@ -20,7 +20,7 @@ namespace Lexplosion.Logic.Management
         WithDirectory.BaseFilesUpdates BaseFiles;
 
         VersionManifest Manifest;
-        Dictionary<string, int> Updates;
+        LastUpdates Updates;
         CurseforgeFileInfo Info = null;
 
         private string InstanceId;

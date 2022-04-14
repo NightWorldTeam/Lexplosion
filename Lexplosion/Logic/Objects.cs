@@ -5,9 +5,14 @@ using System.Windows.Media.Imaging;
 namespace Lexplosion.Logic.Objects // TODO: позаменять классы на структуры
 {
     /// <summary>
-    /// Структура файла, в котором хранятся установленные аддоны
+    /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
     /// </summary>
     class InstalledAddons : Dictionary<int, InstalledAddonInfo> { }
+
+    // <summary>
+    /// Структура файла lastUpdates.json
+    ///
+    public class LastUpdates : Dictionary<string, long> { }
 
     public class InstanceProperties : OutsideInstance
     {
@@ -53,7 +58,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
             public Dictionary<string, FileInfo> objects;
             public List<string> oldFiles;
             public bool security;
-            public int folderVersion;
+            public long folderVersion;
         }
 
         public Dictionary<string, NInstanceManifest.WithFolder> data = new Dictionary<string, NInstanceManifest.WithFolder>();
@@ -81,9 +86,8 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     {
         public new FileInfo minecraftJar;
         public bool security;
-        public int librariesLastUpdate;
+        public long librariesLastUpdate;
         public string nativesUrl;
-        public int nativesLastUpdate;
     }
 
     class FileInfo
@@ -91,8 +95,8 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string name;
         public string url;
         public string sha1;
-        public int size;
-        public int lastUpdate;
+        public long size;
+        public long lastUpdate;
         public bool notArchived;
     }
 
@@ -206,7 +210,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string name;
         public string mainImage;
         public string author;
-        public int version;
+        public long version;
         public string description;
         public List<string> categories;
     }

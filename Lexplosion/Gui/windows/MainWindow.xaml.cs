@@ -67,12 +67,11 @@ namespace Lexplosion.Gui.Windows
         public void PagesController(string page, Frame frame, CreateObject createObject)
         {
             Page obj;
-            if (page.Contains("InstancePage") || page.Contains("OverviewPage") || page.Contains("ModsListPage") || page.Contains("VersionPage"))
+            if (page == "InstancePage" || page == "OverviewPage" || page == "ModsListPage" || page == "VersionPage")
             {
-                frame.Navigate(createObject());
-                return;
+                obj = createObject();
             }
-            if (!_pages.ContainsKey(page))
+            else if (!_pages.ContainsKey(page))
             {
                 obj = createObject();
                 _pages[page] = obj;
