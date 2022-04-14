@@ -27,23 +27,23 @@ namespace Lexplosion.Logic.Network
             UncnownError
         }
 
-        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "")
+        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "", string gameVersion = "")
         {
             try
             {
-                if (pageSize > 50)
+                if (gameVersion != "")
                 {
-                    pageSize = 50;
+                    gameVersion = "&gameVersion=" + gameVersion;
                 }
 
                 string url;
                 if (categoriy == ModpacksCategories.All)
                 {
-                    url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                    url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
                 }
                 else
                 {
-                    url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                    url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
                 }
                 string answer;
 
@@ -70,7 +70,44 @@ namespace Lexplosion.Logic.Network
             {
                 return new List<CurseforgeInstanceInfo>();
             }
+        }
 
+        public static List<CurseforgeModInfo> GetAddonsList(int pageSize, int index, AddonType type, string searchFilter = "", string gameVersion = "")
+        {
+            try
+            {
+                if (gameVersion != "")
+                {
+                    gameVersion = "&gameVersion=" + gameVersion;
+                }
+
+                string url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                //url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=6&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                
+                string answer;
+                WebRequest req = WebRequest.Create(url);
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                if (answer != null)
+                {
+                    return JsonConvert.DeserializeObject<List<CurseforgeModInfo>>(answer);
+                }
+
+                return new List<CurseforgeModInfo>();
+            }
+            catch
+            {
+                return new List<CurseforgeModInfo>();
+            }
         }
 
         public static List<CurseforgeFileInfo> GetInstanceInfo(string id)
@@ -161,10 +198,10 @@ namespace Lexplosion.Logic.Network
                 {
                     var data = JsonConvert.DeserializeObject<CurseforgeInstanceInfo>(answer);
 
-                    if (data.LatestFiles != null && data.LatestFiles.Count > 0)
+                    if (data.latestFiles != null && data.latestFiles.Count > 0)
                     {
-                        long maxId = data.LatestFiles[0].id;
-                        foreach (var value in data.LatestFiles)
+                        long maxId = data.latestFiles[0].id;
+                        foreach (var value in data.latestFiles)
                         {
                             if (value.id > maxId || data.Modloader == ModloaderType.None)
                             {

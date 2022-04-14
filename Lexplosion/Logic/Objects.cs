@@ -110,8 +110,23 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string name;
     }
 
-    public class CurseforgeInstanceInfo
+    /// <summary>
+    /// Описывает проект курсфорджа. Дочерние классы используются при декодировании Json
+    /// </summary>
+    public abstract class CurseforgeProjectInfo
     {
+        public class GameVersion
+        {
+            public string gameVersion;
+            public int projectFileId;
+        }
+
+        public class LatestFile
+        {
+            public long id;
+            public List<string> gameVersion;
+        }
+
         public class Author
         {
             public string name;
@@ -126,29 +141,38 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
             public string url;
         }
 
-        public class GameVersion
-        {
-            public string gameVersion;
-        }
-
-        public class LatestFile
-        {
-            public long id;
-            public List<string> gameVersion;
-        }
-
         public int id;
         public string name;
-        public List<Attachment> attachments;
-        public List<Category> categories;
-        public List<Author> authors;
-        public List<GameVersion> gameVersionLatestFiles;
+        public List<LatestFile> latestFiles;
         public string summary;
         public float downloadCount;
         public string dateModified;
         public string websiteUrl;
-        public List<LatestFile> LatestFiles;
+        public List<Attachment> attachments;
+        public List<Category> categories;
+        public List<Author> authors;
+    }
 
+    /// <summary>
+    /// Описывает модпак с курсфорджа. Используются при декодировании Json
+    /// </summary>
+    public class CurseforgeInstanceInfo : CurseforgeProjectInfo
+    {
+        public List<GameVersion> gameVersionLatestFiles;
+        public ModloaderType Modloader;
+    }
+
+    /// <summary>
+    /// Описывает мод с курсфорджа. Используются при декодировании Json
+    /// </summary>
+    public class CurseforgeModInfo : CurseforgeProjectInfo
+    {
+        public class GameVersionMod : GameVersion
+        {
+            public int modLoader;
+        }
+
+        public List<GameVersionMod> gameVersionLatestFiles;
         public ModloaderType Modloader;
     }
 
