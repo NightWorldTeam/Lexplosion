@@ -67,6 +67,7 @@
                 Style="{StaticResource ImageSwitch}"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
+                IsEnabled="False"
                 Click="PreviousImageButton_Click">
             <Path Stroke="White" Data="M1 1l3 3.5L1 8" Margin="0" 
                   VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -82,6 +83,7 @@
                 Style="{StaticResource ImageSwitch}"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
+                IsEnabled="False"
                 Click="NextImageButton_Click">
             <Path Stroke="White" Data="M1 1l3 3.5L1 8" Margin="0" 
                   VerticalAlignment="Center" HorizontalAlignment="Center">

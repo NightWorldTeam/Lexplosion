@@ -31,7 +31,7 @@ namespace Lexplosion.Gui.Pages.Instance
             { "Multiplayer", 80.5133333333333},
             { "FTB Official Pack", 113.16},
             { "Skyblock", 64.4766666666667},
-            { "Vanilla", 49.71}
+            { "Vanilla+", 49.71}
         };
 
         private readonly InstanceProperties _instanceProperties;

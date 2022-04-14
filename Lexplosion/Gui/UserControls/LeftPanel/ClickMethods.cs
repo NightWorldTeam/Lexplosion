@@ -14,6 +14,8 @@ namespace Lexplosion.Gui.UserControls
     /// </summary>
     public partial class LeftPanel : UserControl
     {
+        private Page instanceOpenedPage;
+
         private void CatalogSelected(object sender, RoutedEventArgs e)
         {
             _mainWindow.PagesController("InstanceContainerPage", _mainWindow.RightFrame, delegate ()
@@ -25,15 +27,7 @@ namespace Lexplosion.Gui.UserControls
 
         private void InstanceSelected(object sender, RoutedEventArgs e)
         {
-            var content = new Dictionary<string, ToggleItem>();
-            content.Add("Overview", new ToggleItem("Overview", "OverviewPage", new OverviewPage(_instanceProperties)));
-            content.Add("Mods", new ToggleItem("Mods", "ModsListPage", new ModsListPage()));
-            content.Add("Version", new ToggleItem("Version", "VersionPage", new VersionPage()));
-            _mainWindow.PagesController("InstancePage" + _instanceProperties.Id, _mainWindow.RightFrame, delegate ()
-            {
-                return new SwitcherPage(_instanceProperties.Name, content, _mainWindow);
-            });
-            ReselectionButton(MenuButton0);
+            _mainWindow.RightFrame.Navigate(instanceOpenedPage);
         }
 
         private void LibrarySelected(object sender, RoutedEventArgs e)
@@ -149,10 +143,8 @@ namespace Lexplosion.Gui.UserControls
                 _activePageType = PageType.OpenedInstanceShowCase;
             }
 
-            _mainWindow.PagesController("InstancePage" + _instanceProperties.Id, _mainWindow.RightFrame, delegate ()
-            {
-                return new SwitcherPage(_instanceProperties.Name, content, _mainWindow);
-            });
+            instanceOpenedPage = new SwitcherPage(_instanceProperties.Name, content, _mainWindow);
+            _mainWindow.RightFrame.Navigate(instanceOpenedPage);            
 
             InitializeContent("Modpack", "Экспорт", "Настройки", "Назад");
             ReselectionButton(MenuButton0);
