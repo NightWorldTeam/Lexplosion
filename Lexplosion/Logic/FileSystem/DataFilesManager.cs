@@ -20,7 +20,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static void SaveAccount(string login, string password)
         {
-            password = Convert.ToBase64String(AesСryp.Encode(password, Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
+            password = Convert.ToBase64String(AesСryp.Encode(password, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
             SaveFile(LaunсherSettings.LauncherDataPath + "/account.json", JsonConvert.SerializeObject(new Dictionary<string, string>
             {
                 ["login"] = login,
@@ -44,7 +44,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 try
                 {
-                    password = AesСryp.Decode(Convert.FromBase64String(data["password"]), Encoding.Default.GetBytes(LaunсherSettings.passwordKey), Encoding.Default.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                    password = AesСryp.Decode(Convert.FromBase64String(data["password"]), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
                 }
                 catch
                 {
