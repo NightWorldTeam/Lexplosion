@@ -139,7 +139,6 @@ namespace Lexplosion.Logic.FileSystem
             {
                 return new Settings();
             }
-
         }
 
         public static bool InstanceIsInstalled(string instanceId)
@@ -171,7 +170,6 @@ namespace Lexplosion.Logic.FileSystem
 
         public static int GetUpgradeToolVersion()
         {
-
             if (!File.Exists(DirectoryPath + "/up-version.txt"))
                 return -1;
 
@@ -235,7 +233,6 @@ namespace Lexplosion.Logic.FileSystem
             {
                 return false;
             }*/
-
         }
 
         public static T GetFile<T>(string file)
@@ -267,9 +264,10 @@ namespace Lexplosion.Logic.FileSystem
                 return default;
             }
         }
-
-        //эта функция возвращает имя для файла либрариесов (файлы .lver, что хранит версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры)
-        //у каждой версии игры своё имя для файлов с информацией о либрариесах
+        /// <summary>
+        /// Эта функция возвращает имя для файла либрариесов (файлы .lver, что хранит версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры)
+        /// у каждой версии игры своё имя для файлов с информацией о либрариесах
+        /// </summary>
         public static string GetLibName(string instanceId, VersionInfo version)
         {
             string endName = "";
@@ -288,7 +286,7 @@ namespace Lexplosion.Logic.FileSystem
         public static void SaveManifest(string instanceId, VersionManifest data)
         {
             string minecraftJar = "";
-            if(data.version.minecraftJar != null)
+            if (data.version.minecraftJar != null)
             {
                 minecraftJar = data.version.minecraftJar.name;
             }
@@ -316,7 +314,7 @@ namespace Lexplosion.Logic.FileSystem
             if (data.libraries != null)
             {
                 SaveFile(DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
-            }    
+            }
         }
 
         public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
@@ -337,7 +335,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 data.libraries = librariesData;
             }
-            
+
             return data;
         }
 
