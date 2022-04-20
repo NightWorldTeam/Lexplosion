@@ -5,11 +5,17 @@ using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management
 {
-    class LaunchGame // TODO: возможно из статично класса перевести в обычный 
+    class LaunchGame
     {
+        public delegate void ProgressHandlerCallback(int stagesCount, int stage, int procents);
+        public delegate void ComplitedDownloadCallback(InstanceInit result, List<string> downloadErrors, bool launchGame);
+        public delegate void ComplitedLaunchCallback(string instanceId, bool successful);
+        public delegate void GameExitedCallback(string instanceId);
+
         private Process process = null;
         private Gateway gameGateway = null;
 
@@ -17,8 +23,12 @@ namespace Lexplosion.Logic.Management
         private Settings _settings;
         private InstanceSource _type;
 
+        private static LaunchGame classInstance = null;
+
         public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type)
         {
+            classInstance = this;
+
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
             _settings = instanceSettings;
@@ -56,7 +66,7 @@ namespace Lexplosion.Logic.Management
             return command.Replace(@"\", "/");
         }
 
-        public bool Run(InitData data, ManageLogic.ComplitedLaunchCallback ComplitedLaunch, ManageLogic.GameExitedCallback GameExited)
+        public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
         {
             string command = CreateCommand(data);
 
@@ -196,7 +206,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public InitData Initialization(ManageLogic.ProgressHandlerCallback progressHandler)
+        public InitData Initialization(ProgressHandlerCallback progressHandler)
         {
             InitData Error(InstanceInit init)
             {
@@ -271,22 +281,28 @@ namespace Lexplosion.Logic.Management
             //}
         }
 
-        public static void KillProcess()
+        public static void GameStop()
         {
-            /*UserStatusSetter.GameStop();
+            classInstance.Stop();
+            classInstance = null;
+        }
+
+        private void Stop()
+        {
+            UserStatusSetter.GameStop();
 
             try
             {
                 process.Kill(); // TODO: тут иногда крашится (ввроде если ошибка скачивания была)
                 process.Dispose();
-            } 
+            }
             catch { }
 
             try
             {
                 gameGateway.StopWork();
             }
-            catch { }*/
+            catch { }
         }
     }
 }

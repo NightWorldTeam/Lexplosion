@@ -312,7 +312,7 @@ namespace Lexplosion.Gui.UserControls
                 case UpperButtonFunctions.Update:
                     break;
                 case UpperButtonFunctions.Close:
-                    LaunchGame.KillProcess();
+                    LaunchGame.GameStop();
                     SwitchButtons(SwitchButtonsType.PLAY);
                     break;
             }

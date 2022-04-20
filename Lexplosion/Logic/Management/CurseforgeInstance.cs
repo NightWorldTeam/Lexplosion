@@ -28,9 +28,9 @@ namespace Lexplosion.Logic.Management
 
         private bool BaseFilesIsCheckd = false;
         private bool onlyBase;
-        private ManageLogic.ProgressHandlerCallback ProgressHandler;
+        private LaunchGame.ProgressHandlerCallback ProgressHandler;
 
-        public CurseforgeInstance(string instanceid, bool onlyBase_, ManageLogic.ProgressHandlerCallback progressHandler)
+        public CurseforgeInstance(string instanceid, bool onlyBase_, LaunchGame.ProgressHandlerCallback progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;

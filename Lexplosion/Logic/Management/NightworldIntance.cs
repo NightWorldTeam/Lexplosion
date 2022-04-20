@@ -20,9 +20,9 @@ namespace Lexplosion.Logic.Management
         private bool requiresUpdates = true;
         private bool onlyBase;
         private int stagesCount = 0;
-        private ManageLogic.ProgressHandlerCallback ProgressHandler;
+        private LaunchGame.ProgressHandlerCallback ProgressHandler;
 
-        public NightworldIntance(string instanceid, bool onlyBase_, ManageLogic.ProgressHandlerCallback progressHandler)
+        public NightworldIntance(string instanceid, bool onlyBase_, LaunchGame.ProgressHandlerCallback progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;
