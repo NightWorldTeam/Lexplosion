@@ -138,14 +138,14 @@ namespace Lexplosion.Logic.Management
             }*/
 
             Settings instanceSettings = DataFilesManager.GetSettings(instanceId);
-            InitData data = LaunchGame.Initialization(instanceId, instanceSettings, type, ProgressHandler);
+            LaunchGame launchGame = new LaunchGame(instanceId, instanceSettings, type);
+            InitData data = launchGame.Initialization(ProgressHandler);
 
             if (data.InitResult == InstanceInit.Successful)
             {
                 ComplitedDownload(data.InitResult, data.DownloadErrors, true);
 
-                string command = LaunchGame.CreateCommand(instanceId, data, instanceSettings);
-                LaunchGame.Run(command, instanceId, ComplitedLaunch, GameExited, instanceSettings);
+                launchGame.Run(data, ComplitedLaunch, GameExited);
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
             else

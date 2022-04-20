@@ -1,5 +1,4 @@
 ﻿using LumiSoft.Net.STUN.Client;
-using System.Collections.Generic;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -32,6 +31,8 @@ namespace Lexplosion.Logic.Network
         protected string ControlServer;
 
         private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9654);
+
+        private Socket controlConnection;
 
         public NetworkServer(string uuid, string serverType, bool directConnection, string controlServer)
         {
@@ -80,13 +81,13 @@ namespace Lexplosion.Logic.Network
         protected void Accepting(string serverType) // TODO: нужно избегать повторного подключения
         {
             //подключаемся к управляющему серверу
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
+            controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
 
             string st =
                 "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
-            socket.Send(sendData); //авторизируемся на упрявляющем сервере
+            controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
             Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD");
 
             while (IsWork)
@@ -97,14 +98,16 @@ namespace Lexplosion.Logic.Network
                 {
                     byte[] data = new byte[33];
 
-                    int bytes = socket.Receive(data);
+                    Console.WriteLine("ControlServerRecv");
+                    int bytes = controlConnection.Receive(data);
+                    Console.WriteLine("ControlServerEndRecv");
 
                     if (bytes > 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
                     {
                         clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
-                        socket.Send(new byte[1] { 97 }); //отправляем серверу соглашение
+                        controlConnection.Send(new byte[1] { 97 }); //отправляем серверу соглашение
 
-                        bytes = socket.Receive(data);
+                        bytes = controlConnection.Receive(data);
                         if (bytes == 1 && data[0] == 98) //сервер запрашивает мой порт
                         {
                             byte[] portData;
@@ -130,14 +133,13 @@ namespace Lexplosion.Logic.Network
                                 portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                             }
 
-                            socket.Send(portData); //отправляем серверу наш порт
+                            controlConnection.Send(portData); //отправляем серверу наш порт
                         }
                         else
                         {
                             // TODO: опять же произошло что-то с сервером
                             continue;
                         }
-
                     }
                     else
                     {
@@ -150,7 +152,7 @@ namespace Lexplosion.Logic.Network
 
                 {
                     byte[] data = new byte[21];
-                    int bytes = socket.Receive(data); //получем ip клиента
+                    int bytes = controlConnection.Receive(data); //получем ip клиента
 
                     byte[] resp = new byte[bytes];
                     for (int i = 0; i < bytes; i++) // TODO: сделать этот перенос нормально, но не через resize
@@ -165,6 +167,9 @@ namespace Lexplosion.Logic.Network
                         string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
                         string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                         string hostIp = str.Replace(":" + hostPort, "");
+
+                        hostPort = "9655";
+                        hostIp = "127.0.0.1";
 
                         point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
                         Console.WriteLine("Host EndPoint " + point);
@@ -202,8 +207,6 @@ namespace Lexplosion.Logic.Network
                     }
                 }
             }
-
-            socket.Close(); //закрываем соединение с управляющим сервером
         }
 
         public virtual void StopWork()
@@ -211,6 +214,9 @@ namespace Lexplosion.Logic.Network
             IsWork = false;
 
             AcceptingThread.Abort();
+            controlConnection.Send(new byte[1] { 122 }); // отправляем управляющиму серверу сообщение что мы отключаемся
+            controlConnection.Close(); //закрываем соединение с управляющим сервером
+
             SendingThread.Abort();
             ReadingThread.Abort();
 

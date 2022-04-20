@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
-using Lexplosion.Logic.Network.SMP;
 
 namespace Lexplosion.Logic.Network
 {
@@ -77,7 +76,7 @@ namespace Lexplosion.Logic.Network
                     //файл передан, закрываем соединение
                     if (OffsetsList[clientPoint] >= SFilesList[TransmittedFiles[clientPoint]].FileSize)
                     {
-                        //Server.Close(clientPoint);
+                        Server.Close(clientPoint);
                         Console.WriteLine("END SEND");
                         AvailableConnections.Remove(clientPoint);
                         AuthorizedClients.Remove(clientPoint);
@@ -122,6 +121,7 @@ namespace Lexplosion.Logic.Network
                                 TransmittedFiles[point] = profileId;
                                 OffsetsList[point] = 0;
                                 AuthorizedClients.Add(point);
+                                Server.Send(BitConverter.GetBytes(SFilesList[profileId].FileSize), point);
                                 WaitClient.Set();
                                 Console.WriteLine("Авторизировал");
                             }

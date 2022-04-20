@@ -28,7 +28,7 @@ namespace Lexplosion.Logic.Network
             ControlServer = controlServer;
         }
 
-        public virtual void Initialization(string UUID, string serverUUID)
+        public virtual bool Initialization(string UUID, string serverUUID)
         {
             //подключаемся к управляющему серверу
             TcpClient client = new TcpClient();
@@ -42,9 +42,8 @@ namespace Lexplosion.Logic.Network
 
             {
                 byte[] buf = new byte[2];
-                Console.WriteLine("ControlServerWait");
                 int bytes = stream.Read(buf, 0, buf.Length);
-                Console.WriteLine("ControlServerEndWait");
+                Console.WriteLine("BUF-0 " + buf[0]);
 
                 if (buf[0] == 98) // сервер согласился, а управляющий сервер запрашивает порт
                 {
@@ -56,11 +55,6 @@ namespace Lexplosion.Logic.Network
                         sock.Client.Bind(localPoint);
                         Bridge = new SmpClient(sock);
 
-                        /*UdpClient sock = new UdpClient();
-                        sock.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                        sock.Client.Bind(localPoint);
-
-                        STUN_Result result = STUN_Client.Query("64.233.163.127", 19305, sock.Client);*/ //получем наш внешний адрес
                         STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, sock.Client);
                         Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
 
@@ -68,6 +62,7 @@ namespace Lexplosion.Logic.Network
                         string externalPort = result.PublicEndPoint.ToString();
                         externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
                         portData = Encoding.UTF8.GetBytes(externalPort);
+
 
                         DirectConnection = true;
                     }
@@ -85,6 +80,7 @@ namespace Lexplosion.Logic.Network
                 else
                 {
                     // TODO: либо управляющий сервер отъехал, либо сервер отказал
+                    return false;
                 }
             }
 
@@ -108,6 +104,8 @@ namespace Lexplosion.Logic.Network
                 string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
                 string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                 string hostIp = str.Replace(":" + hostPort, "");
+                hostPort = "9654";
+                hostIp = "127.0.0.1";
                 Console.WriteLine("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
                 isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
             }
@@ -135,10 +133,13 @@ namespace Lexplosion.Logic.Network
 
                 sendingThread.Start();
                 readingThread.Start();
+
+                return true;
             }
             else
             {
                 Console.WriteLine("пиздец");
+                return false;
             }
         }
 

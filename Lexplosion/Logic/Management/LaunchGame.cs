@@ -8,53 +8,66 @@ using Lexplosion.Logic.Network;
 
 namespace Lexplosion.Logic.Management
 {
-    static class LaunchGame // TODO: возможно из статично класса перевести в обычный 
+    class LaunchGame // TODO: возможно из статично класса перевести в обычный 
     {
-        private static Process process = null;
-        private static Gateway gameGateway = null;
+        private Process process = null;
+        private Gateway gameGateway = null;
 
-        public static string CreateCommand(string instanceId, InitData data, Settings instanceSettings)
+        private string _instanceId;
+        private Settings _settings;
+        private InstanceSource _type;
+
+        public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type)
         {
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
+            _settings = instanceSettings;
+            _instanceId = instanceId;
+            _type = type;
+        }
+
+        private string CreateCommand(InitData data)
+        {
             string command;
-            string versionPath = instanceSettings.GamePath + "/instances/" + instanceId + "/version/" + data.VersionFile.minecraftJar.name;
+            string versionPath = _settings.GamePath + "/instances/" + _instanceId + "/version/" + data.VersionFile.minecraftJar.name;
 
-            if (instanceSettings.GameArgs.Length > 0 && instanceSettings.GameArgs[instanceSettings.GameArgs.Length - 1] != ' ')
-                instanceSettings.GameArgs += " ";
+            if (_settings.GameArgs.Length > 0 && _settings.GameArgs[_settings.GameArgs.Length - 1] != ' ')
+                _settings.GameArgs += " ";
 
-            command = " -Djava.library.path=\"" + instanceSettings.GamePath + "/natives/" + data.VersionFile.gameVersion + "\" -cp ";
+            command = " -Djava.library.path=\"" + _settings.GamePath + "/natives/" + data.VersionFile.gameVersion + "\" -cp ";
 
             foreach (string lib in data.Libraries.Keys)
             {
-                command += "\"" + instanceSettings.GamePath + "/libraries/" + lib + "\";";
+                command += "\"" + _settings.GamePath + "/libraries/" + lib + "\";";
             }
 
             command += "\"" + versionPath + "\"";
             command +=  @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
-            command += " -Xmx" + instanceSettings.Xmx + "M -Xms" + instanceSettings.Xms + "M " + instanceSettings.GameArgs;
+            command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
             command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion;
-            command += " --gameDir \"" + instanceSettings.GamePath + "/instances/" + instanceId + "\"";
-            command += " --assetsDir \"" + instanceSettings.GamePath + "/assets" + "\"";
+            command += " --gameDir \"" + _settings.GamePath + "/instances/" + _instanceId + "\"";
+            command += " --assetsDir \"" + _settings.GamePath + "/assets" + "\"";
             command += " --assetIndex " + data.VersionFile.assetsVersion;
             command += " --uuid " + UserData.UUID + " --accessToken " + UserData.AccessToken + " --userProperties [] --userType legacy ";
             command += data.VersionFile.arguments;
-            command += " --width " + instanceSettings.WindowWidth + " --height " + instanceSettings.WindowHeight;
+            command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
 
             return command.Replace(@"\", "/");
         }
 
-        public static bool Run(string command, string instanceId, ManageLogic.ComplitedLaunchCallback ComplitedLaunch, ManageLogic.GameExitedCallback GameExited, Settings instanceSettings)
+        public bool Run(InitData data, ManageLogic.ComplitedLaunchCallback ComplitedLaunch, ManageLogic.GameExitedCallback GameExited)
         {
+            string command = CreateCommand(data);
+
             process = new Process();
             gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
 
-            UserStatusSetter.GameStart(UserData.Instances.Record[instanceId].Name);
+            UserStatusSetter.GameStart(UserData.Instances.Record[_instanceId].Name);
 
-            if (instanceSettings.ShowConsole == true)
+            if (_settings.ShowConsole == true)
             {
-                MainWindow.Obj.Dispatcher.Invoke(delegate
+                MainWindow.Obj.Dispatcher.Invoke(delegate ()
                 {
                     if (!ConsoleWindow.isShow)
                     {
@@ -73,8 +86,8 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-                process.StartInfo.FileName = instanceSettings.JavaPath;
-                process.StartInfo.WorkingDirectory = instanceSettings.GamePath + "/instances/" + instanceId;
+                process.StartInfo.FileName = _settings.JavaPath;
+                process.StartInfo.WorkingDirectory = _settings.GamePath + "/instances/" + _instanceId;
                 process.StartInfo.Arguments = command;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.UseShellExecute = false;
@@ -88,9 +101,9 @@ namespace Lexplosion.Logic.Management
 
                         if (e.Data.Contains(" LWJGL Version") || e.Data.Contains("Launching target 'fmlclient' with arguments") || e.Data.Contains("Narrator library for x64 successfully loaded"))
                         {
-                            ComplitedLaunch(instanceId, true);
+                            ComplitedLaunch(_instanceId, true);
 
-                            if (instanceSettings.HiddenMode == true)
+                            if (_settings.HiddenMode == true)
                             {
                                 MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
                                 launcherVisible = false;
@@ -121,7 +134,7 @@ namespace Lexplosion.Logic.Management
 
                 process.OutputDataReceived += BeforeLaunch;
 
-                if (instanceSettings.ShowConsole == true)
+                if (_settings.ShowConsole == true)
                     process.OutputDataReceived += WriteToConsole;
 
                 process.Exited += (sender, ea) =>
@@ -130,9 +143,9 @@ namespace Lexplosion.Logic.Management
 
                     if (!gameVisible)
                     {
-                        MainWindow.Obj.Dispatcher.Invoke(delegate
+                        MainWindow.Obj.Dispatcher.Invoke(delegate ()
                         {
-                            ComplitedLaunch(instanceId, false);
+                            ComplitedLaunch(_instanceId, false);
 
                             // TODO: перенести это в ConsoleWindow
                             if (!ConsoleWindow.isShow) 
@@ -164,10 +177,8 @@ namespace Lexplosion.Logic.Management
                     }
                     catch { }
 
-                    GameExited(instanceId);
+                    GameExited(_instanceId);
 
-                    process = null;
-                    gameGateway = null;
                 };
 
                 process.Start();
@@ -179,16 +190,13 @@ namespace Lexplosion.Logic.Management
             } 
             catch 
             {
-                ComplitedLaunch(instanceId, false);
-
-                gameGateway = null;
-                process = null;
+                ComplitedLaunch(_instanceId, false);
 
                 return false;
             }
         }
 
-        public static InitData Initialization(string instanceId, Settings instanceSettings, InstanceSource type, ManageLogic.ProgressHandlerCallback progressHandler)
+        public InitData Initialization(ManageLogic.ProgressHandlerCallback progressHandler)
         {
             InitData Error(InstanceInit init)
             {
@@ -200,29 +208,27 @@ namespace Lexplosion.Logic.Management
 
             //try
             {
-                instanceSettings.Merge(UserData.GeneralSettings, true);
-
-                WithDirectory.Create(instanceSettings.GamePath);
+                WithDirectory.Create(_settings.GamePath);
                 InitData data = null;
 
-                if (!Directory.Exists(instanceSettings.GamePath) || !instanceSettings.GamePath.Contains(":"))
+                if (!Directory.Exists(_settings.GamePath) || !_settings.GamePath.Contains(":"))
                     return Error(InstanceInit.GamePathError);
 
-                bool autoUpdate = (instanceSettings.AutoUpdate == true);
+                bool autoUpdate = (_settings.AutoUpdate == true);
 
                 if (!UserData.Offline)
                 {
                     IPrototypeInstance instance;
-                    switch (type)
+                    switch (_type)
                     {
                         case InstanceSource.Nightworld:
-                            instance = new NightworldIntance(instanceId, !autoUpdate, progressHandler);
+                            instance = new NightworldIntance(_instanceId, !autoUpdate, progressHandler);
                             break;
                         case InstanceSource.Local:
-                            instance = new LocalInstance(instanceId, progressHandler);
+                            instance = new LocalInstance(_instanceId, progressHandler);
                             break;
                         case InstanceSource.Curseforge:
-                            instance = new CurseforgeInstance(instanceId, !autoUpdate, progressHandler);
+                            instance = new CurseforgeInstance(_instanceId, !autoUpdate, progressHandler);
                             break;
                         default:
                             instance = null;
@@ -241,7 +247,7 @@ namespace Lexplosion.Logic.Management
                 }
                 else
                 {
-                    VersionManifest files = DataFilesManager.GetManifest(instanceId, true);
+                    VersionManifest files = DataFilesManager.GetManifest(_instanceId, true);
 
                     if (files != null)
                     {
@@ -267,7 +273,7 @@ namespace Lexplosion.Logic.Management
 
         public static void KillProcess()
         {
-            UserStatusSetter.GameStop();
+            /*UserStatusSetter.GameStop();
 
             try
             {
@@ -280,10 +286,7 @@ namespace Lexplosion.Logic.Management
             {
                 gameGateway.StopWork();
             }
-            catch { }
-
-            gameGateway = null;
-            process = null;
+            catch { }*/
         }
     }
 }

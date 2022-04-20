@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Net;
 using System.Threading;
 
@@ -38,6 +37,7 @@ namespace Lexplosion.Logic.Network.SMP
         private readonly ConcurrentQueue<Message> receivingQueue = new ConcurrentQueue<Message>();
 
         private readonly AutoResetEvent receiveWait = new AutoResetEvent(false);
+        private readonly Semaphore cloaseBlock = new Semaphore(1, 1);
 
         public SmpServer(IPEndPoint point_)
         {
@@ -134,8 +134,14 @@ namespace Lexplosion.Logic.Network.SMP
 
         public bool Close(IPEndPoint point)
         {
-            SmpClient client = clients[point];
-            client.Close();
+            cloaseBlock.WaitOne();
+            if (clients.ContainsKey(point))
+            {
+                SmpClient client = clients[point];
+                client.Close();
+            }
+            cloaseBlock.Release();
+
             return true;
         }
 
