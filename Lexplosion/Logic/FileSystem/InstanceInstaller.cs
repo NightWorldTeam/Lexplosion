@@ -44,6 +44,8 @@ namespace Lexplosion.Logic.FileSystem
         private bool assetsIndexes = false;
         private Assets assets;
 
+        int updatesCount = 0;
+
         /// <summary>
         /// Проверяет основные файла клиента, недостающие файлы помещает во внуренний список на скачивание
         /// </summary>
@@ -53,8 +55,6 @@ namespace Lexplosion.Logic.FileSystem
         // TODO: его вызов обернуть в try
         public int CheckBaseFiles(VersionManifest filesInfo, ref LastUpdates updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
         {
-            int updatesCount = 0;
-
             //проверяем файл версии
             if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/version"))
             {
@@ -426,7 +426,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             string addr;
             string[] folders;
-            int updatesCount = 0;
+            int updated = 0;
 
             List<string> errors = new List<string>();
             WebClient wc = new WebClient();
@@ -465,8 +465,8 @@ namespace Lexplosion.Logic.FileSystem
                     errors.Add("version/" + minecraftJar.name);
                 }
 
-                updatesCount++;
-                ProcentUpdateEvent?.Invoke(updatesCount, updatesCount);
+                updated++;
+                ProcentUpdateEvent?.Invoke(updatesCount, updated);
 
             }
 
@@ -561,9 +561,8 @@ namespace Lexplosion.Logic.FileSystem
                         DelFile(DirectoryPath + "/libraries/" + lib);
                     }
 
-
-                    updatesCount++;
-                    ProcentUpdateEvent(updatesCount, updatesCount);
+                    updated++;
+                    ProcentUpdateEvent?.Invoke(updatesCount, updated);
                 }
                 else
                 {
@@ -657,8 +656,8 @@ namespace Lexplosion.Logic.FileSystem
                         errors.Add("libraries/" + lib);
                     }
 
-                    updatesCount++;
-                    ProcentUpdateEvent(updatesCount, updatesCount);
+                    updated++;
+                    ProcentUpdateEvent?.Invoke(updatesCount, updated);
                 }
             }
 
@@ -689,8 +688,8 @@ namespace Lexplosion.Logic.FileSystem
                                 errors.Add("asstes: " + asset);
                             }
 
-                            updatesCount++;
-                            ProcentUpdateEvent(updatesCount, updatesCount);
+                            updated++;
+                            ProcentUpdateEvent?.Invoke(updatesCount, updated);
                         }
                     }
                     else

@@ -23,6 +23,12 @@ namespace Lexplosion.Logic.FileSystem
 
         public event ProcentUpdate FilesDownloadEvent;
 
+        /// <summary>
+        /// Проверяет файлы сбокри (моды, конфиги и прочую хуйню).
+        /// </summary>
+        /// <returns>
+        /// Возвращает количество файлов, которые нужно обновить. -1 в случае неудачи (возможно только если включена защита целосности клиента). 
+        /// </returns>
         public int CheckInstance(NInstanceManifest filesInfo, ref LastUpdates updates)
         {
             int updatesCount = 0;
@@ -171,6 +177,12 @@ namespace Lexplosion.Logic.FileSystem
             return updatesCount;
         }
 
+        /// <summary>
+        /// Обновляет файлы, которые метод CheckInstance добавил в список
+        /// </summary>
+        /// <returns>
+        /// Возвращает список файлов, скачивание которых закончилось ошибкой
+        /// </returns>
         public List<string> UpdateInstance(NInstanceManifest filesList, string externalId, ref LastUpdates updates)
         {
             int updatesCount = 0;
@@ -237,6 +249,22 @@ namespace Lexplosion.Logic.FileSystem
             Directory.Delete(tempDir, true);
 
             return errors;
+        }
+
+        /// <summary>
+        /// Проверяет все ли файлы клиента присутсвуют
+        /// </summary>
+        public bool InvalidStruct(LastUpdates updates)
+        {
+            foreach (string file in updates.Keys)
+            {
+                if (!File.Exists(file) && !Directory.Exists(file))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

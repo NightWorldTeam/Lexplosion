@@ -56,6 +56,9 @@ namespace Lexplosion.Logic.FileSystem
         public event ProcentUpdate MainFileDownloadEvent;
         public event ProcentUpdate AddonsDownloadEvent;
 
+        /// <summary>
+        /// Проверяет все ли файлы клиента присутсвуют
+        /// </summary>
         public bool InvalidStruct(LocalFiles localFiles)
         {
             if (localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
@@ -84,6 +87,12 @@ namespace Lexplosion.Logic.FileSystem
             return false;
         }
 
+        /// <summary>
+        /// Скачивает архив с модпаком.
+        /// </summary>
+        /// <returns>
+        /// Возвращает манифест, полученный из архива.
+        /// </returns>
         public InstanceManifest DownloadInstance(string downloadUrl, string fileName, ref LocalFiles localFiles)
         {
             //try
@@ -165,6 +174,12 @@ namespace Lexplosion.Logic.FileSystem
             }*/
         }
 
+        /// <summary>
+        /// Скачивает все аддоны модпака из спика
+        /// </summary>
+        /// <returns>
+        /// Возвращает список ошибок.
+        /// </returns>
         public List<string> InstallInstance(InstanceManifest data, LocalFiles localFiles)
         {
             InstalledAddons installedAddons = null;

@@ -28,19 +28,6 @@ namespace Lexplosion.Logic.Management
             onlyBase = onlyBase_;
         }
 
-        private bool InvalidStruct()
-        {
-            foreach(string file in Updates.Keys)
-            {
-                if (!File.Exists(file) && !Directory.Exists(file))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public InstanceInit Check()
         {
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
@@ -142,7 +129,7 @@ namespace Lexplosion.Logic.Management
                     stagesCount++;
                 }
 
-                if (requiresUpdates || InvalidStruct())
+                if (requiresUpdates || installer.InvalidStruct(Updates))
                 {
                     int variableFilesUpdatesCount = 0;
                     variableFilesUpdatesCount = installer.CheckInstance(Manifest, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
