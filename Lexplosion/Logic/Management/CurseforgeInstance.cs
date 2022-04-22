@@ -11,30 +11,31 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using CurseforgeLogic = Lexplosion.Logic.FileSystem.WithDirectory.CurseForge;
 
 namespace Lexplosion.Logic.Management
 {
     class CurseforgeInstance : IPrototypeInstance
     {       
-        WithDirectory.BaseFilesUpdates BaseFiles;
-
-        VersionManifest Manifest;
-        LastUpdates Updates;
-        CurseforgeFileInfo Info = null;
+        private VersionManifest Manifest;
+        private LastUpdates Updates;
+        private CurseforgeFileInfo Info = null;
+        private CurseforgeInstaller installer;
 
         private string InstanceId;
-        public InstancePlatformData InfoData;
+        private InstancePlatformData InfoData;
 
         private bool BaseFilesIsCheckd = false;
         private bool onlyBase;
-        private LaunchGame.ProgressHandlerCallback ProgressHandler;
+        private ProgressHandlerCallback ProgressHandler;
 
-        public CurseforgeInstance(string instanceid, bool onlyBase_, LaunchGame.ProgressHandlerCallback progressHandler)
+        int updatesCount = 0;
+
+        public CurseforgeInstance(string instanceid, bool onlyBase_, ProgressHandlerCallback progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;
             onlyBase = onlyBase_;
+            installer = new CurseforgeInstaller(instanceid);
         }
 
         public InstanceInit Check()
@@ -63,9 +64,9 @@ namespace Lexplosion.Logic.Management
                 if (Manifest != null)
                 {
                     Updates = WithDirectory.GetLastUpdates(InstanceId);
-                    BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
+                    updatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
 
-                    if (BaseFiles == null)
+                    if (updatesCount == -1)
                     {
                         return InstanceInit.GuardError;
                     }
@@ -158,15 +159,15 @@ namespace Lexplosion.Logic.Management
                 catch { }
             });
 
-            var localFiles = DataFilesManager.GetFile<CurseforgeLogic.LocalFiles>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
+            var localFiles = DataFilesManager.GetFile<CurseforgeInstaller.LocalFiles>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
 
             if (localFiles == null)
             {
-                localFiles = new CurseforgeLogic.LocalFiles();
+                localFiles = new CurseforgeInstaller.LocalFiles();
             }
 
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
-            if (Info != null || CurseforgeLogic.InvalidStruct(InstanceId, localFiles)) 
+            if (Info != null || installer.InvalidStruct(localFiles)) 
             {
                 if (Info == null)
                 {
@@ -181,7 +182,7 @@ namespace Lexplosion.Logic.Management
                     }
                 }
 
-                WithDirectory.ProcentUpdate MainFileDownload = delegate (int totalDataCount, int nowDataCount)
+                installer.MainFileDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     if (nowDataCount != 0)
                     {
@@ -194,7 +195,7 @@ namespace Lexplosion.Logic.Management
                 };
 
                 // скачиваем архив модпака и из него получаем манифест
-                CurseforgeLogic.InstanceManifest manifest = CurseforgeLogic.DownloadInstance(Info.downloadUrl, InstanceId, Info.fileName, MainFileDownload, ref localFiles);
+                var manifest = installer.DownloadInstance(Info.downloadUrl, Info.fileName, ref localFiles);
 
                 if (manifest == null || manifest.minecraft == null || manifest.minecraft.modLoaders == null || manifest.minecraft.version == null)
                 {
@@ -246,9 +247,9 @@ namespace Lexplosion.Logic.Management
                         DataFilesManager.SaveManifest(InstanceId, Manifest);
 
                         Updates = WithDirectory.GetLastUpdates(InstanceId);
-                        BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
+                        updatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
 
-                        if (BaseFiles == null)
+                        if (updatesCount == -1)
                         {
                             return new InitData
                             {
@@ -265,22 +266,18 @@ namespace Lexplosion.Logic.Management
                     }
                 }
 
-                if (BaseFiles.UpdatesCount > 0)
+                if (updatesCount > 0)
                 {
-                    BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
+                    installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                     {
                         ProgressHandler(3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     };
                 }
-                else
-                {
-                    BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
-                }
 
-                WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
+                installer.UpdateBaseFiles(Manifest, ref Updates);
                 ProgressHandler(3, 2, 100);
 
-                WithDirectory.ProcentUpdate AddonsDownload = delegate (int totalDataCount, int nowDataCount)
+                installer.AddonsDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     if (nowDataCount != 0)
                     {
@@ -293,7 +290,7 @@ namespace Lexplosion.Logic.Management
                 };
 
                 // скачиваем аддоны
-                List<string> errors = CurseforgeLogic.InstallInstance(InstanceId, manifest, localFiles, AddonsDownload);
+                List<string> errors = installer.InstallInstance(manifest, localFiles);
 
                 if (errors.Count > 0)
                 {
@@ -308,19 +305,15 @@ namespace Lexplosion.Logic.Management
             {
                 if (BaseFilesIsCheckd)
                 {
-                    if (BaseFiles.UpdatesCount > 0)
+                    if (updatesCount > 0)
                     {
-                        BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
+                        installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                         {
                             ProgressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                         };
                     }
-                    else
-                    {
-                        BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
-                    }
 
-                    WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
+                    installer.UpdateBaseFiles(Manifest, ref Updates);
                 }
                 else
                 {

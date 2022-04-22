@@ -76,7 +76,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static void UpdateInstance(string instanceId, LaunchGame.ProgressHandlerCallback ProgressHandler, LaunchGame.ComplitedDownloadCallback ComplitedDownload)
+        public static void UpdateInstance(string instanceId, ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload)
         {
             ProgressHandler(1, 0, 0);
 
@@ -111,7 +111,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static void СlientManager(string instanceId, LaunchGame.ProgressHandlerCallback ProgressHandler, LaunchGame.ComplitedDownloadCallback ComplitedDownload, LaunchGame.ComplitedLaunchCallback ComplitedLaunch, LaunchGame.GameExitedCallback GameExited)
+        public static void СlientManager(string instanceId, ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
         {
             InstanceSource type = UserData.Instances.Record[instanceId].Type;
 
@@ -275,7 +275,7 @@ namespace Lexplosion.Logic.Management
             return instanceId;
         }
 
-        public static ImportResult ImportInstance(string zipFile, out List<string> errors, LaunchGame.ProgressHandlerCallback ProgressHandler)
+        public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerCallback ProgressHandler)
         {
             string instanceId;
             ImportResult res = WithDirectory.ImportInstance(zipFile, out errors, out instanceId);

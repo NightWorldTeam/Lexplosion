@@ -7,20 +7,20 @@ namespace Lexplosion.Logic.Management
 {
     class LocalInstance : IPrototypeInstance
     {
-        WithDirectory.BaseFilesUpdates BaseFiles;
-
-        VersionManifest Manifest;
-        LastUpdates Updates;
+        private VersionManifest Manifest;
+        private LastUpdates Updates;
+        private InstanceInstaller installer;
 
         private string InstanceId;
         private int stagesCount = 0;
 
-        private LaunchGame.ProgressHandlerCallback ProgressHandler;
+        private ProgressHandlerCallback ProgressHandler;
 
-        public LocalInstance(string instanceid, LaunchGame.ProgressHandlerCallback progressHandler)
+        public LocalInstance(string instanceid, ProgressHandlerCallback progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;
+            installer = new InstanceInstaller(instanceid);
         }
 
         public InstanceInit Check()
@@ -37,15 +37,16 @@ namespace Lexplosion.Logic.Management
 
             if (Manifest != null)
             {
+                int updatesCount = 0;
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
-                BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
+                updatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
 
-                if (BaseFiles == null)
+                if (updatesCount == -1)
                 {
                     return InstanceInit.GuardError;
                 }
 
-                if (BaseFiles.UpdatesCount > 0)
+                if (updatesCount > 0)
                 {
                     stagesCount = 1;
                 }
@@ -65,17 +66,14 @@ namespace Lexplosion.Logic.Management
             {
                 ProgressHandler(1, 1, 0);
 
-                BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
+                installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     ProgressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                 };
             }
-            else
-            {
-                BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
-            }
 
-            List<string> errors = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
+            // TODO: есть ли смысл его вызывать?
+            List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates);
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             InstanceInit result = InstanceInit.Successful;

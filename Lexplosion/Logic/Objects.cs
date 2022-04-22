@@ -9,9 +9,9 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     /// </summary>
     class InstalledAddons : Dictionary<int, InstalledAddonInfo> { }
 
-    // <summary>
+    /// <summary>
     /// Структура файла lastUpdates.json
-    ///
+    ///<summary>
     public class LastUpdates : Dictionary<string, long> { }
 
     public class InstanceProperties : OutsideInstance

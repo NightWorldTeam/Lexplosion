@@ -182,10 +182,12 @@
     </Compile>
     <Compile Include="Logic\Aes.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Logic\FileSystem\CurseForgeInstaller.cs" />
+    <Compile Include="Logic\FileSystem\CurseforgeInstaller.cs" />
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
+    <Compile Include="Logic\FileSystem\InstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\NightWorldInstaller.cs" />
     <Compile Include="Logic\Management\CurseforgeInstance.cs" />
+    <Compile Include="Logic\Management\Delegates.cs" />
     <Compile Include="Logic\Management\LocalInstance.cs" />
     <Compile Include="Logic\Management\McAddonsManager.cs" />
     <Compile Include="Logic\Management\NightworldIntance.cs" />

@@ -8,21 +8,20 @@ namespace Lexplosion.Logic.Management
 {
     class NightworldIntance : IPrototypeInstance
     {
-        WithDirectory.BaseFilesUpdates BaseFiles;
-        WithDirectory.NightWorld.ModpackFilesUpdates VariableFiles;
-
-        NInstanceManifest Manifest;
-        LastUpdates Updates;
+        private NInstanceManifest Manifest;
+        private LastUpdates Updates;
+        private NightWorldInstaller installer;
 
         private string InstanceId;
-        public InstancePlatformData InfoData;
+        private InstancePlatformData InfoData;
 
         private bool requiresUpdates = true;
         private bool onlyBase;
         private int stagesCount = 0;
-        private LaunchGame.ProgressHandlerCallback ProgressHandler;
+        private int baseFaliseUpdatesCount = 0;
+        private ProgressHandlerCallback ProgressHandler;
 
-        public NightworldIntance(string instanceid, bool onlyBase_, LaunchGame.ProgressHandlerCallback progressHandler)
+        public NightworldIntance(string instanceid, bool onlyBase_, ProgressHandlerCallback progressHandler)
         {
             InstanceId = instanceid;
             ProgressHandler = progressHandler;
@@ -132,26 +131,27 @@ namespace Lexplosion.Logic.Management
             {
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
 
-                BaseFiles = WithDirectory.CheckBaseFiles(Manifest, InstanceId, ref Updates); // проверяем основные файлы клиента на обновление
-                if (BaseFiles == null) 
+                baseFaliseUpdatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
+                if (baseFaliseUpdatesCount == -1) 
                 { 
                     return InstanceInit.GuardError; 
                 }
 
-                if (BaseFiles.UpdatesCount > 0)
+                if (baseFaliseUpdatesCount > 0)
                 {
                     stagesCount++;
                 }
 
                 if (requiresUpdates || InvalidStruct())
                 {
-                    VariableFiles = WithDirectory.NightWorld.CheckInstance(Manifest, InstanceId, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
-                    if (!VariableFiles.Successful)
+                    int variableFilesUpdatesCount = 0;
+                    variableFilesUpdatesCount = installer.CheckInstance(Manifest, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
+                    if (variableFilesUpdatesCount == -1)
                     {
                         return InstanceInit.GuardError;
                     }
 
-                    if (VariableFiles.UpdatesCount > 0)
+                    if (variableFilesUpdatesCount > 0)
                     {
                         stagesCount++;
                     }
@@ -169,32 +169,28 @@ namespace Lexplosion.Logic.Management
         {
             if (stagesCount > 0)
             {
-                BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount)
+                installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     ProgressHandler(stagesCount, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                 };
             }
-            else
-            {
-                BaseFiles.ProcentUpdateFunc = delegate (int totalDataCount, int nowDataCount) { };
-            }
 
-            if (BaseFiles.UpdatesCount > 0)
+            if (baseFaliseUpdatesCount > 0)
             {
                 ProgressHandler(stagesCount, 1, 0);
             }
 
-            List<string> errors_ = WithDirectory.UpdateBaseFiles(BaseFiles, Manifest, InstanceId, ref Updates);
+            List<string> errors_ = installer.UpdateBaseFiles(Manifest, ref Updates);
             List<string> errors = null;
 
             if (requiresUpdates)
             {
-                if (BaseFiles.UpdatesCount > 0)
+                if (baseFaliseUpdatesCount > 0)
                     ProgressHandler(stagesCount, 2, 0);
                 else
                     ProgressHandler(stagesCount, 1, 0);
        
-                errors = WithDirectory.NightWorld.UpdateInstance(VariableFiles, Manifest, InstanceId, InfoData.id, ref Updates);
+                errors = installer.UpdateInstance(Manifest, InfoData.id, ref Updates);
             }
 
             Manifest.data = null;
