@@ -56,6 +56,7 @@ namespace Lexplosion.Logic.FileSystem
         public int CheckBaseFiles(VersionManifest filesInfo, ref LastUpdates updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
         {
             //проверяем файл версии
+            Console.WriteLine(DirectoryPath + "/instances/" + instanceId + "/version");
             if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/version"))
             {
                 Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
@@ -193,6 +194,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 assetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
                 updatesCount++;
+                Console.WriteLine("assetsIndexes ");
 
                 if (!File.Exists(DirectoryPath + "/assets/indexes/" + filesInfo.version.assetsVersion + ".json"))
                 {

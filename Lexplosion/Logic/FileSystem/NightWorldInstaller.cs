@@ -21,6 +21,8 @@ namespace Lexplosion.Logic.FileSystem
         private Dictionary<string, List<string>> data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
         private List<string> oldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
 
+        int updatesCount = 0;
+
         public event ProcentUpdate FilesDownloadEvent;
 
         /// <summary>
@@ -31,8 +33,6 @@ namespace Lexplosion.Logic.FileSystem
         /// </returns>
         public int CheckInstance(NightWorldManifest filesInfo, ref LastUpdates updates)
         {
-            int updatesCount = 0;
-
             //Проходимся по списку папок(data) из класса instanceFiles
             foreach (string dir in filesInfo.data.Keys)
             {
@@ -185,7 +185,7 @@ namespace Lexplosion.Logic.FileSystem
         /// </returns>
         public List<string> UpdateInstance(NightWorldManifest filesList, string externalId, ref LastUpdates updates)
         {
-            int updatesCount = 0;
+            int updated = 0;
             WebClient wc = new WebClient();
             string tempDir = CreateTempDir();
 
@@ -218,8 +218,8 @@ namespace Lexplosion.Logic.FileSystem
                         updates[dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
                     }
 
-                    updatesCount++;
-                    FilesDownloadEvent?.Invoke(updatesCount, updatesCount);
+                    updated++;
+                    FilesDownloadEvent?.Invoke(updatesCount, updated);
 
                     // TODO: где-то тут записывать что файл был обновлен, чтобы если загрузка была первана она началась с того же места
                 }
@@ -237,8 +237,8 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         updates.Remove(file);
 
-                        updatesCount++;
-                        FilesDownloadEvent?.Invoke(updatesCount, updatesCount);
+                        updated++;
+                        FilesDownloadEvent?.Invoke(updatesCount, updated);
                     }
                 }
             }

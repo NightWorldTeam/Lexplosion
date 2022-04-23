@@ -111,6 +111,8 @@ namespace Lexplosion.Logic.Management
             {
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
 
+                requiresUpdates = (requiresUpdates || Updates.Count == 0);
+
                 baseFaliseUpdatesCount = installer.CheckBaseFiles(manifest, ref Updates); // проверяем основные файлы клиента на обновление
                 if (baseFaliseUpdatesCount == -1)
                 {
@@ -165,10 +167,22 @@ namespace Lexplosion.Logic.Management
 
             if (requiresUpdates)
             {
+                int stage;
                 if (baseFaliseUpdatesCount > 0)
-                    ProgressHandler(stagesCount, 2, 0);
+                {
+                    stage = 2;
+                    ProgressHandler(stagesCount, stage, 0);
+                }
                 else
-                    ProgressHandler(stagesCount, 1, 0);
+                {
+                    stage = 1;
+                    ProgressHandler(stagesCount, stage, 0);
+                }
+
+                installer.FilesDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+                {
+                    ProgressHandler(stagesCount, stage, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                };
 
                 errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates);
             }
