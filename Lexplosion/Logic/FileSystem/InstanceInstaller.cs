@@ -1,17 +1,16 @@
-﻿using Lexplosion.Logic.Objects;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Lexplosion.Logic.Network;
 using System.IO.Compression;
 using System.Net;
+using System.Threading;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Network;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
@@ -19,6 +18,15 @@ namespace Lexplosion.Logic.FileSystem
 {
     class InstanceInstaller
     {
+        private class DataSemophore
+        {
+            public Semaphore semaphore;
+            public int usersCount = 0;
+        }
+
+        private static Dictionary<string, DataSemophore> libsDownloadingWait = new Dictionary<string, DataSemophore>();
+        private static Dictionary<string, DataSemophore> assetsDownloadingWait = new Dictionary<string, DataSemophore>();
+
         protected string instanceId;
 
         public InstanceInstaller(string instanceID)
@@ -103,11 +111,12 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //получаем версию libraries
-            if (File.Exists(DirectoryPath + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver"))
+            string libName = GetLibName(instanceId, filesInfo.version);
+            if (File.Exists(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver"))
             {
                 try
                 {
-                    using (FileStream fstream = new FileStream(DirectoryPath + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
+                    using (FileStream fstream = new FileStream(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
                     {
                         byte[] fileBytes = new byte[fstream.Length];
                         fstream.Read(fileBytes, 0, fileBytes.Length);
@@ -125,7 +134,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-                SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesInfo.version) + ".lver", "0");
+                SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", "0");
                 updates["libraries"] = 0;
             }
 
@@ -152,7 +161,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     // получем файл, в ктором хранятси список либрариесов, которые удачно скачались в прошлый раз
                     List<string> downloadedFiles = new List<string>();
-                    string downloadedInfoAddr = DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, filesInfo.version) + "-downloaded.json";
+                    string downloadedInfoAddr = DirectoryPath + "/versions/libraries/" + libName + "-downloaded.json";
                     bool fileExided = false;
                     if (File.Exists(downloadedInfoAddr))
                     {
@@ -351,7 +360,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(path);
             }
 
-            try
+            //try
             {
                 // TODO: возможно не удалять старый файл, а скачивать только в случае, если старый файл отличается
                 wc.DownloadFile(url, temp + file);
@@ -360,11 +369,11 @@ namespace Lexplosion.Logic.FileSystem
 
                 return true;
             }
-            catch
+            /*catch
             {
                 DelFile(temp + file);
                 return false;
-            }
+            }*/
         }
 
         //функция для скачивания файлов в jar формате, со сравнением хэша
@@ -473,9 +482,28 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //скачиваем libraries
+            string libName = GetLibName(instanceId, filesList.version);
+
+            lock (libsDownloadingWait)
+            {
+                if (!libsDownloadingWait.ContainsKey(libName))
+                {
+                    libsDownloadingWait[libName] = new DataSemophore
+                    {
+                        semaphore = new Semaphore(1, 1)
+                    };
+                }
+
+                libsDownloadingWait[libName].usersCount++;
+            }
+
+            Console.WriteLine("WAIT LIBS " + instanceId);
+            libsDownloadingWait[libName].semaphore.WaitOne();
+            Console.WriteLine("START DOWNLOAD " + instanceId);
+
             folders = null;
             List<string> executedMethods = new List<string>();
-            string downloadedLibsAddr = DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, filesList.version) + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
+            string downloadedLibsAddr = DirectoryPath + "/versions/libraries/" + libName + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
             // TODO: список downloadedLibs мы получаем в методе проверки. брать от туда, а не подгружать опять
             List<string> downloadedLibs = GetFile<List<string>>(downloadedLibsAddr); // сюда мы пихаем файлы, которые удачно скачались. При каждом удачном скачивании сохраняем список в файл. Если все файлы скачались удачно - удаляем этот список
             if (downloadedLibs == null) downloadedLibs = new List<string>();
@@ -483,7 +511,7 @@ namespace Lexplosion.Logic.FileSystem
 
             if (libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
             {
-                SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + GetLibName(instanceId, filesList.version) + ".lver", filesList.version.librariesLastUpdate.ToString());
+                SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", filesList.version.librariesLastUpdate.ToString());
             }
 
             string tempDir = CreateTempDir();
@@ -555,7 +583,6 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         downloadedLibs.Add(lib);
                         SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
-                        Console.WriteLine("SAVE DOWNLOADED");
                     }
                     else
                     {
@@ -663,8 +690,16 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
-            Directory.Delete(tempDir, true);
-            Directory.Delete(temp, true);
+            try
+            {
+                Directory.Delete(tempDir, true);
+            }
+            catch { }
+            try
+            {
+                Directory.Delete(temp, true);
+            }
+            catch { }
 
             if (downloadedLibs.Count - startDownloadedLibsCount == libraries.Count)
             {
@@ -672,7 +707,38 @@ namespace Lexplosion.Logic.FileSystem
                 DelFile(downloadedLibsAddr);
             }
 
+            Console.WriteLine("END DOWNLOAD LIBS " + instanceId);
+            lock (libsDownloadingWait)
+            {
+                if (libsDownloadingWait[libName].usersCount < 2)
+                {
+                    libsDownloadingWait[libName].semaphore.Release();
+                    libsDownloadingWait.Remove(libName);
+                }
+                else
+                {
+                    libsDownloadingWait[libName].usersCount--;
+                    libsDownloadingWait[libName].semaphore.Release();
+                }
+            }
+            Console.WriteLine("RELEASE LIBS " + instanceId);
+
             //скачиваем assets
+
+            lock (assetsDownloadingWait)
+            {
+                if (!assetsDownloadingWait.ContainsKey(libName))
+                {
+                    assetsDownloadingWait[libName] = new DataSemophore
+                    {
+                        semaphore = new Semaphore(1, 1)
+                    };
+                }
+
+                assetsDownloadingWait[libName].usersCount++;
+            }
+
+            assetsDownloadingWait[libName].semaphore.WaitOne();
 
             // скачиваем файлы objects
             if (assets.objects != null)
@@ -719,6 +785,20 @@ namespace Lexplosion.Logic.FileSystem
                         wc.DownloadFile(filesList.version.assetsIndexes, DirectoryPath + "/assets/indexes/" + filesList.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
                     }
                     catch { }
+                }
+            }
+
+            lock (assetsDownloadingWait)
+            {
+                if (assetsDownloadingWait[libName].usersCount < 2)
+                {
+                    assetsDownloadingWait[libName].semaphore.Release();
+                    assetsDownloadingWait.Remove(libName);
+                }
+                else
+                {
+                    assetsDownloadingWait[libName].usersCount--;
+                    assetsDownloadingWait[libName].semaphore.Release();
                 }
             }
 
