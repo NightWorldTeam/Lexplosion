@@ -14,11 +14,10 @@ namespace Lexplosion.Logic.Network
 {
     static class NightWorldApi
     {
-        private class DataNInstanceManifest : NInstanceManifest //этот класс нужен для декодирования json в GetInstanceManifest
+        private class DataNInstanceManifest : NightWorldManifest //этот класс нужен для декодирования json в GetInstanceManifest
         {
             public string code;
             public string str;
-            public new Dictionary<string, DataLibInfo> libraries;
         }
 
         public static Dictionary<string, NWInstanceInfo> GetInstancesList()
@@ -52,7 +51,7 @@ namespace Lexplosion.Logic.Network
         }
 
         // Функция получает манифест для NightWorld модпаков
-        public static NInstanceManifest GetInstanceManifest(string instanceId) // TODO: одинаковые блоки кода в этих двух функция вынести в другую функцию
+        public static NightWorldManifest GetInstanceManifest(string instanceId) // TODO: одинаковые блоки кода в этих двух функция вынести в другую функцию
         {
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
@@ -91,28 +90,11 @@ namespace Lexplosion.Logic.Network
 
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
-                            Dictionary<string, LibInfo> libraries = null;
-                            if (filesData.libraries != null)
-                            {
-                                libraries = new Dictionary<string, LibInfo>();
-                                foreach (string lib in filesData.libraries.Keys)
-                                {
-                                    if (filesData.libraries[lib].os == "all" || filesData.libraries[lib].os == "windows")
-                                    {
-                                        libraries[lib] = new LibInfo
-                                        {
-                                            notArchived = filesData.libraries[lib].notArchived,
-                                            url = filesData.libraries[lib].url
-                                        };
-                                    }
-                                }
-                            }
                             
-                            NInstanceManifest ret = new NInstanceManifest
+                            NightWorldManifest ret = new NightWorldManifest
                             {
                                 data = filesData.data,
-                                version = filesData.version,
-                                libraries = libraries
+                                version = filesData.version
                             };
 
                             return ret;

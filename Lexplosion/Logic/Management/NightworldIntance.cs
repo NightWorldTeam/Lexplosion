@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
@@ -8,7 +9,8 @@ namespace Lexplosion.Logic.Management
 {
     class NightworldIntance : IPrototypeInstance
     {
-        private NInstanceManifest Manifest;
+        private NightWorldManifest nightworldManifest = null;
+        private VersionManifest manifest = null;
         private LastUpdates Updates;
         private NightWorldInstaller installer;
 
@@ -26,6 +28,7 @@ namespace Lexplosion.Logic.Management
             InstanceId = instanceid;
             ProgressHandler = progressHandler;
             onlyBase = onlyBase_;
+            installer = new NightWorldInstaller(instanceid);
         }
 
         public InstanceInit Check()
@@ -50,78 +53,68 @@ namespace Lexplosion.Logic.Management
 
             if (!requiresUpdates)
             {
-                VersionManifest manifest = DataFilesManager.GetManifest(InstanceId, false);
-                if (manifest == null || manifest.version == null || manifest.version.gameVersion == null || manifest.version.gameVersion == "")
+                VersionManifest manifest_ = DataFilesManager.GetManifest(InstanceId, false);
+                if (manifest_ == null || manifest_.version == null || manifest_.version.gameVersion == null || manifest_.version.gameVersion == "")
                 {
-                    NInstanceManifest manifest_ = NightWorldApi.GetInstanceManifest(InfoData.id);
-                    if (manifest_ == null)
+                    nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
+                    if (nightworldManifest == null)
                     {
                         return InstanceInit.ServerError;
                     }
 
-                    VersionManifest tempManifest = ToServer.GetVersionManifest(manifest_.version.gameVersion, manifest_.version.modloaderType, manifest_.version.modloaderVersion);
-                    if (tempManifest == null)
+                    var versionInfo = nightworldManifest.version;
+                    manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                    if (manifest == null)
                     {
                         return InstanceInit.ServerError;
                     }
-
-                    Manifest = new NInstanceManifest 
-                    {
-                        libraries = tempManifest.libraries,
-                        version = tempManifest.version
-                    };
                 }
                 else
                 {
-                    VersionManifest tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
-                    if (tempManifest == null)
-                    {
-                        NInstanceManifest manifest_ = NightWorldApi.GetInstanceManifest(InfoData.id);
-                        if (manifest_ == null)
-                        {
-                            return InstanceInit.ServerError;
-                        }
+                    var versionInfo = manifest_.version;
+                    manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
 
-                        tempManifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
-                        if (tempManifest == null)
+                    nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
+                    if (nightworldManifest == null)
+                    {
+                        return InstanceInit.ServerError;
+                    }
+
+                    if (manifest == null)
+                    {
+                        var mcVersion = nightworldManifest.version;
+                        manifest = ToServer.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, mcVersion.modloaderVersion);
+                        if (manifest == null)
                         {
                             return InstanceInit.ServerError;
                         }
                     }
-
-                    Manifest = new NInstanceManifest
-                    {
-                        libraries = tempManifest.libraries,
-                        version = tempManifest.version
-                    };
                 }
             }
             else
             {
-                Manifest = NightWorldApi.GetInstanceManifest(InfoData.id);
-                if (Manifest == null || Manifest.version == null)
+                nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
+                if (nightworldManifest == null || nightworldManifest.version == null)
                 {
                     return InstanceInit.ServerError;
                 }
 
-                VersionManifest manifest_ = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
-                if (manifest_ == null)
+                var versionInfo = nightworldManifest.version;
+                manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                if (manifest == null)
                 {
                     return InstanceInit.ServerError;
                 }
-
-                Manifest.version = manifest_.version;
-                Manifest.libraries = manifest_.libraries;
             }
 
-            if (Manifest != null)
+            if (manifest != null)
             {
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
 
-                baseFaliseUpdatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
-                if (baseFaliseUpdatesCount == -1) 
-                { 
-                    return InstanceInit.GuardError; 
+                baseFaliseUpdatesCount = installer.CheckBaseFiles(manifest, ref Updates); // проверяем основные файлы клиента на обновление
+                if (baseFaliseUpdatesCount == -1)
+                {
+                    return InstanceInit.GuardError;
                 }
 
                 if (baseFaliseUpdatesCount > 0)
@@ -132,7 +125,7 @@ namespace Lexplosion.Logic.Management
                 if (requiresUpdates || installer.InvalidStruct(Updates))
                 {
                     int variableFilesUpdatesCount = 0;
-                    variableFilesUpdatesCount = installer.CheckInstance(Manifest, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
+                    variableFilesUpdatesCount = installer.CheckInstance(nightworldManifest, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
                     if (variableFilesUpdatesCount == -1)
                     {
                         return InstanceInit.GuardError;
@@ -167,7 +160,7 @@ namespace Lexplosion.Logic.Management
                 ProgressHandler(stagesCount, 1, 0);
             }
 
-            List<string> errors_ = installer.UpdateBaseFiles(Manifest, ref Updates);
+            List<string> errors_ = installer.UpdateBaseFiles(manifest, ref Updates);
             List<string> errors = null;
 
             if (requiresUpdates)
@@ -176,13 +169,11 @@ namespace Lexplosion.Logic.Management
                     ProgressHandler(stagesCount, 2, 0);
                 else
                     ProgressHandler(stagesCount, 1, 0);
-       
-                errors = installer.UpdateInstance(Manifest, InfoData.id, ref Updates);
+
+                errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates);
             }
 
-            Manifest.data = null;
-
-            DataFilesManager.SaveManifest(InstanceId, Manifest);
+            DataFilesManager.SaveManifest(InstanceId, manifest);
 
             if (errors != null)
             {
@@ -206,8 +197,8 @@ namespace Lexplosion.Logic.Management
             {
                 InitResult = result,
                 DownloadErrors = errors,
-                VersionFile = Manifest.version,
-                Libraries = Manifest.libraries
+                VersionFile = manifest.version,
+                Libraries = manifest.libraries
             };
         }
     }

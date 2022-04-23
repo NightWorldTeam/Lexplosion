@@ -1,9 +1,4 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +6,11 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
 {

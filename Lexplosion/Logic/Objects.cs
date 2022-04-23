@@ -44,14 +44,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public bool isNative;
     }
 
-    class VersionManifest
-    {
-        public VersionInfo version;
-        //public Dictionary<string, string> natives;
-        public Dictionary<string, LibInfo> libraries;
-    }
-
-    class NInstanceManifest : VersionManifest
+    class LocalNightWorldManifest
     {
         public class WithFolder
         {
@@ -61,13 +54,34 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
             public long folderVersion;
         }
 
-        public Dictionary<string, NInstanceManifest.WithFolder> data = new Dictionary<string, NInstanceManifest.WithFolder>();
+        public Dictionary<string, WithFolder> data = new Dictionary<string, WithFolder>();
     }
 
-    class InstancePlatformData
+    class NightWorldManifest : LocalNightWorldManifest
     {
-        public string id;
-        public int instanceVersion;
+        public class Version
+        {
+            public string modloaderVersion;
+            public ModloaderType modloaderType;
+            public string gameVersion;
+            public bool customBaseFiles = false;
+            public bool security;
+        }
+
+        public Version version;
+    }
+
+    class VersionManifest
+    {
+        public VersionInfo version;
+        public Dictionary<string, LibInfo> libraries;
+    }
+
+    class VersionInfo : LocalVersionInfo
+    {
+        public new FileInfo minecraftJar;
+        public bool security;
+        public long librariesLastUpdate;
     }
 
     class LocalVersionInfo
@@ -82,14 +96,6 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public ModloaderType modloaderType;
     }
 
-    class VersionInfo : LocalVersionInfo
-    {
-        public new FileInfo minecraftJar;
-        public bool security;
-        public long librariesLastUpdate;
-        public string nativesUrl;
-    }
-
     class FileInfo
     {
         public string name;
@@ -98,6 +104,12 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public long size;
         public long lastUpdate;
         public bool notArchived;
+    }
+
+    class InstancePlatformData
+    {
+        public string id;
+        public int instanceVersion;
     }
 
     class InitData

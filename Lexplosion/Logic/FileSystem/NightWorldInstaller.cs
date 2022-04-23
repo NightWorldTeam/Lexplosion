@@ -29,7 +29,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает количество файлов, которые нужно обновить. -1 в случае неудачи (возможно только если включена защита целосности клиента). 
         /// </returns>
-        public int CheckInstance(NInstanceManifest filesInfo, ref LastUpdates updates)
+        public int CheckInstance(NightWorldManifest filesInfo, ref LastUpdates updates)
         {
             int updatesCount = 0;
 
@@ -183,7 +183,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список файлов, скачивание которых закончилось ошибкой
         /// </returns>
-        public List<string> UpdateInstance(NInstanceManifest filesList, string externalId, ref LastUpdates updates)
+        public List<string> UpdateInstance(NightWorldManifest filesList, string externalId, ref LastUpdates updates)
         {
             int updatesCount = 0;
             WebClient wc = new WebClient();

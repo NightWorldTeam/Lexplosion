@@ -237,8 +237,7 @@ namespace Lexplosion.Logic.Management
         } 
 
         public static string CreateInstance(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion, string externalId = "")
-        {   
-            Console.WriteLine(externalId);
+        {
             string instanceId = GenerateInstanceId(name);
             
             UserData.Instances.AddInstance(instanceId, new InstanceParametrs
