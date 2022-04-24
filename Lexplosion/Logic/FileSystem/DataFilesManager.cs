@@ -364,7 +364,5 @@ namespace Lexplosion.Logic.FileSystem
         {
             SaveFile(DirectoryPath + "/instanesList.json", JsonConvert.SerializeObject(content));
         }
-
     }
-
 }
