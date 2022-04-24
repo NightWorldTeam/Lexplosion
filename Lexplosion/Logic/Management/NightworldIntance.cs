@@ -164,7 +164,6 @@ namespace Lexplosion.Logic.Management
             }
 
             List<string> errors_ = installer.UpdateBaseFiles(manifest, ref Updates);
-            installer.Release();
             List<string> errors = null;
 
             if (requiresUpdates)
