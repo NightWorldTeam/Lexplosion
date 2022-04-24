@@ -643,8 +643,8 @@ namespace Lexplosion.Logic.FileSystem
                             }
                         }
 
-                        //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
-                        EndWhile: executedMethods.Add(obtainingMethod[0][0]);
+                    //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
+                    EndWhile: executedMethods.Add(obtainingMethod[0][0]);
                         if (!File.Exists(DirectoryPath + "/libraries/" + lib))
                         {
                             Console.WriteLine(DirectoryPath + "/libraries/" + lib);
