@@ -47,7 +47,7 @@ namespace Lexplosion.Logic.Management
             }
 
             command += "\"" + versionPath + "\"";
-            command +=  @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
+            command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
             command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion;
@@ -153,7 +153,7 @@ namespace Lexplosion.Logic.Management
                             ComplitedLaunch(_instanceId, false);
 
                             // TODO: перенести это в ConsoleWindow
-                            if (!ConsoleWindow.isShow) 
+                            if (!ConsoleWindow.isShow)
                             {
                                 ConsoleWindow.Window.Show();
                                 ConsoleWindow.isShow = true;
@@ -192,8 +192,8 @@ namespace Lexplosion.Logic.Management
                 gameGateway.Initialization(process.Id);
 
                 return true;
-            } 
-            catch 
+            }
+            catch
             {
                 ComplitedLaunch(_instanceId, false);
 
@@ -269,7 +269,7 @@ namespace Lexplosion.Logic.Management
                 }
 
                 return data;
-            } 
+            }
             //catch 
             //{
             //    return Error(InstanceInit.UnknownError);
