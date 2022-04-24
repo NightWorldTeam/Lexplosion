@@ -186,6 +186,7 @@
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
     <Compile Include="Logic\FileSystem\InstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\NightWorldInstaller.cs" />
+    <Compile Include="Logic\KeySemaphore.cs" />
     <Compile Include="Logic\Management\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
     <Compile Include="Logic\Management\LocalInstance.cs" />

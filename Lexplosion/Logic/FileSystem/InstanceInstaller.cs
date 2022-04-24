@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IO.Compression;
 using System.Net;
-using System.Threading;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
@@ -18,15 +17,6 @@ namespace Lexplosion.Logic.FileSystem
 {
     class InstanceInstaller
     {
-        private class DataSemophore
-        {
-            public Semaphore semaphore;
-            public int usersCount = 0;
-        }
-
-        private static Dictionary<string, DataSemophore> libsDownloadingWait = new Dictionary<string, DataSemophore>();
-        private static Dictionary<string, DataSemophore> assetsDownloadingWait = new Dictionary<string, DataSemophore>();
-
         protected string instanceId;
 
         public InstanceInstaller(string instanceID)
@@ -484,23 +474,6 @@ namespace Lexplosion.Logic.FileSystem
             //скачиваем libraries
             string libName = GetLibName(instanceId, filesList.version);
 
-            lock (libsDownloadingWait)
-            {
-                if (!libsDownloadingWait.ContainsKey(libName))
-                {
-                    libsDownloadingWait[libName] = new DataSemophore
-                    {
-                        semaphore = new Semaphore(1, 1)
-                    };
-                }
-
-                libsDownloadingWait[libName].usersCount++;
-            }
-
-            Console.WriteLine("WAIT LIBS " + instanceId);
-            libsDownloadingWait[libName].semaphore.WaitOne();
-            Console.WriteLine("START DOWNLOAD " + instanceId);
-
             folders = null;
             List<string> executedMethods = new List<string>();
             string downloadedLibsAddr = DirectoryPath + "/versions/libraries/" + libName + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
@@ -707,38 +680,7 @@ namespace Lexplosion.Logic.FileSystem
                 DelFile(downloadedLibsAddr);
             }
 
-            Console.WriteLine("END DOWNLOAD LIBS " + instanceId);
-            lock (libsDownloadingWait)
-            {
-                if (libsDownloadingWait[libName].usersCount < 2)
-                {
-                    libsDownloadingWait[libName].semaphore.Release();
-                    libsDownloadingWait.Remove(libName);
-                }
-                else
-                {
-                    libsDownloadingWait[libName].usersCount--;
-                    libsDownloadingWait[libName].semaphore.Release();
-                }
-            }
-            Console.WriteLine("RELEASE LIBS " + instanceId);
-
             //скачиваем assets
-
-            lock (assetsDownloadingWait)
-            {
-                if (!assetsDownloadingWait.ContainsKey(libName))
-                {
-                    assetsDownloadingWait[libName] = new DataSemophore
-                    {
-                        semaphore = new Semaphore(1, 1)
-                    };
-                }
-
-                assetsDownloadingWait[libName].usersCount++;
-            }
-
-            assetsDownloadingWait[libName].semaphore.WaitOne();
 
             // скачиваем файлы objects
             if (assets.objects != null)
@@ -785,20 +727,6 @@ namespace Lexplosion.Logic.FileSystem
                         wc.DownloadFile(filesList.version.assetsIndexes, DirectoryPath + "/assets/indexes/" + filesList.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
                     }
                     catch { }
-                }
-            }
-
-            lock (assetsDownloadingWait)
-            {
-                if (assetsDownloadingWait[libName].usersCount < 2)
-                {
-                    assetsDownloadingWait[libName].semaphore.Release();
-                    assetsDownloadingWait.Remove(libName);
-                }
-                else
-                {
-                    assetsDownloadingWait[libName].usersCount--;
-                    assetsDownloadingWait[libName].semaphore.Release();
                 }
             }
 
