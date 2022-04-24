@@ -17,6 +17,9 @@ namespace Lexplosion.Logic.FileSystem
 {
     class InstanceInstaller
     {
+        private static KeySemaphore semaphore = new KeySemaphore();
+        private bool workIsEnd = false;
+
         protected string instanceId;
 
         public InstanceInstaller(string instanceID)
@@ -44,6 +47,8 @@ namespace Lexplosion.Logic.FileSystem
 
         int updatesCount = 0;
 
+        private string semaphoreKey;
+
         /// <summary>
         /// Проверяет основные файла клиента, недостающие файлы помещает во внуренний список на скачивание
         /// </summary>
@@ -53,6 +58,8 @@ namespace Lexplosion.Logic.FileSystem
         // TODO: его вызов обернуть в try
         public int CheckBaseFiles(VersionManifest filesInfo, ref LastUpdates updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
         {
+            semaphoreKey = filesInfo.version.gameVersion;
+            semaphore.WaitOne(semaphoreKey);
             //проверяем файл версии
             Console.WriteLine(DirectoryPath + "/instances/" + instanceId + "/version");
             if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/version"))
@@ -735,7 +742,21 @@ namespace Lexplosion.Logic.FileSystem
             //сохраняем lastUpdates
             SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
 
+            semaphore.Release(semaphoreKey);
+            workIsEnd = true;
+
             return errors;
+        }
+
+        /// <summary>
+        /// Этот метод освобождает семофоры, если они не были освобождены.
+        /// </summary>
+        public void Release()
+        {
+            if (!workIsEnd)
+            {
+                semaphore.Release(semaphoreKey);
+            }
         }
     }
 }

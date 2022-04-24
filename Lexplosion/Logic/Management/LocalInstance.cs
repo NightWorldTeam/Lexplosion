@@ -44,6 +44,7 @@ namespace Lexplosion.Logic.Management
 
                 if (updatesCount == -1)
                 {
+                    installer.Release();
                     return InstanceInit.GuardError;
                 }
 
@@ -75,6 +76,7 @@ namespace Lexplosion.Logic.Management
 
             // TODO: есть ли смысл его вызывать?
             List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates);
+            installer.Release();
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             InstanceInit result = InstanceInit.Successful;
