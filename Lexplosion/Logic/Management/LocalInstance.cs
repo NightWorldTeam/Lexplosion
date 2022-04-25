@@ -44,7 +44,6 @@ namespace Lexplosion.Logic.Management
 
                 if (updatesCount == -1)
                 {
-                    installer.Release();
                     return InstanceInit.GuardError;
                 }
 

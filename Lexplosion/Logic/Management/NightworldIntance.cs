@@ -114,7 +114,6 @@ namespace Lexplosion.Logic.Management
                 baseFaliseUpdatesCount = installer.CheckBaseFiles(manifest, ref Updates); // проверяем основные файлы клиента на обновление
                 if (baseFaliseUpdatesCount == -1)
                 {
-                    installer.Release();
                     return InstanceInit.GuardError;
                 }
 
@@ -129,7 +128,6 @@ namespace Lexplosion.Logic.Management
                     variableFilesUpdatesCount = installer.CheckInstance(nightworldManifest, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
                     if (variableFilesUpdatesCount == -1)
                     {
-                        installer.Release();
                         return InstanceInit.GuardError;
                     }
 
@@ -143,7 +141,6 @@ namespace Lexplosion.Logic.Management
             }
             else
             {
-                installer.Release();
                 return InstanceInit.ServerError;
             }
         }

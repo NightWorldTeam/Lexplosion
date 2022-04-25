@@ -68,7 +68,6 @@ namespace Lexplosion.Logic.Management
 
                     if (updatesCount == -1)
                     {
-                        installer.Release();
                         return InstanceInit.GuardError;
                     }
                 }
@@ -176,7 +175,6 @@ namespace Lexplosion.Logic.Management
 
                     if (Info == null || Info.downloadUrl == null || Info.fileName == null)
                     {
-                        installer.Release();
                         return new InitData
                         {
                             InitResult = InstanceInit.CursforgeIdError,
@@ -201,7 +199,6 @@ namespace Lexplosion.Logic.Management
 
                 if (manifest == null || manifest.minecraft == null || manifest.minecraft.modLoaders == null || manifest.minecraft.version == null)
                 {
-                    installer.Release();
                     return new InitData
                     {
                         InitResult = InstanceInit.ManifestError,
@@ -254,7 +251,6 @@ namespace Lexplosion.Logic.Management
 
                         if (updatesCount == -1)
                         {
-                            installer.Release();
                             return new InitData
                             {
                                 InitResult = InstanceInit.GuardError,
@@ -263,7 +259,6 @@ namespace Lexplosion.Logic.Management
                     }
                     else
                     {
-                        installer.Release();
                         return new InitData
                         {
                             InitResult = InstanceInit.ServerError,
@@ -299,7 +294,6 @@ namespace Lexplosion.Logic.Management
 
                 if (errors.Count > 0)
                 {
-                    installer.Release();
                     return new InitData
                     {
                         InitResult = InstanceInit.DownloadFilesError,
@@ -323,15 +317,12 @@ namespace Lexplosion.Logic.Management
                 }
                 else
                 {
-                    installer.Release();
                     return new InitData
                     {
                         InitResult = InstanceInit.ForgeVersionError,
                     };
                 }
             }
-
-            installer.Release();
 
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
