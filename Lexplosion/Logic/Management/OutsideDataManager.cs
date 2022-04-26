@@ -61,7 +61,7 @@ namespace Lexplosion.Logic.Management
                         OutsideInstance instanceInfo = new OutsideInstance()
                         {
                             Name = nwInstances[nwModpack].name ?? "Uncnown name",
-                            InstanceAssets = new InstanceAssets() 
+                            InstanceAssets = new InstanceAssets()
                             {
                                 author = nwInstances[nwModpack].author ?? "",
                                 description = nwInstances[nwModpack].description ?? "",

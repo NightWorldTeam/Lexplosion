@@ -43,7 +43,7 @@ namespace Lexplosion
             app.Run(new SplashWindow());
         }
 
-        private static void InitializedSystem() 
+        private static void InitializedSystem()
         {
             // получем количество процессов с таким же именем
             int processesCount = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length;
@@ -128,8 +128,8 @@ namespace Lexplosion
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();
-            } 
-            catch 
+            }
+            catch
             {
                 MessageBox.Show("Не удалось обновить лаунчер!");
             }
@@ -169,7 +169,7 @@ namespace Lexplosion
 
             int key = threads.Add(null);
 
-            var thread = new Thread(delegate () 
+            var thread = new Thread(delegate ()
             {
                 int threadKey = key;
 

@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Management
 
             if (status_ != Statuses.Offline)
             {
-                Lexplosion.Run.TaskRun(delegate () 
+                Lexplosion.Run.TaskRun(delegate ()
                 {
                     while (true)
                     {
