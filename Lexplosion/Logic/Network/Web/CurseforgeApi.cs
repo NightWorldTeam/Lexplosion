@@ -83,7 +83,7 @@ namespace Lexplosion.Logic.Network
 
                 string url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
                 //url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=6&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
-                
+
                 string answer;
                 WebRequest req = WebRequest.Create(url);
                 using (WebResponse resp = req.GetResponse())
@@ -224,7 +224,7 @@ namespace Lexplosion.Logic.Network
 
                     return data;
                 }
-                else 
+                else
                 {
                     Console.WriteLine("null");
                 }
@@ -273,8 +273,8 @@ namespace Lexplosion.Logic.Network
                 string answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID);
                 if (answer == null)
                 {
-                    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> 
-                    { 
+                    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+                    {
                         [projectID.ToString()] = (null, DownloadAddonRes.ProjectIdError)
                     };
                 }

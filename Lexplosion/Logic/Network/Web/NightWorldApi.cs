@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.Network
             {
                 string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData);
                 Dictionary<string, NWInstanceInfo> list = JsonConvert.DeserializeObject<Dictionary<string, NWInstanceInfo>>(answer);
-                
+
                 return list;
             }
             catch
@@ -90,7 +90,7 @@ namespace Lexplosion.Logic.Network
 
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
-                            
+
                             NightWorldManifest ret = new NightWorldManifest
                             {
                                 data = filesData.data,

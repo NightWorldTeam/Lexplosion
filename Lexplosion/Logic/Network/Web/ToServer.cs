@@ -136,7 +136,7 @@ namespace Lexplosion.Logic.Network
                         }
                         else if (modloader == ModloaderType.Forge)
                         {
-                            modloaderUrl = "/forge/" ;
+                            modloaderUrl = "/forge/";
                             modloaderUrl += modloaderVersion;
                         }
                     }

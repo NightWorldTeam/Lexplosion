@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 namespace Lexplosion.Logic.Management
 {
     class CurseforgeInstance : IPrototypeInstance
-    {       
+    {
         private VersionManifest Manifest;
         private LastUpdates Updates;
         private CurseforgeFileInfo Info = null;
@@ -105,7 +105,7 @@ namespace Lexplosion.Logic.Management
                 {
                     CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
                     string dir = WithDirectory.DirectoryPath + "/instances-assets/" + InstanceId;
-                  
+
                     InstanceAssets assets = new InstanceAssets();
 
                     if (info.attachments.Count > 0)
@@ -167,7 +167,7 @@ namespace Lexplosion.Logic.Management
             }
 
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
-            if (Info != null || installer.InvalidStruct(localFiles)) 
+            if (Info != null || installer.InvalidStruct(localFiles))
             {
                 if (Info == null)
                 {

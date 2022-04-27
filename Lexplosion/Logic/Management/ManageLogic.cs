@@ -185,7 +185,7 @@ namespace Lexplosion.Logic.Management
                         while (UserData.Instances.Record.ContainsKey(instanceId_));
                         instanceId = instanceId_;
                     }
-                } 
+                }
                 else if (UserData.Instances.Record.ContainsKey(instanceId))
                 {
                     string instanceId_ = instanceId;
@@ -234,12 +234,12 @@ namespace Lexplosion.Logic.Management
             }
 
             return false;
-        } 
+        }
 
         public static string CreateInstance(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion, string externalId = "")
         {
             string instanceId = GenerateInstanceId(name);
-            
+
             UserData.Instances.AddInstance(instanceId, new InstanceParametrs
             {
                 Name = name,
