@@ -63,6 +63,7 @@ namespace Lexplosion.Global
         {
             public const string ModpacksData = "https://night-world.org/minecraft/modpacks/";
             public const string VersionsData = "https://night-world.org/minecraft/versions/";
+            public const string JavaData = "https://night-world.org/minecraft/java/";
             public const string Upload = "https://night-world.org/minecraft/upload/";
             public const string LauncherParts = "https://night-world.org/assets/launcher/windows/";
             public const string LogicScripts = "https://night-world.org/requestProcessing/";

@@ -22,7 +22,27 @@ namespace Lexplosion.Logic.Network
             public new Dictionary<string, DataLibInfo> libraries;
         }
 
-        static public bool CheckLauncherUpdates()
+        public class JavaVersion
+        {
+            public string LastGameVersion;
+            public string JavaName;
+            public long LastUpdate;
+        }
+
+        public static List<JavaVersion> GetJavaVersions()
+        {
+            try
+            {
+                string answer = HttpGet(LaunсherSettings.URL.JavaData);
+                return JsonConvert.DeserializeObject<List<JavaVersion>>(answer);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static bool CheckLauncherUpdates()
         {
             try
             {
@@ -195,7 +215,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        static public Dictionary<string, string> Authorization(string login, string password, string email = "")
+        public static Dictionary<string, string> Authorization(string login, string password, string email = "")
         {
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
@@ -280,7 +300,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        static public string HttpPost(string url, List<List<string>> data = null) // TODO: List<string> заменить на массив
+        public static string HttpPost(string url, List<List<string>> data = null) // TODO: List<string> заменить на массив
         {
             try
             {
