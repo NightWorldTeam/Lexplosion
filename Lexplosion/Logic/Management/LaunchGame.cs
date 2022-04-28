@@ -250,12 +250,19 @@ namespace Lexplosion.Logic.Management
                             {
                                 if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                                 {
-                                    javaCheck.Update();
+                                    if (!javaCheck.Update())
+                                    {
+                                        return Error(InstanceInit.JavaDownloadError);
+                                    }
                                 }
 
                                 if (checkResult == JavaChecker.CheckResult.Successful)
                                 {
                                     _settings.JavaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                                }
+                                else
+                                {
+                                    return Error(InstanceInit.JavaDownloadError);
                                 }
                             }
                         }

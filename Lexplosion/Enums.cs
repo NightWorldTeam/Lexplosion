@@ -67,6 +67,7 @@
         ForgeVersionError,
         GamePathError,
         ManifestError,
+        JavaDownloadError,
         UnknownError
     }
 
