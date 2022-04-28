@@ -109,10 +109,7 @@ namespace Lexplosion.Logic.FileSystem
                 List<string> files = new List<string>();
 
                 string tempDir = CreateTempDir();
-                if (File.Exists(tempDir + fileName))
-                {
-                    File.Delete(tempDir + fileName);
-                }
+                DelFile(tempDir + fileName);
 
                 // скачивание архива
                 using (WebClient wc = new WebClient())

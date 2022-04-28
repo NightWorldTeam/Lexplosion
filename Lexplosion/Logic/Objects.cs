@@ -259,4 +259,15 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
             }
         }
     }
+
+    /// <summary>
+    /// Этот класс хранят инфу о версии джавы.
+    /// </summary>
+    public class JavaVersion
+    {
+        public string LastGameVersion;
+        public string JavaName;
+        public long LastUpdate;
+        public string ExecutableFile = "/bin/javaw.exe";
+    }
 }

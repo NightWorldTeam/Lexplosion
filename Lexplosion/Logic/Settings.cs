@@ -14,6 +14,7 @@ namespace Lexplosion.Logic
     public class Settings
     {
         public string JavaPath = null;
+        public bool? CustomJava = null;
         public string GamePath = null;
         public uint? Xmx = null;
         public uint? Xms = null;
@@ -29,6 +30,7 @@ namespace Lexplosion.Logic
             if (priority)
             {
                 if (JavaPath == null) JavaPath = settings.JavaPath;
+                if (CustomJava == null) CustomJava = settings.CustomJava;
                 if (GamePath == null) GamePath = settings.GamePath;
                 if (Xmx == null) Xmx = settings.Xmx;
                 if (Xms == null) Xms = settings.Xms;
@@ -42,6 +44,7 @@ namespace Lexplosion.Logic
             else
             {
                 if (settings.JavaPath != null) JavaPath = settings.JavaPath;
+                if (settings.CustomJava != null) CustomJava = settings.CustomJava;
                 if (settings.GamePath != null) GamePath = settings.GamePath;
                 if (settings.Xmx != null) Xmx = settings.Xmx;
                 if (settings.Xms != null) Xms = settings.Xms;
@@ -67,25 +70,10 @@ namespace Lexplosion.Logic
 
         public static Settings GetDefault()
         {
-            /*<!-- получение директории до джавы -->*/
-            string javaPath = "";
-            try
+            return new Settings
             {
-                using (RegistryKey jre = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-                {
-                    RegistryKey java = jre.OpenSubKey(@"SOFTWARE\JavaSoft\Java Runtime Environment");
-                    javaPath = (java.OpenSubKey(java.GetValue("CurrentVersion").ToString()).GetValue("JavaHome").ToString() + @"/bin/javaw.exe").Replace(@"\", "/");
-                }
-
-            }
-            catch
-            {
-                // TODO: тут ставить автоматически установленную джаву
-            }
-
-            Settings settengs = new Settings
-            {
-                JavaPath = javaPath,
+                JavaPath = "",
+                CustomJava = false,
                 GamePath = LaunсherSettings.gamePath,
                 Xmx = 512,
                 Xms = 256,
@@ -95,8 +83,6 @@ namespace Lexplosion.Logic
                 HiddenMode = false,
                 GameArgs = ""
             };
-
-            return settengs;
         }
     }
 }

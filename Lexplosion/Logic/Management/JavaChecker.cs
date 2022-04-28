@@ -1,17 +1,19 @@
-﻿using Lexplosion.Logic.Network;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lexplosion.Logic.FileSystem;
 using System.IO;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
 {
-    using JavaVersionsFile = Dictionary<string, int>;
+    using JavaVersionsFile = Dictionary<string, JavaVersion>;
 
-    class JavaChecker
+    class JavaChecker : IDisposable
     {
         public enum CheckResult
         {
@@ -26,6 +28,19 @@ namespace Lexplosion.Logic.Management
 
             public GameVersion(string gameVersion)
             {
+                if (gameVersion == "max")
+                {
+                    _numbers = new int[3]
+                    {
+                        Int32.MaxValue,
+                        Int32.MaxValue,
+                        Int32.MaxValue
+                    };
+
+                    IsValid = true;
+                    return;
+                }
+
                 string[] numbers = gameVersion.Split('.');
 
                 if (numbers.Length == 3)
@@ -87,7 +102,12 @@ namespace Lexplosion.Logic.Management
             }
         }
 
+        private static readonly KeySemaphore _downloadSemaphore = new KeySemaphore();
+
+        private bool _semIsReleased = false;
         private GameVersion _gameVersion;
+        private JavaVersion _thisJava = null;
+        private JavaVersionsFile _versionsFile;
 
         public bool IsValid
         {
@@ -102,48 +122,44 @@ namespace Lexplosion.Logic.Management
             _gameVersion = new GameVersion(gameVersion);
         }
 
-        public bool Check(out CheckResult result)
+        public bool Check(out CheckResult result, out JavaVersion java)
         {
-            List<ToServer.JavaVersion> versions = ToServer.GetJavaVersions();
-            ToServer.JavaVersion thisJava = null;
+            List<JavaVersion> versions = ToServer.GetJavaVersions();
 
-            foreach (ToServer.JavaVersion javaVer in versions)
+            foreach (JavaVersion javaVer in versions)
             {
-                if (javaVer.LastGameVersion == "max")
+                GameVersion version = new GameVersion(javaVer.LastGameVersion);
+                if (version.IsValid && version >= _gameVersion)
                 {
-                    thisJava = javaVer;
+                    _thisJava = javaVer;
                     break;
-                }
-                else
-                {
-                    GameVersion version = new GameVersion(javaVer.LastGameVersion);
-                    if (version.IsValid && version >= _gameVersion)
-                    {
-                        thisJava = javaVer;
-                        break;
-                    }
                 }
             }
 
-            if (thisJava != null && thisJava.JavaName != null)
+            _downloadSemaphore.WaitOne(_thisJava.JavaName);
+
+            if (_thisJava != null && _thisJava.JavaName != null)
             {
-                JavaVersionsFile info = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
-                if (info != null && info.ContainsKey(thisJava.JavaName))
+                _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
+                if (_versionsFile != null && _versionsFile.ContainsKey(_thisJava.JavaName) && _versionsFile[_thisJava.JavaName] != null)
                 {
-                    if (info[thisJava.JavaName] < thisJava.LastUpdate)
+                    if (_versionsFile[_thisJava.JavaName].LastUpdate < _thisJava.LastUpdate)
                     {
+                        java = _thisJava;
                         result = CheckResult.Successful;
                         return true;
                     }
                     else
                     {
-                        if (!Directory.Exists(WithDirectory.DirectoryPath + "/java/" + thisJava.JavaName))
+                        if (!File.Exists(WithDirectory.DirectoryPath + "/java/" + _thisJava.JavaName + "/" + _thisJava.ExecutableFile))
                         {
+                            java = _thisJava;
                             result = CheckResult.Successful;
                             return true;
                         }
                         else
                         {
+                            java = _versionsFile[_thisJava.JavaName];
                             result = CheckResult.Successful;
                             return false;
                         }
@@ -151,17 +167,49 @@ namespace Lexplosion.Logic.Management
                 }
                 else
                 {
+                    java = _thisJava;
                     result = CheckResult.Successful;
                     return true;
                 }
             }
             else
             {
+                java = null;
                 result = CheckResult.DefinitionError;
                 return false;
             }
         }
 
+        public bool Update()
+        {
+            if (_versionsFile == null)
+            {
+                _versionsFile = new JavaVersionsFile();
+            }
 
+            if (WithDirectory.DonwloadJava(_thisJava.JavaName))
+            {
+                _versionsFile[_thisJava.JavaName] = _thisJava;
+                DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/java/javaVersions.json", JsonConvert.SerializeObject(_versionsFile));
+
+                _semIsReleased = true;
+                _downloadSemaphore.Release(_thisJava.JavaName);
+                return true;
+            }
+            else
+            {
+                _semIsReleased = true;
+                _downloadSemaphore.Release(_thisJava.JavaName);
+                return false;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_semIsReleased)
+            {
+                _downloadSemaphore.Release(_thisJava.JavaName);
+            }
+        }
     }
 }

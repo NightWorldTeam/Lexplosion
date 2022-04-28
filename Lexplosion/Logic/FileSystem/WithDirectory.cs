@@ -95,7 +95,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static bool DownloadFile(string url, string fileName, string tempDir)
         {
-            try
+            //try
             {
                 using (WebClient wc = new WebClient())
                 {
@@ -105,10 +105,10 @@ namespace Lexplosion.Logic.FileSystem
 
                 return true;
             }
-            catch
-            {
-                return false;
-            }
+            //catch
+            //{
+            //    return false;
+            //}
         }
 
         //функция для удаления файла при его существовании 
@@ -177,8 +177,6 @@ namespace Lexplosion.Logic.FileSystem
 
             return updates;
         }
-
-        
 
         public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
         {
@@ -410,6 +408,47 @@ namespace Lexplosion.Logic.FileSystem
             {
                 //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
             });
+        }
+
+        public static bool DonwloadJava(string javaName)
+        {
+            string tempDir = CreateTempDir();
+            string fileName = javaName + ".zip";
+
+            //try
+            {
+                if (!DownloadFile(LaunсherSettings.URL.JavaData + "download/" + fileName, fileName, tempDir))
+                {
+                    return false;
+                }
+
+                string javaPath = DirectoryPath + "/java/";
+                if (!Directory.Exists(javaPath))
+                {
+                    Directory.CreateDirectory(javaPath);
+                }
+                else
+                {
+                    if (Directory.Exists(javaPath + javaName))
+                    {
+                        Directory.Delete(javaPath, true);
+                    }
+                }
+              
+                ZipFile.ExtractToDirectory(tempDir + fileName, javaPath);
+            }
+            //catch
+            //{
+            //    return false;
+            //}
+
+            try
+            {
+                Directory.Delete(tempDir, true);
+            }
+            catch { }
+
+            return true;
         }
     }
 }

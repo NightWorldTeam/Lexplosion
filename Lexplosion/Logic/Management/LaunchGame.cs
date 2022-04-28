@@ -244,6 +244,21 @@ namespace Lexplosion.Logic.Management
                     if (result == InstanceInit.Successful)
                     {
                         data = instance.Update();
+                        if (data.InitResult == InstanceInit.Successful && _settings.CustomJava == false)
+                        {
+                            using (JavaChecker javaCheck = new JavaChecker(data.VersionFile.gameVersion))
+                            {
+                                if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
+                                {
+                                    javaCheck.Update();
+                                }
+
+                                if (checkResult == JavaChecker.CheckResult.Successful)
+                                {
+                                    _settings.JavaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                                }
+                            }
+                        }
                     }
                     else
                     {

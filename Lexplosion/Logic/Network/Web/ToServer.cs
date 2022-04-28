@@ -22,13 +22,6 @@ namespace Lexplosion.Logic.Network
             public new Dictionary<string, DataLibInfo> libraries;
         }
 
-        public class JavaVersion
-        {
-            public string LastGameVersion;
-            public string JavaName;
-            public long LastUpdate;
-        }
-
         public static List<JavaVersion> GetJavaVersions()
         {
             try
