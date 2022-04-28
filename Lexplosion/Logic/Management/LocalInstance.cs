@@ -15,17 +15,16 @@ namespace Lexplosion.Logic.Management
         private string InstanceId;
         private int stagesCount = 0;
 
-        private ProgressHandlerCallback ProgressHandler;
-
-        public LocalInstance(string instanceid, ProgressHandlerCallback progressHandler)
+        public LocalInstance(string instanceid)
         {
             InstanceId = instanceid;
-            ProgressHandler = progressHandler;
             installer = new InstanceInstaller(instanceid);
         }
 
-        public InstanceInit Check()
+        public InstanceInit Check(out string gameVersion)
         {
+            gameVersion = "";
+
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
 
@@ -52,28 +51,29 @@ namespace Lexplosion.Logic.Management
                     stagesCount = 1;
                 }
 
+                gameVersion = Manifest.version.gameVersion;
                 return InstanceInit.Successful;
             }
             else
             {
+                gameVersion = Manifest.version.gameVersion;
                 return InstanceInit.Successful;
             }
-
         }
 
-        public InitData Update()
+        public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
             if (stagesCount == 1)
             {
-                ProgressHandler(1, 1, 0);
+                progressHandler(1, 1, 0);
 
                 installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                 {
-                    ProgressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    progressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                 };
             }
 
-            List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates);
+            List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
             DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             InstanceInit result = InstanceInit.Successful;

@@ -26,21 +26,20 @@ namespace Lexplosion.Logic.Management
 
         private bool BaseFilesIsCheckd = false;
         private bool onlyBase;
-        private ProgressHandlerCallback ProgressHandler;
 
         int updatesCount = 0;
 
-        public CurseforgeInstance(string instanceid, bool onlyBase_, ProgressHandlerCallback progressHandler)
+        public CurseforgeInstance(string instanceid, bool onlyBase_)
         {
             InstanceId = instanceid;
-            ProgressHandler = progressHandler;
             onlyBase = onlyBase_;
             installer = new CurseforgeInstaller(instanceid);
         }
 
-        public InstanceInit Check()
+        public InstanceInit Check(out string gameVersion)
         {
-            ProgressHandler(1, 0, 0);
+            gameVersion = "";
+
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
@@ -94,10 +93,11 @@ namespace Lexplosion.Logic.Management
 
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
 
+            gameVersion = Manifest.version.gameVersion;
             return InstanceInit.Successful;
         }
 
-        public InitData Update()
+        public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
             // асинхронно скачиваем иконку
             Lexplosion.Run.TaskRun(delegate () {
@@ -186,11 +186,11 @@ namespace Lexplosion.Logic.Management
                 {
                     if (nowDataCount != 0)
                     {
-                        ProgressHandler(3, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        progressHandler(3, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     }
                     else
                     {
-                        ProgressHandler(3, 1, 0);
+                        progressHandler(3, 1, 0);
                     }
                 };
 
@@ -205,7 +205,7 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
-                ProgressHandler(3, 2, 0);
+                progressHandler(3, 2, 0);
 
                 // Скачиваем основные файлы майкнрафта
 
@@ -270,22 +270,22 @@ namespace Lexplosion.Logic.Management
                 {
                     installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                     {
-                        ProgressHandler(3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        progressHandler(3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     };
                 }
 
-                installer.UpdateBaseFiles(Manifest, ref Updates);
-                ProgressHandler(3, 2, 100);
+                installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
+                progressHandler(3, 2, 100);
 
                 installer.AddonsDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     if (nowDataCount != 0)
                     {
-                        ProgressHandler(3, 3, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        progressHandler(3, 3, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     }
                     else
                     {
-                        ProgressHandler(3, 3, 0);
+                        progressHandler(3, 3, 0);
                     }
                 };
 
@@ -309,11 +309,11 @@ namespace Lexplosion.Logic.Management
                     {
                         installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                         {
-                            ProgressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                            progressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                         };
                     }
 
-                    installer.UpdateBaseFiles(Manifest, ref Updates);
+                    installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
                 }
                 else
                 {

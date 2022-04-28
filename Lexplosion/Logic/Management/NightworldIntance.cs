@@ -19,18 +19,17 @@ namespace Lexplosion.Logic.Management
         private bool onlyBase;
         private int stagesCount = 0;
         private int baseFaliseUpdatesCount = 0;
-        private ProgressHandlerCallback ProgressHandler;
 
-        public NightworldIntance(string instanceid, bool onlyBase_, ProgressHandlerCallback progressHandler)
+        public NightworldIntance(string instanceid, bool onlyBase_)
         {
             InstanceId = instanceid;
-            ProgressHandler = progressHandler;
             onlyBase = onlyBase_;
             installer = new NightWorldInstaller(instanceid);
         }
 
-        public InstanceInit Check()
+        public InstanceInit Check(out string gameVersion)
         {
+            gameVersion = "";
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null)
@@ -137,6 +136,8 @@ namespace Lexplosion.Logic.Management
                     }
                 }
 
+                gameVersion = manifest.version.gameVersion;
+
                 return InstanceInit.Successful;
             }
             else
@@ -145,22 +146,22 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public InitData Update()
+        public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
             if (stagesCount > 0)
             {
                 installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                 {
-                    ProgressHandler(stagesCount, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    progressHandler(stagesCount, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                 };
             }
 
             if (baseFaliseUpdatesCount > 0)
             {
-                ProgressHandler(stagesCount, 1, 0);
+                progressHandler(stagesCount, 1, 0);
             }
 
-            List<string> errors_ = installer.UpdateBaseFiles(manifest, ref Updates);
+            List<string> errors_ = installer.UpdateBaseFiles(manifest, ref Updates, javaPath);
             List<string> errors = null;
 
             if (requiresUpdates)
@@ -169,17 +170,17 @@ namespace Lexplosion.Logic.Management
                 if (baseFaliseUpdatesCount > 0)
                 {
                     stage = 2;
-                    ProgressHandler(stagesCount, stage, 0);
+                    progressHandler(stagesCount, stage, 0);
                 }
                 else
                 {
                     stage = 1;
-                    ProgressHandler(stagesCount, stage, 0);
+                    progressHandler(stagesCount, stage, 0);
                 }
 
                 installer.FilesDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
-                    ProgressHandler(stagesCount, stage, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    progressHandler(stagesCount, stage, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                 };
 
                 errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates);

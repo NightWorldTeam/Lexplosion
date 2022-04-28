@@ -86,23 +86,46 @@ namespace Lexplosion.Logic.Management
             switch (type)
             {
                 case InstanceSource.Nightworld:
-                    instance = new NightworldIntance(instanceId, false, ProgressHandler);
+                    instance = new NightworldIntance(instanceId, false);
                     break;
                 case InstanceSource.Local:
-                    instance = new LocalInstance(instanceId, ProgressHandler);
+                    instance = new LocalInstance(instanceId);
                     break;
                 case InstanceSource.Curseforge:
-                    instance = new CurseforgeInstance(instanceId, false, ProgressHandler);
+                    instance = new CurseforgeInstance(instanceId, false);
                     break;
                 default:
                     instance = null;
                     break;
             }
 
-            InstanceInit result = instance.Check();
+            InstanceInit result = instance.Check(out string gameVersion);
             if (result == InstanceInit.Successful)
             {
-                InitData res = instance.Update();
+                string javaPath;
+                using (JavaChecker javaCheck = new JavaChecker(gameVersion))
+                {
+                    if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
+                    {
+                        if (!javaCheck.Update())
+                        {
+                            ComplitedDownload(InstanceInit.JavaDownloadError, null, false);
+                            return;
+                        }
+                    }
+
+                    if (checkResult == JavaChecker.CheckResult.Successful)
+                    {
+                        javaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                    }
+                    else
+                    {
+                        ComplitedDownload(InstanceInit.JavaDownloadError, null, false);
+                        return;
+                    }
+                }
+
+                InitData res = instance.Update(javaPath, ProgressHandler);
                 ComplitedDownload(res.InitResult, res.DownloadErrors, false);
             }
             else
@@ -275,13 +298,38 @@ namespace Lexplosion.Logic.Management
         }
 
         public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerCallback ProgressHandler)
-        {
+        { // TODO : этот метод полная хуйня блять, надо доделать, может даже переделать
             string instanceId;
             ImportResult res = WithDirectory.ImportInstance(zipFile, out errors, out instanceId);
-            LocalInstance instance = new LocalInstance(instanceId, ProgressHandler);
+            LocalInstance instance = new LocalInstance(instanceId);
 
-            instance.Check(); // TODO: тут вовзращать ошибки
-            instance.Update();
+            InstanceInit result = instance.Check(out string gameVersion); // TODO: тут вовзращать ошибки
+
+            if (result == InstanceInit.Successful)
+            {
+                string javaPath;
+                using (JavaChecker javaCheck = new JavaChecker(gameVersion))
+                {
+                    if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
+                    {
+                        if (!javaCheck.Update())
+                        {
+                            return ImportResult.JavaDownloadError;
+                        }
+                    }
+
+                    if (checkResult == JavaChecker.CheckResult.Successful)
+                    {
+                        javaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                    }
+                    else
+                    {
+                        return ImportResult.JavaDownloadError;
+                    }
+                }
+
+                instance.Update(javaPath, ProgressHandler);
+            }
 
             // TODO: Тут вырезал строку
             /*

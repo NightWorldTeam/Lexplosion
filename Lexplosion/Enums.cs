@@ -5,6 +5,7 @@
         Successful,
         ZipFileError,
         GameVersionError,
+        JavaDownloadError,
         IsOfflineMode,
         MovingFilesError,
         ServerFilesError,

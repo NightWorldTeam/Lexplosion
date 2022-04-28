@@ -112,7 +112,7 @@ namespace Lexplosion.Logic.Management
             return data;
         }
 
-        public static bool StartProcess(string command, ProcessExecutor executor)
+        public static bool StartProcess(string command, ProcessExecutor executor, string javaPath = "")
         {
             string fileName = "";
 
@@ -123,7 +123,7 @@ namespace Lexplosion.Logic.Management
             }
             else if (executor == ProcessExecutor.Java)
             {
-                fileName = UserData.GeneralSettings.JavaPath;
+                fileName = javaPath;
             }
             else
             {

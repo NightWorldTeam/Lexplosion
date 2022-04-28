@@ -425,7 +425,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список файлов, скачивание которых закончилось ошибкой
         /// </returns>
-        public List<string> UpdateBaseFiles(VersionManifest filesList, ref LastUpdates updates)
+        public List<string> UpdateBaseFiles(VersionManifest filesList, ref LastUpdates updates, string javaPath)
         {
             string addr;
             string[] folders;
@@ -617,7 +617,7 @@ namespace Lexplosion.Logic.FileSystem
                                         Console.WriteLine();
                                         Console.WriteLine(command);
 
-                                        if (!Utils.StartProcess(command, executord))
+                                        if (!Utils.StartProcess(command, executord, javaPath))
                                         {
                                             errors.Add("libraries/" + lib);
                                             goto EndWhile; //возникла ошибка

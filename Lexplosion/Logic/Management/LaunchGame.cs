@@ -227,45 +227,43 @@ namespace Lexplosion.Logic.Management
                     switch (_type)
                     {
                         case InstanceSource.Nightworld:
-                            instance = new NightworldIntance(_instanceId, !autoUpdate, progressHandler);
+                            instance = new NightworldIntance(_instanceId, !autoUpdate);
                             break;
                         case InstanceSource.Local:
-                            instance = new LocalInstance(_instanceId, progressHandler);
+                            instance = new LocalInstance(_instanceId);
                             break;
                         case InstanceSource.Curseforge:
-                            instance = new CurseforgeInstance(_instanceId, !autoUpdate, progressHandler);
+                            instance = new CurseforgeInstance(_instanceId, !autoUpdate);
                             break;
                         default:
                             instance = null;
                             break;
                     }
 
-                    InstanceInit result = instance.Check();
+                    InstanceInit result = instance.Check(out string gameVersion);
                     if (result == InstanceInit.Successful)
                     {
-                        data = instance.Update();
-                        if (data.InitResult == InstanceInit.Successful && _settings.CustomJava == false)
+                        using (JavaChecker javaCheck = new JavaChecker(gameVersion))
                         {
-                            using (JavaChecker javaCheck = new JavaChecker(data.VersionFile.gameVersion))
+                            if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                             {
-                                if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
-                                {
-                                    if (!javaCheck.Update())
-                                    {
-                                        return Error(InstanceInit.JavaDownloadError);
-                                    }
-                                }
-
-                                if (checkResult == JavaChecker.CheckResult.Successful)
-                                {
-                                    _settings.JavaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
-                                }
-                                else
+                                if (!javaCheck.Update())
                                 {
                                     return Error(InstanceInit.JavaDownloadError);
                                 }
                             }
+
+                            if (checkResult == JavaChecker.CheckResult.Successful)
+                            {
+                                _settings.JavaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                            }
+                            else
+                            {
+                                return Error(InstanceInit.JavaDownloadError);
+                            }
                         }
+
+                        data = instance.Update(_settings.JavaPath, progressHandler);
                     }
                     else
                     {
