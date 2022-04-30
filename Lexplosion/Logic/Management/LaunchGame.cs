@@ -243,14 +243,24 @@ namespace Lexplosion.Logic.Management
                     InstanceInit result = instance.Check(out string gameVersion);
                     if (result == InstanceInit.Successful)
                     {
+                        ProgressHandlerCallback progressHandler_;
                         using (JavaChecker javaCheck = new JavaChecker(gameVersion))
                         {
                             if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                             {
+                                progressHandler_ = delegate (int stageCount, int stage, int procent)
+                                {
+                                    progressHandler(stageCount + 1, stage + 1, procent);
+                                };
+
                                 if (!javaCheck.Update())
                                 {
                                     return Error(InstanceInit.JavaDownloadError);
                                 }
+                            }
+                            else
+                            {
+                                progressHandler_ = progressHandler;
                             }
 
                             if (checkResult == JavaChecker.CheckResult.Successful)
