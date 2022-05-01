@@ -104,10 +104,10 @@ namespace Lexplosion.Logic.Management
 
                     OutsideInstance instanceInfo = new OutsideInstance()
                     {
-                        Name = instance.name,
+                        Name = instance.name ?? "Uncnown name",
                         InstanceAssets = new InstanceAssets()
                         {
-                            author = instance.authors[0].name, // TODO: тут может быть null
+                            author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown",
                             description = instance.summary,
                         },
                         MainImage = null, // TODO: если картинки не найдено тут нулл и останется
