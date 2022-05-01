@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.Management
                         Name = instance.name ?? "Uncnown name",
                         InstanceAssets = new InstanceAssets()
                         {
-                            author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown",
+                            author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown author",
                             description = instance.summary,
                         },
                         MainImage = null, // TODO: если картинки не найдено тут нулл и останется
