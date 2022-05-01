@@ -20,6 +20,9 @@ namespace Lexplosion.Logic.Management
 
         private static LaunchGame classInstance = null;
 
+        private bool removeImportantTaskMark = false;
+        private object removeImportantTaskLocker = new object();
+
         public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type)
         {
             classInstance = this;
@@ -67,6 +70,7 @@ namespace Lexplosion.Logic.Management
 
             process = new Process();
             gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
+            Lexplosion.Run.AddImportantTask();
 
             UserStatusSetter.GameStart(UserData.Instances.Record[_instanceId].Name);
 
@@ -144,7 +148,28 @@ namespace Lexplosion.Logic.Management
 
                 process.Exited += (sender, ea) =>
                 {
+                    try
+                    {
+                        process.Dispose();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        gameGateway.StopWork();
+                    }
+                    catch { }
+
                     UserStatusSetter.GameStop();
+
+                    lock (removeImportantTaskLocker)
+                    {
+                        if (!removeImportantTaskMark)
+                        {
+                            removeImportantTaskMark = true;
+                            Lexplosion.Run.RemoveImportantTask();
+                        }
+                    }                  
 
                     if (!gameVisible)
                     {
@@ -170,20 +195,7 @@ namespace Lexplosion.Logic.Management
                         MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Show(); });
                     }
 
-                    try
-                    {
-                        process.Dispose();
-                    }
-                    catch { }
-
-                    try
-                    {
-                        gameGateway.StopWork();
-                    }
-                    catch { }
-
                     GameExited(_instanceId);
-
                 };
 
                 process.Start();
@@ -328,6 +340,15 @@ namespace Lexplosion.Logic.Management
                 gameGateway.StopWork();
             }
             catch { }
+
+            lock (removeImportantTaskLocker)
+            {
+                if (!removeImportantTaskMark)
+                {
+                    removeImportantTaskMark = true;
+                    Lexplosion.Run.RemoveImportantTask();
+                }
+            }
         }
     }
 }

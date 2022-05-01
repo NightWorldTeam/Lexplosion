@@ -150,17 +150,57 @@ namespace Lexplosion
             return null;
         }
 
-        public static void BeforeExit(object sender, EventArgs e)
+        private static int importantThreads = 0;
+        private static ManualResetEvent waitingClosing = new ManualResetEvent(true);
+        private static object locker = new object();
+
+        /// <summary>
+        /// Добавляет приоритетную задачу. При выключении лаунчер будет ждать завершения всех приоритетных задач.
+        /// </summary>
+        public static void AddImportantTask()
         {
-            // TODO: сохранить все данные
-            UserStatusSetter.Exit();
-            threads.StopThreads();
+            importantThreads++;
+            lock (locker)
+            {
+                waitingClosing.Reset();
+            }        
+        }
+
+        /// <summary>
+        /// Сообщает что приоритетная задача выполнена.
+        /// </summary>
+        public static void RemoveImportantTask()
+        {
+            importantThreads--;
+            lock (locker)
+            {
+                if (importantThreads == 0)
+                {
+                    waitingClosing.Set();
+                }
+            }
         }
 
         public static void Exit()
         {
             BeforeExit(null, null);
             Environment.Exit(0);
+        }
+
+        public static void BeforeExit(object sender, EventArgs e)
+        {
+            // TODO: сохранить все данные
+            //закрываем все окна
+            foreach (Window window in app.Windows)
+            {
+                window.Close();
+            }
+
+            // стопаем все процессы вроде скачивания и тп
+            threads.StopThreads();
+
+            waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
+            UserStatusSetter.Exit();
         }
 
         public static StopTask TaskRun(ThreadStart ThreadFunc)
