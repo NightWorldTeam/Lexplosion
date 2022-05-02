@@ -192,6 +192,18 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public ModloaderType Modloader;
     }
 
+    /// <summary>
+    /// Описывает модпак с найтворлда. Используются при декодировании Json
+    /// </summary>
+    public class NightworldInstanceInfo
+    {
+        public long DateUpdate;
+        public List<string> Images;
+        public string Desription;
+        public List<Category> Categories;
+        public string WebsiteUrl;
+    }
+
     public class InstanceParametrs
     {
         public string Name;
@@ -225,6 +237,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public long version;
         public string description;
         public List<string> categories;
+        public long DonwloadsCount;
     }
 
     public class DataLibInfo : LibInfo

@@ -50,6 +50,21 @@ namespace Lexplosion.Logic.Network
             }
         }
 
+        public static NightworldInstanceInfo GetInstanceInfo(string id)
+        {
+            try
+            {
+                string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(id) + "/info");
+                NightworldInstanceInfo info = JsonConvert.DeserializeObject<NightworldInstanceInfo>(answer);
+
+                return info;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         // Функция получает манифест для NightWorld модпаков
         public static NightWorldManifest GetInstanceManifest(string instanceId) // TODO: одинаковые блоки кода в этих двух функция вынести в другую функцию
         {
