@@ -112,6 +112,9 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public int instanceVersion;
     }
 
+    /// <summary>
+    /// Нужен для передачи данных между методами при запуске игры.
+    /// </summary>
     class InitData
     {
         public InstanceInit InitResult;
