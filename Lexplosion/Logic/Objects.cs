@@ -36,6 +36,9 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public List<Category> categories;
     }
 
+    /// <summary>
+    /// Информация о майкрафтовской либе
+    /// </summary>
     public class LibInfo
     {
         public bool notArchived;
@@ -84,6 +87,9 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public long librariesLastUpdate;
     }
 
+    /// <summary>
+    /// Локальный манифест модпака, который хранится в файле manifest.json
+    /// </summary>
     class LocalVersionInfo
     {
         public Dictionary<string, string> minecraftJar;
