@@ -80,6 +80,8 @@ namespace Lexplosion.Logic.Management
         {
             ProgressHandler(1, 0, 0);
 
+            Settings instanceSettings = DataFilesManager.GetSettings(instanceId);
+
             InstanceSource type = UserData.Instances.Record[instanceId].Type;
             IPrototypeInstance instance;
 
@@ -103,27 +105,34 @@ namespace Lexplosion.Logic.Management
             if (result == InstanceInit.Successful)
             {
                 string javaPath;
-                using (JavaChecker javaCheck = new JavaChecker(gameVersion))
+                if (instanceSettings.CustomJava == true)
                 {
-                    if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
+                    using (JavaChecker javaCheck = new JavaChecker(gameVersion))
                     {
-                        if (!javaCheck.Update())
+                        if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
+                        {
+                            if (!javaCheck.Update())
+                            {
+                                ComplitedDownload(InstanceInit.JavaDownloadError, null, false);
+                                return;
+                            }
+                        }
+
+                        if (checkResult == JavaChecker.CheckResult.Successful)
+                        {
+                            javaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                        }
+                        else
                         {
                             ComplitedDownload(InstanceInit.JavaDownloadError, null, false);
                             return;
                         }
                     }
-
-                    if (checkResult == JavaChecker.CheckResult.Successful)
-                    {
-                        javaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
-                    }
-                    else
-                    {
-                        ComplitedDownload(InstanceInit.JavaDownloadError, null, false);
-                        return;
-                    }
                 }
+                else
+                {
+                    javaPath = instanceSettings.JavaPath;
+                }          
 
                 InitData res = instance.Update(javaPath, ProgressHandler);
                 ComplitedDownload(res.InitResult, res.DownloadErrors, false);
