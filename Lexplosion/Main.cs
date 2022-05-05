@@ -81,10 +81,6 @@ namespace Lexplosion
             Thread.Sleep(1000);
             app.Dispatcher.Invoke(() =>
             {
-                /*var authWindow = new AuthWindow();
-                app.MainWindow.Close();
-                app.MainWindow = authWindow;
-                app.MainWindow.Show();*/
                 var authWindow = new AuthWindow();
                 authWindow.Left = app.MainWindow.Left - 97;
                 authWindow.Top = app.MainWindow.Top - 39;
