@@ -52,7 +52,7 @@ namespace Lexplosion.Logic.Management
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-            command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion;
+            command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion + "-test";
             command += " --gameDir \"" + _settings.GamePath + "/instances/" + _instanceId + "\"";
             command += " --assetsDir \"" + _settings.GamePath + "/assets" + "\"";
             command += " --assetIndex " + data.VersionFile.assetsVersion;

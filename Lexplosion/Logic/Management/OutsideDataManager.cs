@@ -198,7 +198,8 @@ namespace Lexplosion.Logic.Management
 
         public static List<OutsideInstance> GetInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
-            Console.WriteLine("CLICK");
+            return UploadInstances(type, pageSize, pageIndex, ModpacksCategories.All, searchFilter);
+            Console.WriteLine("CLICK " + type + " " + pageIndex);
             List<OutsideInstance> page;
             if (Math.Abs(pageIndex - PageIndex) > 1)
             {
@@ -223,13 +224,11 @@ namespace Lexplosion.Logic.Management
             if (page != null)
             {
                 WaitUpload.Reset();
-                //Console.WriteLine("A " + (page == null).ToString());
             }
             else
             {
                 WaitUpload.WaitOne();
                 page = pageIndex >= PageIndex ? uploadedInstances[type].Next : uploadedInstances[type].Back;
-                //Console.WriteLine("B " + (page == null).ToString());
             }
 
             Lexplosion.Run.TaskRun(delegate ()
@@ -239,6 +238,7 @@ namespace Lexplosion.Logic.Management
                 WaitUpload.Set();
             });
 
+            Console.WriteLine("PAGE IS NULL " + (page == null) + " " + type + " " + pageIndex);
             return page;
         }
     }

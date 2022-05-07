@@ -29,7 +29,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     {
         public string description { get; set; }
         public string author { get; set; }
-        public List<byte[]> images;
+        public List<string> images;
         public string mainImage;
         public string xmx;
         public string xms;
@@ -201,24 +201,12 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public ModloaderType Modloader;
     }
 
-    /// <summary>
-    /// Описывает модпак с найтворлда. Используются при декодировании Json
-    /// </summary>
-    public class NightworldInstanceInfo
-    {
-        public long DateUpdate;
-        public List<string> Images;
-        public string Desription;
-        public List<Category> Categories;
-        public string WebsiteUrl;
-    }
-
     public class InstanceParametrs
     {
         public string Name { get; set; }
         public InstanceSource Type;
         public bool UpdateAvailable;
-        public bool IsInstalled { get; set; } = false;
+        public bool IsInstalled { get; set; } = true;
     }
 
     public class OutsideInstance : InstanceParametrs

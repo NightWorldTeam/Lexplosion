@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
 {
@@ -148,6 +153,87 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
+            Lexplosion.Run.TaskRun(delegate () {
+                //try
+                {
+                    var info = NightWorldApi.GetInstanceInfo(InfoData.id);
+                    if (info != null)
+                    {
+                        string dir = WithDirectory.DirectoryPath + "/instances-assets/" + InstanceId;
+
+                        InstanceAssets assets = new InstanceAssets();
+
+                        // TODO: написать где-то отдельную функцию для скачивания файла
+
+                        //try
+                        {
+                            using (WebClient wc = new WebClient())
+                            {
+                                string[] a = info.MainImage.Split('/');
+                                string fileName = dir + "/" + a[a.Length - 1];
+
+                                if (!Directory.Exists(dir))
+                                {
+                                    Directory.CreateDirectory(dir);
+                                }
+
+                                if (File.Exists(fileName))
+                                {
+                                    File.Delete(fileName);
+                                }
+
+                                wc.DownloadFile(info.MainImage, fileName);
+                                assets.mainImage = InstanceId + "/" + a[a.Length - 1];
+                            }
+                        }
+                        //catch { }
+
+                        // Скачиваем картинки
+                        if (!Directory.Exists(dir + "/images"))
+                        {
+                            Directory.CreateDirectory(dir + "/images");
+                        }
+                        assets.images = new List<string>();
+                        foreach (string image in info.Images)
+                        {
+                            //try
+                            {
+                                string[] a = image.Split('/');
+                                string fileName = dir + "/images/" + a[a.Length - 1];
+
+                                using (WebClient wc = new WebClient())
+                                {
+                                    if (File.Exists(fileName))
+                                    {
+                                        File.Delete(fileName);
+                                    }
+
+                                    wc.DownloadFile(image, fileName);
+                                    assets.images.Add(InstanceId + "/images/" + a[a.Length - 1]);
+                                }
+                            }
+                            //catch { }
+                        }
+
+                        //устанавливаем описание
+                        assets.description = info.Description ?? "";
+
+                        //устанавливаем автора
+                        if (info.Author != null)
+                        {
+                            assets.author = info.Author;
+                        }
+
+                        assets.categories = info.Categories; // устанавливаем теги
+
+                        // сохраняем асетсы модпака
+                        UserData.Instances.SetAssets(InstanceId, assets);
+                        DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.Instances.Assets[InstanceId]));
+                    }
+                }
+                //catch { }
+            });
+
             if (stagesCount > 0)
             {
                 installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)

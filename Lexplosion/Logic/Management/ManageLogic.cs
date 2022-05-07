@@ -359,32 +359,64 @@ namespace Lexplosion.Logic.Management
             switch (type)
             {
                 case InstanceSource.Curseforge:
-                    var data = CurseforgeApi.GetInstance(instanceId);
-                    var images = new List<byte[]>();
-                    using (var webClient = new WebClient())
                     {
-                        foreach (var item in data.attachments)
+                        var data = CurseforgeApi.GetInstance(instanceId);
+                        var images = new List<byte[]>();
+                        using (var webClient = new WebClient())
                         {
-                            try
+                            foreach (var item in data.attachments)
                             {
-                                if (!item.isDefault && !item.url.Contains("avatars"))
-                                    images.Add(webClient.DownloadData(item.url));
+                                try
+                                {
+                                    if (!item.isDefault && !item.url.Contains("avatars"))
+                                        images.Add(webClient.DownloadData(item.url));
+                                }
+                                catch { }
                             }
-                            catch { }
                         }
-                    }
 
-                    return new InstanceData
+                        return new InstanceData
+                        {
+                            Categories = data.categories,
+                            Description = data.summary,
+                            TotalDownloads = (long)data.downloadCount,
+                            GameVersion = data.gameVersionLatestFiles[0].gameVersion,
+                            LastUpdate = DateTime.Parse(data.dateModified).ToString("dd MMM yyyy"),
+                            Modloader = data.Modloader,
+                            Images = images
+                        };
+                    }
+                case InstanceSource.Nightworld:
                     {
-                        Categories = data.categories,
-                        Description = data.summary,
-                        TotalDownloads = (long)data.downloadCount,
-                        GameVersion = data.gameVersionLatestFiles[0].gameVersion,
-                        LastUpdate = DateTime.Parse(data.dateModified).ToString("dd MMM yyyy"),
-                        Modloader = data.Modloader,
-                        Images = images,
-                        WebsiteUrl = data.websiteUrl
-                    };
+                        var data = NightWorldApi.GetInstanceInfo(instanceId);
+                        var images = new List<byte[]>();
+
+                        if (data.Images != null)
+                        {
+                            using (var webClient = new WebClient())
+                            {
+                                foreach (var item in data.Images)
+                                {
+                                    try
+                                    {
+                                        images.Add(webClient.DownloadData(item));
+                                    }
+                                    catch { }
+                                }
+                            }
+                        }
+
+                        return new InstanceData
+                        {
+                            Categories = data.Categories,
+                            Description = data.Description,
+                            TotalDownloads = data.DownloadCounts,
+                            GameVersion = data.GameVersion,
+                            LastUpdate = (new DateTime(1970, 1, 1).AddSeconds(data.LastUpdate)).ToString("dd MMM yyyy"),
+                            Modloader = data.Modloader,
+                            Images = images
+                        };
+                    }
                 default:
                     return null;
                 

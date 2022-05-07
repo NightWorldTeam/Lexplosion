@@ -20,6 +20,22 @@ namespace Lexplosion.Logic.Network
             public string str;
         }
 
+        public class InstanceInfo
+        {
+            public string Name;
+            public long Version;
+            public string MainImage;
+            public long DownloadCounts;
+            public List<Category> Categories;
+            public string Description;
+            public string Author;
+            public string WebsiteUrl;
+            public List<string> Images;
+            public string GameVersion;
+            public long LastUpdate;
+            public ModloaderType Modloader;
+        }
+
         public static Dictionary<string, NWInstanceInfo> GetInstancesList()
         {
             try
@@ -50,12 +66,12 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static NightworldInstanceInfo GetInstanceInfo(string id)
+        public static InstanceInfo GetInstanceInfo(string id)
         {
             try
             {
                 string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(id) + "/info");
-                NightworldInstanceInfo info = JsonConvert.DeserializeObject<NightworldInstanceInfo>(answer);
+                InstanceInfo info = JsonConvert.DeserializeObject<InstanceInfo>(answer);
 
                 return info;
             }

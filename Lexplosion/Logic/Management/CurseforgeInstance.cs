@@ -142,7 +142,7 @@ namespace Lexplosion.Logic.Management
                     }
 
                     //устанавливаем описание
-                    assets.description = (info.summary != null) ? info.summary : "";
+                    assets.description = info.summary ?? "";
 
                     //устанавливаем автора
                     if (info.authors.Count > 0 && info.authors[0].name != null)
