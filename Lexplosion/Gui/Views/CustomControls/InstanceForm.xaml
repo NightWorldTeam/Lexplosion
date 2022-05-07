@@ -232,7 +232,7 @@
                         </Border>
                         <TextBlock x:Name="InstallProgress"
                             Foreground="White"
-                            Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat='{}%'}"
+                            Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
                             Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource ConvertBoolToVisibility}}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"

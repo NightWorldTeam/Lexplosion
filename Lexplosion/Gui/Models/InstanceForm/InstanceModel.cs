@@ -7,6 +7,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private InstanceProperties _properties;
 
         private string _overviewField;
+        private MultibuttonModel _multibuttonModel;
 
         #region props
 

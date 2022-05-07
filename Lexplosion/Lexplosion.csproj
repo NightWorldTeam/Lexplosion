@@ -115,6 +115,7 @@
     <Compile Include="Gui\Stores\NavigationStore.cs" />
     <Compile Include="Gui\SubmenuViewModel.cs" />
     <Compile Include="Gui\Tab.cs" />
+    <Compile Include="Gui\Utilities.cs" />
     <Compile Include="Gui\ViewModels\AuthViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\InstanceFactoryViewModel.cs" />

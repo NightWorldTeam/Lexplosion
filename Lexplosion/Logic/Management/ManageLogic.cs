@@ -373,16 +373,17 @@ namespace Lexplosion.Logic.Management
                             catch { }
                         }
                     }
-                    
+
                     return new InstanceData
                     {
                         Categories = data.categories,
                         Description = data.summary,
-                        DonwloadCounts = (long)data.downloadCount,
+                        TotalDownloads = (long)data.downloadCount,
                         GameVersion = data.gameVersionLatestFiles[0].gameVersion,
                         LastUpdate = DateTime.Parse(data.dateModified).ToString("dd MMM yyyy"),
                         Modloader = data.Modloader,
-                        Images = images
+                        Images = images,
+                        WebsiteUrl = data.websiteUrl
                     };
                 default:
                     return null;

@@ -26,22 +26,16 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         };
 
         private bool _isLoaded = false;
+        private double _categoryPanelBorderHeight;
 
         public OverviewModel OverviewModel { get; set; }
 
         public double CategoryPanelBorderHeight
         {
-            get
+            get => _categoryPanelBorderHeight; set 
             {
-                var childWidth = 0.0;
-                foreach (var item in OverviewModel.Info.categories)
-                {
-                    childWidth += tagSizes[item.name];
-                }
-                if (childWidth < 326.5)
-                    return 53;
-                else
-                    return 103;
+                _categoryPanelBorderHeight = value;
+                OnPropertyChanged(nameof(CategoryPanelBorderHeight));
             }
         }
 
@@ -49,7 +43,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => new RelayCommand(obj =>
             {
-                System.Diagnostics.Process.Start(OverviewModel.Info.websiteUrl);
+                System.Diagnostics.Process.Start(OverviewModel.InstanceData.WebsiteUrl);
             });
         }
 
@@ -65,11 +59,27 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public OverviewViewModel(string outsideId, string localId, InstanceSource source = InstanceSource.Curseforge)
         {
-            OverviewModel = new OverviewModel(
-                outsideId,
-                source
-                );
-            IsLoaded = false;
+            Lexplosion.Run.TaskRun(() => { 
+                OverviewModel = new OverviewModel(
+                    outsideId,
+                    source
+                    );
+                CategoryPanelBorderHeight = CalcCategoryBorderHeight();
+                IsLoaded = false;
+            });
+        }
+
+        public double CalcCategoryBorderHeight() 
+        {
+            var childWidth = 0.0;
+            foreach (var item in OverviewModel.InstanceData.Categories)
+            {
+                childWidth += tagSizes[item.name];
+            }
+            if (childWidth < 326.5)
+                return 53;
+            else
+                return 103;
         }
     }
 }

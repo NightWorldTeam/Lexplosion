@@ -139,7 +139,7 @@ namespace Lexplosion.Gui.ViewModels
                                     categories = categories
                                 },
                                 Id = outsideInstanceId,
-                                Logo = new BitmapImage(new System.Uri(imageUrl)),
+                                Logo = Utilities.GetImage(imageUrl),
                                 IsDownloadingInstance = false,
                                 IsInstalled = UserData.Instances.Record[key].IsInstalled,
                                 UpdateAvailable = UserData.Instances.Record[key].UpdateAvailable,

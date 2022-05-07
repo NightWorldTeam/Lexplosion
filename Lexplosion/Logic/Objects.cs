@@ -218,7 +218,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string Name { get; set; }
         public InstanceSource Type;
         public bool UpdateAvailable;
-        public bool IsInstalled { get; set; } = true;
+        public bool IsInstalled { get; set; } = false;
     }
 
     public class OutsideInstance : InstanceParametrs
@@ -295,12 +295,13 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
 
     public class InstanceData
     {
-        public string GameVersion;
-        public string LastUpdate;
-        public long DonwloadCounts;
-        public ModloaderType Modloader;
-        public string Description;
-        public List<Category> Categories;
-        public List<byte[]> Images;
+        public string GameVersion { get; set; }
+        public string LastUpdate { get; set; }
+        public long TotalDownloads { get; set; }
+        public ModloaderType Modloader { get; set; }
+        public string Description { get; set; }
+        public List<Category> Categories { get; set; }
+        public List<byte[]> Images { get; set; }
+        public string WebsiteUrl { get; set; }
     }
 }

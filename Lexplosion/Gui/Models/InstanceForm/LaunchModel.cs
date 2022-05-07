@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management;
+using System.Threading;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
@@ -23,11 +24,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             Lexplosion.Run.TaskRun(delegate
             {
+                _instanceModel.IsDownloadingInstance = true;
                 ManageLogic.СlientManager(_instanceModel.LocalId, _downloadModel.Download,
                     _downloadModel.InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit);
+                MainViewModel.IsInstanceRunning = true;
+                _multibuttonModel.ChangeFuncClose();
             });
-            MainViewModel.IsInstanceRunning = true;
-            _multibuttonModel.ChangeFuncClose();
         }
 
         public void InstanceRunCompleted(string id, bool successful)
@@ -38,13 +40,14 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
             else 
             {
-                _multibuttonModel.ChangeFuncPlay();
+                
             }
             _instanceModel.OverviewField = _instanceModel.Properties.InstanceAssets.description;
         }
 
         public void InstanceGameExit(string id)
         {
+            _multibuttonModel.ChangeFuncPlay();
             MainViewModel.IsInstanceRunning = false;
         }
         #endregion

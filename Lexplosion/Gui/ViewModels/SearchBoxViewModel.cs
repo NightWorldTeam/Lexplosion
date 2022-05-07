@@ -12,8 +12,8 @@ namespace Lexplosion.Gui.ViewModels
 
         private Action _searchChangedAction;
 
-        private InstanceSource _selectedInstanceSource;
-        private int _selectedSourceIndex;
+        private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
+        private int _selectedSourceIndex = 1;
 
         public InstanceSource SelectedInstanceSource 
         {
@@ -74,7 +74,6 @@ namespace Lexplosion.Gui.ViewModels
         public SearchBoxViewModel(Action action)
         {
             _searchChangedAction = action;
-            SelectedSourceIndex = 1;
         }
     }
 }

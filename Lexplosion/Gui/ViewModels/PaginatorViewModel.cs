@@ -13,8 +13,8 @@ namespace Lexplosion.Gui.ViewModels
         private bool _canGoBack = false;
         private bool _canGoNext = true;
 
-        private int _pageIndex = 0;
-        private int _pageNum = 1;
+        private ushort _pageIndex = 0;
+        private ushort _pageNum = 1;
 
         private InstanceSource _source;
 
@@ -43,13 +43,13 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _prevPageCommand ?? (new RelayCommand(obj =>
             {
-                if (PageIndex > 0) 
+                if (PageIndex - 1 >= 0) 
                 {
                     if (!CanGoNext) CanGoNext = true;
                     if (!CanGoBack) CanGoBack = true;
                     PageIndex--;
                 }
-                if (PageIndex == 0) CanGoBack = false;
+                else if (PageIndex == 0) CanGoBack = false;
             }));
         }
 
@@ -57,19 +57,19 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _textBoxPageIndexChanged ?? (new RelayCommand(obj => 
             {
-                if (PageNum == 0) 
+                if (PageNum < 1) 
                 {
                     PageNum = 1;
                 }
                 if (PageNum >= 1)
                 {
-                    PageIndex = PageNum - 1;
+                    PageIndex = PageNum--;
                 }
                 else PageIndex = 0;
-            }));
+            }));  
         }
 
-        public int PageIndex
+        public ushort PageIndex
         {
             get => _pageIndex; set
             {
@@ -97,11 +97,14 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public int PageNum 
+        public ushort PageNum 
         {
             get => _pageNum; set 
             {
-                _pageNum = value;
+                if (value <= 0)
+                    _pageNum = 1;
+                else
+                    _pageNum = value;
                 OnPropertyChanged(nameof(PageNum));
             }
         }
@@ -111,7 +114,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _source; set
             {
                 _source = value;
-                OnPropertyChanged("Source");
+                OnPropertyChanged(nameof(Source));
             }
         }
     }

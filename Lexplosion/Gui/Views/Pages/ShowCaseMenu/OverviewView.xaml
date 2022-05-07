@@ -84,7 +84,7 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Foreground="White"
-                                    Text="{Binding OverviewModel.GameVersion}" />
+                                    Text="{Binding OverviewModel.InstanceData.GameVersion}" />
 
                                 <Border x:Name="LoadingVersion1" Grid.Column="0" 
                                         Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" 
@@ -113,7 +113,7 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Foreground="White"
-                                    Text="{Binding OverviewModel.LastUpdate}" />
+                                    Text="{Binding OverviewModel.InstanceData.LastUpdate}" />
                                 <Border x:Name="LoadingLastUpdate1" 
                                         Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" 
                                         Grid.Column="0" Background="#202020" CornerRadius="10" Margin="0,7,5,7" />
@@ -140,7 +140,7 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Foreground="White"
-                                    Text="{Binding OverviewModel.TotalDownloads}" />
+                                    Text="{Binding OverviewModel.InstanceData.TotalDownloads}" />
                                 <Border x:Name="LoadingTotalDownloads1" 
                                         Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" 
                                         Grid.Column="0" Background="#202020" CornerRadius="10" Margin="0,7,5,7" />
@@ -166,7 +166,7 @@
                                 <TextBlock x:Name="Core"
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
-                                    Text="{Binding OverviewModel.Modloader, UpdateSourceTrigger=PropertyChanged}"
+                                    Text="{Binding OverviewModel.InstanceData.Modloader, UpdateSourceTrigger=PropertyChanged}"
                                     Foreground="White" />
                                 <Border x:Name="LoadingCore1" 
                                         Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" 
@@ -207,7 +207,7 @@
                 FontSize="15"
                 FontWeight="Regular"
                 Foreground="WhiteSmoke"
-                Text="{Binding OverviewModel.ShortDescription, UpdateSourceTrigger=Default}"
+                Text="{Binding OverviewModel.InstanceData.Description, UpdateSourceTrigger=Default}"
                 TextWrapping="Wrap" />
             <Border x:Name="LoadingShortDescription" 
                     Grid.Row="2"
@@ -243,7 +243,7 @@
                             Padding="5,0,0,0"
                             Text="Категории" />
                         <ItemsControl Grid.Row="1"
-                              ItemsSource="{Binding OverviewModel.Categories}"
+                              ItemsSource="{Binding OverviewModel.InstanceData.Categories}"
                               Padding="1"
                               Height="{Binding CategoryPanelBorderHeight}">
                             <ItemsControl.ItemsPanel >
@@ -285,7 +285,7 @@
                         FontSize="14"
                         Foreground="#f5f5f5"
                         Opacity="0.8"
-                        Text="{Binding OverviewModel.Description}"
+                        Text="{Binding OverviewModel.InstanceData.Description}"
                         TextWrapping="Wrap" />
                     <Border x:Name="LoadingDescription" 
                             Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
