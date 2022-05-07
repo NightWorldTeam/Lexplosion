@@ -1,4 +1,6 @@
-﻿using Lexplosion.Logic.Objects;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.Objects;
+using System.Diagnostics;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
@@ -31,6 +33,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
             {
 
             };
+        }
+
+        public void OpenInstanceFolder() 
+        {
+            Process.Start("explorer", @"" + UserData.GeneralSettings.GamePath.Replace("/", @"\") + @"\instances\" + Instance.Properties.Id);
         }
     }
 }

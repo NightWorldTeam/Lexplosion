@@ -52,6 +52,7 @@ namespace Lexplosion.Gui.ViewModels
                     case LowerButtonFunc.DeleteFromLibrary:
                         break;
                     case LowerButtonFunc.OpenFolder:
+                        Model.OpenInstanceFolder();
                         break;
                     case LowerButtonFunc.CancelDownload:
                         break;

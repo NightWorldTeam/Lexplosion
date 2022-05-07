@@ -13,6 +13,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private int _downloadProgress;
         private int _stage;
         private int _stagesCount;
+        private DownloadStageTypes _downloadStageType;
 
         private InstanceModel _instanceModel;
         private MultibuttonModel _multibuttonModel;
@@ -55,6 +56,15 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
+        public DownloadStageTypes DownloadStageType
+        {
+            get => _downloadStageType; set
+            {
+                _downloadStageType = value;
+                OnPropertyChanged(nameof(DownloadStageType));
+            }
+        }
+
         #endregion
 
         public DownloadModel(InstanceModel instanceModel, MultibuttonModel multibuttonModel)
@@ -89,19 +99,23 @@ namespace Lexplosion.Gui.Models.InstanceForm
             });
         }
 
-        public void Download(int stagesCount, int stage, int procent)
+        public void Download(DownloadStageTypes downloadStageType, int stagesCount, int stage, int procent)
         {
             StagesCount = stagesCount;
             Stage = stage;
             DownloadProgress = procent;
+            DownloadStageType = downloadStageType;
 
-            if (stage == 0)
+            if (downloadStageType == DownloadStageTypes.Java)
             {
+                _instanceModel.OverviewField = "Идёт скачивание Java...";
+            }
+            else if (downloadStageType == DownloadStageTypes.Prepare) 
+            { 
                 _instanceModel.OverviewField = "Идёт подготовка к запуску...";
                 IsIndeterminate = true; 
-
             }
-            else 
+            else
             {
                 _instanceModel.OverviewField = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
                 IsIndeterminate = false;
