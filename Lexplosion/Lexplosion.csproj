@@ -93,6 +93,89 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Gui\Commands\CommandBase.cs" />
+    <Compile Include="Gui\Commands\NavigateCommand.cs" />
+    <Compile Include="Gui\Commands\RelayCommand.cs" />
+    <Compile Include="Gui\Helpers\AsyncObservableCollection.cs" />
+    <Compile Include="Gui\Helpers\GridHelper.cs" />
+    <Compile Include="Gui\Helpers\PasswordBoxHelper.cs" />
+    <Compile Include="Gui\Helpers\TextBoxHelper.cs" />
+    <Compile Include="Gui\InstanceFormController.cs" />
+    <Compile Include="Gui\IPaginable.cs" />
+    <Compile Include="Gui\Models\GeneralSettingsModel.cs" />
+    <Compile Include="Gui\Models\InstanceFactory\InstanceFactoryModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\DownloadModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\InstanceFormModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\InstanceModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\LaunchModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\MultibuttonModel.cs" />
+    <Compile Include="Gui\Models\MainModel.cs" />
+    <Compile Include="Gui\Models\ShowCaseMenu\OverviewModel.cs" />
+    <Compile Include="Gui\MultiBindingConverter.cs" />
+    <Compile Include="Gui\NegativeBooleanToVisibilityConverter.cs" />
+    <Compile Include="Gui\Stores\NavigationStore.cs" />
+    <Compile Include="Gui\SubmenuViewModel.cs" />
+    <Compile Include="Gui\Tab.cs" />
+    <Compile Include="Gui\ViewModels\AuthViewModel.cs" />
+    <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />
+    <Compile Include="Gui\ViewModels\FactoryMenu\InstanceFactoryViewModel.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\CatalogViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\GeneralSettingsViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\LibraryViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\MainMenuViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainViewModel.cs" />
+    <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
+    <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\OverviewViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\ShowCaseViewModel.cs" />
+    <Compile Include="Gui\ViewModels\TabMenuViewModel.cs" />
+    <Compile Include="Gui\Views\CustomControls\InstanceForm.xaml.cs">
+      <DependentUpon>InstanceForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\CustomControls\Paginator.xaml.cs">
+      <DependentUpon>Paginator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\CustomControls\SearchBox.xaml.cs">
+      <DependentUpon>SearchBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\AuthView.xaml.cs">
+      <DependentUpon>AuthView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\FactoryGeneralView.xaml.cs">
+      <DependentUpon>FactoryGeneralView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\InstanceFactoryView.xaml.cs">
+      <DependentUpon>InstanceFactoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\CatalogView.xaml.cs">
+      <DependentUpon>CatalogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\GeneralSettingsView.xaml.cs">
+      <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\LibraryView.xaml.cs">
+      <DependentUpon>LibraryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\OverviewView.xaml.cs">
+      <DependentUpon>OverviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\ShowCaseView.xaml.cs">
+      <DependentUpon>ShowCaseView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\TabMenuView.xaml.cs">
+      <DependentUpon>TabMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Windows\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\VMBase.cs" />
     <Compile Include="Logic\Aes.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Logic\FileSystem\CurseforgeInstaller.cs" />
@@ -137,6 +220,94 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\Defaults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\FrameStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\StylesDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\TabControlStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Views\CustomControls\InstanceForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\CustomControls\Paginator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\CustomControls\SearchBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\AuthView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\FactoryGeneralView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\InstanceFactoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\CatalogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\GeneralSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\LibraryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\OverviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\ShowCaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\TabMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Windows\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Windows\SplashWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -219,5 +390,6 @@
     <Content Include="DLL\NewtonsoftJson.dll" />
     <Resource Include="launcher_loading.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

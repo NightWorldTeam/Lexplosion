@@ -1,8 +1,4 @@
-﻿using Lexplosion.Gui.Windows;
-using System;
-using System.Threading.Tasks;
-using System.Windows;
-using Lexplosion;
+﻿using System.Windows;
 
 namespace Lexplosion
 {

@@ -16,7 +16,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
 
     public class InstanceProperties : OutsideInstance
     {
-        public BitmapImage Logo;
+        public BitmapImage Logo { get; set; }
         public List<string> InstanceTags;
         public bool IsInstanceAddedToLibrary;
         public bool IsDownloadingInstance;
@@ -27,13 +27,13 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     /// </summary>
     public class InstanceAssets
     {
-        public string description;
-        public string author;
+        public string description { get; set; }
+        public string author { get; set; }
         public List<byte[]> images;
         public string mainImage;
         public string xmx;
         public string xms;
-        public List<Category> categories;
+        public List<Category> categories { get; set; }
     }
 
     /// <summary>
@@ -170,7 +170,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string name;
         public List<LatestFile> latestFiles;
         public string summary;
-        public float downloadCount;
+        public float downloadCount { get; set; }
         public string dateModified;
         public string websiteUrl;
         public List<Attachment> attachments;
@@ -215,7 +215,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
 
     public class InstanceParametrs
     {
-        public string Name;
+        public string Name { get; set; }
         public InstanceSource Type;
         public bool UpdateAvailable;
     }
@@ -224,11 +224,11 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     {
         public string Id; // id от Type
         public string LocalId; // айди созданой в лаунчере сборки
-        public InstanceAssets InstanceAssets;
+        public InstanceAssets InstanceAssets { get; set; }
         public byte[] MainImage;
         public bool IsInstalled;
         public List<string> Categories;
-        public float DownloadCount;
+        public float DownloadCount { get; set; }
     }
 
     class CurseforgeFileInfo
@@ -256,8 +256,8 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
 
     public struct MCVersionInfo
     {
-        public string type;
-        public string id;
+        public string type { get; set; }
+        public string id { get; set; }
     }
 
     /// <summary>

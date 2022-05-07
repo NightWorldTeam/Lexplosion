@@ -11,7 +11,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using System.Threading;
-using Lexplosion.Gui.Windows;
+using Lexplosion.Gui.Views.Windows;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -42,7 +42,6 @@ namespace Lexplosion
         {
             app.Run(new SplashWindow());
         }
-
         private static void InitializedSystem()
         {
             // получем количество процессов с таким же именем
@@ -71,17 +70,39 @@ namespace Lexplosion
             ManageLogic.DefineListInstances();
             //WithDirectory.CheckLauncherAssets();
 
-            Application.Current.Resources = new ResourceDictionary()
+            var stylePath = "pack://application:,,,/Gui/Resources/";
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri("pack://application:,,,/Gui/Styles/StylesDictionary.xaml")
-            };
+                Source = new Uri(stylePath + "Colors.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(stylePath + "Defaults.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(stylePath + "TabControlStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(stylePath + "ButtonStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(stylePath + "StylesDictionary.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/DataTemplateDictionary.xaml")
+            });
 
             OutsideDataManager.DefineInstances();
 
             Thread.Sleep(1000);
+
             app.Dispatcher.Invoke(() =>
             {
-                var authWindow = new AuthWindow();
+                var authWindow = new MainWindow();
                 authWindow.Left = app.MainWindow.Left - 97;
                 authWindow.Top = app.MainWindow.Top - 39;
                 authWindow.Show();

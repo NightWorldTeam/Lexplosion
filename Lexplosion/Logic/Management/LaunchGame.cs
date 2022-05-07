@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Gui.Windows;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
@@ -76,17 +75,17 @@ namespace Lexplosion.Logic.Management
 
             if (_settings.ShowConsole == true)
             {
-                MainWindow.Obj.Dispatcher.Invoke(delegate ()
-                {
-                    if (!ConsoleWindow.isShow)
-                    {
-                        ConsoleWindow.Window.Show();
-                        ConsoleWindow.isShow = true;
-                    }
+                //App.Current.Dispatcher.Invoke(delegate ()
+                //{
+                //    if (!ConsoleWindow.isShow)
+                //    {
+                //        ConsoleWindow.Window.Show();
+                //        ConsoleWindow.isShow = true;
+                //    }
 
-                    ConsoleWindow.Window.Update("Выполняется запуск игры...");
-                    ConsoleWindow.Window.Update(command);
-                });
+                //    ConsoleWindow.Window.Update("Выполняется запуск игры...");
+                //    ConsoleWindow.Window.Update(command);
+                //});
             }
 
             bool launcherVisible = true;
@@ -114,7 +113,7 @@ namespace Lexplosion.Logic.Management
 
                             if (_settings.HiddenMode == true)
                             {
-                                MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
+                                //MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
                                 launcherVisible = false;
                             }
 
@@ -128,17 +127,17 @@ namespace Lexplosion.Logic.Management
 
                 void WriteToConsole(object s, DataReceivedEventArgs e)
                 {
-                    if (ConsoleWindow.isShow)
-                    {
-                        MainWindow.Obj.Dispatcher.Invoke(delegate
-                        {
-                            ConsoleWindow.Window.Update(e.Data);
-                        });
-                    }
-                    else
-                    {
-                        process.OutputDataReceived -= WriteToConsole;
-                    }
+                    //if (ConsoleWindow.isShow)
+                    //{
+                    //    MainWindow.Obj.Dispatcher.Invoke(delegate
+                    //    {
+                    //        ConsoleWindow.Window.Update(e.Data);
+                    //    });
+                    //}
+                    //else
+                    //{
+                    //    process.OutputDataReceived -= WriteToConsole;
+                    //}
                 }
 
                 process.OutputDataReceived += BeforeLaunch;
@@ -173,18 +172,18 @@ namespace Lexplosion.Logic.Management
 
                     if (!gameVisible)
                     {
-                        MainWindow.Obj.Dispatcher.Invoke(delegate ()
+                        App.Current.Dispatcher.Invoke(delegate ()
                         {
                             ComplitedLaunch(_instanceId, false);
 
                             // TODO: перенести это в ConsoleWindow
-                            if (!ConsoleWindow.isShow)
-                            {
-                                ConsoleWindow.Window.Show();
-                                ConsoleWindow.isShow = true;
-                            }
-                            ConsoleWindow.Window.Update(consoleText);
-                            ConsoleWindow.Window.Update(command);
+                            //if (!ConsoleWindow.isShow)
+                            //{
+                            //    ConsoleWindow.Window.Show();
+                            //    ConsoleWindow.isShow = true;
+                            //}
+                            //ConsoleWindow.Window.Update(consoleText);
+                            //ConsoleWindow.Window.Update(command);
                         });
 
                         consoleText = "";
@@ -192,7 +191,7 @@ namespace Lexplosion.Logic.Management
 
                     if (!launcherVisible)
                     {
-                        MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Show(); });
+                        //App.Current.Dispatcher.Invoke(delegate { MainWindow.Obj.Show(); });
                     }
 
                     GameExited(_instanceId);

@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="ActivityColor">#167FFC</Color>
+    <SolidColorBrush x:Key="PrimaryColor" Color="{StaticResource ActivityColor}" />
+    
+    
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#1f202a"/>
+    <SolidColorBrush x:Key="DarkBackgroundBrush" Color="#1f202a"/>
+    <SolidColorBrush x:Key="DarkDarkBackgroundBrush" Color="#1f202a"/>
+    <SolidColorBrush x:Key="PressedBrush" Color="#1f202a"/>
+    <SolidColorBrush x:Key="MouseOverBrush" Color="#383838"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#1f202a"/>
+    <SolidColorBrush x:Key="ShadowBorderBrush1" Color="#1f202a"/>
+    <SolidColorBrush x:Key="ShadowBorderBrush2" Color="#1f202a"/>
+    <SolidColorBrush x:Key="DarkDarkForegroundBrush" Color="#1f202a"/>
+    <SolidColorBrush x:Key="DarkForegroundBrush" Color="#1f202a"/>
+    <SolidColorBrush x:Key="ForegroundBrush" Color="#1f202a"/>
+</ResourceDictionary>

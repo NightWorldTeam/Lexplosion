@@ -8,7 +8,6 @@ using System.IO.Compression;
 using Newtonsoft.Json;
 using System.Threading;
 using Lexplosion.Global;
-using Lexplosion.Gui.Windows;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System.Windows;
@@ -398,16 +397,16 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch
             {
-                MainWindow.Obj.Dispatcher.Invoke(delegate
-                {
-                    MainWindow.Obj.SetMessageBox("Произошла ошибка при удалении.");
-                });
+                //MainWindow.Obj.Dispatcher.Invoke(delegate
+                //{
+                //    MainWindow.Obj.SetMessageBox("Произошла ошибка при удалении.");
+                //});
             }
 
-            MainWindow.Obj.Dispatcher.Invoke(delegate
-            {
-                //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
-            });
+            //MainWindow.Obj.Dispatcher.Invoke(delegate
+            //{
+            //    //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
+            //});
         }
 
         public static bool DonwloadJava(string javaName)
