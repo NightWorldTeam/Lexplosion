@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace Lexplosion.Logic.Management
 {
@@ -149,7 +150,6 @@ namespace Lexplosion.Logic.Management
         {
             InstanceSource type = UserData.Instances.Record[instanceId].Type;
 
-            // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
             ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Dictionary<string, string> xmx = new Dictionary<string, string>();
@@ -352,6 +352,42 @@ namespace Lexplosion.Logic.Management
             */
 
             return res;
+        }
+
+        public static InstanceData GetInstanceData(InstanceSource type, string instanceId)
+        {
+            switch (type)
+            {
+                case InstanceSource.Curseforge:
+                    var data = CurseforgeApi.GetInstance(instanceId);
+                    var images = new List<byte[]>();
+                    using (var webClient = new WebClient())
+                    {
+                        foreach (var item in data.attachments)
+                        {
+                            try
+                            {
+                                if (!item.isDefault && !item.url.Contains("avatars"))
+                                    images.Add(webClient.DownloadData(item.url));
+                            }
+                            catch { }
+                        }
+                    }
+                    
+                    return new InstanceData
+                    {
+                        Categories = data.categories,
+                        Description = data.summary,
+                        DonwloadCounts = (long)data.downloadCount,
+                        GameVersion = data.gameVersionLatestFiles[0].gameVersion,
+                        LastUpdate = DateTime.Parse(data.dateModified).ToString("dd MMM yyyy"),
+                        Modloader = data.Modloader,
+                        Images = images
+                    };
+                default:
+                    return null;
+                
+            }
         }
     }
 }

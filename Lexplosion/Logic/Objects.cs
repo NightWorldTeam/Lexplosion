@@ -292,4 +292,15 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public long LastUpdate;
         public string ExecutableFile = "/bin/javaw.exe";
     }
+
+    public class InstanceData
+    {
+        public string GameVersion;
+        public string LastUpdate;
+        public long DonwloadCounts;
+        public ModloaderType Modloader;
+        public string Description;
+        public List<Category> Categories;
+        public List<byte[]> Images;
+    }
 }
