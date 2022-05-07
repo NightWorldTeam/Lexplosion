@@ -6,9 +6,9 @@ namespace Lexplosion.Gui.ViewModels
     {
         private RelayCommand _searchCommand;
 
-        private string _searchTextUncomfirmed;
-        private string _searchTextComfirmed;
-        private string _currentSearchText;
+        private string _searchTextUncomfirmed = string.Empty;
+        private string _searchTextComfirmed = string.Empty;
+        private string _currentSearchText = string.Empty;
 
         private Action _searchChangedAction;
 
@@ -21,6 +21,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _selectedInstanceSource = value;
                 OnPropertyChanged(nameof(SelectedInstanceSource));
+                _searchChangedAction();
             }
         }
 
@@ -28,7 +29,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _searchCommand ?? (new RelayCommand(obj => 
             {
-                if (_currentSearchText == SearchTextUncomfirmed)
+                if (_currentSearchText != SearchTextUncomfirmed)
                 {
                     if (SearchTextUncomfirmed.Length != 0)
                     {
@@ -65,6 +66,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _selectedSourceIndex = value;
                 if (value == 0) SelectedInstanceSource = InstanceSource.Nightworld;
+                if (value == 1) SelectedInstanceSource = InstanceSource.Curseforge;
                 OnPropertyChanged(nameof(SelectedSourceIndex));
             }
         }
@@ -72,7 +74,6 @@ namespace Lexplosion.Gui.ViewModels
         public SearchBoxViewModel(Action action)
         {
             _searchChangedAction = action;
-            SelectedInstanceSource = InstanceSource.Curseforge;
             SelectedSourceIndex = 1;
         }
     }

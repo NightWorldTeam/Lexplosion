@@ -41,10 +41,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
             Lexplosion.Run.TaskRun(delegate () 
             {
-                Console.WriteLine(PaginatorVM.PageIndex);
                 var instances = OutsideDataManager.GetInstances(
-                    SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed
-                    );                
+                    InstanceSource.Nightworld, _pageSize, 0, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed
+                    );
 
                 if (instances.Count == 0)
                 {
