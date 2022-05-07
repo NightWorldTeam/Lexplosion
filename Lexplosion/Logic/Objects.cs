@@ -227,7 +227,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public InstanceAssets InstanceAssets { get; set; }
         public byte[] MainImage;
         public bool IsInstalled;
-        public List<string> Categories;
+        public List<Category> Categories { get; set; }
         public float DownloadCount { get; set; }
     }
 
@@ -245,7 +245,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string author;
         public long version;
         public string description;
-        public List<string> categories;
+        public List<Category> categories;
         public long DonwloadsCount;
     }
 

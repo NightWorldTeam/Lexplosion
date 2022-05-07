@@ -34,19 +34,8 @@ namespace Lexplosion.Logic.Management
         private static List<OutsideInstance> UploadInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
             Console.WriteLine("UploadInstances " + pageIndex);
-            List<string> CategoriesListConverter(List<Category> categories)
-            {
-                List<string> znfvrdfga = new List<string>();
-                foreach (var c in categories)
-                {
-                    znfvrdfga.Add(c.name);
-                }
-
-                return znfvrdfga;
-            }
 
             List<OutsideInstance> Instances = new List<OutsideInstance>();
-
             List<AutoResetEvent> events = new List<AutoResetEvent>();
 
             if (type == InstanceSource.Nightworld)
@@ -67,7 +56,7 @@ namespace Lexplosion.Logic.Management
                                 description = nwInstances[nwModpack].description ?? "",
                             },
                             MainImage = null,
-                            Categories = nwInstances[nwModpack].categories ?? new List<string>(),
+                            Categories = nwInstances[nwModpack].categories ?? new List<Category>(),
                             DownloadCount = 0,
                             Type = InstanceSource.Nightworld,
                             Id = nwModpack
@@ -104,14 +93,14 @@ namespace Lexplosion.Logic.Management
 
                     OutsideInstance instanceInfo = new OutsideInstance()
                     {
-                        Name = instance.name ?? "Uncnown name",
+                        Name = instance.name ?? "Unknown name",
                         InstanceAssets = new InstanceAssets()
                         {
                             author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown author",
                             description = instance.summary,
                         },
                         MainImage = null, // TODO: если картинки не найдено тут нулл и останется
-                        Categories = CategoriesListConverter(instance.categories),
+                        Categories = instance.categories,
                         DownloadCount = instance.downloadCount,
                         Type = InstanceSource.Curseforge,
                         Id = instance.id.ToString()

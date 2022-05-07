@@ -72,7 +72,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                                                 {
                                                     author = instances[j].InstanceAssets.author,
                                                     description = instances[j].InstanceAssets.description,
-                                                    categories = instances[j].InstanceAssets.categories
+                                                    categories = instances[j].Categories
                                                 },
                                                 Id = instances[j].Id,
                                                 Logo = ToImage(instances[j].MainImage),
