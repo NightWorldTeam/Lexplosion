@@ -6,7 +6,7 @@ namespace Lexplosion.Gui.ViewModels
     {
         private RelayCommand _searchCommand;
 
-        private string _searchTextUncomfirmed = "Поле поиска";
+        private string _searchTextUncomfirmed;
         private string _searchTextComfirmed;
         private string _currentSearchText;
 

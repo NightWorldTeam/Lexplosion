@@ -132,7 +132,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     public class Category
     {
         public int categoryId;
-        public string name;
+        public string name { get; set; }
     }
 
     /// <summary>
