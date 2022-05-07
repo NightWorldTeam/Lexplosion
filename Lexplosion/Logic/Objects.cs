@@ -218,6 +218,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string Name { get; set; }
         public InstanceSource Type;
         public bool UpdateAvailable;
+        public bool IsInstalled { get; set; } = true;
     }
 
     public class OutsideInstance : InstanceParametrs
@@ -226,7 +227,6 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string LocalId; // айди созданой в лаунчере сборки
         public InstanceAssets InstanceAssets { get; set; }
         public byte[] MainImage;
-        public bool IsInstalled;
         public List<Category> Categories { get; set; }
         public float DownloadCount { get; set; }
     }

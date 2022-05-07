@@ -34,7 +34,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             if (successful)
             {
-                
+
             }
             else 
             {

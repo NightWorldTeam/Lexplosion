@@ -1,8 +1,14 @@
-﻿using Lexplosion.Gui.Models.InstanceFactory;
+﻿using Lexplosion.Gui.Commands;
+using Lexplosion.Gui.Models;
+using Lexplosion.Gui.Models.InstanceFactory;
+using Lexplosion.Gui.Models.InstanceForm;
+using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
@@ -18,6 +24,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private string _selectedModloaderVersion;
 
         private bool _isModloaderSelected = false;
+
+        public ICommand NavigationMainMenuCommand { get; }
 
         #region prop
         public bool IsModloaderSelected 
@@ -109,6 +117,17 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                         ManageLogic.CreateInstance(
                             Model.Name, InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion
                         );
+                        NavigationMainMenuCommand.Execute(null);
+                        MainModel.AddedInstanceForms.Add(
+                            new InstanceFormViewModel(
+                                new InstanceFormModel(
+                                    new InstanceProperties 
+                                    {
+                                        
+                                    }
+                                    )
+                                )
+                            );
                     }
                 }));
             }
@@ -117,7 +136,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         public FactoryGeneralViewModel()
         {
-            
+            NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
+                 MainViewModel.NavigationStore, () => new MainMenuViewModel());
+
             List<string> versions = new List<string>();
             Lexplosion.Run.TaskRun(() =>
             {

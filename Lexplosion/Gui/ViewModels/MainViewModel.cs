@@ -87,7 +87,7 @@ namespace Lexplosion.Gui.ViewModels
             if (UserData.Instances.Record.Keys.Count == 0)
                 return;
 
-            string description, imageUrl, author, outsideInstanceId, localId;
+            string description, imageUrl, author, outsideInstanceId;
             InstanceSource source;
 
             foreach (var key in UserData.Instances.Record.Keys)
@@ -141,8 +141,8 @@ namespace Lexplosion.Gui.ViewModels
                                 Id = outsideInstanceId,
                                 Logo = new BitmapImage(new System.Uri(imageUrl)),
                                 IsDownloadingInstance = false,
-                                IsInstalled = false,
-                                UpdateAvailable = false,
+                                IsInstalled = UserData.Instances.Record[key].IsInstalled,
+                                UpdateAvailable = UserData.Instances.Record[key].UpdateAvailable,
                                 IsInstanceAddedToLibrary = true
                             }
                         )
