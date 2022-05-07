@@ -86,7 +86,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 else 
                 {
                     _instanceModel.LocalId = ManageLogic.CreateInstance(
-                        _instanceModel.Properties.Name, InstanceSource.Curseforge,
+                        _instanceModel.Properties.Name, _instanceModel.Properties.Type,
                         "", ModloaderType.None, "", _instanceModel.OutsideId);
                 }
             }
