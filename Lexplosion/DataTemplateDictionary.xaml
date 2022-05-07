@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vmmainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu" 
+                    xmlns:pagemm="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu" 
+                    xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
+                    xmlns:pages="clr-namespace:Lexplosion.Gui.Views.Pages"
+                    xmlns:showcasemenu="clr-namespace:Lexplosion.Gui.ViewModels.ShowCaseMenu"
+                    xmlns:showcasepage="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
+                    xmlns:factorymenu="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
+                    xmlns:vmfactorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu" 
+                    xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls" 
+                    xmlns:gui="clr-namespace:Lexplosion.Gui" xmlns:models="clr-namespace:Lexplosion.Gui.Models">
+    <!--  -->
+    <BooleanToVisibilityConverter x:Key="ConvertBoolToVisibility" />
+    <gui:NegativeBooleanToVisibilityConverter x:Key="NegativeConvertBoolToVisibility" />
+
+
+    <models:MainModel x:Key="MainModel"/>
+    <vmmainmenu:MainMenuViewModel x:Key="MainMenuViewModel"/>
+    <gui:MultiBindingConverter x:Key="MultiBiningConverter"/>
+    
+    <!--<DataTemplate DataType="{x:Type viewmodels:InstanceFormViewModel}">
+        <customcontrols:InstanceForm  Margin="4,30,30,0"/>
+    </DataTemplate>-->
+
+    <!-- Auth DataTemplate -->
+    <DataTemplate DataType="{x:Type viewmodels:AuthViewModel}">
+        <pages:AuthView />
+    </DataTemplate>
+    <!-- MainMenu DataTemplate -->
+    <DataTemplate DataType="{x:Type vmmainmenu:MainMenuViewModel}">
+        <pagemm:MainMenuView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmainmenu:CatalogViewModel}">
+        <pagemm:CatalogView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmainmenu:LibraryViewModel}">
+        <pagemm:LibraryView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmainmenu:GeneralSettingsViewModel}">
+        <pagemm:GeneralSettingsView />
+    </DataTemplate>
+    <!-- InstanceShowCase DataTemplate -->
+    <DataTemplate DataType="{x:Type showcasemenu:ShowCaseViewModel}">
+        <showcasepage:ShowCaseView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:OverviewViewModel}">
+        <showcasepage:OverviewView/>
+    </DataTemplate>
+    <!-- InstanceFactory DataTemplate -->
+    <DataTemplate DataType="{x:Type vmfactorymenu:InstanceFactoryViewModel}">
+        <factorymenu:InstanceFactoryView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodels:TabMenuViewModel}">
+        <pages:TabMenuView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmfactorymenu:FactoryGeneralViewModel}">
+        <factorymenu:FactoryGeneralView/>
+    </DataTemplate>
+</ResourceDictionary>
