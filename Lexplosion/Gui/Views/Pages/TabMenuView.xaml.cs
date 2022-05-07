@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Lexplosion.Gui.Views
+namespace Lexplosion.Gui.Views.Pages
 {
     /// <summary>
     /// Логика взаимодействия для TabMenuView.xaml

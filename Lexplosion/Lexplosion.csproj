@@ -100,7 +100,6 @@
     <Compile Include="Gui\Helpers\GridHelper.cs" />
     <Compile Include="Gui\Helpers\PasswordBoxHelper.cs" />
     <Compile Include="Gui\Helpers\TextBoxHelper.cs" />
-    <Compile Include="Gui\InstanceFormController.cs" />
     <Compile Include="Gui\IPaginable.cs" />
     <Compile Include="Gui\Models\GeneralSettingsModel.cs" />
     <Compile Include="Gui\Models\InstanceFactory\InstanceFactoryModel.cs" />
@@ -139,7 +138,7 @@
     <Compile Include="Gui\Views\CustomControls\SearchBox.xaml.cs">
       <DependentUpon>SearchBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Views\AuthView.xaml.cs">
+    <Compile Include="Gui\Views\Pages\AuthView.xaml.cs">
       <DependentUpon>AuthView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\FactoryMenu\FactoryGeneralView.xaml.cs">
@@ -166,7 +165,7 @@
     <Compile Include="Gui\Views\Pages\ShowCaseMenu\ShowCaseView.xaml.cs">
       <DependentUpon>ShowCaseView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Views\TabMenuView.xaml.cs">
+    <Compile Include="Gui\Views\Pages\TabMenuView.xaml.cs">
       <DependentUpon>TabMenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Windows\MainWindow.xaml.cs">
@@ -265,7 +264,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Views\AuthView.xaml">
+    <Page Include="Gui\Views\Pages\AuthView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -301,7 +300,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Views\TabMenuView.xaml">
+    <Page Include="Gui\Views\Pages\TabMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
