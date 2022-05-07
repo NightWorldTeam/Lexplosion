@@ -81,6 +81,7 @@ namespace Lexplosion.Logic.Management
             ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(instanceId);
+            instanceSettings.Merge(UserData.GeneralSettings, true);
 
             InstanceSource type = UserData.Instances.Record[instanceId].Type;
             IPrototypeInstance instance;
@@ -105,12 +106,13 @@ namespace Lexplosion.Logic.Management
             if (result == InstanceInit.Successful)
             {
                 string javaPath;
-                if (instanceSettings.CustomJava == true)
+                if (instanceSettings.CustomJava == false)
                 {
                     using (JavaChecker javaCheck = new JavaChecker(gameVersion))
                     {
                         if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                         {
+                            ProgressHandler(DownloadStageTypes.Java, 0, 0, 0);
                             if (!javaCheck.Update())
                             {
                                 ComplitedDownload(InstanceInit.JavaDownloadError, null, false);

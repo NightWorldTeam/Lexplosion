@@ -254,7 +254,7 @@ namespace Lexplosion.Logic.Management
                     InstanceInit result = instance.Check(out string gameVersion);
                     if (result == InstanceInit.Successful)
                     {
-                        if (_settings.CustomJava == true)
+                        if (_settings.CustomJava == false)
                         {
                             using (JavaChecker javaCheck = new JavaChecker(gameVersion))
                             {
