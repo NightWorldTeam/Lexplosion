@@ -186,11 +186,11 @@ namespace Lexplosion.Logic.Management
                 {
                     if (nowDataCount != 0)
                     {
-                        progressHandler(3, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        progressHandler(DownloadStageTypes.Client, 3, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     }
                     else
                     {
-                        progressHandler(3, 1, 0);
+                        progressHandler(DownloadStageTypes.Client, 3, 1, 0);
                     }
                 };
 
@@ -205,7 +205,7 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
-                progressHandler(3, 2, 0);
+                progressHandler(DownloadStageTypes.Client, 3, 2, 0);
 
                 // Скачиваем основные файлы майкнрафта
 
@@ -270,22 +270,22 @@ namespace Lexplosion.Logic.Management
                 {
                     installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                     {
-                        progressHandler(3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        progressHandler(DownloadStageTypes.Client, 3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     };
                 }
 
                 installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
-                progressHandler(3, 2, 100);
+                progressHandler(DownloadStageTypes.Client, 3, 2, 100);
 
                 installer.AddonsDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     if (nowDataCount != 0)
                     {
-                        progressHandler(3, 3, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        progressHandler(DownloadStageTypes.Client, 3, 3, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     }
                     else
                     {
-                        progressHandler(3, 3, 0);
+                        progressHandler(DownloadStageTypes.Client, 3, 3, 0);
                     }
                 };
 
@@ -309,7 +309,7 @@ namespace Lexplosion.Logic.Management
                     {
                         installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
                         {
-                            progressHandler(1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                            progressHandler(DownloadStageTypes.Client, 1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                         };
                     }
 

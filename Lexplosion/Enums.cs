@@ -89,4 +89,11 @@
         Resourcepacks = 12,
         Maps = 17
     }
+
+    public enum DownloadStageTypes
+    {
+        Prepare,
+        Client,
+        Java
+    }
 }

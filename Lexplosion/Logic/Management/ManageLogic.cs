@@ -78,7 +78,7 @@ namespace Lexplosion.Logic.Management
 
         public static void UpdateInstance(string instanceId, ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload)
         {
-            ProgressHandler(1, 0, 0);
+            ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(instanceId);
 
@@ -148,7 +148,7 @@ namespace Lexplosion.Logic.Management
             InstanceSource type = UserData.Instances.Record[instanceId].Type;
 
             // MainWindow.Obj.SetProcessBar("Выполняется запуск игры");
-            ProgressHandler(1, 0, 0);
+            ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Dictionary<string, string> xmx = new Dictionary<string, string>();
             xmx["eos"] = "2700";

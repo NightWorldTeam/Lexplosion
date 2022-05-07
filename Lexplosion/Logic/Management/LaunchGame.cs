@@ -256,24 +256,16 @@ namespace Lexplosion.Logic.Management
                     {
                         if (_settings.CustomJava == true)
                         {
-                            ProgressHandlerCallback progressHandler_;
                             using (JavaChecker javaCheck = new JavaChecker(gameVersion))
                             {
                                 if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                                 {
-                                    progressHandler_ = delegate (int stageCount, int stage, int procent)
-                                    {
-                                        progressHandler(stageCount + 1, stage + 1, procent);
-                                    };
+                                    progressHandler(DownloadStageTypes.Java, 0, 0, 0);
 
                                     if (!javaCheck.Update())
                                     {
                                         return Error(InstanceInit.JavaDownloadError);
                                     }
-                                }
-                                else
-                                {
-                                    progressHandler_ = progressHandler;
                                 }
 
                                 if (checkResult == JavaChecker.CheckResult.Successful)
