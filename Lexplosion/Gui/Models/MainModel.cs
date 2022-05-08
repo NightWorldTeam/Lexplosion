@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Data;
 
 namespace Lexplosion.Gui.Models
 {

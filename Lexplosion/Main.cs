@@ -89,6 +89,10 @@ namespace Lexplosion
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
+                Source = new Uri(stylePath + "ListboxStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
                 Source = new Uri(stylePath + "StylesDictionary.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
