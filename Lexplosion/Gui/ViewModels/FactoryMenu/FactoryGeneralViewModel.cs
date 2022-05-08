@@ -28,7 +28,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         private bool _isModloaderSelected = false;
 
-        public ICommand NavigationMainMenuCommand { get; }
+        public ICommand NavigationMainMenuCommand { get; set; }
 
         #region prop
         public bool IsModloaderSelected
@@ -117,13 +117,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 {
                     if (Model.Name != "")
                     {
-                        ManageLogic.CreateInstance(
+                        var id = ManageLogic.CreateInstance(
                             Model.Name, InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion
                         );
                         NavigationMainMenuCommand.Execute(null);
-
-                        var newInstanceId = UserData.Instances.Record.Keys.Last();
-                        var newInstanceParams = UserData.Instances.Record[newInstanceId];
 
                         MainModel.AddedInstanceForms.Add(
                             new InstanceFormViewModel(
@@ -133,7 +130,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                                         Name = Model.Name,
                                         Type = InstanceSource.Local,
                                         Id = string.Empty,
-                                        LocalId = newInstanceId,
+                                        LocalId = id,
                                         Categories = new List<Category>()
                                         {
                                             new Category()
