@@ -42,7 +42,7 @@
                                 Content="{TemplateBinding SelectionBoxItem}"
                                 Foreground="White"
                                 FontSize="15"
-                                IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                 ClickMode="Press">
                             </ToggleButton>
                             <ContentPresenter Name="ContentSite" 

@@ -17,7 +17,6 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     public class InstanceProperties : OutsideInstance
     {
         public BitmapImage Logo { get; set; }
-        public List<string> InstanceTags;
         public bool IsInstanceAddedToLibrary;
         public bool IsDownloadingInstance;
     }
