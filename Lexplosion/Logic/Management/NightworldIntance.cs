@@ -65,7 +65,15 @@ namespace Lexplosion.Logic.Management
                     }
 
                     var versionInfo = nightworldManifest.version;
-                    manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                    if (nightworldManifest.CustomVersion)
+                    {
+                        manifest = NightWorldApi.GetVersionManifest(InfoData.id);
+                    }
+                    else
+                    {
+                        manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                    }
+                    
                     if (manifest == null)
                     {
                         return InstanceInit.ServerError;
@@ -74,7 +82,14 @@ namespace Lexplosion.Logic.Management
                 else
                 {
                     var versionInfo = manifest_.version;
-                    manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                    if (nightworldManifest.CustomVersion)
+                    {
+                        manifest = NightWorldApi.GetVersionManifest(InfoData.id);
+                    }
+                    else
+                    {
+                        manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                    }
 
                     nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
                     if (nightworldManifest == null)
@@ -85,7 +100,15 @@ namespace Lexplosion.Logic.Management
                     if (manifest == null)
                     {
                         var mcVersion = nightworldManifest.version;
-                        manifest = ToServer.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, mcVersion.modloaderVersion);
+                        if (nightworldManifest.CustomVersion)
+                        {
+                            manifest = NightWorldApi.GetVersionManifest(InfoData.id);
+                        }
+                        else
+                        {
+                            manifest = ToServer.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, mcVersion.modloaderVersion);
+                        }
+
                         if (manifest == null)
                         {
                             return InstanceInit.ServerError;
@@ -102,7 +125,15 @@ namespace Lexplosion.Logic.Management
                 }
 
                 var versionInfo = nightworldManifest.version;
-                manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                if (nightworldManifest.CustomVersion)
+                {
+                    manifest = NightWorldApi.GetVersionManifest(InfoData.id);
+                }
+                else
+                {
+                    manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
+                }
+
                 if (manifest == null)
                 {
                     return InstanceInit.ServerError;

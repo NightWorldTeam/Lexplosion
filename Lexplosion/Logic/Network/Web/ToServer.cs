@@ -15,13 +15,6 @@ namespace Lexplosion.Logic.Network
 {
     static class ToServer
     {
-        private class DataVersionManifest : VersionManifest //этот класс нужен для декодирования json в GetVersionManifest
-        {
-            public string code;
-            public string str;
-            public new Dictionary<string, DataLibInfo> libraries;
-        }
-
         public static List<JavaVersion> GetJavaVersions()
         {
             try

@@ -380,7 +380,7 @@ namespace Lexplosion.Logic.Management
                             Categories = data.categories,
                             Description = data.summary,
                             TotalDownloads = (long)data.downloadCount,
-                            GameVersion = data.gameVersionLatestFiles[0].gameVersion,
+                            GameVersion = (data.gameVersionLatestFiles != null && data.gameVersionLatestFiles.Count > 0) ? data.gameVersionLatestFiles[0].gameVersion : "",
                             LastUpdate = DateTime.Parse(data.dateModified).ToString("dd MMM yyyy"),
                             Modloader = data.Modloader,
                             Images = images

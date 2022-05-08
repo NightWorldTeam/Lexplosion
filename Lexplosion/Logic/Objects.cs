@@ -74,13 +74,13 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public bool CustomVersion;
     }
 
-    class VersionManifest
+    public class VersionManifest
     {
         public VersionInfo version;
         public Dictionary<string, LibInfo> libraries;
     }
 
-    class VersionInfo : LocalVersionInfo
+    public class VersionInfo : LocalVersionInfo
     {
         public new FileInfo minecraftJar;
         public bool security;
@@ -90,7 +90,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     /// <summary>
     /// Локальный манифест модпака, который хранится в файле manifest.json
     /// </summary>
-    class LocalVersionInfo
+    public class LocalVersionInfo
     {
         public Dictionary<string, string> minecraftJar;
         public string arguments;
@@ -102,7 +102,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public ModloaderType modloaderType;
     }
 
-    class FileInfo
+    public class FileInfo
     {
         public string name;
         public string url;
