@@ -72,6 +72,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         }
 
         public Version version;
+        public bool CustomVersion;
     }
 
     class VersionManifest

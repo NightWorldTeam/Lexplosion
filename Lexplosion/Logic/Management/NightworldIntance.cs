@@ -194,25 +194,28 @@ namespace Lexplosion.Logic.Management
                             Directory.CreateDirectory(dir + "/images");
                         }
                         assets.images = new List<string>();
-                        foreach (string image in info.Images)
+                        if (info.Images != null)
                         {
-                            //try
+                            foreach (string image in info.Images)
                             {
-                                string[] a = image.Split('/');
-                                string fileName = dir + "/images/" + a[a.Length - 1];
-
-                                using (WebClient wc = new WebClient())
+                                //try
                                 {
-                                    if (File.Exists(fileName))
-                                    {
-                                        File.Delete(fileName);
-                                    }
+                                    string[] a = image.Split('/');
+                                    string fileName = dir + "/images/" + a[a.Length - 1];
 
-                                    wc.DownloadFile(image, fileName);
-                                    assets.images.Add(InstanceId + "/images/" + a[a.Length - 1]);
+                                    using (WebClient wc = new WebClient())
+                                    {
+                                        if (File.Exists(fileName))
+                                        {
+                                            File.Delete(fileName);
+                                        }
+
+                                        wc.DownloadFile(image, fileName);
+                                        assets.images.Add(InstanceId + "/images/" + a[a.Length - 1]);
+                                    }
                                 }
+                                //catch { }
                             }
-                            //catch { }
                         }
 
                         //устанавливаем описание
