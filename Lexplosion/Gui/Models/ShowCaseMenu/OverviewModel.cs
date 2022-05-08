@@ -11,14 +11,18 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
 {
     public class OverviewModel : VMBase
     {
-        private readonly string _id;
-        private readonly InstanceSource _source;
-        public InstanceData InstanceData { get; private set; }
+        private InstanceData _instanceData;
+        public InstanceData InstanceData 
+        { 
+            get => _instanceData; set 
+            {
+                _instanceData = value;
+                OnPropertyChanged(nameof(InstanceData));
+            }
+        }
 
         public OverviewModel(string id, InstanceSource source)
         {
-            _source = source;
-            _id = id;
             InstanceData = ManageLogic.GetInstanceData(source, id);
         }
     }

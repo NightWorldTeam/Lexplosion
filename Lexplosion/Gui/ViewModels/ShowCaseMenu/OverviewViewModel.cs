@@ -25,10 +25,19 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             { "Vanilla+", 49.71}
         };
 
-        private bool _isLoaded = false;
+        private bool _isLoaded = true;
         private double _categoryPanelBorderHeight;
+        private OverviewModel _overviewModel;
 
-        public OverviewModel OverviewModel { get; set; }
+        #region props
+        public OverviewModel OverviewModel 
+        { 
+            get => _overviewModel; set 
+            {
+                _overviewModel = value;
+                OnPropertyChanged(nameof(OverviewModel));
+            } 
+        }
 
         public double CategoryPanelBorderHeight
         {
@@ -38,6 +47,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 OnPropertyChanged(nameof(CategoryPanelBorderHeight));
             }
         }
+        #endregion props
 
         public RelayCommand CurseforgePageCommand
         {

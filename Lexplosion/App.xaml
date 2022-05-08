@@ -26,7 +26,13 @@
             <!-- More -->
             
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Gui/Styles/StylesDictionary.xaml"/>
+                <ResourceDictionary Source="/Gui/Resources/Colors.xaml" />
+                <ResourceDictionary Source="/Gui/Resources/Defaults.xaml" />
+                <ResourceDictionary Source="/Gui/Resources/TabControlStyles.xaml" />
+                <ResourceDictionary Source="/Gui/Resources/ButtonStyles.xaml" />
+                <ResourceDictionary Source="/Gui/Resources/ListboxStyles.xaml" />
+                <ResourceDictionary Source="/Gui/Resources/StylesDictionary.xaml" />
+                <ResourceDictionary Source="DataTemplateDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

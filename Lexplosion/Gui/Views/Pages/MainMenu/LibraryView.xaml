@@ -3,9 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu" 
-             xmlns:model="clr-namespace:Lexplosion.Gui.Models.InstanceForm"
-             xmlns:helpers="clr-namespace:Lexplosion.Gui.Behaviors"
              xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
              xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
              mc:Ignorable="d" 
@@ -17,35 +14,28 @@
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type viewmodels:InstanceFormViewModel}">
-            <customcontrols:InstanceForm  Margin="4,30,30,0"/>
+            <customcontrols:InstanceForm Margin="30,15,30,15"/>
         </DataTemplate>
     </UserControl.Resources>
 
 
     <Grid x:Name="MainGrid">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False">
-            <ScrollViewer.Background>
-                <!-- #1313131 0.8-->
-                <!-- "Black" 0.64 -->
-                <SolidColorBrush Color="#121212" Opacity="0.65"/>
-            </ScrollViewer.Background>
-            <Grid x:Name="InstanceGrid" Margin="0,15,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="150" />
-                </Grid.RowDefinitions>
-                <ItemsControl Margin="15,0,0,0" ItemsSource="{Binding Source={StaticResource MainModel}, Path=AddedInstanceForms}" BorderBrush="Transparent" />
-                <Button 
-                    x:Name="AddInstanceBtn" Height="120" 
-                    Width="620"
-                    Grid.Row="1"
-                    Margin="0,15,0,0"
-                    VerticalAlignment="Top"
-                    DataContext="{StaticResource MainMenuViewModel}"
-                    Style="{StaticResource LibraryAddBtn}"
-                    Command="{Binding NavigationFactoryCommand}"
-                    Content="Добавить сборку" />
-            </Grid>
-        </ScrollViewer>
+        <Grid.Background>
+            <SolidColorBrush Color="#121212" Opacity="0.55"/>
+        </Grid.Background>
+        <ListBox Style="{StaticResource LibraryListBox}" ItemContainerStyle="{StaticResource LibraryListBoxItem}">
+            <ListBox.ItemsSource>
+                <CompositeCollection>
+                    <CollectionContainer Collection="{Binding Source={StaticResource MainModel}, Path=AddedInstanceForms}"/>
+                    <ListBoxItem Style="{StaticResource LibraryListBoxItem}" 
+                                 Margin="30,15,30,0" 
+                                 HorizontalContentAlignment="Center">
+                        <Button Style="{StaticResource LibraryAddBtn}"
+                                Command="{Binding Source={StaticResource MainMenuViewModel}, Path=NavigationFactoryCommand}"
+                                Content="Добавить сборку" Width="620" Height="120"/>
+                    </ListBoxItem>
+                </CompositeCollection>
+            </ListBox.ItemsSource>
+        </ListBox>
     </Grid>
 </UserControl>

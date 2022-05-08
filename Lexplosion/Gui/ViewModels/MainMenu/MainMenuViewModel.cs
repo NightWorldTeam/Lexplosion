@@ -58,7 +58,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             NavigationFactoryCommand = new NavigateCommand<InstanceFactoryViewModel>(
                  MainViewModel.NavigationStore, () => new InstanceFactoryViewModel());
 
-
             Tabs = new ObservableCollection<Tab>
             {
                 new Tab
