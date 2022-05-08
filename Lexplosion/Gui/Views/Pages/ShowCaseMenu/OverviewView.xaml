@@ -84,7 +84,7 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Foreground="White"
-                                    Text="{Binding OverviewModel.InstanceData.GameVersion}" />
+                                    Text="{Binding OverviewModel.InstanceData.GameVersion }"/>
 
                                 <Border x:Name="LoadingVersion1" Grid.Column="0" 
                                         Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" 
