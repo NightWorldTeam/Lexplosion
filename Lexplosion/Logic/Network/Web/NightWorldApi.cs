@@ -177,8 +177,8 @@ namespace Lexplosion.Logic.Network
 
                 //try
                 {
-                    Console.WriteLine("URL " + LaunсherSettings.URL.ModpacksData + modpackId + "/version");
-                    string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + modpackId + "/version", data);
+                    Console.WriteLine("URL " + LaunсherSettings.URL.ModpacksData + modpackId + "/versionManifest");
+                    string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + modpackId + "/versionManifest", data);
 
                     if (answer != null)
                     {
