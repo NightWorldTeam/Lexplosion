@@ -289,7 +289,7 @@
                              BorderBrush="#121212"
                              BorderThickness="1"
                              helpers:TextBoxHelper.OnlyNumeric="Uint"
-                             helpers:TextBoxHelper.DefaultValue="1024"
+                             helpers:TextBoxHelper.DefaultValue="512"
                              Text="{Binding GeneralSettings.Xmx}"
                              FontSize="20"
                              Height="42" Width="125">

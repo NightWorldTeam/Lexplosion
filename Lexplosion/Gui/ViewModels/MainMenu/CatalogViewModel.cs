@@ -37,7 +37,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         {
             LibraryOutsideIds.Clear();
             LibraryOutsideIds = MainModel.GetOutsideIds();
-
+            Console.WriteLine(string.Join(", ", LibraryOutsideIds));
             Lexplosion.Run.TaskRun(delegate () 
             {
                 var instances = OutsideDataManager.GetInstances(

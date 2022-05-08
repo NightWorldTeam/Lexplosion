@@ -28,7 +28,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private bool _isLoaded = true;
         private double _categoryPanelBorderHeight;
         private OverviewModel _overviewModel;
-
+        
         #region props
         public OverviewModel OverviewModel 
         { 
@@ -47,15 +47,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 OnPropertyChanged(nameof(CategoryPanelBorderHeight));
             }
         }
-        #endregion props
-
-        public RelayCommand CurseforgePageCommand
-        {
-            get => new RelayCommand(obj =>
-            {
-                System.Diagnostics.Process.Start(OverviewModel.InstanceData.WebsiteUrl);
-            });
-        }
 
         public bool IsLoaded
         {
@@ -65,6 +56,15 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 _isLoaded = value;
                 OnPropertyChanged(nameof(IsLoaded));
             }
+        }
+        #endregion props
+
+        public RelayCommand CurseforgePageCommand
+        {
+            get => new RelayCommand(obj =>
+            {
+                System.Diagnostics.Process.Start(OverviewModel.InstanceData.WebsiteUrl);
+            });
         }
 
         public OverviewViewModel(string outsideId, string localId, InstanceSource source = InstanceSource.Curseforge)

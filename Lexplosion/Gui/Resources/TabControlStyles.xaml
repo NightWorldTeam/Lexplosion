@@ -16,7 +16,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
-                    <Grid Width="120">
+                    <Grid Width="125">
                         <Grid.Background>
                             <SolidColorBrush Color="#191919" />
                         </Grid.Background>
@@ -26,11 +26,11 @@
                             <RowDefinition Height="3" />
                         </Grid.RowDefinitions>
                         
-                        <ContentPresenter x:Name="ContentSite"
+                        <ContentPresenter Margin="10,0,0,0" x:Name="ContentSite"
                                           ContentSource="Header"
                                           Content="{Binding Header}"
                                           HorizontalAlignment="Center"/>
-                        <Border Grid.Row="1" x:Name="Border" BorderThickness="0,0,0,3" 
+                        <Border Margin="10,0,0,0" Grid.Row="1" x:Name="Border" BorderThickness="0,0,0,3" 
                                     Focusable="False"
                                     BorderBrush="#167FFC"
                                     VerticalAlignment="Stretch" HorizontalAlignment="Stretch">

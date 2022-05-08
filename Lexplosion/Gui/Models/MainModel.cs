@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
@@ -14,8 +15,10 @@ namespace Lexplosion.Gui.Models
             List<string> OutsideIds = new List<string>();
             foreach (var aif in AddedInstanceForms)
             {
+                Console.WriteLine(aif.Model.Instance.OutsideId);
+                Console.WriteLine(aif.Model.Instance.LocalId);
                 if (aif.Model.Instance.OutsideId != null || aif.Model.Instance.OutsideId != "")
-                    OutsideIds.Add(aif.Model.Instance.LocalId);
+                    OutsideIds.Add(aif.Model.Instance.OutsideId);
             }
 
             return OutsideIds;

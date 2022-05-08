@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu" 
              xmlns:showcasemenu="clr-namespace:Lexplosion.Gui.ViewModels.ShowCaseMenu"
-             xmlns:objects="clr-namespace:Lexplosion.Logic.Objects"
+             xmlns:objects="clr-namespace:Lexplosion.Logic.Objects" xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450"
              d:DesignWidth="700">
@@ -41,7 +41,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="20" />
                 <RowDefinition Height="240" />
-                <RowDefinition x:Name="ShortDescriptionRow"  Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="67" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
@@ -52,8 +52,8 @@
                     <ColumnDefinition Width="230" />
                 </Grid.ColumnDefinitions>
                 <!-- Width="450" Height="240" -->
-                <!--usercontrols:Gallery Grid.Column="0" x:Name="Gallery" Margin="20,0,0,0" Visibility="Hidden"/-->
-                <Border x:Name="LoadingGallery" Grid.Column="0" Background="#232323" Visibility="Visible" Margin="20,0,0,0"  CornerRadius="10"/>
+                <customcontrols:Gallery Grid.Column="0" Margin="20,0,0,0"/>
+                <Border x:Name="LoadingGallery" Grid.Column="0" Background="#232323" Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" Margin="20,0,0,0"  CornerRadius="10"/>
                 <!--Image Margin="20,0,0,0" Source="pack://application:,,,/Assets/images/background/regBG.png" 
                     Grid.Column="0" Width="450" Stretch="Fill"/-->
                 <Grid Grid.Column="1" ShowGridLines="False">

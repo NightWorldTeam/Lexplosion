@@ -119,6 +119,7 @@
     <Compile Include="Gui\ViewModels\AuthViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\InstanceFactoryViewModel.cs" />
+    <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\CatalogViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\GeneralSettingsViewModel.cs" />
@@ -130,6 +131,9 @@
     <Compile Include="Gui\ViewModels\ShowCaseMenu\OverviewViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\ShowCaseViewModel.cs" />
     <Compile Include="Gui\ViewModels\TabMenuViewModel.cs" />
+    <Compile Include="Gui\Views\CustomControls\Gallery.xaml.cs">
+      <DependentUpon>Gallery.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\Views\CustomControls\InstanceForm.xaml.cs">
       <DependentUpon>InstanceForm.xaml</DependentUpon>
     </Compile>
@@ -257,6 +261,10 @@
     <Page Include="Gui\Resources\TabControlStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Views\CustomControls\Gallery.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\CustomControls\InstanceForm.xaml">
       <SubType>Designer</SubType>
