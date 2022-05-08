@@ -45,7 +45,7 @@ namespace Lexplosion.Logic.FileSystem
         private bool assetsIndexes = false;
         private Assets assets;
 
-        int updatesCount = 0;
+        private int updatesCount = 0;
 
         /// <summary>
         /// Проверяет основные файла клиента, недостающие файлы помещает во внуренний список на скачивание
@@ -64,6 +64,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
                 minecraftJar = true; //сразу же добавляем minecraftJar в обновления
+                Console.WriteLine("OPDF 1");
                 updatesCount++;
             }
             else
@@ -87,6 +88,7 @@ namespace Lexplosion.Logic.FileSystem
                                     {
                                         File.Delete(minecraftJarFile); //удаляем файл, если не сходится хэш или размер
                                         minecraftJar = true;
+                                        Console.WriteLine("OPDF 2");
                                         updatesCount++;
                                     }
                                 }
@@ -101,6 +103,7 @@ namespace Lexplosion.Logic.FileSystem
                 else
                 {
                     minecraftJar = true;
+                    Console.WriteLine("OPDF 3 ");
                     updatesCount++;
                 }
             }
@@ -139,6 +142,7 @@ namespace Lexplosion.Logic.FileSystem
                 foreach (string lib in manifest.libraries.Keys)
                 {
                     libraries[lib] = manifest.libraries[lib];
+                    Console.WriteLine("OPDF 4 "+ lib);
                     updatesCount++;
                 }
             }
@@ -149,6 +153,7 @@ namespace Lexplosion.Logic.FileSystem
                     foreach (string lib in manifest.libraries.Keys)
                     {
                         libraries[lib] = manifest.libraries[lib];
+                        Console.WriteLine("OPDF 5 " + lib);
                         updatesCount++;
                     }
                 }
@@ -170,6 +175,7 @@ namespace Lexplosion.Logic.FileSystem
                         if ((downloadedFiles == null && fileExided) || !File.Exists(DirectoryPath + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
                         {
                             libraries[lib] = manifest.libraries[lib];
+                            Console.WriteLine("OPDF 6 " + lib);
                             updatesCount++;
                         }
                     }
@@ -183,6 +189,7 @@ namespace Lexplosion.Logic.FileSystem
                     if (manifest.libraries[lib].isNative)
                     {
                         libraries[lib] = manifest.libraries[lib];
+                        Console.WriteLine("OPDF 7 " + lib);
                         updatesCount++;
                     }
                 }
@@ -197,6 +204,7 @@ namespace Lexplosion.Logic.FileSystem
             if (asstes.objects == null)
             {
                 assetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
+                Console.WriteLine("OPDF 8 ");
                 updatesCount++;
                 Console.WriteLine("assetsIndexes ");
 
@@ -225,6 +233,7 @@ namespace Lexplosion.Logic.FileSystem
                         if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                         {
                             assets.objects[asset] = asstes.objects[asset];
+                            Console.WriteLine("OPDF 9");
                             updatesCount++;
                         }
                     }
@@ -232,6 +241,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         // С этим файлом возникла ошибка. Добавляем его в список на обновление. Метод обновления законет его в список ошибок
                         assets.objects[asset] = asstes.objects[asset];
+                        Console.WriteLine("OPDF 10");
                         updatesCount++;
                     }
                 }
@@ -444,6 +454,7 @@ namespace Lexplosion.Logic.FileSystem
             //скачивание файла версии
             if (minecraftJar)
             {
+                Console.WriteLine("Update MinecraftJar");
                 Objects.FileInfo minecraftJar = manifest.version.minecraftJar;
                 if (minecraftJar.url == null)
                 {
@@ -466,6 +477,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (isDownload)
                 {
+                    Console.WriteLine("Update MinecraftJar1");
                     updates["version"] = minecraftJar.lastUpdate;
                 }
                 else

@@ -181,6 +181,8 @@ namespace Lexplosion.Logic.Management
                     {
                         stagesCount++;
                     }
+
+                    requiresUpdates = true;
                 }
 
                 gameVersion = manifest.version.gameVersion;

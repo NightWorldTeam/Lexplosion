@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.FileSystem
         private Dictionary<string, List<string>> data = new Dictionary<string, List<string>>(); //сюда записываем файлы, которые нужно обновить
         private List<string> oldFiles = new List<string>(); // список старых файлов, которые нуждаются в обновлении
 
-        int updatesCount = 0;
+        private int updatesCount = 0;
 
         public event ProcentUpdate FilesDownloadEvent;
 
@@ -49,7 +49,6 @@ namespace Lexplosion.Logic.FileSystem
                         }
 
                         updates[dir] = filesInfo.data[dir].folderVersion;
-                        updatesCount += filesInfo.data[dir].objects.Count;
                     }
 
                     // TODO: тут из lastUpdates удалить все файлы из этой папки
@@ -258,10 +257,16 @@ namespace Lexplosion.Logic.FileSystem
         {
             foreach (string file in updates.Keys)
             {
-                if (!File.Exists(file) && !Directory.Exists(file))
+                try
                 {
-                    return true;
+                    string path = DirectoryPath + "/instances/" + instanceId + "/" + file;
+
+                    if (!File.Exists(path) && !Directory.Exists(path))
+                    {
+                        return true;
+                    }
                 }
+                catch { }
             }
 
             return false;
