@@ -268,7 +268,7 @@ namespace Lexplosion.Logic.FileSystem
         /// Эта функция возвращает имя для файла либрариесов (файлы .lver, что хранит версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры)
         /// у каждой версии игры своё имя для файлов с информацией о либрариесах
         /// </summary>
-        public static string GetLibName(string instanceId, VersionInfo version)
+        public static string GetLibName(VersionInfo version)
         {
             string endName = "";
             if (version.modloaderType == ModloaderType.Fabric)
@@ -313,7 +313,7 @@ namespace Lexplosion.Logic.FileSystem
             SaveFile(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(dataLocal));
             if (data.libraries != null)
             {
-                SaveFile(DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json", JsonConvert.SerializeObject(data.libraries));
+                SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
             }
         }
 
@@ -327,7 +327,7 @@ namespace Lexplosion.Logic.FileSystem
 
             if (includingLibraries)
             {
-                Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + GetLibName(instanceId, data.version) + ".json");
+                Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json");
                 if (librariesData == null)
                 {
                     librariesData = new Dictionary<string, LibInfo>();

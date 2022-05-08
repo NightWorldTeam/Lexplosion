@@ -12,13 +12,18 @@ namespace Lexplosion.Logic.Management
 {
     class NightworldIntance : IPrototypeInstance
     {
+        private class NwInstancePlatformData : InstancePlatformData
+        {
+            public bool CustomVersion;
+        }
+
         private NightWorldManifest nightworldManifest = null;
         private VersionManifest manifest = null;
         private LastUpdates Updates;
         private NightWorldInstaller installer;
 
         private string InstanceId;
-        private InstancePlatformData InfoData;
+        private NwInstancePlatformData InfoData;
 
         private bool requiresUpdates = true;
         private bool onlyBase;
@@ -35,7 +40,7 @@ namespace Lexplosion.Logic.Management
         public InstanceInit Check(out string gameVersion)
         {
             gameVersion = "";
-            InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
+            InfoData = DataFilesManager.GetFile<NwInstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null)
             {
@@ -68,6 +73,8 @@ namespace Lexplosion.Logic.Management
                     if (nightworldManifest.CustomVersion)
                     {
                         manifest = NightWorldApi.GetVersionManifest(InfoData.id);
+                        InfoData.CustomVersion = true;
+                        DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
                     }
                     else
                     {
@@ -82,7 +89,7 @@ namespace Lexplosion.Logic.Management
                 else
                 {
                     var versionInfo = manifest_.version;
-                    if (nightworldManifest.CustomVersion)
+                    if (InfoData.CustomVersion)
                     {
                         manifest = NightWorldApi.GetVersionManifest(InfoData.id);
                     }
@@ -102,6 +109,8 @@ namespace Lexplosion.Logic.Management
                         var mcVersion = nightworldManifest.version;
                         if (nightworldManifest.CustomVersion)
                         {
+                            InfoData.CustomVersion = true;
+                            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
                             manifest = NightWorldApi.GetVersionManifest(InfoData.id);
                         }
                         else
@@ -127,6 +136,8 @@ namespace Lexplosion.Logic.Management
                 var versionInfo = nightworldManifest.version;
                 if (nightworldManifest.CustomVersion)
                 {
+                    InfoData.CustomVersion = true;
+                    DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
                     manifest = NightWorldApi.GetVersionManifest(InfoData.id);
                 }
                 else

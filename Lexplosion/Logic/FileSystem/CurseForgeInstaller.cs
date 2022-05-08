@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.FileSystem
 {
     class CurseforgeInstaller : InstanceInstaller
     {
-        public CurseforgeInstaller(string instanceId): base(instanceId) { }
+        public CurseforgeInstaller(string instanceId) : base(instanceId) { }
 
         public class InstanceManifest
         {

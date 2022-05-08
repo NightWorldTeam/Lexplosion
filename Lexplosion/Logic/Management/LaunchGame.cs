@@ -5,6 +5,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using System.Collections.Generic;
+using System;
 
 namespace Lexplosion.Logic.Management
 {
@@ -41,7 +42,7 @@ namespace Lexplosion.Logic.Management
             if (_settings.GameArgs.Length > 0 && _settings.GameArgs[_settings.GameArgs.Length - 1] != ' ')
                 _settings.GameArgs += " ";
 
-            command = " -Djava.library.path=\"" + _settings.GamePath + "/natives/" + data.VersionFile.gameVersion + "\" -cp ";
+            command = " -Djava.library.path=\"" + _settings.GamePath + "/natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.gameVersion) + "\" -cp ";
 
             foreach (string lib in data.Libraries.Keys)
             {
@@ -52,7 +53,7 @@ namespace Lexplosion.Logic.Management
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-            command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion + "-test";
+            command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion;
             command += " --gameDir \"" + _settings.GamePath + "/instances/" + _instanceId + "\"";
             command += " --assetsDir \"" + _settings.GamePath + "/assets" + "\"";
             command += " --assetIndex " + data.VersionFile.assetsVersion;

@@ -125,7 +125,8 @@ namespace Lexplosion.Logic.Network
                             NightWorldManifest ret = new NightWorldManifest
                             {
                                 data = filesData.data,
-                                version = filesData.version
+                                version = filesData.version,
+                                CustomVersion = filesData.CustomVersion
                             };
 
                             return ret;

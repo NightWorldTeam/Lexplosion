@@ -57,6 +57,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         }
 
         public Dictionary<string, WithFolder> data = new Dictionary<string, WithFolder>();
+        public bool CustomVersion;
     }
 
     class NightWorldManifest : LocalNightWorldManifest
@@ -66,12 +67,10 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
             public string modloaderVersion;
             public ModloaderType modloaderType;
             public string gameVersion;
-            public bool customBaseFiles = false;
             public bool security;
         }
 
         public Version version;
-        public bool CustomVersion;
     }
 
     public class VersionManifest
@@ -83,8 +82,34 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     public class VersionInfo : LocalVersionInfo
     {
         public new FileInfo minecraftJar;
+        public string CustomVersionName;
         public bool security;
         public long librariesLastUpdate;
+
+        /// <summary>
+        /// Эта функция возвращает имя для файла либрариесов (файлы .lver, что хранят версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры).
+        /// У каждой версии игры своё имя для файлов с информацией о либрариесах
+        /// </summary>
+        public string GetLibName
+        {
+            get
+            {
+                if (CustomVersionName != null)
+                    return CustomVersionName;
+
+                string endName = "";
+                if (modloaderType == ModloaderType.Fabric)
+                {
+                    endName = "-Fabric-" + modloaderVersion;
+                }
+                else if (modloaderType == ModloaderType.Forge)
+                {
+                    endName = "-Forge-" + modloaderVersion;
+                }
+
+                return gameVersion + endName;
+            }         
+        }
     }
 
     /// <summary>
