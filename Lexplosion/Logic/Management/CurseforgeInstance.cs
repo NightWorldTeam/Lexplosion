@@ -182,16 +182,9 @@ namespace Lexplosion.Logic.Management
                     }
                 }
 
-                installer.MainFileDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+                installer.MainFileDownloadEvent += delegate (int percent)
                 {
-                    if (nowDataCount != 0)
-                    {
-                        progressHandler(DownloadStageTypes.Client, 3, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
-                    }
-                    else
-                    {
-                        progressHandler(DownloadStageTypes.Client, 3, 1, 0);
-                    }
+                    progressHandler(DownloadStageTypes.Client, 3, 1, percent);
                 };
 
                 // скачиваем архив модпака и из него получаем манифест
@@ -268,7 +261,7 @@ namespace Lexplosion.Logic.Management
 
                 if (updatesCount > 0)
                 {
-                    installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
+                    installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                     {
                         progressHandler(DownloadStageTypes.Client, 3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                     };
@@ -307,7 +300,7 @@ namespace Lexplosion.Logic.Management
                 {
                     if (updatesCount > 0)
                     {
-                        installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
+                        installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                         {
                             progressHandler(DownloadStageTypes.Client, 1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                         };

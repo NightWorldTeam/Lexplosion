@@ -27,6 +27,11 @@ namespace Lexplosion.Logic.Network
         string UUID;
         string accessToken;
 
+        private UdpClient _serverSimulatorUdp;
+        private UdpClient _clientSimulatorUdp;
+
+        private bool _isWork = true;
+
         public Gateway(string uuid, string accessToken_, string controlServer)
         {
             UUID = uuid;
@@ -62,8 +67,8 @@ namespace Lexplosion.Logic.Network
             {
                 try
                 {
-                    byte[] data;
-                    while (true)
+                    byte[] data = null;
+                    while (_isWork)
                     {
                         data = client.Receive(ref ip);
                         if (isClient) //если работает клиент то ждем когда перестанет
@@ -117,16 +122,16 @@ namespace Lexplosion.Logic.Network
         // Симуляция майнкрафт клиента. То есть используется если наш макрафт является сервером
         public void ClientSimulator(int pid)
         {
-            UdpClient client = new UdpClient();
-            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            _clientSimulatorUdp = new UdpClient();
+            _clientSimulatorUdp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
-            client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
-            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
+            _clientSimulatorUdp.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
+            _clientSimulatorUdp.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
 
-            while (true)
+            while (_isWork)
             {
-                client.Client.ReceiveTimeout = -1; // убираем таймоут, чтобы этот метод мог ждать бесконечно
-                bool successful = ListenGameSrvers(client, out string name, out int port, pid, true);
+                _clientSimulatorUdp.Client.ReceiveTimeout = -1; // убираем таймоут, чтобы этот метод мог ждать бесконечно
+                bool successful = ListenGameSrvers(_clientSimulatorUdp, out string name, out int port, pid, true);
 
                 if (!successful) // TODO: из всего алгоритма выходить не надо, надо только перевести всё в ручной режим
                 {
@@ -156,10 +161,10 @@ namespace Lexplosion.Logic.Network
                 InformingThread.Start();
                 Server = new ServerBridge(UUID, port, true, ControlServer);
 
-                client.Client.ReceiveTimeout = 3000; // ставим таймаут, чтобы если пакетов небыло, ListenGameSrvers вернул false
-                while (true)
+                _clientSimulatorUdp.Client.ReceiveTimeout = 3000; // ставим таймаут, чтобы если пакетов небыло, ListenGameSrvers вернул false
+                while (_isWork)
                 {
-                    bool result = ListenGameSrvers(client, out string name_, out int port_, pid, false);
+                    bool result = ListenGameSrvers(_clientSimulatorUdp, out string name_, out int port_, pid, false);
                     if (!result || name_ != name || port != port_) // если функция вернула false или изменилось имя или изменился порт - значит серер был закрыт
                     {
                         isServer = false;
@@ -184,12 +189,12 @@ namespace Lexplosion.Logic.Network
         {
             ClientBridge bridge = new ClientBridge(UUID, ControlServer);
 
-            UdpClient client = new UdpClient();
-            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 0);
-            client.Client.Ttl = 0; //это чтобы другие компьютеры в локальной сети не видели этого сервера
-            client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
-            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"), IPAddress.Parse("127.0.0.1"));
+            _serverSimulatorUdp = new UdpClient();
+            _serverSimulatorUdp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            _serverSimulatorUdp.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 0);
+            _serverSimulatorUdp.Client.Ttl = 0; //это чтобы другие компьютеры в локальной сети не видели этого сервера
+            _serverSimulatorUdp.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
+            _serverSimulatorUdp.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"), IPAddress.Parse("127.0.0.1"));
 
             while (true)
             {
@@ -226,7 +231,7 @@ namespace Lexplosion.Logic.Network
                                 text += " в " + servers[uuid].gameClientName;
                             }
                             byte[] _data = Encoding.UTF8.GetBytes("[MOTD]§3" + text + "[/MOTD][AD]" + ports[uuid] + "[/AD]");
-                            client.Send(_data, _data.Length, new IPEndPoint(IPAddress.Parse("224.0.2.60"), 4445));
+                            _serverSimulatorUdp.Send(_data, _data.Length, new IPEndPoint(IPAddress.Parse("224.0.2.60"), 4445));
                         }
                     }
                 }
@@ -243,9 +248,13 @@ namespace Lexplosion.Logic.Network
         public void StopWork()
         {
             isServer = false;
+            _isWork = false;
 
-            ServerSimulatorThread.Abort();
-            ClientSimulatorThread.Abort();
+            try { _serverSimulatorUdp.Close(); } catch { }
+            try { _clientSimulatorUdp.Close(); } catch { }
+
+            try { ServerSimulatorThread.Abort(); } catch { }
+            try { ClientSimulatorThread.Abort(); } catch { }
 
             if (Server != null)
             {

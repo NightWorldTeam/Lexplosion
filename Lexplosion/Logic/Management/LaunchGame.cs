@@ -263,7 +263,12 @@ namespace Lexplosion.Logic.Management
                                 {
                                     progressHandler(DownloadStageTypes.Java, 0, 0, 0);
 
-                                    if (!javaCheck.Update())
+                                    bool updateResult = javaCheck.Update(delegate (int percent)
+                                    {
+                                        progressHandler(DownloadStageTypes.Java, 0, 0, percent);
+                                    });
+
+                                    if (!updateResult)
                                     {
                                         return Error(InstanceInit.JavaDownloadError);
                                     }

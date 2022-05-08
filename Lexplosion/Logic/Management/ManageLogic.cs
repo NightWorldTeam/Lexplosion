@@ -114,7 +114,12 @@ namespace Lexplosion.Logic.Management
                         if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                         {
                             ProgressHandler(DownloadStageTypes.Java, 0, 0, 0);
-                            if (!javaCheck.Update())
+                            bool downloadResult = javaCheck.Update(delegate (int percent)
+                            {
+                                ProgressHandler(DownloadStageTypes.Java, 0, 0, percent);
+                            });
+
+                            if (!downloadResult)
                             {
                                 ComplitedDownload(InstanceInit.JavaDownloadError, null, false);
                                 return;
@@ -138,6 +143,7 @@ namespace Lexplosion.Logic.Management
                 }          
 
                 InitData res = instance.Update(javaPath, ProgressHandler);
+                Console.WriteLine("RESULT " + res.InitResult);
                 ComplitedDownload(res.InitResult, res.DownloadErrors, false);
             }
             else
@@ -323,7 +329,12 @@ namespace Lexplosion.Logic.Management
                 {
                     if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                     {
-                        if (!javaCheck.Update())
+                        bool downloadResult = javaCheck.Update(delegate (int percent)
+                        {
+                            ProgressHandler(DownloadStageTypes.Java, 0, 0, percent);
+                        });
+
+                        if (!downloadResult)
                         {
                             return ImportResult.JavaDownloadError;
                         }

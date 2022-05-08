@@ -180,14 +180,14 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public bool Update()
+        public bool Update(Action<int> percentHandler)
         {
             if (_versionsFile == null)
             {
                 _versionsFile = new JavaVersionsFile();
             }
 
-            if (WithDirectory.DonwloadJava(_thisJava.JavaName))
+            if (WithDirectory.DonwloadJava(_thisJava.JavaName, percentHandler))
             {
                 _versionsFile[_thisJava.JavaName] = _thisJava;
                 DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/java/javaVersions.json", JsonConvert.SerializeObject(_versionsFile));

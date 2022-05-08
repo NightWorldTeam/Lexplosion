@@ -53,7 +53,9 @@ namespace Lexplosion.Logic.FileSystem
             public bool FullClient = false;
         }
 
-        public event ProcentUpdate MainFileDownloadEvent;
+        public delegate void Procent(int procent);
+
+        public event Procent MainFileDownloadEvent;
         public event ProcentUpdate AddonsDownloadEvent;
 
         /// <summary>
@@ -109,16 +111,16 @@ namespace Lexplosion.Logic.FileSystem
                 List<string> files = new List<string>();
 
                 string tempDir = CreateTempDir();
-                DelFile(tempDir + fileName);
 
                 // скачивание архива
-                using (WebClient wc = new WebClient())
+                MainFileDownloadEvent?.Invoke(0);
+                bool res = DownloadFile(downloadUrl, fileName, tempDir, delegate(int percent) 
                 {
-                    MainFileDownloadEvent?.Invoke(1, 0);
-                    DelFile(tempDir + fileName);
-                    wc.DownloadFile(downloadUrl, tempDir + fileName);
-                    MainFileDownloadEvent?.Invoke(1, 1);
-                }
+                    MainFileDownloadEvent?.Invoke(percent);
+                });
+
+                if (!res)
+                    return null;
 
                 if (Directory.Exists(tempDir + "dataDownload"))
                 {

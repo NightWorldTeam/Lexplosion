@@ -110,6 +110,36 @@ namespace Lexplosion.Logic.FileSystem
             //}
         }
 
+        public static bool DownloadFile(string url, string fileName, string tempDir, Action<int> percentHandler)
+        {
+            using (var webClient = new WebClient())
+            {
+                DelFile(tempDir + fileName);
+
+                ManualResetEvent endEvent = new ManualResetEvent(false);
+                bool result = true;
+
+                webClient.DownloadProgressChanged += (sender, e) => percentHandler(e.ProgressPercentage);
+                webClient.DownloadFileCompleted += (sender, e) =>
+                {
+                    result = (e.Error == null);
+                    endEvent.Set();
+                };
+
+                try
+                {
+                    webClient.DownloadFileTaskAsync(url, tempDir + fileName);
+                    endEvent.WaitOne();
+
+                    return result;
+                }
+                catch
+                {
+                    return false;
+                } 
+            }
+        }
+
         //функция для удаления файла при его существовании 
         public static void DelFile(string file)
         {
@@ -409,14 +439,14 @@ namespace Lexplosion.Logic.FileSystem
             //});
         }
 
-        public static bool DonwloadJava(string javaName)
+        public static bool DonwloadJava(string javaName, Action<int> percentHandler)
         {
             string tempDir = CreateTempDir();
             string fileName = javaName + ".zip";
 
             //try
             {
-                if (!DownloadFile(LaunсherSettings.URL.JavaData + "download/" + fileName, fileName, tempDir))
+                if (!DownloadFile(LaunсherSettings.URL.JavaData + "download/" + fileName, fileName, tempDir, percentHandler))
                 {
                     return false;
                 }
@@ -433,7 +463,7 @@ namespace Lexplosion.Logic.FileSystem
                         Directory.Delete(javaPath, true);
                     }
                 }
-              
+
                 ZipFile.ExtractToDirectory(tempDir + fileName, javaPath);
             }
             //catch

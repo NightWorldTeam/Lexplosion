@@ -283,7 +283,7 @@ namespace Lexplosion.Logic.Management
 
             if (stagesCount > 0)
             {
-                installer.ProcentUpdateEvent += delegate (int totalDataCount, int nowDataCount)
+                installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     progressHandler(DownloadStageTypes.Client, stagesCount, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                 };
