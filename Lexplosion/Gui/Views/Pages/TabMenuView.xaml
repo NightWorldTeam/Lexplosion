@@ -23,7 +23,7 @@
         <TextBlock Text="{Binding Header}"
                    Grid.Column="1"
                    FontSize="18"
-                   Margin="23,10,0,10"
+                   Margin="30,10,0,10"
                    VerticalAlignment="Center" 
                    FontWeight="SemiBold"
                    Grid.Row="0"
@@ -41,7 +41,7 @@
             <TabControl.ContentTemplate>
                 <!-- this is the body of the TabItem template-->
                 <DataTemplate>
-                    <ContentControl
+                    <ContentControl 
                         Content="{Binding Content}" />
                 </DataTemplate>
             </TabControl.ContentTemplate>

@@ -131,7 +131,19 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _multibuttonModel.ChangeFuncPlay();
             }
             else if (result == InstanceInit.DownloadFilesError) 
-            { }
+            {
+                _instanceModel.IsInstalled = false;
+                _instanceModel.IsDownloadingInstance = false;
+                _multibuttonModel.ChangeFuncDownload(true);
+                Console.WriteLine();
+                Console.WriteLine();
+                foreach (var de in downloadErrors) 
+                { 
+                    Console.WriteLine(de);
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+            }
             else 
             { }
             _instanceModel.OverviewField = _instanceModel.Properties.InstanceAssets.description;
