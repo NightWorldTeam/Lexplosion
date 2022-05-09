@@ -50,6 +50,12 @@
     <DataTemplate DataType="{x:Type viewmodels:GalleryViewModel}">
         <customcontrols:Gallery />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:InstanceMenuViewModel}">
+        <showcasepage:InstanceMenuView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:InstanceSettingsViewModel}">
+        <showcasepage:InstanceSettingsView />
+    </DataTemplate>
     <!-- InstanceFactory DataTemplate -->
     <DataTemplate DataType="{x:Type vmfactorymenu:InstanceFactoryViewModel}">
         <factorymenu:InstanceFactoryView/>

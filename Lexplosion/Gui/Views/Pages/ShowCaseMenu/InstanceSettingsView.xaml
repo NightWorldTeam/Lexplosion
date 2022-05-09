@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="Lexplosion.Gui.Views.Pages.MainMenu.GeneralSettingsView"
+﻿<UserControl x:Class="Lexplosion.Gui.Views.Pages.ShowCaseMenu.InstanceSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu"
+             xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
              xmlns:helpers="clr-namespace:Lexplosion.Gui.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -163,49 +163,25 @@
         </Style>
     </UserControl.Resources>
     <Grid x:Name="MainGrid">
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <Grid ShowGridLines="False" Height="460"
->
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+            <Grid ShowGridLines="False">
                 <Grid.Background>
                     <!-- "Black" 0.64 -->
                     <SolidColorBrush Color="#191919"  Opacity="0.65"/>
                 </Grid.Background>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0" />
+                    <ColumnDefinition Width="25" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Row="0" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Width="15" Height="15" 
-                          VerticalAlignment="Bottom" Margin="0,0,3,2">
-                        <Ellipse Grid.Column="0" 
-                                 Width="15" Height="15" 
-                                 StrokeThickness="1" 
-                                 Stroke="White" />
-                        <TextBlock Text="i" 
-                                   Foreground="White"
-                                   HorizontalAlignment="Center" 
-                                   FontSize="11" />
-                    </Grid>
-                    <TextBlock Grid.Column="1" 
-                               Text="Общие настройки. Настройки для конкретного клиента можно изенить на его странице"
-                               Foreground="#BBBBBB"
-                               FontWeight="Bold"
-                               FontSize="14"
-                               VerticalAlignment="Bottom"/>
-                </Grid>
-                <Grid Grid.Row="2" Grid.Column="1" ShowGridLines="False">
+                <Grid Grid.Row="1" Grid.Column="1" ShowGridLines="False">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="160" />
@@ -213,8 +189,8 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <ComboBox Grid.Column="0"
-                              ItemsSource="{Binding GeneralSettings.Resolutions}"
-                              SelectedValue="{Binding GeneralSettings.ScreenResolution}"
+                              ItemsSource="{Binding InstanceSettings.Resolutions}"
+                              SelectedValue="{Binding InstanceSettings.ScreenResolution}"
                               Width="44" Height="42"
                               MaxDropDownHeight="180"
                               HorizontalAlignment="Left"/>
@@ -232,15 +208,15 @@
                                 FontWeight="Medium"
                                 Margin="10,0,0,0" />
                         <TextBox
-                            Style="{StaticResource CTB}"
-                            BorderBrush="#121212"
-                            BorderThickness="1"
-                            helpers:TextBoxHelper.OnlyNumeric="Uint"
-                            helpers:TextBoxHelper.DefaultValue="120"
-                            FontSize="20"
-                            Width="125" Height="42" 
-                            Grid.Row="1" 
-                            Text="{Binding GeneralSettings.WindowWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                Style="{StaticResource CTB}"
+                                BorderBrush="#121212"
+                                BorderThickness="1"
+                                helpers:TextBoxHelper.OnlyNumeric="Uint"
+                                helpers:TextBoxHelper.DefaultValue="800"
+                                FontSize="20"
+                                Width="125" Height="42" 
+                                Grid.Row="1" 
+                                Text="{Binding InstanceSettings.WindowWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                     </Grid>
                     <Grid Grid.Column="2" ShowGridLines="False">
                         <Grid.RowDefinitions>
@@ -255,18 +231,18 @@
                                 FontWeight="Medium"
                                 HorizontalAlignment="Left"
                                 Margin="10,0,0,0" />
-                        <TextBox Grid.Row="1" x:Name="HeightTextBox"
+                        <TextBox Grid.Row="1"
                                 Style="{StaticResource CTB}"
                                 BorderBrush="#121212"
                                 BorderThickness="1"
                                 helpers:TextBoxHelper.OnlyNumeric="Uint"
-                                helpers:TextBoxHelper.DefaultValue="120"
+                                helpers:TextBoxHelper.DefaultValue="600"
                                 FontSize="20"
                                 Height="42" Width="125"
-                                Text="{Binding GeneralSettings.WindowHeight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                Text="{Binding InstanceSettings.WindowHeight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                     </Grid>
                 </Grid>
-                <Grid Grid.Row="3" Grid.Column="1" ShowGridLines="False">
+                <Grid Grid.Row="2" Grid.Column="1" ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20"/>
                         <RowDefinition Height="60"/>
@@ -289,12 +265,11 @@
                              BorderThickness="1"
                              helpers:TextBoxHelper.OnlyNumeric="Uint"
                              helpers:TextBoxHelper.DefaultValue="512"
-                             Text="{Binding GeneralSettings.Xmx}"
+                             Text="{Binding InstanceSettings.Xmx}"
                              FontSize="20"
-                             Height="42" Width="125">
-                    </TextBox>
+                             Height="42" Width="125" />
                 </Grid>
-                <Grid Grid.Row="4" Grid.Column="1" ShowGridLines="False">
+                <Grid Grid.Row="3" Grid.Column="1" ShowGridLines="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20"/>
                         <RowDefinition Height="60"/>
@@ -312,45 +287,30 @@
                             <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" x:Name="InstanceFolderPath" 
+                        <TextBox Grid.Column="0"
                                 Style="{StaticResource CTB}"
                                 BorderBrush="#121212"
                                 BorderThickness="0"
                                 FontSize="20"
-                                Text="{Binding GeneralSettings.SystemPath, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding InstanceSettings.SystemPath, UpdateSourceTrigger=PropertyChanged}"
                                 Foreground="#bbb"
                                 Height="42" 
-                                Margin="5,0,0,0"/>
-                        <Button Grid.Column="1" x:Name="OpenFolderBrowserButton"
+                                Margin="5,0,0,0" />
+                        <Button Grid.Column="1"
                                 Style="{StaticResource FolderBrowerButton}"
                                 Content="Обзор"
+                                Command="{Binding OpenFolderBrowser}"
                                 Height="38"
-                                FontWeight="Medium"
-                                Command="{Binding OpenFolderBrowser}" />
+                                FontWeight="Medium" />
                     </Grid>
                 </Grid>
-                <StackPanel Grid.Row="5" Grid.Column="1" Margin="5,0,0,0">
-                    <CheckBox x:Name="AutoInstanceUpdateCheckBox"
-                              Content="Обновлять сборки автоматически"
+                <StackPanel Grid.Row="4" Grid.Column="1">
+                    <CheckBox
+                              Content="Обновлять автоматически"
                               Foreground="#eee" 
                               FontSize="14" 
-                              IsChecked="{Binding GeneralSettings.IsAutoUpdate}"
                               FontWeight="Medium"
-                              Margin="0,0,0,2"/>
-                    <CheckBox x:Name="HideLauncherCheckBox"
-                              Content="Скрывать лаунчер при запуске игры"
-                              Foreground="#eee" 
-                              IsChecked="{Binding GeneralSettings.IsHiddenMode}"
-                              FontSize="14" 
-                              FontWeight="Medium"
-                              Margin="0,0,0,0"/>
-                    <CheckBox x:Name="ShowConsoleCheckBox"
-                              Content="Показывать консоль"
-                              Foreground="#eee" 
-                              FontSize="14" 
-                              IsChecked="{Binding GeneralSettings.IsShowConsole}"
-                              FontWeight="Medium"
-                              Margin="0,0,0,0"/>
+                              Margin="0,0,0,2" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

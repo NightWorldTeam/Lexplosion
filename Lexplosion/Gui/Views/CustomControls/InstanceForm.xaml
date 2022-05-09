@@ -71,6 +71,7 @@
                                         <Binding Path="Model.Instance.LocalId" />
                                         <Binding Path="Model.Instance.Source" />
                                         <Binding Path="Model.Instance.Properties.Name" />
+                                        <Binding Path="Model.Instance.IsInstalled" />
                                     </MultiBinding>
                                 </MouseBinding.CommandParameter>
                             </MouseBinding>
