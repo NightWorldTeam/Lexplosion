@@ -442,7 +442,7 @@ namespace Lexplosion.Logic.Network.SMP
                 repeatDeliveryBlock.Release();
 
                 byte attemptCounts = 0;
-                int delay = (int)(rtt * packages.Count);
+                int delay = (int)((rtt + rtt/2) * packages.Count);
                 // цикл отправки
                 while (IsConnected && attemptCounts < 15)
                 {
@@ -460,7 +460,7 @@ namespace Lexplosion.Logic.Network.SMP
                     lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
                 Begin:
-                    if (!deliveryWait.WaitOne()) // истекло время ожидания
+                    if (!deliveryWait.WaitOne(delay)) // истекло время ожидания
                     {
                         delay *= delayMultipliers[attemptCounts];
                         attemptCounts++;
