@@ -221,7 +221,9 @@ namespace Lexplosion.Logic.Network
                     {
                         isClient = true;
                         clientModeWaiting.Reset();
+                        Console.WriteLine("SET SERVERS WAIT 1");
                         Dictionary<string, int> ports = _clientBridge.SetServers(new List<string>(servers.Keys));
+                        Console.WriteLine("SET SERVERS WAIT 2");
 
                         //Отправляем пакеты сервера для отображения в локальных мирах
                         foreach (string uuid in ports.Keys)
@@ -265,7 +267,7 @@ namespace Lexplosion.Logic.Network
 
             if (_clientBridge != null)
             {
-                _clientBridge.Close(null);
+                _clientBridge.StopWork();
             }
         }
 
