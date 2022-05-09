@@ -61,7 +61,7 @@ namespace Lexplosion.Logic.Network
                             Bridge = new SmpClient(sock);
 
                             STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, sock.Client);
-                            Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
+                            Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString() + " " + result.NetType);
 
                             //парсим и получаем порт
                             string externalPort = result.PublicEndPoint.ToString();

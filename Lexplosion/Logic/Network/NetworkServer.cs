@@ -126,7 +126,7 @@ namespace Lexplosion.Logic.Network
                                 externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
                                 portData = Encoding.UTF8.GetBytes(externalPort.ToString());
 
-                                Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
+                                Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString() + " " + result.NetType);
                             }
                             else
                             {
