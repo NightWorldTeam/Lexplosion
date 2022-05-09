@@ -160,7 +160,7 @@ namespace Lexplosion.Logic.Network
                 });
 
                 InformingThread.Start();
-                _serverBridge = new ServerBridge(UUID, port, false, ControlServer);
+                _serverBridge = new ServerBridge(UUID, port, true, ControlServer);
 
                 _clientSimulatorUdp.Client.ReceiveTimeout = 3000; // ставим таймаут, чтобы если пакетов небыло, ListenGameSrvers вернул false
                 while (_isWork)

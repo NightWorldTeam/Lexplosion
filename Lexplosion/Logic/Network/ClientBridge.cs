@@ -138,7 +138,11 @@ namespace Lexplosion.Logic.Network
             IsConnected = false;
             if (IsConnected)
             {
-                ServerSimulator.Close(); //закрываем соединение с клиентом     
+                try
+                {
+                    ServerSimulator.Close(); //закрываем соединение с клиентом   
+                }
+                catch { }
 
                 // стопаем сокеты
                 AcceptingBlock.WaitOne();
