@@ -108,11 +108,11 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
-        public SmpClient(IPEndPoint point, bool a = false)
+        public SmpClient(int port, bool a = false)
         {
             socket = new UdpClient();
             if (a) socket.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            socket.Client.Bind(point);
+            socket.Client.Bind(new IPEndPoint(IPAddress.Any, port));
 
             var sioUdpConnectionReset = -1744830452;
             var inValue = new byte[] { 0 };
@@ -142,11 +142,14 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     //try
                     {
+                        Console.WriteLine("CONNCET WAIT " + remoteIp);
                         data = socket.Receive(ref remoteIp);
+                        Console.WriteLine("CONNCET END WAIT " + remoteIp + " " + string.Join(", ", data));
                         if (data.Length > 0)
                         {
                             if (data[0] == 0x00 || data[0] == 0x01 || data[0] == 0x03 || data[0] == 0x02) //если пришел пинг, ответ на пинг, пакет данных или пакет с кодом вычисления mtu то isConnected делаем true
                             {
+                                Console.WriteLine("CONNCET 1 " + data[0]);
                                 if (data[0] == 0x00 && data.Length > 2) // если это пакет с вычислением mtu - отвечаем на него
                                 {
                                     socket.Send(new byte[2] { 0x07, data[1] }, 2);

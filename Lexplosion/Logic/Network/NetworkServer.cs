@@ -49,7 +49,9 @@ namespace Lexplosion.Logic.Network
             {
                 udpClient = new UdpClient();
                 udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                Server = new SmpServer((IPEndPoint)udpClient.Client.LocalEndPoint);
+                udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
+                IPEndPoint point = (IPEndPoint)udpClient.Client.LocalEndPoint;
+                Server = new SmpServer(point.Port);
             }
             else
             {
