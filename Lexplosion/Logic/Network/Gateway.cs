@@ -21,7 +21,8 @@ namespace Lexplosion.Logic.Network
         private Thread ClientSimulatorThread;
         private Thread InformingThread;
 
-        ServerBridge Server = null;
+        ServerBridge _serverBridge = null;
+        ClientBridge _clientBridge = null;
         string ControlServer = "";
 
         string UUID;
@@ -159,7 +160,7 @@ namespace Lexplosion.Logic.Network
                 });
 
                 InformingThread.Start();
-                Server = new ServerBridge(UUID, port, false, ControlServer);
+                _serverBridge = new ServerBridge(UUID, port, false, ControlServer);
 
                 _clientSimulatorUdp.Client.ReceiveTimeout = 3000; // ставим таймаут, чтобы если пакетов небыло, ListenGameSrvers вернул false
                 while (_isWork)
@@ -169,7 +170,7 @@ namespace Lexplosion.Logic.Network
                     {
                         isServer = false;
                         waitingInforming.Set(); // высвобождаем поток InformingThread чтобы он не ждал лишнее время
-                        Server.StopWork();
+                        _serverBridge.StopWork();
                         break;
                     }
 
@@ -187,7 +188,7 @@ namespace Lexplosion.Logic.Network
         // Симуляция майнкрафт сервера. То есть используется если наш макрафт является клиентом
         public void ServerSimulator(int pid)
         {
-            ClientBridge bridge = new ClientBridge(UUID, ControlServer);
+            _clientBridge = new ClientBridge(UUID, ControlServer);
 
             _serverSimulatorUdp = new UdpClient();
             _serverSimulatorUdp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
@@ -220,7 +221,7 @@ namespace Lexplosion.Logic.Network
                     {
                         isClient = true;
                         clientModeWaiting.Reset();
-                        Dictionary<string, int> ports = bridge.SetServers(new List<string>(servers.Keys));
+                        Dictionary<string, int> ports = _clientBridge.SetServers(new List<string>(servers.Keys));
 
                         //Отправляем пакеты сервера для отображения в локальных мирах
                         foreach (string uuid in ports.Keys)
@@ -256,10 +257,15 @@ namespace Lexplosion.Logic.Network
             try { ServerSimulatorThread.Abort(); } catch { }
             try { ClientSimulatorThread.Abort(); } catch { }
 
-            if (Server != null)
+            if (_serverBridge != null)
             {
                 waitingInforming.Set();
-                Server.StopWork();
+                _serverBridge.StopWork();
+            }
+
+            if (_clientBridge != null)
+            {
+                _clientBridge.Close(null);
             }
         }
 
