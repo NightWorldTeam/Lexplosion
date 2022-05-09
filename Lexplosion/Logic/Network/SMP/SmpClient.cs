@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Network.SMP
         private int lastPackage = -1;
         private List<ushort> repeatDeliveryList = null;
 
-        private int maxPackagesCount = 100;
+        private int maxPackagesCount = 1;
         private long rtt = -1; // пинг в обе стороны (время ожидание ответа)
         private int mtu = 68; //68
         private int hostMtu = -1; // mtu удалённого хоста
@@ -450,6 +450,7 @@ namespace Lexplosion.Logic.Network.SMP
                     {
                         Console.WriteLine("AXAXAXAXAXAX " + attemptCounts + " " + lastPackageId);
                     }
+
                     foreach (ushort id in packages.Keys)
                     {
                         packages[id][HeaderPositions.AttemptsCounts] = attemptCounts; // увставляем номер попытки
@@ -696,7 +697,7 @@ namespace Lexplosion.Logic.Network.SMP
                                                     var idg = BitConverter.ToUInt16(new byte[2] { array[h], array[h + 1] }, 0);
                                                     str += idg + ", ";
                                                 }
-                                                Console.WriteLine("RETAT 1 " + str);
+                                                Console.WriteLine("RETAT 1 ");
                                             }
 
                                             attemptSendCounts = data[HeaderPositions.AttemptsCounts];
