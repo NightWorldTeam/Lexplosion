@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Net;
 using System.Threading;
 
@@ -33,21 +32,21 @@ namespace Lexplosion.Logic.Network.SMP
 
         private bool waitFullPackage = true;
 
-        private readonly int _port;
+        private readonly IPEndPoint localPoint;
         private readonly ConcurrentDictionary<IPEndPoint, SmpClient> clients = new ConcurrentDictionary<IPEndPoint, SmpClient>();
         private readonly ConcurrentQueue<Message> receivingQueue = new ConcurrentQueue<Message>();
 
         private readonly AutoResetEvent receiveWait = new AutoResetEvent(false);
         private readonly Semaphore cloaseBlock = new Semaphore(1, 1);
 
-        public SmpServer(int port)
+        public SmpServer(IPEndPoint point_)
         {
-            _port = port;
+            localPoint = point_;
         }
 
         public bool Connect(IPEndPoint remoteIp)
         {
-            SmpClient client = new SmpClient(_port, true);
+            SmpClient client = new SmpClient(localPoint, true);
 
             client.MessageReceived += delegate (bool isFull)
             {

@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Network.SMP
         private int lastPackage = -1;
         private List<ushort> repeatDeliveryList = null;
 
-        private int maxPackagesCount = 50;
+        private int maxPackagesCount = 100;
         private long rtt = -1; // пинг в обе стороны (время ожидание ответа)
         private int mtu = 68; //68
         private int hostMtu = -1; // mtu удалённого хоста
@@ -108,11 +108,11 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
-        public SmpClient(int port, bool a = false)
+        public SmpClient(IPEndPoint point, bool a = false)
         {
             socket = new UdpClient();
             if (a) socket.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            socket.Client.Bind(new IPEndPoint(IPAddress.Any, port));
+            socket.Client.Bind(point);
 
             var sioUdpConnectionReset = -1744830452;
             var inValue = new byte[] { 0 };
@@ -133,25 +133,20 @@ namespace Lexplosion.Logic.Network.SMP
         public bool Connect(IPEndPoint remoteIp)
         {
             socket.Connect(remoteIp);
-            Console.WriteLine("CONN FDS 0");
 
             var thread = new Thread(delegate ()
             {
                 byte[] data = null;
-                Console.WriteLine("CONN FDS");
 
                 while (!IsConnected)
                 {
                     //try
                     {
-                        Console.WriteLine("CONNCET WAIT " + remoteIp);
                         data = socket.Receive(ref remoteIp);
-                        Console.WriteLine("CONNCET END WAIT " + remoteIp + " " + string.Join(", ", data));
                         if (data.Length > 0)
                         {
                             if (data[0] == 0x00 || data[0] == 0x01 || data[0] == 0x03 || data[0] == 0x02) //если пришел пинг, ответ на пинг, пакет данных или пакет с кодом вычисления mtu то isConnected делаем true
                             {
-                                Console.WriteLine("CONNCET 1 " + data[0]);
                                 if (data[0] == 0x00 && data.Length > 2) // если это пакет с вычислением mtu - отвечаем на него
                                 {
                                     socket.Send(new byte[2] { 0x07, data[1] }, 2);
@@ -168,7 +163,6 @@ namespace Lexplosion.Logic.Network.SMP
                         }
                     }
                     //catch { }
-                    Console.WriteLine(" END CONN FDS " + IsConnected);
                 }
 
             });
@@ -464,7 +458,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
-                    Begin:
+                Begin:
                     if (!deliveryWait.WaitOne(delay)) // истекло время ожидания
                     {
                         delay *= delayMultipliers[attemptCounts];
@@ -569,7 +563,6 @@ namespace Lexplosion.Logic.Network.SMP
                 try
                 {
                     data = socket.Receive(ref point);
-                    Console.WriteLine("RECV " + data.Length);
                 }
                 catch
                 {
@@ -583,7 +576,6 @@ namespace Lexplosion.Logic.Network.SMP
                     switch (data[0])
                     {
                         case 0: // пришел пакет с вычислением mtu
-                            Console.WriteLine("RECV1 " + data[0] + " " + data[1]);
                             if (data.Length > 2)
                             {
                                 socket.Send(new byte[2] { 0x07, data[1] }, 2);
@@ -704,7 +696,7 @@ namespace Lexplosion.Logic.Network.SMP
                                                     var idg = BitConverter.ToUInt16(new byte[2] { array[h], array[h + 1] }, 0);
                                                     str += idg + ", ";
                                                 }
-                                                //Console.WriteLine("RETAT 1 " + str);
+                                                Console.WriteLine("RETAT 1 " + str);
                                             }
 
                                             attemptSendCounts = data[HeaderPositions.AttemptsCounts];
@@ -735,6 +727,7 @@ namespace Lexplosion.Logic.Network.SMP
                                         {
                                             byte[] array = package.ToArray();
                                             socket.Send(array, array.Length);
+                                            Console.WriteLine("RETAT 2");
                                         }
                                         else
                                         {
@@ -849,7 +842,7 @@ namespace Lexplosion.Logic.Network.SMP
                 return;
             }
 
-            Begin: sendBlock.WaitOne();
+        Begin: sendBlock.WaitOne();
 
             int _mtu = mtu;
             int _maxPackagesCount = maxPackagesCount;

@@ -23,13 +23,14 @@ namespace Lexplosion.Logic.Network
         protected AutoResetEvent ReadingWait;
 
         protected IServerTransmitter Server;
-        protected IPEndPoint localPoint;
 
         protected bool IsWork = false;
 
         protected string UUID;
         protected bool DirectConnection;
         protected string ControlServer;
+
+        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9654);
 
         private Socket controlConnection;
 
@@ -47,13 +48,7 @@ namespace Lexplosion.Logic.Network
 
             if (DirectConnection)
             {
-                UdpClient udpClient = new UdpClient();
-                udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
-                int port = ((IPEndPoint)udpClient.Client.LocalEndPoint).Port;
-                udpClient.Close();
-                Server = new SmpServer(port);
-                localPoint = new IPEndPoint(IPAddress.Any, port);
+                Server = new SmpServer(localPoint);
             }
             else
             {
@@ -131,7 +126,7 @@ namespace Lexplosion.Logic.Network
                                 externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
                                 portData = Encoding.UTF8.GetBytes(externalPort.ToString());
 
-                                Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString() + " " + result.NetType);
+                                Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
                             }
                             else
                             {
@@ -173,8 +168,8 @@ namespace Lexplosion.Logic.Network
                         string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                         string hostIp = str.Replace(":" + hostPort, "");
 
-                        /*hostPort = "9655";
-                        hostIp = "127.0.0.1";*/
+                        hostPort = "9655";
+                        hostIp = "127.0.0.1";
 
                         point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
                         Console.WriteLine("Host EndPoint " + point);
