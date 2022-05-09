@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management;
-using System.Threading;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
@@ -20,6 +19,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         }
 
         #region methods
+
         public void LaunchInstance()
         {
             Lexplosion.Run.TaskRun(delegate
@@ -40,7 +40,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
             else 
             {
-                
             }
             _instanceModel.OverviewField = _instanceModel.Properties.InstanceAssets.description;
         }
@@ -50,6 +49,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _multibuttonModel.ChangeFuncPlay();
             MainViewModel.IsInstanceRunning = false;
         }
+
         #endregion
     }
 }

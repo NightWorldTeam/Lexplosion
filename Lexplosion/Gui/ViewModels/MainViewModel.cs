@@ -4,10 +4,8 @@ using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
-using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -25,7 +23,6 @@ namespace Lexplosion.Gui.ViewModels
                 OnPropertyChanged(nameof(IsAuthorized));
             }
         }
-
 
         public bool IsAuth { get => UserData.IsAuthorized; }
 
@@ -97,7 +94,6 @@ namespace Lexplosion.Gui.ViewModels
                 author = "by NightWorld";
                 outsideInstanceId = string.Empty;
                 source = InstanceSource.Local;
-                Console.WriteLine(key);
 
                 var categories = new List<Category>();
 

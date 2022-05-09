@@ -1,12 +1,6 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.Models.ShowCaseMenu
 {

@@ -1,12 +1,6 @@
 ﻿using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceForm;
-using Lexplosion.Logic.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using Lexplosion.Logic.Management;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -29,6 +23,7 @@ namespace Lexplosion.Gui.ViewModels
                         Model.DownloadModel.DonwloadPrepare();
                         break;
                     case UpperButtonFunc.ProgressBar:
+                        // TODO: может сделать, что-то типо меню скачивания??
                         break;
                     case UpperButtonFunc.Update:
                         Model.DownloadModel.DonwloadPrepare();
@@ -37,6 +32,8 @@ namespace Lexplosion.Gui.ViewModels
                         Model.LaunchModel.LaunchInstance();
                         break;
                     case UpperButtonFunc.Close:
+                        LaunchGame.GameStop();
+                        Model.ButtonModel.ChangeFuncPlay();
                         break;
                 }
             }));

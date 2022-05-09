@@ -109,6 +109,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             if (downloadStageType == DownloadStageTypes.Java)
             {
                 _instanceModel.OverviewField = "Идёт скачивание Java...";
+                IsIndeterminate = false;
             }
             else if (downloadStageType == DownloadStageTypes.Prepare) 
             { 
@@ -136,12 +137,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _instanceModel.IsDownloadingInstance = false;
                 _multibuttonModel.ChangeFuncDownload(true);
                 Console.WriteLine();
-                Console.WriteLine();
                 foreach (var de in downloadErrors) 
                 { 
                     Console.WriteLine(de);
                 }
-                Console.WriteLine();
                 Console.WriteLine();
             }
             else 

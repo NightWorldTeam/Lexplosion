@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
 {
@@ -37,7 +36,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         {
             LibraryOutsideIds.Clear();
             LibraryOutsideIds = MainModel.GetOutsideIds();
-            Console.WriteLine(string.Join(", ", LibraryOutsideIds));
             Lexplosion.Run.TaskRun(delegate () 
             {
                 var instances = OutsideDataManager.GetInstances(
@@ -90,10 +88,3 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         }
     }
 }
-
-
-/*
- Самый удачный обучающий процесс
-
- 
- */

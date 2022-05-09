@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 
@@ -8,8 +7,6 @@ namespace Lexplosion.Gui.ViewModels
     public class GalleryViewModel : VMBase
     {
         private BitmapImage _bitmapImage;
-        private RelayCommand _prevImage;
-        private RelayCommand _nextImage;
 
         private byte _selectedImagesIndex = 0;
 
