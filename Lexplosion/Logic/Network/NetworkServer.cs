@@ -53,6 +53,7 @@ namespace Lexplosion.Logic.Network
                 int port = ((IPEndPoint)udpClient.Client.LocalEndPoint).Port;
                 udpClient.Close();
                 Server = new SmpServer(port);
+                localPoint = new IPEndPoint(IPAddress.Any, port);
             }
             else
             {
