@@ -109,6 +109,7 @@
     <Compile Include="Gui\Models\InstanceForm\LaunchModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\MultibuttonModel.cs" />
     <Compile Include="Gui\Models\MainModel.cs" />
+    <Compile Include="Gui\Models\ShowCaseMenu\InstanceSettingsModel.cs" />
     <Compile Include="Gui\Models\ShowCaseMenu\OverviewModel.cs" />
     <Compile Include="Gui\MultiBindingConverter.cs" />
     <Compile Include="Gui\NegativeBooleanToVisibilityConverter.cs" />
@@ -128,6 +129,8 @@
     <Compile Include="Gui\ViewModels\MainViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceMenuViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\OverviewViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\ShowCaseViewModel.cs" />
     <Compile Include="Gui\ViewModels\TabMenuViewModel.cs" />
@@ -163,6 +166,12 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstanceMenuView.xaml.cs">
+      <DependentUpon>InstanceMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstanceSettingsView.xaml.cs">
+      <DependentUpon>InstanceSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ShowCaseMenu\OverviewView.xaml.cs">
       <DependentUpon>OverviewView.xaml</DependentUpon>
@@ -303,6 +312,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\InstanceMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\InstanceSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
