@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Network.SMP
         private int lastPackage = -1;
         private List<ushort> repeatDeliveryList = null;
 
-        private int maxPackagesCount = 1;
+        private int maxPackagesCount = 100;
         private long rtt = -1; // пинг в обе стороны (время ожидание ответа)
         private int mtu = 68; //68
         private int hostMtu = -1; // mtu удалённого хоста
@@ -460,7 +460,7 @@ namespace Lexplosion.Logic.Network.SMP
                     lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
                 Begin:
-                    if (!deliveryWait.WaitOne(delay)) // истекло время ожидания
+                    if (!deliveryWait.WaitOne()) // истекло время ожидания
                     {
                         delay *= delayMultipliers[attemptCounts];
                         attemptCounts++;
