@@ -53,7 +53,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _closeCommand ?? (_closeCommand = new RelayCommand(obj => 
             {
-                Application.Current.MainWindow.Close();
+                Run.Exit();
             }));
         }
 
