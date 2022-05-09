@@ -23,7 +23,7 @@ namespace Lexplosion.Logic.Network
         protected AutoResetEvent ReadingWait;
 
         protected IServerTransmitter Server;
-        protected UdpClient udpClient = null;
+        protected IPEndPoint localPoint;
 
         protected bool IsWork = false;
 
@@ -47,11 +47,12 @@ namespace Lexplosion.Logic.Network
 
             if (DirectConnection)
             {
-                udpClient = new UdpClient();
+                UdpClient udpClient = new UdpClient();
                 udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
-                IPEndPoint point = (IPEndPoint)udpClient.Client.LocalEndPoint;
-                Server = new SmpServer(point.Port);
+                int port = ((IPEndPoint)udpClient.Client.LocalEndPoint).Port;
+                udpClient.Close();
+                Server = new SmpServer(port);
             }
             else
             {
@@ -116,8 +117,12 @@ namespace Lexplosion.Logic.Network
                             byte[] portData;
                             if (DirectConnection)
                             {
+                                UdpClient sock = new UdpClient();
+                                sock.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                                sock.Client.Bind(localPoint);
+
                                 // TODO: сделать получения списка stun серверов с нашего сервера
-                                STUN_Result result = STUN_Client.Query("stun.l.google.com", 19305, udpClient.Client); //получем наш внешний адрес
+                                STUN_Result result = STUN_Client.Query("stun.l.google.com", 19305, sock.Client); //получем наш внешний адрес
 
                                 //парсим порт
                                 string externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
@@ -219,11 +224,6 @@ namespace Lexplosion.Logic.Network
             ReadingThread.Abort();
 
             Server.StopWork();
-
-            if (udpClient != null)
-            {
-                udpClient.Close();
-            }
         }
 
         protected abstract void ClientAbort(IPEndPoint point); // мeтод который вызывается при обрыве соединения
