@@ -133,10 +133,12 @@ namespace Lexplosion.Logic.Network.SMP
         public bool Connect(IPEndPoint remoteIp)
         {
             socket.Connect(remoteIp);
+            Console.WriteLine("CONN FDS 0");
 
             var thread = new Thread(delegate ()
             {
                 byte[] data = null;
+                Console.WriteLine("CONN FDS");
 
                 while (!IsConnected)
                 {
@@ -166,6 +168,7 @@ namespace Lexplosion.Logic.Network.SMP
                         }
                     }
                     //catch { }
+                    Console.WriteLine(" END CONN FDS " + IsConnected);
                 }
 
             });
@@ -566,6 +569,7 @@ namespace Lexplosion.Logic.Network.SMP
                 try
                 {
                     data = socket.Receive(ref point);
+                    Console.WriteLine("RECV " + data.Length);
                 }
                 catch
                 {
@@ -579,6 +583,7 @@ namespace Lexplosion.Logic.Network.SMP
                     switch (data[0])
                     {
                         case 0: // пришел пакет с вычислением mtu
+                            Console.WriteLine("RECV1 " + data[0] + " " + data[1]);
                             if (data.Length > 2)
                             {
                                 socket.Send(new byte[2] { 0x07, data[1] }, 2);
