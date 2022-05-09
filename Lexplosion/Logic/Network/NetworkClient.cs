@@ -20,8 +20,6 @@ namespace Lexplosion.Logic.Network
         protected Thread readingThread;
         protected Thread sendingThread;
 
-        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9655);
-
         public NetworkClient(string clientType, string controlServer)
         {
             ClientType = clientType;
@@ -57,7 +55,6 @@ namespace Lexplosion.Logic.Network
                         if (buf[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
                         {
                             UdpClient sock = new UdpClient();
-                            sock.Client.Bind(localPoint);
                             Bridge = new SmpClient(sock);
 
                             STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, sock.Client);
