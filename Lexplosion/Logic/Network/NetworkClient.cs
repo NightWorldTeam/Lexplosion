@@ -104,8 +104,6 @@ namespace Lexplosion.Logic.Network
                 string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
                 string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                 string hostIp = str.Replace(":" + hostPort, "");
-                hostPort = "9654";
-                hostIp = "127.0.0.1";
                 Console.WriteLine("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
                 isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
             }

@@ -168,9 +168,6 @@ namespace Lexplosion.Logic.Network
                         string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                         string hostIp = str.Replace(":" + hostPort, "");
 
-                        hostPort = "9655";
-                        hostIp = "127.0.0.1";
-
                         point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
                         Console.WriteLine("Host EndPoint " + point);
                         isConected = ((SmpServer)Server).Connect(point);
