@@ -71,14 +71,14 @@
         <Setter Property="Height" Value="25" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontSize" Value="12" />
-        <Setter Property="Margin" Value="2,0,2,0" />
-        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Margin" Value="2,0,2,2" />
+        <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="#5a5c61" CornerRadius="4" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent">
+                    <Border Background="#242527" CornerRadius="4" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="Transparent">
                         <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" RecognizesAccessKey="True" Margin="10,0,10,0"/>
                     </Border>
                 </ControlTemplate>

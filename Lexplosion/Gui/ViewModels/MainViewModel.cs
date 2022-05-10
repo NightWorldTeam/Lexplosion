@@ -4,6 +4,7 @@ using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -14,27 +15,26 @@ namespace Lexplosion.Gui.ViewModels
         public static readonly NavigationStore NavigationStore = new NavigationStore();
         public static bool IsInstanceRunning = false;
 
+        private string _nickname;
         private bool _isAuthorized;
-        public bool IsAuthorized 
+
+        private RelayCommand _closeCommand;
+        private RelayCommand _hideCommand;
+        
+
+        #region props
+        public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
+        
+        public bool IsAuthorized
         {
-            get => _isAuthorized; set 
+            get => _isAuthorized; set
             {
                 _isAuthorized = value;
                 OnPropertyChanged(nameof(IsAuthorized));
             }
         }
 
-        public bool IsAuth { get => UserData.IsAuthorized; }
-
-        public MainModel Model { get; } 
-        public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
-
-        private string _nickname;
-
-        private RelayCommand _closeCommand;
-        private RelayCommand _hideCommand;
-
-        #region props
+        public MainModel Model { get; }
 
         public string Nickname 
         {
@@ -69,11 +69,11 @@ namespace Lexplosion.Gui.ViewModels
         public MainViewModel()
         {
             Model = new MainModel();
-            NavigationStore.CurrentViewModel = new AuthViewModel(this);
-            InstancesLoading();
+            NavigationStore.CurrentViewModel = new AuthViewModel(this, InstancesLoading);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
         }
 
+        #region methods
         private void OnCurrentViewModelChanged()
         {
             OnPropertyChanged(nameof(CurrentViewModel));
@@ -86,12 +86,12 @@ namespace Lexplosion.Gui.ViewModels
 
             string description, imageUrl, author, outsideInstanceId;
             InstanceSource source;
-
             foreach (var key in UserData.Instances.Record.Keys)
             {
-                description = "This modpack is not have description...";
+                description = "This modpack is not have description but you can add it.";
+                //var sdfsdfs = "Описание отсутсвует, но вы можете его добавить.";
                 imageUrl = "pack://application:,,,/assets/images/icons/non_image.png";
-                author = "by NightWorld";
+                author = Nickname;
                 outsideInstanceId = string.Empty;
                 source = InstanceSource.Local;
 
@@ -146,5 +146,6 @@ namespace Lexplosion.Gui.ViewModels
                 );
             }
         }
+        #endregion
     }
 }

@@ -15,7 +15,7 @@ namespace Lexplosion.Gui.ViewModels
         private bool _isSaveMe = false;
 
         private MainViewModel _model;
-
+        private Action _libraryInstancesLoading;
         private RelayCommand _signUpCommand;
 
         #region props
@@ -51,7 +51,6 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _signUpCommand ?? (new RelayCommand(obj =>
             {
-                Console.WriteLine(Login + " " + Password);
                 Lexplosion.Run.TaskRun(() => 
                 {
                     AuthCode authCode = ManageLogic.Auth(Login, Password, IsSaveMe);
@@ -62,6 +61,7 @@ namespace Lexplosion.Gui.ViewModels
                             case AuthCode.Successfully:
                                 _model.Nickname = UserData.Login;
                                 _model.IsAuthorized = true;
+                                _libraryInstancesLoading();
                                 NavigationCommand.Execute(null);
                                 break;
                             case AuthCode.DataError:
@@ -80,9 +80,10 @@ namespace Lexplosion.Gui.ViewModels
 
         public ICommand NavigationCommand { get; }
 
-        public AuthViewModel(MainViewModel model)
+        public AuthViewModel(MainViewModel model, Action libraryInstancesLoading)
         {
             _model = model;
+            _libraryInstancesLoading = libraryInstancesLoading;
 
             DataFilesManager.GetAccount(out _login, out _password);
             Login = _login; Password = _password;

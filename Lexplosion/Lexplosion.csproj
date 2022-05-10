@@ -418,7 +418,6 @@
   <ItemGroup>
     <Resource Include="logo.ico" />
     <Resource Include="Assets\images\icons\more_blue.png" />
-    <Resource Include="Assets\images\icons\more_gradient.png" />
     <Resource Include="Assets\images\icons\logo.ico" />
     <Content Include="DLL\LumiSoft.Net.dll" />
     <Content Include="DLL\NewtonsoftJson.dll" />

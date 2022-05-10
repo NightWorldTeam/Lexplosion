@@ -197,7 +197,7 @@
                 Style="{StaticResource SearchButtonStyle}"/>
 
         <ComboBox x:Name="SourceBox" Grid.Column="3" 
-                  Background="#131313" Height="30"
+                  Background="#131313" Height="30" Width="100"
                   SelectedIndex="{Binding SelectedSourceIndex}"
                   VerticalAlignment="Top"
                   Margin="0,5,0,0">

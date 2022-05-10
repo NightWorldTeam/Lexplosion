@@ -11,14 +11,13 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 {
     public class CatalogViewModel : VMBase, IPaginable
     {
-        public ObservableCollection<InstanceFormViewModel> InstanceForms { get; set; } = new ObservableCollection<InstanceFormViewModel>();
+        private const int _pageSize = 10;
 
+        public ObservableCollection<InstanceFormViewModel> InstanceForms { get; set; } = new ObservableCollection<InstanceFormViewModel>();
         public List<string> LibraryOutsideIds = new List<string>();
 
         public PaginatorViewModel PaginatorVM { get; private set; }
         public SearchBoxViewModel SearchBoxVM { get; }
-  
-        private int _pageSize = 10;
 
         public CatalogViewModel()
         {
@@ -46,8 +45,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 {
 
                 }
-                else {
-                    App.Current.Dispatcher.Invoke((Action)delegate {
+                else 
+                {
+                    App.Current.Dispatcher.Invoke((Action)delegate 
+                    {
                         InstanceForms.Clear();
                         for (int j = 0; j < instances.Count; j++) 
                         {
@@ -55,7 +56,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                             {
                                 InstanceForms.Add(MainModel.GetSpecificVM(instances[j].Id));
                             }
-                            else { 
+                            else 
+                            {
                                 InstanceForms.Add(
                                     new InstanceFormViewModel(
                                         new InstanceFormModel(

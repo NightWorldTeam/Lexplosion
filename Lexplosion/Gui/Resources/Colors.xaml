@@ -2,9 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Color x:Key="ActivityColor">#167FFC</Color>
-    <SolidColorBrush x:Key="PrimaryColor" Color="{StaticResource ActivityColor}" />
-    
-    
+    <SolidColorBrush x:Key="BrandSolidColorBrush" Color="{StaticResource ActivityColor}" />
+
+
+
+    <Color x:Key="BrandColor">#167FFC</Color>
+    <Color x:Key="PrimaryColor">#18191b</Color>
+
     <SolidColorBrush x:Key="BackgroundBrush" Color="#1f202a"/>
     <SolidColorBrush x:Key="DarkBackgroundBrush" Color="#1f202a"/>
     <SolidColorBrush x:Key="DarkDarkBackgroundBrush" Color="#1f202a"/>

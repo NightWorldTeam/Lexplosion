@@ -102,10 +102,10 @@
                             TextTrimming="WordEllipsis"/>
                         <TextBlock x:Name="TextBlockAuthor"
                             Grid.Column="1"
-                            Text="{Binding Model.Instance.Properties.InstanceAssets.author}"
+                            Text="{Binding Model.Instance.Properties.InstanceAssets.author, StringFormat='by {0}'}"
                             FontSize="12"
                             Padding="0"
-                            Margin="0,0,10,0"
+                            Margin="0,0,2,0"
                             Foreground="#a9b1ba"
                             VerticalAlignment="Center"
                             FlowDirection="RightToLeft"
