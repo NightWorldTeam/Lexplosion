@@ -1021,12 +1021,14 @@ namespace Lexplosion.Logic.Network.SMP
                 }
             }
 
+            Console.WriteLine("SMP CLIENT STOP WORK");
             data = null;
             return false;
         }
 
         private void StopWork()
         {
+            Console.WriteLine("StopWork() SMP CLIENT");
             IsConnected = false;
             connectionControl.Abort();
             //serviceReceive.Abort();

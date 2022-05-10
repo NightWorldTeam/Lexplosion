@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Threading;
 
@@ -118,6 +119,7 @@ namespace Lexplosion.Logic.Network.SMP
                 }
             }
 
+            Console.WriteLine("SMP SERVER STOP WORK");
             data = null;
             return null;
         }
