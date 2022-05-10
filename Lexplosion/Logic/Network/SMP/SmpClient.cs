@@ -442,7 +442,7 @@ namespace Lexplosion.Logic.Network.SMP
                 repeatDeliveryBlock.Release();
 
                 byte attemptCounts = 0;
-                int delay = (int)((rtt + rtt/2) * packages.Count);
+                int delay = (int)((rtt*2) * packages.Count);
                 // цикл отправки
                 while (IsConnected && attemptCounts < 15)
                 {

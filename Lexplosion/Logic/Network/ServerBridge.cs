@@ -176,7 +176,6 @@ namespace Lexplosion.Logic.Network
 
             while (IsWork)
             {
-                Console.WriteLine("Reading");
                 IPEndPoint point = Server.Receive(out byte[] data);
 
                 try
