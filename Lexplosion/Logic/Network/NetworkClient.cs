@@ -55,7 +55,7 @@ namespace Lexplosion.Logic.Network
                         sock.Client.Bind(localPoint);
                         Bridge = new SmpClient(sock);
 
-                        STUN_Result result = STUN_Client.Query("stun.12connect.com", 3478, sock.Client);
+                        STUN_Result result = STUN_Client.Query("stun.zoiper.com", 3478, sock.Client);
                         Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
 
                         //парсим и получаем порт

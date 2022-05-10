@@ -118,7 +118,7 @@ namespace Lexplosion.Logic.Network
                                 sock.Client.Bind(localPoint);
 
                                 // TODO: сделать получения списка stun серверов с нашего сервера
-                                STUN_Result result = STUN_Client.Query("stun.12connect.com", 3478, sock.Client); //получем наш внешний адрес
+                                STUN_Result result = STUN_Client.Query("stun.zoiper.com", 3478, sock.Client); //получем наш внешний адрес
                                 sock.Close();
 
                                 //парсим порт
