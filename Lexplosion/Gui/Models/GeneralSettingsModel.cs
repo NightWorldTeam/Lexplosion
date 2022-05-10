@@ -24,6 +24,7 @@ namespace Lexplosion.Gui.Models
             {
                 UserData.GeneralSettings.GamePath = value.Replace(@"\", "/");
                 OnPropertyChanged("SystemPath");
+                DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
 
