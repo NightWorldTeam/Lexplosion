@@ -20,7 +20,7 @@ namespace Lexplosion.Logic.Network
         protected Thread readingThread;
         protected Thread sendingThread;
 
-        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9655);
+        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 15323);
 
         public NetworkClient(string clientType, string controlServer)
         {

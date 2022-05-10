@@ -30,7 +30,7 @@ namespace Lexplosion.Logic.Network
         protected bool DirectConnection;
         protected string ControlServer;
 
-        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9654);
+        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 23375);
 
         private Socket controlConnection;
 
