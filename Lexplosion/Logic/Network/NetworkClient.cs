@@ -55,7 +55,7 @@ namespace Lexplosion.Logic.Network
                         sock.Client.Bind(localPoint);
                         Bridge = new SmpClient(sock);
 
-                        STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, sock.Client);
+                        STUN_Result result = STUN_Client.Query("iphone-stun.strato-iphone.de", 3478, sock.Client);
                         Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
 
                         //парсим и получаем порт
