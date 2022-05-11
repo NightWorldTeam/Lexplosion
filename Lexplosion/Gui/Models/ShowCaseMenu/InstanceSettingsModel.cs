@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
-using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models.ShowCaseMenu
 {
@@ -9,6 +8,16 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
     {
         private Settings _instanceSettings;
         private string _instanceId;
+
+        public string JavaPath
+        {
+            get => UserData.GeneralSettings.JavaPath.Replace(@"\", "/"); set
+            {
+                UserData.GeneralSettings.JavaPath = value.Replace(@"\", "/");
+                OnPropertyChanged("JavaPath");
+                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
+            }
+        }
 
         public Settings InstanceSettings 
         {
@@ -66,16 +75,6 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.Xms = value;
                 OnPropertyChanged("Xms");
-                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
-            }
-        }
-
-        public string JavaPath
-        {
-            get => InstanceSettings.JavaPath; set
-            {
-                InstanceSettings.JavaPath = value;
-                OnPropertyChanged("JavaPath");
                 DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
             }
         }

@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
-using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models
 {
