@@ -157,16 +157,21 @@
     </Style>
 
     <Style x:Key="DefaultBrandColorButton" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Border" CornerRadius="5" BorderThickness="0" Background="#167FFC" BorderBrush="#1c91a6">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="4" ShadowDepth="1" Color="#2d8cfc" />
+                        </Border.Effect>
                         <ContentPresenter Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#167FFC" />
-                            <Setter TargetName="Border" Property="Background" Value="#167FFC"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#1472e3" />
+                            <Setter TargetName="Border" Property="Background" Value="#1472e3"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="False">

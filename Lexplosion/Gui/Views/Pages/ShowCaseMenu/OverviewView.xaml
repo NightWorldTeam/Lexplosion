@@ -182,7 +182,7 @@
                         Width="100"
                         Height="29"
                         Margin="60,10,59.6,21"
-                        BorderBrush="#167FFC"
+                        Style="{StaticResource DefaultBrandColorButton}"
                         Command="{Binding CurseforgePageCommand}"
                         Content="Вебсайт"
                         FontSize="14"

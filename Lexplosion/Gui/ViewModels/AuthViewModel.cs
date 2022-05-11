@@ -86,6 +86,8 @@ namespace Lexplosion.Gui.ViewModels
             _libraryInstancesLoading = libraryInstancesLoading;
 
             DataFilesManager.GetAccount(out _login, out _password);
+            if (_login != null && _password != null)
+                IsSaveMe = true;
             Login = _login; Password = _password;
 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(

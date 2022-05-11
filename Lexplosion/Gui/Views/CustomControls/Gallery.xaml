@@ -9,7 +9,7 @@
     <Grid>
         <Image Source="{Binding OverviewModel.GalleryVM.SelectedImage}" Width="450" Height="240" />
         <Border x:Name="ButtonLeft" Height="240" Width="25"
-                Background="Black" Opacity="0.2" HorizontalAlignment="Left">
+                Background="Black" Opacity="0" HorizontalAlignment="Left">
             <Border.InputBindings>
                 <MouseBinding Gesture="LeftClick" Command="{Binding OverviewModel.GalleryVM.PrevImage}" />
             </Border.InputBindings>
@@ -40,7 +40,7 @@
                 </EventTrigger>
             </Border.Triggers>
         </Border>
-        <Border x:Name="ButtonRight" Height="240" Width="25" Background="Black" Opacity="0.2" HorizontalAlignment="Right">
+        <Border x:Name="ButtonRight" Height="240" Width="25" Background="Black" Opacity="0" HorizontalAlignment="Right">
             <Border.InputBindings>
                 <MouseBinding Gesture="LeftClick" Command="{Binding OverviewModel.GalleryVM.NextImage}" />
             </Border.InputBindings>

@@ -66,22 +66,22 @@ namespace Lexplosion.Gui.Models
             }
         }
 
-        public bool? IsShowConsole
-        {
-            get => UserData.GeneralSettings.ShowConsole; set
-            {
-                UserData.GeneralSettings.ShowConsole = value;
-                OnPropertyChanged("IsShowConsole");
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
-            }
-        }
-
         public string GameArgs
         {
             get => UserData.GeneralSettings.GameArgs; set
             {
                 UserData.GeneralSettings.GameArgs = value;
                 OnPropertyChanged("GameArgs");
+                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+            }
+        }
+
+        public bool? IsShowConsole
+        {
+            get => UserData.GeneralSettings.ShowConsole; set
+            {
+                UserData.GeneralSettings.ShowConsole = value;
+                OnPropertyChanged("IsShowConsole");
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }

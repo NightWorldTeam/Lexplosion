@@ -161,7 +161,7 @@
 
                     <CheckBox Style="{StaticResource CustomCheckBox}"
                         Content="Запомнить меня" HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Center" IsChecked="{Binding IsSaveMe}"
                         Height="Auto" Grid.Row="0"/>
                     <Button Style="{StaticResource DefaultBrandColorButton}"
                         Command="{Binding SingUpCommand}" Content="Войти"
