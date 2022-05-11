@@ -73,11 +73,19 @@ namespace Lexplosion
             var stylePath = "pack://application:,,,/Gui/Resources/";
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
+                Source = new Uri(stylePath + "Fonts.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
                 Source = new Uri(stylePath + "Colors.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(stylePath + "Defaults.xaml")
+            });
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(stylePath + "TextBoxStyles.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
@@ -94,6 +102,10 @@ namespace Lexplosion
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(stylePath + "StylesDictionary.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(stylePath + "ComboBoxStyles.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {

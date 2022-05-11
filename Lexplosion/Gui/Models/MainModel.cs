@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
+using System.Linq;
 
 namespace Lexplosion.Gui.Models
 {
@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.Models
         public static List<string> GetOutsideIds() 
         {
             List<string> OutsideIds = new List<string>();
-            foreach (var aif in AddedInstanceForms)
+            foreach (var aif in AddedInstanceForms.ToArray())
             {
                 Console.WriteLine(aif.Model.Instance.OutsideId);
                 Console.WriteLine(aif.Model.Instance.LocalId);

@@ -71,40 +71,6 @@
         </Setter>
     </Style>
 
-    <!-- Start Button Style -->
-    <Style x:Key="CBS" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-        <Setter Property="FontFamily" Value="pack://application:,,,/assets/fonts/#Casper Bold"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="Border" 
-                            CornerRadius="5" 
-                            BorderThickness="1" 
-                            Background="#167FFC" 
-                            BorderBrush="#2c99c2">
-                        <ContentPresenter Margin="2" 
-                                          HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center" 
-                                          RecognizesAccessKey="True"/>
-                    </Border>
-
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
-                            <Setter TargetName="Border" Property="Background" Value="#167FFC"/>
-                            <Setter Property="Foreground" Value="White"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="False">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#1c91a6" />
-                            <Setter TargetName="Border" Property="Background" Value="#167FFC"/>
-                            <Setter Property="Foreground" Value="White"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <!-- Switcher Style -->
     <Style x:Key="MWCBS" TargetType="{x:Type ToggleButton}">
         <!-- <Setter Property="" Value=""/> #4cb2d6-->
@@ -168,93 +134,6 @@
                                 Property="Data"
                                 Value="M 10.5 15.188 v 5.625 A 1.687 1.687 0 0 1 8.812 22.5 H 1.688 A 1.687 1.687 0 0 1 0 20.813 V 15.188 A 1.687 1.687 0 0 1 1.688 13.5 H 8.812 A 1.687 1.687 0 0 1 10.5 15.188 Z M 0 26.438 v 5.625 A 1.687 1.687 0 0 0 1.688 33.75 H 8.812 A 1.687 1.687 0 0 0 10.5 32.063 V 26.438 A 1.687 1.687 0 0 0 8.812 24.75 H 1.688 A 1.687 1.687 0 0 0 0 26.438 Z M 8.812 2.25 H 1.688 A 1.687 1.687 0 0 0 0 3.938 V 9.563 A 1.687 1.687 0 0 0 1.688 11.25 H 8.812 A 1.687 1.687 0 0 0 10.5 9.563 V 3.938 A 1.687 1.687 0 0 0 8.812 2.25 Z m 5.625 31.5 H 34.313 A 1.687 1.687 0 0 0 36 32.063 V 26.438 a 1.687 1.687 0 0 0 -1.687 -1.687 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 33.75 Z M 12.75 3.938 V 9.563 a 1.687 1.687 0 0 0 1.688 1.688 H 34.313 A 1.687 1.687 0 0 0 36 9.563 V 3.938 A 1.687 1.687 0 0 0 34.313 2.25 H 14.437 A 1.687 1.687 0 0 0 12.75 3.938 Z M 14.437 22.5 H 34.313 A 1.687 1.687 0 0 0 36 20.813 V 15.188 A 1.687 1.687 0 0 0 34.313 13.5 H 14.437 a 1.687 1.687 0 0 0 -1.687 1.688 v 5.625 A 1.687 1.687 0 0 0 14.437 22.5 Z"/>
                         </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Setting Button Style 1-->
-    <Style x:Key="TSB" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="FontSize" Value="24"/>
-        <Setter Property="KeyboardNavigation.IsTabStop" Value="False"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border" CornerRadius="0" BorderBrush="Transparent" Background="Transparent">
-                        <ContentPresenter HorizontalAlignment="Center"  RecognizesAccessKey="True"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="CTB" TargetType="{x:Type TextBox}">
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
-        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <Setter Property="MinWidth" Value="145"/>
-        <Setter Property="MinHeight" Value="25"/>
-        <Setter Property="AllowDrop" Value="true"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Foreground" Value="#b9b7b7"/>
-        <Setter Property="CaretBrush" Value="#167FFC"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Border Name="Border" 
-                        CornerRadius="8"
-                        Padding="2"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        Background="#1f1f1f">
-                        <Grid>
-                            <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
-                            <TextBlock x:Name="WatermarkText" Text="{TemplateBinding Text}" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" IsHitTestVisible="False" Foreground="White"/>
-                        </Grid>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
-                                            <EasingColorKeyFrame KeyTime="0" Value="#FFE8EDF9" />
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="ReadOnly">
-                                    <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
-                                            <EasingColorKeyFrame KeyTime="0" Value="#FFE8EDF9"/>
-                                        </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="MouseOver"/>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                    </Border>
-
-                    <ControlTemplate.Triggers>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsKeyboardFocusWithin" Value="False"/>
-                                <Condition Property="Text" Value=""/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Visibility" TargetName="WatermarkText" Value="Visible"/>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsKeyboardFocusWithin" Value="False"/>
-                                <Condition Property="Text" Value="{x:Null}"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Visibility" TargetName="WatermarkText" Value="Visible"/>
-                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

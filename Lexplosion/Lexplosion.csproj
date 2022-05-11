@@ -96,6 +96,7 @@
     <Compile Include="Gui\Commands\CommandBase.cs" />
     <Compile Include="Gui\Commands\NavigateCommand.cs" />
     <Compile Include="Gui\Commands\RelayCommand.cs" />
+    <Compile Include="Gui\Constants.cs" />
     <Compile Include="Gui\Helpers\AsyncObservableCollection.cs" />
     <Compile Include="Gui\Helpers\GridHelper.cs" />
     <Compile Include="Gui\Helpers\PasswordBoxHelper.cs" />
@@ -247,6 +248,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Gui\Resources\ComboBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Gui\Resources\Defaults.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -270,6 +275,10 @@
     <Page Include="Gui\Resources\TabControlStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\TextBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\CustomControls\Gallery.xaml">
       <SubType>Designer</SubType>

@@ -12,11 +12,11 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             {
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
-                    dialog.SelectedPath = InstanceSettings.SystemPath;
-                    if (dialog.ShowDialog() == DialogResult.OK)
-                    {
-                        InstanceSettings.SystemPath = dialog.SelectedPath;
-                    }
+                    //dialog.SelectedPath = InstanceSettings.SystemPath;
+                    //if (dialog.ShowDialog() == DialogResult.OK)
+                    //{
+                    //    InstanceSettings.SystemPath = dialog.SelectedPath;
+                    //}
                 }
             });
         }
