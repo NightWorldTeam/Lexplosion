@@ -18,6 +18,17 @@ namespace Lexplosion.Gui.ViewModels
 
         private InstanceSource _source;
 
+        private bool _isLoaded;
+
+        public bool IsLoaded
+        {
+            get => _isLoaded; set
+            {
+                _isLoaded = value;
+                OnPropertyChanged(nameof(IsLoaded));
+            }
+        }
+
         private Action _pageIndexChangedAction;
 
         public PaginatorViewModel(Action action)
@@ -29,8 +40,8 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _nextPageCommand ?? (new RelayCommand(obj =>
             {
-                if (PageIndex < PageLimit.max) 
-                { 
+                if (PageIndex < PageLimit.max)
+                {
                     if (!CanGoNext) CanGoNext = true;
                     if (!CanGoBack) CanGoBack = true;
                     PageIndex++;
@@ -43,7 +54,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _prevPageCommand ?? (new RelayCommand(obj =>
             {
-                if (PageIndex - 1 >= 0) 
+                if (PageIndex - 1 >= 0)
                 {
                     if (!CanGoNext) CanGoNext = true;
                     if (!CanGoBack) CanGoBack = true;
@@ -53,11 +64,11 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
-        public RelayCommand TextBoxPageIndexChanged 
+        public RelayCommand TextBoxPageIndexChanged
         {
-            get => _textBoxPageIndexChanged ?? (new RelayCommand(obj => 
+            get => _textBoxPageIndexChanged ?? (new RelayCommand(obj =>
             {
-                if (PageNum < 1) 
+                if (PageNum < 1)
                 {
                     PageNum = 1;
                 }
@@ -66,7 +77,7 @@ namespace Lexplosion.Gui.ViewModels
                     PageIndex = PageNum--;
                 }
                 else PageIndex = 0;
-            }));  
+            }));
         }
 
         public ushort PageIndex
@@ -97,9 +108,9 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public ushort PageNum 
+        public ushort PageNum
         {
-            get => _pageNum; set 
+            get => _pageNum; set
             {
                 if (value <= 0)
                     _pageNum = 1;
@@ -109,7 +120,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public InstanceSource Source 
+        public InstanceSource Source
         {
             get => _source; set
             {

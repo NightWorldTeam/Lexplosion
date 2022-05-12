@@ -26,37 +26,39 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             GetInitializeInstance();
         }
 
-        public async void GetInitializeInstance() 
+        public async void GetInitializeInstance()
         {
             await Task.Run(() => InstancesPageLoading());
         }
 
-        private void InstancesPageLoading() 
+        private void InstancesPageLoading()
         {
+            SearchBoxVM.IsLoaded = false;
+            PaginatorVM.IsLoaded = false;
             LibraryOutsideIds.Clear();
             LibraryOutsideIds = MainModel.GetOutsideIds();
-            Lexplosion.Run.TaskRun(delegate () 
+            Lexplosion.Run.TaskRun(delegate ()
             {
                 var instances = OutsideDataManager.GetInstances(
                     SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed
                     );
-                 
+
                 if (instances.Count == 0)
                 {
 
                 }
-                else 
+                else
                 {
-                    App.Current.Dispatcher.Invoke((Action)delegate 
+                    App.Current.Dispatcher.Invoke((Action)delegate
                     {
                         InstanceForms.Clear();
-                        for (int j = 0; j < instances.Count; j++) 
+                        for (int j = 0; j < instances.Count; j++)
                         {
                             if (LibraryOutsideIds.Contains(instances[j].Id))
                             {
                                 InstanceForms.Add(MainModel.GetSpecificVM(instances[j].Id));
                             }
-                            else 
+                            else
                             {
                                 InstanceForms.Add(
                                     new InstanceFormViewModel(
@@ -86,6 +88,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                         }
                     });
                 }
+                SearchBoxVM.IsLoaded = true;
+                PaginatorVM.IsLoaded = true;
             });
         }
     }

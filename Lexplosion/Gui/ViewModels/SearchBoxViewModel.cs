@@ -15,9 +15,20 @@ namespace Lexplosion.Gui.ViewModels
         private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
         private int _selectedSourceIndex = 1;
 
-        public InstanceSource SelectedInstanceSource 
+        private bool _isLoaded;
+
+        public bool IsLoaded
         {
-            get => _selectedInstanceSource; set 
+            get => _isLoaded; set
+            {
+                _isLoaded = value;
+                OnPropertyChanged(nameof(IsLoaded));
+            }
+        }
+
+        public InstanceSource SelectedInstanceSource
+        {
+            get => _selectedInstanceSource; set
             {
                 _selectedInstanceSource = value;
                 OnPropertyChanged(nameof(SelectedInstanceSource));
@@ -27,7 +38,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public RelayCommand SearchCommand
         {
-            get => _searchCommand ?? (new RelayCommand(obj => 
+            get => _searchCommand ?? (new RelayCommand(obj =>
             {
                 if (_currentSearchText != SearchTextUncomfirmed)
                 {

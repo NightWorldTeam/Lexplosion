@@ -32,7 +32,8 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
-                <customcontrols:SearchBox Margin="0,15,0,0" DataContext="{Binding SearchBoxVM}" HorizontalAlignment="Center"/>
+                <customcontrols:SearchBox Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
+                    Margin="0,15,0,0" DataContext="{Binding SearchBoxVM}" HorizontalAlignment="Center"/>
                 <Grid ShowGridLines="False" x:Name="InstanceGrid" Grid.Row="1" Margin="0, 0, 0, 0">
                     <TextBlock x:Name="LoadingLabel" 
                                Text="Идёт загрузка. Пожалуйста подождите..." 
@@ -46,7 +47,8 @@
                                Visibility="Hidden" Height="35" Width="480"/>
                     <ItemsControl Margin="15,0,0,0" ItemsSource="{Binding InstanceForms}" BorderBrush="Transparent"/>
                 </Grid>
-                <customcontrols:Paginator Grid.Row="2" DataContext="{Binding PaginatorVM}"/>
+                <customcontrols:Paginator Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
+                                          Grid.Row="2" DataContext="{Binding PaginatorVM}"/>
             </Grid>
         </ScrollViewer>
     </Grid>
