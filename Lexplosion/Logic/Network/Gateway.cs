@@ -5,6 +5,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using Newtonsoft.Json;
@@ -129,15 +130,23 @@ namespace Lexplosion.Logic.Network
                         new List<string>() { "accessToken", accessToken }
                     };
 
-                    // раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
-                    while (isWork)
+                    try
                     {
-                        string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
-                        Console.WriteLine(ans);
-                        waitingInforming.WaitOne(120000);
+                        // раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
+                        while (isWork)
+                        {
+                            string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
+                            Console.WriteLine(ans);
+                            waitingInforming.WaitOne(120000);
+                        }
                     }
-
-                    ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer.php", input);
+                    finally
+                    {
+                        Task.Run(delegate ()
+                        {
+                            ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer.php", input);
+                        });
+                    }
                 });
 
                 InformingThread.Start();
