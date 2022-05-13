@@ -184,4 +184,23 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="LogoutButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Pattern}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                            <Path 
+                                Fill="White" 
+                                Data="M 0 1.77778 C 0 0.8 0.799822 0 1.77738 0 H 8.88691 V 1.77778 H 1.77738 V 14.2222 H 8.88691 V 16 H 1.77738 C 0.799822 16 0 15.2 0 14.2222 V 1.77778 Z M 12.5981 7.11111 L 10.3444 4.85689 L 11.601 3.6 L 16 8 L 11.601 12.4 L 10.3444 11.1431 L 12.5981 8.88889 H 6.74517 V 7.11111 H 12.5981 Z"
+                                />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
