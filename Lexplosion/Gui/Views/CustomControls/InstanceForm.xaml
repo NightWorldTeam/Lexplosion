@@ -5,11 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Lexplosion.Gui.Views.CustomControls"
              xmlns:objects="clr-namespace:Lexplosion.Logic.Objects"
-             xmlns:instanceform="clr-namespace:Lexplosion.Gui.Models.InstanceForm" 
-             xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
-             xmlns:vmmainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu" 
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
-             xmlns:gui="clr-namespace:Lexplosion.Gui"
              mc:Ignorable="d" 
              d:DesignHeight="120" d:DesignWidth="620">
 
@@ -24,9 +19,12 @@
     </UserControl.Resources>
 
     <Grid>
-        <Border Width="620" Height="120" CornerRadius="10">
+        <Border 
+            Width="620" 
+            Height="120"
+            CornerRadius="10">
             <Border.Background>
-                <SolidColorBrush Color="#151719" x:Name="Background"/>
+                <SolidColorBrush Color="#151719"/>
             </Border.Background>
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" ShadowDepth="10" Color="#151719" Opacity="0.1"/>
@@ -42,28 +40,32 @@
                     <RowDefinition Height="120"/>
                 </Grid.RowDefinitions>
 
-                <Grid x:Name="InstanceLogo" 
-                      Grid.Column="0"
-                      MouseEnter="InstanceLogo_MouseEnter" 
-                      MouseLeave="InstanceLogo_MouseLeave">
-                    <Border x:Name="InstanceLogo_Background"
-                            CornerRadius="10">
+                <Grid 
+                    x:Name="InstanceLogo" 
+                    Grid.Column="0"
+                    MouseEnter="InstanceLogo_MouseEnter" 
+                    MouseLeave="InstanceLogo_MouseLeave">
+                    <Border 
+                        x:Name="InstanceLogo_Background"
+                        CornerRadius="10">
                         <Border.Background>
                             <ImageBrush ImageSource="{Binding Model.Instance.Properties.Logo}" />
                         </Border.Background>
                     </Border>
-                    <TextBlock x:Name="InstanceLogo_Text"
-                            Foreground="White"
-                            FontWeight="Bold"
-                            FontSize="22"
-                            Text="Больше"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            Visibility="Collapsed"/>
-                    <Grid Background="Transparent" Opacity="0.1">
+                    <TextBlock 
+                        x:Name="InstanceLogo_Text"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        FontSize="22"
+                        Text="Больше"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Visibility="Collapsed"/>
+                    <Grid 
+                        Background="Transparent" 
+                        Opacity="0.1">
                         <Grid.InputBindings>
-                            <MouseBinding Gesture="LeftClick" Command="{Binding LogoClickCommand, Source={StaticResource MainMenuViewModel}}" 
-                                          >
+                            <MouseBinding Gesture="LeftClick" Command="{Binding LogoClickCommand, Source={StaticResource MainMenuViewModel}}">
                                 <MouseBinding.CommandParameter>
                                     <MultiBinding Converter="{StaticResource MultiBiningConverter}">
                                         <Binding Path="Model.Instance.IsInstalled" />
@@ -78,14 +80,15 @@
                         </Grid.InputBindings>
                     </Grid>
                 </Grid>
-                <Grid x:Name="TextContentGrid" 
+                <Grid
                     Grid.Column="1"
                     Margin="10,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Grid x:Name="TitleGrid" Grid.Row="0">
+                    
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="135"/>
@@ -93,14 +96,15 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="TextBlockTitle" 
+                        
+                        <TextBlock
                             Grid.Column="0"
                             Padding="0"
                             Text="{Binding Model.Instance.Properties.Name}"
                             FontSize="22"
                             Foreground="#ffffff"
                             TextTrimming="WordEllipsis"/>
-                        <TextBlock x:Name="TextBlockAuthor"
+                        <TextBlock
                             Grid.Column="1"
                             Text="{Binding Model.Instance.Properties.InstanceAssets.author, StringFormat='by {0}'}"
                             FontSize="12"
@@ -112,7 +116,7 @@
                             FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
                             TextTrimming="WordEllipsis"/>
                     </Grid>
-                    <Grid x:Name="OverviewGrid" 
+                    <Grid
                         Grid.Column="1" 
                         Grid.Row="1"
                         Margin="0,5,0,0">
@@ -120,7 +124,7 @@
                             <RowDefinition Height="27"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="TextBlockOverview"
+                        <TextBlock
                             Grid.Column="0"
                             Grid.Row="0"
                             Text="{Binding Model.Instance.OverviewField}"
@@ -128,7 +132,7 @@
                             HorizontalAlignment="Left"
                             FontSize="16"
                             TextTrimming="WordEllipsis"/>
-                        <TextBlock x:Name="TextBlockInstallStage"
+                        <TextBlock
                             Grid.Column="0"
                             Grid.Row="0"
                             Foreground="#f5f5f5"
@@ -136,12 +140,14 @@
                             FontSize="18"
                             TextTrimming="WordEllipsis"
                             Visibility="Collapsed"/>
-                        <ItemsControl Grid.Row="1" Margin="0,1,1,1" 
-                                      ItemsSource="{Binding Model.Instance.Properties.InstanceAssets.categories}"
-                                      Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                        <ItemsControl
+                            Grid.Row="1"
+                            Margin="0,1,1,1" 
+                            ItemsSource="{Binding Model.Instance.Properties.InstanceAssets.categories}"
+                            Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource NegativeConvertBoolToVisibility}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel x:Name="TagsBlock"
+                                    <WrapPanel
                                         IsItemsHost="True"
                                         Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
@@ -154,22 +160,24 @@
                         <RowDefinition Height="60"/>
                         <RowDefinition Height="60"/>
                     </Grid.RowDefinitions>
-                    <Grid x:Name="UpperButton" Grid.Row="0">
+                    <Grid Grid.Row="0">
                         <Border
                             Width="60" 
-                            Height="60" CornerRadius="0,10,0,0">
+                            Height="60" 
+                            CornerRadius="0,10,0,0">
                             <Border.Background>
-                                <SolidColorBrush x:Name="UpperButtonBackground"/>
+                                <SolidColorBrush x:Name="UpperButtonBackground" />
                             </Border.Background>
                             <Border.Triggers>
                                 <EventTrigger RoutedEvent="Border.MouseEnter">
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <ColorAnimation Duration="0:0:0.02"
-                                                            From="Transparent"
-                                                            To="{StaticResource ActivityColor}"
-                                                            Storyboard.TargetName="UpperButtonBackground"
-                                                            Storyboard.TargetProperty="Color"/>
+                                            <ColorAnimation 
+                                                Duration="0:0:0.02"
+                                                From="Transparent"
+                                                To="{StaticResource ActivityColor}"
+                                                Storyboard.TargetName="UpperButtonBackground"
+                                                Storyboard.TargetProperty="Color"/>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
@@ -177,9 +185,10 @@
                                 <EventTrigger RoutedEvent="Border.MouseLeave">
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <ColorAnimation Duration="0:0:0.02" To="Transparent"
-                                                        Storyboard.TargetName="UpperButtonBackground"
-                                                        Storyboard.TargetProperty="Color">
+                                            <ColorAnimation
+                                                Duration="0:0:0.02" To="Transparent"
+                                                Storyboard.TargetName="UpperButtonBackground"
+                                                Storyboard.TargetProperty="Color">
                                             </ColorAnimation>
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -189,39 +198,41 @@
                                 <MouseBinding Gesture="LeftClick" Command="{Binding UpperBtnCommand}" CommandParameter="{Binding Model.ButtonModel.UpperFunc}"/>
                             </Border.InputBindings>
                             <Border.ToolTip>
-                                <ToolTip x:Name="UpperButtonToolTip"
+                                <ToolTip
                                     Placement="Relative" 
                                     Background="Black" 
                                     BorderThickness="0"
                                     HorizontalOffset="{Binding Model.ButtonModel.UpperTip.Offset}"
                                     FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
-                                    <TextBlock FontSize="12" 
-                                               Foreground="White" 
-                                               FontWeight="Bold" 
-                                               Text="{Binding Model.ButtonModel.UpperTip.Text}"
-                                               x:Name="UpperButtonToolTipLable"/>
+                                    <TextBlock 
+                                        FontSize="12" 
+                                        Foreground="White" 
+                                        FontWeight="Bold" 
+                                        Text="{Binding Model.ButtonModel.UpperTip.Text}" />
                                 </ToolTip>
                             </Border.ToolTip>
-
-                            <Path x:Name="UpperButtonPath"
-                                Stretch="Fill" 
-                                Data="{Binding Model.ButtonModel.UpperIcon}"
-                                Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource NegativeConvertBoolToVisibility}}"
-                                Fill="White"
-                                Stroke="White"
-                                Width="20" 
-                                Height="20"/>
+                            <Grid>
+                                <Path
+                                    Stretch="Fill" 
+                                    Data="{Binding Model.ButtonModel.UpperIcon}"
+                                    Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource NegativeConvertBoolToVisibility}}"
+                                    Fill="White"
+                                    Stroke="White"
+                                    Width="20" 
+                                    Height="20" />
+                                <TextBlock
+                                    Foreground="White"
+                                    Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
+                                    Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource ConvertBoolToVisibility}}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    FontSize="18"
+                                    FontWeight="SemiBold" />
+                            </Grid>
                         </Border>
-                        <TextBlock x:Name="InstallProgress"
-                            Foreground="White"
-                            Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
-                            Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource ConvertBoolToVisibility}}"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
-                            FontSize="18"
-                            FontWeight="SemiBold"/>
+
                     </Grid>
-                    <Grid x:Name="LowerButton" Grid.Row="1">
+                    <Grid Grid.Row="1">
                         <Border
                             Width="60"
                             Height="60" 
@@ -233,11 +244,12 @@
                                 <EventTrigger RoutedEvent="Border.MouseEnter">
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <ColorAnimation Duration="0:0:0.02"
-                                                                From="Transparent"
-                                                                To="{StaticResource ActivityColor}"
-                                                                Storyboard.TargetName="LowerButtonBackground"
-                                                                Storyboard.TargetProperty="Color"/>
+                                            <ColorAnimation 
+                                                Duration="0:0:0.02"
+                                                From="Transparent"
+                                                To="{StaticResource ActivityColor}"
+                                                Storyboard.TargetName="LowerButtonBackground"
+                                                Storyboard.TargetProperty="Color" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
@@ -245,9 +257,10 @@
                                 <EventTrigger RoutedEvent="Border.MouseLeave">
                                     <BeginStoryboard>
                                         <Storyboard>
-                                            <ColorAnimation Duration="0:0:0.02" To="Transparent"
-                                                        Storyboard.TargetName="LowerButtonBackground"
-                                                        Storyboard.TargetProperty="Color">
+                                            <ColorAnimation 
+                                                Duration="0:0:0.02" To="Transparent"
+                                                Storyboard.TargetName="LowerButtonBackground"
+                                                Storyboard.TargetProperty="Color">
                                             </ColorAnimation>
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -257,21 +270,20 @@
                                 <MouseBinding Gesture="LeftClick" Command="{Binding LowerBtnCommand}" CommandParameter="{Binding Model.ButtonModel.LowerFunc}"/>
                             </Border.InputBindings>
                             <Border.ToolTip>
-                                <ToolTip x:Name="LowerButtonToolTip"
+                                <ToolTip
                                     Placement="Relative" 
                                     HorizontalOffset="{Binding Model.ButtonModel.LowerTip.Offset}" 
                                     Background="Black" 
                                     BorderThickness="0"
                                     FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
-                                    <TextBlock FontSize="12" 
-                                               Foreground="White" 
-                                               FontWeight="Bold"
-                                               Text="{Binding Model.ButtonModel.LowerTip.Text}"
-                                               x:Name="LowerButtonToolTipLable"/>
+                                    <TextBlock 
+                                        FontSize="12" 
+                                        Foreground="White" 
+                                        FontWeight="Bold"
+                                        Text="{Binding Model.ButtonModel.LowerTip.Text}" />
                                 </ToolTip>
                             </Border.ToolTip>
                             <Path 
-                                x:Name="LowerButtonPath"
                                 Stretch="Fill" 
                                 Fill="White"
                                 Stroke="White"
@@ -283,7 +295,7 @@
                 </Grid>
             </Grid>
         </Border>
-        <ProgressBar x:Name="InstanceProgressBar"
+        <ProgressBar
             Value="{Binding Model.DownloadModel.DownloadProgress}"
             Minimum="0" 
             Maximum="100" 

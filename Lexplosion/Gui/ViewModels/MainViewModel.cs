@@ -4,7 +4,6 @@ using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
@@ -74,7 +68,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             => ChangeFunc(
                     UpperButtonFunc.Play, LowerButtonFunc.OpenFolder,
                     MultiButtonProperties.GeometryPlayIcon, MultiButtonProperties.GeometryOpenFolder,
-                    "Играть", -80, "Открыть папку с игрой", -160
+                    "Играть", -60, "Открыть папку с игрой", -150
             );
 
         public void ChangeFuncDownload(bool isAddedToLibrary)
@@ -86,7 +80,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             ChangeFunc(
                 UpperButtonFunc.Download, lowerBtnFunc,
                 MultiButtonProperties.GeometryDownloadIcon, MultiButtonProperties.GeometryLibraryDelete,
-                "Скачать сборку", -120, "Удалить из библиотеке", -120
+                "Скачать сборку", -110, "Удалить из библиотеке", -150
                 );
         }
 
@@ -101,7 +95,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             => ChangeFunc(
                     UpperButtonFunc.Close, LowerButtonFunc.OpenFolder,
                     MultiButtonProperties.GeometryCancelIcon, MultiButtonProperties.GeometryOpenFolder,
-                    "Закрыть игру", -80, "Открыть папку с игрой", -160
+                    "Закрыть игру", -100, "Открыть папку с игрой", -150
                 );
 
         public void ChangeFunc(
