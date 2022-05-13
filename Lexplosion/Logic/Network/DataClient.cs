@@ -98,7 +98,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public override void Close(IPEndPoint point)
+        protected override void Close(IPEndPoint point)
         {
             fstream.Close();
         }
