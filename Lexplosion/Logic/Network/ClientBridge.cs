@@ -22,6 +22,8 @@ namespace Lexplosion.Logic.Network
 
         const string clientType = "game-client"; // эта строка нужна при подключении к управляющему серверу
 
+        private readonly object _closeLock = new object();
+
         public ClientBridge(string uuid, string server) : base(clientType, server)
         {
             UUID = uuid;
@@ -96,38 +98,56 @@ namespace Lexplosion.Logic.Network
             AvailableServersBlock.WaitOne();
             string serverUUID = AvailableServers[listener];
             Console.WriteLine("AcceptHandler2");
-            base.Initialization(UUID, serverUUID);
-
-            Socket serverSimulator_ = listener.EndAccept(data);
-            ServerSimulator = serverSimulator_;
-            IsConnected = true;
-
-            ReadingWait.Set();
-            SendingWait.Set();
-
-            //закрываем другие сокеты
-            Socket[] values = new Socket[AvailableServers.Count];
-            AvailableServers.Keys.CopyTo(values, 0);
-            foreach (Socket sock in values)
+            if (base.Initialization(UUID, serverUUID))
             {
-                if (AvailableServers[sock] != serverUUID)
-                {
-                    AvailableServers.Remove(sock);
-                    sock.Close();
-                }
-            }
+                Console.WriteLine("AcceptHandler3");
+                Socket serverSimulator_ = listener.EndAccept(data);
+                ServerSimulator = serverSimulator_;
+                IsConnected = true;
 
-            AvailableServersBlock.Release();
-            AcceptingBlock.Release();
+                ReadingWait.Set();
+                SendingWait.Set();
+
+                //закрываем другие сокеты
+                Socket[] values = new Socket[AvailableServers.Count];
+                AvailableServers.Keys.CopyTo(values, 0);
+                foreach (Socket sock in values)
+                {
+                    if (AvailableServers[sock] != serverUUID)
+                    {
+                        AvailableServers.Remove(sock);
+                        sock.Close();
+                    }
+                }
+
+                AvailableServersBlock.Release();
+                AcceptingBlock.Release();
+
+                Console.WriteLine("AcceptHandler4");
+            }
+            else
+            {
+                AcceptingBlock.Release();
+                Socket sock = listener.EndAccept(data);
+                sock.Close();
+                Console.WriteLine("AcceptHandler1.2");
+            }
 
             listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
         }
 
-        public override void Close(IPEndPoint point)
+        protected override void Close(IPEndPoint point)
         {
-            Console.WriteLine("Close");
-            IsConnected = false;
-            ServerSimulator.Close(); //закрываем соединение с клиентом     
+            lock (_closeLock)
+            {
+                if (IsConnected)
+                {
+                    Console.WriteLine("Close");
+                    IsConnected = false;
+                    Bridge.Close();
+                    ServerSimulator.Close(); //закрываем соединение с клиентом   
+                }
+            }
         }
 
         override protected void Sending() //отправляет данные с майнкрафт клиента в сеть
@@ -145,7 +165,6 @@ namespace Lexplosion.Logic.Network
                     if (bytes == 0)
                     {
                         Console.WriteLine("CLOSE. BYTES IS 0");
-                        Bridge.Close();
                         Close(null);
                         readingThread.Abort();
                         break;
@@ -163,7 +182,6 @@ namespace Lexplosion.Logic.Network
             catch (Exception e)
             {
                 Console.WriteLine("Sending " + e);
-                Bridge.Close();
                 Close(null);
                 readingThread.Abort();
             }
@@ -193,7 +211,6 @@ namespace Lexplosion.Logic.Network
 
             Console.WriteLine("Reading " + Bridge.IsConnected);
 
-            Bridge.Close();
             Close(null);
             sendingThread.Abort();
         }

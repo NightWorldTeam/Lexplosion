@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -15,15 +16,18 @@ namespace Lexplosion.Logic.Network
         protected Semaphore ConnectSemaphore; //блокировка для метода BeforeConnect
 
         const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
-        int Port;
+        readonly int Port;
 
-        public ServerBridge(string uuid, int port, bool directConnection, string server) : base(uuid, serverType, directConnection, server)
+        private bool _isWork = true;
+        private object _stopLosk = new object();
+
+        public ServerBridge(string uuid, int localGamePort, bool directConnection, string server) : base(uuid, serverType, directConnection, server)
         {
             ConnectSemaphore = new Semaphore(1, 1);
             Connections = new ConcurrentDictionary<IPEndPoint, Socket>();
             ClientsPoints = new ConcurrentDictionary<Socket, IPEndPoint>();
             Sockets = new List<Socket>();
-            Port = port;
+            Port = localGamePort;
         }
 
         protected override void ClientAbort(IPEndPoint point)
@@ -92,9 +96,7 @@ namespace Lexplosion.Logic.Network
                 SendingBlock.WaitOne();
 
                 ConnectSemaphore.WaitOne();
-                //Console.WriteLine("Sokets count " + Sockets.Count);
                 List<Socket> listeningSokets = new List<Socket>(Sockets);
-                //Console.WriteLine("listeningSokets count " + listeningSokets.Count);
                 ConnectSemaphore.Release();
 
                 try
@@ -203,12 +205,22 @@ namespace Lexplosion.Logic.Network
 
         public override void StopWork()
         {
-            base.StopWork();
-
-            foreach (Socket sock in Sockets)
+            lock (_stopLosk)
             {
-                sock.Close();
+                if (_isWork)
+                {
+                    Console.WriteLine("SERVER STOP WORK METHOD");
+                    base.StopWork();
+
+                    foreach (Socket sock in Sockets)
+                    {
+                        sock.Close();
+                    }
+
+                    _isWork = false;
+                }
             }
+
         }
     }
 }

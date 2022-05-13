@@ -30,9 +30,9 @@ namespace Lexplosion.Logic.Network
         protected bool DirectConnection;
         protected string ControlServer;
 
-        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 23375);
+        private readonly IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9654);
 
-        private Socket controlConnection;
+        private readonly Socket controlConnection;
 
         public NetworkServer(string uuid, string serverType, bool directConnection, string controlServer)
         {
@@ -45,6 +45,8 @@ namespace Lexplosion.Logic.Network
 
             SendingWait = new AutoResetEvent(false);
             ReadingWait = new AutoResetEvent(false);
+
+            controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             if (DirectConnection)
             {
@@ -81,7 +83,6 @@ namespace Lexplosion.Logic.Network
         protected void Accepting(string serverType) // TODO: нужно избегать повторного подключения
         {
             //подключаемся к управляющему серверу
-            controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
 
             string st =
@@ -118,7 +119,7 @@ namespace Lexplosion.Logic.Network
                                 sock.Client.Bind(localPoint);
 
                                 // TODO: сделать получения списка stun серверов с нашего сервера
-                                STUN_Result result = STUN_Client.Query("stun.zoiper.com", 3478, sock.Client); //получем наш внешний адрес
+                                STUN_Result result = STUN_Client.Query("stun.l.google.com", 19305, sock.Client); //получем наш внешний адрес
                                 sock.Close();
 
                                 //парсим порт
@@ -168,6 +169,9 @@ namespace Lexplosion.Logic.Network
                         string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                         string hostIp = str.Replace(":" + hostPort, "");
 
+                        hostPort = "9655";
+                        hostIp = "127.0.0.1";
+
                         point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
                         Console.WriteLine("Host EndPoint " + point);
                         isConected = ((SmpServer)Server).Connect(point);
@@ -211,7 +215,11 @@ namespace Lexplosion.Logic.Network
             IsWork = false;
 
             AcceptingThread.Abort();
-            controlConnection.Send(new byte[1] { 122 }); // отправляем управляющиму серверу сообщение что мы отключаемся
+            try
+            {
+                controlConnection.Send(new byte[1] { 122 }); // отправляем управляющиму серверу сообщение что мы отключаемся
+            }
+            catch { }
             controlConnection.Close(); //закрываем соединение с управляющим сервером
 
             SendingThread.Abort();

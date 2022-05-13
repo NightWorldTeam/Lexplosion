@@ -16,6 +16,8 @@ namespace Lexplosion.Logic.Network.TURN
         protected Semaphore WaitDeletingConnection = new Semaphore(1, 1);
         protected ManualResetEvent WaitConnections = new ManualResetEvent(false); // блокировка метода Receive, если нет клиентов
 
+        protected bool IsWork = true;
+
         public bool Connect(string selfUUID, string hostUUID, out IPEndPoint point)
         {
             byte[] data = new byte[64];
@@ -51,7 +53,7 @@ namespace Lexplosion.Logic.Network.TURN
 
         public IPEndPoint Receive(out byte[] data)
         {
-            while (true)
+            while (IsWork)
             {
                 WaitConnections.WaitOne(); // тут метод остановится, если нет ни одного клиента
 
@@ -85,16 +87,25 @@ namespace Lexplosion.Logic.Network.TURN
 
                 return point;
             }
+
+            data = new byte[0];
+            return null;
         }
 
         public void Send(byte[] inputData, IPEndPoint ip)
         {
-            pointsSockets[ip].Send(inputData);     
+            pointsSockets[ip].Send(inputData);
         }
 
         public void StopWork()
         {
-
+            IsWork = false;
+            WaitDeletingConnection.WaitOne();
+            foreach (var socket in sockets)
+            {
+                socket.Close();
+            }
+            WaitDeletingConnection.Release();
         }
 
         public bool Close(IPEndPoint point)
@@ -102,7 +113,7 @@ namespace Lexplosion.Logic.Network.TURN
             Console.WriteLine("TURN CLOSE ");
             WaitDeletingConnection.WaitOne();
             // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
-            if (pointsSockets.ContainsKey(point))
+            if (IsWork && pointsSockets.ContainsKey(point))
             {
                 Console.WriteLine("TRUN CLOSE GSFSDGF");
                 pointsSockets.TryRemove(point, out Socket sock);
