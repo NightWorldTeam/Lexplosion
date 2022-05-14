@@ -34,6 +34,7 @@ namespace Lexplosion.Logic.Network
             {
                 //подключаемся к управляющему серверу
                 TcpClient client = new TcpClient();
+                Console.WriteLine("CONNECT Initialization");
                 client.Connect(ControlServer, 4565);
 
                 NetworkStream stream = client.GetStream();

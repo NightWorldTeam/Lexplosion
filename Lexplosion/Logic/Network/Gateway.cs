@@ -48,7 +48,7 @@ namespace Lexplosion.Logic.Network
             ClientSimulatorThread.Start();
         }
 
-        public bool ListenGameSrvers(UdpClient client, out string name, out int port, int pid, bool endlesswaiting)
+        public bool ListenGameSrvers(UdpClient client, out string name, out int port, int pid)
         {
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, 0);
 
@@ -61,11 +61,12 @@ namespace Lexplosion.Logic.Network
                 {
                     byte[] data;
                     data = client.Receive(ref ip);
-
                     List<ushort> processPorts = Utils.GetProcessUdpPorts(pid);
 
+                    // TODO: ещё ник проверять
                     if (processPorts.Contains((ushort)ip.Port)) // проверяем принадлежит ли порт, с которого мы получили данные нужному нам процессу 
                     {
+                        Console.WriteLine("Contains?");
                         string strData = Encoding.ASCII.GetString(data);
 
                         if (strData.Substring(0, 6) == "[MOTD]" && strData.Substring(strData.Length - 5, 5) == "[/AD]")
@@ -81,17 +82,8 @@ namespace Lexplosion.Logic.Network
                     }
                     else // пришел пакет от другого клиента, кторый с нами никак не связан
                     {
-                        // если это бесконечное ожидание, то мы просто оступаем на шаг назад, чтобы цикл не закночился
-                        if (endlesswaiting)
-                        {
-                            i--;
-                            continue;
-                        }
-                        else
-                        {
-                            Thread.Sleep(3000); // если оно не бесконечное, засыпаем на время таймаута
-                        }
-
+                        i--;
+                        continue;
                     }
                 }
                 catch { }
@@ -115,7 +107,8 @@ namespace Lexplosion.Logic.Network
 
             while (true)
             {
-                bool successful = ListenGameSrvers(client, out string name, out int port, pid, true);
+                bool successful = ListenGameSrvers(client, out string name, out int port, pid);
+                Console.WriteLine("END LISTING " + name + " " + port);
 
                 if (!successful) // TODO: из всего алгоритма выходить не надо, надо только перевести всё в ручной режим
                 {
@@ -196,7 +189,7 @@ namespace Lexplosion.Logic.Network
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 0);
             client.Client.Ttl = 0; //это чтобы другие компьютеры в локальной сети не видели этого сервера
-            client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
+            client.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
             client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"), IPAddress.Parse("127.0.0.1"));
 
             while (true)
