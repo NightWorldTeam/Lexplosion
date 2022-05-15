@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -61,12 +60,10 @@ namespace Lexplosion.Logic.Network
                 {
                     byte[] data;
                     data = client.Receive(ref ip);
-                    List<ushort> processPorts = Utils.GetProcessUdpPorts(pid);
 
                     // TODO: ещё ник проверять
-                    if (processPorts.Contains((ushort)ip.Port)) // проверяем принадлежит ли порт, с которого мы получили данные нужному нам процессу 
+                    if (Utils.ContainsUdpPort(pid, ip.Port)) // проверяем принадлежит ли порт, с которого мы получили данные нужному нам процессу 
                     {
-                        Console.WriteLine("Contains?");
                         string strData = Encoding.ASCII.GetString(data);
 
                         if (strData.Substring(0, 6) == "[MOTD]" && strData.Substring(strData.Length - 5, 5) == "[/AD]")
@@ -102,13 +99,11 @@ namespace Lexplosion.Logic.Network
             client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
             client.Client.ReceiveTimeout = -1; // убираем таймоут, чтобы этот метод мог ждать бесконечно
 
-            AutoResetEvent waitingInforming = new AutoResetEvent(false);
-            bool isWork = true;
-
             while (true)
             {
+                AutoResetEvent waitingInforming = new AutoResetEvent(false);
+
                 bool successful = ListenGameSrvers(client, out string name, out int port, pid);
-                Console.WriteLine("END LISTING " + name + " " + port);
 
                 if (!successful) // TODO: из всего алгоритма выходить не надо, надо только перевести всё в ручной режим
                 {
@@ -126,12 +121,12 @@ namespace Lexplosion.Logic.Network
                     try
                     {
                         // раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
-                        while (isWork)
+                        do
                         {
                             string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
                             Console.WriteLine(ans);
-                            waitingInforming.WaitOne(120000);
                         }
+                        while (!waitingInforming.WaitOne(120000));
                     }
                     finally
                     {
@@ -147,20 +142,9 @@ namespace Lexplosion.Logic.Network
 
                 while (true)
                 {
+                    Console.WriteLine("GAME SERVER IS WORK");
                     // проверяем имеется ли этот порт. Если имеется - значит сервер запущен
-                    bool gameIsNotActive = true;
-                    IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-                    var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpListeners();
-                    foreach (var tcpi in tcpConnInfoArray)
-                    {
-                        if (tcpi.Port == port)
-                        {
-                            gameIsNotActive = false;
-                            break;
-                        }
-                    }
-
-                    if (gameIsNotActive)
+                    if (!Utils.ContainsTcpPort(pid, port))
                     {
                         break;
                     }
@@ -168,7 +152,6 @@ namespace Lexplosion.Logic.Network
                     Thread.Sleep(3000);
                 }
 
-                isWork = false;
                 waitingInforming.Set(); // высвобождаем поток InformingThread чтобы он не ждал лишнее время
                 Server.StopWork();
             }
@@ -194,8 +177,7 @@ namespace Lexplosion.Logic.Network
 
             while (true)
             {
-                List<ushort> processPorts = Utils.GetProcessUdpPorts(pid);
-                if (processPorts.Contains(4445))
+                if (Utils.ContainsUdpPort(pid, 4445))
                 {
                     List<List<string>> input = new List<List<string>>
                     {

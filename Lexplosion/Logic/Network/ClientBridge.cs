@@ -127,6 +127,7 @@ namespace Lexplosion.Logic.Network
             }
             else
             {
+                AvailableServersBlock.Release();
                 AcceptingBlock.Release();
                 Socket sock = listener.EndAccept(data);
                 sock.Close();

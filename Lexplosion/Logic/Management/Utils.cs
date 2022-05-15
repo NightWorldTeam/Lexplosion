@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 
 namespace Lexplosion.Logic.Management
@@ -30,17 +31,66 @@ namespace Lexplosion.Logic.Management
             Cmd
         }
 
-        public struct UdpRowOwnerPid
+        private struct UdpRowOwnerPid
         {
             public uint LocalAddr;
             public uint LocalPort;
             public uint OwningPid;
         }
 
-        [System.Runtime.InteropServices.DllImport("iphlpapi.dll", SetLastError = true)]
+        private enum TcpTableClass
+        {
+            TcpTableBasicListener,
+            TcpTableBasicConnections,
+            TcpTableBasicAll,
+            TcpTableOwnerPidListener,
+            TcpTableOwnerPidConnections,
+            TcpTableOwnerPidAll,
+            TcpTableOwnerModuleListener,
+            TcpTableOwnerModuleConnections,
+            TcpTableOwnerModuleAll
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct TcpRowOwnerPid
+        {
+            public TcpState State;
+            public uint LocalAddr;
+            public uint LocalPort;
+            public uint RemoteAddr;
+            public uint RemotePort;
+            public uint OwningPid;
+        }
+
+        private static void ReadData<T>(IntPtr buffer, out T[] tTable)
+        {
+            Type rowType = typeof(T);
+            int sizeRow = Marshal.SizeOf(rowType);
+            long buffAddress = buffer.ToInt64();
+
+            int count = Marshal.ReadInt32(buffer);
+            int offcet = Marshal.SizeOf(typeof(Int32));
+
+            tTable = new T[count];
+            for (int i = 0; i < tTable.Length; i++)
+            {
+                //calc position for next array element
+                var memoryPos = new IntPtr(buffAddress + offcet);
+                //read element
+                tTable[i] = (T)Marshal.PtrToStructure(memoryPos, rowType);
+
+                offcet += sizeRow;
+            }
+        }
+
+        [DllImport("iphlpapi.dll", SetLastError = true)]
+        private static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort,
+            IpVersion ipVersion, TcpTableClass tblClass, int reserved);
+
+        [DllImport("iphlpapi.dll", SetLastError = true)]
         private static extern uint GetExtendedUdpTable(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, IpVersion ipVersion, UdpTableClass tblClass, int reserved);
 
-        public static List<ushort> GetProcessUdpPorts(int pid)
+        public static bool ContainsUdpPort(int pid, int port)
         {
             UdpRowOwnerPid[] tTable = null;
 
@@ -61,30 +111,13 @@ namespace Lexplosion.Logic.Management
                 }
 
                 if (retVal != Successfully)
-                    return null;
+                    return false;
 
-                Type rowType = typeof(UdpRowOwnerPid);
-                int sizeRow = Marshal.SizeOf(rowType);
-                long buffAddress = buffer.ToInt64();
-
-                int count = Marshal.ReadInt32(buffer);
-                int offcet = Marshal.SizeOf(typeof(Int32));
-
-                tTable = new UdpRowOwnerPid[count];
-                for (int i = 0; i < count; i++)
-                {
-                    //calc position for next array element
-                    var memoryPos = new IntPtr(buffAddress + offcet);
-                    //read element
-                    tTable[i] = (UdpRowOwnerPid)Marshal.PtrToStructure(memoryPos, rowType);
-
-                    offcet += sizeRow;
-                }
-
+                ReadData(buffer, out tTable);
             }
             catch
             {
-                return null;
+                return false;
             }
             finally
             {
@@ -92,24 +125,82 @@ namespace Lexplosion.Logic.Management
                 Marshal.FreeHGlobal(buffer);
             }
 
-            List<ushort> data = new List<ushort>();
             for (int i = 0; i < tTable.Length; i++)
             {
                 if (tTable[i].OwningPid == pid)
                 {
-                    uint port = tTable[i].LocalPort;
+                    uint _port = tTable[i].LocalPort;
                     var b = new byte[2];
                     // high weight byte
-                    b[0] = (byte)(port >> 8);
+                    b[0] = (byte)(_port >> 8);
                     // low weight byte
-                    b[1] = (byte)(port & 255);
+                    b[1] = (byte)(_port & 255);
 
-                    data.Add(BitConverter.ToUInt16(b, 0));
+                    if (BitConverter.ToUInt16(b, 0) == port)
+                    {
+                        return true;
+                    }
                 }
-
             }
 
-            return data;
+            return false;
+        }
+
+        public static bool ContainsTcpPort(int pid, int port)
+        {
+            TcpRowOwnerPid[] tTable;
+
+            int buffSize = 0;
+
+            // how much memory do we need?
+            GetExtendedTcpTable(IntPtr.Zero, ref buffSize, false, IpVersion.IPv4, TcpTableClass.TcpTableOwnerPidAll, 0);
+
+            IntPtr buffer = Marshal.AllocHGlobal(buffSize);
+            try
+            {
+                uint retVal = GetExtendedTcpTable(buffer, ref buffSize, false, IpVersion.IPv4,
+                                                  TcpTableClass.TcpTableOwnerPidAll, 0);
+
+                while (retVal == ErrorInsufficientBuffer) //buffer should be greater?
+                {
+                    buffer = Marshal.ReAllocHGlobal(buffer, new IntPtr(buffSize));
+                    retVal = GetExtendedTcpTable(buffer, ref buffSize, false, IpVersion.IPv4,
+                                                 TcpTableClass.TcpTableOwnerPidAll, 0);
+                }
+
+                if (retVal != Successfully) return false;
+
+                ReadData(buffer, out tTable);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                // Free the Memory
+                Marshal.FreeHGlobal(buffer);
+            }
+
+            for (int i = 0; i < tTable.Length; i++)
+            {
+                if (tTable[i].OwningPid == pid)
+                {
+                    uint _port = tTable[i].LocalPort;
+                    var b = new byte[2];
+                    // high weight byte
+                    b[0] = (byte)(_port >> 8);
+                    // low weight byte
+                    b[1] = (byte)(_port & 255);
+
+                    if (BitConverter.ToUInt16(b, 0) == port)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public static bool StartProcess(string command, ProcessExecutor executor, string javaPath = "")
