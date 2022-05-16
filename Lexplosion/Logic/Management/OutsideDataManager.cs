@@ -40,7 +40,7 @@ namespace Lexplosion.Logic.Management
 
             if (type == InstanceSource.Nightworld)
             {
-                Dictionary<string, NWInstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
+                Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
 
                 int i = 0;
                 foreach (string nwModpack in nwInstances.Keys)
@@ -49,22 +49,23 @@ namespace Lexplosion.Logic.Management
                     {
                         OutsideInstance instanceInfo = new OutsideInstance()
                         {
-                            Name = nwInstances[nwModpack].name ?? "Uncnown name",
+                            Name = nwInstances[nwModpack].Name ?? "Uncnown name",
                             InstanceAssets = new InstanceAssets()
                             {
-                                author = nwInstances[nwModpack].author ?? "",
-                                description = nwInstances[nwModpack].description ?? "",
+                                author = nwInstances[nwModpack].Author ?? "",
+                                description = nwInstances[nwModpack].Description ?? "",
                             },
                             MainImage = null,
-                            Categories = nwInstances[nwModpack].categories ?? new List<Category>(),
+                            Categories = nwInstances[nwModpack].Categories ?? new List<Category>(),
                             DownloadCount = 0,
                             Type = InstanceSource.Nightworld,
-                            Id = nwModpack
+                            Id = nwModpack,
+                            GameVersion = nwInstances[nwModpack].GameVersion
                         };
 
                         var e = new AutoResetEvent(false);
                         events.Add(e);
-                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceInfo, nwInstances[nwModpack].mainImage });
+                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceInfo, nwInstances[nwModpack].MainImage });
 
                         instanceInfo.IsInstalled = UserData.Instances.ExternalIds.ContainsKey(nwModpack);
 
@@ -103,7 +104,8 @@ namespace Lexplosion.Logic.Management
                         Categories = instance.categories,
                         DownloadCount = instance.downloadCount,
                         Type = InstanceSource.Curseforge,
-                        Id = instance.id.ToString()
+                        Id = instance.id.ToString(),
+                        GameVersion = (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0) ? instance.gameVersionLatestFiles[0].gameVersion : ""
                     };
 
                     if (instance.attachments != null && instance.attachments.Count > 0)

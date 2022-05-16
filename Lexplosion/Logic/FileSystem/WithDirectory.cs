@@ -479,5 +479,48 @@ namespace Lexplosion.Logic.FileSystem
 
             return true;
         }
+
+        public static List<byte[]> LoadMcScreenshots(string instanceId)
+        {
+            string[] files;
+            List<byte[]> screenshot = new List<byte[]>();
+
+            try
+            {
+                if (Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/screenshots"))
+                {
+                    files = Directory.GetFiles(DirectoryPath + "/instances/" + instanceId + "/screenshots");
+                }
+                else
+                {
+                    return screenshot;
+                }
+            }
+            catch
+            {
+                return screenshot;
+            }
+
+            try
+            {
+                foreach (string file in files)
+                {
+                    using (FileStream fstream = File.OpenRead(file))
+                    {
+                        byte[] fileBytes = new byte[fstream.Length];
+                        fstream.Read(fileBytes, 0, fileBytes.Length);
+                        fstream.Close();
+
+                        screenshot.Add(fileBytes);
+                    }
+                }
+
+                return screenshot;
+            }
+            catch
+            {
+                return screenshot;
+            }
+        }
     }
 }

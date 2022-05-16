@@ -242,6 +242,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public byte[] MainImage;
         public List<Category> Categories { get; set; }
         public float DownloadCount { get; set; }
+        public string GameVersion { get; set; }
     }
 
     class CurseforgeFileInfo
@@ -249,17 +250,6 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public int id;
         public string downloadUrl;
         public string fileName;
-    }
-
-    class NWInstanceInfo
-    {
-        public string name;
-        public string mainImage;
-        public string author;
-        public long version;
-        public string description;
-        public List<Category> categories;
-        public long DonwloadsCount;
     }
 
     public class DataLibInfo : LibInfo
@@ -316,5 +306,6 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public List<Category> Categories { get; set; }
         public List<byte[]> Images { get; set; }
         public string WebsiteUrl { get; set; }
+        public string Summary { get; set; }
     }
 }

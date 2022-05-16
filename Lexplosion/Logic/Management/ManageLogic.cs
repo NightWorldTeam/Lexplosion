@@ -390,11 +390,13 @@ namespace Lexplosion.Logic.Management
                         {
                             Categories = data.categories,
                             Description = data.summary,
+                            Summary = data.summary,
                             TotalDownloads = (long)data.downloadCount,
                             GameVersion = (data.gameVersionLatestFiles != null && data.gameVersionLatestFiles.Count > 0) ? data.gameVersionLatestFiles[0].gameVersion : "",
                             LastUpdate = DateTime.Parse(data.dateModified).ToString("dd MMM yyyy"),
                             Modloader = data.Modloader,
-                            Images = images
+                            Images = images,
+                            WebsiteUrl = data.websiteUrl
                         };
                     }
                 case InstanceSource.Nightworld:
@@ -421,16 +423,28 @@ namespace Lexplosion.Logic.Management
                         {
                             Categories = data.Categories,
                             Description = data.Description,
+                            Summary = data.Summary,
                             TotalDownloads = data.DownloadCounts,
                             GameVersion = data.GameVersion,
                             LastUpdate = (new DateTime(1970, 1, 1).AddSeconds(data.LastUpdate)).ToString("dd MMM yyyy"),
                             Modloader = data.Modloader,
-                            Images = images
+                            Images = images,
+                            WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + instanceId
                         };
                     }
                 default:
-                    return null;
-                
+                    return new InstanceData
+                    {
+                        Categories = new List<Category>(),
+                        Description = null,
+                        Summary = null,
+                        TotalDownloads = 0,
+                        GameVersion = "",
+                        LastUpdate = null,
+                        Modloader = ModloaderType.None,
+                        Images = WithDirectory.LoadMcScreenshots(instanceId)
+                    };
+
             }
         }
     }

@@ -249,7 +249,6 @@ namespace Lexplosion.Logic.FileSystem
 
                         return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(fileBytes));
                     }
-
                 }
 
                 return default;

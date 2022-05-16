@@ -20,34 +20,40 @@ namespace Lexplosion.Logic.Network
             public string str;
         }
 
-        public class InstanceInfo
+        public class FullInstanceInfo : InstanceInfo
         {
-            public string Name;
-            public long Version;
-            public string MainImage;
             public long DownloadCounts;
-            public List<Category> Categories;
-            public string Description;
-            public string Author;
             public string WebsiteUrl;
             public List<string> Images;
-            public string GameVersion;
             public long LastUpdate;
             public ModloaderType Modloader;
         }
 
-        public static Dictionary<string, NWInstanceInfo> GetInstancesList()
+        public class InstanceInfo
+        {
+            public string Name;
+            public string MainImage;
+            public string Author;
+            public long Version;
+            public string Description;
+            public string Summary;
+            public List<Category> Categories;
+            public long DonwloadsCount;
+            public string GameVersion;
+        }
+
+        public static Dictionary<string, InstanceInfo> GetInstancesList()
         {
             try
             {
                 string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData);
-                Dictionary<string, NWInstanceInfo> list = JsonConvert.DeserializeObject<Dictionary<string, NWInstanceInfo>>(answer);
+                Dictionary<string, InstanceInfo> list = JsonConvert.DeserializeObject<Dictionary<string, InstanceInfo>>(answer);
 
                 return list;
             }
             catch
             {
-                return new Dictionary<string, NWInstanceInfo>();
+                return new Dictionary<string, InstanceInfo>();
             }
         }
 
@@ -66,12 +72,12 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static InstanceInfo GetInstanceInfo(string id)
+        public static FullInstanceInfo GetInstanceInfo(string id)
         {
             try
             {
                 string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(id) + "/info");
-                InstanceInfo info = JsonConvert.DeserializeObject<InstanceInfo>(answer);
+                FullInstanceInfo info = JsonConvert.DeserializeObject<FullInstanceInfo>(answer);
 
                 return info;
             }
