@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Collections.Generic;
+using System;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using System.Collections.Generic;
-using System;
+using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management
 {

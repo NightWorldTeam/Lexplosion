@@ -1,7 +1,4 @@
-﻿using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Objects;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +6,10 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Curseforge;
 
 namespace Lexplosion.Logic.Network
 {

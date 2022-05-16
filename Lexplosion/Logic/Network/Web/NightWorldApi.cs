@@ -1,7 +1,4 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Objects;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,6 +6,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
+using Lexplosion.Global;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Objects.Nightworld;
 
 namespace Lexplosion.Logic.Network
 {

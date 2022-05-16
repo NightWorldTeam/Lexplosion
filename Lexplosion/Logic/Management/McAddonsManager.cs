@@ -13,6 +13,11 @@ using static Lexplosion.Logic.Network.CurseforgeApi;
 
 namespace Lexplosion.Logic.Management
 {
+    /// <summary>
+    /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
+    /// </summary>
+    public class InstalledAddons : Dictionary<int, InstalledAddonInfo> { }
+
     static class McAddonsManager
     {
         public static bool InstallAddon(int projectID, int fileID, string instanceId, string gameVersion)

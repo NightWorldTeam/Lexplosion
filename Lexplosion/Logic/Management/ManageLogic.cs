@@ -1,14 +1,16 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Objects;
-using System.Collections.Generic;
-using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Network;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System;
-using Newtonsoft.Json;
 using System.Net;
+using Newtonsoft.Json;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Global;
 
 namespace Lexplosion.Logic.Management
 {

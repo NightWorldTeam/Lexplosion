@@ -10,6 +10,8 @@ using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Objects.Curseforge;
 using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management

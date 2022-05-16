@@ -1,10 +1,11 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using Lexplosion.Global;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Curseforge;
 
 namespace Lexplosion.Logic.Management
 {

@@ -4,12 +4,13 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Security.Cryptography;
-using Newtonsoft.Json;
-using Lexplosion.Logic.Objects;
-using Lexplosion.Global;
 using System.Windows;
-using Lexplosion.Logic.FileSystem;
 using System.Runtime.Serialization.Formatters.Binary;
+using Newtonsoft.Json;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Global;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Network
 {

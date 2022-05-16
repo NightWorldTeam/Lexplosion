@@ -5,14 +5,15 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.IO.Compression;
-using Newtonsoft.Json;
 using System.Threading;
+using System.Windows;
+using System.Linq;
+using Newtonsoft.Json;
+using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
-using System.Windows;
-using System.Linq;
-using Lexplosion.Logic.Management;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
