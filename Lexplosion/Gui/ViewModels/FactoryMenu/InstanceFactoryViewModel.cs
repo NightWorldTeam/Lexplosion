@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -22,18 +23,37 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                     NavigationMainMenuCommand.Execute(null);
             }
         }
-         
+
+        private static FactoryGeneralViewModel _factoryGeneralVM = new FactoryGeneralViewModel();
+        private static FactoryDLCVM _factoryDLCVM = new FactoryDLCVM();
+
+        private List<Tab> FactoryTabs = new List<Tab>()
+        {
+            new Tab
+            {
+                Header = "Основное",
+                Content = _factoryGeneralVM
+            },
+            new Tab
+            {
+                Header = "DLC",
+                Content = _factoryDLCVM
+            }
+        };
+
         public InstanceFactoryViewModel()
         {
             NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
-                MainViewModel.NavigationStore, () => new MainMenuViewModel());
+                MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
+
+            var _tabMenuViewModel = new TabMenuViewModel(FactoryTabs, "Создание сборки");
 
             Tabs = new ObservableCollection<Tab>
             {
                 new Tab
                 {
                     Header = "Создание Сборки",
-                    Content = new FactoryGeneralViewModel()
+                    Content = _tabMenuViewModel
                 },
                 new Tab
                 {

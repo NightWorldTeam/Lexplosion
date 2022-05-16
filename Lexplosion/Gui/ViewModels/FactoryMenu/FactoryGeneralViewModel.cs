@@ -7,6 +7,7 @@ using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -115,8 +116,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 return _createInstance ?? (new RelayCommand(obj =>
                 {
-                    if (Model.Name != "")
-                    {
                         var id = ManageLogic.CreateInstance(
                             Model.Name, InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion
                         );
@@ -127,7 +126,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                                 new InstanceFormModel(
                                     new InstanceProperties
                                     {
-                                        Name = Model.Name,
+                                        Name = Model.Name ?? "Custom Instance",
                                         Type = InstanceSource.Local,
                                         Id = string.Empty,
                                         LocalId = id,
@@ -153,7 +152,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                                     )
                                 )
                             );
-                    }
                 }));
             }
         }
@@ -162,7 +160,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         public FactoryGeneralViewModel()
         {
             NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
-                 MainViewModel.NavigationStore, () => new MainMenuViewModel());
+                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
 
             List<string> versions = new List<string>();
             Lexplosion.Run.TaskRun(() =>

@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Gui\BooleanToColorConverter.cs" />
     <Compile Include="Gui\Commands\CommandBase.cs" />
     <Compile Include="Gui\Commands\NavigateCommand.cs" />
     <Compile Include="Gui\Commands\RelayCommand.cs" />
@@ -119,6 +120,8 @@
     <Compile Include="Gui\Tab.cs" />
     <Compile Include="Gui\Utilities.cs" />
     <Compile Include="Gui\ViewModels\AuthViewModel.cs" />
+    <Compile Include="Gui\ViewModels\CurseforgeMarket\CurseforgeMarketViewModel.cs" />
+    <Compile Include="Gui\ViewModels\FactoryMenu\FactoryDLCVM.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\InstanceFactoryViewModel.cs" />
     <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
@@ -149,6 +152,12 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\AuthView.xaml.cs">
       <DependentUpon>AuthView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\CurseforgeMarketView.xaml.cs">
+      <DependentUpon>CurseforgeMarketView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\FactoryDLCView.xaml.cs">
+      <DependentUpon>FactoryDLCView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\FactoryMenu\FactoryGeneralView.xaml.cs">
       <DependentUpon>FactoryGeneralView.xaml</DependentUpon>
@@ -297,6 +306,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\AuthView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\CurseforgeMarketView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\FactoryDLCView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

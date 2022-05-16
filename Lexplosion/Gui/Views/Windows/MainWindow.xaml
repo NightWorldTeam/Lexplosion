@@ -90,8 +90,23 @@
                 <Button Grid.Column="2" Content="Logout"
                         Command="" Background="Transparent" 
                         Style="{StaticResource LogoutButton}"
-                        BorderBrush="Transparent" Foreground="#fff"/>
+                        BorderBrush="Transparent" Foreground="#fff">
+                    <Button.ToolTip>
+                        <ToolTip
+                            Placement="Relative" 
+                            Background="Black" 
+                            HorizontalOffset="-80"
+                            VerticalOffset="-30"
+                            BorderThickness="0"
+                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
+                            <TextBlock Text="Настройки пользователя" FontSize="12" Foreground="White"/>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
             </Grid>
         </Border>
+        <ContentControl 
+            Grid.Row="1"
+            Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>

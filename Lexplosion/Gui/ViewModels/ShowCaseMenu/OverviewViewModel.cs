@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.Models.ShowCaseMenu;
+using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
@@ -87,9 +88,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 childWidth += tagSizes[item.name];
             }
             if (childWidth < 326.5)
-                return 53;
+                return 40;
             else
-                return 103;
+                return 60;
         }
     }
 }

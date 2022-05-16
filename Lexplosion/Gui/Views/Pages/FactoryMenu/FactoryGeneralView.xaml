@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
              mc:Ignorable="d" 
-             xmlns:objects="clr-namespace:Lexplosion" xmlns:factorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu"
+             xmlns:objects="clr-namespace:Lexplosion" 
+             xmlns:factorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu"
+             xmlns:helpers="clr-namespace:Lexplosion.Gui.Helpers"
              d:DesignHeight="450" d:DesignWidth="700">
     <UserControl.Resources>
         <!-- TextBlock -->
@@ -261,13 +263,12 @@
                     HorizontalAlignment="Left"
                     TextAlignment="Left"/>
                 <TextBox
-                    Text="{Binding Model.Name}"
+                    Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Width="244"
                     Height="40"
                     Margin="30,60,0,0"
                     VerticalAlignment="Top"
-                    HorizontalAlignment="Left"
-                    />
+                    HorizontalAlignment="Left" />
                 <!--TextChanged="InstanceNameTB_TextChanged"-->
 
                 <!-- Version -->
@@ -280,7 +281,7 @@
                     TextAlignment="Left"/>
                 <ComboBox
                     ItemsSource="{Binding GameVersions}"
-                    SelectedValue="{Binding SelectedVersion}"
+                    SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}"
                     Width="200"
                     Height="40"
                     Margin="304,60,0,0"
@@ -339,7 +340,7 @@
                 <!-- More -->
                 <ComboBox Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}"
                     ItemsSource="{Binding ModloaderVersions}"
-                    SelectedValue="{Binding SelectedModloaderVersion}"
+                    SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}"
                     Width="180"
                     Height="40"
                     Background="Red"
@@ -347,18 +348,16 @@
                     Margin="30,20,0,0"/>
 
                 <Button
-                        BorderThickness="0"
-                        Background="#167FFC"
-                        Foreground="White"
-                        FontSize="14"
-                        FontWeight="DemiBold"
-                        Content="Создать"
-                        Command="{Binding CreateInstance}"
-                        HorizontalAlignment="Left"
-                        Margin="26,250,0,0"
-                        Width="105"
-                        Height="35"
-                        />
+                    Style="{StaticResource DefaultBrandColorButton}"
+                    Command="{Binding CreateInstance}"
+                    HorizontalAlignment="Left"
+                    Margin="26,250,0,0"
+                    FontWeight="DemiBold"
+                    FontSize="14"
+                    Content="Собрать"
+                    Width="105"
+                    Height="35"
+                    />
                 <!--Click="CreateInstanceButton_Click"-->
                 <Button
                         Background="#232527" 

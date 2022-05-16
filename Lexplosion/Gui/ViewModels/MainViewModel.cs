@@ -2,6 +2,8 @@
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.Stores;
+using Lexplosion.Gui.ViewModels.CurseforgeMarket;
+using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
@@ -12,6 +14,8 @@ namespace Lexplosion.Gui.ViewModels
     public class MainViewModel : VMBase
     {
         public static readonly NavigationStore NavigationStore = new NavigationStore();
+        public static readonly MainMenuViewModel MainMenuVM = new MainMenuViewModel();
+
         public static bool IsInstanceRunning = false;
 
         private string _nickname;

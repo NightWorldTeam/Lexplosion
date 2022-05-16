@@ -91,7 +91,7 @@ namespace Lexplosion.Gui.ViewModels
             Login = _login; Password = _password;
 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
-                MainViewModel.NavigationStore, () => new MainMenuViewModel());
+                MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
         }
     }
 }

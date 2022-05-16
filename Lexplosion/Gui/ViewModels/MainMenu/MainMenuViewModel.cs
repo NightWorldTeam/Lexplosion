@@ -9,6 +9,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 {
     public class MainMenuViewModel : SubmenuViewModel
     {
+        private readonly CatalogViewModel _catalogVM;
+        private readonly LibraryViewModel _libraryVM;
+        //private readonly CatalogViewModel _catalogVM;
+        private readonly TabMenuViewModel _tabMenuViewModel;
+
         public ICommand NavigationFactoryCommand { get; }
         public ICommand NavigationInstanceCommand { get; private set; }
         public ICommand NavigationShowCaseCommand { get; private set; }
@@ -63,17 +68,22 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             NavigationFactoryCommand = new NavigateCommand<InstanceFactoryViewModel>(
                  MainViewModel.NavigationStore, () => new InstanceFactoryViewModel());
 
+            _catalogVM = new CatalogViewModel();
+            _libraryVM = new LibraryViewModel();
+            //_catalogVM = new CatalogViewModel();
+            _tabMenuViewModel = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");
+
             Tabs = new ObservableCollection<Tab>
             {
                 new Tab
                 {
                     Header = "Каталог",
-                    Content = new CatalogViewModel()
+                    Content = _catalogVM
                 },
                 new Tab
                 {
                     Header = "Библиотека",
-                    Content = new LibraryViewModel()
+                    Content = _libraryVM
                 },
                 new Tab
                 {
@@ -83,7 +93,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab
                 {
                     Header = "Настройки",
-                    Content = new TabMenuViewModel(GeneralSettingsTabs, "Настройки")
+                    Content = _tabMenuViewModel
                 }
             };
             SelectedTab = Tabs[0];

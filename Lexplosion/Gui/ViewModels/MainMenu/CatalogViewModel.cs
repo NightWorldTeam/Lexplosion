@@ -16,7 +16,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public ObservableCollection<InstanceFormViewModel> InstanceForms { get; set; } = new ObservableCollection<InstanceFormViewModel>();
         public List<string> LibraryOutsideIds = new List<string>();
 
-        public PaginatorViewModel PaginatorVM { get; private set; }
+        public PaginatorViewModel PaginatorVM { get; }
         public SearchBoxViewModel SearchBoxVM { get; }
 
         public CatalogViewModel()

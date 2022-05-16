@@ -30,7 +30,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         public ShowCaseViewModel(string localId, string outsideId, string name, InstanceSource source)
         {
            NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
-                 MainViewModel.NavigationStore, () => new MainMenuViewModel());
+                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
 
             _showCaseTabMenu = new List<Tab>()
             {

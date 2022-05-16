@@ -8,21 +8,29 @@
                     xmlns:showcasepage="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
                     xmlns:factorymenu="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
                     xmlns:vmfactorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu" 
+                    xmlns:vmcurseforgemarket="clr-namespace:Lexplosion.Gui.ViewModels.CurseforgeMarket" 
                     xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls" 
-                    xmlns:gui="clr-namespace:Lexplosion.Gui" xmlns:models="clr-namespace:Lexplosion.Gui.Models">
-    <!--  -->
+                    xmlns:gui="clr-namespace:Lexplosion.Gui" 
+                    xmlns:models="clr-namespace:Lexplosion.Gui.Models">
+    <!-- Converters -->
     <BooleanToVisibilityConverter x:Key="ConvertBoolToVisibility" />
     <gui:NegativeBooleanToVisibilityConverter x:Key="NegativeConvertBoolToVisibility" />
+    <gui:MultiBindingConverter x:Key="MultiBiningConverter"/>
+    <gui:BooleanToColorConverter x:Key="BooleanToColorConverter" />
 
 
     <models:MainModel x:Key="MainModel"/>
     <vmmainmenu:MainMenuViewModel x:Key="MainMenuViewModel"/>
-    <gui:MultiBindingConverter x:Key="MultiBiningConverter"/>
-    
+
     <!--<DataTemplate DataType="{x:Type viewmodels:InstanceFormViewModel}">
         <customcontrols:InstanceForm  Margin="4,30,30,0"/>
     </DataTemplate>-->
 
+    <!-- Market -->
+    <DataTemplate DataType="{x:Type vmcurseforgemarket:CurseforgeMarketViewModel}">
+        <pages:CurseforgeMarketView />
+    </DataTemplate>
+    
     <!-- Auth DataTemplate -->
     <DataTemplate DataType="{x:Type viewmodels:AuthViewModel}">
         <pages:AuthView />
@@ -64,6 +72,9 @@
         <pages:TabMenuView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vmfactorymenu:FactoryGeneralViewModel}">
-        <factorymenu:FactoryGeneralView/>
+        <factorymenu:FactoryGeneralView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmfactorymenu:FactoryDLCVM}">
+        <factorymenu:FactoryDLCView />
     </DataTemplate>
 </ResourceDictionary>

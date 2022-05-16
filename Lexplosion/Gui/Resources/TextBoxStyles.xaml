@@ -101,4 +101,19 @@
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="Foreground" Value="#b9b7b7"/>
     </Style>
+
+    <Style x:Key="ExpanderHeaderContent" TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="#828282" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="10,0,0,0" />
+    </Style>
+
+    <Style x:Key="DLCInfo" TargetType="{x:Type TextBlock}">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="10,0,0,0" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
 </ResourceDictionary>

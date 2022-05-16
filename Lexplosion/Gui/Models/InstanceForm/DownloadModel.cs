@@ -136,12 +136,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _instanceModel.IsInstalled = false;
                 _instanceModel.IsDownloadingInstance = false;
                 _multibuttonModel.ChangeFuncDownload(true);
-                Console.WriteLine();
                 foreach (var de in downloadErrors) 
                 { 
-                    Console.WriteLine(de);
+                    Console.WriteLine("Instance Download Completed --- Error: " + de);
                 }
-                Console.WriteLine();
             }
             else 
             { }

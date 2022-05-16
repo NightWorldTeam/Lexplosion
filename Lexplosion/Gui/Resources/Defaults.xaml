@@ -203,4 +203,13 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="CustomTipTool" TargetType="{x:Type ToolTip}">
+        <Setter Property="Placement" Value="Relative" />
+        <Setter Property="Background" Value="Black" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontFamily" Value="{StaticResource CasperBold}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
 </ResourceDictionary>

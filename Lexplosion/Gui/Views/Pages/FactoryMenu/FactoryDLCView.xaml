@@ -1,0 +1,333 @@
+﻿<UserControl x:Class="Lexplosion.Gui.Views.Pages.FactoryMenu.FactoryDLCView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="700"
+             xmlns:factorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu" 
+             >
+    <UserControl.Resources>
+        <Style x:Key="ExpanderHeaderFocusVisual">
+            <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border/>
+                        </ControlTemplate>
+                    </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ExpanderDownHeaderStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border Height="{TemplateBinding Height}"
+                            Padding="{TemplateBinding Padding}" 
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="5,5,0,0">
+                            <ContentPresenter
+                                Margin="10"
+                                HorizontalAlignment="Left" 
+                                RecognizesAccessKey="True"
+                                VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CustomExpander" TargetType="{x:Type Expander}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Expander}">
+                        <Border 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="#171717"
+                            CornerRadius="10,10,0,0"
+                            SnapsToDevicePixels="True">
+                            <DockPanel>
+                                <ToggleButton
+                                    DockPanel.Dock="Top"
+                                    Focusable="False"
+                                    Background="{TemplateBinding Background}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    FontSize="{TemplateBinding FontSize}"
+                                    FontFamily="{TemplateBinding FontFamily}"
+                                    FontWeight="{TemplateBinding FontWeight}"
+                                    IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Margin="1" Padding="{TemplateBinding Padding}" 
+                                    Style="{StaticResource ExpanderDownHeaderStyle}"
+                                    FontStretch="{TemplateBinding FontStretch}"
+                                    MinWidth="0" MinHeight="0"
+                                    Height="{TemplateBinding Height}"
+                                    FocusVisualStyle="{StaticResource ExpanderHeaderFocusVisual}" >
+                                    <TextBlock 
+                                        Focusable="False"
+                                        DockPanel.Dock="Top" 
+                                        Foreground="{TemplateBinding Foreground}" 
+                                        Text="{TemplateBinding Header}" 
+                                        Height="25" />
+                                </ToggleButton>
+                                    
+                                <Grid
+                                    x:Name="ExpandSide"
+                                    Background="Transparent"
+                                    DockPanel.Dock="Bottom"
+                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                    Margin="{TemplateBinding Margin}"
+                                    Visibility="Collapsed"
+                                    VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                                    <ContentPresenter Focusable="False" />
+                                </Grid>
+                            </DockPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="true">
+                                <Setter Property="Visibility" TargetName="ExpandSide" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DLCListBox" TargetType="{x:Type ListBox}">
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style x:Key="DLCListBoxItem" TargetType="{x:Type ListBoxItem}">
+
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+           <StackPanel>
+                <Expander
+                    Style="{StaticResource CustomExpander}" 
+                    Header="Список модификаций:" 
+                    Foreground="#ffffff" 
+                    VerticalAlignment="Top"
+                    Background="#0f59b0"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    >
+                    <ListBox ItemsSource="{Binding InstalledMods}" Tag="{Binding BindsDirectlyToSource=True}">
+                        <ListBox.Template>
+                            <ControlTemplate>
+                                <Border
+                                    Background="Transparent"
+                                    BorderThickness="1" 
+                                    BorderBrush="#262626"
+                                    >
+                                    <DockPanel 
+                                        LastChildFill="True"
+                                        >
+                                        <Border 
+                                            Height="40" 
+                                            DockPanel.Dock="Top"
+                                            BorderThickness="0,0,1,1" 
+                                            BorderBrush="#262626" 
+                                            Background="Transparent"
+                                            >
+                                            <Grid ShowGridLines="False">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="259" />
+                                                    <ColumnDefinition Width="150" />
+                                                    <ColumnDefinition Width="150" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock 
+                                                    Style="{StaticResource ExpanderHeaderContent}"
+                                                    Text="Название"
+                                                    />
+                                                <TextBlock 
+                                                    Style="{StaticResource ExpanderHeaderContent}"
+                                                    Grid.Column="1"
+                                                    Text="Автор" 
+                                                    />
+                                                <TextBlock 
+                                                    Grid.Column="2"
+                                                    Style="{StaticResource ExpanderHeaderContent}"
+                                                    Text="Версия"/>
+                                                <Button
+                                                    Style="{StaticResource IconicButton}"
+                                                    HorizontalAlignment="Right"
+                                                    Width="30" 
+                                                    Height="30"
+                                                    Grid.Column="3"
+                                                    Margin="0,0,5,0"
+                                                    Command="{Binding OpenMarket}"
+                                                    CommandParameter="{x:Static factorymenu:MarketDLCType.Mods}">
+                                                    <Path
+                                                        Fill="White"
+                                                        Data="M 12 7 C 12.1989 7 12.3897 7.07902 12.5303 7.21967 C 12.671 7.36032 12.75 7.55109 12.75 7.75 V 11.25 H 16.25 C 16.4489 11.25 16.6397 11.329 16.7803 11.4697 C 16.921 11.6103 17 11.8011 17 12 C 17 12.1989 16.921 12.3897 16.7803 12.5303 C 16.6397 12.671 16.4489 12.75 16.25 12.75 H 12.75 V 16.25 C 12.75 16.4489 12.671 16.6397 12.5303 16.7803 C 12.3897 16.921 12.1989 17 12 17 C 11.8011 17 11.6103 16.921 11.4697 16.7803 C 11.329 16.6397 11.25 16.4489 11.25 16.25 V 12.75 H 7.75 C 7.55109 12.75 7.36032 12.671 7.21967 12.5303 C 7.07902 12.3897 7 12.1989 7 12 C 7 11.8011 7.07902 11.6103 7.21967 11.4697 C 7.36032 11.329 7.55109 11.25 7.75 11.25 H 11.25 V 7.75 C 11.25 7.55109 11.329 7.36032 11.4697 7.21967 C 11.6103 7.07902 11.8011 7 12 7 Z M 3 6.25 C 3 5.38805 3.34241 4.5614 3.9519 3.9519 C 4.5614 3.34241 5.38805 3 6.25 3 H 17.75 C 18.612 3 19.4386 3.34241 20.0481 3.9519 C 20.6576 4.5614 21 5.38805 21 6.25 V 17.75 C 21 18.612 20.6576 19.4386 20.0481 20.0481 C 19.4386 20.6576 18.612 21 17.75 21 H 6.25 C 5.38805 21 4.5614 20.6576 3.9519 20.0481 C 3.34241 19.4386 3 18.612 3 17.75 V 6.25 Z M 6.25 4.5 C 5.78587 4.5 5.34075 4.68437 5.01256 5.01256 C 4.68437 5.34075 4.5 5.78587 4.5 6.25 V 17.75 C 4.5 18.716 5.284 19.5 6.25 19.5 H 17.75 C 18.2141 19.5 18.6592 19.3156 18.9874 18.9874 C 19.3156 18.6592 19.5 18.2141 19.5 17.75 V 6.25 C 19.5 5.78587 19.3156 5.34075 18.9874 5.01256 C 18.6592 4.68437 18.2141 4.5 17.75 4.5 H 6.25 Z"
+                                                        />
+                                                    <Button.ToolTip>
+                                                        <ToolTip
+                                                            Style="{StaticResource CustomTipTool}"
+                                                            HorizontalOffset="-120"
+                                                            VerticalOffset="-20" 
+                                                            Content="Добавить модификацию" 
+                                                            />  
+                                                    </Button.ToolTip>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                        <ItemsPresenter/>
+                                    </DockPanel>
+                                </Border>
+                            </ControlTemplate>
+                        </ListBox.Template>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type factorymenu:Mod}">
+                                <Grid ShowGridLines="False" Height="60">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="215" />
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border CornerRadius="5" Background="Purple" Grid.Column="0" Height="40" Width="40"/>
+                                    <TextBlock 
+                                        Style="{StaticResource DLCInfo}"
+                                        Grid.Column="1" 
+                                        Text="{Binding Name}" 
+                                        TextWrapping="WrapWithOverflow" />
+                                    <TextBlock 
+                                        Style="{StaticResource DLCInfo}"
+                                        Grid.Column="2"
+                                        Text="{Binding Author}" 
+                                        TextWrapping="Wrap" />
+                                    <TextBlock 
+                                        Style="{StaticResource DLCInfo}"
+                                        Grid.Column="3"
+                                        Text="{Binding Version}" 
+                                        TextWrapping="Wrap"/>
+
+                                    <StackPanel Orientation="Horizontal" Grid.Column="4" VerticalAlignment="Center">
+                                        <ToggleButton
+                                            Margin="5,0,0,0"
+                                            Style="{StaticResource IconicToggleButton}"
+                                            >
+                                            <ToggleButton.ToolTip>
+                                                <ToolTip
+                                                    Style="{StaticResource CustomTipTool}"
+                                                    HorizontalOffset="-70"
+                                                    VerticalOffset="-27" 
+                                                    Content="Запускать модификацию" 
+                                                />
+                                            </ToggleButton.ToolTip>
+                                        </ToggleButton>
+                                        <Button 
+                                            Style="{StaticResource IconicButton}" 
+                                            Margin="5,0,0,0"
+                                            Command="{Binding DataContext.CurseforgeCommand,
+                                                RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"
+                                            CommandParameter="{Binding Curseforge}"
+                                            >
+                                            <Canvas>
+                                                <Path Canvas.Left="-12"
+                                                Canvas.Top="-5"
+                                                Width="24"
+                                                Height="12.84" 
+                                                Fill="White"
+                                                Data="M 6.307 0.581055 L 6.698 2.25605 H 0 C 0 2.25605 0.112 2.75805 0.167 2.81405 C 0.335 3.09305 0.502 3.42805 0.726 3.65105 C 1.786 4.87905 3.628 5.38105 5.135 5.66005 C 6.195 5.88405 7.256 5.94005 8.316 5.99505 L 9.544 9.28806 H 10.214 L 10.605 10.3491 H 10.047 L 9.098 13.4191 H 18.419 L 17.47 10.3491 H 16.912 L 17.302 9.28806 H 17.972 C 17.972 9.28806 18.53 5.88405 20.26 4.32105 C 21.935 2.75805 24 2.53505 24 2.53505 V 0.581055 H 6.307 Z M 15.684 9.00905 C 15.237 9.28805 14.735 9.28805 14.4 9.51205 C 14.177 9.62305 14.065 9.95806 14.065 9.95806 C 13.842 9.45606 13.563 9.28806 13.228 9.17706 C 12.893 9.06506 12.279 9.12106 11.442 8.39506 C 10.884 7.89306 10.828 7.22305 10.884 6.88805 V 6.72105 C 10.884 6.66505 10.884 6.60906 10.94 6.55306 C 11.051 6.21906 11.33 5.88405 11.888 5.66005 C 11.888 5.66005 11.498 6.21906 11.888 6.77706 C 12.112 7.11206 12.558 7.27905 12.949 7.05605 C 13.116 6.94405 13.228 6.72106 13.284 6.55306 C 13.395 6.16306 13.395 5.77205 13.06 5.49305 C 12.558 5.04705 12.447 4.43305 12.781 4.04205 C 12.781 4.04205 12.893 4.54405 13.395 4.48805 C 13.73 4.48805 13.73 4.37706 13.619 4.26506 C 13.563 4.09806 12.837 3.03705 13.898 2.25605 C 13.898 2.25605 14.567 1.80905 15.349 1.86505 C 14.902 1.92105 14.4 2.20005 14.233 2.64705 V 2.70205 C 14.065 3.14905 14.177 3.65105 14.512 4.09805 C 14.735 4.43305 15.014 4.71205 15.126 5.15805 C 14.958 5.10205 14.847 5.15806 14.735 5.27006 C 14.6755 5.33749 14.634 5.41888 14.6144 5.50665 C 14.5949 5.59442 14.5978 5.68573 14.623 5.77206 C 14.679 5.88406 14.791 5.99505 14.902 5.99505 H 15.07 C 15.237 5.94005 15.349 5.71605 15.293 5.54905 C 15.405 5.66005 15.46 5.94006 15.405 6.10706 C 15.405 6.27406 15.293 6.44206 15.237 6.55306 C 15.181 6.66506 15.07 6.77705 15.014 6.88805 C 14.958 7.00005 14.902 7.11205 14.902 7.22305 C 14.902 7.33505 14.902 7.50206 14.958 7.61406 C 15.181 7.94906 15.628 7.61405 15.74 7.33505 C 15.907 7.00005 15.851 6.60906 15.628 6.27406 C 15.628 6.27406 16.019 6.49806 16.298 7.27906 C 16.521 7.94906 16.13 8.73005 15.684 9.00905 V 9.00905 Z"
+                                             />
+                                            </Canvas>
+                                            <Button.ToolTip>
+                                                <ToolTip
+                                                Style="{StaticResource CustomTipTool}"
+                                                HorizontalOffset="-70"
+                                                VerticalOffset="-27" 
+                                                Content="Страница на Curseforge" 
+                                                />
+                                            </Button.ToolTip>
+                                        </Button>
+                                        <Button 
+                                            Style="{StaticResource IconicButton}" 
+                                            Margin="5,0,0,0"
+                                            Command="{Binding DataContext.UpdateCommand,
+                                                RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}">
+                                            <Canvas>
+                                                <Path Canvas.Top="-10"
+                                               Canvas.Left="-10"
+                                               Width="19.94"
+                                               Height="19.94"
+                                               Fill="White"
+                                               Data="M 15.5 20.3126 C 14.5482 20.3126 13.6177 20.0303 12.8263 19.5015 C 12.0349 18.9727 11.4181 18.2211 11.0538 17.3417 C 10.6896 16.4624 10.5943 15.4947 10.78 14.5612 C 10.9657 13.6277 11.424 12.7702 12.097 12.0971 C 12.7701 11.4241 13.6276 10.9657 14.5611 10.78 C 15.4947 10.5943 16.4623 10.6897 17.3417 11.0539 C 18.221 11.4181 18.9726 12.035 19.5014 12.8264 C 20.0303 13.6178 20.3125 14.5482 20.3125 15.5001 C 20.311 16.776 19.8035 17.9992 18.9013 18.9014 C 17.9991 19.8036 16.7759 20.3111 15.5 20.3126 Z M 15.5 12.0626 C 14.8201 12.0626 14.1555 12.2642 13.5902 12.6419 C 13.0249 13.0196 12.5843 13.5565 12.3242 14.1846 C 12.064 14.8127 11.9959 15.5039 12.1286 16.1707 C 12.2612 16.8375 12.5886 17.45 13.0693 17.9307 C 13.5501 18.4115 14.1626 18.7389 14.8294 18.8715 C 15.4962 19.0042 16.1874 18.9361 16.8155 18.6759 C 17.4436 18.4157 17.9805 17.9751 18.3582 17.4098 C 18.7359 16.8445 18.9375 16.1799 18.9375 15.5001 C 18.9366 14.5887 18.5741 13.7149 17.9297 13.0704 C 17.2852 12.4259 16.4114 12.0635 15.5 12.0626 Z M 10 18.2501 C 7.81269 18.2477 5.71564 17.3778 4.16898 15.8311 C 2.62232 14.2844 1.75237 12.1874 1.75 10.0001 H 0.375 C 0.377911 12.5519 1.39291 14.9983 3.19731 16.8028 C 5.00172 18.6072 7.44818 19.6222 10 19.6251 V 18.2501 Z M 7.25 4.50007 H 3.86613 C 4.97864 3.25446 6.44343 2.37636 8.06635 1.98217 C 9.68926 1.58797 11.3936 1.69629 12.9536 2.29278 C 14.5135 2.88926 15.8554 3.94573 16.8013 5.32216 C 17.7471 6.69859 18.2524 8.32997 18.25 10.0001 H 19.625 C 19.628 8.08661 19.0598 6.21581 17.993 4.6273 C 16.9262 3.0388 15.4095 1.80492 13.6372 1.08372 C 11.8648 0.362523 9.91752 0.186843 8.04471 0.579183 C 6.1719 0.971523 4.45885 1.91402 3.125 3.28595 V 0.37507 H 1.75 V 5.87507 H 7.25 V 4.50007 Z" 
+                                             />
+                                                <Path 
+                                                Canvas.Top="3"
+                                                Canvas.Left="4"
+                                                Width="15.81"
+                                                Height="14.44"
+                                                Fill="White"
+                                                Data="M 3.5625 3.59038 L 2.1875 2.21538 V 0.4375 H 0.8125 V 2.78462 L 2.59038 4.5625 L 3.5625 3.59038 Z"
+                                             />
+                                            </Canvas>
+                                            <Button.ToolTip>
+                                                <ToolTip
+                                                Style="{StaticResource CustomTipTool}"
+                                                HorizontalOffset="-30"
+                                                VerticalOffset="-27" 
+                                                Content="Обновить" 
+                                                />
+                                            </Button.ToolTip>
+                                        </Button>
+                                        <Button 
+                                            Style="{StaticResource IconicButton}" 
+                                            Margin="5,0,0,0"
+                                            Command="{Binding DataContext.DeleteCommand,
+                                                RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"
+                                            >
+                                            <Canvas>
+                                                <Path Canvas.Top="-12"
+                                               Canvas.Left="-10"
+                                               Width="19.5"
+                                               Height="22.5"
+                                               Fill="White"
+                                               Data="M 19.75 4.5 C 19.75 4.89782 19.592 5.27936 19.3107 5.56066 C 19.0294 5.84196 18.6478 6 18.25 6 H 17.5 V 19.5 C 17.5 20.2956 17.1839 21.0587 16.6213 21.6213 C 16.0587 22.1839 15.2956 22.5 14.5 22.5 H 5.5 C 4.70435 22.5 3.94129 22.1839 3.37868 21.6213 C 2.81607 21.0587 2.5 20.2956 2.5 19.5 V 6 H 1.75 C 1.35218 6 0.970644 5.84196 0.68934 5.56066 C 0.408035 5.27936 0.25 4.89782 0.25 4.5 V 3 C 0.25 2.60218 0.408035 2.22064 0.68934 1.93934 C 0.970644 1.65804 1.35218 1.5 1.75 1.5 H 7 C 7 1.10218 7.15804 0.720644 7.43934 0.43934 C 7.72064 0.158035 8.10218 0 8.5 0 L 11.5 0 C 11.8978 0 12.2794 0.158035 12.5607 0.43934 C 12.842 0.720644 13 1.10218 13 1.5 H 18.25 C 18.6478 1.5 19.0294 1.65804 19.3107 1.93934 C 19.592 2.22064 19.75 2.60218 19.75 3 V 4.5 Z M 4.177 6 L 4 6.0885 V 19.5 C 4 19.8978 4.15804 20.2794 4.43934 20.5607 C 4.72064 20.842 5.10218 21 5.5 21 H 14.5 C 14.8978 21 15.2794 20.842 15.5607 20.5607 C 15.842 20.2794 16 19.8978 16 19.5 V 6.0885 L 15.823 6 H 4.177 Z M 1.75 4.5 V 3 H 18.25 V 4.5 H 1.75 Z" 
+                                            />
+                                                <Path 
+                                                Canvas.Top="-4"
+                                                Canvas.Left="-5.2"
+                                                Width="9"
+                                                Height="10.5"
+                                                Fill="White"
+                                                Data="M 1.25 0.25 C 1.44891 0.25 1.63968 0.329018 1.78033 0.46967 C 1.92098 0.610322 2 0.801088 2 1 V 10 C 2 10.1989 1.92098 10.3897 1.78033 10.5303 C 1.63968 10.671 1.44891 10.75 1.25 10.75 C 1.05109 10.75 0.860322 10.671 0.71967 10.5303 C 0.579018 10.3897 0.5 10.1989 0.5 10 V 1 C 0.5 0.801088 0.579018 0.610322 0.71967 0.46967 C 0.860322 0.329018 1.05109 0.25 1.25 0.25 V 0.25 Z M 5 0.25 C 5.19891 0.25 5.38968 0.329018 5.53033 0.46967 C 5.67098 0.610322 5.75 0.801088 5.75 1 V 10 C 5.75 10.1989 5.67098 10.3897 5.53033 10.5303 C 5.38968 10.671 5.19891 10.75 5 10.75 C 4.80109 10.75 4.61032 10.671 4.46967 10.5303 C 4.32902 10.3897 4.25 10.1989 4.25 10 V 1 C 4.25 0.801088 4.32902 0.610322 4.46967 0.46967 C 4.61032 0.329018 4.80109 0.25 5 0.25 V 0.25 Z M 9.5 1 C 9.5 0.801088 9.42098 0.610322 9.28033 0.46967 C 9.13968 0.329018 8.94891 0.25 8.75 0.25 C 8.55109 0.25 8.36032 0.329018 8.21967 0.46967 C 8.07902 0.610322 8 0.801088 8 1 V 10 C 8 10.1989 8.07902 10.3897 8.21967 10.5303 C 8.36032 10.671 8.55109 10.75 8.75 10.75 C 8.94891 10.75 9.13968 10.671 9.28033 10.5303 C 9.42098 10.3897 9.5 10.1989 9.5 10 V 1 Z" 
+                                            />
+                                            </Canvas>
+                                            <Button.ToolTip>
+                                                <ToolTip
+                                                Style="{StaticResource CustomTipTool}"
+                                                HorizontalOffset="-30"
+                                                VerticalOffset="-27" 
+                                                Content="Удалить" 
+                                                />
+                                            </Button.ToolTip>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

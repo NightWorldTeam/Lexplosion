@@ -6,6 +6,7 @@ namespace Lexplosion.Gui.Stores
     {
         public event Action CurrentViewModelChanged;
         private VMBase _currentViewModel;
+        private VMBase _prevViewModel;
 
         // save opened pages here;
 
@@ -16,6 +17,14 @@ namespace Lexplosion.Gui.Stores
             {
                 _currentViewModel = value;
                 OnCurrentViewModelChanged();
+            }
+        }
+
+        public VMBase PrevViewModel
+        {
+            get => _prevViewModel; set 
+            {
+                _prevViewModel = value;
             }
         }
 

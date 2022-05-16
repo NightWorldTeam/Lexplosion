@@ -218,7 +218,7 @@
                     />
             <Grid Grid.Row="3" ShowGridLines="False">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="350" />
+                    <ColumnDefinition Width="326" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Border x:Name="CategoryPanelBorder"
