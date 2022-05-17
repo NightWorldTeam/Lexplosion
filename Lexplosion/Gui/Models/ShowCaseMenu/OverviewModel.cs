@@ -18,9 +18,13 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
 
         public GalleryViewModel GalleryVM { get; }
 
-        public OverviewModel(string id, InstanceSource source)
+        public OverviewModel(string outsideId, string localId, InstanceSource source)
         {
-            InstanceData = ManageLogic.GetInstanceData(source, id);
+            if (outsideId == null || outsideId == "") 
+            {
+                InstanceData = ManageLogic.GetInstanceData(source, localId);
+            }
+            else InstanceData = ManageLogic.GetInstanceData(source, outsideId);
             GalleryVM = new GalleryViewModel(InstanceData.Images);
         }
     }

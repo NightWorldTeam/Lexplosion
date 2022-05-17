@@ -7,7 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="240" d:DesignWidth="450">
     <Grid>
-        <Image Source="{Binding OverviewModel.GalleryVM.SelectedImage}" Width="450" Height="240" />
+        <Image Source="{Binding OverviewModel.GalleryVM.SelectedImage}" Width="450" Height="240">
+            <Image.Effect>
+                <BlurEffect Radius="{Binding OverviewModel.GalleryVM.BlurEffectRadius}"/>
+            </Image.Effect>
+        </Image>
+        <TextBlock 
+            Visibility="{Binding OverviewModel.GalleryVM.IsNoneImages, Converter={StaticResource ConvertBoolToVisibility}}"
+            Text="Изображения отсутствуют"
+            Foreground="White"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontWeight="Bold" FontSize="14"/>
         <Border x:Name="ButtonLeft" Height="240" Width="25"
                 Background="Black" Opacity="0" HorizontalAlignment="Left">
             <Border.InputBindings>

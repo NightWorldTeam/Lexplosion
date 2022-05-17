@@ -73,6 +73,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             Lexplosion.Run.TaskRun(() => { 
                 OverviewModel = new OverviewModel(
                     outsideId,
+                    localId,
                     source
                     );
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
