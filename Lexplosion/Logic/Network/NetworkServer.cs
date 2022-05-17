@@ -15,9 +15,11 @@ namespace Lexplosion.Logic.Network
         protected Thread AcceptingThread;
         protected Thread ReadingThread;
         protected Thread SendingThread;
+        private Thread MaintainingThread;
 
         protected Semaphore AcceptingBlock; //блокировка во время приёма подключения
         protected Semaphore SendingBlock; //блокировка во время работы метода Sending
+        protected Semaphore ControlConnectionBlock; // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
 
         protected AutoResetEvent SendingWait;
         protected AutoResetEvent ReadingWait;
@@ -44,6 +46,7 @@ namespace Lexplosion.Logic.Network
             DirectConnection = directConnection;
             AcceptingBlock = new Semaphore(1, 1);
             SendingBlock = new Semaphore(1, 1);
+            ControlConnectionBlock = new Semaphore(0, 1);
 
             SendingWait = new AutoResetEvent(false);
             ReadingWait = new AutoResetEvent(false);
@@ -76,10 +79,14 @@ namespace Lexplosion.Logic.Network
                 Accepting(serverType);
             });
 
+            MaintainingThread = new Thread(delegate () //поток отправляющий управляющему серверу пустые пакеты для поддержиния соединения
+            {
+                MaintainingConnection();
+            });
+
             AcceptingThread.Start();
             SendingThread.Start();
             ReadingThread.Start();
-
         }
 
         protected void Accepting(string serverType) // TODO: нужно избегать повторного подключения
@@ -91,18 +98,20 @@ namespace Lexplosion.Logic.Network
                 "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\", \"accessToken\" : \"" + _accessToken + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
+            MaintainingThread.Start();
             Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD");
 
             while (IsWork)
             {
                 Console.WriteLine("BVC1");
                 string clientUUID;
-
                 {
                     byte[] data = new byte[33];
 
                     Console.WriteLine("ControlServerRecv");
+                    ControlConnectionBlock.Release(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
                     int bytes = controlConnection.Receive(data);
+                    ControlConnectionBlock.WaitOne(); // блочим семофор
                     Console.WriteLine("ControlServerEndRecv");
 
                     if (bytes > 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
@@ -217,6 +226,7 @@ namespace Lexplosion.Logic.Network
             IsWork = false;
 
             AcceptingThread.Abort();
+            MaintainingThread.Abort();
             try
             {
                 controlConnection.Send(new byte[1] { 122 }); // отправляем управляющиму серверу сообщение что мы отключаемся
@@ -228,6 +238,23 @@ namespace Lexplosion.Logic.Network
             ReadingThread.Abort();
 
             Server.StopWork();
+        }
+
+        private void MaintainingConnection()
+        {
+            try
+            {
+                Thread.Sleep(240000); // ждём 4 минуты 240000
+
+                while (IsWork)
+                {
+                    ControlConnectionBlock.WaitOne();
+                    controlConnection.Send(new byte[1] { 121 });
+                    ControlConnectionBlock.Release();
+                    Thread.Sleep(240000); // ждём 4 минуты
+                }
+            }
+            catch { }
         }
 
         protected abstract void ClientAbort(IPEndPoint point); // мeтод который вызывается при обрыве соединения
