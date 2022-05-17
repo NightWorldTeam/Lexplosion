@@ -138,7 +138,7 @@ namespace Lexplosion.Logic.Network
                 });
 
                 InformingThread.Start();
-                Server = new ServerBridge(UUID, port, false, ControlServer);
+                Server = new ServerBridge(UUID, accessToken, port, false, ControlServer);
 
                 while (true)
                 {
@@ -166,7 +166,7 @@ namespace Lexplosion.Logic.Network
         // Симуляция майнкрафт сервера. То есть используется если наш макрафт является клиентом
         public void ServerSimulator(int pid)
         {
-            ClientBridge bridge = new ClientBridge(UUID, ControlServer);
+            ClientBridge bridge = new ClientBridge(UUID, accessToken, ControlServer);
 
             UdpClient client = new UdpClient();
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);

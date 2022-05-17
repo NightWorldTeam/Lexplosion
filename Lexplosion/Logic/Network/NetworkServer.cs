@@ -27,6 +27,7 @@ namespace Lexplosion.Logic.Network
         protected bool IsWork = false;
 
         protected string UUID;
+        protected string _accessToken;
         protected bool DirectConnection;
         protected string ControlServer;
 
@@ -34,9 +35,10 @@ namespace Lexplosion.Logic.Network
 
         private readonly Socket controlConnection;
 
-        public NetworkServer(string uuid, string serverType, bool directConnection, string controlServer)
+        public NetworkServer(string uuid, string accessToken, string serverType, bool directConnection, string controlServer)
         {
             UUID = uuid;
+            _accessToken = accessToken;
             IsWork = true;
             ControlServer = controlServer;
             DirectConnection = directConnection;
@@ -86,7 +88,7 @@ namespace Lexplosion.Logic.Network
             controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
 
             string st =
-                "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"}";
+                "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\", \"accessToken\" : \"" + _accessToken + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
             Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD");

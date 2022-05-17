@@ -19,14 +19,16 @@ namespace Lexplosion.Logic.Network
 
         private bool IsConnected = false; // когда будет подключен майкнрафт клиент эта переменная будет true
         private readonly string UUID = "";
+        private readonly string _accessToken = "";
 
         const string clientType = "game-client"; // эта строка нужна при подключении к управляющему серверу
 
         private readonly object _closeLock = new object();
 
-        public ClientBridge(string uuid, string server) : base(clientType, server)
+        public ClientBridge(string uuid, string accessToken, string server) : base(clientType, server)
         {
             UUID = uuid;
+            _accessToken = accessToken;
         }
 
         public Dictionary<string, int> SetServers(List<string> servers)
@@ -98,7 +100,7 @@ namespace Lexplosion.Logic.Network
             AvailableServersBlock.WaitOne();
             string serverUUID = AvailableServers[listener];
             Console.WriteLine("AcceptHandler2");
-            if (base.Initialization(UUID, serverUUID))
+            if (base.Initialization(UUID, _accessToken, serverUUID))
             {
                 Console.WriteLine("AcceptHandler3");
                 Socket serverSimulator_ = listener.EndAccept(data);

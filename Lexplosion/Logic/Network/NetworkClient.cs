@@ -28,7 +28,7 @@ namespace Lexplosion.Logic.Network
             ControlServer = controlServer;
         }
 
-        public virtual bool Initialization(string UUID, string serverUUID)
+        public virtual bool Initialization(string UUID, string accessToken, string serverUUID)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Lexplosion.Logic.Network
                 client.Connect(ControlServer, 4565);
 
                 NetworkStream stream = client.GetStream();
-                string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\"}";
+                string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"accessToken\": \"" + accessToken + "\"}";
                 byte[] sendData = Encoding.UTF8.GetBytes(st);
                 stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
                 Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);

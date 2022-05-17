@@ -226,7 +226,7 @@
     <Compile Include="Logic\Network\IServerTransmitter.cs" />
     <Compile Include="Logic\Network\NetworkClient.cs" />
     <Compile Include="Logic\Network\NetworkServer.cs" />
-    <Compile Include="Logic\Network\Objects.cs" />
+    <Compile Include="Logic\Network\Web\Objects.cs" />
     <Compile Include="Logic\Network\ServerBridge.cs" />
     <Compile Include="Logic\Network\SMP\SmpClient.cs" />
     <Compile Include="Logic\Network\SMP\SmpServer.cs" />
