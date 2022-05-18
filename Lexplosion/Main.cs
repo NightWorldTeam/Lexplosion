@@ -112,7 +112,7 @@ namespace Lexplosion
                 Source = new Uri("pack://application:,,,/DataTemplateDictionary.xaml")
             });
 
-            OutsideDataManager.DefineInstances();
+            //OutsideDataManager.DefineInstances();
 
             Thread.Sleep(1000);
 

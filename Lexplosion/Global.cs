@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Global
 {
@@ -47,10 +48,12 @@ namespace Lexplosion.Global
                 AddInstanceNofity?.Invoke();
             }
 
-            public static void SetAssets(string id, InstanceAssets assets)
+            public static void SetAssets(string instanceId, InstanceAssets assets)
             {
-                Assets[id] = assets;
-                SetAssetsNofity?.Invoke(id, assets);
+                Assets[instanceId] = assets;
+                SetAssetsNofity?.Invoke(instanceId, assets);
+                DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances-assets/" + instanceId + "/assets.json", 
+                    JsonConvert.SerializeObject(UserData.Instances.Assets[instanceId]));
             }
 
             public static bool IsExistId(string id) => ExternalIds.ContainsKey(id);

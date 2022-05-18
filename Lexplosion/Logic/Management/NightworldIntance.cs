@@ -266,6 +266,7 @@ namespace Lexplosion.Logic.Management
 
                         //устанавливаем описание
                         assets.description = info.Description ?? "";
+                        assets.Summary = info.Summary ?? "";
 
                         //устанавливаем автора
                         if (info.Author != null)
@@ -277,7 +278,6 @@ namespace Lexplosion.Logic.Management
 
                         // сохраняем асетсы модпака
                         UserData.Instances.SetAssets(InstanceId, assets);
-                        DataFilesManager.SaveFile(dir + "/assets.json", JsonConvert.SerializeObject(UserData.Instances.Assets[InstanceId]));
                     }
                 }
                 //catch { }

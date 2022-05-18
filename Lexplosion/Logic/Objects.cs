@@ -23,6 +23,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string xmx;
         public string xms;
         public List<Category> categories { get; set; }
+        public string Summary { get; set; }
     }
 
     public class Category
