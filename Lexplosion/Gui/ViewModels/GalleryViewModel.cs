@@ -12,6 +12,9 @@ namespace Lexplosion.Gui.ViewModels
         private bool _isNoneImages = false;
         private double _blurEffectRadius = 0;
 
+        private bool _isLeftBorder;
+        private bool _isRightBorder;
+
         #region command
         public RelayCommand PrevImage
         {
@@ -21,6 +24,7 @@ namespace Lexplosion.Gui.ViewModels
                 {
                     SelectedImagesIndex--;
                 }
+                else IsLeftBorder = true;
             });
         }
 
@@ -28,10 +32,11 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => new RelayCommand(obj =>
             {
-                if ((Images.Count > SelectedImagesIndex + 1))
+                if ((SelectedImagesIndex < Images.Count - 1))
                 {
                     SelectedImagesIndex++;
                 }
+                else IsRightBorder = true;
             });
         }
 
@@ -52,6 +57,8 @@ namespace Lexplosion.Gui.ViewModels
             get => _selectedImagesIndex; set
             {
                 _selectedImagesIndex = value;
+                if (value > 0) IsLeftBorder = false;
+                if (value < Images.Count - 1) IsRightBorder = false;
                 SelectedImage = Images[value];
                 OnPropertyChanged(nameof(SelectedImagesIndex));
             }
@@ -78,6 +85,24 @@ namespace Lexplosion.Gui.ViewModels
                 BlurEffectRadius = 10;
             }
         }
+
+        public bool IsLeftBorder 
+        {
+            get => _isLeftBorder; set
+            {
+                _isLeftBorder = value;
+                OnPropertyChanged(nameof(IsLeftBorder));
+            }
+        }
+
+        public bool IsRightBorder 
+        {
+            get => _isRightBorder; set
+            {
+                _isRightBorder = value;
+                OnPropertyChanged(nameof(IsRightBorder));
+            }
+        }
         #endregion 
 
         public ObservableCollection<BitmapImage> Images { get; } = new ObservableCollection<BitmapImage>();
@@ -86,12 +111,17 @@ namespace Lexplosion.Gui.ViewModels
             App.Current.Dispatcher.Invoke(() => {
                 foreach (var i in images)
                     Images.Add(Utilities.ToImage(i));
-                
+
+                IsLeftBorder = true;
+
                 if (Images.Count > 0)
-                {
                     SelectedImage = Images[SelectedImagesIndex];
+                else
+                {
+                    IsNoneImages = true;
+                    IsRightBorder = true;
                 }
-                else IsNoneImages = true;
+                if (Images.Count == 1) IsRightBorder = true;
             });
         }
     }

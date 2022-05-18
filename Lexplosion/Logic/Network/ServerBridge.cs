@@ -106,7 +106,6 @@ namespace Lexplosion.Logic.Network
                 catch (ArgumentNullException)
                 {
                     Console.WriteLine("WAIT GDFGFDGFD");
-                    // TODO: тут он зависал при выключении лаунчер
                     SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
                     Console.WriteLine("WAIT GDFGFDGFD1");

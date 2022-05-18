@@ -7,24 +7,45 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
     public class OverviewModel : VMBase
     {
         private InstanceData _instanceData;
-        public InstanceData InstanceData 
-        { 
-            get => _instanceData; set 
+        private bool _isLocalInstance = false;
+
+        #region props
+        public InstanceData InstanceData
+        {
+            get => _instanceData; set
             {
                 _instanceData = value;
                 OnPropertyChanged(nameof(InstanceData));
             }
         }
 
+        public bool IsLocalInstance 
+        {
+            get => _isLocalInstance; set
+            {
+                _isLocalInstance = value;
+                OnPropertyChanged(nameof(IsLocalInstance));
+            }
+        }
+        #endregion
+
         public GalleryViewModel GalleryVM { get; }
 
         public OverviewModel(string outsideId, string localId, InstanceSource source)
         {
-            if (outsideId == null || outsideId == "") 
+            switch (source) 
             {
-                InstanceData = ManageLogic.GetInstanceData(source, localId);
+                case InstanceSource.Nightworld:
+                    InstanceData = ManageLogic.GetInstanceData(source, outsideId);
+                    break;
+                case InstanceSource.Curseforge:
+                    InstanceData = ManageLogic.GetInstanceData(source, outsideId);
+                    break;
+                case InstanceSource.Local:
+                    IsLocalInstance = true;
+                    InstanceData = ManageLogic.GetInstanceData(source, localId);
+                    break;
             }
-            else InstanceData = ManageLogic.GetInstanceData(source, outsideId);
             GalleryVM = new GalleryViewModel(InstanceData.Images);
         }
     }

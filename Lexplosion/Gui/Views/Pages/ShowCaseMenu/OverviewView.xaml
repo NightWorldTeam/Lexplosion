@@ -184,11 +184,11 @@
                         Margin="60,10,59.6,21"
                         Style="{StaticResource DefaultBrandColorButton}"
                         Command="{Binding CurseforgePageCommand}"
+                        Visibility="{Binding OverviewModel.IsLocalInstance,  Converter={StaticResource NegativeConvertBoolToVisibility}}"
                         Content="Вебсайт"
                         FontSize="14"
                         FontWeight="Medium"
-                        Foreground="White"
-                        Name="CurseforgeUrl">
+                        Foreground="White">
                         <Button.Background>
                             <SolidColorBrush Color="#f5f5f5" Opacity="0.2" />
                         </Button.Background>
@@ -207,7 +207,7 @@
                 FontSize="15"
                 FontWeight="Regular"
                 Foreground="WhiteSmoke"
-                Text="{Binding OverviewModel.InstanceData.Description, UpdateSourceTrigger=Default}"
+                Text="{Binding OverviewModel.InstanceData.Summary, UpdateSourceTrigger=Default}"
                 TextWrapping="Wrap" />
             <Border x:Name="LoadingShortDescription" 
                     Grid.Row="2"

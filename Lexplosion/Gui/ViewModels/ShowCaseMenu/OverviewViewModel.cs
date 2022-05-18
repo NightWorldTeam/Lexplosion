@@ -64,7 +64,14 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => new RelayCommand(obj =>
             {
-                System.Diagnostics.Process.Start(OverviewModel.InstanceData.WebsiteUrl);
+                try
+                {
+                    System.Diagnostics.Process.Start(OverviewModel.InstanceData.WebsiteUrl);
+                }
+                catch 
+                {
+                    // message box here.
+                }
             });
         }
 

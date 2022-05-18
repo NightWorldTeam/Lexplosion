@@ -19,8 +19,24 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             FontWeight="Bold" FontSize="14"/>
-        <Border x:Name="ButtonLeft" Height="240" Width="25"
-                Background="Black" Opacity="0" HorizontalAlignment="Left">
+        <Border x:Name="ButtonLeft" 
+                Height="240" 
+                Width="25"
+                HorizontalAlignment="Left"
+                Visibility="{Binding OverviewModel.GalleryVM.IsLeftBorder, 
+                    Converter={StaticResource NegativeConvertBoolToVisibility}}">
+            <Path 
+                x:Name="LeftArrow"
+                Stroke="White" 
+                Fill="White"
+                Opacity="0.8"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" 
+                Data="M 7.41 10.59 L 2.83 6 L 7.41 1.41 L 6 0 L 0 6 L 6 12 L 7.41 10.59 Z"
+            />
+            <Border.Background>
+                <SolidColorBrush x:Name="LeftButtonBackground" Color="Black" Opacity="0" />
+            </Border.Background>
             <Border.InputBindings>
                 <MouseBinding Gesture="LeftClick" Command="{Binding OverviewModel.GalleryVM.PrevImage}" />
             </Border.InputBindings>
@@ -28,11 +44,21 @@
                 <EventTrigger RoutedEvent="Border.MouseEnter">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:0.02"
+                            <DoubleAnimation Duration="0:0:0.1"
                                 Storyboard.TargetProperty="Opacity"
-                                Storyboard.TargetName="ButtonLeft"
+                                Storyboard.TargetName="LeftButtonBackground"
                                 From="0"
                                 To="0.2"
+                                />
+                        </Storyboard>
+                    </BeginStoryboard>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.1"
+                                Storyboard.TargetProperty="Opacity"
+                                Storyboard.TargetName="LeftArrow"
+                                From="0"
+                                To="0.8"
                                 />
                         </Storyboard>
                     </BeginStoryboard>
@@ -40,10 +66,20 @@
                 <EventTrigger RoutedEvent="Border.MouseLeave">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:0.02"
+                            <DoubleAnimation Duration="0:0:0.4"
                                 Storyboard.TargetProperty="Opacity"
-                                Storyboard.TargetName="ButtonLeft"
+                                Storyboard.TargetName="LeftButtonBackground"
                                 From="0.2"
+                                To="0"
+                                />
+                        </Storyboard>
+                    </BeginStoryboard>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.4"
+                                Storyboard.TargetProperty="Opacity"
+                                Storyboard.TargetName="LeftArrow"
+                                From="0.8"
                                 To="0"
                                 />
                         </Storyboard>
@@ -51,7 +87,23 @@
                 </EventTrigger>
             </Border.Triggers>
         </Border>
-        <Border x:Name="ButtonRight" Height="240" Width="25" Background="Black" Opacity="0" HorizontalAlignment="Right">
+        <Border x:Name="ButtonRight" 
+                Height="240" 
+                Width="25" 
+                HorizontalAlignment="Right"
+                Visibility="{Binding OverviewModel.GalleryVM.IsRightBorder,
+                    Converter={StaticResource NegativeConvertBoolToVisibility}}">
+            <Path x:Name="RightArrow"
+                Stroke="White" 
+                Fill="White"
+                  Opacity="0.8"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Data="M 0.590027 10.59 L 5.17003 6 L 0.590027 1.41 L 2.00003 0 L 8.00003 6 L 2.00003 12 L 0.590027 10.59 Z"
+            />
+            <Border.Background>
+                <SolidColorBrush x:Name="RightButtonBackground" Color="Black" Opacity="0" />
+            </Border.Background>
             <Border.InputBindings>
                 <MouseBinding Gesture="LeftClick" Command="{Binding OverviewModel.GalleryVM.NextImage}" />
             </Border.InputBindings>
@@ -59,11 +111,21 @@
                 <EventTrigger RoutedEvent="Border.MouseEnter">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:0.02"
+                            <DoubleAnimation Duration="0:0:0.1"
                                 Storyboard.TargetProperty="Opacity"
-                                Storyboard.TargetName="ButtonRight"
+                                Storyboard.TargetName="RightButtonBackground"
                                 From="0"
                                 To="0.2"
+                                />
+                        </Storyboard>
+                    </BeginStoryboard>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.1"
+                                Storyboard.TargetProperty="Opacity"
+                                Storyboard.TargetName="RightArrow"
+                                From="0"
+                                To="0.8"
                                 />
                         </Storyboard>
                     </BeginStoryboard>
@@ -71,10 +133,20 @@
                 <EventTrigger RoutedEvent="Border.MouseLeave">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:0.02"
+                            <DoubleAnimation Duration="0:0:0.4"
                                 Storyboard.TargetProperty="Opacity"
-                                Storyboard.TargetName="ButtonRight"
+                                Storyboard.TargetName="RightButtonBackground"
                                 From="0.2"
+                                To="0"
+                                />
+                        </Storyboard>
+                    </BeginStoryboard>    
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.4"
+                                Storyboard.TargetProperty="Opacity"
+                                Storyboard.TargetName="RightArrow"
+                                From="0.8"
                                 To="0"
                                 />
                         </Storyboard>
