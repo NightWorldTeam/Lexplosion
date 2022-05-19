@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
@@ -15,9 +18,12 @@ using Lexplosion.Logic.Objects.Curseforge;
 
 namespace Lexplosion.Logic.Management.Instances
 {
+    // Структура файла с установленными модпаками (instanesList.json)
+    using InstalledInstancesFormat = Dictionary<string, InstalledInstance>;
+
     class ClientInstance
     {
-        private InstanceSource _type;
+        public readonly InstanceSource Type;
         private string _externalId = null;
         private string _localId = null;
 
@@ -33,6 +39,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Summary { get; private set; }
         public bool IsInstalled { get; private set; }
         public bool UpdateAvailable { get; private set; }
+        public bool NotDownloaded { get; private set; } = false;
         #endregion
 
         /// <summary>
@@ -42,60 +49,138 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="externalID">Его внешний айдишник</param>
         private ClientInstance(InstanceSource type, string externalID)
         {
-            _type = type;
+            Type = type;
             _externalId = externalID;
         }
 
+        /// <summary>
+        /// Этот конструктор создаёт установленную сборку. То есть используется для сборок в библиотеке
+        /// </summary>
+        /// <param name="type">Собста тип модпака</param>
+        /// <param name="externalID">Его внешний айдишник</param>
+        /// /// <param name="externalID">Локальный айдишник</param>
         private ClientInstance(InstanceSource type, string externalID, string localId) : this(type, externalID)
         {
             _localId = localId;
         }
 
+        /// <summary>
+        /// Этот конструктор создаёт локальную сборку. Должен использоваться соотвественно только при создании локлаьной сборки
+        /// </summary>
+        /// <param name="name">Имя сборки</param>
+        /// <param name="gameVersion">Версия игры</param>
+        /// <param name="modloader">Тип модлоадера</param>
+        /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
+        public ClientInstance(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion = null)
+        {
+            Name = name;
+            Type = type;
+            GameVersion = gameVersion;
+            string localId = GenerateInstanceId();
+
+            Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + localId);
+
+            VersionManifest manifest = new VersionManifest
+            {
+                version = new VersionInfo
+                {
+                    gameVersion = gameVersion,
+                    modloaderVersion = modloaderVersion,
+                    modloaderType = modloader
+                }
+            };
+
+            _installedInstances[localId] = this;
+            DataFilesManager.SaveManifest(localId, manifest);
+
+            // деаем список всех установленных сборок
+            var list = new InstalledInstancesFormat();
+            foreach (var inst in _installedInstances.Keys)
+            {
+                list[inst] = new InstalledInstance
+                {
+                    Name = name,
+                    Type = type,
+                    NotDownloaded = false,
+                };
+            }
+
+            // сохраняем этот список
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instanesList.json", JsonConvert.SerializeObject(list));
+        }
+
         public static void DefineInstalledInstances()
         {
-            var record = DataFilesManager.GetInstancesList();
+            var list = DataFilesManager.GetFile<InstalledInstancesFormat>(WithDirectory.DirectoryPath + "/instanesList.json");
 
-            foreach (string locaId in record.Keys)
+            if (list != null)
             {
-                string externalID = null;
-                byte[] logo = null;
-
-                //получаем вншний айдшник, если этот модпак не локлаьный
-                if (record[locaId].Type != InstanceSource.Local)
+                foreach (string localId in list.Keys)
                 {
-                    InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + locaId + "/instancePlatformData.json");
-                    if (data != null)
+                    //проверяем установлен ли этот модпак и не содержит ли его id запрещенных символов
+                    if (Directory.Exists(WithDirectory.DirectoryPath + "/instances/" + localId) && !Regex.IsMatch(localId.Replace("_", ""), @"[^a-zA-Z0-9]"))
                     {
-                        externalID = data.id;
-                    }
-                }
+                        string externalID = null;
+                        byte[] logo = null;
 
-                //получаем асетсы модпаков
-                InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.DirectoryPath + "/instances-assets/" + locaId + "/assets.json");
-
-                string file = WithDirectory.DirectoryPath + "/instances-assets/" + assetsData.mainImage;
-                if (assetsData != null && File.Exists(file))
-                {
-                    if (File.Exists(file))
-                    {
-                        try
+                        //получаем вншний айдшник, если этот модпак не локлаьный
+                        if (list[localId].Type != InstanceSource.Local)
                         {
-                            logo = File.ReadAllBytes(file);
+                            InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
+                            if (data != null)
+                            {
+                                externalID = data.id;
+                            }
                         }
-                        catch { }
+
+                        //получаем асетсы модпаков
+                        InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
+
+                        if (assetsData != null && assetsData.mainImage != null)
+                        {
+                            string file = WithDirectory.DirectoryPath + "/instances-assets/" + assetsData.mainImage;
+                            if (File.Exists(file))
+                            {
+                                try
+                                {
+                                    logo = File.ReadAllBytes(file);
+                                }
+                                catch { }
+                            }
+                        }
+
+                        ClientInstance intance;
+                        if (assetsData != null)
+                        {
+                            intance = new ClientInstance(list[localId].Type, externalID, localId)
+                            {
+                                Name = list[localId].Name ?? "Uncnown name",
+                                Summary = assetsData.Summary ?? "",
+                                Author = assetsData.author ?? "Uncnown author",
+                                Description = assetsData.description ?? "",
+                                Categories = assetsData.categories ?? new List<Category>(),
+                                GameVersion = "1.10.2",
+                                Logo = logo
+                            };
+                        }
+                        else
+                        {
+                            intance = new ClientInstance(list[localId].Type, externalID, localId)
+                            {
+                                Name = list[localId].Name ?? "Uncnown name",
+                                Summary = "",
+                                Author = "Uncnown author",
+                                Description = "",
+                                Categories = new List<Category>(),
+                                GameVersion = "1.10.2",
+                                Logo = logo
+                            };
+                        }
+
+                        intance.CheckUpdates();
+                        _installedInstances[localId] = intance;
                     }
                 }
-
-                _installedInstances[locaId] = new ClientInstance(record[locaId].Type, externalID, locaId)
-                {
-                    Name = record[locaId].Name ?? "Uncnown name",
-                    Summary = assetsData.Summary ?? "",
-                    Author = assetsData.author ?? "Uncnown author",
-                    Description = assetsData.description ?? "",
-                    Categories = assetsData.categories ?? new List<Category>(),
-                    GameVersion = "1.10.2",
-                    Logo = logo
-                };
             }
         }
 
@@ -133,7 +218,7 @@ namespace Lexplosion.Logic.Management.Instances
                         clientIinstance.IsInstalled = _installedInstances.ContainsKey(nwModpack);
                         if (clientIinstance.IsInstalled)
                         {
-                            clientIinstance.UpdateAvailable = ManageLogic.CheckIntanceUpdates(clientIinstance._externalId, InstanceSource.Nightworld);
+                            clientIinstance.CheckUpdates();
                         }
 
                         Instances.Add(clientIinstance);
@@ -184,7 +269,7 @@ namespace Lexplosion.Logic.Management.Instances
                     clientIinstance.IsInstalled = _installedInstances.ContainsKey(instance.id.ToString());
                     if (clientIinstance.IsInstalled)
                     {
-                        clientIinstance.UpdateAvailable = ManageLogic.CheckIntanceUpdates(clientIinstance._externalId, InstanceSource.Curseforge);
+                        clientIinstance.CheckUpdates();
                     }
 
                     Instances.Add(clientIinstance);
@@ -203,7 +288,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public InstanceData GetRestData()
         {
-            switch (_type)
+            switch (Type)
             {
                 case InstanceSource.Curseforge:
                     {
@@ -293,7 +378,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             IPrototypeInstance instance;
 
-            switch (_type)
+            switch (Type)
             {
                 case InstanceSource.Nightworld:
                     instance = new NightworldIntance(_localId, false);
@@ -356,6 +441,138 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 ComplitedDownload(result, null, false);
             }
+        }
+
+        public void Run(ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
+        {
+            ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
+
+            Dictionary<string, string> xmx = new Dictionary<string, string>();
+            xmx["eos"] = "2700";
+            xmx["tn"] = "2048";
+            xmx["oth"] = "2048";
+            xmx["lt"] = "512";
+
+            /*int k = 0;
+            int c = 0;
+            if (xmx.ContainsKey(instanceId) && int.TryParse(xmx[instanceId], out k) && int.TryParse(UserData.Settings["xmx"], out c))
+            {
+                if (c < k)
+                    MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
+            }*/
+
+            Settings instanceSettings = DataFilesManager.GetSettings(_localId);
+            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
+            InitData data = launchGame.Initialization(ProgressHandler);
+
+            if (data.InitResult == InstanceInit.Successful)
+            {
+                ComplitedDownload(data.InitResult, data.DownloadErrors, true);
+
+                launchGame.Run(data, ComplitedLaunch, GameExited);
+                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+            }
+            else
+            {
+                ComplitedDownload(data.InitResult, data.DownloadErrors, false);
+            }
+        }
+
+        public void AddToLibrary()
+        {
+            _localId = GenerateInstanceId();
+            _installedInstances[_localId] = this;
+        }
+
+        private void CheckUpdates()
+        {
+            var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + _localId + "/instancePlatformData.json");
+            if (infoData == null || infoData.id == null)
+            {
+                UpdateAvailable = true;
+                return;
+            }
+
+            switch (Type)
+            {
+                case InstanceSource.Curseforge:
+                    if (!Int32.TryParse(infoData.id, out _))
+                    {
+                        UpdateAvailable = true;
+                        return;
+                    }
+
+                    List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(infoData.id); //получем информацию об этом модпаке
+
+                    //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
+                    foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
+                    {
+                        if (ver.id > infoData.instanceVersion)
+                        {
+                            UpdateAvailable = true;
+                            return;
+                        }
+                    }
+                    break;
+            }
+
+            UpdateAvailable = false;
+            return;
+        }
+
+        private string GenerateInstanceId()
+        {
+            Random rnd = new Random();
+
+            string instanceId = Name;
+            instanceId = instanceId.Replace(" ", "_");
+
+            using (SHA1 sha = new SHA1Managed())
+            {
+                if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
+                {
+                    int j = 0;
+                    while (j < instanceId.Length)
+                    {
+                        if (Regex.IsMatch(instanceId[j].ToString(), @"[^a-zA-Z0-9]") && instanceId[j] != '_')
+                        {
+                            instanceId = instanceId.Replace(instanceId[j], '_');
+                        }
+                        j++;
+                    }
+
+                    if (_installedInstances.ContainsKey(instanceId))
+                    {
+                        string instanceId_ = instanceId;
+                        int i = 0;
+                        do
+                        {
+                            if (i > 0)
+                            {
+                                instanceId_ = instanceId + "__" + i;
+                            }
+                            i++;
+                        }
+                        while (_installedInstances.ContainsKey(instanceId_));
+                        instanceId = instanceId_;
+                    }
+                }
+                else if (_installedInstances.ContainsKey(instanceId))
+                {
+                    string instanceId_ = instanceId;
+                    int i = 0;
+                    do
+                    {
+                        instanceId_ = instanceId + "_" + i;
+                        i++;
+                    }
+                    while (_installedInstances.ContainsKey(instanceId_));
+
+                    instanceId = instanceId_;
+                }
+            }
+
+            return instanceId;
         }
 
         private static void ImageDownload(object state)

@@ -35,7 +35,7 @@ namespace Lexplosion.Logic.Network.TURN
             }
 
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 8765));
+            sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 8765)); // TODO: обернуть в трай
             sock.Send(data);
 
             WaitDeletingConnection.WaitOne();

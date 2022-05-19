@@ -12,6 +12,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using System.Threading;
 using Lexplosion.Gui.Views.Windows;
+using Lexplosion.Logic.Management.Instances;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -68,6 +69,7 @@ namespace Lexplosion
 
             // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
             ManageLogic.DefineListInstances();
+            ClientInstance.DefineInstalledInstances();
             //WithDirectory.CheckLauncherAssets();
 
             var stylePath = "pack://application:,,,/Gui/Resources/";

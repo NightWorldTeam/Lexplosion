@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Network
 
                     Console.WriteLine("ControlServerRecv");
                     ControlConnectionBlock.Release(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
-                    int bytes = controlConnection.Receive(data);
+                    int bytes = controlConnection.Receive(data); // TODO: в трай запихать
                     ControlConnectionBlock.WaitOne(); // блочим семофор
                     Console.WriteLine("ControlServerEndRecv");
 

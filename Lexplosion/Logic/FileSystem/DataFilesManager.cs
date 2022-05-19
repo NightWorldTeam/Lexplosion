@@ -352,7 +352,7 @@ namespace Lexplosion.Logic.FileSystem
                     if (Directory.Exists(DirectoryPath + "/instances/" + id) && !Regex.IsMatch(id.Replace("_", ""), @"[^a-zA-Z0-9]"))
                     {
                         list[id] = baseList[id];
-                        list[id].UpdateAvailable = ManageLogic.CheckIntanceUpdates(id, baseList[id].Type);
+                        list[id].UpdateAvailable = ManageLogic.CheckIntanceUpdates(id, baseList[id].Type); // TODO: это от сюда убрать
                     }
                 }
             }
