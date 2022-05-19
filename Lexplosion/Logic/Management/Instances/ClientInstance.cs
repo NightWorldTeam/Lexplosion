@@ -184,6 +184,10 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        /// <summary>
+        /// Возвращает список модпаков для библиотки.
+        /// </summary>
+        /// <returns>Список установленных модпаков.</returns>
         public static List<ClientInstance> GetInstalledInstances()
         {
             List<ClientInstance> list = new List<ClientInstance>();
@@ -195,6 +199,10 @@ namespace Lexplosion.Logic.Management.Instances
             return list;
         }
 
+        /// <summary>
+        /// Возвращает список модпаков для каталога.
+        /// </summary>
+        /// <returns>Список внешних модпаков.</returns>
         public static List<ClientInstance> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
             Console.WriteLine("UploadInstances " + pageIndex);
@@ -297,7 +305,11 @@ namespace Lexplosion.Logic.Management.Instances
             return Instances;
         }
 
-        public InstanceData GetRestData()
+        /// <summary>
+        /// Получает всю инфу о модпаке.
+        /// </summary>
+        /// <returns>InstanceData, содержащий в ебе данные на все случаи жизни</returns>
+        public InstanceData GetFullInfo()
         {
             switch (Type)
             {
@@ -380,6 +392,9 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        /// <summary>
+        /// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
+        /// </summary>
         public void UpdateInstance(ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload)
         {
             ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
@@ -454,6 +469,9 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        /// <summary>
+        /// Запускает сборку. Если надо её докачивает
+        /// </summary>
         public void Run(ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
         {
             ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
@@ -489,6 +507,9 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        /// <summary>
+        /// Добавляет сборку в библиотеку
+        /// </summary>
         public void AddToLibrary()
         {
             _localId = GenerateInstanceId();
