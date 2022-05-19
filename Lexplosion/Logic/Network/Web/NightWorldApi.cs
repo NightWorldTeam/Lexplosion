@@ -40,7 +40,6 @@ namespace Lexplosion.Logic.Network
             public string Description;
             public string Summary;
             public List<Category> Categories;
-            public long DonwloadsCount;
             public string GameVersion;
         }
 

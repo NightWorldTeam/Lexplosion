@@ -208,6 +208,7 @@
     <Compile Include="Logic\KeySemaphore.cs" />
     <Compile Include="Logic\Management\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
+    <Compile Include="Logic\Management\Instances\ClientInstance.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LocalInstance.cs" />
     <Compile Include="Logic\Management\McAddonsManager.cs" />
