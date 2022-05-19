@@ -184,6 +184,17 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        public static List<ClientInstance> GetInstalledInstances()
+        {
+            List<ClientInstance> list = new List<ClientInstance>();
+            foreach(ClientInstance instance in _installedInstances.Values)
+            {
+                list.Add(instance);
+            }
+
+            return list;
+        }
+
         public static List<ClientInstance> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
             Console.WriteLine("UploadInstances " + pageIndex);
