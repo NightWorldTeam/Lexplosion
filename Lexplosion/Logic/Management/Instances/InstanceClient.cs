@@ -75,6 +75,7 @@ namespace Lexplosion.Logic.Management.Instances
             Name = name;
             Type = type;
             GameVersion = gameVersion;
+            InLibrary = true;
             string localId = GenerateInstanceId();
 
             Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + localId);
@@ -176,6 +177,7 @@ namespace Lexplosion.Logic.Management.Instances
                             };
                         }
 
+                        instance.InLibrary = true;
                         instance.CheckUpdates();
                         _installedInstances[localId] = instance;
                     }
