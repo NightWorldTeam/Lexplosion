@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.Models.ShowCaseMenu;
+using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
 
@@ -75,14 +76,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             });
         }
 
-        public OverviewViewModel(string outsideId, string localId, InstanceSource source = InstanceSource.Curseforge)
+        public OverviewViewModel(InstanceClient instanceClient)
         {
             Lexplosion.Run.TaskRun(() => { 
-                OverviewModel = new OverviewModel(
-                    outsideId,
-                    localId,
-                    source
-                    );
+                OverviewModel = new OverviewModel(instanceClient);
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
                 IsLoaded = false;
             });

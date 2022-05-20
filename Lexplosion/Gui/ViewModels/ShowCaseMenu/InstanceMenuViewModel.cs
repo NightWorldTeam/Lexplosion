@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
+using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -30,7 +31,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         #endregion
 
-        public InstanceMenuViewModel(string localId, string outsideId, string name, InstanceSource source)
+        public InstanceMenuViewModel(InstanceClient instanceClient)
         {
             NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
@@ -40,7 +41,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 new Tab()
                 {
                     Header = "Overview",
-                    Content = new OverviewViewModel(outsideId, localId, source)
+                    Content = new OverviewViewModel(instanceClient)
                 },
                 new Tab()
                 {
@@ -59,12 +60,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 new Tab
                 {
                     Header = "Обзор",
-                    Content =  new TabMenuViewModel(_showCaseTabMenu, name)
+                    Content =  new TabMenuViewModel(_showCaseTabMenu, instanceClient.Name)
                 },
                 new Tab 
                 {
                     Header = "Настройки",
-                    Content = new InstanceSettingsViewModel(localId),
+                    Content = new InstanceSettingsViewModel(instanceClient),
                 },
                 new Tab
                 {

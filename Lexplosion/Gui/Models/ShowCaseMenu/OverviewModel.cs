@@ -1,5 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
-using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Gui.Models.ShowCaseMenu
@@ -31,21 +31,9 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
 
         public GalleryViewModel GalleryVM { get; }
 
-        public OverviewModel(string outsideId, string localId, InstanceSource source)
+        public OverviewModel(InstanceClient instanceClient)
         {
-            switch (source) 
-            {
-                case InstanceSource.Nightworld:
-                    InstanceData = ManageLogic.GetInstanceData(source, outsideId);
-                    break;
-                case InstanceSource.Curseforge:
-                    InstanceData = ManageLogic.GetInstanceData(source, outsideId);
-                    break;
-                case InstanceSource.Local:
-                    IsLocalInstance = true;
-                    InstanceData = ManageLogic.GetInstanceData(source, localId);
-                    break;
-            }
+            InstanceData = instanceClient.GetFullInfo();
             GalleryVM = new GalleryViewModel(InstanceData.Images);
         }
     }

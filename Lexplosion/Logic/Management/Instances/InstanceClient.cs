@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
@@ -21,13 +18,15 @@ namespace Lexplosion.Logic.Management.Instances
     // Структура файла с установленными модпаками (instanesList.json)
     using InstalledInstancesFormat = Dictionary<string, InstalledInstance>;
 
-    class ClientInstance
+    public class InstanceClient
     {
         public readonly InstanceSource Type;
         private string _externalId = null;
         private string _localId = null;
 
-        private static Dictionary<string, ClientInstance> _installedInstances = new Dictionary<string, ClientInstance>();
+        private static Dictionary<string, InstanceClient> _installedInstances = new Dictionary<string, InstanceClient>();
+
+        //TODO: добавить настройки!
 
         #region info
         public string Name { get; private set; }
@@ -37,9 +36,9 @@ namespace Lexplosion.Logic.Management.Instances
         public List<Category> Categories { get; private set; }
         public string GameVersion { get; private set; }
         public string Summary { get; private set; }
-        public bool IsInstalled { get; private set; }
+        public bool InLibrary { get; private set; }
         public bool UpdateAvailable { get; private set; }
-        public bool NotDownloaded { get; private set; } = false;
+        public bool IsNonInstalled { get; private set; } = false;
         #endregion
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         /// <param name="type">Собста тип модпака</param>
         /// <param name="externalID">Его внешний айдишник</param>
-        private ClientInstance(InstanceSource type, string externalID)
+        private InstanceClient(InstanceSource type, string externalID)
         {
             Type = type;
             _externalId = externalID;
@@ -59,7 +58,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="type">Собста тип модпака</param>
         /// <param name="externalID">Его внешний айдишник</param>
         /// /// <param name="externalID">Локальный айдишник</param>
-        private ClientInstance(InstanceSource type, string externalID, string localId) : this(type, externalID)
+        private InstanceClient(InstanceSource type, string externalID, string localId) : this(type, externalID)
         {
             _localId = localId;
         }
@@ -71,7 +70,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="gameVersion">Версия игры</param>
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
-        public ClientInstance(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion = null)
+        public InstanceClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion = null)
         {
             Name = name;
             Type = type;
@@ -149,14 +148,14 @@ namespace Lexplosion.Logic.Management.Instances
                             }
                         }
 
-                        ClientInstance intance;
+                        InstanceClient instance;
                         if (assetsData != null)
                         {
-                            intance = new ClientInstance(list[localId].Type, externalID, localId)
+                            instance = new InstanceClient(list[localId].Type, externalID, localId)
                             {
-                                Name = list[localId].Name ?? "Uncnown name",
+                                Name = list[localId].Name ?? "Unknown name",
                                 Summary = assetsData.Summary ?? "",
-                                Author = assetsData.author ?? "Uncnown author",
+                                Author = assetsData.author ?? "Unknown author",
                                 Description = assetsData.description ?? "",
                                 Categories = assetsData.categories ?? new List<Category>(),
                                 GameVersion = "1.10.2",
@@ -165,11 +164,11 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         else
                         {
-                            intance = new ClientInstance(list[localId].Type, externalID, localId)
+                            instance = new InstanceClient(list[localId].Type, externalID, localId)
                             {
-                                Name = list[localId].Name ?? "Uncnown name",
+                                Name = list[localId].Name ?? "Unknown name",
                                 Summary = "",
-                                Author = "Uncnown author",
+                                Author = "Unknown author",
                                 Description = "",
                                 Categories = new List<Category>(),
                                 GameVersion = "1.10.2",
@@ -177,8 +176,8 @@ namespace Lexplosion.Logic.Management.Instances
                             };
                         }
 
-                        intance.CheckUpdates();
-                        _installedInstances[localId] = intance;
+                        instance.CheckUpdates();
+                        _installedInstances[localId] = instance;
                     }
                 }
             }
@@ -188,10 +187,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список модпаков для библиотки.
         /// </summary>
         /// <returns>Список установленных модпаков.</returns>
-        public static List<ClientInstance> GetInstalledInstances()
+        public static List<InstanceClient> GetInstalledInstances()
         {
-            List<ClientInstance> list = new List<ClientInstance>();
-            foreach(ClientInstance instance in _installedInstances.Values)
+            var list = new List<InstanceClient>();
+            foreach(InstanceClient instance in _installedInstances.Values)
             {
                 list.Add(instance);
             }
@@ -203,44 +202,44 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список модпаков для каталога.
         /// </summary>
         /// <returns>Список внешних модпаков.</returns>
-        public static List<ClientInstance> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
+        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
         {
             Console.WriteLine("UploadInstances " + pageIndex);
 
-            List<ClientInstance> Instances = new List<ClientInstance>();
-            List<AutoResetEvent> events = new List<AutoResetEvent>();
+            var instances = new List<InstanceClient>();
+            var events = new List<AutoResetEvent>();
 
             if (type == InstanceSource.Nightworld)
             {
                 Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
 
-                int i = 0;
+                var i = 0;
                 foreach (string nwModpack in nwInstances.Keys)
                 {
                     if (i < pageSize * (pageIndex + 1))
                     {
-                        var clientIinstance = new ClientInstance(InstanceSource.Nightworld, nwModpack)
+                        var clientIinstance = new InstanceClient(InstanceSource.Nightworld, nwModpack)
                         {
-                            Name = nwInstances[nwModpack].Name ?? "Uncnown name",
+                            Name = nwInstances[nwModpack].Name ?? "Unknown name",
                             Logo = null,
                             Categories = nwInstances[nwModpack].Categories ?? new List<Category>(),
                             GameVersion = nwInstances[nwModpack].GameVersion ?? "",
                             Summary = nwInstances[nwModpack].Summary ?? "",
                             Description = nwInstances[nwModpack].Description ?? "",
-                            Author = nwInstances[nwModpack].Author ?? "Uncnown author"
+                            Author = nwInstances[nwModpack].Author ?? "Unknown author"
                         };
 
                         var e = new AutoResetEvent(false);
                         events.Add(e);
                         ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, clientIinstance, nwInstances[nwModpack].MainImage });
 
-                        clientIinstance.IsInstalled = _installedInstances.ContainsKey(nwModpack);
-                        if (clientIinstance.IsInstalled)
+                        clientIinstance.InLibrary = _installedInstances.ContainsKey(nwModpack);
+                        if (clientIinstance.InLibrary)
                         {
                             clientIinstance.CheckUpdates();
                         }
 
-                        Instances.Add(clientIinstance);
+                        instances.Add(clientIinstance);
                     }
 
                     i++;
@@ -257,7 +256,7 @@ namespace Lexplosion.Logic.Management.Instances
                         author = instance.authors[0].name;
                     }
 
-                    var clientIinstance = new ClientInstance(InstanceSource.Curseforge, instance.id.ToString())
+                    var instanceClient = new InstanceClient(InstanceSource.Curseforge, instance.id.ToString())
                     {
                         Name = instance.name ?? "Unknown name",
                         Logo = null,
@@ -265,7 +264,7 @@ namespace Lexplosion.Logic.Management.Instances
                         GameVersion = (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0) ? instance.gameVersionLatestFiles[0].gameVersion : "",
                         Summary = instance.summary ?? "",
                         Description = instance.summary ?? "",
-                        Author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Uncnown author"
+                        Author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown author"
                     };
 
                     if (instance.attachments != null && instance.attachments.Count > 0)
@@ -282,16 +281,16 @@ namespace Lexplosion.Logic.Management.Instances
 
                         var e = new AutoResetEvent(false);
                         events.Add(e);
-                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, clientIinstance, url });
+                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceClient, url });
                     }
 
-                    clientIinstance.IsInstalled = _installedInstances.ContainsKey(instance.id.ToString());
-                    if (clientIinstance.IsInstalled)
+                    instanceClient.InLibrary = _installedInstances.ContainsKey(instance.id.ToString());
+                    if (instanceClient.InLibrary)
                     {
-                        clientIinstance.CheckUpdates();
+                        instanceClient.CheckUpdates();
                     }
 
-                    Instances.Add(clientIinstance);
+                    instances.Add(instanceClient);
                 }
             }
 
@@ -302,7 +301,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             Console.WriteLine("UploadInstances End " + pageIndex);
 
-            return Instances;
+            return instances;
         }
 
         /// <summary>
@@ -512,8 +511,11 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void AddToLibrary()
         {
-            _localId = GenerateInstanceId();
-            _installedInstances[_localId] = this;
+            if (!InLibrary)
+            {
+                _localId = GenerateInstanceId();
+                _installedInstances[_localId] = this;
+            }
         }
 
         private void CheckUpdates()
@@ -612,7 +614,7 @@ namespace Lexplosion.Logic.Management.Instances
             object[] array = state as object[];
 
             AutoResetEvent e = (AutoResetEvent)array[0];
-            ClientInstance instanceInfo = (ClientInstance)array[1];
+            InstanceClient instanceInfo = (InstanceClient)array[1];
             string url = (string)array[2];
 
             try
@@ -629,5 +631,11 @@ namespace Lexplosion.Logic.Management.Instances
 
             e.Set();
         }
+
+        public string GetDirectoryPath() => @"" + UserData.GeneralSettings.GamePath.Replace("/", @"\") + @"\instances\" + _localId;
+
+        public Settings GetSettings() => DataFilesManager.GetSettings(_localId);
+
+        public void SaveSettings(Settings settings) => DataFilesManager.SaveSettings(settings, _localId);
     }
 }

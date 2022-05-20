@@ -5,6 +5,7 @@ using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using System;
@@ -116,42 +117,13 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 return _createInstance ?? (new RelayCommand(obj =>
                 {
-                        var id = ManageLogic.CreateInstance(
-                            Model.Name, InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion
-                        );
-                        NavigationMainMenuCommand.Execute(null);
+                    NavigationMainMenuCommand.Execute(null);
 
-                        MainModel.AddedInstanceForms.Add(
-                            new InstanceFormViewModel(
-                                new InstanceFormModel(
-                                    new InstanceProperties
-                                    {
-                                        Name = Model.Name ?? "Custom Instance",
-                                        Type = InstanceSource.Local,
-                                        Id = string.Empty,
-                                        LocalId = id,
-                                        Categories = new List<Category>()
-                                        {
-                                            new Category()
-                                            {
-                                                categoryId = -1,
-                                                name = SelectedVersion
-                                            }
-                                        },
-                                        Logo = Utilities.GetImage("pack://application:,,,/assets/images/icons/non_image.png"),
-                                        InstanceAssets = new InstanceAssets()
-                                        {
-                                            description = "This modpack is not have description...",
-                                            author = "by NightWorld",
-                                        },
-                                        IsInstalled = false,
-                                        IsDownloadingInstance = false,
-                                        UpdateAvailable = false,
-                                        IsInstanceAddedToLibrary = true
-                                    }
-                                    )
-                                )
-                            );
+                    MainModel.LibraryInstances.Add(
+                        new InstanceFormViewModel(
+                            new InstanceClient(Model.Name ?? "CustomInstance", InstanceSource.Local, Model.SelectedVersion, Model.ModloaderType, SelectedModloaderVersion)
+                        )
+                    );
                 }));
             }
         }

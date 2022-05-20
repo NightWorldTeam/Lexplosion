@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -18,8 +19,8 @@ namespace Lexplosion.Gui.ViewModels
                 switch ((UpperButtonFunc)obj) 
                 {
                     case UpperButtonFunc.Download:
-                        if (!MainModel.AddedInstanceForms.Contains(MainModel.GetSpecificVM(Model.Instance.OutsideId)))
-                            MainModel.AddedInstanceForms.Add(this);
+                        //if (!MainModel.LibraryInstances.Contains(MainModel.GetSpecificVM(Model.InstanceClient.OutsideId)))
+                        //    MainModel.LibraryInstances.Add(this);
                         Model.DownloadModel.DonwloadPrepare();
                         break;
                     case UpperButtonFunc.ProgressBar:
@@ -57,11 +58,9 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
-        public InstanceFormViewModel(InstanceFormModel model)
+        public InstanceFormViewModel(InstanceClient instanceClient)
         {
-            Model = model;
-            //NavigationShowCaseCommand = new NavigationCommands<ShowCaseViewModel>(
-            //    MainViewModel.NavigationStore, () => new ShowCaseViewModel());
+            Model = new InstanceFormModel(instanceClient);
         }
     }
 }

@@ -17,6 +17,7 @@
     <gui:NegativeBooleanToVisibilityConverter x:Key="NegativeConvertBoolToVisibility" />
     <gui:MultiBindingConverter x:Key="MultiBiningConverter"/>
     <gui:BooleanToColorConverter x:Key="BooleanToColorConverter" />
+    <gui:BytesToBitmapImageConventer x:Key="BytesToBitmapImageConverter" />
 
 
     <models:MainModel x:Key="MainModel"/>

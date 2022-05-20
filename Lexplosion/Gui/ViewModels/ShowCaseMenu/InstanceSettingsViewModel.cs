@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.Models.ShowCaseMenu;
+using Lexplosion.Logic.Management.Instances;
 using System.Windows.Forms;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
@@ -21,9 +22,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             });
         }
 
-        public InstanceSettingsViewModel(string instanceId)
+        public InstanceSettingsViewModel(InstanceClient instanceClient)
         {
-            InstanceSettings = new InstanceSettingsModel(instanceId);
+            InstanceSettings = new InstanceSettingsModel(instanceClient);
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic;
-using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.Gui.Models.ShowCaseMenu
 {
     public class InstanceSettingsModel : VMBase
     {
+        private InstanceClient _instanceClient;
         private Settings _instanceSettings;
-        private string _instanceId;
 
         public string JavaPath
         {
@@ -15,7 +15,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 UserData.GeneralSettings.JavaPath = value.Replace(@"\", "/");
                 OnPropertyChanged("JavaPath");
-                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
+                _instanceClient.SaveSettings(InstanceSettings);
             }
         }
 
@@ -34,7 +34,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.WindowHeight = value;
                 OnPropertyChanged("WindowHeight");
-                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
+                _instanceClient.SaveSettings(InstanceSettings);
             }
         }
 
@@ -44,7 +44,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.WindowWidth = value;
                 OnPropertyChanged("WindowWidth");
-                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
+                _instanceClient.SaveSettings(InstanceSettings);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.Xmx = value;
                 OnPropertyChanged("Xmx");
-                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
+                _instanceClient.SaveSettings(InstanceSettings);
             }
         }
 
@@ -75,7 +75,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.Xms = value;
                 OnPropertyChanged("Xms");
-                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
+                _instanceClient.SaveSettings(InstanceSettings);
             }
         }
 
@@ -85,7 +85,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.GameArgs = value;
                 OnPropertyChanged("GameArgs");
-                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
+                _instanceClient.SaveSettings(InstanceSettings);
             }
         }
 
@@ -95,16 +95,15 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.AutoUpdate = value;
                 OnPropertyChanged("IsAutoUpdate");
-                DataFilesManager.SaveSettings(InstanceSettings, _instanceId);
+                _instanceClient.SaveSettings(InstanceSettings);
             }
         }
 
-        public InstanceSettingsModel(string instanceId)
+        public InstanceSettingsModel(InstanceClient instanceClient)
         {
-            _instanceSettings = DataFilesManager.GetSettings(instanceId);
+            _instanceClient = instanceClient;
+            _instanceSettings = instanceClient.GetSettings();
             InstanceSettings.Merge(UserData.GeneralSettings, true);
-
-            _instanceId = instanceId;
         }
     }
 }

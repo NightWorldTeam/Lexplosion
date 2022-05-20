@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Global;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using System.Diagnostics;
 
@@ -7,37 +8,35 @@ namespace Lexplosion.Gui.Models.InstanceForm
     public class InstanceFormModel : VMBase
     {
         #region props
-        public InstanceModel Instance { get; set; }
+        public InstanceClient InstanceClient { get; set; }
         public DownloadModel DownloadModel { get; set; }
         public MultibuttonModel ButtonModel { get; set; }
         public LaunchModel LaunchModel { get; set; }
         #endregion
 
-        public InstanceFormModel(InstanceProperties properties)
+        public InstanceFormModel(InstanceClient instanceClient)
         {
 
-            Instance = new InstanceModel(properties);
+            InstanceClient = instanceClient;
             ButtonModel = new MultibuttonModel();
-            if (Instance.IsInstalled)
-                ButtonModel.ChangeFuncPlay();
-            else 
-                ButtonModel.ChangeFuncDownload(Instance.IsInstanceAddedToLibrary);
-
-            DownloadModel = new DownloadModel(Instance, ButtonModel)
+            DownloadModel = new DownloadModel(InstanceClient, ButtonModel)
             {
                 DownloadProgress = 0,
                 Stage = 0,
                 StagesCount = 0
             };
-            LaunchModel = new LaunchModel(Instance, DownloadModel, ButtonModel)
-            {
+            LaunchModel = new LaunchModel(InstanceClient, DownloadModel, ButtonModel);
 
-            };
+            if (InstanceClient.InLibrary)
+            {
+                ButtonModel.ChangeFuncPlay();
+            }
+            else ButtonModel.ChangeFuncDownload(InstanceClient.IsNonInstalled);
         }
 
         public void OpenInstanceFolder() 
         {
-            Process.Start("explorer", @"" + UserData.GeneralSettings.GamePath.Replace("/", @"\") + @"\instances\" + Instance.Properties.Id);
+            Process.Start("explorer", InstanceClient.GetDirectoryPath());
         }
     }
 }

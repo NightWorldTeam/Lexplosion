@@ -49,7 +49,7 @@
                         x:Name="InstanceLogo_Background"
                         CornerRadius="10">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Model.Instance.Properties.Logo}" />
+                            <ImageBrush ImageSource="{Binding Model.InstanceClient.Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
                         </Border.Background>
                     </Border>
                     <TextBlock 
@@ -65,18 +65,11 @@
                         Background="Transparent" 
                         Opacity="0.1">
                         <Grid.InputBindings>
-                            <MouseBinding Gesture="LeftClick" Command="{Binding LogoClickCommand, Source={StaticResource MainMenuViewModel}}">
-                                <MouseBinding.CommandParameter>
-                                    <MultiBinding Converter="{StaticResource MultiBiningConverter}">
-                                        <Binding Path="Model.Instance.IsInstalled" />
-                                        <Binding Path="Model.Instance.OutsideId" />
-                                        <Binding Path="Model.Instance.LocalId" />
-                                        <Binding Path="Model.Instance.Source" />
-                                        <Binding Path="Model.Instance.Properties.Name" />
-                                        <Binding Path="Model.Instance.IsInstalled" />
-                                    </MultiBinding>
-                                </MouseBinding.CommandParameter>
-                            </MouseBinding>
+                            <MouseBinding 
+                                Gesture="LeftClick" 
+                                Command="{Binding LogoClickCommand, Source={StaticResource MainMenuViewModel}}"
+                                CommandParameter="{Binding Model.InstanceClient}"
+                                />
                         </Grid.InputBindings>
                     </Grid>
                 </Grid>
@@ -96,17 +89,32 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
-                        
+
                         <TextBlock
                             Grid.Column="0"
                             Padding="0"
-                            Text="{Binding Model.Instance.Properties.Name}"
+                            Text="{Binding Model.InstanceClient.Name}"
                             FontSize="22"
                             Foreground="#ffffff"
-                            TextTrimming="WordEllipsis"/>
+                            TextTrimming="WordEllipsis">
+                            <TextBlock.ToolTip>
+                                <ToolTip
+                                    Placement="Relative" 
+                                    VerticalOffset="-19" 
+                                    Background="Black" 
+                                    BorderThickness="0"
+                                    FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
+                                    <TextBlock 
+                                        FontSize="12" 
+                                        Foreground="White" 
+                                        FontWeight="Bold"
+                                        Text="{Binding Model.InstanceClient.Name}" />
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
                         <TextBlock
                             Grid.Column="1"
-                            Text="{Binding Model.Instance.Properties.InstanceAssets.author, StringFormat='by {0}'}"
+                            Text="{Binding Model.InstanceClient.Author, StringFormat='by {0}'}"
                             FontSize="12"
                             Padding="0"
                             Margin="0,0,2,0"
@@ -127,7 +135,7 @@
                         <TextBlock
                             Grid.Column="0"
                             Grid.Row="0"
-                            Text="{Binding Model.Instance.OverviewField}"
+                            Text="{Binding Model.InstanceClient.Description}"
                             Foreground="#d5d5d5"
                             HorizontalAlignment="Left"
                             FontSize="16"
@@ -143,8 +151,8 @@
                         <ItemsControl
                             Grid.Row="1"
                             Margin="0,1,1,1" 
-                            ItemsSource="{Binding Model.Instance.Properties.InstanceAssets.categories}"
-                            Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                            ItemsSource="{Binding Model.InstanceClient.Categories}"
+                            Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel
@@ -215,7 +223,7 @@
                                 <Path
                                     Stretch="Fill" 
                                     Data="{Binding Model.ButtonModel.UpperIcon}"
-                                    Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource NegativeConvertBoolToVisibility}}"
+                                    Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}"
                                     Fill="White"
                                     Stroke="White"
                                     Width="20" 
@@ -223,7 +231,7 @@
                                 <TextBlock
                                     Foreground="White"
                                     Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
-                                    Visibility="{Binding Model.Instance.IsDownloadingInstance, Converter={StaticResource ConvertBoolToVisibility}}"
+                                    Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center"
                                     FontSize="18"
@@ -306,7 +314,7 @@
             Background="#131313"
             Foreground="#5773FF"
             IsIndeterminate="{Binding Model.DownloadModel.IsIndeterminate}"
-            Visibility="{Binding Path=Model.Instance.IsDownloadingInstance, Converter={StaticResource ConvertBoolToVisibility}}">
+            Visibility="{Binding Path=Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}">
             <ProgressBar.Effect>
                 <DropShadowEffect ShadowDepth="1" BlurRadius="20" Opacity="0.3"/>
             </ProgressBar.Effect>

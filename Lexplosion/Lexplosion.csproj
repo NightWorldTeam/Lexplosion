@@ -94,6 +94,7 @@
     <Compile Include="App.xaml.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Gui\BooleanToColorConverter.cs" />
+    <Compile Include="Gui\BytesToBitmapImageConventer.cs" />
     <Compile Include="Gui\Commands\CommandBase.cs" />
     <Compile Include="Gui\Commands\NavigateCommand.cs" />
     <Compile Include="Gui\Commands\RelayCommand.cs" />
@@ -107,7 +108,6 @@
     <Compile Include="Gui\Models\InstanceFactory\InstanceFactoryModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\DownloadModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\InstanceFormModel.cs" />
-    <Compile Include="Gui\Models\InstanceForm\InstanceModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\LaunchModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\MultibuttonModel.cs" />
     <Compile Include="Gui\Models\MainModel.cs" />
@@ -208,7 +208,7 @@
     <Compile Include="Logic\KeySemaphore.cs" />
     <Compile Include="Logic\Management\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
-    <Compile Include="Logic\Management\Instances\ClientInstance.cs" />
+    <Compile Include="Logic\Management\Instances\InstanceClient.cs" />
     <Compile Include="Logic\Management\Instances\Objects.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LocalInstance.cs" />

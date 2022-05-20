@@ -6,7 +6,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 {
     public class InstanceFactoryModel : VMBase
     {
-        private const string _defaultInstanceName = "Custom Instance";
+        private const string _defaultInstanceName = "Custom InstanceClient";
         private string _name;
         private string _selectedVersion;
         private ModloaderType _modloaderType;

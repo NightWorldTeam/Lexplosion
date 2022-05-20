@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
+using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -24,21 +25,16 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         {
             get => _logoClickCommand ?? (new RelayCommand(obj =>
             {
-                var values = (object[])obj;
+                var instanceClient = (InstanceClient)obj;
 
-                var result = (bool)values[0];
-                var outsideId = (string)values[1];
-                var localId = (string)values[2];
-                var source = (InstanceSource)values[3];
-                var name = (string)values[4];
-                var isInstalled = (bool)values[5];
-                if (isInstalled) {
-                    NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                        MainViewModel.NavigationStore, () => new InstanceMenuViewModel(localId, outsideId, name, source));
+                if (!instanceClient.IsNonInstalled) {
+                    NavigationShowCaseCommand = new NavigateCommand<ShowCaseViewModel>(
+                        MainViewModel.NavigationStore, () => new ShowCaseViewModel(instanceClient));
+
                 } else 
                 {
-                    NavigationShowCaseCommand = new NavigateCommand<ShowCaseViewModel>(
-                        MainViewModel.NavigationStore, () => new ShowCaseViewModel(localId, outsideId, name, source));
+                    NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
+                        MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceClient));
                 }
                 NavigationShowCaseCommand?.Execute(null);
             }));

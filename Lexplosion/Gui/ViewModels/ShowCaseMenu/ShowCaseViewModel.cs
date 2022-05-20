@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
+using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -27,7 +28,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private List<Tab> _showCaseTabMenu;
 
-        public ShowCaseViewModel(string localId, string outsideId, string name, InstanceSource source)
+        public ShowCaseViewModel(InstanceClient instanceClient)
         {
            NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
                  MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
@@ -37,7 +38,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 new Tab()
                 {
                     Header = "Overview",
-                    Content = new OverviewViewModel(outsideId, localId, source)
+                    Content = new OverviewViewModel(instanceClient)
                 },
                 new Tab()
                 {
@@ -56,7 +57,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 new Tab
                 {
                     Header = "Обзор",
-                    Content =  new TabMenuViewModel(_showCaseTabMenu, name)
+                    Content =  new TabMenuViewModel(_showCaseTabMenu, instanceClient.Name)
                 },
                 new Tab
                 {

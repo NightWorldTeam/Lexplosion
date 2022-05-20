@@ -1,7 +1,5 @@
 ﻿using Lexplosion.Gui.Models;
-using Lexplosion.Gui.Models.InstanceForm;
-using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,12 +34,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             SearchBoxVM.IsLoaded = false;
             PaginatorVM.IsLoaded = false;
             LibraryOutsideIds.Clear();
-            LibraryOutsideIds = MainModel.GetOutsideIds();
+            //LibraryOutsideIds = MainModel.GetOutsideIds();
+
             Lexplosion.Run.TaskRun(delegate ()
             {
-                var instances = OutsideDataManager.GetInstances(
-                    SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed
-                    );
+                var instances = InstanceClient.GetOutsideInstances(
+                SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed);
 
                 if (instances.Count == 0)
                 {
@@ -52,41 +50,19 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
                         InstanceForms.Clear();
-                        for (int j = 0; j < instances.Count; j++)
+                        foreach (var instance in instances)
                         {
-                            if (LibraryOutsideIds.Contains(instances[j].Id))
-                            {
-                                InstanceForms.Add(MainModel.GetSpecificVM(instances[j].Id));
-                            }
-                            else
-                            {
-                                InstanceForms.Add(
-                                    new InstanceFormViewModel(
-                                        new InstanceFormModel(
-                                            new InstanceProperties
-                                            {
-                                                Name = instances[j].Name,
-                                                Type = instances[j].Type,
-                                                LocalId = instances[j].LocalId,
-                                                InstanceAssets = new InstanceAssets()
-                                                {
-                                                    author = instances[j].InstanceAssets.author,
-                                                    description = instances[j].InstanceAssets.description,
-                                                    categories = instances[j].Categories
-                                                },
-                                                Id = instances[j].Id,
-                                                Logo = Utilities.ToImage(instances[j].MainImage),
-                                                IsDownloadingInstance = false,
-                                                IsInstalled = false,
-                                                UpdateAvailable = false,
-                                                IsInstanceAddedToLibrary = false
-                                            }
-                                            )
-                                        )
-                                    );
-                            }
+                            //if (LibraryOutsideIds.Contains(""))
+                            //{
+                            //    InstanceForms.Add(MainModel.GetSpecificVM(""));
+                            //}
+                            //else
+                            //{
+                            InstanceForms.Add(new InstanceFormViewModel(instance));
+                            //}
                         }
                     });
+
                 }
                 SearchBoxVM.IsLoaded = true;
                 PaginatorVM.IsLoaded = true;
