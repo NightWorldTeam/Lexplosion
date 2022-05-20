@@ -31,7 +31,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             {
                 ButtonModel.ChangeFuncPlay();
             }
-            else ButtonModel.ChangeFuncDownload(InstanceClient.IsNonInstalled);
+            else ButtonModel.ChangeFuncDownload(InstanceClient.IsInstalled);
         }
 
         public void OpenInstanceFolder() 
