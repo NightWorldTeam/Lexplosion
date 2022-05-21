@@ -133,6 +133,7 @@ namespace Lexplosion.Logic.Management.Instances
                             if (data != null)
                             {
                                 externalID = data.id;
+                                _externaLocalIdsPairs[externalID] = localId;
                             }
                         }
 
@@ -184,7 +185,6 @@ namespace Lexplosion.Logic.Management.Instances
                         instance.IsInstalled = true;
                         instance.CheckUpdates();
                         _installedInstances[localId] = instance;
-                        _externaLocalIdsPairs[externalID] = localId;
                     }
                 }
             }
