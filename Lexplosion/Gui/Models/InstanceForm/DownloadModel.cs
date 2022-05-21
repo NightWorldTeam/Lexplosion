@@ -1,5 +1,4 @@
-﻿using Lexplosion.Logic.Management.Instances;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models.InstanceForm
@@ -11,10 +10,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private int _stagesCount;
         private DownloadStageTypes _downloadStageType;
 
-        private InstanceClient _instanceClient;
-        private MultibuttonModel _multibuttonModel;
-        private bool _isIndeterminate;
+        private InstanceFormModel _instanceFormModel;
 
+        private bool _isIndeterminate;
         private bool _isDownloadInProgress;
 
         #region prop
@@ -24,7 +22,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             set 
             {
                 _isDownloadInProgress = value;
-                OnPropertyChanged(nameof(_isDownloadInProgress));
+                OnPropertyChanged();
             }
         }
 
@@ -74,23 +72,22 @@ namespace Lexplosion.Gui.Models.InstanceForm
         }
         #endregion
 
-        public DownloadModel(InstanceClient instanceModel, MultibuttonModel multibuttonModel)
+        public DownloadModel(InstanceFormModel instanceFormModel)
         {
-            _instanceClient = instanceModel;
-            _multibuttonModel = multibuttonModel;
+            _instanceFormModel = instanceFormModel;
         }
 
         #region methods
 
         public void DonwloadPrepare()
         {
-            _instanceClient.AddToLibrary();
-            _multibuttonModel.ChangeFuncProgressBar();
-            _isDownloadInProgress = true;
+            _instanceFormModel.InstanceClient.AddToLibrary();
+            _instanceFormModel.ButtonModel.ChangeFuncProgressBar();
+            IsDownloadInProgress = true;
 
             Lexplosion.Run.TaskRun(delegate
             {
-                _instanceClient.UpdateInstance(Download, InstanceDownloadCompleted);
+                _instanceFormModel.InstanceClient.UpdateInstance(Download, InstanceDownloadCompleted);
             });
         }
 
@@ -103,17 +100,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             if (downloadStageType == DownloadStageTypes.Java)
             {
-                //_instanceClient.OverviewField = "Идёт скачивание Java...";
+                _instanceFormModel.OverviewField = "Идёт скачивание Java...";
                 IsIndeterminate = false;
             }
             else if (downloadStageType == DownloadStageTypes.Prepare)
             {
-                //_instanceClient.OverviewField = "Идёт подготовка к запуску...";
+                _instanceFormModel.OverviewField = "Идёт подготовка к запуску...";
                 IsIndeterminate = true;
             }
             else
             {
-                //_instanceClient.OverviewField = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
+                _instanceFormModel.OverviewField = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
                 IsIndeterminate = false;
             }
         }
@@ -125,13 +122,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 case InstanceInit.Successful:
                     {
                         IsDownloadInProgress = false;
-                        _multibuttonModel.ChangeFuncPlay();
+                        _instanceFormModel.ButtonModel.ChangeFuncPlay();
                     }
                     break;
                 case InstanceInit.DownloadFilesError:
                     {
                         IsDownloadInProgress = false;
-                        _multibuttonModel.ChangeFuncDownload(true);
+                        _instanceFormModel.ButtonModel.ChangeFuncDownload(true);
                         foreach (var de in downloadErrors)
                         {
                             Console.WriteLine("InstanceClient Download Completed --- Error: " + de);
@@ -139,9 +136,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     }
                     break;
                 default:
+                    IsDownloadInProgress = false;
                     break;
             }
-            //_instanceClient.OverviewField = _instanceClient.Properties.InstanceAssets.description;
+            _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Description;
         }
 
         public void CancelInstanceDownload() 

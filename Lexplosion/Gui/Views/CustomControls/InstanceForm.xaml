@@ -135,7 +135,7 @@
                         <TextBlock
                             Grid.Column="0"
                             Grid.Row="0"
-                            Text="{Binding Model.InstanceClient.Description}"
+                            Text="{Binding Model.OverviewField}"
                             Foreground="#d5d5d5"
                             HorizontalAlignment="Left"
                             FontSize="16"
@@ -222,12 +222,12 @@
                             <Grid>
                                 <Path
                                     Stretch="Fill" 
-                                    Data="{Binding Model.ButtonModel.UpperIcon}"
                                     Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}"
                                     Fill="White"
                                     Stroke="White"
-                                    Width="20" 
-                                    Height="20" />
+                                    Data="{Binding Model.ButtonModel.UpperIcon.Geometry}"
+                                    Width="{Binding Model.ButtonModel.UpperIcon.Width}" 
+                                    Height="{Binding Model.ButtonModel.UpperIcon.Height}" />
                                 <TextBlock
                                     Foreground="White"
                                     Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
@@ -295,9 +295,9 @@
                                 Stretch="Fill" 
                                 Fill="White"
                                 Stroke="White"
-                                Data="{Binding Model.ButtonModel.LowerIcon}"
-                                Width="20" 
-                                Height="20" />
+                                Data="{Binding Model.ButtonModel.LowerIcon.Geometry}"
+                                Width="{Binding Model.ButtonModel.LowerIcon.Width}" 
+                                Height="{Binding Model.ButtonModel.LowerIcon.Height}" />
                         </Border>
                     </Grid>
                 </Grid>

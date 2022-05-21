@@ -1,22 +1,16 @@
 ﻿using Lexplosion.Gui.ViewModels;
-using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
     public class LaunchModel
     {
-        private InstanceClient _instanceModel;
-        private DownloadModel _downloadModel;
-        private MultibuttonModel _multibuttonModel;
+        private InstanceFormModel _formModel;
 
         public bool IsGameLaunched { get; set; }
 
-        public LaunchModel(InstanceClient instanceModel, DownloadModel downloadModel, MultibuttonModel multibuttonModel)
+        public LaunchModel(InstanceFormModel instanceFormModel)
         {
-            _instanceModel = instanceModel;
-            _downloadModel = downloadModel;
-            _multibuttonModel = multibuttonModel;
+            _formModel = instanceFormModel;
         }
 
         #region methods
@@ -25,10 +19,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             Lexplosion.Run.TaskRun(delegate
             {
-                //_instanceModel.IsDownloadingInstance = true;
-                _instanceModel.Run(_downloadModel.Download, _downloadModel.InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit);
+                _formModel.DownloadModel.IsDownloadInProgress = true;
+                _formModel.DownloadModel.IsIndeterminate = true;
+                _formModel.InstanceClient.Run(
+                    _formModel.DownloadModel.Download, _formModel.DownloadModel.InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit
+                    );
                 MainViewModel.IsInstanceRunning = true;
-                _multibuttonModel.ChangeFuncClose();
+                _formModel.ButtonModel.ChangeFuncClose();
             });
         }
 
@@ -41,12 +38,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
             else 
             {
             }
-            //_instanceModel.OverviewField = _instanceModel.Properties.InstanceAssets.description;
+            _formModel.OverviewField = _formModel.InstanceClient.Description;
         }
 
         public void InstanceGameExit(string id)
         {
-            _multibuttonModel.ChangeFuncPlay();
+            _formModel.ButtonModel.ChangeFuncPlay();
             MainViewModel.IsInstanceRunning = false;
         }
 

@@ -121,7 +121,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
                     MainModel.LibraryInstances.Add(
                         new InstanceFormViewModel(
-                            new InstanceClient(Model.Name ?? "CustomInstance", InstanceSource.Local, Model.SelectedVersion, Model.ModloaderType, SelectedModloaderVersion)
+                            new InstanceClient(Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion)
                         )
                     );
                 }));

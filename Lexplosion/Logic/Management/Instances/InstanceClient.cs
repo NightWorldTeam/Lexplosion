@@ -38,7 +38,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Summary { get; private set; }
         public bool InLibrary { get; private set; }
         public bool UpdateAvailable { get; private set; }
-        public bool IsInstalled { get; private set; } = true;
+        public bool IsInstalled { get; private set; } = false;
         #endregion
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     Name = name,
                     Type = type,
-                    NotDownloaded = false,
+                    NotDownloaded = true,
                 };
             }
 

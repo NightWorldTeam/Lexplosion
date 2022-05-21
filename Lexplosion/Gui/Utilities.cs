@@ -8,9 +8,9 @@ namespace Lexplosion.Gui
     {
         public static BitmapImage ToImage(byte[] array)
         {
-            if (array is null)
+            if (array is null || array.Length == 0)
                 return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
-            BitmapImage image = new BitmapImage();
+            var image = new BitmapImage();
             image.BeginInit();
             image.StreamSource = new System.IO.MemoryStream(array);
             image.EndInit();

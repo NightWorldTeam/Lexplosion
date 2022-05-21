@@ -27,11 +27,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 var instanceClient = (InstanceClient)obj;
 
-                if (!instanceClient.IsInstalled) {
+                if (instanceClient.IsInstalled) {
                     NavigationShowCaseCommand = new NavigateCommand<ShowCaseViewModel>(
                         MainViewModel.NavigationStore, () => new ShowCaseViewModel(instanceClient));
 
-                } else 
+                } 
+                else 
                 {
                     NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
                         MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceClient));
