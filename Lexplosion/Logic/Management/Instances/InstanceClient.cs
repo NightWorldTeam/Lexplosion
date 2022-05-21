@@ -41,6 +41,11 @@ namespace Lexplosion.Logic.Management.Instances
         public bool IsInstalled { get; private set; } = false;
         #endregion
 
+        /*public event ProgressHandlerCallback ProgressHandler;
+        public event ComplitedDownloadCallback ComplitedDownload;
+        public event ComplitedLaunchCallback ComplitedLaunch;
+        public event GameExitedCallback GameExited;*/
+
         /// <summary>
         /// Этот конструктор создаёт еще не установленную сборку. То есть используется для сборок из каталога
         /// </summary>
@@ -76,31 +81,27 @@ namespace Lexplosion.Logic.Management.Instances
             Type = type;
             GameVersion = gameVersion;
             InLibrary = true;
-            string localId = GenerateInstanceId();
+            _localId = GenerateInstanceId();
 
-            Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + localId);
+            CreateFileStruct(modloader, modloaderVersion);
+            _installedInstances[_localId] = this;
 
-            VersionManifest manifest = new VersionManifest
-            {
-                version = new VersionInfo
-                {
-                    gameVersion = gameVersion,
-                    modloaderVersion = modloaderVersion,
-                    modloaderType = modloader
-                }
-            };
+            SaveInstalledInstancesList();
+        }
 
-            _installedInstances[localId] = this;
-            DataFilesManager.SaveManifest(localId, manifest);
-
+        /// <summary>
+        /// Сохраняем список установленных сборок (библиотеку) в файл instanesList.json.
+        /// </summary>
+        private void SaveInstalledInstancesList()
+        {
             // деаем список всех установленных сборок
             var list = new InstalledInstancesFormat();
             foreach (var inst in _installedInstances.Keys)
             {
                 list[inst] = new InstalledInstance
                 {
-                    Name = name,
-                    Type = type,
+                    Name = Name,
+                    Type = Type,
                     NotDownloaded = true,
                 };
             }
@@ -178,6 +179,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
 
                         instance.InLibrary = true;
+                        instance.IsInstalled = true;
                         instance.CheckUpdates();
                         _installedInstances[localId] = instance;
                     }
@@ -192,7 +194,7 @@ namespace Lexplosion.Logic.Management.Instances
         public static List<InstanceClient> GetInstalledInstances()
         {
             var list = new List<InstanceClient>();
-            foreach(InstanceClient instance in _installedInstances.Values)
+            foreach (InstanceClient instance in _installedInstances.Values)
             {
                 list.Add(instance);
             }
@@ -398,6 +400,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void UpdateInstance(ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload)
         {
+            Console.WriteLine("download 0");
             ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
@@ -461,6 +464,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
 
                 InitData res = instance.Update(javaPath, ProgressHandler);
+                IsInstalled = (res.InitResult == InstanceInit.Successful);
                 Console.WriteLine("RESULT " + res.InitResult);
                 ComplitedDownload(res.InitResult, res.DownloadErrors, false);
             }
@@ -477,26 +481,13 @@ namespace Lexplosion.Logic.Management.Instances
         {
             ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
 
-            Dictionary<string, string> xmx = new Dictionary<string, string>();
-            xmx["eos"] = "2700";
-            xmx["tn"] = "2048";
-            xmx["oth"] = "2048";
-            xmx["lt"] = "512";
-
-            /*int k = 0;
-            int c = 0;
-            if (xmx.ContainsKey(instanceId) && int.TryParse(xmx[instanceId], out k) && int.TryParse(UserData.Settings["xmx"], out c))
-            {
-                if (c < k)
-                    MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
-            }*/
-
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
             InitData data = launchGame.Initialization(ProgressHandler);
 
             if (data.InitResult == InstanceInit.Successful)
             {
+                IsInstalled = true;
                 ComplitedDownload(data.InitResult, data.DownloadErrors, true);
 
                 launchGame.Run(data, ComplitedLaunch, GameExited);
@@ -516,7 +507,9 @@ namespace Lexplosion.Logic.Management.Instances
             if (!InLibrary)
             {
                 _localId = GenerateInstanceId();
+                CreateFileStruct(ModloaderType.None, "");
                 _installedInstances[_localId] = this;
+                SaveInstalledInstancesList();
             }
         }
 
@@ -632,6 +625,35 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             e.Set();
+        }
+
+        /// <summary>
+        /// Создает необходимую структуру файлов для сборки при её добавлении в библиотеку (ну при создании локальной)
+        /// </summary>
+        public void CreateFileStruct(ModloaderType modloader, string modloaderVersion)
+        {
+            Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + _localId);
+
+            VersionManifest manifest = new VersionManifest
+            {
+                version = new VersionInfo
+                {
+                    gameVersion = GameVersion,
+                    modloaderVersion = modloaderVersion,
+                    modloaderType = modloader
+                }
+            };
+            DataFilesManager.SaveManifest(_localId, manifest);
+
+            if (Type != InstanceSource.Local)
+            {
+                var instanceData = new InstancePlatformData
+                {
+                    id = _externalId
+                };
+
+                DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + _localId + "/instancePlatformData.json", JsonConvert.SerializeObject(instanceData));
+            }
         }
 
         public string GetDirectoryPath() => @"" + UserData.GeneralSettings.GamePath.Replace("/", @"\") + @"\instances\" + _localId;

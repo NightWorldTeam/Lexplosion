@@ -47,6 +47,7 @@ namespace Lexplosion.Logic.Management
 
             if (InfoData == null || InfoData.id == null || !Int32.TryParse(InfoData.id, out _))
             {
+                Console.WriteLine("GRSFHFHFGHGFHF " + InstanceId);
                 return InstanceInit.CursforgeIdError;
             }
 
