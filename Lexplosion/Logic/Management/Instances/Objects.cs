@@ -9,7 +9,7 @@ namespace Lexplosion.Logic.Management.Instances
     class InstalledInstance
     {
         public string Name;
-        public bool NotDownloaded;
+        public bool IsInstalled;
         public InstanceSource Type;
     }
 }

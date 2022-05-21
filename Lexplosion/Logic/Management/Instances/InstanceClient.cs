@@ -102,9 +102,9 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 list[inst] = new InstalledInstance
                 {
-                    Name = Name,
-                    Type = Type,
-                    NotDownloaded = true,
+                    Name = _installedInstances[inst].Name,
+                    Type = _installedInstances[inst].Type,
+                    IsInstalled = _installedInstances[inst].IsInstalled,
                 };
             }
 
