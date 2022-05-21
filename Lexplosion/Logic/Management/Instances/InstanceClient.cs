@@ -41,10 +41,10 @@ namespace Lexplosion.Logic.Management.Instances
         public bool IsInstalled { get; private set; } = false;
         #endregion
 
-        /*public event ProgressHandlerCallback ProgressHandler;
+        public event ProgressHandlerCallback ProgressHandler;
         public event ComplitedDownloadCallback ComplitedDownload;
         public event ComplitedLaunchCallback ComplitedLaunch;
-        public event GameExitedCallback GameExited;*/
+        public event GameExitedCallback GameExited;
 
         /// <summary>
         /// Этот конструктор создаёт еще не установленную сборку. То есть используется для сборок из каталога
@@ -398,10 +398,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
         /// </summary>
-        public void UpdateInstance(ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload)
+        public void UpdateInstance()
         {
             Console.WriteLine("download 0");
-            ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
+            ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(UserData.GeneralSettings, true);
@@ -434,15 +434,15 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                         {
-                            ProgressHandler(DownloadStageTypes.Java, 0, 0, 0);
+                            ProgressHandler?.Invoke(DownloadStageTypes.Java, 0, 0, 0);
                             bool downloadResult = javaCheck.Update(delegate (int percent)
                             {
-                                ProgressHandler(DownloadStageTypes.Java, 0, 0, percent);
+                                ProgressHandler?.Invoke(DownloadStageTypes.Java, 0, 0, percent);
                             });
 
                             if (!downloadResult)
                             {
-                                ComplitedDownload(InstanceInit.JavaDownloadError, null, false);
+                                ComplitedDownload?.Invoke(InstanceInit.JavaDownloadError, null, false);
                                 return;
                             }
                         }
@@ -453,7 +453,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         else
                         {
-                            ComplitedDownload(InstanceInit.JavaDownloadError, null, false);
+                            ComplitedDownload?.Invoke(InstanceInit.JavaDownloadError, null, false);
                             return;
                         }
                     }
@@ -466,20 +466,20 @@ namespace Lexplosion.Logic.Management.Instances
                 InitData res = instance.Update(javaPath, ProgressHandler);
                 IsInstalled = (res.InitResult == InstanceInit.Successful);
                 Console.WriteLine("RESULT " + res.InitResult);
-                ComplitedDownload(res.InitResult, res.DownloadErrors, false);
+                ComplitedDownload?.Invoke(res.InitResult, res.DownloadErrors, false);
             }
             else
             {
-                ComplitedDownload(result, null, false);
+                ComplitedDownload?.Invoke(result, null, false);
             }
         }
 
         /// <summary>
         /// Запускает сборку. Если надо её докачивает
         /// </summary>
-        public void Run(ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
+        public void Run()
         {
-            ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
+            ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
@@ -488,14 +488,14 @@ namespace Lexplosion.Logic.Management.Instances
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = true;
-                ComplitedDownload(data.InitResult, data.DownloadErrors, true);
+                ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
 
                 launchGame.Run(data, ComplitedLaunch, GameExited);
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
             else
             {
-                ComplitedDownload(data.InitResult, data.DownloadErrors, false);
+                ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
             }
         }
 

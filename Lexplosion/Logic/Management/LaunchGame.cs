@@ -73,7 +73,7 @@ namespace Lexplosion.Logic.Management
             gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
             Lexplosion.Run.AddImportantTask();
 
-            UserStatusSetter.GameStart(UserData.Instances.Record[_instanceId].Name);
+            UserStatusSetter.GameStart("Minecraft");
 
             if (_settings.ShowConsole == true)
             {
