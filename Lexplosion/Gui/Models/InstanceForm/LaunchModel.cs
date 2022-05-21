@@ -11,8 +11,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public LaunchModel(InstanceFormModel instanceFormModel)
         {
             _formModel = instanceFormModel;
+            instanceFormModel.InstanceClient.ComplitedLaunch += LaunchCompleted;
+            instanceFormModel.InstanceClient.GameExited += GameExited;
         }
-
         #region methods
 
         public void LaunchInstance()
@@ -21,15 +22,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
             {
                 _formModel.DownloadModel.IsDownloadInProgress = true;
                 _formModel.DownloadModel.IsIndeterminate = true;
-                _formModel.InstanceClient.Run(
-                    _formModel.DownloadModel.Download, _formModel.DownloadModel.InstanceDownloadCompleted, InstanceRunCompleted, InstanceGameExit
-                    );
+                _formModel.InstanceClient.Run();
                 MainViewModel.IsInstanceRunning = true;
                 _formModel.ButtonModel.ChangeFuncClose();
             });
         }
 
-        public void InstanceRunCompleted(string id, bool successful)
+        public void LaunchCompleted(string id, bool successful)
         {
             if (successful)
             {
@@ -41,7 +40,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _formModel.OverviewField = _formModel.InstanceClient.Description;
         }
 
-        public void InstanceGameExit(string id)
+        public void GameExited(string id)
         {
             _formModel.ButtonModel.ChangeFuncPlay();
             MainViewModel.IsInstanceRunning = false;

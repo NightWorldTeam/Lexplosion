@@ -75,6 +75,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public DownloadModel(InstanceFormModel instanceFormModel)
         {
             _instanceFormModel = instanceFormModel;
+            instanceFormModel.InstanceClient.ProgressHandler += Download;
+            instanceFormModel.InstanceClient.ComplitedDownload += InstanceDownloadCompleted;
         }
 
         #region methods
@@ -87,7 +89,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             Lexplosion.Run.TaskRun(delegate
             {
-                _instanceFormModel.InstanceClient.UpdateInstance(Download, InstanceDownloadCompleted);
+                _instanceFormModel.InstanceClient.UpdateInstance();
             });
         }
 
