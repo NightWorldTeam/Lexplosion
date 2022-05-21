@@ -25,6 +25,8 @@ namespace Lexplosion.Logic.Management.Instances
         private string _localId = null;
 
         private static Dictionary<string, InstanceClient> _installedInstances = new Dictionary<string, InstanceClient>();
+        // ключ - вншений id, значение - внутренний id
+        private static Dictionary<string, string> _externaLocalIdsPairs = new Dictionary<string, string>();
 
         //TODO: добавить настройки!
 
@@ -182,6 +184,7 @@ namespace Lexplosion.Logic.Management.Instances
                         instance.IsInstalled = true;
                         instance.CheckUpdates();
                         _installedInstances[localId] = instance;
+                        _externaLocalIdsPairs[externalID] = localId;
                     }
                 }
             }
@@ -222,28 +225,31 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     if (i < pageSize * (pageIndex + 1))
                     {
-                        var clientIinstance = new InstanceClient(InstanceSource.Nightworld, nwModpack)
+                        InstanceClient instanceClient;
+                        if (_externaLocalIdsPairs.ContainsKey(nwModpack))
                         {
-                            Name = nwInstances[nwModpack].Name ?? "Unknown name",
-                            Logo = null,
-                            Categories = nwInstances[nwModpack].Categories ?? new List<Category>(),
-                            GameVersion = nwInstances[nwModpack].GameVersion ?? "",
-                            Summary = nwInstances[nwModpack].Summary ?? "",
-                            Description = nwInstances[nwModpack].Description ?? "",
-                            Author = nwInstances[nwModpack].Author ?? "Unknown author"
-                        };
+                            instanceClient = _installedInstances[_externaLocalIdsPairs[nwModpack]];
+                            instanceClient.CheckUpdates();
+                        }
+                        else
+                        {
+                            instanceClient = new InstanceClient(InstanceSource.Nightworld, nwModpack)
+                            {
+                                Name = nwInstances[nwModpack].Name ?? "Unknown name",
+                                Logo = null,
+                                Categories = nwInstances[nwModpack].Categories ?? new List<Category>(),
+                                GameVersion = nwInstances[nwModpack].GameVersion ?? "",
+                                Summary = nwInstances[nwModpack].Summary ?? "",
+                                Description = nwInstances[nwModpack].Description ?? "",
+                                Author = nwInstances[nwModpack].Author ?? "Unknown author"
+                            };
+                        }
 
                         var e = new AutoResetEvent(false);
                         events.Add(e);
-                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, clientIinstance, nwInstances[nwModpack].MainImage });
+                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceClient, nwInstances[nwModpack].MainImage });
 
-                        clientIinstance.InLibrary = _installedInstances.ContainsKey(nwModpack);
-                        if (clientIinstance.InLibrary)
-                        {
-                            clientIinstance.CheckUpdates();
-                        }
-
-                        instances.Add(clientIinstance);
+                        instances.Add(instanceClient);
                     }
 
                     i++;
@@ -260,16 +266,25 @@ namespace Lexplosion.Logic.Management.Instances
                         author = instance.authors[0].name;
                     }
 
-                    var instanceClient = new InstanceClient(InstanceSource.Curseforge, instance.id.ToString())
+                    InstanceClient instanceClient;
+                    if (_externaLocalIdsPairs.ContainsKey(instance.id.ToString()))
                     {
-                        Name = instance.name ?? "Unknown name",
-                        Logo = null,
-                        Categories = instance.categories,
-                        GameVersion = (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0) ? instance.gameVersionLatestFiles[0].gameVersion : "",
-                        Summary = instance.summary ?? "",
-                        Description = instance.summary ?? "",
-                        Author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown author"
-                    };
+                        instanceClient = _installedInstances[_externaLocalIdsPairs[instance.id.ToString()]];
+                        instanceClient.CheckUpdates();
+                    }
+                    else
+                    {
+                        instanceClient = new InstanceClient(InstanceSource.Curseforge, instance.id.ToString())
+                        {
+                            Name = instance.name ?? "Unknown name",
+                            Logo = null,
+                            Categories = instance.categories,
+                            GameVersion = (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0) ? instance.gameVersionLatestFiles[0].gameVersion : "",
+                            Summary = instance.summary ?? "",
+                            Description = instance.summary ?? "",
+                            Author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown author"
+                        };
+                    }
 
                     if (instance.attachments != null && instance.attachments.Count > 0)
                     {
@@ -286,12 +301,6 @@ namespace Lexplosion.Logic.Management.Instances
                         var e = new AutoResetEvent(false);
                         events.Add(e);
                         ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceClient, url });
-                    }
-
-                    instanceClient.InLibrary = _installedInstances.ContainsKey(instance.id.ToString());
-                    if (instanceClient.InLibrary)
-                    {
-                        instanceClient.CheckUpdates();
                     }
 
                     instances.Add(instanceClient);
@@ -383,8 +392,8 @@ namespace Lexplosion.Logic.Management.Instances
                     return new InstanceData
                     {
                         Categories = new List<Category>(),
-                        Description = null,
-                        Summary = null,
+                        Description = "This modpack is not have description but you can add it.",
+                        Summary = "This modpack is not have description but you can add it.",
                         TotalDownloads = 0,
                         GameVersion = "",
                         LastUpdate = null,
