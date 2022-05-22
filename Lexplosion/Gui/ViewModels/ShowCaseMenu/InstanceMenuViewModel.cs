@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management.Instances;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -25,7 +26,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 _tabControlSelectedValue = value;
                 OnPropertyChanged(nameof(TabControlSelectedIndex));
                 if (value == Tabs.Count - 1)
+                {
+                    GC.Collect();
                     NavigationMainMenuCommand.Execute(null);
+                }
             }
         }
 
@@ -55,6 +59,20 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 }
             };
 
+            var _settingsTabs = new List<Tab>()
+            {
+                new Tab
+                {
+                    Header = "Игровые настройки",
+                    Content = new InstanceSettingsViewModel(instanceClient)
+                },
+                new Tab
+                {
+                    Header = "О Сборке",
+                    Content = null
+                },
+            };
+
             Tabs = new ObservableCollection<Tab>
             {
                 new Tab
@@ -62,10 +80,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     Header = "Обзор",
                     Content =  new TabMenuViewModel(_showCaseTabMenu, instanceClient.Name)
                 },
-                new Tab 
+                new Tab
                 {
                     Header = "Настройки",
-                    Content = new InstanceSettingsViewModel(instanceClient),
+                    Content = new TabMenuViewModel(_settingsTabs, "Настройки сборки"),
                 },
                 new Tab
                 {

@@ -16,7 +16,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
-                    <Grid Width="125">
+                    <Grid MinWidth="125">
                         <Grid.Background>
                             <SolidColorBrush Color="#191919" />
                         </Grid.Background>

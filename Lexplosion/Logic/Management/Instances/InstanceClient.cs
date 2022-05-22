@@ -25,8 +25,11 @@ namespace Lexplosion.Logic.Management.Instances
         private string _localId = null;
 
         private static Dictionary<string, InstanceClient> _installedInstances = new Dictionary<string, InstanceClient>();
-        // ключ - вншений id, значение - внутренний id
-        private static Dictionary<string, string> _externaLocalIdsPairs = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Содержит пары состоящие из внешнего и внутреннего id.
+        /// </summary>
+        private static Dictionary<string, string> _idsPairs = new Dictionary<string, string>();
 
         //TODO: добавить настройки!
 
@@ -49,10 +52,10 @@ namespace Lexplosion.Logic.Management.Instances
         public event GameExitedCallback GameExited;
 
         /// <summary>
-        /// Этот конструктор создаёт еще не установленную сборку. То есть используется для сборок из каталога
+        /// Этот конструктор создаёт еще не установленную сборку. Используется для сборок из каталога
         /// </summary>
-        /// <param name="type">Собста тип модпака</param>
-        /// <param name="externalID">Его внешний айдишник</param>
+        /// <param name="type">Тип модпака</param>
+        /// <param name="externalID">Внешний ID</param>
         private InstanceClient(InstanceSource type, string externalID)
         {
             Type = type;
@@ -60,20 +63,20 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Этот конструктор создаёт установленную сборку. То есть используется для сборок в библиотеке
+        /// Этот конструктор создаёт установленную сборку. Используется для сборок в библиотеке.
         /// </summary>
-        /// <param name="type">Собста тип модпака</param>
-        /// <param name="externalID">Его внешний айдишник</param>
-        /// /// <param name="externalID">Локальный айдишник</param>
+        /// <param name="type">Тип модпака</param>
+        /// <param name="externalID">Внешний ID</param>
+        /// <param name="externalID">Локальный ID</param>
         private InstanceClient(InstanceSource type, string externalID, string localId) : this(type, externalID)
         {
             _localId = localId;
         }
 
         /// <summary>
-        /// Этот конструктор создаёт локальную сборку. Должен использоваться соотвественно только при создании локлаьной сборки
+        /// Этот конструктор создаёт локальную сборку. Должен использоваться только при создании локлаьной сборки.
         /// </summary>
-        /// <param name="name">Имя сборки</param>
+        /// <param name="name">Название сборки</param>
         /// <param name="gameVersion">Версия игры</param>
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
@@ -133,7 +136,7 @@ namespace Lexplosion.Logic.Management.Instances
                             if (data != null)
                             {
                                 externalID = data.id;
-                                _externaLocalIdsPairs[externalID] = localId;
+                                _idsPairs[externalID] = localId;
                             }
                         }
 
@@ -191,7 +194,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Возвращает список модпаков для библиотки.
+        /// Возвращает список модпаков для библиотеки.
         /// </summary>
         /// <returns>Список установленных модпаков.</returns>
         public static List<InstanceClient> GetInstalledInstances()
@@ -226,9 +229,9 @@ namespace Lexplosion.Logic.Management.Instances
                     if (i < pageSize * (pageIndex + 1))
                     {
                         InstanceClient instanceClient;
-                        if (_externaLocalIdsPairs.ContainsKey(nwModpack))
+                        if (_idsPairs.ContainsKey(nwModpack))
                         {
-                            instanceClient = _installedInstances[_externaLocalIdsPairs[nwModpack]];
+                            instanceClient = _installedInstances[_idsPairs[nwModpack]];
                             instanceClient.CheckUpdates();
                         }
                         else
@@ -267,9 +270,9 @@ namespace Lexplosion.Logic.Management.Instances
                     }
 
                     InstanceClient instanceClient;
-                    if (_externaLocalIdsPairs.ContainsKey(instance.id.ToString()))
+                    if (_idsPairs.ContainsKey(instance.id.ToString()))
                     {
-                        instanceClient = _installedInstances[_externaLocalIdsPairs[instance.id.ToString()]];
+                        instanceClient = _installedInstances[_idsPairs[instance.id.ToString()]];
                         instanceClient.CheckUpdates();
                     }
                     else
@@ -318,9 +321,10 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Получает всю инфу о модпаке.
+        /// Получает всю информацию о модпаке.
         /// </summary>
-        /// <returns>InstanceData, содержащий в ебе данные на все случаи жизни</returns>
+        /// <returns>InstanceData, содержащий в себе данные которые могут потребоваться</returns>
+
         public InstanceData GetFullInfo()
         {
             switch (Type)
