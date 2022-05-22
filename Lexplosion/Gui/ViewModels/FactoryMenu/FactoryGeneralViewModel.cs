@@ -117,13 +117,12 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 return _createInstance ?? (new RelayCommand(obj =>
                 {
-                    NavigationMainMenuCommand.Execute(null);
+                NavigationMainMenuCommand.Execute(null);
 
-                    MainModel.LibraryInstances.Add(
-                        new InstanceFormViewModel(
-                            new InstanceClient(Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion)
-                        )
-                    );
+                var instanceClient = new InstanceClient(
+                    Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion);
+
+                    MainModel.LibraryInstances.Add(instanceClient, new InstanceFormViewModel(instanceClient));
                 }));
             }
         }

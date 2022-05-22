@@ -55,10 +55,7 @@ namespace Lexplosion.Gui.ViewModels
         #region commands
         public RelayCommand CloseCommand 
         {
-            get => _closeCommand ?? (_closeCommand = new RelayCommand(obj => 
-            {
-                Run.Exit();
-            }));
+            get => _closeCommand ?? (_closeCommand = new RelayCommand(obj => Run.Exit()));
         }
 
         public RelayCommand HideCommand 
@@ -73,7 +70,7 @@ namespace Lexplosion.Gui.ViewModels
         public MainViewModel()
         {
             Model = new MainModel();
-            NavigationStore.CurrentViewModel = new AuthViewModel(this, InstancesLoading);
+            NavigationStore.CurrentViewModel = new AuthViewModel(this, LibraryInstanceLoading);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
         }
 
@@ -83,14 +80,12 @@ namespace Lexplosion.Gui.ViewModels
             OnPropertyChanged(nameof(CurrentViewModel));
         }
 
-        private void InstancesLoading()
+        private void LibraryInstanceLoading()
         {
             foreach (var instanceClient in InstanceClient.GetInstalledInstances()) 
             { 
                 MainModel.LibraryInstances.Add(
-                    new InstanceFormViewModel(
-                        instanceClient
-                    )
+                    instanceClient, new InstanceFormViewModel(instanceClient)
                 );
             }
         }

@@ -101,6 +101,7 @@
     <Compile Include="Gui\Constants.cs" />
     <Compile Include="Gui\Helpers\AsyncObservableCollection.cs" />
     <Compile Include="Gui\Helpers\GridHelper.cs" />
+    <Compile Include="Gui\Helpers\ObservableDictionary.cs" />
     <Compile Include="Gui\Helpers\PasswordBoxHelper.cs" />
     <Compile Include="Gui\Helpers\TextBoxHelper.cs" />
     <Compile Include="Gui\IPaginable.cs" />

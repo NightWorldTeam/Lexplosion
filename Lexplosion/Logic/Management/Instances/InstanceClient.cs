@@ -43,7 +43,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Summary { get; private set; }
         public bool InLibrary { get; private set; }
         public bool UpdateAvailable { get; private set; }
-        public bool IsInstalled { get; private set; } = false;
+        public bool IsInstalled { get; private set; } = true;
         #endregion
 
         public event ProgressHandlerCallback ProgressHandler;

@@ -38,7 +38,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             };
             LaunchModel = new LaunchModel(this);
 
-            if (InstanceClient.IsInstalled)
+            if (InstanceClient.IsInstalled && InstanceClient.InLibrary)
             {
                 ButtonModel.ChangeFuncPlay();
             }

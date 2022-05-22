@@ -52,14 +52,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                         InstanceForms.Clear();
                         foreach (var instance in instances)
                         {
-                            //if (LibraryOutsideIds.Contains(""))
-                            //{
-                            //    InstanceForms.Add(MainModel.GetSpecificVM(""));
-                            //}
-                            //else
-                            //{
-                            InstanceForms.Add(new InstanceFormViewModel(instance));
-                            //}
+                            if (MainModel.LibraryInstances.ContainsKey(instance))
+                            {
+                                InstanceForms.Add(MainModel.LibraryInstances[instance]);
+                            }
+                            else
+                            {
+                                InstanceForms.Add(new InstanceFormViewModel(instance));
+                            }
                         }
                     });
 

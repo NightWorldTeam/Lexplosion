@@ -10,6 +10,8 @@ namespace Lexplosion.Gui.ViewModels
         private RelayCommand _upperBtnCommand;
         private RelayCommand _lowerBtnCommand;
 
+        private InstanceClient _instanceClient;
+
         public InstanceFormModel Model { get; }
 
         public RelayCommand UpperBtnCommand
@@ -19,8 +21,8 @@ namespace Lexplosion.Gui.ViewModels
                 switch ((UpperButtonFunc)obj) 
                 {
                     case UpperButtonFunc.Download:
-                        //if (!MainModel.LibraryInstances.Contains(MainModel.GetSpecificVM(Model.InstanceClient.OutsideId)))
-                        //    MainModel.LibraryInstances.Add(this);
+                        if (!MainModel.LibraryInstances.ContainsKey(_instanceClient))
+                            MainModel.LibraryInstances.Add(_instanceClient, this);
                         Model.DownloadModel.DonwloadPrepare();
                         break;
                     case UpperButtonFunc.ProgressBar:
@@ -61,6 +63,7 @@ namespace Lexplosion.Gui.ViewModels
         public InstanceFormViewModel(InstanceClient instanceClient)
         {
             Model = new InstanceFormModel(instanceClient);
+            _instanceClient = instanceClient;
         }
     }
 }
