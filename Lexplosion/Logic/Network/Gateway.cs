@@ -219,7 +219,7 @@ namespace Lexplosion.Logic.Network
         {
             try { ServerSimulatorThread.Abort(); } catch { }
             try { ClientSimulatorThread.Abort(); } catch { }
-            try { InformingThread.Abort(); } catch { }
+            try { if (InformingThread != null) InformingThread.Abort(); } catch { }
 
             if (Server != null)
             {

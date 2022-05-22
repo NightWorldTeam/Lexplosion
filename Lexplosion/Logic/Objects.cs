@@ -4,13 +4,6 @@ using System.Windows.Media.Imaging;
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects // TODO: позаменять классы на структуры
 {
-    public class InstanceProperties : OutsideInstance
-    {
-        public BitmapImage Logo { get; set; }
-        public bool IsInstanceAddedToLibrary;
-        public bool IsDownloadingInstance;
-    }
-
     /// <summary>
     /// Асесты модпака на главной странице (описание, картинки)
     /// </summary>
@@ -37,7 +30,7 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string Name { get; set; }
         public InstanceSource Type;
         public bool UpdateAvailable;
-        public bool IsInstalled { get; set; } = true;
+        public bool IsInstalled { get; set; }
     }
 
     public class OutsideInstance : InstanceParametrs

@@ -31,8 +31,6 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         private static Dictionary<string, string> _idsPairs = new Dictionary<string, string>();
 
-        //TODO: добавить настройки!
-
         #region info
         public string Name { get; private set; }
         public string Author { get; private set; }
@@ -115,6 +113,9 @@ namespace Lexplosion.Logic.Management.Instances
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instanesList.json", JsonConvert.SerializeObject(list));
         }
 
+        /// <summary>
+        /// Заполняет список установленных сборок. Вызывается 1 раз, в Main при запуске лаунчера
+        /// </summary>
         public static void DefineInstalledInstances()
         {
             var list = DataFilesManager.GetFile<InstalledInstancesFormat>(WithDirectory.DirectoryPath + "/instanesList.json");
@@ -162,9 +163,9 @@ namespace Lexplosion.Logic.Management.Instances
                             instance = new InstanceClient(list[localId].Type, externalID, localId)
                             {
                                 Name = list[localId].Name ?? "Unknown name",
-                                Summary = assetsData.Summary ?? "",
+                                Summary = assetsData.Summary ?? "This modpack is not have description but you can add it.",
                                 Author = assetsData.author ?? "Unknown author",
-                                Description = assetsData.description ?? "",
+                                Description = assetsData.description ?? "This modpack is not have description but you can add it.",
                                 Categories = assetsData.categories ?? new List<Category>(),
                                 GameVersion = "1.10.2",
                                 Logo = logo
@@ -175,9 +176,9 @@ namespace Lexplosion.Logic.Management.Instances
                             instance = new InstanceClient(list[localId].Type, externalID, localId)
                             {
                                 Name = list[localId].Name ?? "Unknown name",
-                                Summary = "",
+                                Summary = "This modpack is not have description but you can add it.",
                                 Author = "Unknown author",
-                                Description = "",
+                                Description = "This modpack is not have description but you can add it.",
                                 Categories = new List<Category>(),
                                 GameVersion = "1.10.2",
                                 Logo = logo
@@ -191,6 +192,13 @@ namespace Lexplosion.Logic.Management.Instances
                     }
                 }
             }
+        }
+
+        public void SetAssets(InstanceAssets assets)
+        {
+            Description = assets.description;
+            Author = assets.author;
+            Summary = assets.Summary;
         }
 
         /// <summary>
@@ -324,7 +332,6 @@ namespace Lexplosion.Logic.Management.Instances
         /// Получает всю информацию о модпаке.
         /// </summary>
         /// <returns>InstanceData, содержащий в себе данные которые могут потребоваться</returns>
-
         public InstanceData GetFullInfo()
         {
             switch (Type)
@@ -413,7 +420,6 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void UpdateInstance()
         {
-            Console.WriteLine("download 0");
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
@@ -488,7 +494,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Запускает сборку. Если надо её докачивает
+        /// Запускает сборку. Если надо её докачивает. Сборка должна быть доавлена в библиотеку
         /// </summary>
         public void Run()
         {
@@ -643,7 +649,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Создает необходимую структуру файлов для сборки при её добавлении в библиотеку (ну при создании локальной)
         /// </summary>
-        public void CreateFileStruct(ModloaderType modloader, string modloaderVersion)
+        private void CreateFileStruct(ModloaderType modloader, string modloaderVersion)
         {
             Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + _localId);
 
@@ -669,7 +675,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        public string GetDirectoryPath() => @"" + UserData.GeneralSettings.GamePath.Replace("/", @"\") + @"\instances\" + _localId;
+        public string GetDirectoryPath() => @"" + WithDirectory.DirectoryPath.Replace("/", @"\") + @"\instances\" + _localId;
 
         public Settings GetSettings() => DataFilesManager.GetSettings(_localId);
 
