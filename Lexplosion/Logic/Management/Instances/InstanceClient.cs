@@ -27,7 +27,7 @@ namespace Lexplosion.Logic.Management.Instances
         private static Dictionary<string, InstanceClient> _installedInstances = new Dictionary<string, InstanceClient>();
 
         /// <summary>
-        /// Содержит пары состоящие из внешнего и внутреннего id.
+        /// Содержит пары состоящие из внешнего и внутреннего id. Ключ - внешний id. Значение соответсвенно внтурннийю
         /// </summary>
         private static Dictionary<string, string> _idsPairs = new Dictionary<string, string>();
 
@@ -528,6 +528,7 @@ namespace Lexplosion.Logic.Management.Instances
                 _localId = GenerateInstanceId();
                 CreateFileStruct(ModloaderType.None, "");
                 _installedInstances[_localId] = this;
+                _idsPairs[_externalId] = _localId;
                 SaveInstalledInstancesList();
             }
         }
