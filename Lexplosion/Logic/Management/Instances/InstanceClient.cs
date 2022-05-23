@@ -528,6 +528,7 @@ namespace Lexplosion.Logic.Management.Instances
                 _localId = GenerateInstanceId();
                 CreateFileStruct(ModloaderType.None, "");
                 _installedInstances[_localId] = this;
+                _idsPairs[_externalId] = _localId;
                 SaveInstalledInstancesList();
             }
         }
