@@ -18,10 +18,10 @@
     <gui:MultiBindingConverter x:Key="MultiBiningConverter"/>
     <gui:BooleanToColorConverter x:Key="BooleanToColorConverter" />
     <gui:BytesToBitmapImageConventer x:Key="BytesToBitmapImageConverter" />
+    <viewmodels:MainViewModel x:Key="MainVM" />
 
 
     <models:MainModel x:Key="MainModel"/>
-    <vmmainmenu:MainMenuViewModel x:Key="MainMenuViewModel"/>
 
     <!--<DataTemplate DataType="{x:Type viewmodels:InstanceFormViewModel}">
         <customcontrols:InstanceForm  Margin="4,30,30,0"/>

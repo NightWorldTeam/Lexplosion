@@ -2,18 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu" 
-             xmlns:showcasemenu="clr-namespace:Lexplosion.Gui.ViewModels.ShowCaseMenu"
-             xmlns:objects="clr-namespace:Lexplosion.Logic.Objects" xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:objects="clr-namespace:Lexplosion.Logic.Objects" 
+             xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450"
              d:DesignWidth="700">
-
-    <!--<UserControl.DataContext>
-        <showcasemenu:OverviewViewModel />
-    </UserControl.DataContext>-->
-
+    
     <UserControl.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="White" />

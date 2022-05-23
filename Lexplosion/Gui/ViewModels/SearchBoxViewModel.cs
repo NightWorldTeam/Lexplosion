@@ -10,7 +10,8 @@ namespace Lexplosion.Gui.ViewModels
         private string _searchTextComfirmed = string.Empty;
         private string _currentSearchText = string.Empty;
 
-        private Action _searchChangedAction;
+        public delegate void SearchChangedCallback();
+        public event SearchChangedCallback SearchChanged;
 
         private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
         private int _selectedSourceIndex = 1;
@@ -31,8 +32,8 @@ namespace Lexplosion.Gui.ViewModels
             get => _selectedInstanceSource; set
             {
                 _selectedInstanceSource = value;
+                SearchChanged.Invoke();
                 OnPropertyChanged(nameof(SelectedInstanceSource));
-                _searchChangedAction();
             }
         }
 
@@ -49,7 +50,7 @@ namespace Lexplosion.Gui.ViewModels
                     }
                     else
                         _currentSearchText = "";
-                    _searchChangedAction();
+                    SearchChanged.Invoke();
                 }
             }));
         }
@@ -80,11 +81,6 @@ namespace Lexplosion.Gui.ViewModels
                 if (value == 1) SelectedInstanceSource = InstanceSource.Curseforge;
                 OnPropertyChanged(nameof(SelectedSourceIndex));
             }
-        }
-
-        public SearchBoxViewModel(Action action)
-        {
-            _searchChangedAction = action;
         }
     }
 }

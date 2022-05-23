@@ -26,12 +26,12 @@
         <ListBox Style="{StaticResource LibraryListBox}" ItemContainerStyle="{StaticResource LibraryListBoxItem}">
             <ListBox.ItemsSource>
                 <CompositeCollection>
-                    <CollectionContainer Collection="{Binding Source={StaticResource MainModel}, Path=LibraryInstances.Values}"/>
+                    <CollectionContainer Collection="{Binding LibraryInstances.Values, Source={StaticResource MainModel}}"/>
                     <ListBoxItem Style="{StaticResource LibraryListBoxItem}" 
                                  Margin="30,15,30,0" 
                                  HorizontalContentAlignment="Center">
                         <Button Style="{StaticResource LibraryAddBtn}"
-                                Command="{Binding Source={StaticResource MainMenuViewModel}, Path=NavigationFactoryCommand}"
+                                Command="{Binding MainMenuViewModel.NavigationFactoryCommand, Source={StaticResource MainVM}}"
                                 Content="Добавить сборку" Width="620" Height="120"/>
                     </ListBoxItem>
                 </CompositeCollection>

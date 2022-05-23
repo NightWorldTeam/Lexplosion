@@ -43,6 +43,7 @@ namespace Lexplosion
         {
             app.Run(new SplashWindow());
         }
+
         private static void InitializedSystem()
         {
             // получем количество процессов с таким же именем
@@ -111,7 +112,7 @@ namespace Lexplosion
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri("pack://application:,,,/DataTemplateDictionary.xaml")
+                Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
 
             //OutsideDataManager.DefineInstances();
@@ -120,12 +121,14 @@ namespace Lexplosion
 
             app.Dispatcher.Invoke(() =>
             {
-                var authWindow = new MainWindow();
-                authWindow.Left = app.MainWindow.Left - 97;
-                authWindow.Top = app.MainWindow.Top - 39;
-                authWindow.Show();
+                var mainWindow = new MainWindow()
+                {
+                    Left = app.MainWindow.Left - 97,
+                    Top = app.MainWindow.Top - 39
+                };
+                mainWindow.Show();
                 app.MainWindow.Close();
-                app.MainWindow = authWindow;
+                app.MainWindow = mainWindow;
             });
         }
 

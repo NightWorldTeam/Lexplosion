@@ -2,6 +2,7 @@
 using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
 using Lexplosion.Logic.Management.Instances;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -10,8 +11,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 {
     public class MainMenuViewModel : SubmenuViewModel
     {
-        private readonly CatalogViewModel _catalogVM;
-        private readonly LibraryViewModel _libraryVM;
+        private readonly CatalogViewModel _catalogVM = new CatalogViewModel();
+        private readonly LibraryViewModel _libraryVM = new LibraryViewModel();
         //private readonly CatalogViewModel _catalogVM;
         private readonly TabMenuViewModel _tabMenuViewModel;
 
@@ -62,12 +63,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public MainMenuViewModel()
         {
+            Console.WriteLine(22);
             NavigationFactoryCommand = new NavigateCommand<InstanceFactoryViewModel>(
                  MainViewModel.NavigationStore, () => new InstanceFactoryViewModel());
 
-            _catalogVM = new CatalogViewModel();
-            _libraryVM = new LibraryViewModel();
-            //_catalogVM = new CatalogViewModel();
             _tabMenuViewModel = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");
 
             Tabs = new ObservableCollection<Tab>

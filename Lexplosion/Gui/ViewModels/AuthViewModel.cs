@@ -14,7 +14,7 @@ namespace Lexplosion.Gui.ViewModels
         private string _password = "";
         private bool _isSaveMe = false;
 
-        private MainViewModel _model;
+        private readonly MainViewModel _model;
         private Action _libraryInstancesLoading;
         private RelayCommand _signUpCommand;
 

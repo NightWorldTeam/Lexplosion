@@ -3,16 +3,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
         mc:Ignorable="d"
-        Width="944" Height="528"
-        ResizeMode="NoResize" Icon="pack://application:,,,/Assets/images/icons/logo.ico"
-        Title="NightWorld"
+        Width="944" 
+        Height="528"
+        ResizeMode="NoResize"
+        Icon="pack://application:,,,/Assets/images/icons/logo.ico"
         AllowsTransparency="False" WindowStyle="None">
-    
-    <Window.DataContext>
-        <viewmodels:MainViewModel />
-    </Window.DataContext>
 
     <Window.Background>
         <SolidColorBrush Color="#18191b" />
@@ -44,7 +40,7 @@
                         Height="28" 
                         Grid.Column="4" 
                         Style="{StaticResource CBSG}"
-                        Command="{Binding HideCommand}"
+                        Command="{Binding HideCommand, Source={StaticResource MainVM}}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
                     <Canvas>
                         <Line X1="0" Y1="0" Y2="0" X2="12.5" Canvas.Left="8" Canvas.Top="15" Stroke="LightGray" StrokeThickness="0.5"/>
@@ -54,7 +50,7 @@
                         Height="28" 
                         Grid.Column="5" 
                         Style="{StaticResource CBSG}" 
-                        Command="{Binding CloseCommand}">
+                        Command="{Binding CloseCommand, Source={StaticResource MainVM}}">
                     <Canvas>
                         <Line X1="1" Y1="0" X2="13" Y2="13" Canvas.Left="7" Canvas.Top="8" Stroke="LightGray" StrokeThickness="0.5"/>
                         <Line X1="1" Y1="13" X2="13" Y2="0" Canvas.Left="7" Canvas.Top="8" Stroke="LightGray" StrokeThickness="0.5"/>
@@ -65,8 +61,8 @@
         <!-- Custom Menu -->
         <ContentControl 
             Grid.Row="1"
-            Content="{Binding CurrentViewModel}" />
-        <Border Visibility="{Binding IsAuthorized, Converter={StaticResource ConvertBoolToVisibility}}"
+            Content="{Binding CurrentViewModel, Source={StaticResource MainVM}}" />
+        <Border Visibility="{Binding IsAuthorized, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}"
                 Grid.Row="1" VerticalAlignment="Bottom" 
                 HorizontalAlignment="Left" Background="#151719"
                 Width="248" Height="34">
@@ -86,7 +82,7 @@
                            TextAlignment="Center" 
                            Width="120" Height="23" 
                            Foreground="#fff"
-                           Text="{Binding Nickname}"/>
+                           Text="{Binding Nickname, Source={StaticResource MainVM}}"/>
                 <Button Grid.Column="2" Content="Logout"
                         Command="" Background="Transparent" 
                         Style="{StaticResource LogoutButton}"
@@ -105,8 +101,5 @@
                 </Button>
             </Grid>
         </Border>
-        <ContentControl 
-            Grid.Row="1"
-            Content="{Binding CurrentViewModel}" />
     </Grid>
 </Window>

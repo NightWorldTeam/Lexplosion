@@ -18,6 +18,9 @@ namespace Lexplosion.Gui.ViewModels
 
         private InstanceSource _source;
 
+        public delegate void PageChangedCallback();
+        public event PageChangedCallback PageChanged;
+
         private bool _isLoaded;
 
         public bool IsLoaded
@@ -27,13 +30,6 @@ namespace Lexplosion.Gui.ViewModels
                 _isLoaded = value;
                 OnPropertyChanged(nameof(IsLoaded));
             }
-        }
-
-        private Action _pageIndexChangedAction;
-
-        public PaginatorViewModel(Action action)
-        {
-            _pageIndexChangedAction = action;
         }
 
         public RelayCommand NextPageCommand
@@ -86,8 +82,8 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _pageIndex = value;
                 PageNum = value++;
+                PageChanged?.Invoke();
                 OnPropertyChanged(nameof(PageIndex));
-                _pageIndexChangedAction();
             }
         }
 

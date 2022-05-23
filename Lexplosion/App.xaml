@@ -35,7 +35,7 @@
                 <ResourceDictionary Source="/Gui/Resources/ListboxStyles.xaml" />
                 <ResourceDictionary Source="/Gui/Resources/StylesDictionary.xaml" />
                 <ResourceDictionary Source="/Gui/Resources/ComboBoxStyles.xaml" />
-                <ResourceDictionary Source="DataTemplateDictionary.xaml" />
+                <ResourceDictionary Source="DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

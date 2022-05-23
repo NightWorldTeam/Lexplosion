@@ -2,12 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             xmlns:objects="clr-namespace:Lexplosion" 
-             xmlns:factorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu"
-             xmlns:helpers="clr-namespace:Lexplosion.Gui.Helpers"
+             xmlns:objects="clr-namespace:Lexplosion"
              d:DesignHeight="450" d:DesignWidth="700">
     <UserControl.Resources>
         <!-- TextBlock -->
