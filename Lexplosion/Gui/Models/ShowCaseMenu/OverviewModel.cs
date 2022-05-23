@@ -31,10 +31,10 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
 
         public GalleryViewModel GalleryVM { get; }
 
-        public OverviewModel(InstanceClient instanceClient)
+        public OverviewModel(InstanceClient instanceClient, ISubmenu submenuViewModel)
         {
             InstanceData = instanceClient.GetFullInfo();
-            GalleryVM = new GalleryViewModel(InstanceData.Images);
+            GalleryVM = new GalleryViewModel(InstanceData.Images, submenuViewModel);
         }
     }
 }

@@ -10,11 +10,17 @@ namespace Lexplosion.Gui
         {
             if (array is null || array.Length == 0)
                 return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = new System.IO.MemoryStream(array);
-            image.EndInit();
-            return image;
+
+            using (var stream = new System.IO.MemoryStream(array)) 
+            {
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.StreamSource = stream;
+                image.EndInit();
+                image.Freeze();
+                return image;
+            }
         }
 
         public static BitmapImage GetImage(string path)

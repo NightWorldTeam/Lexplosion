@@ -76,10 +76,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             });
         }
 
-        public OverviewViewModel(InstanceClient instanceClient)
+        public OverviewViewModel(InstanceClient instanceClient, ISubmenu submenuViewModel)
         {
             Lexplosion.Run.TaskRun(() => { 
-                OverviewModel = new OverviewModel(instanceClient);
+                OverviewModel = new OverviewModel(instanceClient, submenuViewModel);
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
                 IsLoaded = false;
             });

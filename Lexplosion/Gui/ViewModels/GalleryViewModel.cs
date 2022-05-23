@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 
@@ -106,8 +107,9 @@ namespace Lexplosion.Gui.ViewModels
         #endregion 
 
         public ObservableCollection<BitmapImage> Images { get; } = new ObservableCollection<BitmapImage>();
-        public GalleryViewModel(List<byte[]> images)
+        public GalleryViewModel(List<byte[]> images, ISubmenu submenuViewModel)
         {
+            submenuViewModel.NavigationToMainMenu += ClearGallery;
             App.Current.Dispatcher.Invoke(() => {
                 foreach (var i in images)
                     Images.Add(Utilities.ToImage(i));
@@ -123,6 +125,14 @@ namespace Lexplosion.Gui.ViewModels
                 }
                 if (Images.Count == 1) IsRightBorder = true;
             });
+        }
+
+        public void ClearGallery() 
+        {
+            for (var i = 0; i < Images.Count; i++) 
+            {
+                Images[i] = null;
+            }
         }
     }
 }

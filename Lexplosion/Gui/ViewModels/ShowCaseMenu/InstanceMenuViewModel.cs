@@ -1,20 +1,25 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management.Instances;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
-    public class InstanceMenuViewModel : SubmenuViewModel
+    public class InstanceMenuViewModel : SubmenuViewModel, ISubmenu
     {
         private int _tabControlSelectedValue;
         private List<Tab> _showCaseTabMenu;
 
+        public event ISubmenu.NavigationToMenuCallBack NavigationToMainMenu;
+
         #region commands
-        public ICommand NavigationMainMenuCommand { get; }
+        public ICommand NavigationMainMenuCommand
+        {
+            get => new NavigateCommand<MainMenuViewModel>(
+                MainViewModel.NavigationStore, () => { NavigationToMainMenu?.Invoke(); return MainViewModel.MainMenuVM; });
+        }
         #endregion
 
         #region props
@@ -27,7 +32,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 OnPropertyChanged(nameof(TabControlSelectedIndex));
                 if (value == Tabs.Count - 1)
                 {
-                    GC.Collect();
                     NavigationMainMenuCommand.Execute(null);
                 }
             }
@@ -37,15 +41,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public InstanceMenuViewModel(InstanceClient instanceClient)
         {
-            NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
-                MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
-
             _showCaseTabMenu = new List<Tab>()
             {
                 new Tab()
                 {
                     Header = "Overview",
-                    Content = new OverviewViewModel(instanceClient)
+                    Content = new OverviewViewModel(instanceClient, this)
                 },
                 new Tab()
                 {

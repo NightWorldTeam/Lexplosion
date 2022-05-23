@@ -7,12 +7,24 @@ using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
-    public class ShowCaseViewModel : SubmenuViewModel
+    public class ShowCaseViewModel : SubmenuViewModel, ISubmenu
     {
+        public event ISubmenu.NavigationToMenuCallBack NavigationToMainMenu;
 
-        public ICommand NavigationMainMenuCommand { get; }
+        public ICommand NavigationMainMenuCommand 
+        { 
+            get => 
+                new NavigateCommand<MainMenuViewModel>(
+                    MainViewModel.NavigationStore, () => 
+                    { 
+                        NavigationToMainMenu?.Invoke();
+                        return MainViewModel.MainMenuVM; 
+                    }
+                ); 
+        }
 
         private int _tabControlSelectedValue;
+        private List<Tab> _showCaseTabMenu;
 
         public int TabControlSelectedIndex
         {
@@ -25,20 +37,17 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     NavigationMainMenuCommand.Execute(null);
             }
         }
-
-        private List<Tab> _showCaseTabMenu;
+        
 
         public ShowCaseViewModel(InstanceClient instanceClient)
         {
-           NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
-                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
 
             _showCaseTabMenu = new List<Tab>()
             {
                 new Tab()
                 {
                     Header = "Overview",
-                    Content = new OverviewViewModel(instanceClient)
+                    Content = new OverviewViewModel(instanceClient, this)
                 },
                 new Tab()
                 {
