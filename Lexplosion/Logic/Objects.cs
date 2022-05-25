@@ -25,25 +25,6 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public string name { get; set; }
     }
 
-    public class InstanceParametrs
-    {
-        public string Name { get; set; }
-        public InstanceSource Type;
-        public bool UpdateAvailable;
-        public bool IsInstalled { get; set; }
-    }
-
-    public class OutsideInstance : InstanceParametrs
-    {
-        public string Id; // id от Type
-        public string LocalId; // айди созданой в лаунчере сборки
-        public InstanceAssets InstanceAssets { get; set; }
-        public byte[] MainImage;
-        public List<Category> Categories { get; set; }
-        public float DownloadCount { get; set; }
-        public string GameVersion { get; set; }
-    }
-
     /// <summary>
     /// Этот класс хранят инфу об установленном с курсфорджа аддоне
     /// </summary>
