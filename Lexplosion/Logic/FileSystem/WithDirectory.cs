@@ -208,214 +208,214 @@ namespace Lexplosion.Logic.FileSystem
             return updates;
         }
 
-        public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
-        {
-            // TODO: удалять временную папку в конце
-            string targetDir = CreateTempDir() + instanceId + "-export"; //временная папка, куда будем копировать все файлы
-            string srcDir = DirectoryPath + "/instances/" + instanceId;
+        //public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
+        //{
+        //    // TODO: удалять временную папку в конце
+        //    string targetDir = CreateTempDir() + instanceId + "-export"; //временная папка, куда будем копировать все файлы
+        //    string srcDir = DirectoryPath + "/instances/" + instanceId;
 
-            try
-            {
-                if (Directory.Exists(targetDir))
-                {
-                    Directory.Delete(targetDir, true);
-                }
-            }
-            catch
-            {
-                return ExportResult.TempPathError;
-            }
+        //    try
+        //    {
+        //        if (Directory.Exists(targetDir))
+        //        {
+        //            Directory.Delete(targetDir, true);
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        return ExportResult.TempPathError;
+        //    }
 
-            foreach (string dirUnit_ in directoryList)
-            {
-                string dirUnit = dirUnit_.Replace(@"\", "/"); //адрес исходного файла
-                string target = dirUnit.Replace(srcDir, targetDir + "/files"); //адрес этого файла во временной папке
-                string finalPath = target.Substring(0, target.LastIndexOf("/")); //адрес временной папки, где будет храниться этот файл
+        //    foreach (string dirUnit_ in directoryList)
+        //    {
+        //        string dirUnit = dirUnit_.Replace(@"\", "/"); //адрес исходного файла
+        //        string target = dirUnit.Replace(srcDir, targetDir + "/files"); //адрес этого файла во временной папке
+        //        string finalPath = target.Substring(0, target.LastIndexOf("/")); //адрес временной папки, где будет храниться этот файл
 
-                try
-                {
-                    if (!Directory.Exists(finalPath))
-                    {
-                        Directory.CreateDirectory(finalPath);
-                    }
-                }
-                catch
-                {
-                    return ExportResult.TempPathError;
-                }
+        //        try
+        //        {
+        //            if (!Directory.Exists(finalPath))
+        //            {
+        //                Directory.CreateDirectory(finalPath);
+        //            }
+        //        }
+        //        catch
+        //        {
+        //            return ExportResult.TempPathError;
+        //        }
 
-                if (File.Exists(dirUnit))
-                {
-                    try
-                    {
-                        if (File.Exists(target))
-                        {
-                            File.Delete(target);
-                        }
+        //        if (File.Exists(dirUnit))
+        //        {
+        //            try
+        //            {
+        //                if (File.Exists(target))
+        //                {
+        //                    File.Delete(target);
+        //                }
 
-                        File.Copy(dirUnit, target);
-                    }
-                    catch
-                    {
-                        return ExportResult.FileCopyError;
-                    }
-                }
-                else
-                {
-                    return ExportResult.FileCopyError;
-                }
-            }
+        //                File.Copy(dirUnit, target);
+        //            }
+        //            catch
+        //            {
+        //                return ExportResult.FileCopyError;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return ExportResult.FileCopyError;
+        //        }
+        //    }
 
-            VersionManifest instanceFile = GetManifest(instanceId, false);
+        //    VersionManifest instanceFile = GetManifest(instanceId, false);
 
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                ["gameVersion"] = instanceFile.version.gameVersion,
-                ["description"] = description,
-                ["name"] = UserData.Instances.Record[instanceId].Name,
-                ["author"] = UserData.Login,
-                ["modloaderType"] = instanceFile.version.modloaderType.ToString(),
-                ["modloaderVersion"] = instanceFile.version.modloaderVersion,
-            };
-
-
-            string jsonData = JsonConvert.SerializeObject(data);
-            if (!SaveFile(targetDir + "/instanceInfo.json", jsonData))
-            {
-                try
-                {
-                    Directory.Delete(targetDir, true);
-                }
-                catch { }
-
-                return ExportResult.InfoFileError;
-            }
-
-            try
-            {
-                ZipFile.CreateFromDirectory(targetDir, exportFile);
-                Directory.Delete(targetDir, true);
-
-                return ExportResult.Successful;
-            }
-            catch
-            {
-                Directory.Delete(targetDir, true);
-
-                return ExportResult.ZipFileError;
-            }
-        }
-
-        public static ImportResult ImportInstance(string zipFile, out List<string> errors, out string instance_Id)
-        {
-            instance_Id = null;
-
-            string dir = CreateTempDir() + "import/";
-            errors = new List<string>();
-
-            if (!Directory.Exists(dir))
-            {
-                try
-                {
-                    Directory.CreateDirectory(dir);
-                }
-                catch
-                {
-                    return ImportResult.DirectoryCreateError;
-                }
-            }
-            else
-            {
-                Directory.Delete(dir, true);
-            }
-
-            try
-            {
-                ZipFile.ExtractToDirectory(zipFile, dir);
-            }
-            catch
-            {
-                Directory.Delete(dir, true);
-
-                return ImportResult.ZipFileError;
-            }
-
-            Dictionary<string, string> instanceInfo = GetFile<Dictionary<string, string>>(dir + "instanceInfo.json");
-            ModloaderType modloader = ModloaderType.None;
-
-            if (instanceInfo == null || !instanceInfo.ContainsKey("gameVersion") || string.IsNullOrEmpty(instanceInfo["gameVersion"]))
-            {
-                Directory.Delete(dir, true);
-                return ImportResult.GameVersionError;
-            }
-
-            if (!instanceInfo.ContainsKey("name") || string.IsNullOrEmpty(instanceInfo["name"]))
-            {
-                instanceInfo["name"] = "Unknown Name";
-            }
-
-            if (!instanceInfo.ContainsKey("author") || string.IsNullOrEmpty(instanceInfo["author"]))
-            {
-                instanceInfo["author"] = "Unknown author";
-            }
-
-            if (!instanceInfo.ContainsKey("description") || string.IsNullOrEmpty(instanceInfo["description"]))
-            {
-                instanceInfo["description"] = "";
-            }
-
-            if (!instanceInfo.ContainsKey("modloaderVersion") || string.IsNullOrEmpty(instanceInfo["modloaderVersion"]))
-            {
-                instanceInfo["modloaderVersion"] = "";
-            }
-
-            if (!instanceInfo.ContainsKey("modloaderType") || string.IsNullOrEmpty(instanceInfo["modloaderType"]))
-            {
-                instanceInfo["modloaderType"] = "";
-            }
-
-            Enum.TryParse(instanceInfo["modloaderType"], out modloader);
+        //    Dictionary<string, string> data = new Dictionary<string, string>
+        //    {
+        //        ["gameVersion"] = instanceFile.version.gameVersion,
+        //        ["description"] = description,
+        //        ["name"] = UserData.Instances.Record[instanceId].Name,
+        //        ["author"] = UserData.Login,
+        //        ["modloaderType"] = instanceFile.version.modloaderType.ToString(),
+        //        ["modloaderVersion"] = instanceFile.version.modloaderVersion,
+        //    };
 
 
-            string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceSource.Local, instanceInfo["gameVersion"], modloader, instanceInfo["modloaderVersion"]);
-            instance_Id = instanceId;
-            MessageBox.Show(instanceId);
+        //    string jsonData = JsonConvert.SerializeObject(data);
+        //    if (!SaveFile(targetDir + "/instanceInfo.json", jsonData))
+        //    {
+        //        try
+        //        {
+        //            Directory.Delete(targetDir, true);
+        //        }
+        //        catch { }
 
-            string addr = dir + "files/";
-            string targetDir = DirectoryPath + "/instances/" + instanceId + "/";
+        //        return ExportResult.InfoFileError;
+        //    }
 
-            try
-            {
-                IEnumerable<string> allFiles = Directory.EnumerateFiles(addr, "*", SearchOption.AllDirectories);
-                foreach (string fileName in allFiles)
-                {
-                    string targetFileName = fileName.Replace(addr, targetDir);
-                    string dirName = Path.GetDirectoryName(targetFileName);
+        //    try
+        //    {
+        //        ZipFile.CreateFromDirectory(targetDir, exportFile);
+        //        Directory.Delete(targetDir, true);
 
-                    if (!Directory.Exists(dirName))
-                    {
-                        Directory.CreateDirectory(dirName);
-                    }
+        //        return ExportResult.Successful;
+        //    }
+        //    catch
+        //    {
+        //        Directory.Delete(targetDir, true);
 
-                    File.Copy(fileName, targetFileName);
-                }
-            }
-            catch
-            {
-                Directory.Delete(dir, true);
+        //        return ExportResult.ZipFileError;
+        //    }
+        //}
 
-                return ImportResult.MovingFilesError;
-            }
+        //public static ImportResult ImportInstance(string zipFile, out List<string> errors, out string instance_Id)
+        //{
+        //    instance_Id = null;
 
-            try
-            {
-                Directory.Delete(dir, true);
-            }
-            catch { }
+        //    string dir = CreateTempDir() + "import/";
+        //    errors = new List<string>();
+
+        //    if (!Directory.Exists(dir))
+        //    {
+        //        try
+        //        {
+        //            Directory.CreateDirectory(dir);
+        //        }
+        //        catch
+        //        {
+        //            return ImportResult.DirectoryCreateError;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Directory.Delete(dir, true);
+        //    }
+
+        //    try
+        //    {
+        //        ZipFile.ExtractToDirectory(zipFile, dir);
+        //    }
+        //    catch
+        //    {
+        //        Directory.Delete(dir, true);
+
+        //        return ImportResult.ZipFileError;
+        //    }
+
+        //    Dictionary<string, string> instanceInfo = GetFile<Dictionary<string, string>>(dir + "instanceInfo.json");
+        //    ModloaderType modloader = ModloaderType.None;
+
+        //    if (instanceInfo == null || !instanceInfo.ContainsKey("gameVersion") || string.IsNullOrEmpty(instanceInfo["gameVersion"]))
+        //    {
+        //        Directory.Delete(dir, true);
+        //        return ImportResult.GameVersionError;
+        //    }
+
+        //    if (!instanceInfo.ContainsKey("name") || string.IsNullOrEmpty(instanceInfo["name"]))
+        //    {
+        //        instanceInfo["name"] = "Unknown Name";
+        //    }
+
+        //    if (!instanceInfo.ContainsKey("author") || string.IsNullOrEmpty(instanceInfo["author"]))
+        //    {
+        //        instanceInfo["author"] = "Unknown author";
+        //    }
+
+        //    if (!instanceInfo.ContainsKey("description") || string.IsNullOrEmpty(instanceInfo["description"]))
+        //    {
+        //        instanceInfo["description"] = "";
+        //    }
+
+        //    if (!instanceInfo.ContainsKey("modloaderVersion") || string.IsNullOrEmpty(instanceInfo["modloaderVersion"]))
+        //    {
+        //        instanceInfo["modloaderVersion"] = "";
+        //    }
+
+        //    if (!instanceInfo.ContainsKey("modloaderType") || string.IsNullOrEmpty(instanceInfo["modloaderType"]))
+        //    {
+        //        instanceInfo["modloaderType"] = "";
+        //    }
+
+        //    Enum.TryParse(instanceInfo["modloaderType"], out modloader);
 
 
-            return ImportResult.Successful;
-        }
+        //    string instanceId = ManageLogic.CreateInstance(instanceInfo["name"], InstanceSource.Local, instanceInfo["gameVersion"], modloader, instanceInfo["modloaderVersion"]);
+        //    instance_Id = instanceId;
+        //    MessageBox.Show(instanceId);
+
+        //    string addr = dir + "files/";
+        //    string targetDir = DirectoryPath + "/instances/" + instanceId + "/";
+
+        //    try
+        //    {
+        //        IEnumerable<string> allFiles = Directory.EnumerateFiles(addr, "*", SearchOption.AllDirectories);
+        //        foreach (string fileName in allFiles)
+        //        {
+        //            string targetFileName = fileName.Replace(addr, targetDir);
+        //            string dirName = Path.GetDirectoryName(targetFileName);
+
+        //            if (!Directory.Exists(dirName))
+        //            {
+        //                Directory.CreateDirectory(dirName);
+        //            }
+
+        //            File.Copy(fileName, targetFileName);
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        Directory.Delete(dir, true);
+
+        //        return ImportResult.MovingFilesError;
+        //    }
+
+        //    try
+        //    {
+        //        Directory.Delete(dir, true);
+        //    }
+        //    catch { }
+
+
+        //    return ImportResult.Successful;
+        //}
 
         public static void RemoveInstanceDirecory(string instanceId)
         {

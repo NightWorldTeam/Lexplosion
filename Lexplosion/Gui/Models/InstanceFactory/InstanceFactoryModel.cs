@@ -60,10 +60,6 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         public InstanceFactoryModel()
         {
             Name = _defaultInstanceName;
-            foreach (var instance in UserData.Instances.Record.Keys)
-            {
-                UnavailableNames.Add(UserData.Instances.Record[instance].Name);
-            } 
         }
     }
 }

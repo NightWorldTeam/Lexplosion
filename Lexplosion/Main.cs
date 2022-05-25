@@ -69,9 +69,7 @@ namespace Lexplosion
             }
 
             // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
-            ManageLogic.DefineListInstances();
             InstanceClient.DefineInstalledInstances();
-            //WithDirectory.CheckLauncherAssets();
 
             var stylePath = "pack://application:,,,/Gui/Resources/";
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()

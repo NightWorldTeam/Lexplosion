@@ -23,41 +23,6 @@ namespace Lexplosion.Global
             GeneralSettings = Settings.GetDefault();
             GeneralSettings.Merge(DataFilesManager.GetSettings());
         }
-
-        public static class Instances
-        {
-            public static Dictionary<string, InstanceParametrs> Record; // все сборки
-            public static Dictionary<string, InstanceAssets> Assets; // ассетсы всех модпаков
-            public static Dictionary<string, string> ExternalIds; // список внешних айдишников модпаков (ключ - внешний id, значение - внутренний)
-
-            public delegate void InstaceAddHander();
-            public delegate void InstaceSetAssetsHandler(string id, InstanceAssets assets);
-            public static event InstaceAddHander AddInstanceNofity;
-            public static event InstaceSetAssetsHandler SetAssetsNofity;
-
-            public static void AddInstance(string localId, InstanceParametrs parametrs, InstanceAssets assets, string externalId = "")
-            {
-                Record[localId] = parametrs;
-                Assets[localId] = assets;
-
-                if (externalId != "" && externalId != null)
-                {
-                    ExternalIds[externalId] = localId;
-                }
-
-                AddInstanceNofity?.Invoke();
-            }
-
-            public static void SetAssets(string instanceId, InstanceAssets assets)
-            {
-                Assets[instanceId] = assets;
-                SetAssetsNofity?.Invoke(instanceId, assets);
-                DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances-assets/" + instanceId + "/assets.json", 
-                    JsonConvert.SerializeObject(UserData.Instances.Assets[instanceId]));
-            }
-
-            public static bool IsExistId(string id) => ExternalIds.ContainsKey(id);
-        }
     }
 
     static class LaunсherSettings

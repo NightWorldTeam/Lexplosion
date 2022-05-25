@@ -338,31 +338,5 @@ namespace Lexplosion.Logic.FileSystem
 
             return data;
         }
-
-        public static Dictionary<string, InstanceParametrs> GetInstancesList()
-        {
-            var baseList = GetFile<Dictionary<string, InstanceParametrs>>(DirectoryPath + "/instanesList.json");
-            var list = new Dictionary<string, InstanceParametrs>();
-
-            if (baseList != null)
-            {
-                foreach (string id in baseList.Keys)
-                {
-                    //проверяем установлен ли этот модпак и не содержит ли его id запрещенных символов
-                    if (Directory.Exists(DirectoryPath + "/instances/" + id) && !Regex.IsMatch(id.Replace("_", ""), @"[^a-zA-Z0-9]"))
-                    {
-                        list[id] = baseList[id];
-                        list[id].UpdateAvailable = ManageLogic.CheckIntanceUpdates(id, baseList[id].Type); // TODO: это от сюда убрать
-                    }
-                }
-            }
-
-            return list;
-        }
-
-        public static void SaveInstancesList(Dictionary<string, InstanceParametrs> content)
-        {
-            SaveFile(DirectoryPath + "/instanesList.json", JsonConvert.SerializeObject(content));
-        }
     }
 }

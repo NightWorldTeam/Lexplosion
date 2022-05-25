@@ -157,7 +157,7 @@ namespace Lexplosion.Logic.Management
                     assets.categories = info.categories; // устанавливаем теги
 
                     // сохраняем асетсы модпака
-                    UserData.Instances.SetAssets(InstanceId, assets);
+                    //UserData.Instances.SetAssets(InstanceId, assets);
                 }
                 catch { }
             });
