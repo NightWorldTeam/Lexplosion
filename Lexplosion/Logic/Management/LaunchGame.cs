@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Management
             return command.Replace(@"\", "/");
         }
 
-        public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
+        public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName)
         {
             string command = CreateCommand(data);
 
@@ -73,7 +73,7 @@ namespace Lexplosion.Logic.Management
             gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
             Lexplosion.Run.AddImportantTask();
 
-            UserStatusSetter.GameStart("Minecraft");
+            UserStatusSetter.GameStart(gameClientName);
 
             if (_settings.ShowConsole == true)
             {

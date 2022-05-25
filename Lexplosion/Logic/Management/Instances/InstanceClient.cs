@@ -509,7 +509,7 @@ namespace Lexplosion.Logic.Management.Instances
                 IsInstalled = true;
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
 
-                launchGame.Run(data, ComplitedLaunch, GameExited);
+                launchGame.Run(data, ComplitedLaunch, GameExited, Name);
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
             else

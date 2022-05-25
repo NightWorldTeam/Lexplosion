@@ -154,43 +154,6 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public static void СlientManager(string instanceId, ProgressHandlerCallback ProgressHandler, ComplitedDownloadCallback ComplitedDownload, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited)
-        {
-            InstanceSource type = UserData.Instances.Record[instanceId].Type;
-
-            ProgressHandler(DownloadStageTypes.Prepare, 1, 0, 0);
-
-            Dictionary<string, string> xmx = new Dictionary<string, string>();
-            xmx["eos"] = "2700";
-            xmx["tn"] = "2048";
-            xmx["oth"] = "2048";
-            xmx["lt"] = "512";
-
-            /*int k = 0;
-            int c = 0;
-            if (xmx.ContainsKey(instanceId) && int.TryParse(xmx[instanceId], out k) && int.TryParse(UserData.Settings["xmx"], out c))
-            {
-                if (c < k)
-                    MainWindow.Obj.SetMessageBox("Клиент может не запуститься из-за малого количества выделенной памяти. Рекомендуется выделить " + xmx[instanceId] + "МБ", "Предупреждение");
-            }*/
-
-            Settings instanceSettings = DataFilesManager.GetSettings(instanceId);
-            LaunchGame launchGame = new LaunchGame(instanceId, instanceSettings, type);
-            InitData data = launchGame.Initialization(ProgressHandler);
-
-            if (data.InitResult == InstanceInit.Successful)
-            {
-                ComplitedDownload(data.InitResult, data.DownloadErrors, true);
-
-                launchGame.Run(data, ComplitedLaunch, GameExited);
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
-            }
-            else
-            {
-                ComplitedDownload(data.InitResult, data.DownloadErrors, false);
-            }
-        }
-
         public static string GenerateInstanceId(string instanceName)
         {
             Random rnd = new Random();
