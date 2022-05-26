@@ -18,6 +18,7 @@ namespace Lexplosion.Logic.Management
         private string _instanceId;
         private Settings _settings;
         private InstanceSource _type;
+        private string _javaPath = "";
 
         private static LaunchGame classInstance = null;
 
@@ -77,17 +78,11 @@ namespace Lexplosion.Logic.Management
 
             if (_settings.ShowConsole == true)
             {
-                //App.Current.Dispatcher.Invoke(delegate ()
-                //{
-                //    if (!ConsoleWindow.isShow)
-                //    {
-                //        ConsoleWindow.Window.Show();
-                //        ConsoleWindow.isShow = true;
-                //    }
-
-                //    ConsoleWindow.Window.Update("Выполняется запуск игры...");
-                //    ConsoleWindow.Window.Update(command);
-                //});
+                App.Current.Dispatcher.Invoke(delegate ()
+                {
+                    Console.WriteLine("Выполняется запуск игры...");
+                    Console.WriteLine(command);
+                });
             }
 
             bool launcherVisible = true;
@@ -96,7 +91,7 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-                process.StartInfo.FileName = _settings.JavaPath;
+                process.StartInfo.FileName = _javaPath;
                 process.StartInfo.WorkingDirectory = _settings.GamePath + "/instances/" + _instanceId;
                 process.StartInfo.Arguments = command;
                 process.StartInfo.RedirectStandardOutput = true;
@@ -140,6 +135,11 @@ namespace Lexplosion.Logic.Management
                     //{
                     //    process.OutputDataReceived -= WriteToConsole;
                     //}
+
+                    if (_settings.ShowConsole == true)
+                    {
+                        Console.WriteLine(e.Data);
+                    }
                 }
 
                 process.OutputDataReceived += BeforeLaunch;
@@ -178,14 +178,8 @@ namespace Lexplosion.Logic.Management
                         {
                             ComplitedLaunch(_instanceId, false);
 
-                            // TODO: перенести это в ConsoleWindow
-                            //if (!ConsoleWindow.isShow)
-                            //{
-                            //    ConsoleWindow.Window.Show();
-                            //    ConsoleWindow.isShow = true;
-                            //}
-                            //ConsoleWindow.Window.Update(consoleText);
-                            //ConsoleWindow.Window.Update(command);
+                            Console.WriteLine(consoleText);
+                            Console.WriteLine(command);
                         });
 
                         consoleText = "";
@@ -214,84 +208,99 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public InitData Initialization(ProgressHandlerCallback progressHandler)
+        public InitData Update(ProgressHandlerCallback progressHandler)
         {
-            InitData Error(InstanceInit init)
+            IPrototypeInstance instance;
+
+            switch (_type)
+            {
+                case InstanceSource.Nightworld:
+                    instance = new NightworldIntance(_instanceId, false);
+                    break;
+                case InstanceSource.Local:
+                    instance = new LocalInstance(_instanceId);
+                    break;
+                case InstanceSource.Curseforge:
+                    instance = new CurseforgeInstance(_instanceId, false);
+                    break;
+                default:
+                    instance = null;
+                    break;
+            }
+
+            InstanceInit result = instance.Check(out string gameVersion);
+
+            if (result != InstanceInit.Successful)
             {
                 return new InitData
                 {
-                    InitResult = init
+                    InitResult = result
                 };
+            }   
+
+            if (_settings.CustomJava == false)
+            {
+                using (JavaChecker javaCheck = new JavaChecker(gameVersion))
+                {
+                    if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
+                    {
+                        progressHandler?.Invoke(DownloadStageTypes.Java, 0, 0, 0);
+                        bool downloadResult = javaCheck.Update(delegate (int percent)
+                        {
+                            progressHandler?.Invoke(DownloadStageTypes.Java, 0, 0, percent);
+                        });
+
+                        if (!downloadResult)
+                        {
+                            return new InitData
+                            {
+                                InitResult = InstanceInit.JavaDownloadError
+                            };
+                        }
+                    }
+
+                    if (checkResult == JavaChecker.CheckResult.Successful)
+                    {
+                        _javaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+                    }
+                    else
+                    {
+                        return new InitData
+                        {
+                            InitResult = InstanceInit.JavaDownloadError
+                        };
+                    }
+                }
+            }
+            else
+            {
+                _javaPath = _settings.JavaPath;
             }
 
+            return instance.Update(_javaPath, progressHandler);
+        }
+
+
+        public InitData Initialization(ProgressHandlerCallback progressHandler)
+        {
             //try
             {
                 WithDirectory.Create(_settings.GamePath);
                 InitData data = null;
 
                 if (!Directory.Exists(_settings.GamePath) || !_settings.GamePath.Contains(":"))
-                    return Error(InstanceInit.GamePathError);
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.GamePathError
+                    };
+                }
 
                 bool autoUpdate = (_settings.AutoUpdate == true);
 
                 if (!UserData.Offline)
                 {
-                    IPrototypeInstance instance;
-                    switch (_type)
-                    {
-                        case InstanceSource.Nightworld:
-                            instance = new NightworldIntance(_instanceId, !autoUpdate);
-                            break;
-                        case InstanceSource.Local:
-                            instance = new LocalInstance(_instanceId);
-                            break;
-                        case InstanceSource.Curseforge:
-                            instance = new CurseforgeInstance(_instanceId, !autoUpdate);
-                            break;
-                        default:
-                            instance = null;
-                            break;
-                    }
-
-                    InstanceInit result = instance.Check(out string gameVersion);
-                    if (result == InstanceInit.Successful)
-                    {
-                        if (_settings.CustomJava == false)
-                        {
-                            using (JavaChecker javaCheck = new JavaChecker(gameVersion))
-                            {
-                                if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
-                                {
-                                    progressHandler(DownloadStageTypes.Java, 0, 0, 0);
-
-                                    bool updateResult = javaCheck.Update(delegate (int percent)
-                                    {
-                                        progressHandler(DownloadStageTypes.Java, 0, 0, percent);
-                                    });
-
-                                    if (!updateResult)
-                                    {
-                                        return Error(InstanceInit.JavaDownloadError);
-                                    }
-                                }
-
-                                if (checkResult == JavaChecker.CheckResult.Successful)
-                                {
-                                    _settings.JavaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
-                                }
-                                else
-                                {
-                                    return Error(InstanceInit.JavaDownloadError);
-                                }
-                            }
-                        }
-
-                        data = instance.Update(_settings.JavaPath, progressHandler);
-                    }
-                    else
-                    {
-                        return Error(result);
-                    }
+                    return Update(progressHandler);
                 }
                 else
                 {
@@ -307,7 +316,10 @@ namespace Lexplosion.Logic.Management
                     }
                     else
                     {
-                        return Error(InstanceInit.ManifestError);
+                        return new InitData
+                        {
+                            InitResult = InstanceInit.ManifestError
+                        };
                     }
                 }
 

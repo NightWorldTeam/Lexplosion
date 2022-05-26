@@ -24,6 +24,8 @@ namespace Lexplosion.Logic.Management.Instances
         private string _externalId = null;
         private string _localId = null;
 
+        private const string LogoFileName = "logo.png";
+
         private static Dictionary<string, InstanceClient> _installedInstances = new Dictionary<string, InstanceClient>();
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; private set; }
         public string Author { get; private set; }
         public string Description { get; private set; }
-        public byte[] Logo { get; private set; }
+        public byte[] Logo { get; private set; } = null;
         public List<Category> Categories { get; private set; }
         public string GameVersion { get; private set; }
         public string Summary { get; private set; }
@@ -90,6 +92,13 @@ namespace Lexplosion.Logic.Management.Instances
             _installedInstances[_localId] = this;
 
             SaveInstalledInstancesList();
+
+            var assetsData = new InstanceAssets
+            {
+                Author = UserData.Login
+            };
+
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json", JsonConvert.SerializeObject(assetsData));
         }
 
         /// <summary>
@@ -144,16 +153,16 @@ namespace Lexplosion.Logic.Management.Instances
                         //получаем асетсы модпаков
                         InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
 
-                        if (assetsData != null && assetsData.mainImage != null)
+                        if (assetsData != null)
                         {
-                            string file = WithDirectory.DirectoryPath + "/instances-assets/" + assetsData.mainImage;
+                            string file = WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/" + LogoFileName;
                             if (File.Exists(file))
                             {
-                                try
+                                //try
                                 {
                                     logo = File.ReadAllBytes(file);
                                 }
-                                catch { }
+                                //catch { }
                             }
                         }
 
@@ -164,9 +173,9 @@ namespace Lexplosion.Logic.Management.Instances
                             {
                                 Name = list[localId].Name ?? "Unknown name",
                                 Summary = assetsData.Summary ?? "This modpack is not have description but you can add it.",
-                                Author = assetsData.author ?? "Unknown author",
-                                Description = assetsData.description ?? "This modpack is not have description but you can add it.",
-                                Categories = assetsData.categories ?? new List<Category>(),
+                                Author = assetsData.Author ?? "Unknown author",
+                                Description = assetsData.Description ?? "This modpack is not have description but you can add it.",
+                                Categories = assetsData.Categories ?? new List<Category>(),
                                 GameVersion = "1.10.2",
                                 Logo = logo
                             };
@@ -192,13 +201,6 @@ namespace Lexplosion.Logic.Management.Instances
                     }
                 }
             }
-        }
-
-        public void SetAssets(InstanceAssets assets)
-        {
-            Description = assets.description;
-            Author = assets.author;
-            Summary = assets.Summary;
         }
 
         /// <summary>
@@ -241,6 +243,19 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             instanceClient = _installedInstances[_idsPairs[nwModpack]];
                             instanceClient.CheckUpdates();
+                            instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
+                            instanceClient.SaveAssets();
+
+                            if (nwInstances[nwModpack].Categories != null)
+                                instanceClient.Categories = nwInstances[nwModpack].Categories;
+                            if (nwInstances[nwModpack].GameVersion != null)
+                                instanceClient.GameVersion = nwInstances[nwModpack].GameVersion;
+                            if (nwInstances[nwModpack].Summary != null)
+                                instanceClient.Summary = nwInstances[nwModpack].Summary;
+                            if (nwInstances[nwModpack].Description != null)
+                                instanceClient.Description = nwInstances[nwModpack].Description;
+                            if (nwInstances[nwModpack].Author != null)
+                                instanceClient.Author = nwInstances[nwModpack].Author;
                         }
                         else
                         {
@@ -254,11 +269,9 @@ namespace Lexplosion.Logic.Management.Instances
                                 Description = nwInstances[nwModpack].Description ?? "",
                                 Author = nwInstances[nwModpack].Author ?? "Unknown author"
                             };
-                        }
 
-                        var e = new AutoResetEvent(false);
-                        events.Add(e);
-                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceClient, nwInstances[nwModpack].MainImage });
+                            instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
+                        }
 
                         instances.Add(instanceClient);
                     }
@@ -282,6 +295,18 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         instanceClient = _installedInstances[_idsPairs[instance.id.ToString()]];
                         instanceClient.CheckUpdates();
+
+                        if (instance.categories != null)
+                            instanceClient.Categories = instance.categories;
+                        if (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0)
+                            instanceClient.GameVersion = instance.gameVersionLatestFiles[0].gameVersion;
+                        if (instance.summary != null)
+                        {
+                            instanceClient.Summary = instance.summary;
+                            instanceClient.Description = instance.summary;
+                        }
+                        if (instance.authors != null && instance.authors.Count > 0)
+                            instanceClient.Author = instance.authors[0].name;
                     }
                     else
                     {
@@ -309,9 +334,9 @@ namespace Lexplosion.Logic.Management.Instances
                             }
                         }
 
-                        var e = new AutoResetEvent(false);
-                        events.Add(e);
-                        ThreadPool.QueueUserWorkItem(ImageDownload, new object[] { e, instanceClient, url });
+                        instanceClient.DownloadLogo(url);
+                        if (_idsPairs.ContainsKey(instance.id.ToString()))
+                            instanceClient.SaveAssets();
                     }
 
                     instances.Add(instanceClient);
@@ -423,74 +448,15 @@ namespace Lexplosion.Logic.Management.Instances
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
-            instanceSettings.Merge(UserData.GeneralSettings, true);
+            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
+            InitData data = launchGame.Update(ProgressHandler);
 
-            IPrototypeInstance instance;
-
-            switch (Type)
+            if (data.InitResult == InstanceInit.Successful)
             {
-                case InstanceSource.Nightworld:
-                    instance = new NightworldIntance(_localId, false);
-                    break;
-                case InstanceSource.Local:
-                    instance = new LocalInstance(_localId);
-                    break;
-                case InstanceSource.Curseforge:
-                    instance = new CurseforgeInstance(_localId, false);
-                    break;
-                default:
-                    instance = null;
-                    break;
+                IsInstalled = (data.InitResult == InstanceInit.Successful);
             }
 
-            InstanceInit result = instance.Check(out string gameVersion);
-            if (result == InstanceInit.Successful)
-            {
-                string javaPath;
-                if (instanceSettings.CustomJava == false)
-                {
-                    using (JavaChecker javaCheck = new JavaChecker(gameVersion))
-                    {
-                        if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
-                        {
-                            ProgressHandler?.Invoke(DownloadStageTypes.Java, 0, 0, 0);
-                            bool downloadResult = javaCheck.Update(delegate (int percent)
-                            {
-                                ProgressHandler?.Invoke(DownloadStageTypes.Java, 0, 0, percent);
-                            });
-
-                            if (!downloadResult)
-                            {
-                                ComplitedDownload?.Invoke(InstanceInit.JavaDownloadError, null, false);
-                                return;
-                            }
-                        }
-
-                        if (checkResult == JavaChecker.CheckResult.Successful)
-                        {
-                            javaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
-                        }
-                        else
-                        {
-                            ComplitedDownload?.Invoke(InstanceInit.JavaDownloadError, null, false);
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    javaPath = instanceSettings.JavaPath;
-                }
-
-                InitData res = instance.Update(javaPath, ProgressHandler);
-                IsInstalled = (res.InitResult == InstanceInit.Successful);
-                Console.WriteLine("RESULT " + res.InitResult);
-                ComplitedDownload?.Invoke(res.InitResult, res.DownloadErrors, false);
-            }
-            else
-            {
-                ComplitedDownload?.Invoke(result, null, false);
-            }
+            ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
         }
 
         /// <summary>
@@ -530,6 +496,7 @@ namespace Lexplosion.Logic.Management.Instances
                 _installedInstances[_localId] = this;
                 _idsPairs[_externalId] = _localId;
                 SaveInstalledInstancesList();
+                SaveAssets();
             }
         }
 
@@ -624,27 +591,53 @@ namespace Lexplosion.Logic.Management.Instances
             return instanceId;
         }
 
-        private static void ImageDownload(object state)
+        /// <summary>
+        /// Ну бля, качает заглавную картинку (лого) по ссылке и записывает в переменную Logo
+        /// </summary>
+        private void DownloadLogo(string url)
         {
-            object[] array = state as object[];
-
-            AutoResetEvent e = (AutoResetEvent)array[0];
-            InstanceClient instanceInfo = (InstanceClient)array[1];
-            string url = (string)array[2];
-
             try
             {
                 using (var webClient = new WebClient())
                 {
-                    instanceInfo.Logo = webClient.DownloadData(url);
+                    Logo = webClient.DownloadData(url);
                 }
             }
-            catch
-            {
-                instanceInfo.Logo = null;
-            }
+            catch { }
+        }
 
-            e.Set();
+        /// <summary>
+        /// Сохраняет асетсы клиента в файл.
+        /// </summary>
+        private void SaveAssets()
+        {
+            try
+            {
+                if (!Directory.Exists(WithDirectory.DirectoryPath + "/instances-assets/" + _localId))
+                {
+                    Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances-assets/" + _localId);
+                }
+
+                if (Logo != null)
+                {
+                    File.WriteAllBytes(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName, Logo);
+                }
+            }
+            catch { }
+
+            string file = WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
+            InstanceAssets assetsData_ = DataFilesManager.GetFile<InstanceAssets>(file);
+
+            var assetsData = new InstanceAssets
+            {
+                Author = Author,
+                Categories = Categories,
+                Description = Description,
+                Images = (assetsData_ != null) ? assetsData_.Images : null,
+                Summary = Summary
+            };
+
+            DataFilesManager.SaveFile(file, JsonConvert.SerializeObject(assetsData));
         }
 
         /// <summary>

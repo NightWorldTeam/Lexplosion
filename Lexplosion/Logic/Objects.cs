@@ -9,14 +9,13 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
     /// </summary>
     public class InstanceAssets
     {
-        public string description { get; set; }
-        public string author { get; set; }
-        public List<string> images;
-        public string mainImage;
-        public string xmx;
-        public string xms;
-        public List<Category> categories { get; set; }
-        public string Summary { get; set; }
+        public string Description;
+        public string Author;
+        public List<string> Images;
+        public string Xmx;
+        public string Xms;
+        public List<Category> Categories;
+        public string Summary;
     }
 
     public class Category
