@@ -4,9 +4,6 @@
     <Color x:Key="ActivityColor">#167FFC</Color>
     <SolidColorBrush x:Key="BrandSolidColorBrush" Color="{StaticResource ActivityColor}" />
 
-
-
-    <Color x:Key="BrandColor">#167FFC</Color>
     <Color x:Key="PrimaryColor">#18191b</Color>
 
     <SolidColorBrush x:Key="BackgroundBrush" Color="#1f202a"/>

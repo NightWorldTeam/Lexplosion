@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
+    <Compile Include="Controls\DropdownMenu.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Gui\BooleanToColorConverter.cs" />
     <Compile Include="Gui\BytesToBitmapImageConventer.cs" />
@@ -248,6 +249,10 @@
     <Compile Include="Logic\Сryptography.cs" />
     <Compile Include="Main.cs" />
     <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

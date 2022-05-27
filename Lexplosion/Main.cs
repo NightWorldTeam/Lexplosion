@@ -72,6 +72,11 @@ namespace Lexplosion
             InstanceClient.DefineInstalledInstances();
 
             var stylePath = "pack://application:,,,/Gui/Resources/";
+
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Controls/Themes/" + "Generic.xaml")
+            });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(stylePath + "Fonts.xaml")

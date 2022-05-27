@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:objects="clr-namespace:Lexplosion.Logic.Objects"
+             xmlns:objects="clr-namespace:Lexplosion.Logic.Objects" xmlns:controls="clr-namespace:Lexplosion.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="120" d:DesignWidth="620">
 
@@ -61,8 +61,7 @@
                         HorizontalAlignment="Center"
                         Visibility="Collapsed"/>
                     <Grid 
-                        Background="Transparent" 
-                        Opacity="0.1">
+                        Background="Transparent">
                         <Grid.InputBindings>
                             <MouseBinding 
                                 Gesture="LeftClick" 
@@ -79,7 +78,7 @@
                         <RowDefinition Height="30" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    
+
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -150,7 +149,7 @@
                         <ItemsControl
                             Grid.Row="1"
                             Margin="0,1,1,1" 
-                            ItemsSource="{Binding Model.InstanceClient.Categories}"
+                            ItemsSource="{Binding Model.Categories}"
                             Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -237,68 +236,54 @@
                                     FontWeight="SemiBold" />
                             </Grid>
                         </Border>
-
                     </Grid>
-                    <Grid Grid.Row="1">
-                        <Border
-                            Width="60"
-                            Height="60" 
-                            CornerRadius="0,0,10,0">
-                            <Border.Background>
-                                <SolidColorBrush x:Name="LowerButtonBackground" />
-                            </Border.Background>
-                            <Border.Triggers>
-                                <EventTrigger RoutedEvent="Border.MouseEnter">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation 
-                                                Duration="0:0:0.02"
-                                                From="Transparent"
-                                                To="{StaticResource ActivityColor}"
-                                                Storyboard.TargetName="LowerButtonBackground"
-                                                Storyboard.TargetProperty="Color" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-
-                                <EventTrigger RoutedEvent="Border.MouseLeave">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation 
-                                                Duration="0:0:0.02" To="Transparent"
-                                                Storyboard.TargetName="LowerButtonBackground"
-                                                Storyboard.TargetProperty="Color">
-                                            </ColorAnimation>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Border.Triggers>
-                            <Border.InputBindings>
-                                <MouseBinding Gesture="LeftClick" Command="{Binding LowerBtnCommand}" CommandParameter="{Binding Model.ButtonModel.LowerFunc}"/>
-                            </Border.InputBindings>
-                            <Border.ToolTip>
-                                <ToolTip
-                                    Placement="Relative" 
-                                    HorizontalOffset="{Binding Model.ButtonModel.LowerTip.Offset}" 
-                                    Background="Black" 
-                                    BorderThickness="0"
-                                    FontFamily="pack://application:,,,/assets/fonts/#Casper Bold">
-                                    <TextBlock 
-                                        FontSize="12" 
-                                        Foreground="White" 
-                                        FontWeight="Bold"
-                                        Text="{Binding Model.ButtonModel.LowerTip.Text}" />
-                                </ToolTip>
-                            </Border.ToolTip>
-                            <Path 
-                                Stretch="Fill" 
-                                Fill="White"
-                                Stroke="White"
-                                Data="{Binding Model.ButtonModel.LowerIcon.Geometry}"
-                                Width="{Binding Model.ButtonModel.LowerIcon.Width}" 
-                                Height="{Binding Model.ButtonModel.LowerIcon.Height}" />
-                        </Border>
-                    </Grid>
+                    <controls:DropdownMenu Grid.Row="1">
+                        <controls:DropdownMenu.Resources>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="Transparent" BorderBrush="Transparent">
+                                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </controls:DropdownMenu.Resources>
+                        <StackPanel>
+                            <Button Foreground="White" Background="#121212">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Viewbox HorizontalAlignment="Left">
+                                        <Path Stretch="Fill"
+                                                    Fill="White"
+                                                    Data="M 25.5 29.1 H 28.5 V 22.5 H 35.1 V 19.5 H 28.5 V 12.9 H 25.5 V 19.5 H 18.9 V 22.5 H 25.5 Z M 13 38 Q 11.8 38 10.9 37.1 Q 10 36.2 10 35 V 7 Q 10 5.8 10.9 4.9 Q 11.8 4 13 4 H 41 Q 42.2 4 43.1 4.9 Q 44 5.8 44 7 V 35 Q 44 36.2 43.1 37.1 Q 42.2 38 41 38 Z M 13 35 H 41 Q 41 35 41 35 Q 41 35 41 35 V 7 Q 41 7 41 7 Q 41 7 41 7 H 13 Q 13 7 13 7 Q 13 7 13 7 V 35 Q 13 35 13 35 Q 13 35 13 35 Z M 13 7 Q 13 7 13 7 Q 13 7 13 7 V 35 Q 13 35 13 35 Q 13 35 13 35 Q 13 35 13 35 Q 13 35 13 35 V 7 Q 13 7 13 7 Q 13 7 13 7 Z M 7 44 Q 5.8 44 4.9 43.1 Q 4 42.2 4 41 V 10 H 7 V 41 Q 7 41 7 41 Q 7 41 7 41 H 38 V 44 Z"
+                                                />
+                                    </Viewbox>
+                                    <TextBlock Grid.Column="1" Margin="5" FontSize="14" Text="Добавить в библиотеку"/>
+                                </Grid>
+                            </Button>
+                            <Button Foreground="White" Background="#121212">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Viewbox HorizontalAlignment="Left">
+                                        <Path Stretch="Fill"
+                                                    Fill="White"
+                                                    Data="M 6.307 0.581055 L 6.698 2.25605 H 0 C 0 2.25605 0.112 2.75805 0.167 2.81405 C 0.335 3.09305 0.502 3.42805 0.726 3.65105 C 1.786 4.87905 3.628 5.38105 5.135 5.66005 C 6.195 5.88405 7.256 5.94005 8.316 5.99505 L 9.544 9.28806 H 10.214 L 10.605 10.3491 H 10.047 L 9.098 13.4191 H 18.419 L 17.47 10.3491 H 16.912 L 17.302 9.28806 H 17.972 C 17.972 9.28806 18.53 5.88405 20.26 4.32105 C 21.935 2.75805 24 2.53505 24 2.53505 V 0.581055 H 6.307 Z M 15.684 9.00905 C 15.237 9.28805 14.735 9.28805 14.4 9.51205 C 14.177 9.62305 14.065 9.95806 14.065 9.95806 C 13.842 9.45606 13.563 9.28806 13.228 9.17706 C 12.893 9.06506 12.279 9.12106 11.442 8.39506 C 10.884 7.89306 10.828 7.22305 10.884 6.88805 V 6.72105 C 10.884 6.66505 10.884 6.60906 10.94 6.55306 C 11.051 6.21906 11.33 5.88405 11.888 5.66005 C 11.888 5.66005 11.498 6.21906 11.888 6.77706 C 12.112 7.11206 12.558 7.27905 12.949 7.05605 C 13.116 6.94405 13.228 6.72106 13.284 6.55306 C 13.395 6.16306 13.395 5.77205 13.06 5.49305 C 12.558 5.04705 12.447 4.43305 12.781 4.04205 C 12.781 4.04205 12.893 4.54405 13.395 4.48805 C 13.73 4.48805 13.73 4.37706 13.619 4.26506 C 13.563 4.09806 12.837 3.03705 13.898 2.25605 C 13.898 2.25605 14.567 1.80905 15.349 1.86505 C 14.902 1.92105 14.4 2.20005 14.233 2.64705 V 2.70205 C 14.065 3.14905 14.177 3.65105 14.512 4.09805 C 14.735 4.43305 15.014 4.71205 15.126 5.15805 C 14.958 5.10205 14.847 5.15806 14.735 5.27006 C 14.6755 5.33749 14.634 5.41888 14.6144 5.50665 C 14.5949 5.59442 14.5978 5.68573 14.623 5.77206 C 14.679 5.88406 14.791 5.99505 14.902 5.99505 H 15.07 C 15.237 5.94005 15.349 5.71605 15.293 5.54905 C 15.405 5.66005 15.46 5.94006 15.405 6.10706 C 15.405 6.27406 15.293 6.44206 15.237 6.55306 C 15.181 6.66506 15.07 6.77705 15.014 6.88805 C 14.958 7.00005 14.902 7.11205 14.902 7.22305 C 14.902 7.33505 14.902 7.50206 14.958 7.61406 C 15.181 7.94906 15.628 7.61405 15.74 7.33505 C 15.907 7.00005 15.851 6.60906 15.628 6.27406 C 15.628 6.27406 16.019 6.49806 16.298 7.27906 C 16.521 7.94906 16.13 8.73005 15.684 9.00905 V 9.00905 Z"
+                                                />
+                                    </Viewbox>
+                                    <TextBlock Grid.Column="1" Margin="5" FontSize="14" Text="Открыть Curseforge"/>
+                                </Grid>
+                            </Button>
+                        </StackPanel>
+                    </controls:DropdownMenu>
                 </Grid>
             </Grid>
         </Border>

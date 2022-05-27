@@ -31,7 +31,7 @@
                                  Margin="30,15,30,0" 
                                  HorizontalContentAlignment="Center">
                         <Button Style="{StaticResource LibraryAddBtn}"
-                                Command="{Binding MainMenuViewModel.NavigationFactoryCommand, Source={StaticResource MainVM}}"
+                                Command="{Binding MainMenuVM.NavigationFactoryCommand, Source={StaticResource MainVM}}"
                                 Content="Добавить сборку" Width="620" Height="120"/>
                     </ListBoxItem>
                 </CompositeCollection>
