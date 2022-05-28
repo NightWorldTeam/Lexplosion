@@ -2,6 +2,7 @@
 using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using System;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -28,15 +29,12 @@ namespace Lexplosion.Gui.ViewModels
                     case UpperButtonFunc.ProgressBar:
                         // TODO: может сделать, что-то типо меню скачивания??
                         break;
-                    case UpperButtonFunc.Update:
-                        Model.DownloadModel.DonwloadPrepare();
-                        break;
                     case UpperButtonFunc.Play:
                         Model.LaunchModel.LaunchInstance();
                         break;
                     case UpperButtonFunc.Close:
                         LaunchGame.GameStop();
-                        Model.ButtonModel.ChangeFuncPlay();
+                        Model.UpperButton.ChangeFuncPlay();
                         break;
                 }
             }));
@@ -45,7 +43,8 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _lowerBtnCommand ?? (_lowerBtnCommand = new RelayCommand(obj =>
             {
-                switch((LowerButtonFunc)obj) 
+                Console.WriteLine(((LowerButtonFunc)obj).ToString());
+                switch ((LowerButtonFunc)obj)
                 {
                     case LowerButtonFunc.AddToLibrary:
                         break;
@@ -55,6 +54,21 @@ namespace Lexplosion.Gui.ViewModels
                         Model.OpenInstanceFolder();
                         break;
                     case LowerButtonFunc.CancelDownload:
+                        break;
+                    case LowerButtonFunc.Update:
+                        Model.DownloadModel.DonwloadPrepare();
+                        break;
+                    case LowerButtonFunc.OpenWebsite:
+                            try
+                            {
+                                System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
+                            }
+                            catch
+                            {
+                                // message box here.
+                            }
+                        break;
+                    case LowerButtonFunc.RemoveInstance:
                         break;
                 }
             }));

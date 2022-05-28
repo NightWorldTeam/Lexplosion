@@ -84,7 +84,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public void DonwloadPrepare()
         {
             _instanceFormModel.InstanceClient.AddToLibrary();
-            _instanceFormModel.ButtonModel.ChangeFuncProgressBar();
+            _instanceFormModel.UpperButton.ChangeFuncProgressBar();
             IsDownloadInProgress = true;
 
             Lexplosion.Run.TaskRun(delegate
@@ -124,13 +124,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 case InstanceInit.Successful:
                     {
                         IsDownloadInProgress = false;
-                        _instanceFormModel.ButtonModel.ChangeFuncPlay();
+                        _instanceFormModel.UpperButton.ChangeFuncPlay();
                     }
                     break;
                 case InstanceInit.DownloadFilesError:
                     {
                         IsDownloadInProgress = false;
-                        _instanceFormModel.ButtonModel.ChangeFuncDownload(true);
+                        _instanceFormModel.UpperButton.ChangeFuncDownload(true);
                         foreach (var de in downloadErrors)
                         {
                             Console.WriteLine("InstanceClient Download Completed --- Error: " + de);

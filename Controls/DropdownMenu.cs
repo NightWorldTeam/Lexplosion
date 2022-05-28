@@ -18,19 +18,10 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty IsOpenProperty =
             DependencyProperty.Register("IsOpen", typeof(bool), typeof(DropdownMenu), new PropertyMetadata(false));
 
-        public static readonly DependencyProperty CornerRadiusProperty =
-            DependencyProperty.Register("ToggleCornerRadius", typeof(double), typeof(DropdownMenu), new PropertyMetadata(0.0));
-
         public bool IsOpen
         {
             get => (bool)GetValue(IsOpenProperty);
             set => SetValue(IsOpenProperty, value);
-        }
-
-        public double ToggleCornerRadius 
-        {
-            get => (double)GetValue(CornerRadiusProperty);
-            set => SetValue(CornerRadiusProperty, value);
         }
 
         static DropdownMenu() 

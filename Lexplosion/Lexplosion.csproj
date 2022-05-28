@@ -112,7 +112,9 @@
     <Compile Include="Gui\Models\InstanceForm\DownloadModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\InstanceFormModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\LaunchModel.cs" />
-    <Compile Include="Gui\Models\InstanceForm\MultibuttonModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\LowerButton.cs" />
+    <Compile Include="Gui\Models\InstanceForm\ButtonModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\UpperButton.cs" />
     <Compile Include="Gui\Models\MainModel.cs" />
     <Compile Include="Gui\Models\ShowCaseMenu\InstanceSettingsModel.cs" />
     <Compile Include="Gui\Models\ShowCaseMenu\OverviewModel.cs" />

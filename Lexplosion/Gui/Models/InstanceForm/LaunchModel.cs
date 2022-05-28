@@ -24,7 +24,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _formModel.DownloadModel.IsIndeterminate = true;
                 _formModel.InstanceClient.Run();
                 MainViewModel.IsInstanceRunning = true;
-                _formModel.ButtonModel.ChangeFuncClose();
+                _formModel.UpperButton.ChangeFuncClose();
             });
         }
 
@@ -42,7 +42,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public void GameExited(string id)
         {
-            _formModel.ButtonModel.ChangeFuncPlay();
+            _formModel.UpperButton.ChangeFuncPlay();
             MainViewModel.IsInstanceRunning = false;
         }
 
