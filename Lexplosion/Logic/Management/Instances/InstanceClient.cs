@@ -44,6 +44,7 @@ namespace Lexplosion.Logic.Management.Instances
         public bool InLibrary { get; private set; }
         public bool UpdateAvailable { get; private set; }
         public bool IsInstalled { get; private set; } = true;
+        public string WebsiteUrl { get; private set; } = null;
         #endregion
 
         public event ProgressHandlerCallback ProgressHandler;
@@ -273,6 +274,8 @@ namespace Lexplosion.Logic.Management.Instances
                             instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
                         }
 
+                        instanceClient.WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + nwModpack;
+
                         instances.Add(instanceClient);
                     }
 
@@ -321,6 +324,8 @@ namespace Lexplosion.Logic.Management.Instances
                             Author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown author"
                         };
                     }
+
+                    instanceClient.WebsiteUrl = instance.websiteUrl;
 
                     if (instance.attachments != null && instance.attachments.Count > 0)
                     {
