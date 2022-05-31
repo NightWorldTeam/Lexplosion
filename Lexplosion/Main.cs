@@ -204,7 +204,7 @@ namespace Lexplosion
             lock (locker)
             {
                 waitingClosing.Reset();
-            }        
+            }
         }
 
         /// <summary>
