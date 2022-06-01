@@ -674,10 +674,19 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        public string GetDirectoryPath() => @"" + WithDirectory.DirectoryPath.Replace("/", @"\") + @"\instances\" + _localId;
+        public string GetDirectoryPath()
+        {
+            return @"" + WithDirectory.DirectoryPath.Replace("/", @"\") + @"\instances\" + _localId;
+        }
 
-        public Settings GetSettings() => DataFilesManager.GetSettings(_localId);
+        public Settings GetSettings()
+        {
+            return DataFilesManager.GetSettings(_localId);
+        }
 
-        public void SaveSettings(Settings settings) => DataFilesManager.SaveSettings(settings, _localId);
+        public void SaveSettings(Settings settings)
+        {
+            return DataFilesManager.SaveSettings(settings, _localId);
+        }
     }
 }
