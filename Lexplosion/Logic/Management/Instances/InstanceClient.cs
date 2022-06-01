@@ -686,7 +686,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public void SaveSettings(Settings settings)
         {
-            return DataFilesManager.SaveSettings(settings, _localId);
+            DataFilesManager.SaveSettings(settings, _localId);
         }
     }
 }
