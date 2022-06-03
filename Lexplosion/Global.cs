@@ -34,7 +34,7 @@ namespace Lexplosion.Global
             public const string JavaData = "https://night-world.org/minecraft/java/";
             public const string Upload = "https://night-world.org/minecraft/upload/";
             public const string LauncherParts = "https://night-world.org/assets/launcher/windows/";
-            public const string LogicScripts = "https://night-world.org/requestProcessing/";
+            public const string LogicScripts = "https://night-world.org/api/user/";
             public const string Base = "https://night-world.org/";
         }
 

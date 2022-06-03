@@ -123,7 +123,7 @@ namespace Lexplosion.Logic.Network
                         // раз в 2 минуты отправляем пакеты основному серверу информирующие о доступности нашего игровго сервера
                         do
                         {
-                            string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer.php", input);
+                            string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer", input);
                             Console.WriteLine(ans);
                         }
                         while (!waitingInforming.WaitOne(120000));
@@ -132,7 +132,7 @@ namespace Lexplosion.Logic.Network
                     {
                         Task.Run(delegate ()
                         {
-                            ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer.php", input);
+                            ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "dropGameServer", input);
                         });
                     }
                 });
@@ -185,7 +185,7 @@ namespace Lexplosion.Logic.Network
                         new List<string>() { "accessToken", accessToken }
                     };
 
-                    string data = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getGameServers.php", input);
+                    string data = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getGameServers", input);
                     Dictionary<string, OnlineUserInfo> servers = null;
                     try
                     {
