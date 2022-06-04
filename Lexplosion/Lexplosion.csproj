@@ -213,6 +213,7 @@
     <Compile Include="Logic\KeySemaphore.cs" />
     <Compile Include="Logic\Management\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
+    <Compile Include="Logic\Management\Instances\InstanceAddon.cs" />
     <Compile Include="Logic\Management\Instances\InstanceClient.cs" />
     <Compile Include="Logic\Management\Instances\Objects.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />

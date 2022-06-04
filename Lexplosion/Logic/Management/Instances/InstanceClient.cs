@@ -45,6 +45,10 @@ namespace Lexplosion.Logic.Management.Instances
         public bool UpdateAvailable { get; private set; }
         public bool IsInstalled { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
+        public string ExternalId
+        {
+            get { return _externalId; }
+        }
         #endregion
 
         public event ProgressHandlerCallback ProgressHandler;
@@ -687,6 +691,10 @@ namespace Lexplosion.Logic.Management.Instances
         public void SaveSettings(Settings settings)
         {
             DataFilesManager.SaveSettings(settings, _localId);
+        }
+
+        public void GetInstalledAddons(AddonType addonsType)
+        {
         }
 
         //public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerCallback ProgressHandler)
