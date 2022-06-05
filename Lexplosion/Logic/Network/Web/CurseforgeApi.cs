@@ -73,7 +73,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static List<CurseforgeModInfo> GetAddonsList(int pageSize, int index, AddonType type, string searchFilter = "", string gameVersion = "")
+        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, string searchFilter = "", string gameVersion = "")
         {
             try
             {
@@ -99,14 +99,14 @@ namespace Lexplosion.Logic.Network
 
                 if (answer != null)
                 {
-                    return JsonConvert.DeserializeObject<List<CurseforgeModInfo>>(answer);
+                    return JsonConvert.DeserializeObject<List<CurseforgeAddonInfo>>(answer);
                 }
 
-                return new List<CurseforgeModInfo>();
+                return new List<CurseforgeAddonInfo>();
             }
             catch
             {
-                return new List<CurseforgeModInfo>();
+                return new List<CurseforgeAddonInfo>();
             }
         }
 

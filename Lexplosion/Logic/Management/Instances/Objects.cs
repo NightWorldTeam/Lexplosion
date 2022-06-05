@@ -12,4 +12,15 @@ namespace Lexplosion.Logic.Management.Instances
         public bool IsInstalled;
         public InstanceSource Type;
     }
+
+    /// <summary>
+    /// Содержит основную инфу о модпаке.
+    /// </summary>
+    public class BaseInstanceData
+    {
+        public InstanceSource Type;
+        public string GameVersion;
+        public string LocalId;
+        public string ExternalId;
+    }
 }

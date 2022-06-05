@@ -45,10 +45,6 @@ namespace Lexplosion.Logic.Management.Instances
         public bool UpdateAvailable { get; private set; }
         public bool IsInstalled { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
-        public string ExternalId
-        {
-            get { return _externalId; }
-        }
         #endregion
 
         public event ProgressHandlerCallback ProgressHandler;
@@ -104,6 +100,23 @@ namespace Lexplosion.Logic.Management.Instances
             };
 
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json", JsonConvert.SerializeObject(assetsData));
+        }
+
+        /// <summary>
+        /// Возвращает основные данные модпака.
+        /// </summary>
+        public BaseInstanceData GetBaseData
+        {
+            get 
+            {
+                return new BaseInstanceData
+                {
+                    LocalId = _localId,
+                    ExternalId = _externalId,
+                    Type = Type,
+                    GameVersion = GameVersion
+                };
+            }
         }
 
         /// <summary>

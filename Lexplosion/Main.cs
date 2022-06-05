@@ -118,7 +118,22 @@ namespace Lexplosion
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
 
-            //OutsideDataManager.DefineInstances();
+            //string url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=12&gameVersion=1.12.2";
+
+            //string answer;
+            //WebRequest req = WebRequest.Create(url);
+            //using (WebResponse resp = req.GetResponse())
+            //{
+            //    using (Stream stream = resp.GetResponseStream())
+            //    {
+            //        using (StreamReader sr = new StreamReader(stream))
+            //        {
+            //            answer = sr.ReadToEnd();
+            //        }
+            //    }
+            //}
+            //Console.WriteLine(answer);
+
 
             Thread.Sleep(1000);
 

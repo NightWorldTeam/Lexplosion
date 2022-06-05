@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
             public string url;
         }
 
-        public int id;
+        public int id; // TODO: подобные поля потом нужно на long заменить
         public string name;
         public List<LatestFile> latestFiles;
         public string summary;
@@ -61,15 +61,16 @@ namespace Lexplosion.Logic.Objects.Curseforge
     /// <summary>
     /// Описывает мод с курсфорджа. Используются при декодировании Json
     /// </summary>
-    public class CurseforgeModInfo : CurseforgeProjectInfo
+    public class CurseforgeAddonInfo : CurseforgeProjectInfo
     {
-        public class GameVersionMod : GameVersion
+        public class GameVersionAddon : GameVersion
         {
             public int modLoader;
+            public string projectFileName;
         }
 
-        public List<GameVersionMod> gameVersionLatestFiles;
-        public ModloaderType Modloader;
+        public List<GameVersionAddon> gameVersionLatestFiles;
+        //public ModloaderType Modloader;
     }
 
     class CurseforgeFileInfo
