@@ -15,9 +15,12 @@ namespace Lexplosion.Logic.Management.Instances
 {
     class InstanceAddon
     {
-        //public static void GetAddonsLis()
         public string Name { get; private set; }
         public string Author { get; private set; }
+        public byte[] Logo { get; private set; } = null;
+        public bool IsInstalled { get; private set; } = false;
+        public bool UpdateAvailable { get; private set; }
+        public string WebsiteUrl { get; private set; } = null;
 
         private readonly CurseforgeAddonInfo _modInfo;
         private readonly BaseInstanceData _modpackInfo;
@@ -108,6 +111,44 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             InstallAddon(fileID);
+        }
+
+        public void Disable()
+        {
+            int projectID = _modInfo.id;
+            string instanceId = _modpackInfo.LocalId;
+
+            var installedAddons = DataFilesManager.GetFile<InstalledAddons>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
+            if (installedAddons != null && installedAddons.ContainsKey(projectID))
+            {
+                try
+                {
+                    var installedAddon = installedAddons[projectID];
+                    if (installedAddon.IsDisable)
+                    {
+                        string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
+                        if (File.Exists(dir + installedAddon.ActualPath))
+                        {
+                            File.Move(dir + installedAddon.ActualPath, dir + installedAddon.Path);
+                            installedAddon.IsDisable = false;
+
+                            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
+                        }
+                    }
+                    else
+                    {
+                        string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
+                        if (File.Exists(dir + installedAddon.Path))
+                        {
+                            installedAddon.IsDisable = true;
+                            File.Move(dir + installedAddon.Path, dir + installedAddon.ActualPath);
+
+                            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
+                        }
+                    }
+                }
+                catch { }
+            }
         }
     }
 }
