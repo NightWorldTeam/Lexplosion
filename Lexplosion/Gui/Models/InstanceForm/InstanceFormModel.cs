@@ -63,9 +63,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
             // set categories to list
             // add game version like category
             Categories.Add(new Category { name = instanceClient.GameVersion });
-            foreach (var category in InstanceClient.Categories)
-            {
-                Categories.Add(category);
+            if (InstanceClient.Categories != null && InstanceClient.Categories.Count > 0) 
+            { 
+                foreach (var category in InstanceClient.Categories)
+                {
+                    Categories.Add(category);
+                }
             }
 
             OverviewField = instanceClient.Description;
