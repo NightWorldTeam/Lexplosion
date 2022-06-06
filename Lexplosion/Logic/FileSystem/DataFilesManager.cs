@@ -264,24 +264,6 @@ namespace Lexplosion.Logic.FileSystem
                 return default;
             }
         }
-        /// <summary>
-        /// Эта функция возвращает имя для файла либрариесов (файлы .lver, что хранит версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры)
-        /// у каждой версии игры своё имя для файлов с информацией о либрариесах
-        /// </summary>
-        public static string GetLibName(VersionInfo version)
-        {
-            string endName = "";
-            if (version.modloaderType == ModloaderType.Fabric)
-            {
-                endName = "-Fabric-" + version.modloaderVersion;
-            }
-            else if (version.modloaderType == ModloaderType.Forge)
-            {
-                endName = "-Forge-" + version.modloaderVersion;
-            }
-
-            return version.gameVersion + endName;
-        }
 
         public static void SaveManifest(string instanceId, VersionManifest data)
         {

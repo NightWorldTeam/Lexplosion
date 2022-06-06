@@ -79,7 +79,7 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(InfoData.id); //получем информацию об этом модпаке
+            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(InfoData.id); //получем информацию об этом модпаке
 
             if (!onlyBase)
             {
@@ -174,7 +174,7 @@ namespace Lexplosion.Logic.Management
             {
                 if (Info == null)
                 {
-                    Info = CurseforgeApi.GetInstanceInfo(InfoData.id, InfoData.instanceVersion); //получем информацию об этом модпаке
+                    Info = CurseforgeApi.GetProjectFile(InfoData.id, InfoData.instanceVersion); //получем информацию об этом модпаке
 
                     if (Info == null || Info.downloadUrl == null || Info.fileName == null)
                     {

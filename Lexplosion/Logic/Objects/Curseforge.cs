@@ -47,6 +47,14 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public List<Attachment> attachments;
         public List<Category> categories;
         public List<Author> authors;
+
+        public string GetAuthorName
+        {
+            get 
+            { 
+                return (authors != null && authors.Count > 0) ? authors[0].name : "Unknown author"; 
+            }
+        }
     }
 
     /// <summary>

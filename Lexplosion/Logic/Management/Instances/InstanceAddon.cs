@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using Newtonsoft.Json;
+using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.FileSystem;
 using static Lexplosion.Logic.Network.CurseforgeApi;
-using System.IO;
-using Newtonsoft.Json;
-using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -34,16 +34,48 @@ namespace Lexplosion.Logic.Management.Instances
 
         public static List<InstanceAddon> GetAddons(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, string searchFilter = "")
         {
+            string instanceId = modpackInfo.LocalId;
             var addons = new List<InstanceAddon>();
 
+            // получаем спсиок всех аддонов с курсфорджа
             List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, searchFilter);
             if (addonsList == null)
                 return addons;
 
+            // получаем список установленных аддонов
+            var installedAddons = DataFilesManager.GetFile<InstalledAddons>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
+
+            // проходимся по аддонам с курсфорджа
             int i = 0;
             foreach (CurseforgeAddonInfo addon in addonsList)
             {
-                addons.Add(new InstanceAddon(addon, modpackInfo));
+                bool isInstalled = 
+                    (installedAddons.ContainsKey(addon.id) && 
+                    File.Exists(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addon.id].ActualPath));
+
+                int lastFileID = 0;
+                if (isInstalled)
+                {
+                    // ищем последнюю версию аддона
+                    foreach (var addonVersion in addon.gameVersionLatestFiles)
+                    {
+                        if (addonVersion.gameVersion == modpackInfo.GameVersion)
+                        {
+                            lastFileID = addonVersion.projectFileId;
+                            break;
+                        }
+                    }
+                }
+
+                var instanceAddon = new InstanceAddon(addon, modpackInfo)
+                {
+                    IsInstalled = isInstalled,
+                    Author = addon.GetAuthorName,
+                    WebsiteUrl = addon.websiteUrl,
+                    UpdateAvailable = (installedAddons[addon.id].FileID < lastFileID) // если установленная версия аддона меньше последней - значит доступно обновление
+                };
+
+                addons.Add(instanceAddon);
                 i++;
             }
 

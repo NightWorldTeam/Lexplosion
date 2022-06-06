@@ -28,171 +28,99 @@ namespace Lexplosion.Logic.Network
             UncnownError
         }
 
-        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "", string gameVersion = "")
+        private class ProjectTypeInfo
+        {
+            public class CategorySection
+            {
+                public int packageType;
+            }
+
+            public class FileData
+            {
+                public int id;
+                public string fileName;
+                public string downloadUrl;
+                public string displayName;
+                public List<Dictionary<string, int>> dependencies;
+            }
+
+            public class LatestFile
+            {
+                public int projectFileId;
+                public string gameVersion;
+            }
+
+            public CategorySection categorySection;
+            public List<LatestFile> gameVersionLatestFiles;
+        }
+
+        private static T GetApiData<T>(string url) where T : new()
         {
             try
             {
-                if (gameVersion != "")
-                {
-                    gameVersion = "&gameVersion=" + gameVersion;
-                }
 
-                string url;
-                if (categoriy == ModpacksCategories.All)
-                {
-                    url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
-                }
-                else
-                {
-                    url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
-                }
-                string answer;
-
-                WebRequest req = WebRequest.Create(url);
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
-                }
+                string answer = ToServer.HttpGet(url);
 
                 if (answer != null)
                 {
-                    return JsonConvert.DeserializeObject<List<CurseforgeInstanceInfo>>(answer);
+                    return JsonConvert.DeserializeObject<T>(answer);
                 }
 
-                return new List<CurseforgeInstanceInfo>();
+                return new T();
             }
             catch
             {
-                return new List<CurseforgeInstanceInfo>();
+                return new T();
             }
+        }
+
+        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "", string gameVersion = "")
+        {
+            if (gameVersion != "")
+            {
+                gameVersion = "&gameVersion=" + gameVersion;
+            }
+
+            string url;
+            if (categoriy == ModpacksCategories.All)
+            {
+                url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+            }
+            else
+            {
+                url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+            }
+
+            return GetApiData<List<CurseforgeInstanceInfo>>(url);
+
         }
 
         public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, string searchFilter = "", string gameVersion = "")
         {
-            try
+            if (gameVersion != "")
             {
-                if (gameVersion != "")
-                {
-                    gameVersion = "&gameVersion=" + gameVersion;
-                }
-
-                string url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
-
-                string answer;
-                WebRequest req = WebRequest.Create(url);
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
-                }
-
-                if (answer != null)
-                {
-                    return JsonConvert.DeserializeObject<List<CurseforgeAddonInfo>>(answer);
-                }
-
-                return new List<CurseforgeAddonInfo>();
+                gameVersion = "&gameVersion=" + gameVersion;
             }
-            catch
-            {
-                return new List<CurseforgeAddonInfo>();
-            }
+
+            string url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);  
+            return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 
-        public static List<CurseforgeFileInfo> GetInstanceInfo(string id)
+        public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
         {
-            try
-            {
-                string answer;
-
-                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/" + id + "/files");
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
-                }
-
-                if (answer != null)
-                {
-                    return JsonConvert.DeserializeObject<List<CurseforgeFileInfo>>(answer);
-                }
-                else
-                {
-                    return new List<CurseforgeFileInfo>();
-                }
-            }
-            catch
-            {
-                return new List<CurseforgeFileInfo>();
-            }
+            return GetApiData<List<CurseforgeFileInfo>>("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectId + "/files");
         }
 
-        public static CurseforgeFileInfo GetInstanceInfo(string id, int fileId)
+        public static CurseforgeFileInfo GetProjectFile(string projecrId, int fileId)
         {
-            try
-            {
-                string answer;
-
-                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/" + id + "/file/" + fileId);
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
-                }
-
-                if (answer != null)
-                {
-                    return JsonConvert.DeserializeObject<CurseforgeFileInfo>(answer);
-                }
-                else
-                {
-                    return new CurseforgeFileInfo();
-                }
-            }
-            catch
-            {
-                return new CurseforgeFileInfo();
-            }
+            return GetApiData<CurseforgeFileInfo>("https://addons-ecs.forgesvc.net/api/v2/addon/" + projecrId + "/file/" + fileId);
         }
 
         public static CurseforgeInstanceInfo GetInstance(string id)
         {
             try
             {
-                string answer;
-
-                WebRequest req = WebRequest.Create("https://addons-ecs.forgesvc.net/api/v2/addon/" + id + "/");
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
-                }
+                string answer = ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + id + "/");
 
                 if (answer != null)
                 {
@@ -235,32 +163,6 @@ namespace Lexplosion.Logic.Network
             {
                 return null;
             }
-        }
-
-        private class ProjectTypeInfo
-        {
-            public class CategorySection
-            {
-                public int packageType;
-            }
-
-            public class FileData
-            {
-                public int id;
-                public string fileName;
-                public string downloadUrl;
-                public string displayName;
-                public List<Dictionary<string, int>> dependencies;
-            }
-
-            public class LatestFile
-            {
-                public int projectFileId;
-                public string gameVersion;
-            }
-
-            public CategorySection categorySection;
-            public List<LatestFile> gameVersionLatestFiles;
         }
 
         public static Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false, string gameVersion = "")

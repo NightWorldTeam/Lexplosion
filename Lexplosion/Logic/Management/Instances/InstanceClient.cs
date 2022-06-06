@@ -25,6 +25,9 @@ namespace Lexplosion.Logic.Management.Instances
         private string _localId = null;
 
         private const string LogoFileName = "logo.png";
+        private const string UnknownName = "Unknown name";
+        private const string UnknownAuthor = "Unknown author";
+        private const string NoDescription = "Описания нет, но мы надеемся что оно будет.";
 
         private static Dictionary<string, InstanceClient> _installedInstances = new Dictionary<string, InstanceClient>();
 
@@ -38,10 +41,10 @@ namespace Lexplosion.Logic.Management.Instances
         public string Author { get; private set; }
         public string Description { get; private set; }
         public byte[] Logo { get; private set; } = null;
-        public List<Category> Categories { get; private set; }
+        public List<Category> Categories { get; private set; } = null;
         public string GameVersion { get; private set; }
         public string Summary { get; private set; }
-        public bool InLibrary { get; private set; }
+        public bool InLibrary { get; private set; } = false;
         public bool UpdateAvailable { get; private set; }
         public bool IsInstalled { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
@@ -88,6 +91,8 @@ namespace Lexplosion.Logic.Management.Instances
             GameVersion = gameVersion;
             InLibrary = true;
             _localId = GenerateInstanceId();
+            Author = UserData.Login;
+            Description = NoDescription;
 
             CreateFileStruct(modloader, modloaderVersion);
             _installedInstances[_localId] = this;
@@ -151,8 +156,12 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 foreach (string localId in list.Keys)
                 {
-                    //проверяем установлен ли этот модпак и не содержит ли его id запрещенных символов
-                    if (Directory.Exists(WithDirectory.DirectoryPath + "/instances/" + localId) && !Regex.IsMatch(localId.Replace("_", ""), @"[^a-zA-Z0-9]"))
+                    VersionManifest instanceManifest = DataFilesManager.GetManifest(localId, false);
+                    bool manifestIsCorrect = 
+                        (instanceManifest != null && instanceManifest.version != null && instanceManifest.version.gameVersion != null);
+
+                    //проверяем имеется ли манифест, не содержит ли его id запрещенных символов
+                    if (manifestIsCorrect && !Regex.IsMatch(localId.Replace("_", ""), @"[^a-zA-Z0-9]"))
                     {
                         string externalID = null;
                         byte[] logo = null;
@@ -189,12 +198,12 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             instance = new InstanceClient(list[localId].Type, externalID, localId)
                             {
-                                Name = list[localId].Name ?? "Unknown name",
-                                Summary = assetsData.Summary ?? "This modpack is not have description but you can add it.",
-                                Author = assetsData.Author ?? "Unknown author",
-                                Description = assetsData.Description ?? "This modpack is not have description but you can add it.",
+                                Name = list[localId].Name ?? UnknownName,
+                                Summary = assetsData.Summary ?? NoDescription,
+                                Author = assetsData.Author ?? UnknownAuthor,
+                                Description = assetsData.Description ?? NoDescription,
                                 Categories = assetsData.Categories ?? new List<Category>(),
-                                GameVersion = "1.10.2",
+                                GameVersion = instanceManifest.version?.gameVersion,
                                 Logo = logo
                             };
                         }
@@ -202,12 +211,12 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             instance = new InstanceClient(list[localId].Type, externalID, localId)
                             {
-                                Name = list[localId].Name ?? "Unknown name",
-                                Summary = "This modpack is not have description but you can add it.",
-                                Author = "Unknown author",
-                                Description = "This modpack is not have description but you can add it.",
+                                Name = list[localId].Name ?? UnknownName,
+                                Summary = NoDescription,
+                                Author = UnknownAuthor,
+                                Description = NoDescription,
                                 Categories = new List<Category>(),
-                                GameVersion = "1.10.2",
+                                GameVersion = instanceManifest.version?.gameVersion,
                                 Logo = logo
                             };
                         }
@@ -256,44 +265,46 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     if (i < pageSize * (pageIndex + 1))
                     {
-                        InstanceClient instanceClient;
-                        if (_idsPairs.ContainsKey(nwModpack))
+                        // проверяем версию игры
+                        if (nwInstances[nwModpack].GameVersion != null)
                         {
-                            instanceClient = _installedInstances[_idsPairs[nwModpack]];
-                            instanceClient.CheckUpdates();
-                            instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
-                            instanceClient.SaveAssets();
-
-                            if (nwInstances[nwModpack].Categories != null)
-                                instanceClient.Categories = nwInstances[nwModpack].Categories;
-                            if (nwInstances[nwModpack].GameVersion != null)
-                                instanceClient.GameVersion = nwInstances[nwModpack].GameVersion;
-                            if (nwInstances[nwModpack].Summary != null)
-                                instanceClient.Summary = nwInstances[nwModpack].Summary;
-                            if (nwInstances[nwModpack].Description != null)
-                                instanceClient.Description = nwInstances[nwModpack].Description;
-                            if (nwInstances[nwModpack].Author != null)
-                                instanceClient.Author = nwInstances[nwModpack].Author;
-                        }
-                        else
-                        {
-                            instanceClient = new InstanceClient(InstanceSource.Nightworld, nwModpack)
+                            InstanceClient instanceClient;
+                            if (_idsPairs.ContainsKey(nwModpack))
                             {
-                                Name = nwInstances[nwModpack].Name ?? "Unknown name",
-                                Logo = null,
-                                Categories = nwInstances[nwModpack].Categories ?? new List<Category>(),
-                                GameVersion = nwInstances[nwModpack].GameVersion ?? "",
-                                Summary = nwInstances[nwModpack].Summary ?? "",
-                                Description = nwInstances[nwModpack].Description ?? "",
-                                Author = nwInstances[nwModpack].Author ?? "Unknown author"
-                            };
+                                instanceClient = _installedInstances[_idsPairs[nwModpack]];
+                                instanceClient.CheckUpdates();
+                                instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
+                                instanceClient.SaveAssets();
 
-                            instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
+                                if (nwInstances[nwModpack].Categories != null)
+                                    instanceClient.Categories = nwInstances[nwModpack].Categories;
+                                if (nwInstances[nwModpack].Summary != null)
+                                    instanceClient.Summary = nwInstances[nwModpack].Summary;
+                                if (nwInstances[nwModpack].Description != null)
+                                    instanceClient.Description = nwInstances[nwModpack].Description;
+                                if (nwInstances[nwModpack].Author != null)
+                                    instanceClient.Author = nwInstances[nwModpack].Author;
+                            }
+                            else
+                            {
+                                instanceClient = new InstanceClient(InstanceSource.Nightworld, nwModpack)
+                                {
+                                    Name = nwInstances[nwModpack].Name ?? UnknownName,
+                                    Logo = null,
+                                    Categories = nwInstances[nwModpack].Categories ?? new List<Category>(),
+                                    GameVersion = nwInstances[nwModpack].GameVersion ?? "",
+                                    Summary = nwInstances[nwModpack].Summary ?? "",
+                                    Description = nwInstances[nwModpack].Description ?? "",
+                                    Author = nwInstances[nwModpack].Author ?? UnknownAuthor
+                                };
+
+                                instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
+                            }
+
+                            instanceClient.WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + nwModpack;
+
+                            instances.Add(instanceClient);
                         }
-
-                        instanceClient.WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + nwModpack;
-
-                        instances.Add(instanceClient);
                     }
 
                     i++;
@@ -304,64 +315,66 @@ namespace Lexplosion.Logic.Management.Instances
                 List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, ModpacksCategories.All, searchFilter);
                 foreach (var instance in curseforgeInstances)
                 {
-                    string author = "";
-                    if (instance.authors != null && instance.authors.Count > 0 && instance.authors[0].name != null)
+                    // проверяем версию игры
+                    if (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0 && instance.gameVersionLatestFiles[0].gameVersion != null)
                     {
-                        author = instance.authors[0].name;
-                    }
-
-                    InstanceClient instanceClient;
-                    if (_idsPairs.ContainsKey(instance.id.ToString()))
-                    {
-                        instanceClient = _installedInstances[_idsPairs[instance.id.ToString()]];
-                        instanceClient.CheckUpdates();
-
-                        if (instance.categories != null)
-                            instanceClient.Categories = instance.categories;
-                        if (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0)
-                            instanceClient.GameVersion = instance.gameVersionLatestFiles[0].gameVersion;
-                        if (instance.summary != null)
+                        string author = "";
+                        if (instance.authors != null && instance.authors.Count > 0 && instance.authors[0].name != null)
                         {
-                            instanceClient.Summary = instance.summary;
-                            instanceClient.Description = instance.summary;
-                        }
-                        if (instance.authors != null && instance.authors.Count > 0)
-                            instanceClient.Author = instance.authors[0].name;
-                    }
-                    else
-                    {
-                        instanceClient = new InstanceClient(InstanceSource.Curseforge, instance.id.ToString())
-                        {
-                            Name = instance.name ?? "Unknown name",
-                            Logo = null,
-                            Categories = instance.categories,
-                            GameVersion = (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0) ? instance.gameVersionLatestFiles[0].gameVersion : "",
-                            Summary = instance.summary ?? "",
-                            Description = instance.summary ?? "",
-                            Author = (instance.authors != null && instance.authors.Count > 0) ? instance.authors[0].name : "Unknown author"
-                        };
-                    }
-
-                    instanceClient.WebsiteUrl = instance.websiteUrl;
-
-                    if (instance.attachments != null && instance.attachments.Count > 0)
-                    {
-                        string url = instance.attachments[0].thumbnailUrl;
-                        foreach (var attachment in instance.attachments)
-                        {
-                            if (attachment.isDefault)
-                            {
-                                url = attachment.thumbnailUrl;
-                                break;
-                            }
+                            author = instance.authors[0].name;
                         }
 
-                        instanceClient.DownloadLogo(url);
+                        InstanceClient instanceClient;
                         if (_idsPairs.ContainsKey(instance.id.ToString()))
-                            instanceClient.SaveAssets();
-                    }
+                        {
+                            instanceClient = _installedInstances[_idsPairs[instance.id.ToString()]];
+                            instanceClient.CheckUpdates();
 
-                    instances.Add(instanceClient);
+                            if (instance.categories != null)
+                                instanceClient.Categories = instance.categories;
+                            if (instance.summary != null)
+                            {
+                                instanceClient.Summary = instance.summary;
+                                instanceClient.Description = instance.summary;
+                            }
+                            if (instance.authors != null && instance.authors.Count > 0)
+                                instanceClient.Author = instance.authors[0].name;
+                        }
+                        else
+                        {
+                            instanceClient = new InstanceClient(InstanceSource.Curseforge, instance.id.ToString())
+                            {
+                                Name = instance.name ?? UnknownName,
+                                Logo = null,
+                                Categories = instance.categories,
+                                GameVersion = instance.gameVersionLatestFiles[0].gameVersion,
+                                Summary = instance.summary ?? "",
+                                Description = instance.summary ?? "",
+                                Author = instance.GetAuthorName
+                            };
+                        }
+
+                        instanceClient.WebsiteUrl = instance.websiteUrl;
+
+                        if (instance.attachments != null && instance.attachments.Count > 0)
+                        {
+                            string url = instance.attachments[0].thumbnailUrl;
+                            foreach (var attachment in instance.attachments)
+                            {
+                                if (attachment.isDefault)
+                                {
+                                    url = attachment.thumbnailUrl;
+                                    break;
+                                }
+                            }
+
+                            instanceClient.DownloadLogo(url);
+                            if (_idsPairs.ContainsKey(instance.id.ToString()))
+                                instanceClient.SaveAssets();
+                        }
+
+                        instances.Add(instanceClient);
+                    }      
                 }
             }
 
@@ -450,8 +463,8 @@ namespace Lexplosion.Logic.Management.Instances
                     return new InstanceData
                     {
                         Categories = new List<Category>(),
-                        Description = "This modpack is not have description but you can add it.",
-                        Summary = "This modpack is not have description but you can add it.",
+                        Description = NoDescription,
+                        Summary = NoDescription,
                         TotalDownloads = 0,
                         GameVersion = "",
                         LastUpdate = null,
@@ -540,7 +553,7 @@ namespace Lexplosion.Logic.Management.Instances
                         return;
                     }
 
-                    List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetInstanceInfo(infoData.id); //получем информацию об этом модпаке
+                    List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(infoData.id); //получем информацию об этом модпаке
 
                     //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
                     foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
@@ -704,10 +717,6 @@ namespace Lexplosion.Logic.Management.Instances
         public void SaveSettings(Settings settings)
         {
             DataFilesManager.SaveSettings(settings, _localId);
-        }
-
-        public void GetInstalledAddons(AddonType addonsType)
-        {
         }
 
         //public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerCallback ProgressHandler)

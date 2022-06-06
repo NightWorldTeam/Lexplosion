@@ -240,7 +240,6 @@ namespace Lexplosion.Logic.Network
                 try
                 {
                     answer = HttpPost(LaunсherSettings.URL.Base + "api/account/auth", data);
-                    Console.WriteLine(answer);
 
                     if (answer == null)
                     {
