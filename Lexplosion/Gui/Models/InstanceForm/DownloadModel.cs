@@ -87,6 +87,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _instanceFormModel.UpperButton.ChangeFuncProgressBar();
             IsDownloadInProgress = true;
 
+            _instanceFormModel.UpdateLowerButton();
+
             Lexplosion.Run.TaskRun(delegate
             {
                 _instanceFormModel.InstanceClient.UpdateInstance();
@@ -125,6 +127,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     {
                         IsDownloadInProgress = false;
                         _instanceFormModel.UpperButton.ChangeFuncPlay();
+                        _instanceFormModel.UpdateLowerButton();
                     }
                     break;
                 case InstanceInit.DownloadFilesError:

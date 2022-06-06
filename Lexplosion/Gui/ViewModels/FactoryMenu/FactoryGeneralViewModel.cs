@@ -85,7 +85,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         public InstanceFactoryModel Model { get; }
 
-        #endregion
+        #endregion props
 
 
         #region commands
@@ -126,7 +126,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 }));
             }
         }
-        #endregion
+        #endregion commands
 
         public FactoryGeneralViewModel()
         {

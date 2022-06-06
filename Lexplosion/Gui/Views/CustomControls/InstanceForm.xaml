@@ -275,7 +275,7 @@
                             </Grid>
                         </Border>
                     </Grid>
-                    <controls:DropdownMenu Grid.Row="1" ToggleCornerRadius="10">
+                    <controls:DropdownMenu Grid.Row="1" Background="#313131">
                         <ItemsControl
                             ItemsSource="{Binding Model.LowerButtons}">
                             <ItemsControl.ItemsPanel>

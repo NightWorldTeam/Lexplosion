@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 
@@ -19,7 +20,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         // buttons
         public UpperButton UpperButton { get; set; }
-        public List<LowerButton> LowerButtons { get; } = new List<LowerButton>();
+        // сделать lock объект
+        public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
+
+        private object _locker = false;
 
         public string OverviewField
         {
@@ -49,14 +53,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 (
                     MultiButtonProperties.GeometryDownloadIcon,
                     UpperButtonFunc.Download,
-                    new Tip() 
+                    new Tip()
                     {
                         Text = "Установить сборку",
                         Offset = -160
                     }
                 );
-
-            PrepareLowerButton();
 
             // set categories to list
             // add game version like category
@@ -80,6 +82,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 UpperButton.ChangeFuncPlay();
             }
             else UpperButton.ChangeFuncDownload(InstanceClient.IsInstalled);
+            UpdateLowerButton();
         }
 
         public void OpenInstanceFolder()
@@ -87,54 +90,64 @@ namespace Lexplosion.Gui.Models.InstanceForm
             Process.Start("explorer", InstanceClient.GetDirectoryPath());
         }
 
-        private void PrepareLowerButton() 
+        public void UpdateLowerButton()
         {
-            if (InstanceClient.UpdateAvailable) 
-            { 
-                LowerButtons.Add(
-                    new LowerButton("Обновить", MultiButtonProperties.UpdateInstance, LowerButtonFunc.Update)
-                );
-            }
-
-            if (InstanceClient.WebsiteUrl != null) 
-            {
-                if (InstanceClient.Type == InstanceSource.Curseforge)
+            App.Current.Dispatcher.Invoke(() => { 
+                LowerButtons.Clear();
+                if (InstanceClient.UpdateAvailable)
                 {
                     LowerButtons.Add(
-                            new LowerButton("Перейти на Curseforge", MultiButtonProperties.ToCurseforge, LowerButtonFunc.OpenWebsite)
+                        new LowerButton("Обновить", MultiButtonProperties.UpdateInstance, LowerButtonFunc.Update)
+                    );
+                }
+
+                if (InstanceClient.WebsiteUrl != null)
+                {
+                    if (InstanceClient.Type == InstanceSource.Curseforge)
+                    {
+                        LowerButtons.Add(
+                                new LowerButton("Перейти на Curseforge", MultiButtonProperties.ToCurseforge, LowerButtonFunc.OpenWebsite)
+                            );
+                    }
+                    else if (InstanceClient.Type == InstanceSource.Nightworld)
+                    {
+                        LowerButtons.Add(
+                            new LowerButton("Перейти на NightWorld", MultiButtonProperties.ToCurseforge, LowerButtonFunc.OpenWebsite)
+                        );
+                    }
+
+                }
+
+                if (InstanceClient.InLibrary || DownloadModel.IsDownloadInProgress)
+                {
+                    LowerButtons.Add(
+                            new LowerButton("Удалить из библиотеки", MultiButtonProperties.GeometryLibraryDelete, LowerButtonFunc.DeleteFromLibrary)
                         );
                 }
-                else if (InstanceClient.Type == InstanceSource.Nightworld) 
+                else
                 {
                     LowerButtons.Add(
-                        new LowerButton("Перейти на NightWorld", MultiButtonProperties.ToCurseforge, LowerButtonFunc.OpenWebsite)
+                        new LowerButton("Добавить в библиотеку", MultiButtonProperties.GeometryLibraryAdd, LowerButtonFunc.AddToLibrary)
                     );
                 }
 
-            }
-
-            if (InstanceClient.InLibrary)
-            {
-                LowerButtons.Add(
-                        new LowerButton("Удалить из библиотеки", MultiButtonProperties.GeometryLibraryDelete, LowerButtonFunc.DeleteFromLibrary)
+                if (DownloadModel.IsDownloadInProgress)
+                {
+                    LowerButtons.Add(
+                        new LowerButton("Отменить скачивание", MultiButtonProperties.GeometryCancelIcon, LowerButtonFunc.CancelDownload)
                     );
-            }
-            else 
-            {
-                LowerButtons.Add(
-                    new LowerButton("Добавить в библиотеку", MultiButtonProperties.GeometryLibraryAdd, LowerButtonFunc.AddToLibrary)
-                );
-            }
+                }
 
-            if (InstanceClient.IsInstalled) 
-            {
-                LowerButtons.Add(
-                    new LowerButton("Открыть папку", MultiButtonProperties.GeometryOpenFolder, LowerButtonFunc.OpenFolder)
-                );       
-                LowerButtons.Add(
-                    new LowerButton("Удалить сборку", MultiButtonProperties.RemoveInstance, LowerButtonFunc.RemoveInstance)
-                );
-            }
+                if (InstanceClient.IsInstalled)
+                {
+                    LowerButtons.Add(
+                        new LowerButton("Открыть папку", MultiButtonProperties.GeometryOpenFolder, LowerButtonFunc.OpenFolder)
+                    );
+                    LowerButtons.Add(
+                        new LowerButton("Удалить сборку", MultiButtonProperties.RemoveInstance, LowerButtonFunc.RemoveInstance)
+                    );
+                }
+            });
         }
     }
 }
