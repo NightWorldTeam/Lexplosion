@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Lexplosion.Gui
+namespace Lexplosion
 {
     public class VMBase : INotifyPropertyChanged
     {
