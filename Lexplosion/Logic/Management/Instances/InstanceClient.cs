@@ -45,7 +45,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string GameVersion { get; private set; }
         public string Summary { get; private set; }
         public bool InLibrary { get; private set; } = false;
-        public bool UpdateAvailable { get; private set; }
+        public bool UpdateAvailable { get; private set; } = false;
         public bool IsInstalled { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
         #endregion
@@ -540,7 +540,7 @@ namespace Lexplosion.Logic.Management.Instances
             var infoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + _localId + "/instancePlatformData.json");
             if (infoData == null || infoData.id == null)
             {
-                UpdateAvailable = true;
+                UpdateAvailable = false;
                 return;
             }
 
