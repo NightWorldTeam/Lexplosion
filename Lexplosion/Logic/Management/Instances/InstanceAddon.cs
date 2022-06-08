@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.IO.Compression;
+using Tommy;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
@@ -15,24 +17,33 @@ namespace Lexplosion.Logic.Management.Instances
 {
     class InstanceAddon
     {
-        public string Name { get; private set; }
-        public string Author { get; private set; }
+        public string Name { get; private set; } = "";
+        public string Author { get; private set; } = "";
+        public string Description { get; private set; } = "";
         public byte[] Logo { get; private set; } = null;
         public bool IsInstalled { get; private set; } = false;
-        public bool UpdateAvailable { get; private set; }
+        public bool UpdateAvailable { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
 
         private readonly CurseforgeAddonInfo _modInfo;
         private readonly BaseInstanceData _modpackInfo;
+        private readonly int _projectId;
 
         private InstanceAddon(CurseforgeAddonInfo modInfo, BaseInstanceData modpackInfo)
         {
             _modInfo = modInfo;
+            _projectId = modInfo.id;
             _modpackInfo = modpackInfo;
-            Name = modInfo.name;
         }
 
-        public static List<InstanceAddon> GetAddons(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, string searchFilter = "")
+        private InstanceAddon(int projectId, BaseInstanceData modpackInfo)
+        {
+            _modInfo = null;
+            _projectId = projectId;
+            _modpackInfo = modpackInfo;
+        }
+
+        public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, string searchFilter = "")
         {
             string instanceId = modpackInfo.LocalId;
             var addons = new List<InstanceAddon>();
@@ -69,6 +80,8 @@ namespace Lexplosion.Logic.Management.Instances
 
                 var instanceAddon = new InstanceAddon(addon, modpackInfo)
                 {
+                    Description = addon.summary,
+                    Name = addon.name,
                     IsInstalled = isInstalled,
                     Author = addon.GetAuthorName,
                     WebsiteUrl = addon.websiteUrl,
@@ -98,7 +111,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         private bool InstallAddon(int fileID)
         {
-            int projectID = _modInfo.id;
+            int projectID = _projectId;
             string instanceId = _modpackInfo.LocalId;
             string gameVersion = _modpackInfo.GameVersion;
 
@@ -145,9 +158,64 @@ namespace Lexplosion.Logic.Management.Instances
             InstallAddon(fileID);
         }
 
+        //public static List<InstanceAddon> GetInstalledAddons(BaseInstanceData modpackInfo)
+        //{
+        //    string getParameterValue(TomlTable table, string parameter)
+        //    {
+        //        if (table["mods"][0][parameter].IsString)
+        //            return table["mods"][0][parameter];
+        //        else if (table[parameter])
+        //            return table[parameter];
+        //        else
+        //            return "";
+        //    }
+
+        //    List<InstanceAddon> addons = new List<InstanceAddon>();
+
+        //    string[] files;
+        //    try
+        //    {
+        //        files = Directory.GetFiles(WithDirectory.DirectoryPath + "/" + modpackInfo.LocalId + "/mods/", "*.jar", SearchOption.TopDirectoryOnly);
+        //    }
+        //    catch
+        //    {
+        //        return addons;
+        //    }
+
+        //    foreach (string fileAddr in files)
+        //    {
+        //        try
+        //        {
+        //            using (ZipArchive zip = ZipFile.Open(fileAddr, ZipArchiveMode.Read))
+        //            {
+        //                ZipArchiveEntry entry = zip.GetEntry("META-INF/mods.toml");
+
+        //                using (Stream file = entry.Open())
+        //                {
+        //                    using (TextReader text = new StreamReader(file))
+        //                    {
+        //                        TomlTable table = TOML.Parse(text);
+        //                        Console.WriteLine(getParameterValue(table, "displayName"));
+        //                        Console.WriteLine(getParameterValue(table, "authors"));
+        //                        Console.WriteLine(getParameterValue(table, "version"));
+        //                        Console.WriteLine(getParameterValue(table, "description"));
+        //                        Console.WriteLine(getParameterValue(table, "modId"));
+
+        //                        //addons.Add(new InstanceAddon())
+
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        catch
+        //        {
+        //        }
+        //    }
+        //}
+
         public void Disable()
         {
-            int projectID = _modInfo.id;
+            int projectID = _projectId;
             string instanceId = _modpackInfo.LocalId;
 
             var installedAddons = DataFilesManager.GetFile<InstalledAddons>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
