@@ -43,6 +43,19 @@ namespace Lexplosion.Logic.Management.Instances
             _modpackInfo = modpackInfo;
         }
 
+        private static InstalledAddons GetInstalledAddons(string instanceId)
+        {
+            var data = DataFilesManager.GetFile<InstalledAddons>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
+            if (data == null)
+                return new InstalledAddons();
+            return data;
+        }
+
+        private static void SaveInstalledAddons(string instanceId, InstalledAddons data)
+        {
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(data));
+        }
+
         public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, string searchFilter = "")
         {
             string instanceId = modpackInfo.LocalId;
@@ -54,7 +67,7 @@ namespace Lexplosion.Logic.Management.Instances
                 return addons;
 
             // получаем список установленных аддонов
-            var installedAddons = DataFilesManager.GetFile<InstalledAddons>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
+            var installedAddons = GetInstalledAddons(instanceId);
 
             // проходимся по аддонам с курсфорджа
             int i = 0;
@@ -115,14 +128,8 @@ namespace Lexplosion.Logic.Management.Instances
             string instanceId = _modpackInfo.LocalId;
             string gameVersion = _modpackInfo.GameVersion;
 
-            var installedAddons = DataFilesManager.GetFile<InstalledAddons>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
-            if (installedAddons == null)
-            {
-                installedAddons = new InstalledAddons();
-            }
-
+            var installedAddons = GetInstalledAddons(instanceId);
             bool addonAlreadyInstalled = installedAddons.ContainsKey(projectID);
-
             var addonsList = CurseforgeApi.DownloadAddon(projectID, fileID, "instances/" + instanceId + "/", !addonAlreadyInstalled, gameVersion);
 
             foreach (string file in addonsList.Keys)
@@ -138,7 +145,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
             }
 
-            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
+            SaveInstalledAddons(instanceId, installedAddons);
 
             return true;
         }
@@ -158,68 +165,132 @@ namespace Lexplosion.Logic.Management.Instances
             InstallAddon(fileID);
         }
 
-        //public static List<InstanceAddon> GetInstalledAddons(BaseInstanceData modpackInfo)
-        //{
-        //    string getParameterValue(TomlTable table, string parameter)
-        //    {
-        //        if (table["mods"][0][parameter].IsString)
-        //            return table["mods"][0][parameter];
-        //        else if (table[parameter])
-        //            return table[parameter];
-        //        else
-        //            return "";
-        //    }
+        public static List<InstanceAddon> GetInstalledMods(BaseInstanceData modpackInfo)
+        {
+            string getParameterValue(TomlTable table, string parameter)
+            {
+                if (table["mods"][0][parameter].IsString)
+                    return table["mods"][0][parameter];
+                else if (table[parameter])
+                    return table[parameter];
+                else
+                    return "";
+            }
 
-        //    List<InstanceAddon> addons = new List<InstanceAddon>();
+            string modsPath = WithDirectory.DirectoryPath + "/" + modpackInfo.LocalId + "/mods/";
+            List<InstanceAddon> addons = new List<InstanceAddon>();
 
-        //    string[] files;
-        //    try
-        //    {
-        //        files = Directory.GetFiles(WithDirectory.DirectoryPath + "/" + modpackInfo.LocalId + "/mods/", "*.jar", SearchOption.TopDirectoryOnly);
-        //    }
-        //    catch
-        //    {
-        //        return addons;
-        //    }
+            InstalledAddons actualAddonsList = new InstalledAddons(); //актуальный список аддонов, то есть те аддоны которы действительно существует. В конце именно этот спсиок будет сохранен в файл
+            var existsAddons = new Dictionary<string, int>(); // ключ - имя файла, значение - айди. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке installedAddons.
 
-        //    foreach (string fileAddr in files)
-        //    {
-        //        try
-        //        {
-        //            using (ZipArchive zip = ZipFile.Open(fileAddr, ZipArchiveMode.Read))
-        //            {
-        //                ZipArchiveEntry entry = zip.GetEntry("META-INF/mods.toml");
+            // Составляем список известных нам аддонов. То есть читаем спсиок аддонов из файла, проходимся по каждому
+            // если он существует, то добавляем в existsAddons и actualAddonsList.
+            InstalledAddons installedAddons = GetInstalledAddons(modpackInfo.LocalId);
+            foreach (int installedAddonId in installedAddons.Keys)
+            {
+                InstalledAddonInfo installedAddon = installedAddons[installedAddonId];
+                if (installedAddon.Type == AddonType.Mod) // с модами нужно поебаться и проверить
+                {
+                    if (File.Exists(modsPath + "/" + installedAddon.ActualPath))
+                    {
+                        actualAddonsList[installedAddonId] = installedAddon; // аддон действительно существует, добавляем в список
+                        existsAddons[installedAddon.ActualPath] = installedAddonId;
+                    }
+                }
+                else //всё остальное не тогаем. Просто перекидывеам в новый список
+                {
+                    existsAddons[installedAddon.ActualPath] = installedAddonId;
+                }
+            }
 
-        //                using (Stream file = entry.Open())
-        //                {
-        //                    using (TextReader text = new StreamReader(file))
-        //                    {
-        //                        TomlTable table = TOML.Parse(text);
-        //                        Console.WriteLine(getParameterValue(table, "displayName"));
-        //                        Console.WriteLine(getParameterValue(table, "authors"));
-        //                        Console.WriteLine(getParameterValue(table, "version"));
-        //                        Console.WriteLine(getParameterValue(table, "description"));
-        //                        Console.WriteLine(getParameterValue(table, "modId"));
+            string[] files;
+            try
+            {
+                files = Directory.GetFiles(modsPath, "*.*", SearchOption.TopDirectoryOnly);
+            }
+            catch
+            {
+                return addons;
+            }
 
-        //                        //addons.Add(new InstanceAddon())
+            int generatedAddonId = -1; // тут хранится следующий следющий сгенерированный айдишник. По сути переменная нужна чисто для оптимизации
+            // Теперь проходмся по всем файлам в папке
+            foreach (string fileAddr in files)
+            {
+                string fileAddr_ = fileAddr.Replace('\\', '/');
+                string extension = Path.GetExtension(fileAddr_);
+                if (extension == "jar" || extension == "disable")
+                {
+                    string displayName = "", authors = "", version = "", description = "", modId = "";
 
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        catch
-        //        {
-        //        }
-        //    }
-        //}
+                    // тут пытаемся получить инфу о моде
+                    try
+                    {
+                        using (ZipArchive zip = ZipFile.Open(fileAddr_, ZipArchiveMode.Read))
+                        {
+                            ZipArchiveEntry entry = zip.GetEntry("META-INF/mods.toml");
+
+                            using (Stream file = entry.Open())
+                            {
+                                using (TextReader text = new StreamReader(file))
+                                {
+                                    TomlTable table = TOML.Parse(text);
+                                    displayName = getParameterValue(table, "displayName");
+                                    authors = getParameterValue(table, "authors");
+                                    version = getParameterValue(table, "version");
+                                    description = getParameterValue(table, "description");
+                                    modId = getParameterValue(table, "modId");
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+
+                    int addonId;
+                    string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/" + modpackInfo.LocalId + "/", "");
+                    if (!existsAddons.ContainsKey(xyi)) // аддон есть в папке, но нет в списке, нужно добавить, так же генерируем айдишник для него
+                    {
+                        // собстна генерируем айдишник
+                        addonId = generatedAddonId;
+                        while (existsAddons.ContainsKey(xyi))
+                        {
+                            addonId--;
+                        }
+                        generatedAddonId = addonId - 1;
+
+                        actualAddonsList[addonId] = new InstalledAddonInfo
+                        {
+                            FileID = -1,
+                            ProjectID = addonId,
+                            Type = AddonType.Mod,
+                            IsDisable = (extension == "disable")
+
+                        };
+                    }
+                    else // аддон есть везде, берём его айдишник
+                    {
+                        addonId = existsAddons[xyi];
+                    }
+
+                    addons.Add(new InstanceAddon(addonId, modpackInfo)
+                    {
+                        Author = authors,
+                        Description = description,
+                        Name = displayName,
+                    });
+                }
+            }
+
+            return addons;
+        }
 
         public void Disable()
         {
             int projectID = _projectId;
             string instanceId = _modpackInfo.LocalId;
 
-            var installedAddons = DataFilesManager.GetFile<InstalledAddons>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json");
-            if (installedAddons != null && installedAddons.ContainsKey(projectID))
+            var installedAddons = GetInstalledAddons(instanceId);
+            if (installedAddons.ContainsKey(projectID))
             {
                 try
                 {
@@ -232,7 +303,7 @@ namespace Lexplosion.Logic.Management.Instances
                             File.Move(dir + installedAddon.ActualPath, dir + installedAddon.Path);
                             installedAddon.IsDisable = false;
 
-                            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
+                            SaveInstalledAddons(instanceId, installedAddons);
                         }
                     }
                     else
@@ -243,7 +314,7 @@ namespace Lexplosion.Logic.Management.Instances
                             installedAddon.IsDisable = true;
                             File.Move(dir + installedAddon.Path, dir + installedAddon.ActualPath);
 
-                            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(installedAddons));
+                            SaveInstalledAddons(instanceId, installedAddons);
                         }
                     }
                 }
