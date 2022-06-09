@@ -263,8 +263,8 @@ namespace Lexplosion.Logic.Management.Instances
                             FileID = -1,
                             ProjectID = addonId,
                             Type = AddonType.Mod,
-                            IsDisable = (extension == "disable")
-
+                            IsDisable = (extension == "disable"),
+                            Path = (extension == "jar") ? xyi : xyi.Remove(xyi.Length - 8) // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
                         };
                     }
                     else // аддон есть везде, берём его айдишник
