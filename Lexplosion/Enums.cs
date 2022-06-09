@@ -85,7 +85,7 @@
     public enum AddonType
     {
         Unknown,
-        Mod = 6,
+        Mods = 6,
         Resourcepacks = 12,
         Maps = 17
     }

@@ -165,6 +165,10 @@ namespace Lexplosion.Logic.Management.Instances
             InstallAddon(fileID);
         }
 
+        /// <summary>
+        /// Возвращает список модов. При вызове так же сохраняет спсиок модов, анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
+        /// </summary>
+        /// <param name="modpackInfo">Инфа о модпаке с которого нужно получить список модов</param>
         public static List<InstanceAddon> GetInstalledMods(BaseInstanceData modpackInfo)
         {
             string getParameterValue(TomlTable table, string parameter)
@@ -189,7 +193,7 @@ namespace Lexplosion.Logic.Management.Instances
             foreach (int installedAddonId in installedAddons.Keys)
             {
                 InstalledAddonInfo installedAddon = installedAddons[installedAddonId];
-                if (installedAddon.Type == AddonType.Mod) // с модами нужно поебаться и проверить
+                if (installedAddon.Type == AddonType.Mods) // с модами нужно поебаться и проверить
                 {
                     if (File.Exists(modsPath + "/" + installedAddon.ActualPath))
                     {
@@ -262,7 +266,7 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             FileID = -1,
                             ProjectID = addonId,
-                            Type = AddonType.Mod,
+                            Type = AddonType.Mods,
                             IsDisable = (extension == "disable"),
                             Path = (extension == "jar") ? xyi : xyi.Remove(xyi.Length - 8) // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
                         };

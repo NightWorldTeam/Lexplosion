@@ -277,7 +277,7 @@ namespace Lexplosion.Logic.Network
                     AddonType addonType = (AddonType)data.categorySection.packageType;
                     switch (addonType)
                     {
-                        case AddonType.Mod:
+                        case AddonType.Mods:
                             folderName = "mods";
                             break;
                         case AddonType.Maps:
