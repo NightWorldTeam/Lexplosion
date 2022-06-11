@@ -20,6 +20,16 @@ namespace Lexplosion.Logic.Management.Instances
 
     public class InstanceClient
     {
+        class ArchivedClientData
+        {
+            public string GameVersion;
+            public string Name;
+            public string Description;
+            public string Author;
+            public ModloaderType ModloaderType;
+            public string ModloaderVersion;
+        }
+
         public readonly InstanceSource Type;
         private string _externalId = null;
         private string _localId = null;
@@ -717,6 +727,22 @@ namespace Lexplosion.Logic.Management.Instances
         public void SaveSettings(Settings settings)
         {
             DataFilesManager.SaveSettings(settings, _localId);
+        }
+
+        public ExportResult ExportInstance(List<string> filesList, string exportFile)
+        {
+            VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
+
+            var parameters = new ArchivedClientData
+            {
+                Author = Author,
+                Description = Description,
+                GameVersion = instanceManifest?.version?.gameVersion,
+                ModloaderType = instanceManifest?.version?.modloaderType ?? ModloaderType.None,
+                ModloaderVersion = instanceManifest?.version?.modloaderVersion,
+            };
+
+            return WithDirectory.ExportInstance<ArchivedClientData>(_localId, filesList, exportFile, parameters);
         }
 
         //public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerCallback ProgressHandler)

@@ -208,103 +208,90 @@ namespace Lexplosion.Logic.FileSystem
             return updates;
         }
 
-        //public static ExportResult ExportInstance(string instanceId, List<string> directoryList, string exportFile, string description)
-        //{
-        //    // TODO: удалять временную папку в конце
-        //    string targetDir = CreateTempDir() + instanceId + "-export"; //временная папка, куда будем копировать все файлы
-        //    string srcDir = DirectoryPath + "/instances/" + instanceId;
+        public static ExportResult ExportInstance<T>(string instanceId, List<string> filesList, string exportFile, T parameters)
+        {
+            // TODO: удалять временную папку в конце
+            string targetDir = CreateTempDir() + instanceId + "-export"; //временная папка, куда будем копировать все файлы
+            string srcDir = DirectoryPath + "/instances/" + instanceId;
 
-        //    try
-        //    {
-        //        if (Directory.Exists(targetDir))
-        //        {
-        //            Directory.Delete(targetDir, true);
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        return ExportResult.TempPathError;
-        //    }
+            try
+            {
+                if (Directory.Exists(targetDir))
+                {
+                    Directory.Delete(targetDir, true);
+                }
+            }
+            catch
+            {
+                return ExportResult.TempPathError;
+            }
 
-        //    foreach (string dirUnit_ in directoryList)
-        //    {
-        //        string dirUnit = dirUnit_.Replace(@"\", "/"); //адрес исходного файла
-        //        string target = dirUnit.Replace(srcDir, targetDir + "/files"); //адрес этого файла во временной папке
-        //        string finalPath = target.Substring(0, target.LastIndexOf("/")); //адрес временной папки, где будет храниться этот файл
+            foreach (string dirUnit_ in filesList)
+            {
+                string dirUnit = dirUnit_.Replace(@"\", "/"); //адрес исходного файла
+                string target = dirUnit.Replace(srcDir, targetDir + "/files"); //адрес этого файла во временной папке
+                string finalPath = target.Substring(0, target.LastIndexOf("/")); //адрес временной папки, где будет храниться этот файл
 
-        //        try
-        //        {
-        //            if (!Directory.Exists(finalPath))
-        //            {
-        //                Directory.CreateDirectory(finalPath);
-        //            }
-        //        }
-        //        catch
-        //        {
-        //            return ExportResult.TempPathError;
-        //        }
+                try
+                {
+                    if (!Directory.Exists(finalPath))
+                    {
+                        Directory.CreateDirectory(finalPath);
+                    }
+                }
+                catch
+                {
+                    return ExportResult.TempPathError;
+                }
 
-        //        if (File.Exists(dirUnit))
-        //        {
-        //            try
-        //            {
-        //                if (File.Exists(target))
-        //                {
-        //                    File.Delete(target);
-        //                }
+                if (File.Exists(dirUnit))
+                {
+                    try
+                    {
+                        if (File.Exists(target))
+                        {
+                            File.Delete(target);
+                        }
 
-        //                File.Copy(dirUnit, target);
-        //            }
-        //            catch
-        //            {
-        //                return ExportResult.FileCopyError;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return ExportResult.FileCopyError;
-        //        }
-        //    }
+                        File.Copy(dirUnit, target);
+                    }
+                    catch
+                    {
+                        return ExportResult.FileCopyError;
+                    }
+                }
+                else
+                {
+                    return ExportResult.FileCopyError;
+                }
+            }
 
-        //    VersionManifest instanceFile = GetManifest(instanceId, false);
+            string jsonData = JsonConvert.SerializeObject(parameters);
+            if (!SaveFile(targetDir + "/instanceInfo.json", jsonData))
+            {
+                try
+                {
+                    Directory.Delete(targetDir, true);
+                }
+                catch { }
 
-        //    Dictionary<string, string> data = new Dictionary<string, string>
-        //    {
-        //        ["gameVersion"] = instanceFile.version.gameVersion,
-        //        ["description"] = description,
-        //        ["name"] = UserData.Instances.Record[instanceId].Name,
-        //        ["author"] = UserData.Login,
-        //        ["modloaderType"] = instanceFile.version.modloaderType.ToString(),
-        //        ["modloaderVersion"] = instanceFile.version.modloaderVersion,
-        //    };
+                return ExportResult.InfoFileError;
+            }
 
+            try
+            {
+                ZipFile.CreateFromDirectory(targetDir, exportFile);
+                Directory.Delete(targetDir, true);
 
-        //    string jsonData = JsonConvert.SerializeObject(data);
-        //    if (!SaveFile(targetDir + "/instanceInfo.json", jsonData))
-        //    {
-        //        try
-        //        {
-        //            Directory.Delete(targetDir, true);
-        //        }
-        //        catch { }
+                return ExportResult.Successful;
+            }
+            catch
+            {
+                Directory.Delete(targetDir, true);
 
-        //        return ExportResult.InfoFileError;
-        //    }
-
-        //    try
-        //    {
-        //        ZipFile.CreateFromDirectory(targetDir, exportFile);
-        //        Directory.Delete(targetDir, true);
-
-        //        return ExportResult.Successful;
-        //    }
-        //    catch
-        //    {
-        //        Directory.Delete(targetDir, true);
-
-        //        return ExportResult.ZipFileError;
-        //    }
-        //}
+                return ExportResult.ZipFileError;
+            }
+        }
 
         //public static ImportResult ImportInstance(string zipFile, out List<string> errors, out string instance_Id)
         //{
