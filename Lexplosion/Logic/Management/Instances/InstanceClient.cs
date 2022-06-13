@@ -501,6 +501,7 @@ namespace Lexplosion.Logic.Management.Instances
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
+                SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
 
             ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
@@ -520,6 +521,7 @@ namespace Lexplosion.Logic.Management.Instances
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = true;
+                SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
 
                 launchGame.Run(data, ComplitedLaunch, GameExited, Name);

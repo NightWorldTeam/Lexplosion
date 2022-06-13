@@ -96,7 +96,7 @@ namespace Lexplosion.Logic.Network
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
             client.Client.Bind(new IPEndPoint(IPAddress.Any, 4445));
-            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
+            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60")); // TODO: try пихнуть
             client.Client.ReceiveTimeout = -1; // убираем таймоут, чтобы этот метод мог ждать бесконечно
 
             while (true)
