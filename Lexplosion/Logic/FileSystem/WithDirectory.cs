@@ -280,6 +280,7 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
+                DelFile(exportFile);
                 ZipFile.CreateFromDirectory(targetDir, exportFile);
                 Directory.Delete(targetDir, true);
 

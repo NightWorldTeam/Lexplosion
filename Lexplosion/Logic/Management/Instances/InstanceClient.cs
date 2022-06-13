@@ -236,6 +236,8 @@ namespace Lexplosion.Logic.Management.Instances
                         instance.CheckUpdates();
                         _installedInstances[localId] = instance;
                     }
+
+                    
                 }
             }
         }
@@ -686,7 +688,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Создает необходимую структуру файлов для сборки при её добавлении в библиотеку (ну при создании локальной)
+        /// Создает необходимую структуру файлов для сборки при её добавлении в библиотеку (ну при создании локальной).
         /// </summary>
         private void CreateFileStruct(ModloaderType modloader, string modloaderVersion)
         {
@@ -729,8 +731,102 @@ namespace Lexplosion.Logic.Management.Instances
             DataFilesManager.SaveSettings(settings, _localId);
         }
 
-        public ExportResult ExportInstance(List<string> filesList, string exportFile)
+
+        /// <summary>
+        /// Возвращает список файлов и папок данной директории в папки модпака. 
+        /// </summary>
+        /// <param name="path">
+        /// Путь до директории, содержание котрой необходимо вернуть. Путь указывается относительно папки модпака.
+        /// Если нужно получить список элементов из корня папки модпака, то ничего передавать не надо.
+        /// </param>
+        /// <returns>Элементы данной директории. Ключ - путь относительно папки модпака, значение - описание элемента директории.</returns>
+        public Dictionary<string, PathLevel> GetPathContent(string path = "/")
         {
+            Dictionary<string, PathLevel> pathContent = new Dictionary<string, PathLevel>();
+            string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
+
+            try
+            {
+                DirectoryInfo dir = new DirectoryInfo(dirPath + path);
+
+                try
+                {
+                    foreach (DirectoryInfo item in dir.GetDirectories())
+                    {
+                        pathContent["/" + item.Name] = new PathLevel
+                        {
+                            IsFile = false
+                        };
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    foreach (var item in dir.GetFiles())
+                    {
+                        pathContent["/" + item.Name] = new PathLevel
+                        {
+                            IsFile = true
+                        };
+                    }
+                }
+                catch { }
+            }
+            catch { }
+
+            return pathContent;
+        }
+
+        /// <summary>
+        /// Экспортирует модпак.
+        /// </summary>
+        /// <param name="exportList">Список файлов и папок на экспорт. Ключ - путь относительно папки модпака, значение - описание элемента директории.</param>
+        /// <param name="exportFile">Полноый путь к архиву, в который будет производиться экспорт.</param>
+        /// <returns>Результат экспорт</returns>
+        public ExportResult ExportInstance(Dictionary<string, PathLevel> exportList, string exportFile)
+        {
+            string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
+
+            void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList)
+            {
+                foreach (string key in exportList.Keys)
+                {
+                    PathLevel elem = exportList[key];
+                    if (elem.IsFile)
+                    {
+                        list.Add(dirPath + key);
+                    }
+                    else
+                    {
+                        if (elem.AllUnits)
+                        {
+                            string[] files;
+                            try
+                            {
+                                files = Directory.GetFiles(dirPath + key, "*", SearchOption.AllDirectories);
+                            }
+                            catch 
+                            {
+                                files = new string[0];
+                            }
+
+                            foreach (string file in files)
+                            {
+                                list.Add(file);
+                            }
+                        }
+                        else
+                        {
+                            ParsePathLevel(ref list, elem.UnitsList);
+                        }
+                    }
+                }
+            }
+
+            List<string> filesList = new List<string>();
+            ParsePathLevel(ref filesList, exportList);
+
             VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
 
             var parameters = new ArchivedClientData
