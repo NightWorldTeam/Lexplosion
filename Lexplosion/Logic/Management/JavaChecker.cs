@@ -43,22 +43,30 @@ namespace Lexplosion.Logic.Management
 
                 string[] numbers = gameVersion.Split('.');
 
+                int num1 = 0, num2 = 0, num3 = 0;
                 if (numbers.Length == 3)
                 {
-                    int num1 = 0, num2 = 0, num3 = 0;
                     IsValid = Int32.TryParse(numbers[0], out num1) && Int32.TryParse(numbers[1], out num2) && Int32.TryParse(numbers[2], out num3);
-
-                    _numbers = new int[3] {
-                        num1,
-                        num2,
-                        num3
-                    };
+                    
+                }
+                else if (numbers.Length == 2)
+                {
+                    IsValid = Int32.TryParse(numbers[0], out num1) && Int32.TryParse(numbers[1], out num2);
+                }
+                else if (numbers.Length == 1)
+                {
+                    IsValid = Int32.TryParse(numbers[0], out num1);
                 }
                 else
                 {
                     IsValid = false;
-                    _numbers = new int[3];
                 }
+
+                _numbers = new int[3] {
+                    num1,
+                    num2,
+                    num3
+                };
             }
 
             public static bool operator >=(GameVersion elem1, GameVersion elem2)

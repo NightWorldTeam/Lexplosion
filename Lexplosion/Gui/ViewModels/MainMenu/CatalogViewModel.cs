@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public ObservableCollection<InstanceFormViewModel> InstanceForms { get; set; } = new ObservableCollection<InstanceFormViewModel>();
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
-        public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true);
+        public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel();
 
         public CatalogViewModel()
         {

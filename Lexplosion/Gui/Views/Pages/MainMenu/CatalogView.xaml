@@ -4,9 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:models="clr-namespace:Lexplosion.Gui.ViewModels"
-             xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls" 
-             xmlns:mainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu" 
-             d:DataContext="{d:DesignInstance Type=mainmenu:CatalogViewModel}"
+             xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls" xmlns:mainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu" d:DataContext="{d:DesignInstance Type=mainmenu:CatalogViewModel}"
              mc:Ignorable="d" 
             d:DesignHeight="450" d:DesignWidth="700">
 
@@ -25,7 +23,7 @@
             <ScrollViewer.Background>
                 <!-- #1313131 0.8-->
                 <!-- "Black" 0.64 -->
-                <SolidColorBrush Color="#121212" Opacity="0.7"/>
+                <SolidColorBrush Color="#121212" Opacity="0.70"/>
             </ScrollViewer.Background>
             <Grid x:Name="ControlElementsGrid" ShowGridLines="False">
                 <Grid.RowDefinitions>
