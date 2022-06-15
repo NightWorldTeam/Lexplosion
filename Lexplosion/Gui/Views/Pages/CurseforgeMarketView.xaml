@@ -2,25 +2,19 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Background>
+        <ImageBrush ImageSource="pack://Application:,,,/Assets/images/background/marketBG.png" />
+    </UserControl.Background>
     <UserControl.Resources>
         <Style x:Key="CloseButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Pattern}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border BorderBrush="White" 
-                                BorderThickness="1" 
-                                CornerRadius="20"
-                                >
-                            <Grid>
-                                <Canvas>
-                                    <Line X1="1" Y1="0" X2="13" Y2="13" Canvas.Left="7" Canvas.Top="8" Stroke="LightGray" StrokeThickness="1"/>
-                                    <Line X1="1" Y1="13" X2="13" Y2="0" Canvas.Left="7" Canvas.Top="8" Stroke="LightGray" StrokeThickness="1"/>
-                                </Canvas>
-                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Grid>
+                        <Border>
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -44,115 +38,136 @@
     </UserControl.Resources>
     <Grid>
         <Grid.Background>
-            <SolidColorBrush Color="#18191b" />
+            <SolidColorBrush Color="#18191b" Opacity="0.7"/>
         </Grid.Background>
+        
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="210"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+
         <Button Grid.Column="1" 
-            Margin="5"
+            VerticalAlignment="Center"
+            Margin="0,0,20,0"
             Style="{StaticResource CloseButton}"
-            VerticalAlignment="Top" 
             HorizontalAlignment="Right"
             Width="30" 
             Height="30"
             Command="{Binding ClosePageCommand}">
+            <Viewbox Height="15">
+                <Path Data="M 12.45 37.65 L 10.35 35.55 L 21.9 24 L 10.35 12.45 L 12.45 10.35 L 24 21.9 L 35.55 10.35 L 37.65 12.45 L 26.1 24 L 37.65 35.55 L 35.55 37.65 L 24 26.1 Z"
+                      Fill="WhiteSmoke"
+                      Stretch="Fill"/>
+            </Viewbox>
         </Button>
 
-        <ListBox Grid.Column="1" Style="{StaticResource LibraryListBox}" Background="Transparent" Grid.Row="1">
-            <ListBoxItem HorizontalContentAlignment="Center"
-                         Width="600" Background="#151719" Style="{StaticResource ModsListBoxItem}" Height="80">
-                <Grid ShowGridLines="False" Height="60">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="15" />
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="400" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Border CornerRadius="5" Background="Purple" Grid.Column="1" Height="40" Width="40"/>
-                    <Grid Grid.Column="2" ShowGridLines="False">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid ShowGridLines="False">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Style="{StaticResource DLCInfo}" FontWeight="Bold" Text="Just Enough Items (JEI)"/>
-                            <TextBlock Style="{StaticResource DLCInfo}" FontWeight="Bold"  Grid.Column="1" Text="by mezz" />
+        <customcontrols:SearchBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" DataContext="{Binding SearchBoxVM}"/>
+
+        <ListBox Grid.Column="1" Style="{StaticResource LibraryListBox}" Grid.Row="1">
+            <ListBoxItem Width="570" Style="{StaticResource ModsListBoxItem}" Height="80">
+                <Border Background="#151719" CornerRadius="15">
+                    <Grid ShowGridLines="False" Height="60">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="15" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="380" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Border CornerRadius="5" Background="Purple" Grid.Column="1" Height="40" Width="40"/>
+                        
+                        <Grid Grid.Column="2" ShowGridLines="False">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Style="{StaticResource DLCInfo}" FontWeight="Bold" Text="Just Enough Items (JEI)"/>
+                                <TextBlock Style="{StaticResource DLCInfo}" FontWeight="Bold"  Grid.Column="1" Text="by mezz" />
+                            </Grid>
+                            
+                            <Grid Grid.Row="1" ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                            
+                                <TextBlock Style="{StaticResource DLCInfo}"
+                                    Text="167.7M Downloads" Opacity="0.8" FontSize="12"/>
+                            
+                                <TextBlock Style="{StaticResource DLCInfo}"
+                                           Grid.Column="1" Opacity="0.8" Text="Updated 3 days ago" FontSize="12"/>
+                            
+                                <TextBlock Style="{StaticResource DLCInfo}" 
+                                    Grid.Column="2" Text="Created Nov 24, 2015" Opacity="0.8" FontSize="12"/>
+                            </Grid>
+                        
+                            <Grid Grid.Row="2" ShowGridLines="False">
+                                <TextBlock Text="View Items and Recipes" 
+                                           TextWrapping="WrapWithOverflow" 
+                                           Style="{StaticResource DLCInfo}" 
+                                           FontSize="12"
+                                           FontWeight="Normal" 
+                                           Foreground="WhiteSmoke"/>
+                            </Grid>
+                            
                         </Grid>
-                        <Grid Grid.Row="1" ShowGridLines="False">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Style="{StaticResource DLCInfo}"
-                                Text="167.7M Downloads" Opacity="0.8" FontSize="12"/>
-                            <TextBlock Style="{StaticResource DLCInfo}"
-                                       Grid.Column="1" Opacity="0.8" Text="Updated 3 days ago" FontSize="12"/>
-                            <TextBlock Style="{StaticResource DLCInfo}" 
-                                Grid.Column="2" Text="Created Nov 24, 2015" Opacity="0.8" FontSize="12"/>
-                        </Grid>
-                        <Grid Grid.Row="2" ShowGridLines="False">
-                            <TextBlock Text="View Items and Recipes" TextWrapping="WrapWithOverflow" 
-                                       Style="{StaticResource DLCInfo}" FontSize="12"
-                                       FontWeight="Normal" Foreground="WhiteSmoke"/>
-                        </Grid>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="3" VerticalAlignment="Center">
+                            <Button Style="{StaticResource DefaultBrandColorButton}" Width="80" Height="30">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Height="15">
+                                        <Path Data="M 14 11 V 14 H 2 V 11 H 0 V 14 C 0 15.1 0.9 16 2 16 H 14 C 15.1 16 16 15.1 16 14 V 11 H 14 Z M 13 7 L 11.59 5.59 L 9 8.17 V 0 H 7 V 8.17 L 4.41 5.59 L 3 7 L 8 12 L 13 7 Z"
+                                            Fill="White"
+                                            Stretch="Fill"/>
+                                    </Viewbox>
+                                    
+                                    <TextBlock Margin="5,0,0,0" Text="Install" FontWeight="Bold"/>
+                                </StackPanel>
+                                
+                                <Button.ToolTip>
+                                    <ToolTip
+                                        Style="{StaticResource CustomTipTool}"
+                                        HorizontalOffset="-60"
+                                        VerticalOffset="-27" 
+                                        Content="Установить модификацию" />
+                                </Button.ToolTip>
+                            </Button>
+
+                            <Button Margin="5,0,0,0" Style="{StaticResource DefaultBrandColorButton}" Height="30" Width="40">
+                                <WrapPanel>
+                                    <Viewbox Width="25">
+                                        <Path Data="M 6.307 0.581055 L 6.698 2.25605 H 0 C 0 2.25605 0.112 2.75805 0.167 2.81405 C 0.335 3.09305 0.502 3.42805 0.726 3.65105 C 1.786 4.87905 3.628 5.38105 5.135 5.66005 C 6.195 5.88405 7.256 5.94005 8.316 5.99505 L 9.544 9.28806 H 10.214 L 10.605 10.3491 H 10.047 L 9.098 13.4191 H 18.419 L 17.47 10.3491 H 16.912 L 17.302 9.28806 H 17.972 C 17.972 9.28806 18.53 5.88405 20.26 4.32105 C 21.935 2.75805 24 2.53505 24 2.53505 V 0.581055 H 6.307 Z M 15.684 9.00905 C 15.237 9.28805 14.735 9.28805 14.4 9.51205 C 14.177 9.62305 14.065 9.95806 14.065 9.95806 C 13.842 9.45606 13.563 9.28806 13.228 9.17706 C 12.893 9.06506 12.279 9.12106 11.442 8.39506 C 10.884 7.89306 10.828 7.22305 10.884 6.88805 V 6.72105 C 10.884 6.66505 10.884 6.60906 10.94 6.55306 C 11.051 6.21906 11.33 5.88405 11.888 5.66005 C 11.888 5.66005 11.498 6.21906 11.888 6.77706 C 12.112 7.11206 12.558 7.27905 12.949 7.05605 C 13.116 6.94405 13.228 6.72106 13.284 6.55306 C 13.395 6.16306 13.395 5.77205 13.06 5.49305 C 12.558 5.04705 12.447 4.43305 12.781 4.04205 C 12.781 4.04205 12.893 4.54405 13.395 4.48805 C 13.73 4.48805 13.73 4.37706 13.619 4.26506 C 13.563 4.09806 12.837 3.03705 13.898 2.25605 C 13.898 2.25605 14.567 1.80905 15.349 1.86505 C 14.902 1.92105 14.4 2.20005 14.233 2.64705 V 2.70205 C 14.065 3.14905 14.177 3.65105 14.512 4.09805 C 14.735 4.43305 15.014 4.71205 15.126 5.15805 C 14.958 5.10205 14.847 5.15806 14.735 5.27006 C 14.6755 5.33749 14.634 5.41888 14.6144 5.50665 C 14.5949 5.59442 14.5978 5.68573 14.623 5.77206 C 14.679 5.88406 14.791 5.99505 14.902 5.99505 H 15.07 C 15.237 5.94005 15.349 5.71605 15.293 5.54905 C 15.405 5.66005 15.46 5.94006 15.405 6.10706 C 15.405 6.27406 15.293 6.44206 15.237 6.55306 C 15.181 6.66506 15.07 6.77705 15.014 6.88805 C 14.958 7.00005 14.902 7.11205 14.902 7.22305 C 14.902 7.33505 14.902 7.50206 14.958 7.61406 C 15.181 7.94906 15.628 7.61405 15.74 7.33505 C 15.907 7.00005 15.851 6.60906 15.628 6.27406 C 15.628 6.27406 16.019 6.49806 16.298 7.27906 C 16.521 7.94906 16.13 8.73005 15.684 9.00905 V 9.00905 Z"
+                                            Stretch="Fill"
+                                            Fill="White" />
+                                    </Viewbox>
+                                </WrapPanel>
+
+                                <Button.ToolTip>
+                                    <ToolTip
+                                        Style="{StaticResource CustomTipTool}"
+                                        HorizontalOffset="-60"
+                                        VerticalOffset="-27" 
+                                        Content="Перейти на curseforge" />
+                                </Button.ToolTip>
+                            </Button>
+                        </StackPanel>
+                        
                     </Grid>
-                    <StackPanel Orientation="Horizontal" Grid.Column="3" VerticalAlignment="Center">
-                        <Button Style="{StaticResource DefaultBrandColorButton}" Width="80" Height="30"
-                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
-                            <WrapPanel>
-                                <Path
-                                    Height="19"
-                                    Fill="White"
-                                    Data="M 14 11 V 14 H 2 V 11 H 0 V 14 C 0 15.1 0.9 16 2 16 H 14 C 15.1 16 16 15.1 16 14 V 11 H 14 Z M 13 7 L 11.59 5.59 L 9 8.17 V 0 H 7 V 8.17 L 4.41 5.59 L 3 7 L 8 12 L 13 7 Z"
-                                    />
-                                <TextBlock 
-                                    Margin="5,0,0,0" 
-                                    Text="Install"
-                                    FontWeight="Bold"/>
-                            </WrapPanel>
-                            <Button.ToolTip>
-                                <ToolTip
-                                    Style="{StaticResource CustomTipTool}"
-                                    HorizontalOffset="-60"
-                                    VerticalOffset="-27" 
-                                    Content="Установить модификацию" 
-                                />
-                            </Button.ToolTip>
-                        </Button>
-                        <Button Margin="5,0,0,0" Style="{StaticResource DefaultBrandColorButton}" Height="30" Width="40"
-                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
-                            <WrapPanel>
-                                <Viewbox Width="20" Height="20">
-                                    <Path
-                                        Stretch="Fill"
-                                        Fill="White"
-                                        Data="M 6.307 0.581055 L 6.698 2.25605 H 0 C 0 2.25605 0.112 2.75805 0.167 2.81405 C 0.335 3.09305 0.502 3.42805 0.726 3.65105 C 1.786 4.87905 3.628 5.38105 5.135 5.66005 C 6.195 5.88405 7.256 5.94005 8.316 5.99505 L 9.544 9.28806 H 10.214 L 10.605 10.3491 H 10.047 L 9.098 13.4191 H 18.419 L 17.47 10.3491 H 16.912 L 17.302 9.28806 H 17.972 C 17.972 9.28806 18.53 5.88405 20.26 4.32105 C 21.935 2.75805 24 2.53505 24 2.53505 V 0.581055 H 6.307 Z M 15.684 9.00905 C 15.237 9.28805 14.735 9.28805 14.4 9.51205 C 14.177 9.62305 14.065 9.95806 14.065 9.95806 C 13.842 9.45606 13.563 9.28806 13.228 9.17706 C 12.893 9.06506 12.279 9.12106 11.442 8.39506 C 10.884 7.89306 10.828 7.22305 10.884 6.88805 V 6.72105 C 10.884 6.66505 10.884 6.60906 10.94 6.55306 C 11.051 6.21906 11.33 5.88405 11.888 5.66005 C 11.888 5.66005 11.498 6.21906 11.888 6.77706 C 12.112 7.11206 12.558 7.27905 12.949 7.05605 C 13.116 6.94405 13.228 6.72106 13.284 6.55306 C 13.395 6.16306 13.395 5.77205 13.06 5.49305 C 12.558 5.04705 12.447 4.43305 12.781 4.04205 C 12.781 4.04205 12.893 4.54405 13.395 4.48805 C 13.73 4.48805 13.73 4.37706 13.619 4.26506 C 13.563 4.09806 12.837 3.03705 13.898 2.25605 C 13.898 2.25605 14.567 1.80905 15.349 1.86505 C 14.902 1.92105 14.4 2.20005 14.233 2.64705 V 2.70205 C 14.065 3.14905 14.177 3.65105 14.512 4.09805 C 14.735 4.43305 15.014 4.71205 15.126 5.15805 C 14.958 5.10205 14.847 5.15806 14.735 5.27006 C 14.6755 5.33749 14.634 5.41888 14.6144 5.50665 C 14.5949 5.59442 14.5978 5.68573 14.623 5.77206 C 14.679 5.88406 14.791 5.99505 14.902 5.99505 H 15.07 C 15.237 5.94005 15.349 5.71605 15.293 5.54905 C 15.405 5.66005 15.46 5.94006 15.405 6.10706 C 15.405 6.27406 15.293 6.44206 15.237 6.55306 C 15.181 6.66506 15.07 6.77705 15.014 6.88805 C 14.958 7.00005 14.902 7.11205 14.902 7.22305 C 14.902 7.33505 14.902 7.50206 14.958 7.61406 C 15.181 7.94906 15.628 7.61405 15.74 7.33505 C 15.907 7.00005 15.851 6.60906 15.628 6.27406 C 15.628 6.27406 16.019 6.49806 16.298 7.27906 C 16.521 7.94906 16.13 8.73005 15.684 9.00905 V 9.00905 Z"
-                                    />
-                                </Viewbox>
-                            </WrapPanel>
-                            <Button.ToolTip>
-                                <ToolTip
-                                    Style="{StaticResource CustomTipTool}"
-                                    HorizontalOffset="-60"
-                                    VerticalOffset="-27" 
-                                    Content="Перейти на curseforge" 
-                                />
-                            </Button.ToolTip>
-                        </Button>
-                    </StackPanel>
-                </Grid>
+                </Border>
             </ListBoxItem>
         </ListBox>
     </Grid>
