@@ -50,9 +50,28 @@ namespace Lexplosion.Logic.Management.Instances
         private static Dictionary<string, string> _idsPairs = new Dictionary<string, string>();
 
         #region info
-        public string Name { get; private set; }
-        public string Author { get; private set; }
-        public string Description { get; private set; }
+
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            private set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _description;
+        public string Description
+        {
+            get => _description;
+            private set
+            {
+                _description = value;
+                OnPropertyChanged();
+            }
+        }
 
         private byte[] _logo = null;
         public byte[] Logo
@@ -60,13 +79,45 @@ namespace Lexplosion.Logic.Management.Instances
             get => _logo;
             private set
             {
-                OnPropertyChanged();
                 _logo = value;
+                OnPropertyChanged();
             }
         }
-        public List<Category> Categories { get; private set; } = null;
-        public string GameVersion { get; private set; }
-        public string Summary { get; private set; }
+
+        private List<Category> _categories = null;
+        public List<Category> Categories
+        {
+            get => _categories;
+            private set
+            {
+                _categories = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _gameVersion;
+        public string GameVersion
+        {
+            get => _gameVersion;
+            private set
+            {
+                _gameVersion = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _summary;
+        public string Summary
+        {
+            get => _summary;
+            private set
+            {
+                _summary = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Author { get; private set; }
         public bool InLibrary { get; private set; } = false;
         public bool UpdateAvailable { get; private set; } = false;
         public bool IsInstalled { get; private set; } = false;
@@ -496,18 +547,62 @@ namespace Lexplosion.Logic.Management.Instances
                         };
                     }
                 default:
-                    return new InstanceData
                     {
-                        Categories = new List<Category>(),
-                        Description = NoDescription,
-                        Summary = NoDescription,
-                        TotalDownloads = 0,
-                        GameVersion = "",
-                        LastUpdate = null,
-                        Modloader = ModloaderType.None,
-                        Images = WithDirectory.LoadMcScreenshots(_localId)
-                    };
+                        VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
+                        return new InstanceData
+                        {
+                            Categories = new List<Category>(),
+                            Description = NoDescription,
+                            Summary = NoDescription,
+                            TotalDownloads = 0,
+                            GameVersion = GameVersion,
+                            LastUpdate = null,
+                            Modloader = instanceManifest?.version?.modloaderType ?? ModloaderType.None,
+                            Images = WithDirectory.LoadMcScreenshots(_localId)
+                        };
+                    }
+            }
+        }
 
+        /// <summary>
+        /// Изменяет параметры клиента. Клиент должен быть добавлен в библиотеку.
+        /// Если параметр не нужно менять, то в него передавать null.
+        /// Если нужно сменить тип модлоадера, то обязательно ещё нужно передать его версию.
+        /// </summary>
+        /// <param name="name">Им клиента.</param>
+        /// <param name="desc">Описание.</param>
+        /// <param name="gameVersion">Версия игры.</param>
+        /// <param name="summary">Краткое описание.</param>
+        /// <param name="categories">Категории.</param>
+        /// <param name="modloader">Тип модлоадера. Если его нужно изменить, то обязательно нужно передать и modloaderVersion.</param>
+        /// <param name="modloaderVersion">Версия модлоадера.</param>
+        public void ChangeParameters(string name, string desc, string gameVersion, string summary, 
+            List<Category> categories, ModloaderType? modloader, string modloaderVersion)
+        {
+            if (modloaderVersion != null)
+            {
+                VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+                if (manifest != null)
+                {
+                    if (modloader != null)
+                    {
+                        manifest.version.modloaderType = (ModloaderType)modloader;
+                    }
+                    manifest.version.modloaderVersion = modloaderVersion;
+                    DataFilesManager.SaveManifest(_localId, manifest);
+                }
+            }
+
+            if (desc != null) Description = desc;
+            if (gameVersion != null) GameVersion = gameVersion;
+            if (summary != null) Summary = summary;
+            if (categories != null) Categories = categories;
+            SaveAssets();
+
+            if (name != null)
+            {
+                Name = name;
+                SaveInstalledInstancesList();
             }
         }
 
