@@ -18,21 +18,8 @@ namespace Lexplosion.Logic.Management.Instances
     // Структура файла с установленными модпаками (instanesList.json)
     using InstalledInstancesFormat = Dictionary<string, InstalledInstance>;
 
-    public class InstanceClient : VMBase
+    public class InstanceClient
     {
-        class ArchivedClientData
-        {
-            public string GameVersion;
-            public string Name;
-            public string Description;
-            public string Author;
-            public ModloaderType ModloaderType;
-            public string ModloaderVersion;
-            public List<Category> Categories;
-            public string Summary;
-            public string LogoFileName;
-        }
-
         public readonly InstanceSource Type;
         private string _externalId = null;
         private string _localId = null;
@@ -53,17 +40,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; private set; }
         public string Author { get; private set; }
         public string Description { get; private set; }
-
-        private byte[] _logo = null;
-        public byte[] Logo
-        {
-            get => _logo;
-            private set
-            {
-                OnPropertyChanged();
-                _logo = value;
-            }
-        }
+        public byte[] Logo { get; private set; } = null;
         public List<Category> Categories { get; private set; } = null;
         public string GameVersion { get; private set; }
         public string Summary { get; private set; }
@@ -101,41 +78,33 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Этот конструктор создаёт локальную сборку. Должен использоваться только при создании локальной сборки и при импорте.
-        /// </summary>
-        /// <param name="name">Название сборки</param>
-        /// <param name="gameVersion">Версия игры</param>
-        private InstanceClient(string name, InstanceSource type, string gameVersion)
-        {
-            Name = name;
-            Type = type;
-            GameVersion = gameVersion;
-            _localId = GenerateInstanceId();
-        }
-
-        /// <summary>
-        /// Этот метод создаёт локальную сборку. Должен использоваться только при создании локальной сборки.
+        /// Этот конструктор создаёт локальную сборку. Должен использоваться только при создании локлаьной сборки.
         /// </summary>
         /// <param name="name">Название сборки</param>
         /// <param name="gameVersion">Версия игры</param>
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion = null)
+        public InstanceClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion = null)
         {
-            var client = new InstanceClient(name, type, gameVersion)
+            Name = name;
+            Type = type;
+            GameVersion = gameVersion;
+            InLibrary = true;
+            _localId = GenerateInstanceId();
+            Author = UserData.Login;
+            Description = NoDescription;
+
+            CreateFileStruct(modloader, modloaderVersion);
+            _installedInstances[_localId] = this;
+
+            SaveInstalledInstancesList();
+
+            var assetsData = new InstanceAssets
             {
-                InLibrary = true,
-                Author = UserData.Login,
-                Description = NoDescription
+                Author = UserData.Login
             };
 
-            client.CreateFileStruct(modloader, modloaderVersion);
-            client.SaveAssets();
-
-            _installedInstances[client._localId] = client;
-            client.SaveInstalledInstancesList();
-
-            return client;
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json", JsonConvert.SerializeObject(assetsData));
         }
 
         /// <summary>
@@ -256,7 +225,7 @@ namespace Lexplosion.Logic.Management.Instances
                         instance.IsInstalled = list[localId].IsInstalled;
                         instance.CheckUpdates();
                         _installedInstances[localId] = instance;
-                    }          
+                    }
                 }
             }
         }
@@ -520,7 +489,6 @@ namespace Lexplosion.Logic.Management.Instances
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
-                SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
 
             ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
@@ -540,7 +508,6 @@ namespace Lexplosion.Logic.Management.Instances
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = true;
-                SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
 
                 launchGame.Run(data, ComplitedLaunch, GameExited, Name);
@@ -660,21 +627,18 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Ну бля, качает заглавную картинку (лого) по ссылке и записывает в переменную Logo. Делает это всё в пуле потоков.
+        /// Ну бля, качает заглавную картинку (лого) по ссылке и записывает в переменную Logo
         /// </summary>
         private void DownloadLogo(string url)
         {
-            ThreadPool.QueueUserWorkItem(delegate (object state)
+            try
             {
-                try
+                using (var webClient = new WebClient())
                 {
-                    using (var webClient = new WebClient())
-                    {
-                        Logo = webClient.DownloadData(url);
-                    }
+                    Logo = webClient.DownloadData(url);
                 }
-                catch { }
-            });
+            }
+            catch { }
         }
 
         /// <summary>
@@ -712,7 +676,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Создает необходимую структуру файлов для сборки при её добавлении в библиотеку (ну при создании локальной).
+        /// Создает необходимую структуру файлов для сборки при её добавлении в библиотеку (ну при создании локальной)
         /// </summary>
         private void CreateFileStruct(ModloaderType modloader, string modloaderVersion)
         {
@@ -755,170 +719,55 @@ namespace Lexplosion.Logic.Management.Instances
             DataFilesManager.SaveSettings(settings, _localId);
         }
 
+        //public static ImportResult ImportInstance(string zipFile, out List<string> errors, ProgressHandlerCallback ProgressHandler)
+        //{ // TODO : этот метод полная хуйня блять, надо доделать, может даже переделать
+        //    string instanceId;
+        //    ImportResult res = WithDirectory.ImportInstance(zipFile, out errors, out instanceId);
+        //    LocalInstance instance = new LocalInstance(instanceId);
 
-        /// <summary>
-        /// Возвращает список файлов и папок данной директории в папки модпака. 
-        /// </summary>
-        /// <param name="path">
-        /// Путь до директории, содержание котрой необходимо вернуть. Путь указывается относительно папки модпака.
-        /// Если нужно получить список элементов из корня папки модпака, то ничего передавать не надо.
-        /// </param>
-        /// <returns>Элементы данной директории. Ключ - путь относительно папки модпака, значение - описание элемента директории.</returns>
-        public Dictionary<string, PathLevel> GetPathContent(string path = "/")
-        {
-            Dictionary<string, PathLevel> pathContent = new Dictionary<string, PathLevel>();
-            string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
+        //    InstanceInit result = instance.Check(out string gameVersion); // TODO: тут вовзращать ошибки
 
-            try
-            {
-                DirectoryInfo dir = new DirectoryInfo(dirPath + path);
+        //    if (result == InstanceInit.Successful)
+        //    {
+        //        string javaPath;
+        //        using (JavaChecker javaCheck = new JavaChecker(gameVersion))
+        //        {
+        //            if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
+        //            {
+        //                bool downloadResult = javaCheck.Update(delegate (int percent)
+        //                {
+        //                    ProgressHandler(DownloadStageTypes.Java, 0, 0, percent);
+        //                });
 
-                try
-                {
-                    foreach (DirectoryInfo item in dir.GetDirectories())
-                    {
-                        pathContent["/" + item.Name] = new PathLevel
-                        {
-                            IsFile = false
-                        };
-                    }
-                }
-                catch { }
+        //                if (!downloadResult)
+        //                {
+        //                    return ImportResult.JavaDownloadError;
+        //                }
+        //            }
 
-                try
-                {
-                    foreach (var item in dir.GetFiles())
-                    {
-                        pathContent["/" + item.Name] = new PathLevel
-                        {
-                            IsFile = true
-                        };
-                    }
-                }
-                catch { }
-            }
-            catch { }
+        //            if (checkResult == JavaChecker.CheckResult.Successful)
+        //            {
+        //                javaPath = WithDirectory.DirectoryPath + "/java/" + javaVersion.JavaName + javaVersion.ExecutableFile;
+        //            }
+        //            else
+        //            {
+        //                return ImportResult.JavaDownloadError;
+        //            }
+        //        }
 
-            return pathContent;
-        }
+        //        instance.Update(javaPath, ProgressHandler);
+        //    }
 
-        /// <summary>
-        /// Экспортирует модпак.
-        /// </summary>
-        /// <param name="exportList">Список файлов и папок на экспорт. Ключ - путь относительно папки модпака, значение - описание элемента директории.</param>
-        /// <param name="exportFile">Полноый путь к архиву, в который будет производиться экспорт.</param>
-        /// <returns>Результат экспорта.</returns>
-        public ExportResult Export(Dictionary<string, PathLevel> exportList, string exportFile)
-        {
-            string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
+        //    // TODO: Тут вырезал строку
+        //    /*
+        //    if (Gui.PageType.Right.Menu.InstanceContainerPage.obj != null)
+        //    {
+        //        Uri logoPath = new Uri("pack://application:,,,/assets/images/icons/non_image.png");
+        //        Gui.PageType.Right.Menu.InstanceContainerPage.obj.BuildInstanceForm(instanceId, UserData.InstancesList.Count - 1, logoPath, UserData.InstancesList[instanceId].Name, "NightWorld", "test", new List<string>());
+        //    }
+        //    */
 
-            void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList)
-            {
-                foreach (string key in exportList.Keys)
-                {
-                    PathLevel elem = exportList[key];
-                    if (elem.IsFile)
-                    {
-                        list.Add(dirPath + key);
-                    }
-                    else
-                    {
-                        if (elem.AllUnits)
-                        {
-                            string[] files;
-                            try
-                            {
-                                files = Directory.GetFiles(dirPath + key, "*", SearchOption.AllDirectories);
-                            }
-                            catch 
-                            {
-                                files = new string[0];
-                            }
-
-                            foreach (string file in files)
-                            {
-                                list.Add(file);
-                            }
-                        }
-                        else
-                        {
-                            ParsePathLevel(ref list, elem.UnitsList);
-                        }
-                    }
-                }
-            }
-
-            List<string> filesList = new List<string>();
-            ParsePathLevel(ref filesList, exportList);
-
-            VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
-
-            string logoPath = (Logo != null ? WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName : null);
-            var parameters = new ArchivedClientData
-            {
-                Author = Author,
-                Description = Description,
-                GameVersion = instanceManifest?.version?.gameVersion,
-                ModloaderType = instanceManifest?.version?.modloaderType ?? ModloaderType.None,
-                ModloaderVersion = instanceManifest?.version?.modloaderVersion,
-                Name = Name,
-                Categories = Categories,
-                Summary = Summary,
-                LogoFileName = (logoPath != null ? LogoFileName : null)
-            };
-
-            return WithDirectory.ExportInstance<ArchivedClientData>(_localId, filesList, exportFile, parameters, logoPath);
-        }
-
-        /// <summary>
-        /// Импортирует модпак из архива.
-        /// </summary>
-        /// <param name="zipFile">Путь до zip файла, содержащего клиент.</param>
-        /// <returns>Результат импорта.</returns>
-        public static ImportResult Import(string zipFile)
-        {
-            ArchivedClientData parameters;
-            string unzipPath;
-
-            ImportResult res = WithDirectory.UnzipInstance(zipFile, out parameters, out unzipPath);
-            if (res == ImportResult.Successful)
-            {
-                if (parameters != null && parameters.Name != null && parameters.GameVersion != null)
-                {
-                    byte[] logo = null;
-                    if (parameters.LogoFileName != null)
-                    {
-                        try
-                        {
-                            string file = unzipPath + parameters.LogoFileName;
-                            if (File.Exists(unzipPath + parameters.LogoFileName))
-                            {
-                                logo = File.ReadAllBytes(file);
-                            }
-                        }
-                        catch { }
-                    }
-
-                    var client = new InstanceClient(parameters.Name, InstanceSource.Local, parameters.GameVersion)
-                    {
-                        InLibrary = true,
-                        Author = parameters.Author ?? UnknownAuthor,
-                        Description = parameters.Description,
-                        Logo = logo,
-                        Categories = parameters.Categories
-                    };
-
-                    client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion);
-                    client.SaveAssets();
-
-                    _installedInstances[client._localId] = client;
-                    client.SaveInstalledInstancesList();
-
-                    res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
-                }       
-            }
-
-            return res;
-        }
+        //    return res;
+        //}
     }
 }

@@ -18,6 +18,8 @@ namespace Lexplosion.Gui.ViewModels
 
         private bool _isLoaded;
 
+        public bool IsMultiSource { get; }
+
         public bool IsLoaded
         {
             get => _isLoaded; set
@@ -81,6 +83,11 @@ namespace Lexplosion.Gui.ViewModels
                 if (value == 1) SelectedInstanceSource = InstanceSource.Curseforge;
                 OnPropertyChanged(nameof(SelectedSourceIndex));
             }
+        }
+
+        public SearchBoxViewModel(bool isMultiSource = false)
+        {
+            IsMultiSource = isMultiSource;
         }
     }
 }
