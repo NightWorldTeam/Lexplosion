@@ -224,7 +224,6 @@
     <Compile Include="Logic\Management\Instances\Objects.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LocalInstance.cs" />
-    <Compile Include="Logic\Management\McAddonsManager.cs" />
     <Compile Include="Logic\Management\NightworldIntance.cs" />
     <Compile Include="Logic\Management\IPrototypeInstance.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />

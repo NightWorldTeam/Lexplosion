@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -44,4 +45,9 @@ namespace Lexplosion.Logic.Management.Instances
         public string LocalId;
         public string ExternalId;
     }
+
+    /// <summary>
+    /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
+    /// </summary>
+    public class InstalledAddons : Dictionary<int, InstalledAddonInfo> { }
 }
