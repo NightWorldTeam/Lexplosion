@@ -165,6 +165,11 @@ namespace Lexplosion.Logic.Network
             }
         }
 
+        public static string GetProjectChangelog(string projectID, string fileID)
+        {
+            return ToServer.HttpGet("https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID + "/file/" + fileID + "/changelog");
+        }
+
         public static Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> DownloadAddon(int projectID, int fileID, string path, bool downloadDependencies = false, string gameVersion = "")
         {
             Console.WriteLine("");

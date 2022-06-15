@@ -166,7 +166,8 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Возвращает список модов. При вызове так же сохраняет спсиок модов, анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
+        /// Возвращает список модов. При вызове так же сохраняет спсиок модов, 
+        /// анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
         /// </summary>
         /// <param name="modpackInfo">Инфа о модпаке с которого нужно получить список модов</param>
         public static List<InstanceAddon> GetInstalledMods(BaseInstanceData modpackInfo)

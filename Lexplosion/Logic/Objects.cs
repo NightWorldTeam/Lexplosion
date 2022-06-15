@@ -68,5 +68,6 @@ namespace Lexplosion.Logic.Objects // TODO: позаменять классы н
         public List<byte[]> Images { get; set; }
         public string WebsiteUrl { get; set; }
         public string Summary { get; set; }
+        public string Changelog { get; set; }
     }
 }

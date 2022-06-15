@@ -44,6 +44,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string GameVersion;
         public string LocalId;
         public string ExternalId;
+        public bool InLibrary;
     }
 
     /// <summary>

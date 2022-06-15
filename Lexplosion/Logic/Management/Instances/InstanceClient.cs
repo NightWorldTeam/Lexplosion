@@ -150,7 +150,8 @@ namespace Lexplosion.Logic.Management.Instances
                     LocalId = _localId,
                     ExternalId = _externalId,
                     Type = Type,
-                    GameVersion = GameVersion
+                    GameVersion = GameVersion,
+                    InLibrary = InLibrary
                 };
             }
         }
@@ -444,6 +445,8 @@ namespace Lexplosion.Logic.Management.Instances
                             }
                         }
 
+                        var projectFileId = data.gameVersionLatestFiles?[0]?.projectFileId;
+
                         return new InstanceData
                         {
                             Categories = data.categories,
@@ -454,7 +457,8 @@ namespace Lexplosion.Logic.Management.Instances
                             LastUpdate = DateTime.Parse(data.dateModified).ToString("dd MMM yyyy"),
                             Modloader = data.Modloader,
                             Images = images,
-                            WebsiteUrl = data.websiteUrl
+                            WebsiteUrl = data.websiteUrl,
+                            Changelog = (projectFileId != null) ? (CurseforgeApi.GetProjectChangelog(_externalId, projectFileId.ToString()) ?? "") : ""
                         };
                     }
                 case InstanceSource.Nightworld:
@@ -487,7 +491,8 @@ namespace Lexplosion.Logic.Management.Instances
                             LastUpdate = (new DateTime(1970, 1, 1).AddSeconds(data.LastUpdate)).ToString("dd MMM yyyy"),
                             Modloader = data.Modloader,
                             Images = images,
-                            WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + _externalId
+                            WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + _externalId,
+                            Changelog = ""
                         };
                     }
                 default:
@@ -606,54 +611,49 @@ namespace Lexplosion.Logic.Management.Instances
 
         private string GenerateInstanceId()
         {
-            Random rnd = new Random();
-
             string instanceId = Name;
             instanceId = instanceId.Replace(" ", "_");
 
-            using (SHA1 sha = new SHA1Managed())
+            if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
             {
-                if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
+                int j = 0;
+                while (j < instanceId.Length)
                 {
-                    int j = 0;
-                    while (j < instanceId.Length)
+                    if (Regex.IsMatch(instanceId[j].ToString(), @"[^a-zA-Z0-9]") && instanceId[j] != '_')
                     {
-                        if (Regex.IsMatch(instanceId[j].ToString(), @"[^a-zA-Z0-9]") && instanceId[j] != '_')
-                        {
-                            instanceId = instanceId.Replace(instanceId[j], '_');
-                        }
-                        j++;
+                        instanceId = instanceId.Replace(instanceId[j], '_');
                     }
-
-                    if (_installedInstances.ContainsKey(instanceId))
-                    {
-                        string instanceId_ = instanceId;
-                        int i = 0;
-                        do
-                        {
-                            if (i > 0)
-                            {
-                                instanceId_ = instanceId + "__" + i;
-                            }
-                            i++;
-                        }
-                        while (_installedInstances.ContainsKey(instanceId_));
-                        instanceId = instanceId_;
-                    }
+                    j++;
                 }
-                else if (_installedInstances.ContainsKey(instanceId))
+
+                if (_installedInstances.ContainsKey(instanceId))
                 {
                     string instanceId_ = instanceId;
                     int i = 0;
                     do
                     {
-                        instanceId_ = instanceId + "_" + i;
+                        if (i > 0)
+                        {
+                            instanceId_ = instanceId + "__" + i;
+                        }
                         i++;
                     }
                     while (_installedInstances.ContainsKey(instanceId_));
-
                     instanceId = instanceId_;
                 }
+            }
+            else if (_installedInstances.ContainsKey(instanceId))
+            {
+                string instanceId_ = instanceId;
+                int i = 0;
+                do
+                {
+                    instanceId_ = instanceId + "_" + i;
+                    i++;
+                }
+                while (_installedInstances.ContainsKey(instanceId_));
+
+                instanceId = instanceId_;
             }
 
             return instanceId;
