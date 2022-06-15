@@ -73,8 +73,8 @@ namespace Lexplosion.Logic.Management.Instances
             int i = 0;
             foreach (CurseforgeAddonInfo addon in addonsList)
             {
-                bool isInstalled =
-                    (installedAddons.ContainsKey(addon.id) &&
+                bool isInstalled = 
+                    (installedAddons.ContainsKey(addon.id) && 
                     File.Exists(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addon.id].ActualPath));
 
                 int lastFileID = 0;

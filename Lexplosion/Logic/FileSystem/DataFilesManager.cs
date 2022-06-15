@@ -132,12 +132,25 @@ namespace Lexplosion.Logic.FileSystem
                     Settings settings = JsonConvert.DeserializeObject<Settings>(Encoding.UTF8.GetString(fileBytes));
                     if (instanceId != "") settings.GamePath = null;
 
-                    return settings ?? new Settings();
+                    return settings;
                 }
+
             }
             catch
             {
                 return new Settings();
+            }
+        }
+
+        public static bool InstanceIsInstalled(string instanceId)
+        {
+            try
+            {
+                return Directory.Exists(DirectoryPath + "/instances/" + instanceId);
+            }
+            catch
+            {
+                return false;
             }
         }
 
