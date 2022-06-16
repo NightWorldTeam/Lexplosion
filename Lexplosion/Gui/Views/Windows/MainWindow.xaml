@@ -62,7 +62,7 @@
         <ContentControl 
             Grid.Row="1"
             Content="{Binding CurrentViewModel, Source={StaticResource MainVM}}" />
-        <Border Visibility="{Binding IsAuthorized, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}"
+        <Border Visibility="{Binding IsShowInfoBar, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}"
                 Grid.Row="1" VerticalAlignment="Bottom" 
                 HorizontalAlignment="Left" Background="#151719"
                 Width="248" Height="34">

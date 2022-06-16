@@ -7,6 +7,7 @@ namespace Lexplosion.Gui.Views.Pages
     /// </summary>
     public partial class CurseforgeMarketView : UserControl
     {
+
         public CurseforgeMarketView()
         {
             InitializeComponent();

@@ -196,6 +196,7 @@
                 Style="{StaticResource SearchButtonStyle}"/>
 
         <ComboBox x:Name="SourceBox" Grid.Column="3" 
+                  Visibility="{Binding IsMultiSource, Converter={StaticResource ConvertBoolToVisibility}}"
                   Background="#131313" Height="30" Width="100"
                   SelectedIndex="{Binding SelectedSourceIndex}"
                   VerticalAlignment="Top"

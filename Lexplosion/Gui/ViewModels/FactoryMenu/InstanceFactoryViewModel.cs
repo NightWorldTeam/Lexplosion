@@ -24,27 +24,32 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
-        private static FactoryGeneralViewModel _factoryGeneralVM = new FactoryGeneralViewModel();
-        private static FactoryDLCVM _factoryDLCVM = new FactoryDLCVM();
+        private FactoryGeneralViewModel _factoryGeneralVM;
+        private FactoryDLCVM _factoryDLCVM;
 
-        private List<Tab> FactoryTabs = new List<Tab>()
-        {
-            new Tab
-            {
-                Header = "Основное",
-                Content = _factoryGeneralVM
-            },
-            new Tab
-            {
-                Header = "DLC",
-                Content = _factoryDLCVM
-            }
-        };
+        private List<Tab> FactoryTabs;
 
-        public InstanceFactoryViewModel()
+        public InstanceFactoryViewModel(MainViewModel mainViewModel)
         {
             NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
+
+            _factoryGeneralVM = new FactoryGeneralViewModel();
+            _factoryDLCVM = new FactoryDLCVM(mainViewModel);
+
+            var FactoryTabs = new List<Tab>()
+            {
+                new Tab
+                {
+                    Header = "Основное",
+                    Content = _factoryGeneralVM
+                },
+                new Tab
+                {
+                    Header = "DLC",
+                    Content = _factoryDLCVM
+                }
+            }; 
 
             var _tabMenuViewModel = new TabMenuViewModel(FactoryTabs, "Создание сборки");
 

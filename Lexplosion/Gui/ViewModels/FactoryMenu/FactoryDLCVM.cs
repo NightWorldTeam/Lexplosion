@@ -24,6 +24,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
     public class FactoryDLCVM : VMBase
     {
+        private MainViewModel _mainViewModel;
+
         public ObservableCollection<Mod> InstalledMods { get; set; }
 
         private RelayCommand _curseforgeCommand;
@@ -67,7 +69,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 {
                     case MarketDLCType.Mods:
                         MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
-                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel();
+                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(_mainViewModel);
                         break;
                     case MarketDLCType.Resourcepacks:
                         break;
@@ -78,8 +80,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
         #endregion
 
-        public FactoryDLCVM()
+        public FactoryDLCVM(MainViewModel mainViewModel)
         {
+            _mainViewModel = mainViewModel;
+
             InstalledMods = new ObservableCollection<Mod>() 
             {
                 new Mod

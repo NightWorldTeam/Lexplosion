@@ -61,10 +61,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }
         };
 
-        public MainMenuViewModel()
+        public MainMenuViewModel(MainViewModel mainViewModel)
         {
             NavigationFactoryCommand = new NavigateCommand<InstanceFactoryViewModel>(
-                 MainViewModel.NavigationStore, () => new InstanceFactoryViewModel());
+                 MainViewModel.NavigationStore, () => new InstanceFactoryViewModel(mainViewModel));
 
             _tabMenuViewModel = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");
 

@@ -9,7 +9,8 @@ namespace Lexplosion.Gui.ViewModels
     public class MainViewModel : VMBase
     {
         public static readonly NavigationStore NavigationStore = new NavigationStore();
-        public static MainMenuViewModel MainMenuVM { get; } = new MainMenuViewModel();
+        public static MainMenuViewModel MainMenuVM { get; private set; }
+        
 
         public static bool IsInstanceRunning = false;
 
@@ -18,16 +19,28 @@ namespace Lexplosion.Gui.ViewModels
 
         private RelayCommand _closeCommand;
         private RelayCommand _hideCommand;
-        
+
 
         #region props
+        private static bool _isShowInfoBar;
+
         public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
-        
+
+        public bool IsShowInfoBar 
+        { 
+            get => _isShowInfoBar; set 
+            {
+                _isShowInfoBar = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsAuthorized
         {
             get => _isAuthorized; set
             {
                 _isAuthorized = value;
+                IsShowInfoBar = value;
                 OnPropertyChanged(nameof(IsAuthorized));
             }
         }
@@ -64,6 +77,7 @@ namespace Lexplosion.Gui.ViewModels
         public MainViewModel()
         {
             Model = new MainModel();
+            MainMenuVM = new MainMenuViewModel(this);
             NavigationStore.CurrentViewModel = new AuthViewModel(this, LibraryInstanceLoading);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
         }
