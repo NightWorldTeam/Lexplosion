@@ -20,7 +20,7 @@ namespace Lexplosion.Logic.Management.Instances
 
     public class InstanceClient : VMBase
     {
-        class ArchivedClientData
+        private class ArchivedClientData
         {
             public string GameVersion;
             public string Name;

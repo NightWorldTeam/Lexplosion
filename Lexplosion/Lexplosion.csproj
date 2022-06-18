@@ -209,6 +209,7 @@
     <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Management\User.cs" />
     <Compile Include="VMBase.cs" />
     <Compile Include="Logic\Aes.cs" />
     <Compile Include="Enums.cs" />

@@ -96,4 +96,20 @@
         Client,
         Java
     }
+
+    public enum ActivityStatus
+    {
+        Offline,
+        Online,
+        InGame,
+        NotDisturb,
+        OnlyOnline
+    }
+
+    public enum AccountType
+    {
+        NoAuth,
+        NightWorld,
+        Mojang
+    }
 }
