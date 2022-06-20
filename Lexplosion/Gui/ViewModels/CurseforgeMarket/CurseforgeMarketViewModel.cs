@@ -70,12 +70,16 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         public ObservableCollection<ModCategory> ModCategories { get; } = new ObservableCollection<ModCategory>();
         public ObservableCollection<Mod> Mods { get; } = new ObservableCollection<Mod>();
 
+        public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel();
+        public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
+
         #endregion props
 
         public CurseforgeMarketViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
             mainViewModel.IsShowInfoBar = false;
+
             foreach (var name in ModCategoryNames) 
             {
                 ModCategories.Add(new ModCategory 

@@ -23,6 +23,7 @@
         <Grid.Background>
             <SolidColorBrush Color="#121212" Opacity="0.55"/>
         </Grid.Background>
+        
         <ListBox Style="{StaticResource LibraryListBox}" ItemContainerStyle="{StaticResource LibraryListBoxItem}">
             <ListBox.ItemsSource>
                 <CompositeCollection>

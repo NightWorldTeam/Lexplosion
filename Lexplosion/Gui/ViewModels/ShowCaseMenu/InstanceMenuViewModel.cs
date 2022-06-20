@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.Commands;
+using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
@@ -50,11 +51,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 },
                 new Tab()
                 {
-                    Header = "Mods",
-                    Content = null
-                },
-                new Tab()
-                {
                     Header = "Changelog",
                     Content = null
                 }
@@ -64,12 +60,22 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             {
                 new Tab
                 {
-                    Header = "Игровые настройки",
+                    Header = "Параметры",
                     Content = new InstanceSettingsViewModel(instanceClient)
                 },
                 new Tab
                 {
                     Header = "О Сборке",
+                    Content = new InstanceCreationViewModel()
+                },
+                new Tab
+                {
+                    Header = "Дополнения",
+                    Content = null
+                },
+                new Tab 
+                {
+                    Header = "Журнал изменений",
                     Content = null
                 },
             };
@@ -83,7 +89,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 },
                 new Tab
                 {
-                    Header = "Настройки",
+                    Header = "Конфигурация",
                     Content = new TabMenuViewModel(_settingsTabs, "Настройки сборки"),
                 },
                 new Tab

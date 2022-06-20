@@ -6,12 +6,12 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 {
     public class InstanceFactoryModel : VMBase
     {
+        #region prop
+
         private string _name;
         private string _selectedVersion;
         private ModloaderType _modloaderType;
-
         private bool _isAvaliableName;
-        #region prop
 
         public List<string> UnavailableNames { get; } = new List<string>();
         public Dictionary<string, List<string>> ForgeVersions { get; }
@@ -54,11 +54,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
                 OnPropertyChanged(nameof(ModloaderType));
             }
         }
+
         #endregion
-
-        public InstanceFactoryModel()
-        {
-
-        }
     }
 }
