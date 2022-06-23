@@ -157,11 +157,11 @@ namespace Lexplosion.Logic.Network
                     Console.WriteLine("null");
                 }
 
-                return null;
+                return new CurseforgeInstanceInfo();
             }
             catch
             {
-                return null;
+                return new CurseforgeInstanceInfo();
             }
         }
 

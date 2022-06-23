@@ -483,16 +483,19 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         var data = CurseforgeApi.GetInstance(_externalId);
                         var images = new List<byte[]>();
-                        using (var webClient = new WebClient())
+                        if (data.attachments != null)
                         {
-                            foreach (var item in data.attachments)
+                            using (var webClient = new WebClient())
                             {
-                                try
+                                foreach (var item in data.attachments)
                                 {
-                                    if (!item.isDefault && !item.url.Contains("avatars"))
-                                        images.Add(webClient.DownloadData(item.url));
+                                    try
+                                    {
+                                        if (!item.isDefault && !item.url.Contains("avatars"))
+                                            images.Add(webClient.DownloadData(item.url));
+                                    }
+                                    catch { }
                                 }
-                                catch { }
                             }
                         }
 
