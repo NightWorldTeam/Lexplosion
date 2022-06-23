@@ -68,8 +68,9 @@ namespace Lexplosion.Logic.Network
 
                 return new T();
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(url + " " + e);
                 return new T();
             }
         }
