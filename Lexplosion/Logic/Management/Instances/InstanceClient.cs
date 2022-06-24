@@ -508,7 +508,7 @@ namespace Lexplosion.Logic.Management.Instances
                             Summary = data.summary,
                             TotalDownloads = (long)data.downloadCount,
                             GameVersion = (data.gameVersionLatestFiles != null && data.gameVersionLatestFiles.Count > 0) ? data.gameVersionLatestFiles[0].gameVersion : "",
-                            LastUpdate = DateTime.Parse(data.dateModified).ToString("dd MMM yyyy"),
+                            LastUpdate = (data.dateModified != null) ? DateTime.Parse(data.dateModified).ToString("dd MMM yyyy") : "",
                             Modloader = data.Modloader,
                             Images = images,
                             WebsiteUrl = data.websiteUrl,
