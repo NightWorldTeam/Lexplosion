@@ -40,11 +40,18 @@ namespace Lexplosion.Logic.Management.Instances
     /// </summary>
     public class BaseInstanceData
     {
-        public InstanceSource Type;
-        public string GameVersion;
-        public string LocalId;
-        public string ExternalId;
-        public bool InLibrary;
+        public InstanceSource Type { get; set; }
+        public string GameVersion { get; set; }
+        public string LocalId { get; set; }
+        public string ExternalId { get; set; }
+        public bool InLibrary { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Summary { get; set; }
+        public List<Category> Categories { get; set; }
+        public string Author { get; set; }
+        public ModloaderType Modloader { get; set; }
+        public string ModloaderVersion { get; set; }
     }
 
     /// <summary>

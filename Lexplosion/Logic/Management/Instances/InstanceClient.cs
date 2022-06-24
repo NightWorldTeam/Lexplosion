@@ -55,7 +55,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name
         {
             get => _name;
-            set
+            private set
             {
                 _name = value;
                 OnPropertyChanged();
@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Description
         {
             get => _description;
-            set
+            private set
             {
                 _description = value;
                 OnPropertyChanged();
@@ -88,7 +88,7 @@ namespace Lexplosion.Logic.Management.Instances
         public List<Category> Categories
         {
             get => _categories;
-            set
+            private set
             {
                 _categories = value;
                 OnPropertyChanged();
@@ -99,7 +99,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string GameVersion
         {
             get => _gameVersion;
-            set
+            private set
             {
                 _gameVersion = value;
                 OnPropertyChanged();
@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Summary
         {
             get => _summary;
-            set
+            private set
             {
                 _summary = value;
                 OnPropertyChanged();
@@ -122,8 +122,6 @@ namespace Lexplosion.Logic.Management.Instances
         public bool UpdateAvailable { get; private set; } = false;
         public bool IsInstalled { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
-        public string ModloaderVersion { get; private set; } = null;
-        public ModloaderType? Modloader { get; private set; } = null;
         #endregion
 
         public event ProgressHandlerCallback ProgressHandler;
@@ -198,13 +196,22 @@ namespace Lexplosion.Logic.Management.Instances
         {
             get 
             {
+                VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+
                 return new BaseInstanceData
                 {
                     LocalId = _localId,
                     ExternalId = _externalId,
                     Type = Type,
                     GameVersion = GameVersion,
-                    InLibrary = InLibrary
+                    InLibrary = InLibrary,
+                    Author = Author,
+                    Categories = Categories,
+                    Description = Description,
+                    Name = _name,
+                    Summary = _summary,
+                    ModloaderVersion = manifest?.version?.gameVersion ?? "",
+                    Modloader = manifest?.version.modloaderType ?? ModloaderType.None
                 };
             }
         }
@@ -569,51 +576,25 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="summary">Краткое описание.</param>
         /// <param name="categories">Категории.</param>
         /// <param name="modloader">Тип модлоадера. Если его нужно изменить, то обязательно нужно передать и modloaderVersion.</param>
-        /// <param name="modloaderVersion">Версия модлоадера.</param>
-        public void ChangeParameters(string name, string desc, string gameVersion, string summary, 
-            List<Category> categories, ModloaderType? modloader, string modloaderVersion)
+        /// <param name="modloaderVersion">Версия модлоадера.</param>s
+        public void ChangeParameters(BaseInstanceData data)
         {
-            if (modloaderVersion != null)
+            VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+            if (manifest != null)
             {
-                VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
-                if (manifest != null)
-                {
-                    if (modloader != null)
-                    {
-                        manifest.version.modloaderType = (ModloaderType)modloader;
-                    }
-                    manifest.version.modloaderVersion = modloaderVersion;
-                    DataFilesManager.SaveManifest(_localId, manifest);
-                }
+                manifest.version.modloaderType = data.Modloader;
+                manifest.version.modloaderVersion = data.ModloaderVersion;
+                manifest.version.gameVersion = data.GameVersion;
+                DataFilesManager.SaveManifest(_localId, manifest);
             }
 
-            if (desc != null) Description = desc;
-            if (gameVersion != null) GameVersion = gameVersion;
-            if (summary != null) Summary = summary;
-            if (categories != null) Categories = categories;
+            Description = data.Description;
+            GameVersion = data.GameVersion;
+            Summary = data.Summary;
+            Categories = data.Categories;
             SaveAssets();
 
-            if (name != null)
-            {
-                Name = name;
-                SaveInstalledInstancesList();
-            }
-        }
-
-        public void SaveParameters()
-        {
-            if(Modloader != null && ModloaderVersion != null)
-            {
-                VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
-                if (manifest != null)
-                {
-                    manifest.version.modloaderType = (ModloaderType)Modloader;
-                    manifest.version.modloaderVersion = ModloaderVersion;
-                    DataFilesManager.SaveManifest(_localId, manifest);
-                }
-            }
-            
-            SaveAssets();
+            Name = data.Name;
             SaveInstalledInstancesList();
         }
 
