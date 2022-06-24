@@ -55,7 +55,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name
         {
             get => _name;
-            private set
+            set
             {
                 _name = value;
                 OnPropertyChanged();
@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Description
         {
             get => _description;
-            private set
+            set
             {
                 _description = value;
                 OnPropertyChanged();
@@ -88,7 +88,7 @@ namespace Lexplosion.Logic.Management.Instances
         public List<Category> Categories
         {
             get => _categories;
-            private set
+            set
             {
                 _categories = value;
                 OnPropertyChanged();
@@ -99,7 +99,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string GameVersion
         {
             get => _gameVersion;
-            private set
+            set
             {
                 _gameVersion = value;
                 OnPropertyChanged();
@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Summary
         {
             get => _summary;
-            private set
+            set
             {
                 _summary = value;
                 OnPropertyChanged();
@@ -122,6 +122,8 @@ namespace Lexplosion.Logic.Management.Instances
         public bool UpdateAvailable { get; private set; } = false;
         public bool IsInstalled { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
+        public string ModloaderVersion { get; private set; } = null;
+        public ModloaderType? Modloader { get; private set; } = null;
         #endregion
 
         public event ProgressHandlerCallback ProgressHandler;
@@ -399,7 +401,7 @@ namespace Lexplosion.Logic.Management.Instances
                 foreach (var instance in curseforgeInstances)
                 {
                     // проверяем версию игры
-                    if (instance.gameVersionLatestFiles != null && instance.gameVersionLatestFiles.Count > 0 && instance.gameVersionLatestFiles[0].gameVersion != null)
+                    if (instance.latestFilesIndexes != null && instance.latestFilesIndexes.Count > 0 && instance.latestFilesIndexes[0].gameVersion != null)
                     {
                         string author = "";
                         if (instance.authors != null && instance.authors.Count > 0 && instance.authors[0].name != null)
@@ -430,7 +432,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Name = instance.name ?? UnknownName,
                                 Logo = null,
                                 Categories = instance.categories,
-                                GameVersion = instance.gameVersionLatestFiles[0].gameVersion,
+                                GameVersion = instance.latestFilesIndexes[0].gameVersion,
                                 Summary = instance.summary ?? "",
                                 Description = instance.summary ?? "",
                                 Author = instance.GetAuthorName
@@ -439,19 +441,9 @@ namespace Lexplosion.Logic.Management.Instances
 
                         instanceClient.WebsiteUrl = instance.websiteUrl;
 
-                        if (instance.attachments != null && instance.attachments.Count > 0)
+                        if (instance.logo != null && instance.logo.url != null)
                         {
-                            string url = instance.attachments[0].thumbnailUrl;
-                            foreach (var attachment in instance.attachments)
-                            {
-                                if (attachment.isDefault)
-                                {
-                                    url = attachment.thumbnailUrl;
-                                    break;
-                                }
-                            }
-
-                            instanceClient.DownloadLogo(url);
+                            instanceClient.DownloadLogo(instance.logo.url);
                             if (_idsPairs.ContainsKey(instance.id.ToString()))
                                 instanceClient.SaveAssets();
                         }
@@ -483,23 +475,22 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         var data = CurseforgeApi.GetInstance(_externalId);
                         var images = new List<byte[]>();
-                        if (data.attachments != null)
+                        if (data.screenshots != null)
                         {
                             using (var webClient = new WebClient())
                             {
-                                foreach (var item in data.attachments)
+                                foreach (var item in data.screenshots)
                                 {
                                     try
                                     {
-                                        if (!item.isDefault && !item.url.Contains("avatars"))
-                                            images.Add(webClient.DownloadData(item.url));
+                                        images.Add(webClient.DownloadData(item.url));
                                     }
                                     catch { }
                                 }
                             }
                         }
 
-                        var projectFileId = data.gameVersionLatestFiles?[0]?.projectFileId;
+                        var projectFileId = data.latestFilesIndexes?[0]?.fileId;
 
                         return new InstanceData
                         {
@@ -507,9 +498,9 @@ namespace Lexplosion.Logic.Management.Instances
                             Description = data.summary,
                             Summary = data.summary,
                             TotalDownloads = (long)data.downloadCount,
-                            GameVersion = (data.gameVersionLatestFiles != null && data.gameVersionLatestFiles.Count > 0) ? data.gameVersionLatestFiles[0].gameVersion : "",
+                            GameVersion = (data.latestFilesIndexes != null && data.latestFilesIndexes.Count > 0) ? data.latestFilesIndexes[0].gameVersion : "",
                             LastUpdate = (data.dateModified != null) ? DateTime.Parse(data.dateModified).ToString("dd MMM yyyy") : "",
-                            Modloader = data.Modloader,
+                            Modloader = data.ModloaderType,
                             Images = images,
                             WebsiteUrl = data.websiteUrl,
                             Changelog = (projectFileId != null) ? (CurseforgeApi.GetProjectChangelog(_externalId, projectFileId.ToString()) ?? "") : ""
@@ -607,6 +598,23 @@ namespace Lexplosion.Logic.Management.Instances
                 Name = name;
                 SaveInstalledInstancesList();
             }
+        }
+
+        public void SaveParameters()
+        {
+            if(Modloader != null && ModloaderVersion != null)
+            {
+                VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
+                if (manifest != null)
+                {
+                    manifest.version.modloaderType = (ModloaderType)Modloader;
+                    manifest.version.modloaderVersion = ModloaderVersion;
+                    DataFilesManager.SaveManifest(_localId, manifest);
+                }
+            }
+            
+            SaveAssets();
+            SaveInstalledInstancesList();
         }
 
         /// <summary>

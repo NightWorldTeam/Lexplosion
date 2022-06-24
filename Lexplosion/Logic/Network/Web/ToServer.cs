@@ -335,13 +335,21 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static string HttpGet(string url)
+        public static string HttpGet(string url, List<KeyValuePair<string, string>> headers = null)
         {
-            try
+            try 
             {
                 string answer;
 
                 WebRequest req = WebRequest.Create(url);
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        req.Headers.Add(header.Key, header.Value);
+                    }
+                }
+
                 using (WebResponse resp = req.GetResponse())
                 {
                     using (Stream stream = resp.GetResponseStream())
@@ -355,8 +363,9 @@ namespace Lexplosion.Logic.Network
 
                 return answer;
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(url + " " + e);
                 return null;
             }
         }

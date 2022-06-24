@@ -14,7 +14,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public class GameVersion
         {
             public string gameVersion;
-            public int projectFileId;
+            public int fileId;
         }
 
         public class LatestFile
@@ -37,6 +37,11 @@ namespace Lexplosion.Logic.Objects.Curseforge
             public string url;
         }
 
+        public class Logo
+        {
+            public string url;
+        }
+
         public int id; // TODO: подобные поля потом нужно на long заменить
         public string name;
         public List<LatestFile> latestFiles;
@@ -44,9 +49,10 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public float downloadCount { get; set; }
         public string dateModified;
         public string websiteUrl;
-        public List<Attachment> attachments;
+        //public List<Attachment> attachments;
         public List<Category> categories;
         public List<Author> authors;
+        public Logo logo;
 
         public string GetAuthorName
         {
@@ -62,8 +68,14 @@ namespace Lexplosion.Logic.Objects.Curseforge
     /// </summary>
     public class CurseforgeInstanceInfo : CurseforgeProjectInfo
     {
-        public List<GameVersion> gameVersionLatestFiles;
-        public ModloaderType Modloader;
+        public class Screenshot
+        {
+            public string url;
+        }
+
+        public List<GameVersion> latestFilesIndexes;
+        public List<Screenshot> screenshots;
+        public ModloaderType ModloaderType;
     }
 
     /// <summary>

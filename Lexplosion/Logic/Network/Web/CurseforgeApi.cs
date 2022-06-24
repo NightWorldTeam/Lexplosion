@@ -54,12 +54,19 @@ namespace Lexplosion.Logic.Network
             public List<LatestFile> gameVersionLatestFiles;
         }
 
+        class DataContainer<T>
+        {
+            public T data;
+        }
+
         private static T GetApiData<T>(string url) where T : new()
         {
             try
             {
 
-                string answer = ToServer.HttpGet(url);
+                List<KeyValuePair<string, string>> headers = new List<KeyValuePair<string, string>>();
+                headers.Add(new KeyValuePair<string, string>("x-api-key", "$2a$10$O69m8aUjxsqv/5/Cj991IOjb9.n/U496/itkFpF5Y8VbhRjeLMjn6"));
+                string answer = ToServer.HttpGet(url, headers);
 
                 if (answer != null)
                 {
@@ -85,15 +92,16 @@ namespace Lexplosion.Logic.Network
             string url;
             if (categoriy == ModpacksCategories.All)
             {
-                url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&index=0&sortField=1&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                //url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             }
             else
             {
-                url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&index=0&sortField=1&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                //url = "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&sectionId=4471&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             }
 
-            return GetApiData<List<CurseforgeInstanceInfo>>(url);
-
+            return GetApiData<DataContainer<List<CurseforgeInstanceInfo>>>(url).data;
         }
 
         public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, string searchFilter = "", string gameVersion = "")
@@ -132,15 +140,15 @@ namespace Lexplosion.Logic.Network
                         long maxId = data.latestFiles[0].id;
                         foreach (var value in data.latestFiles)
                         {
-                            if (value.id > maxId || data.Modloader == ModloaderType.None)
+                            if (value.id > maxId || data.ModloaderType == ModloaderType.None)
                             {
                                 if (value.gameVersion.Contains("Forge"))
                                 {
-                                    data.Modloader = ModloaderType.Forge;
+                                    data.ModloaderType = ModloaderType.Forge;
                                 }
                                 else if (value.gameVersion.Contains("Fabric"))
                                 {
-                                    data.Modloader = ModloaderType.Fabric;
+                                    data.ModloaderType = ModloaderType.Fabric;
                                 }
 
                                 if (value.id > maxId)

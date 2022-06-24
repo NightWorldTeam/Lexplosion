@@ -85,7 +85,7 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         if (addonVersion.gameVersion == modpackInfo.GameVersion)
                         {
-                            lastFileID = addonVersion.projectFileId;
+                            lastFileID = addonVersion.fileId;
                             break;
                         }
                     }
@@ -157,7 +157,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 if (fileInfo.gameVersion == _modpackInfo.GameVersion)
                 {
-                    fileID = fileInfo.projectFileId;
+                    fileID = fileInfo.fileId;
                     break;
                 }
             }
