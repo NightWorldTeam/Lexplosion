@@ -364,9 +364,12 @@ namespace Lexplosion.Logic.Management.Instances
                             if (_idsPairs.ContainsKey(nwModpack))
                             {
                                 instanceClient = _installedInstances[_idsPairs[nwModpack]];
+                                Console.WriteLine(instanceClient._externalId);
                                 instanceClient.CheckUpdates();
-                                instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
-                                instanceClient.SaveAssets();
+                                instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage, delegate 
+                                {
+                                    instanceClient.SaveAssets();
+                                });
 
                                 if (nwInstances[nwModpack].Categories != null)
                                     instanceClient.Categories = nwInstances[nwModpack].Categories;
@@ -390,7 +393,7 @@ namespace Lexplosion.Logic.Management.Instances
                                     Author = nwInstances[nwModpack].Author ?? UnknownAuthor
                                 };
 
-                                instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage);
+                                instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage, delegate { });
                             }
 
                             instanceClient.WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + nwModpack;
@@ -450,9 +453,12 @@ namespace Lexplosion.Logic.Management.Instances
 
                         if (instance.logo != null && instance.logo.url != null)
                         {
-                            instanceClient.DownloadLogo(instance.logo.url);
-                            if (_idsPairs.ContainsKey(instance.id.ToString()))
-                                instanceClient.SaveAssets();
+                            instanceClient.DownloadLogo(instance.logo.url, delegate 
+                            {
+                                if (_idsPairs.ContainsKey(instance.id.ToString()))
+                                    instanceClient.SaveAssets();
+                            });
+                            
                         }
 
                         instances.Add(instanceClient);
@@ -749,18 +755,20 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Ну бля, качает заглавную картинку (лого) по ссылке и записывает в переменную Logo. Делает это всё в пуле потоков.
         /// </summary>
-        private void DownloadLogo(string url)
+        private void DownloadLogo(string url, Action callback)
         {
             ThreadPool.QueueUserWorkItem(delegate (object state)
             {
-                try
+                //try
                 {
                     using (var webClient = new WebClient())
                     {
                         Logo = webClient.DownloadData(url);
+                        callback();
+                        Console.WriteLine("sdrefzgtxhrbnfdvcfjv " + _externalId + " " + (Logo == null));
                     }
                 }
-                catch { }
+                //catch { }
             });
         }
 
@@ -769,19 +777,21 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         private void SaveAssets()
         {
-            try
+            //try
             {
                 if (!Directory.Exists(WithDirectory.DirectoryPath + "/instances-assets/" + _localId))
                 {
                     Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances-assets/" + _localId);
                 }
 
+                Console.WriteLine((Logo == null) + " " + _externalId);
+
                 if (Logo != null)
                 {
                     File.WriteAllBytes(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName, Logo);
                 }
             }
-            catch { }
+            //catch { }
 
             string file = WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
             InstanceAssets assetsData_ = DataFilesManager.GetFile<InstanceAssets>(file);

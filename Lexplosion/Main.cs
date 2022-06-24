@@ -118,18 +118,18 @@ namespace Lexplosion
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
 
-            WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&pageSize=10&index=0&sortField=1&sortOrder=desc");
-            req.Headers.Add("x-api-key", "$2a$10$O69m8aUjxsqv/5/Cj991IOjb9.n/U496/itkFpF5Y8VbhRjeLMjn6");
-            using (WebResponse resp = req.GetResponse())
-            {
-                using (Stream stream = resp.GetResponseStream())
-                {
-                    using (StreamReader sr = new StreamReader(stream))
-                    {
-                        Console.WriteLine(sr.ReadToEnd());
-                    }
-                }
-            }
+            //WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&pageSize=10&index=0&sortField=1&sortOrder=desc");
+            //req.Headers.Add("x-api-key", "$2a$10$O69m8aUjxsqv/5/Cj991IOjb9.n/U496/itkFpF5Y8VbhRjeLMjn6");
+            //using (WebResponse resp = req.GetResponse())
+            //{
+            //    using (Stream stream = resp.GetResponseStream())
+            //    {
+            //        using (StreamReader sr = new StreamReader(stream))
+            //        {
+            //            Console.WriteLine(sr.ReadToEnd());
+            //        }
+            //    }
+            //}
 
             Thread.Sleep(1000);
 
