@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Logic.Management.Instances;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,27 +9,44 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
     public class InstanceCreationViewModel : VMBase
     {
-        public string[] ModCategoryNames { get; } = new string[19]
+        public InstanceClient CurrentInstanceClient { get; }
+
+        public BaseInstanceData BaseInstanceData { get; }
+
+        public List<string> GameVersions { get; } = MainViewModel.GameVersions.ToList();
+
+        public RelayCommand SaveDataCommand
         {
-            "All Mods",
-            "WorldGen",
-            "Technology",
+            get => new RelayCommand(obj =>
+            {
+                CurrentInstanceClient.ChangeParameters(BaseInstanceData);
+            });
+        }
+
+        public string[] ModpacksCategoryNames { get; } = new string[16]
+        {
+            "Tech",
             "Magic",
-            "Storage",
-            "API and Library",
+            "Sci-Fi",
             "Adventure and RPG",
-            "Map and Information",
-            "Cosmetics",
-            "Miscellaneous",
-            "Addons",
-            "Armor, Tools, and Weapon",
-            "Server Utility",
-            "Food",
-            "Redstone",
-            "Twitch Integration",
-            "MCreator",
-            "Utility & QoL",
-            "Education"
+            "Exploration",
+            "Mini Game",
+            "Quests",
+            "Hardcore",
+            "Map Based",
+            "Small/Ligth",
+            "Extra/Large",
+            "Combat / PVP",
+            "Multiplayer",
+            "FTB Offical Pack",
+            "Skyblock",
+            "Vanilla+"
         };
+
+        public InstanceCreationViewModel(InstanceClient instanceClient)
+        {
+            CurrentInstanceClient = instanceClient;
+            BaseInstanceData = CurrentInstanceClient.GetBaseData;
+        }
     }
 }

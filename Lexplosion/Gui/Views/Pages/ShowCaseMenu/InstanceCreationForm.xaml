@@ -20,7 +20,7 @@
                     CornerRadius="6" 
                     Width="{TemplateBinding Width}" 
                     Height="{TemplateBinding Height}" 
-                    Background="#272727"
+                    Background="#212121"
                     BorderBrush="#121212"
                     BorderThickness="1.5">
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0">
@@ -80,7 +80,7 @@
                                     MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
                                         CornerRadius="6"
-                                        Background="#272727"
+                                        Background="#212121"
                                         BorderThickness="2"
                                         BorderBrush="#167FFC"/>
                                     <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
@@ -144,7 +144,7 @@
 
         <!-- TextBox -->
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Background" Value="#272727" />
+            <Setter Property="Background" Value="#212121" />
             <Setter Property="BorderBrush" Value="#0c0c0c" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Foreground" Value="#efefef" />
@@ -198,125 +198,143 @@
         <!-- Combobox -->
     </UserControl.Resources>
 
-    <ScrollViewer>
-        <Grid Margin="0,10,0,0">
-            <TabControl Background="Transparent" BorderThickness="0" Style="{StaticResource TabControlStyle}" TabStripPlacement="Left">
-                <TabControl.Resources>
-                    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Menenei}"/>
-                </TabControl.Resources>
-                <TabItem Header="Основное">
-                    <Border HorizontalAlignment="Center" Margin="20,0,0,0">
-                        <StackPanel>
-                            <Border Padding="5" BorderBrush="#343639" BorderThickness="0,0,0,2" VerticalAlignment="Top" >
-                                <TextBlock Text="ОСНОВНОЕ" FontSize="16" HorizontalAlignment="Left"/>
-                            </Border>
-
-                            <StackPanel Margin="30,10,30,30" VerticalAlignment="Top" HorizontalAlignment="Center">
-                                <TextBlock Text="НАЗВАНИЕ" Foreground="White" FontSize="14" Opacity="0.8" Margin="0,0,0,5" HorizontalAlignment="Left"/>
-                                <TextBox Height="40" Width="400" />
-                            </StackPanel>
-
-                            <StackPanel Margin="30,0,30,30" VerticalAlignment="Top" HorizontalAlignment="Center">
-                                <TextBlock Text="ВЕРСИЯ" Foreground="White" FontSize="14" Opacity="0.8" Margin="0,0,0,5" HorizontalAlignment="Left"/>
-                                <ComboBox Height="40" Width="400" />
-                            </StackPanel>  
-                            
-                            <StackPanel Margin="30,0,30,30" VerticalAlignment="Top" HorizontalAlignment="Center">
-                                <TextBlock Text="MODLOADER" Foreground="White" FontSize="14" Opacity="0.8" Margin="0,0,0,5" HorizontalAlignment="Left"/>
-                                <ComboBox Height="40" Width="400" />
-                            </StackPanel> 
-                            
-                            <StackPanel Margin="30,0,30,30" VerticalAlignment="Top" HorizontalAlignment="Center">
-                                <TextBlock Text="ВЕРСИЯ ,,," Foreground="White" FontSize="14" Opacity="0.8" Margin="0,0,0,5" HorizontalAlignment="Left"/>
-                                <ComboBox Height="40" Width="400" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                </TabItem>
-                <TabItem Header="Аватар">
-                    <Border Background="Transparent" Margin="20,0,0,0">
-                        <Grid ShowGridLines="True">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="170" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="300" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+    <Grid>
+        <ScrollViewer>
+                <Grid Margin="0,10,0,0">
+                    <TabControl Background="Transparent" BorderThickness="0" Style="{StaticResource TabControlStyle}" TabStripPlacement="Left">
+                        <TabControl.Resources>
+                            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Menenei}"/>
+                        </TabControl.Resources>
+                        <TabItem Header="Основное">
+                            <Border HorizontalAlignment="Center" Margin="20,0,0,0">
                                 <StackPanel>
-                                    <TextBlock Text="Аватар" FontSize="18" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="Выберите изображение для вашего модпака." FontSize="14" Opacity="0.8" HorizontalAlignment="Left"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Border Margin="5" Width="120" Height="120" Background="Green" VerticalAlignment="Bottom"/>
-                                        <Border Margin="5" Width="90" Height="90" Background="DarkGreen" VerticalAlignment="Bottom"/>
-                                        <Border Margin="5" Width="60" Height="60" Background="DarkOliveGreen" VerticalAlignment="Bottom"/>
+                                    <Border Padding="5" BorderBrush="#343639" BorderThickness="0,0,0,2" VerticalAlignment="Top" >
+                                        <TextBlock Text="ОСНОВНОЕ" FontSize="16" HorizontalAlignment="Left"/>
+                                    </Border>
+
+                                    <StackPanel Margin="30,10,30,30" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <TextBlock Text="НАЗВАНИЕ" Foreground="White" FontSize="14" Opacity="0.8" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+                                        <TextBox Height="40" Width="400" Text="{Binding BaseInstanceData.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="30,0,30,30" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <TextBlock Text="ВЕРСИЯ" Foreground="White" FontSize="14" Opacity="0.8" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+                                        <ComboBox Height="40" Width="400" ItemsSource="{Binding GameVersions}" SelectedValue="{Binding BaseInstanceData.GameVersion, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="30,0,30,30" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <TextBlock Text="MODLOADER" Foreground="White" FontSize="14" Opacity="0.8" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+                                        <ComboBox Height="40" Width="400" />
+                                    </StackPanel>
+
+                                    <StackPanel Margin="30,0,30,30" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                        <TextBlock Text="ВЕРСИЯ ,,," Visibility="Collapsed" Foreground="White" FontSize="14" Opacity="0.8" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+                                        <ComboBox Height="40" Width="400" />
                                     </StackPanel>
                                 </StackPanel>
-                                <StackPanel Margin="15,0,0,0" Grid.Column="1">
-                                    <Button Margin="0,50,0,0" Background="#272727" Width="160" Height="40" Content="Загрузить своё аватар" Foreground="#efefef" FontSize="14"/>
-                                    <TextBlock Margin="11,5,0,0" Text="Вы можете загрузить свой аватар, но видеть его будете только вы." TextWrapping="WrapWithOverflow" TextAlignment="Left"
-                                           FontSize="14"/>
+                            </Border>
+                        </TabItem>
+                        <TabItem Header="Аватар">
+                            <Border Background="Transparent" Margin="20,0,0,0">
+                                <Grid ShowGridLines="True">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="170" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="300" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="Аватар" FontSize="18" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="Выберите изображение для вашего модпака." FontSize="14" Opacity="0.8" HorizontalAlignment="Left"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Border Margin="5" Width="120" Height="120" VerticalAlignment="Bottom">
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="{Binding BaseInstanceData.Logo, Converter={StaticResource BytesToBitmapImageConverter}}"/>
+                                                    </Border.Background>
+                                                </Border>
+                                                <Border Margin="5" Width="90" Height="90" VerticalAlignment="Bottom">
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="{Binding BaseInstanceData.Logo, Converter={StaticResource BytesToBitmapImageConverter}}"/>
+                                                    </Border.Background>
+                                                </Border>
+                                                <Border Margin="5" Width="60" Height="60" VerticalAlignment="Bottom">
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="{Binding BaseInstanceData.Logo, Converter={StaticResource BytesToBitmapImageConverter}}"/>
+                                                    </Border.Background>
+                                                </Border>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel Margin="15,0,0,0" Grid.Column="1">
+                                            <Button Margin="0,50,0,0" Background="#272727" Width="160" Height="40" Content="Загрузить своё аватар" Foreground="#efefef" FontSize="14"/>
+                                            <TextBlock Margin="11,5,0,0" Text="Вы можете загрузить свой аватар, но видеть его будете только вы." TextWrapping="WrapWithOverflow" TextAlignment="Left"
+                                                   FontSize="14"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </TabItem>
+                        <TabItem Header="О Сборке" Height="30" VerticalAlignment="Top">
+                            <Border Background="Transparent" Margin="20,0,0,0">
+                                <StackPanel>
+                                    <StackPanel Margin="30,10,30,30">
+                                        <TextBlock Text="Краткое Описание" FontSize="16" Opacity="0.8" HorizontalAlignment="Left" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding BaseInstanceData.Summary, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="30,0,30,30" VerticalAlignment="Top">
+                                        <TextBlock Text="Полное Описание" FontSize="16" Opacity="0.8" HorizontalAlignment="Left" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding BaseInstanceData.Description, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" Height="150" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="30,0,30,30">
+                                        <TextBlock Text="Теги" FontSize="16" Opacity="0.8" HorizontalAlignment="Left" Margin="0,0,0,5"/>
+                                        <ListBox ItemsSource="{Binding ModCategoryNames}" 
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                 Background="#272727" BorderThickness="0" SelectionMode="Multiple" SelectedValue="{Binding BaseInstanceData.Categories.Name}">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListBoxItem}">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                                <Border x:Name="border" CornerRadius="5" Background="#282d37" Padding="10,5,10,5" Margin="5,3,0,3">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                        <Setter TargetName="border"  Property="Background" Value="#4a4e57" />
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel IsItemsHost="True" />
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Foreground="#f2f2f3" Text="{Binding }" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                   FontSize="12"/>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </StackPanel>
                                 </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Border>
-                </TabItem> 
-                <TabItem Header="О Сборке">
-                    <Border Background="Transparent" Margin="20,0,0,0">
-                        <StackPanel>
-                            <StackPanel Margin="30,10,30,30">
-                                <TextBlock Text="Краткое Описание" FontSize="16" Opacity="0.8" HorizontalAlignment="Left" Margin="0,0,0,5"/>
-                                <TextBox />
-                            </StackPanel>
-                            <StackPanel Margin="30,0,30,30" VerticalAlignment="Top">
-                                <TextBlock Text="Полное Описание" FontSize="16" Opacity="0.8" HorizontalAlignment="Left" Margin="0,0,0,5"/>
-                                <TextBox TextWrapping="Wrap" AcceptsReturn="True" Height="150" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
-                            </StackPanel>
-                            <StackPanel Margin="30,0,30,30">
-                                <TextBlock Text="Теги" FontSize="16" Opacity="0.8" HorizontalAlignment="Left" Margin="0,0,0,5"/>
-                                <ListBox ItemsSource="{Binding ModCategoryNames}" 
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         Background="#272727" BorderThickness="0" SelectionMode="Multiple">
-                                    <ListBox.ItemContainerStyle>
-                                        <Style TargetType="{x:Type ListBoxItem}">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                                        <Border x:Name="border" CornerRadius="5" Background="#282d37" Padding="10,5,10,5" Margin="5,3,0,3">
-                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsSelected" Value="True">
-                                                                <Setter TargetName="border"  Property="Background" Value="#4a4e57" />
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </ListBox.ItemContainerStyle>
-                                        <ListBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel IsItemsHost="True" />
-                                        </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Foreground="#f2f2f3" Text="{Binding }" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                           FontSize="12"/>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                </TabItem>
-                <TabItem Header="Галерея">
-                    <Border Background="Transparent"></Border>
-                </TabItem>
-            </TabControl>
-        </Grid>
-    </ScrollViewer>
+                            </Border>
+                        </TabItem>
+                        <TabItem Header="Галерея">
+                            <Border Background="Transparent"></Border>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+        </ScrollViewer>
+
+        <Button Style="{StaticResource DefaultBrandColorButton}" Content="Сохранить" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="15"
+                Command="{Binding SaveDataCommand}"
+                />
+    </Grid>
 </UserControl>

@@ -24,7 +24,7 @@
             <SolidColorBrush Color="#121212" Opacity="0.55"/>
         </Grid.Background>
         
-        <ListBox Style="{StaticResource LibraryListBox}" ItemContainerStyle="{StaticResource LibraryListBoxItem}">
+        <ListBox Style="{StaticResource LibraryListBox}" ItemContainerStyle="{StaticResource LibraryListBoxItem}" ScrollViewer.CanContentScroll="False">
             <ListBox.ItemsSource>
                 <CompositeCollection>
                     <CollectionContainer Collection="{Binding LibraryInstances.Values, Source={StaticResource MainModel}}"/>

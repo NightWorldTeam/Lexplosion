@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.Models.ShowCaseMenu;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
 
@@ -28,10 +29,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         };
 
         private bool _isLoaded = true;
+
         private double _categoryPanelBorderHeight;
         private OverviewModel _overviewModel;
         
         #region props
+
         public OverviewModel OverviewModel 
         { 
             get => _overviewModel; set 
@@ -59,6 +62,11 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 OnPropertyChanged(nameof(IsLoaded));
             }
         }
+
+        public bool IsCategoriesExist { get; set; }
+
+        public bool IsDownloadsCountExists { get; set; }
+
         #endregion props
 
         public RelayCommand CurseforgePageCommand
@@ -80,6 +88,14 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             Lexplosion.Run.TaskRun(() => { 
                 OverviewModel = new OverviewModel(instanceClient, submenuViewModel);
+
+                if (OverviewModel.InstanceData.TotalDownloads == null)
+                {
+                    IsDownloadsCountExists = false;
+                }
+                else IsDownloadsCountExists = true;
+
+
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
                 IsLoaded = false;
             });
@@ -87,8 +103,16 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public double CalcCategoryBorderHeight() 
         {
+            if (OverviewModel.InstanceData.Categories == null || OverviewModel.InstanceData.Categories.Count == 0)
+            {
+                IsCategoriesExist = false;
+                return 0.0;
+            }
+
+            IsCategoriesExist = true;
+
             var childWidth = 0.0;
-            foreach (var item in OverviewModel.InstanceData.Categories)
+            foreach (var item in _overviewModel.InstanceData.Categories)
             {
                 childWidth += tagSizes[item.name];
             }

@@ -37,8 +37,6 @@
                 <RowDefinition Height="20" />
                 <RowDefinition Height="240" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="67" />
-                <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="1" ShowGridLines="False">
@@ -211,11 +209,7 @@
                     Background="#202020"
                     Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
                     />
-            <Grid Grid.Row="3" ShowGridLines="False">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="326" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="3" Margin="0,2,0,0">
                 <Border x:Name="CategoryPanelBorder"
                     Grid.Column="0"
                     Margin="20,0,0,0"
@@ -254,40 +248,38 @@
                 <Border x:Name="LoadingCategoryPanel" 
                         Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
                         Margin=" 18.5,0,0,0" Background="#232323" CornerRadius="2"/>
-            </Grid>
-
-            <Border
-                Grid.Row="4"
-                Margin="10,10,0,0"
-                BorderBrush="#212326"
-                BorderThickness="0,0,0,0">
-                <Grid>
-                    <TextBlock
-                        FontSize="14"
-                        FontWeight="Medium"
-                        Text="Описание" />
-                    <Border x:Name="LoadingDescriptionTitle" 
-                            Background="#202020" 
-                            CornerRadius="10" 
-                            Width="120" Height="25" 
-                            VerticalAlignment="Top" 
-                            Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
-                            HorizontalAlignment="Left" 
-                            Margin="10,9,0,0"/>
-                    <TextBlock
-                        x:Name="Description"
-                        Margin="0,30,0,0"
-                        FontSize="14"
-                        Foreground="#f5f5f5"
-                        Opacity="0.8"
-                        Text="{Binding OverviewModel.InstanceData.Description}"
-                        TextWrapping="Wrap" />
-                    <Border x:Name="LoadingDescription" 
-                            Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
-                            Background="#232323" Margin="10,45,20,0" CornerRadius="5"/>
-                    <Border />
-                </Grid>
-            </Border>
+                <Border
+                    Margin="10,5,0,0"
+                    BorderBrush="#212326"
+                    BorderThickness="0,0,0,0">
+                    <Grid>
+                        <TextBlock
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Text="Описание" />
+                        <Border x:Name="LoadingDescriptionTitle" 
+                                Background="#202020" 
+                                CornerRadius="10" 
+                                Width="120" Height="25" 
+                                VerticalAlignment="Top" 
+                                Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
+                                HorizontalAlignment="Left" 
+                                Margin="10,9,0,0"/>
+                        <TextBlock
+                            x:Name="Description"
+                            Margin="0,20,0,0"
+                            FontSize="14"
+                            Foreground="#f5f5f5"
+                            Opacity="0.8"
+                            Text="{Binding OverviewModel.InstanceData.Description}"
+                            TextWrapping="Wrap" />
+                        <Border x:Name="LoadingDescription" 
+                                Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
+                                Background="#232323" Margin="10,45,20,0" CornerRadius="5"/>
+                        <Border />
+                    </Grid>
+                </Border>
+            </StackPanel>
         </Grid>
     </ScrollViewer>
 </UserControl>

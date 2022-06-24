@@ -21,6 +21,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             get => new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => { NavigationToMainMenu?.Invoke(); return MainViewModel.MainMenuVM; });
         }
+
         #endregion
 
         #region props
@@ -60,25 +61,30 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             {
                 new Tab
                 {
+                    Id = 0,
                     Header = "Параметры",
                     Content = new InstanceSettingsViewModel(instanceClient)
                 },
                 new Tab
                 {
-                    Header = "О Сборке",
-                    Content = new InstanceCreationViewModel()
-                },
-                new Tab
-                {
+                    Id = 3,
                     Header = "Дополнения",
                     Content = null
                 },
                 new Tab 
                 {
+                    Id = 4,
                     Header = "Журнал изменений",
                     Content = null
                 },
             };
+
+            if (instanceClient.Type == InstanceSource.Local) 
+            { 
+                _settingsTabs.Add(new Tab { Id = 1, Header = "О Сборке", Content = new InstanceCreationViewModel(instanceClient) });
+            }
+
+            _settingsTabs.Sort();
 
             Tabs = new ObservableCollection<Tab>
             {

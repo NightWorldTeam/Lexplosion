@@ -133,16 +133,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
                  MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
 
-            List<string> versions = new List<string>();
-            Lexplosion.Run.TaskRun(() =>
-            {
-                foreach (var v in ToServer.GetVersionsList())
-                {
-                    if (v.type == "release") versions.Add(v.id);
-                }
-                GameVersions = new ObservableCollection<string>(versions);
-                SelectedVersion = GameVersions[0];
-            });
+            GameVersions = new ObservableCollection<string>(MainViewModel.GameVersions.ToList());
+            SelectedVersion = GameVersions[0];
             Model = new InstanceFactoryModel();
         }
     }
