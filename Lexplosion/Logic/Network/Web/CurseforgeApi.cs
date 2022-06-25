@@ -56,7 +56,8 @@ namespace Lexplosion.Logic.Network
 
                 if (answer != null)
                 {
-                    return JsonConvert.DeserializeObject<DataContainer<T>>(answer).data;
+                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer).data;
+                    return data ?? new T();
                 }
 
                 return new T();
