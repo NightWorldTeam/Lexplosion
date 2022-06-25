@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.FactoryMenu;
+using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
 using Lexplosion.Logic.Management.Instances;
 using System;
@@ -11,10 +12,51 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 {
     public class MainMenuViewModel : SubmenuViewModel
     {
+        private readonly List<Tab> GeneralSettingsTabs = new List<Tab>()
+        {
+            new Tab
+            {
+                Header = "Основное",
+                Content = new GeneralSettingsViewModel()
+            },
+            new Tab
+            {
+                Header = "Учетная запись",
+                Content = null
+            },
+            new Tab
+            {
+                Header = "О лаунчере",
+                Content = null
+            }
+        };
+
+        private readonly List<Tab> MultiplayerTabs = new List<Tab>()
+        {
+            new Tab
+            {
+                Header = "Общее",
+                Content = new GeneralMultiplayerViewModel()
+            },
+            new Tab
+            {
+                Header = "Друзья",
+                Content = null
+            },
+            new Tab
+            {
+                Header = "Комнаты",
+                Content = null
+            }
+        };
+
         private readonly CatalogViewModel _catalogVM = new CatalogViewModel();
         private readonly LibraryViewModel _libraryVM = new LibraryViewModel();
-        //private readonly CatalogViewModel _catalogVM;
         private readonly TabMenuViewModel _tabMenuViewModel;
+        private readonly TabMenuViewModel _tabMenuViewModel1;
+
+
+        #region Commands
 
         public ICommand NavigationFactoryCommand { get; }
         public ICommand NavigationInstanceCommand { get; private set; }
@@ -42,31 +84,15 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }));
         }
 
-        private List<Tab> GeneralSettingsTabs = new List<Tab>()
-        {
-            new Tab
-            {
-                Header = "Основное",
-                Content = new GeneralSettingsViewModel()
-            },
-            new Tab
-            {
-                Header = "Учетная запись",
-                Content = null
-            },
-            new Tab
-            {
-                Header = "О лаунчере",
-                Content = null
-            }
-        };
+        #endregion CommandsEnd
 
         public MainMenuViewModel(MainViewModel mainViewModel)
         {
             NavigationFactoryCommand = new NavigateCommand<InstanceFactoryViewModel>(
                  MainViewModel.NavigationStore, () => new InstanceFactoryViewModel());
 
-            _tabMenuViewModel = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");
+            _tabMenuViewModel = new TabMenuViewModel(MultiplayerTabs, "Сетевая игра");
+            _tabMenuViewModel1 = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");
 
             Tabs = new ObservableCollection<Tab>
             {
@@ -83,12 +109,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab
                 {
                     Header = "Сетевая игра",
-                    Content = null
+                    Content = _tabMenuViewModel
                 },
                 new Tab
                 {
                     Header = "Настройки",
-                    Content = _tabMenuViewModel
+                    Content = _tabMenuViewModel1
                 }
             };
             SelectedTab = Tabs[0];

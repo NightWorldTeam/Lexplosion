@@ -6,23 +6,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid>
-            <TabControl Background="#18191b" 
+        <TabControl Background="#18191b" 
                     BorderThickness="1,0,0,0"
                     BorderBrush="#212326" 
                     TabStripPlacement="Left"
                     ItemsSource="{Binding Tabs}" SelectedValue="{Binding SelectedTab}" SelectedIndex="{Binding TabControlSelectedIndex}">
-                <TabControl.Resources>
-                    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource LeftMenuItem}" />
-                </TabControl.Resources>
-                <TabControl.ContentTemplate>
-                    <!-- this is the body of the TabItem template-->
-                    <DataTemplate>
-                        <ContentControl
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource LeftMenuItem}" />
+            </TabControl.Resources>
+            <TabControl.ContentTemplate>
+                <!-- this is the body of the TabItem template-->
+                <DataTemplate>
+                    <ContentControl
                     Content="{Binding Content}" />
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
-        </Grid>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
 </UserControl>
