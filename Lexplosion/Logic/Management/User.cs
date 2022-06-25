@@ -1,12 +1,12 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Network;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network;
 
 namespace Lexplosion.Logic
 {
@@ -20,7 +20,6 @@ namespace Lexplosion.Logic
         public ActivityStatus Status { get; private set; }
 
         private string _gameClientName = "";
-        private ActivityStatus _baseStatus = ActivityStatus.Online;
 
         public AuthCode Auth(string login, string password, bool saveUser)
         {
@@ -79,7 +78,7 @@ namespace Lexplosion.Logic
         {
             if (Status == ActivityStatus.InGame)
             {
-                Status = _baseStatus;
+                Status = ActivityStatus.Online;
                 ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=1&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken);
             }
         }

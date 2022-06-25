@@ -53,7 +53,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 Lexplosion.Run.TaskRun(() => 
                 {
-                    AuthCode authCode = ManageLogic.Auth(Login, Password, IsSaveMe);
+                    AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe);
                     App.Current.Dispatcher.Invoke(() => 
                     {
                         switch (authCode) 

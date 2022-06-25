@@ -232,7 +232,6 @@
     <Compile Include="Logic\Management\NightworldIntance.cs" />
     <Compile Include="Logic\Management\IPrototypeInstance.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
-    <Compile Include="Logic\Management\ManageLogic.cs" />
     <Compile Include="Logic\Management\UserStatusSetter.cs" />
     <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />

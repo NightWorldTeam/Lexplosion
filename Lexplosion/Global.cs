@@ -9,12 +9,37 @@ namespace Lexplosion.Global
 {
     static class UserData
     {
-        public static string Login = "";
-        public static string UUID = "00000000-0000-0000-0000-000000000000";
-        public static string AccessToken = "null";
-        public static bool IsAuthorized = false;
-        public static bool Offline = false;
-        public static bool NoUpdate = false;
+        private static User _user;
+
+        public static AuthCode Auth(string login, string password, bool saveUser)
+        {
+            _user = new User();
+            return _user.Auth(login, password, saveUser);
+        }
+
+        public static string Login
+        {
+            get
+            {
+                return _user.Login;
+            }
+        }
+        public static string UUID
+        {
+            get
+            {
+                return _user.UUID;
+            }
+        }
+        public static string AccessToken
+        {
+            get
+            {
+                return _user.AccessToken;
+            }
+        }
+
+        public static readonly bool Offline = false;
 
         public static Settings GeneralSettings { get; private set; } // инициализируется в методе Main
 
