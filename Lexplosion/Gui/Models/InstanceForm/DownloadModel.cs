@@ -144,7 +144,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     IsDownloadInProgress = false;
                     break;
             }
-            _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Description;
+            _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
         }
 
         public void CancelInstanceDownload() 
