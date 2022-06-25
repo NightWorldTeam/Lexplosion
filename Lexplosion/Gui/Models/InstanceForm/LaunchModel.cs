@@ -37,7 +37,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             else 
             {
             }
-            _formModel.OverviewField = _formModel.InstanceClient.Description;
+            _formModel.OverviewField = _formModel.InstanceClient.Summary;
         }
 
         public void GameExited(string id)

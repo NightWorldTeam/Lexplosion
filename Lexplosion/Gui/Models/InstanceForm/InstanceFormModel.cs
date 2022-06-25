@@ -71,7 +71,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 }
             }
 
-            OverviewField = instanceClient.Description;
+            OverviewField = instanceClient.Summary;
             DownloadModel = new DownloadModel(this)
             {
                 DownloadProgress = 0,
