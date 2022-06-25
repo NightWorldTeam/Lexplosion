@@ -56,7 +56,7 @@ namespace Lexplosion.Logic.Network
 
                 if (answer != null)
                 {
-                    return JsonConvert.DeserializeObject<T>(answer);
+                    return JsonConvert.DeserializeObject<DataContainer<T>>(answer).data;
                 }
 
                 return new T();
@@ -85,7 +85,7 @@ namespace Lexplosion.Logic.Network
                 url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&index=0&sortField=1&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             }
 
-            return GetApiData<DataContainer<List<CurseforgeInstanceInfo>>>(url).data;
+            return GetApiData<List<CurseforgeInstanceInfo>>(url);
         }
 
         public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, string searchFilter = "", string gameVersion = "")
@@ -96,24 +96,24 @@ namespace Lexplosion.Logic.Network
             }
 
             string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);  
-            return GetApiData<DataContainer<List<CurseforgeAddonInfo>>>(url).data;
+            return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
         {
-            return GetApiData<DataContainer<List<CurseforgeFileInfo>>>("https://api.curseforge.com/v1/mods/" + projectId + "/files").data;
+            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files");
         }
 
         public static CurseforgeFileInfo GetProjectFile(string projecrId, string fileId)
         {
-            return GetApiData<DataContainer<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projecrId + "/files/" + fileId).data;
+            return GetApiData<CurseforgeFileInfo>("https://api.curseforge.com/v1/mods/" + projecrId + "/files/" + fileId);
         }
 
         public static CurseforgeInstanceInfo GetInstance(string id)
         {
             try
             {
-                var data = GetApiData<DataContainer<CurseforgeInstanceInfo>>("https://api.curseforge.com/v1/mods/" + id + "/").data;
+                var data = GetApiData<CurseforgeInstanceInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
 
                 if (data.latestFiles != null && data.latestFiles.Count > 0)
                 {
@@ -164,7 +164,7 @@ namespace Lexplosion.Logic.Network
             var addonsList = new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>();
             try
             {
-                ProjectTypeInfo data = GetApiData<DataContainer<ProjectTypeInfo>>("https://api.curseforge.com/v1/mods/" + projectID + "/").data;
+                ProjectTypeInfo data = GetApiData<ProjectTypeInfo>("https://api.curseforge.com/v1/mods/" + projectID + "/");
                 if (data.classId == 0 || data.latestFiles == null)
                 {
                     return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
