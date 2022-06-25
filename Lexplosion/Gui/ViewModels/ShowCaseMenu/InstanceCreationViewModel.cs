@@ -15,6 +15,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public List<string> GameVersions { get; } = MainViewModel.GameVersions.ToList();
 
+        public bool IsModloader { get => BaseInstanceData.Modloader != ModloaderType.None; }
+
         public RelayCommand SaveDataCommand
         {
             get => new RelayCommand(obj =>

@@ -16,6 +16,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         public event ISubmenu.NavigationToMenuCallBack NavigationToMainMenu;
 
         #region commands
+
         public ICommand NavigationMainMenuCommand
         {
             get => new NavigateCommand<MainMenuViewModel>(
@@ -25,6 +26,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #endregion
 
         #region props
+
         public int TabControlSelectedIndex
         {
             get => _tabControlSelectedValue;
@@ -91,7 +93,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 new Tab
                 {
                     Header = "Обзор",
-                    Content =  new TabMenuViewModel(_showCaseTabMenu, instanceClient.Name)
+                    Content =  new TabMenuViewModel(_showCaseTabMenu, instanceClient.Name, instanceClient)
                 },
                 new Tab
                 {

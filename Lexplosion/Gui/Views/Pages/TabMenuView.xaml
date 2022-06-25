@@ -21,8 +21,18 @@
         </Grid>
         <TextBlock Text="{Binding Header}"
                    Grid.Column="1"
+                   Visibility="{Binding IsModpackName, Converter={StaticResource NegativeConvertBoolToVisibility}}"
                    FontSize="18"
                    Margin="30,10,0,10"
+                   VerticalAlignment="Center" 
+                   FontWeight="SemiBold"
+                   Grid.Row="0"
+                   Foreground="WhiteSmoke" Height="40" />
+        <TextBlock Text="{Binding InstanceClient.Name}"
+                   Grid.Column="1"
+                   FontSize="18"
+                   Margin="30,10,0,10"
+                   Visibility="{Binding IsModpackName, Converter={StaticResource ConvertBoolToVisibility}}"
                    VerticalAlignment="Center" 
                    FontWeight="SemiBold"
                    Grid.Row="0"

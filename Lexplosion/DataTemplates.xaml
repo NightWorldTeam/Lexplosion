@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vmmainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu" 
-                    xmlns:pagemm="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu" 
+                    xmlns:vmmultiplayer="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu.Multiplayer" 
+                    xmlns:pagemm="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu"
                     xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
                     xmlns:pages="clr-namespace:Lexplosion.Gui.Views.Pages"
                     xmlns:showcasemenu="clr-namespace:Lexplosion.Gui.ViewModels.ShowCaseMenu"
@@ -11,7 +12,8 @@
                     xmlns:vmcurseforgemarket="clr-namespace:Lexplosion.Gui.ViewModels.CurseforgeMarket" 
                     xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls" 
                     xmlns:gui="clr-namespace:Lexplosion.Gui" 
-                    xmlns:models="clr-namespace:Lexplosion.Gui.Models">
+                    xmlns:models="clr-namespace:Lexplosion.Gui.Models"
+                    xmlns:pagemultiplayer="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu.Multiplayer">
     <!-- Converters -->
     <BooleanToVisibilityConverter x:Key="ConvertBoolToVisibility" />
     <gui:NegativeBooleanToVisibilityConverter x:Key="NegativeConvertBoolToVisibility" />
@@ -19,7 +21,6 @@
     <gui:BooleanToColorConverter x:Key="BooleanToColorConverter" />
     <gui:BytesToBitmapImageConventer x:Key="BytesToBitmapImageConverter" />
     <viewmodels:MainViewModel x:Key="MainVM" />
-
 
     <models:MainModel x:Key="MainModel"/>
 
@@ -50,7 +51,11 @@
     <DataTemplate DataType="{x:Type vmmainmenu:GeneralSettingsViewModel}">
         <pagemm:GeneralSettingsView />
     </DataTemplate>
-    
+    <!-- MainMenu Multiplayer DataTemplate-->
+    <DataTemplate DataType="{x:Type vmmultiplayer:GeneralMultiplayerViewModel}">
+        <pagemultiplayer:GeneralMultiplayerView />
+    </DataTemplate>
+
     <!-- InstanceShowCase DataTemplate -->
     <DataTemplate DataType="{x:Type showcasemenu:ShowCaseViewModel}">
         <showcasepage:ShowCaseView/>

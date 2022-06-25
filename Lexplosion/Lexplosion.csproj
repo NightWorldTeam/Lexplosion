@@ -141,6 +141,7 @@
     <Compile Include="Gui\ViewModels\MainMenu\GeneralSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\LibraryViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\MainMenuViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
@@ -188,6 +189,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml.cs">
+      <DependentUpon>GeneralMultiplayerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstanceCreationForm.xaml.cs">
       <DependentUpon>InstanceCreationForm.xaml</DependentUpon>
@@ -362,6 +366,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
