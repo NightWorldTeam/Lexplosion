@@ -555,11 +555,12 @@ namespace Lexplosion.Logic.Management.Instances
                 default:
                     {
                         VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
+                        InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json");
                         return new InstanceData
                         {
                             Categories = new List<Category>(),
-                            Description = NoDescription,
-                            Summary = NoDescription,
+                            Description = assetsData?.Description ?? NoDescription,
+                            Summary = assetsData?.Summary ?? NoDescription,
                             TotalDownloads = 0,
                             GameVersion = GameVersion,
                             LastUpdate = null,
