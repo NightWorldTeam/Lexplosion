@@ -57,5 +57,5 @@ namespace Lexplosion.Logic.Management.Instances
     /// <summary>
     /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
     /// </summary>
-    public class InstalledAddons : Dictionary<int, InstalledAddonInfo> { }
+    public class InstalledAddons : Dictionary<long, InstalledAddonInfo> { }
 }

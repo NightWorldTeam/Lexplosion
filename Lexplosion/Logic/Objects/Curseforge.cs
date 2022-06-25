@@ -98,5 +98,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public int id;
         public string downloadUrl;
         public string fileName;
+        public string displayName;
+        public List<Dictionary<string, int>> dependencies;
     }
 }

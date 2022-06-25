@@ -364,7 +364,6 @@ namespace Lexplosion.Logic.Management.Instances
                             if (_idsPairs.ContainsKey(nwModpack))
                             {
                                 instanceClient = _installedInstances[_idsPairs[nwModpack]];
-                                Console.WriteLine(instanceClient._externalId);
                                 instanceClient.CheckUpdates();
                                 instanceClient.DownloadLogo(nwInstances[nwModpack].MainImage, delegate 
                                 {
@@ -765,7 +764,6 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         Logo = webClient.DownloadData(url);
                         callback();
-                        Console.WriteLine("sdrefzgtxhrbnfdvcfjv " + _externalId + " " + (Logo == null));
                     }
                 }
                 //catch { }
@@ -783,8 +781,6 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances-assets/" + _localId);
                 }
-
-                Console.WriteLine((Logo == null) + " " + _externalId);
 
                 if (Logo != null)
                 {

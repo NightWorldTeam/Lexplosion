@@ -174,7 +174,7 @@ namespace Lexplosion.Logic.Management
             {
                 if (Info == null)
                 {
-                    Info = CurseforgeApi.GetProjectFile(InfoData.id, InfoData.instanceVersion); //получем информацию об этом модпаке
+                    Info = CurseforgeApi.GetProjectFile(InfoData.id, InfoData.instanceVersion.ToString()); //получем информацию об этом модпаке
 
                     if (Info == null || Info.downloadUrl == null || Info.fileName == null)
                     {

@@ -287,7 +287,7 @@ namespace Lexplosion.Logic.FileSystem
                                     if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
                                     {
                                         sem.Release();
-                                        Console.WriteLine("GFDGS пизда");
+                                        Console.WriteLine("GFDGS пизда " + result[result.First().Key].Item2);
                                         //errors.Add(file.projectID + " " + file.fileID);
                                         return;
                                     }
