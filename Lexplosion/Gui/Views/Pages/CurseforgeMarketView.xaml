@@ -166,7 +166,7 @@
                                             
                                             <!-- Install Button-->
                                             <Button Style="{StaticResource DefaultBrandColorButton}" Width="80" Height="30" Visibility="{Binding IsInstalling, Converter={StaticResource NegativeConvertBoolToVisibility}}"
-                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Command="{Binding InstallModCommand}" CommandParameter="{Binding}">
+                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Command="{Binding DataContext.InstallModCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
                                                 <WrapPanel>
                                                     <Path
                                                     Height="19"
