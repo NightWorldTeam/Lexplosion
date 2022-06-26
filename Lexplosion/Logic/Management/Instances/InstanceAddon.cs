@@ -15,7 +15,7 @@ using static Lexplosion.Logic.Network.CurseforgeApi;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    public class InstanceAddon
+    public class InstanceAddon : VMBase
     {
         public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";
@@ -24,6 +24,35 @@ namespace Lexplosion.Logic.Management.Instances
         public bool IsInstalled { get; private set; } = false;
         public bool UpdateAvailable { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
+
+        private bool _isInstalling = false;
+        public bool IsInstalling 
+        {
+            get
+            {
+                return _isInstalling;
+            }
+            set
+            {
+                _isInstalling = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _downloadPercentages = 0;
+        public int DownloadPercentages
+        {
+            get
+            {
+                return _downloadPercentages;
+            }
+
+            set
+            {
+                _downloadPercentages = value;
+                OnPropertyChanged();
+            }
+        }
 
         private readonly CurseforgeAddonInfo _modInfo;
         private readonly BaseInstanceData _modpackInfo;
@@ -165,6 +194,24 @@ namespace Lexplosion.Logic.Management.Instances
             InstallAddon(fileID);
         }
 
+        class mcmodInfo
+        {
+            public string modid;
+            public string name;
+            public string description;
+            public string version;
+            public List<string> authorList;
+        }
+
+        class fabricModJson
+        {
+            public string id;
+            public string name;
+            public string description;
+            public string version;
+            public List<string> authors;
+        }
+
         /// <summary>
         /// Возвращает список модов. При вызове так же сохраняет спсиок модов, 
         /// анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
@@ -182,7 +229,7 @@ namespace Lexplosion.Logic.Management.Instances
                     return "";
             }
 
-            string modsPath = WithDirectory.DirectoryPath + "/" + modpackInfo.LocalId + "/mods/";
+            string modsPath = WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/mods/";
             List<InstanceAddon> addons = new List<InstanceAddon>();
 
             InstalledAddons actualAddonsList = new InstalledAddons(); //актуальный список аддонов, то есть те аддоны которы действительно существует. В конце именно этот спсиок будет сохранен в файл
@@ -224,7 +271,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 string fileAddr_ = fileAddr.Replace('\\', '/');
                 string extension = Path.GetExtension(fileAddr_);
-                if (extension == "jar" || extension == "disable")
+                if (extension == ".jar" || extension == ".disable")
                 {
                     string displayName = "", authors = "", version = "", description = "", modId = "";
 
@@ -234,17 +281,60 @@ namespace Lexplosion.Logic.Management.Instances
                         using (ZipArchive zip = ZipFile.Open(fileAddr_, ZipArchiveMode.Read))
                         {
                             ZipArchiveEntry entry = zip.GetEntry("META-INF/mods.toml");
-
-                            using (Stream file = entry.Open())
+                            if (entry != null)
                             {
-                                using (TextReader text = new StreamReader(file))
+                                using (Stream file = entry.Open())
                                 {
-                                    TomlTable table = TOML.Parse(text);
-                                    displayName = getParameterValue(table, "displayName");
-                                    authors = getParameterValue(table, "authors");
-                                    version = getParameterValue(table, "version");
-                                    description = getParameterValue(table, "description");
-                                    modId = getParameterValue(table, "modId");
+                                    using (TextReader text = new StreamReader(file))
+                                    {
+                                        TomlTable table = TOML.Parse(text);
+                                        displayName = getParameterValue(table, "displayName");
+                                        authors = getParameterValue(table, "authors");
+                                        version = getParameterValue(table, "version");
+                                        description = getParameterValue(table, "description");
+                                        modId = getParameterValue(table, "modId");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                entry = zip.GetEntry("mcmod.info");
+                                if (entry != null)
+                                {
+                                    using (Stream file = entry.Open())
+                                    {
+                                        using (StreamReader reader = new StreamReader(file, encoding: Encoding.UTF8))
+                                        {
+                                            string text = reader.ReadToEnd();
+                                            mcmodInfo modInfo = JsonConvert.DeserializeObject<mcmodInfo>(text);
+                                            displayName = modInfo?.name ?? "";
+                                            version = modInfo?.version ?? "";
+                                            description = modInfo?.description ?? "";
+                                            modId = modInfo?.modid ?? "";
+                                            authors = (modInfo?.authorList != null) ? string.Join(", ", modInfo.authorList) : "";
+                                        }
+                                    }
+
+                                }
+                                else
+                                {
+                                    if (entry != null)
+                                    {
+                                        entry = zip.GetEntry("fabric.mod.json");
+                                        using (Stream file = entry.Open())
+                                        {
+                                            using (StreamReader reader = new StreamReader(file, encoding: Encoding.UTF8))
+                                            {
+                                                string text = reader.ReadToEnd();
+                                                fabricModJson modInfo = JsonConvert.DeserializeObject<fabricModJson>(text);
+                                                displayName = modInfo?.name ?? "";
+                                                version = modInfo?.version ?? "";
+                                                description = modInfo?.description ?? "";
+                                                modId = modInfo?.id ?? "";
+                                                authors = (modInfo?.authors != null) ? string.Join(", ", modInfo.authors) : "";
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -268,8 +358,8 @@ namespace Lexplosion.Logic.Management.Instances
                             FileID = -1,
                             ProjectID = addonId,
                             Type = AddonType.Mods,
-                            IsDisable = (extension == "disable"),
-                            Path = (extension == "jar") ? xyi : xyi.Remove(xyi.Length - 8) // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
+                            IsDisable = (extension == ".disable"),
+                            Path = (extension == ".jar") ? xyi : xyi.Remove(xyi.Length - 8) // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
                         };
                     }
                     else // аддон есть везде, берём его айдишник
@@ -285,6 +375,7 @@ namespace Lexplosion.Logic.Management.Instances
                     });
                 }
             }
+
 
             return addons;
         }

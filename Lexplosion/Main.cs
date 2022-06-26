@@ -118,21 +118,21 @@ namespace Lexplosion
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
 
-            WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=6&pageSize=10&index=0&searchFilter=");
-            req.Headers.Add("x-api-key", "$2a$10$d9HphjHPzYChRhMdu3gStu0DaJ5RGfgtogS1NIBG1c5sqhKSK6hBS");
-            ((HttpWebRequest)req).Accept = "application/json";
+            //WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=6&pageSize=10&index=0&searchFilter=");
+            //req.Headers.Add("x-api-key", "$2a$10$d9HphjHPzYChRhMdu3gStu0DaJ5RGfgtogS1NIBG1c5sqhKSK6hBS");
+            //((HttpWebRequest)req).Accept = "application/json";
 
-            using (WebResponse resp = req.GetResponse())
-            {
-                using (Stream stream = resp.GetResponseStream())
-                {
-                    using (StreamReader sr = new StreamReader(stream))
-                    {
-                        Console.WriteLine("hfgjhf");
-                        Console.WriteLine(sr.ReadToEnd());
-                    }
-                }
-            }
+            //using (WebResponse resp = req.GetResponse())
+            //{
+            //    using (Stream stream = resp.GetResponseStream())
+            //    {
+            //        using (StreamReader sr = new StreamReader(stream))
+            //        {
+            //            Console.WriteLine("hfgjhf");
+            //            Console.WriteLine(sr.ReadToEnd());
+            //        }
+            //    }
+            //}
 
             Thread.Sleep(1000);
 
