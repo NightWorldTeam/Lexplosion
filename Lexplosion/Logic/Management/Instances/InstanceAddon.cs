@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.Management.Instances
             var addons = new List<InstanceAddon>();
 
             // получаем спсиок всех аддонов с курсфорджа
-            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, category, searchFilter, gameVersion: modpackInfo.GameVersion);
+            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, category, searchFilter, modpackInfo.GameVersion);
             if (addonsList == null)
                 return addons;
 
