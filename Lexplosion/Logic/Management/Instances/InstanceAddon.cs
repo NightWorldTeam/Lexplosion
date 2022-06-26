@@ -81,7 +81,7 @@ namespace Lexplosion.Logic.Management.Instances
                 if (isInstalled)
                 {
                     // ищем последнюю версию аддона
-                    foreach (var addonVersion in addon.gameVersionLatestFiles)
+                    foreach (var addonVersion in addon.latestFilesIndexes)
                     {
                         if (addonVersion.gameVersion == modpackInfo.GameVersion)
                         {
@@ -98,7 +98,7 @@ namespace Lexplosion.Logic.Management.Instances
                     IsInstalled = isInstalled,
                     Author = addon.GetAuthorName,
                     WebsiteUrl = addon.websiteUrl,
-                    UpdateAvailable = (installedAddons[addon.id].FileID < lastFileID) // если установленная версия аддона меньше последней - значит доступно обновление
+                    UpdateAvailable = (installedAddons.ContainsKey(addon.id) && (installedAddons[addon.id].FileID < lastFileID)) // если установленная версия аддона меньше последней - значит доступно обновление
                 };
 
                 addons.Add(instanceAddon);
@@ -153,7 +153,7 @@ namespace Lexplosion.Logic.Management.Instances
         public void InstallLatestVersion()
         {
             int fileID = 0;
-            foreach (var fileInfo in _modInfo.gameVersionLatestFiles)
+            foreach (var fileInfo in _modInfo.latestFilesIndexes)
             {
                 if (fileInfo.gameVersion == _modpackInfo.GameVersion)
                 {
