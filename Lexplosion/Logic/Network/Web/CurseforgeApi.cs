@@ -161,9 +161,9 @@ namespace Lexplosion.Logic.Network
         public static Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> DownloadAddon(int projectID, long fileID, string path, bool downloadDependencies = false, string gameVersion = "")
         {
             Console.WriteLine("");
-            Console.WriteLine("PR ID " + projectID);
+            Console.WriteLine("PR ID " + projectID + " downloadDependencies " + downloadDependencies);
             var addonsList = new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>();
-            try
+            //try
             {
                 ProjectTypeInfo data = GetApiData<ProjectTypeInfo>("https://api.curseforge.com/v1/mods/" + projectID + "/");
                 if (data.classId == 0 || data.latestFiles == null)
@@ -233,14 +233,12 @@ namespace Lexplosion.Logic.Network
                     };
                 }
 
-                Console.WriteLine("dependencies.Count " + fileData.dependencies.Count);
-
                 // скачиваем связанные файлы, если это нужно
                 if (downloadDependencies && fileData.dependencies.Count > 0)
                 {
                     foreach (Dictionary<string, int> value in fileData.dependencies)
                     {
-                        if (value.ContainsKey("type") && value["type"] == 3 && value.ContainsKey("addonId"))
+                        if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("addonId"))
                         {
                             Console.WriteLine("download " + value["addonId"]);
                             Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], -1, path, true, gameVersion);
@@ -295,13 +293,13 @@ namespace Lexplosion.Logic.Network
                 }
 
             }
-            catch
-            {
-                return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
-                {
-                    [projectID.ToString()] = (null, DownloadAddonRes.UncnownError)
-                };
-            }
+            //catch
+            //{
+            //    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
+            //    {
+            //        [projectID.ToString()] = (null, DownloadAddonRes.UncnownError)
+            //    };
+            //}
         }
     }
 }

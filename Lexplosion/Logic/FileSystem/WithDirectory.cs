@@ -63,35 +63,42 @@ namespace Lexplosion.Logic.FileSystem
             string tempDir = null;
             Console.WriteLine("INSTALL " + url);
 
-            try
+            //try
             {
+                Console.WriteLine("1");
                 tempDir = CreateTempDir();
+                Console.WriteLine("2");
 
-                if (!Directory.Exists(DirectoryPath + path))
+                if (!Directory.Exists(DirectoryPath + "/" + path))
                 {
-                    Directory.CreateDirectory(DirectoryPath + path);
+                    Directory.CreateDirectory(DirectoryPath + "/" + path);
                 }
+                Console.WriteLine("3");
 
                 using (WebClient wc = new WebClient())
                 {
+                    Console.WriteLine("4");
                     wc.DownloadFile(url, tempDir + fileName);
+                    Console.WriteLine("5");
                     DelFile(DirectoryPath + "/" + path + "/" + fileName);
-                    File.Move(tempDir + fileName, DirectoryPath + "/" + path + "/" + fileName);
+                    File.Move((tempDir + fileName).Replace("/", "\\"), (DirectoryPath + "/" + path + "/" + fileName).Replace("/", "\\"));
+                    Console.WriteLine("6");
                     Directory.Delete(tempDir, true);
                 }
 
+                Console.WriteLine("RETURN TRUE ");
                 return true;
             }
-            catch
-            {
-                if (tempDir != null)
-                {
-                    DelFile(tempDir + fileName);
-                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
-                }
+            //catch
+            //{
+            //    if (tempDir != null)
+            //    {
+            //        DelFile(tempDir + fileName);
+            //        DelFile(DirectoryPath + "/" + path + "/" + fileName);
+            //    }
 
-                return false;
-            }
+            //    return false;
+            //}
         }
 
         public static bool DownloadFile(string url, string fileName, string tempDir)
