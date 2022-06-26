@@ -74,7 +74,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             _mainViewModel = mainViewModel;
             _instanceClient = instanceClient;
-            InstalledMods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData));
+            //InstalledMods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData));
         }
     }
 }

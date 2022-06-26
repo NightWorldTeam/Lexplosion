@@ -41,6 +41,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private readonly MainViewModel _mainViewModel;
 
+        private readonly BaseInstanceData _baseInstanceData;
+
         #region commands
 
         private RelayCommand _closePage;
@@ -52,6 +54,34 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                 _mainViewModel.IsShowInfoBar = true;
                 MainViewModel.NavigationStore.CurrentViewModel = MainViewModel.NavigationStore.PrevViewModel;
             }));
+        }
+
+        public RelayCommand GoToCurseforgeCommand 
+        {
+            get => new RelayCommand(obj => 
+            {
+                var link = (string)obj;
+
+                try
+                {
+                    System.Diagnostics.Process.Start(link);
+                }
+                catch
+                {
+                    // message box here.
+                }
+
+            });
+        }
+
+        public RelayCommand InstallModCommand 
+        {
+            get => new RelayCommand(obj => 
+            {
+                var instanceAddon = (InstanceAddon)obj;
+
+                instanceAddon.InstallLatestVersion();
+            });
         }
 
         #endregion commands
@@ -71,7 +101,15 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             _mainViewModel = mainViewModel;
             mainViewModel.IsShowInfoBar = false;
 
-            Mods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetAddonsCatalog(instanceClient.GetBaseData, 10, 0, AddonType.Mods));
+            foreach (var name in ModCategoryNames)
+            {
+                ModCategories.Add(new ModCategory
+                {
+                    Name = name
+                });
+            }
+            _baseInstanceData = instanceClient.GetBaseData;
+            Mods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetAddonsCatalog(_baseInstanceData, 10, 0, AddonType.Mods));
         }
     }
 }
