@@ -101,13 +101,13 @@ namespace Lexplosion.Logic.Management.Instances
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(data));
         }
 
-        public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, string searchFilter = "")
+        public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, int category = -1, string searchFilter = "")
         {
             string instanceId = modpackInfo.LocalId;
             var addons = new List<InstanceAddon>();
 
             // получаем спсиок всех аддонов с курсфорджа
-            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, searchFilter, gameVersion: modpackInfo.GameVersion);
+            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, category, searchFilter, gameVersion: modpackInfo.GameVersion);
             if (addonsList == null)
                 return addons;
 

@@ -89,14 +89,20 @@ namespace Lexplosion.Logic.Network
             return GetApiData<List<CurseforgeInstanceInfo>>(url);
         }
 
-        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, string searchFilter = "", string gameVersion = "")
+        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, int category, string searchFilter = "", string gameVersion = "")
         {
             if (gameVersion != "")
             {
                 gameVersion = "&gameVersion=" + gameVersion;
             }
 
-            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);  
+            string categoryStr = "";
+            if (category != -1)
+            {
+                categoryStr = "&categoryId=" + category;
+            }
+
+            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);  
             return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 
