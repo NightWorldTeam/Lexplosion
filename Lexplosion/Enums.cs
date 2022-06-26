@@ -112,4 +112,60 @@
         NightWorld,
         Mojang
     }
+
+    public enum ModCategory
+    {
+        AllMods,
+        WorldGen,
+        Technology,
+        Magic,
+        Storage,
+        API_and_Library,
+        Adventure_and_RPG,
+        MapAndInformation,
+        Cosmetics,
+        Miscellaneous,
+        Addons,
+        Armor__Tools_and_Weapon,
+        Server_Utility,
+        Food,
+        Redstone,
+        Twitch_Integration,
+        MCreator,
+        Utility_CharAnd_QoL,
+        Education
+    }
+
+    public enum ResourcePacksCategory
+    {
+        All_Resource_Packs,
+        x16,
+        x32,
+        x64,
+        x128,
+        x256,
+        x512_and_Higher,
+        Steampunk,
+        PhotoRealistic,
+        Modern,
+        Mediaeval,
+        Traditional,
+        Animated,
+        Miscellaneous,
+        ModSupport,
+        DataPacks,
+        FontPacks
+    }
+
+    public enum WorldsCategory
+    {
+        All_Worlds,
+        Adventure,
+        Creation,
+        GameMap,
+        Parkour,
+        Puzzle,
+        Survival,
+        ModdedWorld,
+    }
 }

@@ -8,10 +8,51 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 {
-    public class ModCategory
+    public sealed class AddonCategory
     {
-        public string Name { get; set; }
-        public string ImageSource { get; } = "pack://Application:,,,/assets/images/icons/curseforge/worldgen.png";
+        public int Id { get; }
+        public string Name { get; }
+        public string ImageSource { get; }
+
+        public AddonCategory(int id, string name)
+        {
+            Id = id;
+            Name = name;
+            ImageSource = String.Format("pack://Application:,,,/assets/images/icons/curseforge/{0}.png", Name.ToLower());
+        }
+
+        public static List<AddonCategory> GetCategories(AddonType type)
+        {
+            var result = new List<AddonCategory>();
+            var i = -1;
+
+            if (type == AddonType.Mods)
+            {
+                foreach (var value in Enum.GetValues(typeof(ModCategory)))
+                {
+                    Console.WriteLine(value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"));
+                    result.Add(new AddonCategory(i, value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&")));
+                    i++;
+                }
+                
+            }
+            else if (type == AddonType.Resourcepacks)
+            {
+                foreach (var value in Enum.GetValues(typeof(ResourcePacksCategory)))
+                {
+                    Console.WriteLine(value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"));
+                }
+            }
+            else if (type == AddonType.Maps)
+            {
+                foreach (var value in Enum.GetValues(typeof(WorldsCategory)))
+                {
+                    Console.WriteLine(value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"));
+                }
+            }
+
+            return result;
+        }
     }
 
     public class CurseforgeMarketViewModel : VMBase
@@ -90,7 +131,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #region props 
 
-        public ObservableCollection<ModCategory> ModCategories { get; } = new ObservableCollection<ModCategory>();
+        public ObservableCollection<AddonCategory> ModCategories { get; } = new ObservableCollection<AddonCategory>();
         public ObservableCollection<InstanceAddon> Mods { get; }
 
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel();
@@ -107,12 +148,11 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             Mods = new ObservableCollection<InstanceAddon>();
 
-            foreach (var name in ModCategoryNames)
+            ;
+
+            foreach (var addon in AddonCategory.GetCategories(AddonType.Mods))
             {
-                ModCategories.Add(new ModCategory
-                {
-                    Name = name
-                });
+                ModCategories.Add(addon);
             }
 
             SearchBoxVM.SearchChanged += GetInitializeInstance;
@@ -129,7 +169,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         {
             Lexplosion.Run.TaskRun(delegate ()
             {
-                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex, AddonType.Mods, SearchBoxVM.SearchTextComfirmed);
+                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex, AddonType.Mods, -1, SearchBoxVM.SearchTextComfirmed);
 
                 if (instances.Count == 0)
                 {
