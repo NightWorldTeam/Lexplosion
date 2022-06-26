@@ -82,7 +82,11 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Content Icon -->
-                                    <Border CornerRadius="5" Background="Purple" Grid.Column="1" Height="40" Width="40"/>
+                                    <Border CornerRadius="5" Grid.Column="1" Height="40" Width="40">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}"/>
+                                        </Border.Background>
+                                    </Border>
 
                                     <!-- Content Name and Author Container -->
                                     <Grid Grid.Column="2" ShowGridLines="False">
