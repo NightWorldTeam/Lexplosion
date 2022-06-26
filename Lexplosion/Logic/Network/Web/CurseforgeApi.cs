@@ -238,10 +238,10 @@ namespace Lexplosion.Logic.Network
                 {
                     foreach (Dictionary<string, int> value in fileData.dependencies)
                     {
-                        if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("addonId"))
+                        if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("modId"))
                         {
-                            Console.WriteLine("download " + value["addonId"]);
-                            Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["addonId"], -1, path, true, gameVersion);
+                            Console.WriteLine("download " + value["modId"]);
+                            Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)> addonsList_ = DownloadAddon(value["modId"], -1, path, true, gameVersion);
                             foreach (string file in addonsList_.Keys)
                             {
                                 addonsList[file] = addonsList_[file];

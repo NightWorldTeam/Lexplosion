@@ -65,24 +65,18 @@ namespace Lexplosion.Logic.FileSystem
 
             //try
             {
-                Console.WriteLine("1");
                 tempDir = CreateTempDir();
-                Console.WriteLine("2");
 
                 if (!Directory.Exists(DirectoryPath + "/" + path))
                 {
                     Directory.CreateDirectory(DirectoryPath + "/" + path);
                 }
-                Console.WriteLine("3");
 
                 using (WebClient wc = new WebClient())
                 {
-                    Console.WriteLine("4");
                     wc.DownloadFile(url, tempDir + fileName);
-                    Console.WriteLine("5");
                     DelFile(DirectoryPath + "/" + path + "/" + fileName);
                     File.Move((tempDir + fileName).Replace("/", "\\"), (DirectoryPath + "/" + path + "/" + fileName).Replace("/", "\\"));
-                    Console.WriteLine("6");
                     Directory.Delete(tempDir, true);
                 }
 

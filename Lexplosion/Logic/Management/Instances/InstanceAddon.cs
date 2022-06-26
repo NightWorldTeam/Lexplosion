@@ -57,12 +57,14 @@ namespace Lexplosion.Logic.Management.Instances
         private readonly CurseforgeAddonInfo _modInfo;
         private readonly BaseInstanceData _modpackInfo;
         private readonly int _projectId;
+        private readonly string _gameVersion;
 
         private InstanceAddon(CurseforgeAddonInfo modInfo, BaseInstanceData modpackInfo)
         {
             _modInfo = modInfo;
             _projectId = modInfo.id;
             _modpackInfo = modpackInfo;
+            _gameVersion = modpackInfo.GameVersion;
         }
 
         private InstanceAddon(int projectId, BaseInstanceData modpackInfo)
@@ -70,6 +72,7 @@ namespace Lexplosion.Logic.Management.Instances
             _modInfo = null;
             _projectId = projectId;
             _modpackInfo = modpackInfo;
+            _gameVersion = modpackInfo.GameVersion;
         }
 
         private static InstalledAddons GetInstalledAddons(string instanceId)
@@ -91,7 +94,7 @@ namespace Lexplosion.Logic.Management.Instances
             var addons = new List<InstanceAddon>();
 
             // получаем спсиок всех аддонов с курсфорджа
-            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, searchFilter);
+            List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, searchFilter, gameVersion: modpackInfo.GameVersion);
             if (addonsList == null)
                 return addons;
 
@@ -158,14 +161,13 @@ namespace Lexplosion.Logic.Management.Instances
             string gameVersion = _modpackInfo.GameVersion;
 
             var installedAddons = GetInstalledAddons(instanceId);
-            bool addonAlreadyInstalled = installedAddons.ContainsKey(projectID);
-            var addonsList = CurseforgeApi.DownloadAddon(projectID, fileID, "instances/" + instanceId + "/", !addonAlreadyInstalled, gameVersion);
+            var addonsList = CurseforgeApi.DownloadAddon(projectID, fileID, "instances/" + instanceId + "/", !IsInstalled, gameVersion);
 
             foreach (string file in addonsList.Keys)
             {
                 if (addonsList[file].Item2 == DownloadAddonRes.Successful)
                 {
-                    if (addonsList[file].Item1.ProjectID == projectID && addonAlreadyInstalled)
+                    if (addonsList[file].Item1.ProjectID == projectID && IsInstalled)
                     {
                         DeleteAddon(instanceId, projectID, installedAddons[projectID]);
                     }
