@@ -42,13 +42,21 @@ namespace Lexplosion.Logic.Objects.Curseforge
             public string url;
         }
 
+        public class Links
+        {
+            public string websiteUrl;
+            public string wikiUrl;
+            public string issuesUrl;
+            public string sourceUrl;
+        }
+
         public int id; // TODO: подобные поля потом нужно на long заменить
         public string name;
         public List<LatestFile> latestFiles;
         public string summary;
         public float downloadCount { get; set; }
         public string dateModified;
-        public string websiteUrl;
+        public Links links;
         //public List<Attachment> attachments;
         public List<Category> categories;
         public List<Author> authors;

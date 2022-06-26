@@ -448,7 +448,7 @@ namespace Lexplosion.Logic.Management.Instances
                             };
                         }
 
-                        instanceClient.WebsiteUrl = instance.websiteUrl;
+                        instanceClient.WebsiteUrl = instance.links.websiteUrl;
 
                         if (instance.logo != null && instance.logo.url != null)
                         {
@@ -514,7 +514,7 @@ namespace Lexplosion.Logic.Management.Instances
                             LastUpdate = (data.dateModified != null) ? DateTime.Parse(data.dateModified).ToString("dd MMM yyyy") : "",
                             Modloader = data.ModloaderType,
                             Images = images,
-                            WebsiteUrl = data.websiteUrl,
+                            WebsiteUrl = data.links.websiteUrl,
                             Changelog = (projectFileId != null) ? (CurseforgeApi.GetProjectChangelog(_externalId, projectFileId.ToString()) ?? "") : ""
                         };
                     }

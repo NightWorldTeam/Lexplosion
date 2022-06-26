@@ -12,6 +12,8 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.FileSystem;
 using static Lexplosion.Logic.Network.CurseforgeApi;
+using System.Threading;
+using System.Net;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -20,10 +22,21 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
-        public byte[] Logo { get; private set; } = null;
         public bool IsInstalled { get; private set; } = false;
         public bool UpdateAvailable { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
+
+        public byte[] _logo = null;
+
+        public byte[] Logo
+        {
+            get => _logo;
+            set
+            {
+                _logo = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool _isInstalling = false;
         public bool IsInstalling 
@@ -129,9 +142,11 @@ namespace Lexplosion.Logic.Management.Instances
                     Name = addon.name,
                     IsInstalled = isInstalled,
                     Author = addon.GetAuthorName,
-                    WebsiteUrl = addon.websiteUrl,
+                    WebsiteUrl = addon.links.websiteUrl,
                     UpdateAvailable = (installedAddons.ContainsKey(addon.id) && (installedAddons[addon.id].FileID < lastFileID)) // если установленная версия аддона меньше последней - значит доступно обновление
                 };
+
+                instanceAddon.DownloadLogo(addon.logo.url);
 
                 addons.Add(instanceAddon);
                 i++;
@@ -380,6 +395,24 @@ namespace Lexplosion.Logic.Management.Instances
 
 
             return addons;
+        }
+
+        /// <summary>
+        /// Ну бля, качает заглавную картинку (лого) по ссылке и записывает в переменную Logo. Делает это всё в пуле потоков.
+        /// </summary>
+        private void DownloadLogo(string url)
+        {
+            ThreadPool.QueueUserWorkItem(delegate (object state)
+            {
+                //try
+                {
+                    using (var webClient = new WebClient())
+                    {
+                        Logo = webClient.DownloadData(url);
+                    }
+                }
+                //catch { }
+            });
         }
 
         public void Disable()
