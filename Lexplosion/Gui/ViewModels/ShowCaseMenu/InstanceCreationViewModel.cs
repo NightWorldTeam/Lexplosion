@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,17 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public List<string> GameVersions { get; } = MainViewModel.GameVersions.ToList();
 
+        /// <summary>
+        /// Свойство которое содержит результат проверки наличия modloader'a
+        /// Используется для скрытия поля версии modloader'a, если он отсутствует.
+        /// </summary>
         public bool IsModloader { get => BaseInstanceData.Modloader != ModloaderType.None; }
 
+        #region commands
+
+        /// <summary>
+        /// Команда выполняющаяся при нажатии кнопки "Сохранить"
+        /// </summary>
         public RelayCommand SaveDataCommand
         {
             get => new RelayCommand(obj =>
@@ -24,6 +34,26 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 CurrentInstanceClient.ChangeParameters(BaseInstanceData);
             });
         }
+
+        /// <summary>
+        /// Команда выполняющаяся при нажатии кнопки "Загрузить своё изображение"
+        /// </summary>
+        public RelayCommand UploadLogoCommand
+        {
+            get => new RelayCommand(obj => 
+            {
+                var ofd = new OpenFileDialog();
+                ofd.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
+                ofd.FilterIndex = 1;
+
+                if (ofd.ShowDialog() == true) 
+                {
+                    //BaseInstanceData.Logo = 
+                }
+            });
+        }
+
+        #endregion commands
 
         public string[] ModpacksCategoryNames { get; } = new string[16]
         {

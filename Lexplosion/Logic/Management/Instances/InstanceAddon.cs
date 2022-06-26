@@ -15,7 +15,7 @@ using static Lexplosion.Logic.Network.CurseforgeApi;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    class InstanceAddon
+    public class InstanceAddon
     {
         public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";

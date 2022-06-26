@@ -55,6 +55,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private readonly TabMenuViewModel _tabMenuViewModel;
         private readonly TabMenuViewModel _tabMenuViewModel1;
 
+        private readonly MainViewModel _mainViewModel; 
 
         #region Commands
 
@@ -73,7 +74,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 if (instanceClient.IsInstalled && instanceClient.InLibrary)
                 {
                     NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                        MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceClient));
+                        MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceClient, _mainViewModel));
                 }
                 else
                 {
@@ -93,6 +94,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
             _tabMenuViewModel = new TabMenuViewModel(MultiplayerTabs, "Сетевая игра");
             _tabMenuViewModel1 = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");
+
+            _mainViewModel = mainViewModel;
 
             Tabs = new ObservableCollection<Tab>
             {

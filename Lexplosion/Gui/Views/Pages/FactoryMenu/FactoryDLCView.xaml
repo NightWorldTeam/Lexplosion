@@ -191,7 +191,7 @@
                                 </Border>
                             </ControlTemplate>
                         </ListBox.Template>
-                        <ListBox.ItemTemplate>
+                        <!--ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type factorymenu:Mod}">
                                 <Grid ShowGridLines="False" Height="60">
                                     <Grid.ColumnDefinitions>
@@ -323,7 +323,7 @@
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
+                        </ListBox.ItemTemplate-->
                     </ListBox>
                 </Expander>
             </StackPanel>

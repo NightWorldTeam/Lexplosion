@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Logic.Management.Instances;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,19 +14,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         public string ImageSource { get; } = "pack://Application:,,,/assets/images/icons/curseforge/worldgen.png";
     }
 
-    public class Mod 
-    {
-        public string Name { get; set; }
-        public string Author { get; set; }
-        public string Description { get; set; }
-        public double DownloadCount { get; set; }
-        public string LastUpdated { get; set; }
-        public string CreatedTime { get; set; }
-    }
-
     public class CurseforgeMarketViewModel : VMBase
     {
-        private string[] ModCategoryNames = new string[19] 
+        private readonly string[] ModCategoryNames = new string[19] 
         {
             "All Mods",
             "WorldGen",
@@ -68,53 +59,19 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         #region props 
 
         public ObservableCollection<ModCategory> ModCategories { get; } = new ObservableCollection<ModCategory>();
-        public ObservableCollection<Mod> Mods { get; } = new ObservableCollection<Mod>();
+        public ObservableCollection<InstanceAddon> Mods { get; }
 
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel();
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
 
         #endregion props
 
-        public CurseforgeMarketViewModel(MainViewModel mainViewModel)
+        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
             _mainViewModel = mainViewModel;
             mainViewModel.IsShowInfoBar = false;
 
-            foreach (var name in ModCategoryNames) 
-            {
-                ModCategories.Add(new ModCategory 
-                {
-                    Name = name
-                });
-            }
-
-            for (var i = 0; i < 10; i++) 
-            {
-                if (i % 2 == 0)
-                {
-                    Mods.Add(new Mod
-                    {
-                        Name = "Just Enough Items (JEI)",
-                        Author = "mezz",
-                        DownloadCount = 167.7,
-                        LastUpdated = "Updated 3 days ago",
-                        CreatedTime = "Created Nov 24, 2015",
-                        Description = "View Items and Recipes"
-                    });
-                }
-                else 
-                {
-                    Mods.Add(new Mod
-                    {
-                        Name = "MrCrayfish's Furniture Mod",
-                        Author = "MrCrayfish",
-                        DownloadCount = 43.1,
-                        LastUpdated = "Updated 23 hours ago",
-                        CreatedTime = "Created Apr 7, 2013",
-                        Description = "Adds over 80 unique pieces of furniture into Minecraft!"
-                    });
-                }
-            }
+            Mods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetAddonsCatalog(instanceClient.GetBaseData, 10, 0, AddonType.Mods));
         }
     }
 }

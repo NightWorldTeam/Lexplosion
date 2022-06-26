@@ -43,7 +43,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         #endregion
 
-        public InstanceMenuViewModel(InstanceClient instanceClient)
+        public InstanceMenuViewModel(InstanceClient instanceClient, MainViewModel mainViewModel = null )
         {
             _showCaseTabMenu = new List<Tab>()
             {
@@ -71,7 +71,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 {
                     Id = 3,
                     Header = "Дополнения",
-                    Content = null
+                    Content = new FactoryDLCVM(mainViewModel, instanceClient)
                 },
                 new Tab 
                 {
