@@ -85,8 +85,8 @@ namespace Lexplosion.Logic.Objects.Curseforge
     {
         public class GameVersionAddon : GameVersion
         {
-            public int modLoader;
-            public string projectFileName;
+            public int? modLoader;
+            public string filename;
         }
 
         public List<GameVersionAddon> latestFilesIndexes;
