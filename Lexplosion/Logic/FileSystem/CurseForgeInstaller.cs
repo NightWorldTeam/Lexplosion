@@ -268,15 +268,15 @@ namespace Lexplosion.Logic.FileSystem
 
                             var result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
 
-                            if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
+                            if (result.Value2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
                             {
-                                Console.WriteLine("ERROR " + result[result.First().Key].Item2 + " " + result.First().Key);
+                                Console.WriteLine("ERROR " + result.Value2);
 
                                 // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
-                                if (result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.ProjectIdError || result[result.First().Key].Item2 == CurseforgeApi.DownloadAddonRes.DownloadError)
+                                if (result.Value2 == CurseforgeApi.DownloadAddonRes.ProjectIdError || result.Value2 == CurseforgeApi.DownloadAddonRes.DownloadError)
                                 {
                                     int j = 0;
-                                    while (j < 4 && result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                    while (j < 4 && result.Value2 != CurseforgeApi.DownloadAddonRes.Successful)
                                     {
                                         Console.WriteLine("REPEAT DOWNLOAD");
                                         result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
@@ -284,10 +284,10 @@ namespace Lexplosion.Logic.FileSystem
                                     }
 
                                     // все попытки были неудачными. возвращаем ошибку
-                                    if (result[result.First().Key].Item2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                    if (result.Value2 != CurseforgeApi.DownloadAddonRes.Successful)
                                     {
                                         sem.Release();
-                                        Console.WriteLine("GFDGS пизда " + result[result.First().Key].Item2);
+                                        Console.WriteLine("GFDGS пизда " + result.Value2);
                                         //errors.Add(file.projectID + " " + file.fileID);
                                         return;
                                     }
@@ -301,7 +301,7 @@ namespace Lexplosion.Logic.FileSystem
                             }
 
                             fileBlock.WaitOne();
-                            compliteDownload.InstalledAddons[file.projectID] = result[result.First().Key].Item1;
+                            compliteDownload.InstalledAddons[file.projectID] = result.Value1;
                             Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
                             DataFilesManager.SaveFile(DirectoryPath + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
                             fileBlock.Release();

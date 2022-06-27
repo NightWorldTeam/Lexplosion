@@ -169,46 +169,99 @@ namespace Lexplosion.Logic.Management.Instances
             catch { }
         }
 
-        private bool InstallAddon(int fileID)
+        private bool InstallAddon(CurseforgeFileInfo addonInfo)
         {
-            int projectID = _projectId;
             string instanceId = _modpackInfo.LocalId;
-            string gameVersion = _modpackInfo.GameVersion;
-
             var installedAddons = GetInstalledAddons(instanceId);
-            var addonsList = CurseforgeApi.DownloadAddon(projectID, fileID, "instances/" + instanceId + "/", !IsInstalled, gameVersion);
 
-            foreach (string file in addonsList.Keys)
+            IsInstalling = true;
+            var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
             {
-                if (addonsList[file].Item2 == DownloadAddonRes.Successful)
+                DownloadPercentages = percentages;
+            });
+            IsInstalling = false;
+
+            if (ressult.Value2 == DownloadAddonRes.Successful)
+            {
+                installedAddons[addonInfo.modId] = ressult.Value1;
+
+                //так же скачиваем зависимости
+                if (addonInfo.dependencies.Count > 0)
                 {
-                    if (addonsList[file].Item1.ProjectID == projectID && IsInstalled)
+                    List<Dictionary<string, int>> dependencies = addonInfo.dependencies;
+
+                    // проходимся по спику завиисимостей и скачиваем все зависимые аддоны
+                    int i = 0, count = dependencies.Count;
+                    while(i < count)
                     {
-                        DeleteAddon(instanceId, projectID, installedAddons[projectID]);
+                        var value = dependencies[i];
+                        if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("modId"))
+                        {
+                            Console.WriteLine("download " + value["modId"]);
+                            List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(value["modId"].ToString());
+                            var file = GetLastFile(_modpackInfo.GameVersion, files);
+                            if (file != null)
+                            {
+                                var res = CurseforgeApi.DownloadAddon(file, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages) { });
+                                if (res.Value2 == DownloadAddonRes.Successful)
+                                {
+                                    installedAddons[res.Value1.ProjectID] = res.Value1;
+
+                                    // в список зависимостей добавляем зависимости и этого аддона, если они есть
+                                    if (file.dependencies.Count > 0)
+                                    {
+                                        foreach (var val in file.dependencies)
+                                        {
+                                            dependencies.Add(val);
+                                            i++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        i++;
                     }
-
-                    installedAddons[addonsList[file].Item1.ProjectID] = addonsList[file].Item1;
                 }
-            }
 
-            SaveInstalledAddons(instanceId, installedAddons);
+                SaveInstalledAddons(instanceId, installedAddons);
+            }
 
             return true;
         }
 
-        public void InstallLatestVersion()
+        private static CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo)
         {
-            int fileID = 0;
-            foreach (var fileInfo in _modInfo.latestFilesIndexes)
+            CurseforgeFileInfo file = null;
+            int maxId = 0;
+            foreach (var fileInfo in addonInfo)
             {
-                if (fileInfo.gameVersion == _modpackInfo.GameVersion)
+                if (fileInfo.gameVersions != null && fileInfo.gameVersions.Contains(gameVersion) && maxId < fileInfo.id)
                 {
-                    fileID = fileInfo.fileId;
+                    file = fileInfo;
+                    maxId = fileInfo.id;
                     break;
                 }
             }
 
-            InstallAddon(fileID);
+            return file;
+        }
+
+        public void InstallLatestVersion()
+        {
+            var file = GetLastFile(_modpackInfo.GameVersion, _modInfo.latestFiles);
+            if (file == null)
+            {
+                file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString()));
+                if (file != null)
+                {
+                    InstallAddon(file);
+                }
+            }
+            else
+            {
+                InstallAddon(file);
+            }
         }
 
         class mcmodInfo

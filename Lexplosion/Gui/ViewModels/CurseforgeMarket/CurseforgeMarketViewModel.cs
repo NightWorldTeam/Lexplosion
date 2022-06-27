@@ -123,7 +123,11 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 var instanceAddon = (InstanceAddon)obj;
 
-                instanceAddon.InstallLatestVersion();
+                Lexplosion.Run.TaskRun(delegate
+                {
+                    instanceAddon.InstallLatestVersion();
+                });
+                
             });
         }
 

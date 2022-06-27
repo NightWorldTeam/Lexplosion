@@ -15,6 +15,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -63,7 +64,7 @@ namespace Lexplosion.Logic.FileSystem
             string tempDir = null;
             Console.WriteLine("INSTALL " + url);
 
-            //try
+            try
             {
                 tempDir = CreateTempDir();
 
@@ -82,6 +83,45 @@ namespace Lexplosion.Logic.FileSystem
 
                 Console.WriteLine("RETURN TRUE ");
                 return true;
+            }
+            catch
+            {
+                if (tempDir != null)
+                {
+                    DelFile(tempDir + fileName);
+                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
+                }
+
+                return false;
+            }
+        }
+
+        public static bool InstallFile(string url, string fileName, string path, Action<int> percentHandler)
+        {
+            Console.WriteLine("INSTALL " + url);
+
+            string tempDir = null;
+            //try
+            {
+                tempDir = CreateTempDir();
+                if (!Directory.Exists(DirectoryPath + "/" + path))
+                {
+                    Directory.CreateDirectory(DirectoryPath + "/" + path);
+                }
+
+                if (DownloadFile(url, fileName, tempDir, percentHandler))
+                {
+                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
+                    File.Move((tempDir + fileName).Replace("/", "\\"), (DirectoryPath + "/" + path + "/" + fileName).Replace("/", "\\"));
+                    Directory.Delete(tempDir, true);
+                    return true;
+                }
+                else
+                {
+                    DelFile(tempDir + fileName);
+                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
+                    return false;
+                }
             }
             //catch
             //{
@@ -118,28 +158,28 @@ namespace Lexplosion.Logic.FileSystem
             using (var webClient = new WebClient())
             {
                 DelFile(tempDir + fileName);
-
-                ManualResetEvent endEvent = new ManualResetEvent(false);
                 bool result = true;
 
-                webClient.DownloadProgressChanged += (sender, e) => percentHandler(e.ProgressPercentage);
+                webClient.DownloadProgressChanged += (sender, e) =>
+                {
+                    percentHandler(e.ProgressPercentage);
+                };
                 webClient.DownloadFileCompleted += (sender, e) =>
                 {
                     result = (e.Error == null);
-                    endEvent.Set();
                 };
 
-                try
+                //try
                 {
-                    webClient.DownloadFileTaskAsync(url, tempDir + fileName);
-                    endEvent.WaitOne();
+                    Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);
+                    task.Wait();
 
                     return result;
                 }
-                catch
-                {
-                    return false;
-                } 
+                //catch
+                //{
+                //    return false;
+                //} 
             }
         }
 
