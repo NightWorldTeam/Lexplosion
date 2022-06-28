@@ -217,6 +217,7 @@
     <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Pointer.cs" />
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Logic\ValuePair.cs" />
     <Compile Include="VMBase.cs" />

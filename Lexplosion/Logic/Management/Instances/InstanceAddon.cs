@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
+using System.Threading;
+using System.Net;
 using Tommy;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
@@ -12,8 +14,7 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.FileSystem;
 using static Lexplosion.Logic.Network.CurseforgeApi;
-using System.Threading;
-using System.Net;
+using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -101,8 +102,14 @@ namespace Lexplosion.Logic.Management.Instances
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(data));
         }
 
+        private static Dictionary<int, InstanceAddon> addonsCatalogChache;
+        private static ConcurrentDictionary<int, Pointer<InstanceAddon>> installingAddons;
+
         public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, int category = -1, string searchFilter = "")
         {
+            addonsCatalogChache = new Dictionary<int, InstanceAddon>();
+            installingAddons = new ConcurrentDictionary<int, Pointer<InstanceAddon>>();
+
             string instanceId = modpackInfo.LocalId;
             var addons = new List<InstanceAddon>();
 
@@ -149,6 +156,7 @@ namespace Lexplosion.Logic.Management.Instances
                 instanceAddon.DownloadLogo(addon.logo.url);
 
                 addons.Add(instanceAddon);
+                addonsCatalogChache[addon.id] = instanceAddon;
                 i++;
             }
 
@@ -183,6 +191,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             if (ressult.Value2 == DownloadAddonRes.Successful)
             {
+                IsInstalled = true;
                 installedAddons[addonInfo.modId] = ressult.Value1;
 
                 //так же скачиваем зависимости
@@ -202,9 +211,35 @@ namespace Lexplosion.Logic.Management.Instances
                             var file = GetLastFile(_modpackInfo.GameVersion, files);
                             if (file != null)
                             {
-                                var res = CurseforgeApi.DownloadAddon(file, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages) { });
+                                Pointer<InstanceAddon> addonPointer = new Pointer<InstanceAddon>();
+                                addonPointer.Point = null;
+                                if (addonsCatalogChache.ContainsKey(file.modId))
+                                {
+                                    addonPointer.Point = addonsCatalogChache[file.modId];
+                                    addonPointer.Point.IsInstalling = true;
+                                }
+                                else
+                                {
+                                    installingAddons[file.modId] = addonPointer;
+                                }
+
+                                var res = CurseforgeApi.DownloadAddon(file, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
+                                {
+                                    if (addonPointer.Point != null)
+                                    {
+                                        addonPointer.Point.DownloadPercentages = percentages;
+                                    }
+                                });
+
+                                if (addonPointer.Point != null)
+                                {
+                                    addonPointer.Point.IsInstalling = false;
+                                    installingAddons.TryRemove(file.modId, out _);
+                                }
+                                
                                 if (res.Value2 == DownloadAddonRes.Successful)
                                 {
+                                    IsInstalled = true;
                                     installedAddons[res.Value1.ProjectID] = res.Value1;
 
                                     // в список зависимостей добавляем зависимости и этого аддона, если они есть
