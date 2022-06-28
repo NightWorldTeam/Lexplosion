@@ -52,6 +52,23 @@ namespace Lexplosion.Logic.Management.Instances
         public string Author { get; set; }
         public ModloaderType Modloader { get; set; }
         public string ModloaderVersion { get; set; }
+
+        public static bool operator ==(BaseInstanceData elem1, BaseInstanceData elem2)
+        {
+            if (elem1 is null && elem2 is null)
+            {
+                return (elem1.LocalId == elem2.LocalId);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool operator !=(BaseInstanceData elem1, BaseInstanceData elem2)
+        {
+            return (elem1 is null) || (elem2 is null) || (elem1.LocalId != elem2.LocalId);
+        }
     }
 
     /// <summary>
