@@ -112,28 +112,40 @@ namespace Lexplosion.Logic.Management.Instances
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(data));
         }
 
+        /// <summary>
+        /// Тут хранится список аддонов из метода GetAddonsCatalog. При каждом вызове GetAddonsCatalog этот список обновляется.
+        /// </summary>
         private static Dictionary<int, InstanceAddon> _addonsCatalogChache;
-        private static ConcurrentDictionary<int, Pointer<InstanceAddon>> _installingAddons;
+        /// <summary>
+        /// Аддоны, которые устанавливаются в данный момент. После окончания установки они удаляются из этого списка.
+        /// </summary>
+        private static ConcurrentDictionary<int, Pointer<InstanceAddon>> _installingAddons = new ConcurrentDictionary<int, Pointer<InstanceAddon>>(); // TODO: для ключа еще использвтаь модпак, а не только id
         private static KeySemaphore<int> _installingSemaphore = new KeySemaphore<int>();
         private static Semaphore _chacheSemaphore = new Semaphore(1, 1);
-        private static BaseInstanceData _openedModpack = null;
 
+        /// <summary>
+        /// Очищает сохранённый список аддонов. Нужно вызывать при закрытии каталога чтобы очистить память.
+        /// </summary>
         public static void ClearAddonsListCache()
         {
             _chacheSemaphore.WaitOne();
             _addonsCatalogChache = null;
             _chacheSemaphore.Release();
-            _openedModpack = null;
         }
 
+        /// <summary>
+        /// Возвращает список аддонов с курсфорджа.
+        /// </summary>
+        /// <param name="modpackInfo">Класс BaseInstanceData, описывающий модпак, для которого нужно получить каталог адднов.</param>
+        /// <param name="pageSize"Размер страницы></param>
+        /// <param name="index">Индекс</param>
+        /// <param name="type">Тип аддона</param>
+        /// <param name="category">Категория. По умолчанию -1 (при -1 все категории)</param>
+        /// <param name="searchFilter">Поиск названия</param>
+        /// <returns>Собстна список аддонов.</returns>
         public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, int category = -1, string searchFilter = "")
         {
             _addonsCatalogChache = new Dictionary<int, InstanceAddon>();
-            if (_openedModpack != modpackInfo)
-            {
-                _openedModpack = modpackInfo;
-                _installingAddons = new ConcurrentDictionary<int, Pointer<InstanceAddon>>();
-            }
 
             string instanceId = modpackInfo.LocalId;
             var addons = new List<InstanceAddon>();
