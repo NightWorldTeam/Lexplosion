@@ -103,9 +103,18 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         private static Dictionary<int, InstanceAddon> _addonsCatalogChache;
-        private static ConcurrentDictionary<int, Pointer<InstanceAddon>> _installingAddons = new ConcurrentDictionary<int, Pointer<InstanceAddon>>();
-        private static KeySemaphore<int> _semaphore = new KeySemaphore<int>();
+        private static ConcurrentDictionary<int, Pointer<InstanceAddon>> _installingAddons;
+        private static KeySemaphore<int> _installingSemaphore = new KeySemaphore<int>();
+        private static Semaphore _chacheSemaphore = new Semaphore(1, 1);
         private static BaseInstanceData _openedModpack = null;
+
+        public static void ClearAddonsListCache()
+        {
+            _chacheSemaphore.WaitOne();
+            _addonsCatalogChache = null;
+            _chacheSemaphore.Release();
+            _openedModpack = null;
+        }
 
         public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, int category = -1, string searchFilter = "")
         {
@@ -151,7 +160,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
 
                 InstanceAddon instanceAddon;
-                _semaphore.WaitOne(addonId);
+                _installingSemaphore.WaitOne(addonId);
                 if (_installingAddons.ContainsKey(addonId))
                 {
                     if (_installingAddons[addonId].Point == null)
@@ -186,7 +195,7 @@ namespace Lexplosion.Logic.Management.Instances
                         UpdateAvailable = (installedAddons.ContainsKey(addonId) && (installedAddons[addonId].FileID < lastFileID)) // если установленная версия аддона меньше последней - значит доступно обновление
                     };
                 }
-                _semaphore.Release(addonId);
+                _installingSemaphore.Release(addonId);
 
                 instanceAddon.DownloadLogo(addon.logo.url);
 
@@ -217,12 +226,12 @@ namespace Lexplosion.Logic.Management.Instances
             string instanceId = _modpackInfo.LocalId;
             var installedAddons = GetInstalledAddons(instanceId);
 
-            _semaphore.WaitOne(_modInfo.id);
+            _installingSemaphore.WaitOne(_modInfo.id);
             _installingAddons[_modInfo.id] = new Pointer<InstanceAddon>
             {
                 Point = this
             };
-            _semaphore.Release(_modInfo.id);
+            _installingSemaphore.Release(_modInfo.id);
             IsInstalling = true;
 
             var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
@@ -231,9 +240,9 @@ namespace Lexplosion.Logic.Management.Instances
             });
 
             IsInstalling = false;
-            _semaphore.WaitOne(_modInfo.id);
+            _installingSemaphore.WaitOne(_modInfo.id);
             _installingAddons.TryRemove(_modInfo.id, out _);
-            _semaphore.Release(_modInfo.id);
+            _installingSemaphore.Release(_modInfo.id);
 
             if (ressult.Value2 == DownloadAddonRes.Successful)
             {
@@ -258,15 +267,17 @@ namespace Lexplosion.Logic.Management.Instances
                             {
                                 Pointer<InstanceAddon> addonPointer = new Pointer<InstanceAddon>();
                                 addonPointer.Point = null;
+                                _chacheSemaphore.WaitOne();
                                 if (_addonsCatalogChache.ContainsKey(file.modId))
                                 {
                                     addonPointer.Point = _addonsCatalogChache[file.modId];
                                     addonPointer.Point.IsInstalling = true;
                                 }
+                                _chacheSemaphore.Release();
 
-                                _semaphore.WaitOne(file.modId);
+                                _installingSemaphore.WaitOne(file.modId);
                                 _installingAddons[file.modId] = addonPointer;
-                                _semaphore.Release(file.modId);
+                                _installingSemaphore.Release(file.modId);
 
                                 var res = CurseforgeApi.DownloadAddon(file, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
                                 {
@@ -279,9 +290,9 @@ namespace Lexplosion.Logic.Management.Instances
                                 if (addonPointer.Point != null)
                                 {
                                     addonPointer.Point.IsInstalling = false;
-                                    _semaphore.WaitOne(file.modId);
+                                    _installingSemaphore.WaitOne(file.modId);
                                     _installingAddons.TryRemove(file.modId, out _);
-                                    _semaphore.Release(file.modId);
+                                    _installingSemaphore.Release(file.modId);
                                 }
                                 
                                 if (res.Value2 == DownloadAddonRes.Successful)
