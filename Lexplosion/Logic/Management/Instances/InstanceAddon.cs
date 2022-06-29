@@ -23,11 +23,21 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
-        public bool IsInstalled { get; private set; } = false;
         public bool UpdateAvailable { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
 
         public byte[] _logo = null;
+
+        private bool _isInstalled = false;
+        public bool IsInstalled
+        {
+            get => _isInstalled;
+            private set
+            {
+                _isInstalled = value;
+                OnPropertyChanged();
+            }
+        }
 
         public byte[] Logo
         {
