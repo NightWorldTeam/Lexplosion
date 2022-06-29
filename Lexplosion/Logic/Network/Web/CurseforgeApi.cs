@@ -89,7 +89,7 @@ namespace Lexplosion.Logic.Network
             return GetApiData<List<CurseforgeInstanceInfo>>(url);
         }
 
-        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, int category, string searchFilter = "", string gameVersion = "")
+        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, int category, ModloaderType modloader, string searchFilter = "", string gameVersion = "")
         {
             if (gameVersion != "")
             {
@@ -102,7 +102,17 @@ namespace Lexplosion.Logic.Network
                 categoryStr = "&categoryId=" + category;
             }
 
-            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);  
+            int modloaderValue;
+            if (modloader == ModloaderType.Fabric)
+            {
+                modloaderValue = 4;
+            }
+            else
+            {
+                modloaderValue = (int)modloader;
+            }
+
+            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + "&modLoaderType=" + modloaderValue + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);  
             return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 

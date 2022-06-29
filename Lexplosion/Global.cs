@@ -4,39 +4,41 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
 using Newtonsoft.Json;
+using Lexplosion.Logic.Management;
 
 namespace Lexplosion.Global
 {
     static class UserData
     {
         private static User _user;
+        public static bool IsAuth { get; private set; } = false;
 
         public static AuthCode Auth(string login, string password, bool saveUser)
         {
             _user = new User();
+            IsAuth = true;
+            LaunchGame.GameStartEvent += _user.GameStart;
+            LaunchGame.GameStopEvent += _user.GameStop;
+            Lexplosion.Run.ExitEvent += _user.Exit;
+
             return _user.Auth(login, password, saveUser);
         }
 
         public static string Login
         {
-            get
-            {
-                return _user.Login;
-            }
+            get =>_user.Login;
         }
         public static string UUID
         {
-            get
-            {
-                return _user.UUID;
-            }
+            get => _user.UUID;
         }
         public static string AccessToken
         {
-            get
-            {
-                return _user.AccessToken;
-            }
+            get => _user.AccessToken;
+        }
+        public static AccountType AccountType
+        {
+            get => _user.AccountType;
         }
 
         public static readonly bool Offline = false;

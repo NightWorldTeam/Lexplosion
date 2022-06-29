@@ -2,7 +2,7 @@
 using System.Windows.Media.Imaging;
 
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
-namespace Lexplosion.Logic.Objects // TODO: позаменять классы на структуры
+namespace Lexplosion.Logic.Objects
 {
     /// <summary>
     /// Асесты модпака на главной странице (описание, картинки)

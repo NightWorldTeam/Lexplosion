@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        private static readonly KeySemaphore _downloadSemaphore = new KeySemaphore();
+        private static readonly KeySemaphore<string> _downloadSemaphore = new KeySemaphore<string>();
 
         private bool _semIsReleased = false;
         private GameVersion _gameVersion;

@@ -25,6 +25,9 @@ namespace Lexplosion.Logic.Management
         private bool removeImportantTaskMark = false;
         private object removeImportantTaskLocker = new object();
 
+        public static event Action<string> GameStartEvent;
+        public static event Action GameStopEvent;
+
         public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type)
         {
             classInstance = this;
@@ -74,7 +77,7 @@ namespace Lexplosion.Logic.Management
             gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
             Lexplosion.Run.AddImportantTask();
 
-            UserStatusSetter.GameStart(gameClientName);
+            GameStartEvent(gameClientName);
 
             if (_settings.ShowConsole == true)
             {
@@ -161,7 +164,7 @@ namespace Lexplosion.Logic.Management
                     }
                     catch { }
 
-                    UserStatusSetter.GameStop();
+                    GameStopEvent();
 
                     lock (removeImportantTaskLocker)
                     {
@@ -339,7 +342,7 @@ namespace Lexplosion.Logic.Management
 
         private void Stop()
         {
-            UserStatusSetter.GameStop();
+            GameStopEvent();
 
             try
             {

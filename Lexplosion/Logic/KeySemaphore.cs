@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic
 {
-    class KeySemaphore
+    class KeySemaphore<T>
     {
         private class SemophoreData
         {
@@ -11,10 +11,10 @@ namespace Lexplosion.Logic
             public int users;
         }
 
-        private Dictionary<string, SemophoreData> _semaphores = new Dictionary<string, SemophoreData>();
+        private Dictionary<T, SemophoreData> _semaphores = new Dictionary<T, SemophoreData>();
         private object _locker = new object();
 
-        public void WaitOne(string key)
+        public void WaitOne(T key)
         {
             SemophoreData sem;
             lock (_locker)
@@ -39,7 +39,7 @@ namespace Lexplosion.Logic
             sem.semaphore.WaitOne();
         }
 
-        public void Release(string key)
+        public void Release(T key)
         {
             lock (_locker)
             {

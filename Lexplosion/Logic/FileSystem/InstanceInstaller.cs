@@ -18,8 +18,8 @@ namespace Lexplosion.Logic.FileSystem
 {
     class InstanceInstaller
     {
-        private static KeySemaphore _librariesBlock = new KeySemaphore();
-        private static KeySemaphore _assetsBlock = new KeySemaphore();
+        private static KeySemaphore<string> _librariesBlock = new KeySemaphore<string>();
+        private static KeySemaphore<string> _assetsBlock = new KeySemaphore<string>();
 
         protected string instanceId;
 
@@ -264,9 +264,9 @@ namespace Lexplosion.Logic.FileSystem
 
             //try
             {
+                DelFile(temp + zipFile);
                 wc.DownloadFile(url + ".zip", temp + zipFile);
 
-                DelFile(to + zipFile); // TODO: не ебу че это. Возможно убрать
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
                 File.Delete(temp + zipFile);
 

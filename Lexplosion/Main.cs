@@ -28,6 +28,8 @@ namespace Lexplosion
         private static App app = new App();
         public delegate void StopTask();
 
+        public static event Action ExitEvent;
+
         [STAThread]
         static void Main()
         {
@@ -255,7 +257,7 @@ namespace Lexplosion
             threads.StopThreads();
 
             waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
-            UserStatusSetter.Exit();
+            ExitEvent?.Invoke();  
         }
 
         public static StopTask TaskRun(ThreadStart ThreadFunc)
