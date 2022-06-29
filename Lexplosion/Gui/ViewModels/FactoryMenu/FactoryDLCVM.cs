@@ -30,7 +30,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => _curseforgeCommand ?? (new RelayCommand(obj =>
             {
-                System.Diagnostics.Process.Start((string)obj);
+                if (obj != null) { 
+                    System.Diagnostics.Process.Start((string)obj);
+                }
             }));
         }
 
@@ -74,7 +76,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             _mainViewModel = mainViewModel;
             _instanceClient = instanceClient;
-            //InstalledMods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData));
+            InstalledMods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData));
         }
     }
 }

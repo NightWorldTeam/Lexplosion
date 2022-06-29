@@ -157,7 +157,7 @@
                                         <Grid>
                                             <!-- Cancel Download Button -->
                                             <Button Style="{StaticResource DefaultBrandColorButton}" Width="80" Height="30"
-                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
+                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" IsEnabled="{Binding IsInstalled, Converter={StaticResource InverseBooleanConverter}}">
                                                 <WrapPanel>
                                                     <Path
                                                     Height="19"
@@ -178,10 +178,10 @@
                                                 />
                                                 </Button.ToolTip>
                                             </Button>
-                                            
+
                                             <!-- Install Button-->
                                             <Button Style="{StaticResource DefaultBrandColorButton}" Width="80" Height="30" Visibility="{Binding IsInstalling, Converter={StaticResource NegativeConvertBoolToVisibility}}"
-                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Command="{Binding DataContext.InstallModCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
+                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" IsEnabled="{Binding IsInstalled, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding DataContext.InstallModCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
                                                 <WrapPanel>
                                                     <Path
                                                     Height="19"
@@ -198,12 +198,12 @@
                                                     Style="{StaticResource CustomTipTool}"
                                                     HorizontalOffset="-60"
                                                     VerticalOffset="-27" 
-                                                    Content="Установить модификацию" 
+                                                    Content="Установить модификацию"
                                                 />
                                                 </Button.ToolTip>
                                             </Button>
                                         </Grid>
-                                            
+
                                         <!-- Go to offical page button -->
                                         <Button Margin="5,0,0,0" Style="{StaticResource DefaultBrandColorButton}" Height="30" Width="40"
                                             HorizontalContentAlignment="Left" VerticalContentAlignment="Center" 

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Lexplosion.Gui
+namespace Lexplosion.Gui.Converters
 {
     public class BytesToBitmapImageConventer : IValueConverter
     {

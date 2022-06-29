@@ -95,6 +95,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             get => _closePage ?? (new RelayCommand(obj =>
             {
                 _mainViewModel.IsShowInfoBar = true;
+                InstanceAddon.ClearAddonsListCache();
                 MainViewModel.NavigationStore.CurrentViewModel = MainViewModel.NavigationStore.PrevViewModel;
             }));
         }
