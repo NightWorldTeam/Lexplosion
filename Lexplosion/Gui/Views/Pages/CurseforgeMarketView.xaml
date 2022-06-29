@@ -66,6 +66,17 @@
                 <!-- Search Box -->
                 <customcontrols:SearchBox HorizontalAlignment="Center" VerticalAlignment="Center" DataContext="{Binding SearchBoxVM}"/>
                 
+                <!-- Close Button -->
+                <Button Width="34" Height="34" Background="Transparent" Style="{Binding IconicButton}" 
+                        BorderBrush="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
+                        Command="{Binding ClosePageCommand}">
+                    <Viewbox>
+                        <Path Data="m 16.5 33.6 l 7.5 -7.5 l 7.5 7.5 l 2.1 -2.1 l -7.5 -7.5 l 7.5 -7.5 l -2.1 -2.1 l -7.5 7.5 l -7.5 -7.5 l -2.1 2.1 l 7.5 7.5 l -7.5 7.5 Z M 24 44 q -4.1 0 -7.75 -1.575 q -3.65 -1.575 -6.375 -4.3 q -2.725 -2.725 -4.3 -6.375 Q 4 28.1 4 24 q 0 -4.15 1.575 -7.8 q 1.575 -3.65 4.3 -6.35 q 2.725 -2.7 6.375 -4.275 Q 19.9 4 24 4 q 4.15 0 7.8 1.575 q 3.65 1.575 6.35 4.275 q 2.7 2.7 4.275 6.35 Q 44 19.85 44 24 q 0 4.1 -1.575 7.75 q -1.575 3.65 -4.275 6.375 t -6.35 4.3 Q 28.15 44 24 44 Z m 0 -3 q 7.1 0 12.05 -4.975 Q 41 31.05 41 24 q 0 -7.1 -4.95 -12.05 Q 31.1 7 24 7 q -7.05 0 -12.025 4.95 Q 7 16.9 7 24 q 0 7.05 4.975 12.025 Q 16.95 41 24 41 Z m 0 -17 Z" 
+                              Fill="White" Stretch="Fill"
+                              />
+                    </Viewbox>
+                </Button>
+
                 <!-- Curseforge content container -->
                 <ItemsControl Grid.Row="1" Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding Mods}">
                     <ItemsControl.ItemTemplate>
