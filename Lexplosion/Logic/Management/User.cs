@@ -15,7 +15,6 @@ namespace Lexplosion.Logic
         public string Login { get; private set; } = "";
         public string UUID { get; private set; } = "00000000-0000-0000-0000-000000000000";
         public string AccessToken { get; private set; } = "null";
-
         public AccountType AccountType { get; private set; }
         public ActivityStatus Status { get; private set; }
 

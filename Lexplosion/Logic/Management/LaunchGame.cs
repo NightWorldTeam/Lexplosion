@@ -22,7 +22,7 @@ namespace Lexplosion.Logic.Management
 
         private static LaunchGame classInstance = null;
 
-        private bool removeImportantTaskMark = false;
+        private bool removeImportantTaskMark = true;
         private object removeImportantTaskLocker = new object();
 
         public static event Action<string> GameStartEvent;
@@ -69,15 +69,19 @@ namespace Lexplosion.Logic.Management
             return command.Replace(@"\", "/");
         }
 
-        public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName)
+        public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
         {
             string command = CreateCommand(data);
 
             process = new Process();
-            gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
-            Lexplosion.Run.AddImportantTask();
-
-            GameStartEvent(gameClientName);
+            if (onlineGame)
+            {
+                gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
+                removeImportantTaskMark = false;
+                Lexplosion.Run.AddImportantTask();
+            }
+            
+            GameStartEvent?.Invoke(gameClientName);
 
             if (_settings.ShowConsole == true)
             {
@@ -160,7 +164,7 @@ namespace Lexplosion.Logic.Management
 
                     try
                     {
-                        gameGateway.StopWork();
+                        gameGateway?.StopWork();
                     }
                     catch { }
 
@@ -199,7 +203,7 @@ namespace Lexplosion.Logic.Management
                 process.Start();
                 process.BeginOutputReadLine();
 
-                gameGateway.Initialization(process.Id);
+                gameGateway?.Initialization(process.Id);
 
                 return true;
             }
@@ -342,7 +346,7 @@ namespace Lexplosion.Logic.Management
 
         private void Stop()
         {
-            GameStopEvent();
+            GameStopEvent?.Invoke();
 
             try
             {
@@ -353,7 +357,7 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-                gameGateway.StopWork();
+                gameGateway?.StopWork();
             }
             catch { }
 

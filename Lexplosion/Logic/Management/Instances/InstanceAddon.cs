@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
@@ -26,8 +23,7 @@ namespace Lexplosion.Logic.Management.Instances
         public bool UpdateAvailable { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
 
-        public byte[] _logo = null;
-
+        #region info
         private bool _isInstalled = false;
         public bool IsInstalled
         {
@@ -39,6 +35,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        public byte[] _logo = null;
         public byte[] Logo
         {
             get => _logo;
@@ -77,6 +74,7 @@ namespace Lexplosion.Logic.Management.Instances
                 OnPropertyChanged();
             }
         }
+        #endregion
 
         private readonly CurseforgeAddonInfo _modInfo;
         private readonly BaseInstanceData _modpackInfo;
@@ -478,7 +476,8 @@ namespace Lexplosion.Logic.Management.Instances
                                     using (TextReader text = new StreamReader(file))
                                     {
                                         TomlTable table = TOML.Parse(text);
-                                        if(table != null){
+                                        if (table != null)
+                                        {
                                             displayName = getParameterValue(table, "displayName");
                                             authors = getParameterValue(table, "authors");
                                             version = getParameterValue(table, "version");

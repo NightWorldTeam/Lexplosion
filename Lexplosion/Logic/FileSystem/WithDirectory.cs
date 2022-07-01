@@ -3,19 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
 using System.IO.Compression;
-using System.Threading;
-using System.Windows;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Global;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.FileSystem
 {

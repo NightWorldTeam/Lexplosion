@@ -655,7 +655,7 @@ namespace Lexplosion.Logic.Management.Instances
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
 
-                launchGame.Run(data, ComplitedLaunch, GameExited, Name);
+                launchGame.Run(data, ComplitedLaunch, GameExited, Name, true);
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
             else
@@ -773,7 +773,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             ThreadPool.QueueUserWorkItem(delegate (object state)
             {
-                //try
+                try
                 {
                     using (var webClient = new WebClient())
                     {
@@ -781,7 +781,7 @@ namespace Lexplosion.Logic.Management.Instances
                         callback();
                     }
                 }
-                //catch { }
+                catch { }
             });
         }
 
