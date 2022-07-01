@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Net;
+using System.Collections.Concurrent;
 using Tommy;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
@@ -14,7 +15,6 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.FileSystem;
 using static Lexplosion.Logic.Network.CurseforgeApi;
-using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -379,7 +379,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        class mcmodInfo
+        class McmodInfo
         {
             public string modid;
             public string name;
@@ -388,7 +388,12 @@ namespace Lexplosion.Logic.Management.Instances
             public List<string> authorList;
         }
 
-        class fabricModJson
+        class McmodInfoContainer
+        {
+            public List<McmodInfo> modList;
+        }
+
+        class FabricModJson
         {
             public string id;
             public string name;
@@ -408,7 +413,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 if (table["mods"][0][parameter].IsString)
                     return table["mods"][0][parameter];
-                else if (table[parameter])
+                else if (table[parameter].IsString)
                     return table[parameter];
                 else
                     return "";
@@ -473,11 +478,13 @@ namespace Lexplosion.Logic.Management.Instances
                                     using (TextReader text = new StreamReader(file))
                                     {
                                         TomlTable table = TOML.Parse(text);
-                                        displayName = getParameterValue(table, "displayName");
-                                        authors = getParameterValue(table, "authors");
-                                        version = getParameterValue(table, "version");
-                                        description = getParameterValue(table, "description");
-                                        modId = getParameterValue(table, "modId");
+                                        if(table != null){
+                                            displayName = getParameterValue(table, "displayName");
+                                            authors = getParameterValue(table, "authors");
+                                            version = getParameterValue(table, "version");
+                                            description = getParameterValue(table, "description");
+                                            modId = getParameterValue(table, "modId");
+                                        }
                                     }
                                 }
                             }
@@ -491,12 +498,25 @@ namespace Lexplosion.Logic.Management.Instances
                                         using (StreamReader reader = new StreamReader(file, encoding: Encoding.UTF8))
                                         {
                                             string text = reader.ReadToEnd();
-                                            mcmodInfo modInfo = JsonConvert.DeserializeObject<mcmodInfo>(text);
-                                            displayName = modInfo?.name ?? "";
-                                            version = modInfo?.version ?? "";
-                                            description = modInfo?.description ?? "";
-                                            modId = modInfo?.modid ?? "";
-                                            authors = (modInfo?.authorList != null) ? string.Join(", ", modInfo.authorList) : "";
+                                            List<McmodInfo> data;
+                                            try
+                                            {
+                                                data = JsonConvert.DeserializeObject<List<McmodInfo>>(text);
+                                            }
+                                            catch
+                                            {
+                                                data = JsonConvert.DeserializeObject<McmodInfoContainer>(text)?.modList;
+                                            }
+
+                                            if (data != null && data.Count > 0)
+                                            {
+                                                McmodInfo modInfo = data[0];
+                                                displayName = modInfo?.name ?? "";
+                                                version = modInfo?.version ?? "";
+                                                description = modInfo?.description ?? "";
+                                                modId = modInfo?.modid ?? "";
+                                                authors = (modInfo?.authorList != null) ? string.Join(", ", modInfo.authorList) : "";
+                                            }
                                         }
                                     }
 
@@ -511,7 +531,7 @@ namespace Lexplosion.Logic.Management.Instances
                                             using (StreamReader reader = new StreamReader(file, encoding: Encoding.UTF8))
                                             {
                                                 string text = reader.ReadToEnd();
-                                                fabricModJson modInfo = JsonConvert.DeserializeObject<fabricModJson>(text);
+                                                FabricModJson modInfo = JsonConvert.DeserializeObject<FabricModJson>(text);
                                                 displayName = modInfo?.name ?? "";
                                                 version = modInfo?.version ?? "";
                                                 description = modInfo?.description ?? "";

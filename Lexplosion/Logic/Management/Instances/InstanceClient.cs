@@ -119,7 +119,17 @@ namespace Lexplosion.Logic.Management.Instances
 
         public string Author { get; private set; }
         public bool InLibrary { get; private set; } = false;
-        public bool UpdateAvailable { get; private set; } = false;
+
+        private bool _updateAvailable = false;
+        public bool UpdateAvailable
+        {
+            get => _updateAvailable;
+            set
+            {
+                _updateAvailable = value;
+                OnPropertyChanged();
+            }
+        }
         public bool IsInstalled { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
         #endregion
@@ -315,7 +325,11 @@ namespace Lexplosion.Logic.Management.Instances
 
                         instance.InLibrary = true;
                         instance.IsInstalled = list[localId].IsInstalled;
-                        instance.CheckUpdates();
+                        //хуярим проверку обновлений в пуле потоков
+                        ThreadPool.QueueUserWorkItem(delegate (object state)
+                        {
+                            instance.CheckUpdates();
+                        });
                         _installedInstances[localId] = instance;
                     }          
                 }
