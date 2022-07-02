@@ -113,7 +113,7 @@ namespace Lexplosion.Logic.Network
                 modloaderValue = (int)modloader;
             }
 
-            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + "&modLoaderType=" + modloaderValue + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);  
+            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + "&modLoaderType=" + modloaderValue + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 

@@ -18,13 +18,17 @@ namespace Lexplosion.Logic.Management.Instances
 {
     public class InstanceAddon : VMBase
     {
-        public string Name { get; private set; } = "";
+        #region info
+        public string Name { get; private set; } = "Без названия";
         public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
         public bool UpdateAvailable { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
+        public string FileName { get; private set; } = "";
+        public string Version { get; private set; } = "";
+        public int DownloadCount { get; private set; } = 0;
+        public string LastUpdated { get; private set; } = "";
 
-        #region info
         private bool _isInstalled = false;
         public bool IsInstalled
         {
@@ -151,8 +155,6 @@ namespace Lexplosion.Logic.Management.Instances
 
             // получаем спсиок всех аддонов с курсфорджа
             List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, category, modpackInfo.Modloader, searchFilter, modpackInfo.GameVersion);
-            if (addonsList == null)
-                return addons;
 
             // получаем список установленных аддонов
             var installedAddons = GetInstalledAddons(instanceId);
@@ -193,7 +195,9 @@ namespace Lexplosion.Logic.Management.Instances
                             IsInstalled = isInstalled,
                             Author = addon.GetAuthorName,
                             WebsiteUrl = addon.links.websiteUrl,
-                            UpdateAvailable = (installedAddons.ContainsKey(addonId) && (installedAddons[addonId].FileID < lastFileID)) // если установленная версия аддона меньше последней - значит доступно обновление
+                            UpdateAvailable = (installedAddons.ContainsKey(addonId) && (installedAddons[addonId].FileID < lastFileID)), // если установленная версия аддона меньше последней - значит доступно обновление
+                            DownloadCount = (int)addon.downloadCount,
+                            LastUpdated = DateTime.Parse(addon.dateModified).ToString("dd MMM yyyy")
                         };
 
                         _installingAddons[addonId].Point = instanceAddon;
@@ -213,7 +217,9 @@ namespace Lexplosion.Logic.Management.Instances
                         IsInstalled = isInstalled,
                         Author = addon.GetAuthorName,
                         WebsiteUrl = addon.links.websiteUrl,
-                        UpdateAvailable = (installedAddons.ContainsKey(addonId) && (installedAddons[addonId].FileID < lastFileID)) // если установленная версия аддона меньше последней - значит доступно обновление
+                        UpdateAvailable = (installedAddons.ContainsKey(addonId) && (installedAddons[addonId].FileID < lastFileID)), // если установленная версия аддона меньше последней - значит доступно обновление
+                        DownloadCount = (int)addon.downloadCount,
+                        LastUpdated = DateTime.Parse(addon.dateModified).ToString("dd MMM yyyy")
                     };
                 }
                 _installingSemaphore.Release(addonId);
@@ -385,6 +391,7 @@ namespace Lexplosion.Logic.Management.Instances
             public string description;
             public string version;
             public List<string> authorList;
+            public List<string> authors;
         }
 
         class McmodInfoContainer
@@ -515,11 +522,10 @@ namespace Lexplosion.Logic.Management.Instances
                                                 version = modInfo?.version ?? "";
                                                 description = modInfo?.description ?? "";
                                                 modId = modInfo?.modid ?? "";
-                                                authors = (modInfo?.authorList != null) ? string.Join(", ", modInfo.authorList) : "";
+                                                authors = (modInfo?.authorList != null && modInfo.authorList.Count > 0) ? modInfo.authorList[0] : ((modInfo?.authors != null && modInfo.authors.Count > 0) ? modInfo.authors[0] : "");
                                             }
                                         }
                                     }
-
                                 }
                                 else
                                 {
@@ -536,7 +542,7 @@ namespace Lexplosion.Logic.Management.Instances
                                                 version = modInfo?.version ?? "";
                                                 description = modInfo?.description ?? "";
                                                 modId = modInfo?.id ?? "";
-                                                authors = (modInfo?.authors != null) ? string.Join(", ", modInfo.authors) : "";
+                                                authors = (modInfo?.authors != null && modInfo.authors.Count > 0) ? modInfo.authors[0] : "";
                                             }
                                         }
                                     }
@@ -572,11 +578,19 @@ namespace Lexplosion.Logic.Management.Instances
                         addonId = existsAddons[xyi];
                     }
 
+                    string filename = "";
+                    try
+                    {
+                        filename = Path.GetFileName(fileAddr);
+                    } catch { }
+
                     addons.Add(new InstanceAddon(addonId, modpackInfo)
                     {
                         Author = authors,
                         Description = description,
                         Name = displayName,
+                        FileName = filename,
+                        Version = (!version.Contains("{") ? version : "")
                     });
                 }
             }

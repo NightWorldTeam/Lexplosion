@@ -38,11 +38,6 @@ namespace Lexplosion
             Thread thread = new Thread(InitializedSystem);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-            StartSplashW();
-        }
-
-        private static void StartSplashW()
-        {
             app.Run(new SplashWindow());
         }
 
@@ -120,7 +115,10 @@ namespace Lexplosion
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
 
-            //WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=6&pageSize=10&index=0&searchFilter=");
+            //Console.WriteLine("TEST");
+            ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=432&index=0&sortField=1&sortOrder=desc&pageSize=10&gameVersion=1.12.2&modLoaderType=0&searchFilter=
+            ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&sortField=1&sortOrder=desc&pageSize=10&index=0
+            //WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods/search?gameId=432&classId=6&sortField=1&sortOrder=desc&pageSize=10&index=0&gameVersion=1.12.2&modLoaderType=0");
             //req.Headers.Add("x-api-key", "$2a$10$d9HphjHPzYChRhMdu3gStu0DaJ5RGfgtogS1NIBG1c5sqhKSK6hBS");
             //((HttpWebRequest)req).Accept = "application/json";
 
