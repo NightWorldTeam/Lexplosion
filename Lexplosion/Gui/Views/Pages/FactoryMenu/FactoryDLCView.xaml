@@ -117,39 +117,13 @@
         <ScrollViewer HorizontalScrollBarVisibility="Disabled">
            <StackPanel>
 
-                <TabControl Background="Transparent" BorderBrush="Transparent">
-
-                    <TabControl.Resources>
-
-                        <Style TargetType="{x:Type TabItem}">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type TabItem}">
-                                        <Border>
-                                            <ContentPresenter x:Name="ContentSite" Content="{Binding Header}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
+                <TabControl Background="Transparent" BorderBrush="Transparent" TabStripPlacement="Top">
+                    <TabPanel HorizontalAlignment="Center">
                         
-                        <Style TargetType="{x:Type TabPanel}">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
-                            <Setter Property="Background" Value="Transparent" />
-                        </Style>
-
-
-                        <!--<Style TargetType="{x:Type TabItem}">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type }"
-                                </Setter.Value>
-                            </Setter>
-                        </Style>-->
-                    </TabControl.Resources>
+                    </TabPanel>
 
                     <!-- Mods -->
-                    <TabItem Header="Моды">
+                    <TabItem Header="Mods" Style="{StaticResource TEST}">
 
                         <ListBox ItemsSource="{Binding InstalledMods}" Tag="{Binding BindsDirectlyToSource=True}">
                             <ListBox.Template>
@@ -225,7 +199,7 @@
                                             <ColumnDefinition Width="40" />
                                             <ColumnDefinition Width="215" />
                                             <ColumnDefinition Width="150" />
-                                            <ColumnDefinition Width="150" />
+                                            <ColumnDefinition Width="140" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Border CornerRadius="5" Background="Purple" Grid.Column="0" Height="40" Width="40"/>
@@ -355,30 +329,19 @@
 
                     </TabItem>
 
-                    <TabItem Header="Ресурспаки">
-                        
-                        
-                        
+                    <TabItem Style="{StaticResource TEST}" Header="Ресурспаки">
+
+
+
                     </TabItem>
 
-                    <TabItem Header="Карты">
-                        
-                        
-                        
+                    <TabItem Style="{StaticResource TEST}" Header="Карты">
+
+
+
                     </TabItem>
                 </TabControl>
                
-                <Expander
-                    Style="{StaticResource CustomExpander}" 
-                    Header="Список модификаций:" 
-                    Foreground="#ffffff" 
-                    VerticalAlignment="Top"
-                    Background="#0f59b0"
-                    FontSize="20"
-                    FontWeight="Bold"
-                    >
-
-                </Expander>
             </StackPanel>
         </ScrollViewer>
     </Grid>
