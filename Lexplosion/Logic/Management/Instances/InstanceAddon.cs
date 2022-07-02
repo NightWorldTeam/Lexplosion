@@ -12,6 +12,7 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.FileSystem;
 using static Lexplosion.Logic.Network.CurseforgeApi;
+using System;
 
 namespace Lexplosion.Logic.Management.Instances
 {

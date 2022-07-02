@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexplosion.Logic
+namespace Lexplosion.Tools
 {
-    struct ValuePair<T, U>
+    public struct ValuePair<T, U>
     {
         public T Value1;
         public U Value2;
