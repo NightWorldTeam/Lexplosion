@@ -204,6 +204,16 @@ namespace Lexplosion
                 return Assembly.Load(Resources.LumiSoftNet);
             }
 
+            if (args.Name.Contains("Tommy"))
+            {
+                return Assembly.Load(Resources.Tommy);
+            }
+
+            if (args.Name.Contains("System.IO.Compression"))
+            {
+                return Assembly.Load(Resources.Compression);
+            }
+
             return null;
         }
 

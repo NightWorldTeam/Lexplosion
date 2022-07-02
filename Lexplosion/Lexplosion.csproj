@@ -478,10 +478,12 @@
     <Resource Include="Assets\images\icons\visible_password.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DLL\Tommy.dll" />
     <Resource Include="logo.ico" />
     <Resource Include="Assets\images\icons\more_blue.png" />
     <Resource Include="Assets\images\icons\logo.ico" />
     <Resource Include="Assets\images\icons\curseforge\worldgen.png" />
+    <None Include="DLL\Compression.dll" />
     <Content Include="DLL\LumiSoft.Net.dll" />
     <Content Include="DLL\NewtonsoftJson.dll" />
     <Resource Include="launcher_loading.png" />
