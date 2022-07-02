@@ -136,12 +136,14 @@ namespace Lexplosion.Logic.Network
                                     try
                                     {
                                         result = STUN_Client.Query("stun.l.google.com", 19305, sock.Client); //получем наш внешний адрес
+                                        Console.WriteLine(result.NetType.ToString());
                                     }
                                     catch { }
                                     sock.Close();
 
                                     if (result == null)
                                     {
+                                        Console.WriteLine("result == null");
                                         AcceptingBlock.Release();
                                         continue;
                                     }
