@@ -103,108 +103,127 @@ namespace Lexplosion.Logic.Network
 
             while (IsWork)
             {
-                Console.WriteLine("BVC1");
-                string clientUUID;
+                try
                 {
-                    byte[] data = new byte[33];
-
-                    Console.WriteLine("ControlServerRecv");
-                    ControlConnectionBlock.Release(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
-                    int bytes = controlConnection.Receive(data); // TODO: в трай запихать
-                    ControlConnectionBlock.WaitOne(); // блочим семофор
-                    Console.WriteLine("ControlServerEndRecv");
-
-                    if (bytes > 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
+                    Console.WriteLine("BVC1");
+                    string clientUUID;
                     {
-                        clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
-                        controlConnection.Send(new byte[1] { 97 }); //отправляем серверу соглашение
+                        byte[] data = new byte[33];
 
-                        bytes = controlConnection.Receive(data);
-                        if (bytes == 1 && data[0] == 98) //сервер запрашивает мой порт
+                        Console.WriteLine("ControlServerRecv");
+                        ControlConnectionBlock.Release(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
+                        int bytes = controlConnection.Receive(data); // TODO: в трай запихать
+                        ControlConnectionBlock.WaitOne(); // блочим семофор
+                        Console.WriteLine("ControlServerEndRecv");
+
+                        if (bytes > 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
                         {
-                            byte[] portData;
-                            if (DirectConnection)
+                            clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
+                            controlConnection.Send(new byte[1] { 97 }); //отправляем серверу соглашение
+
+                            bytes = controlConnection.Receive(data);
+                            if (bytes == 1 && data[0] == 98) //сервер запрашивает мой порт
                             {
-                                UdpClient sock = new UdpClient();
-                                sock.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                                sock.Client.Bind(localPoint);
+                                byte[] portData;
+                                if (DirectConnection)
+                                {
+                                    UdpClient sock = new UdpClient();
+                                    sock.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                                    sock.Client.Bind(localPoint);
 
-                                // TODO: сделать получения списка stun серверов с нашего сервера
-                                STUN_Result result = STUN_Client.Query("stun.l.google.com", 19305, sock.Client); //получем наш внешний адрес
-                                sock.Close();
+                                    // TODO: сделать получения списка stun серверов с нашего сервера
+                                    STUN_Result result = null;
+                                    try
+                                    {
+                                        result = STUN_Client.Query("stun.l.google.com", 19305, sock.Client); //получем наш внешний адрес
+                                    }
+                                    catch { }
+                                    sock.Close();
 
-                                //парсим порт
-                                string externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
-                                externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
-                                portData = Encoding.UTF8.GetBytes(externalPort.ToString());
+                                    if (result == null)
+                                    {
+                                        AcceptingBlock.Release();
+                                        continue;
+                                    }
 
-                                Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
+                                    //парсим порт
+                                    string externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
+                                    externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
+                                    portData = Encoding.UTF8.GetBytes(externalPort.ToString());
+
+                                    Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
+                                }
+                                else
+                                {
+                                    portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
+                                }
+
+                                controlConnection.Send(portData); //отправляем серверу наш порт
                             }
                             else
                             {
-                                portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
+                                // TODO: опять же произошло что-то с сервером
+                                continue;
                             }
-
-                            controlConnection.Send(portData); //отправляем серверу наш порт
                         }
                         else
                         {
-                            // TODO: опять же произошло что-то с сервером
+                            // TODO: что-то странное произошло. сервер должен 1 байт вернуть и отправить запрос на подключени
                             continue;
                         }
                     }
-                    else
+
+                    Console.WriteLine("BVC2");
+
                     {
-                        // TODO: что-то странное произошло. сервер должен 1 байт вернуть и отправить запрос на подключени
-                        continue;
-                    }
-                }
+                        byte[] data = new byte[21];
+                        int bytes = controlConnection.Receive(data); //получем ip клиента
 
-                Console.WriteLine("BVC2");
-
-                {
-                    byte[] data = new byte[21];
-                    int bytes = controlConnection.Receive(data); //получем ip клиента
-
-                    byte[] resp = new byte[bytes];
-                    for (int i = 0; i < bytes; i++) // TODO: сделать этот перенос нормально, но не через resize
-                    {
-                        resp[i] = data[i];
-                    }
-
-                    bool isConected;
-                    IPEndPoint point;
-                    if (DirectConnection)
-                    {
-                        string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
-                        string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-                        string hostIp = str.Replace(":" + hostPort, "");
-
-                        //hostPort = "9655";
-                        //hostIp = "127.0.0.1";
-
-                        point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
-                        Console.WriteLine("Host EndPoint " + point);
-                        isConected = ((SmpServer)Server).Connect(point);
-                    }
-                    else
-                    {
-                        Console.WriteLine("BVC3");
-                        isConected = ((TurnBridgeServer)Server).Connect(UUID, clientUUID, out point);
-                        Console.WriteLine("BVC4");
-                    }
-
-                    Console.WriteLine("BVC5");
-                    AcceptingBlock.WaitOne();
-
-                    if (isConected)
-                    {
-                        Console.WriteLine("КОННЕКТ!!!");
-                        if (BeforeConnect(point))
+                        byte[] resp = new byte[bytes];
+                        for (int i = 0; i < bytes; i++) // TODO: сделать этот перенос нормально, но не через resize
                         {
-                            Console.WriteLine("КОННЕКТ2!!!");
-                            SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
-                            ReadingWait.Set();
+                            resp[i] = data[i];
+                        }
+
+                        bool isConected;
+                        IPEndPoint point;
+                        if (DirectConnection)
+                        {
+                            string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
+                            string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
+                            string hostIp = str.Replace(":" + hostPort, "");
+
+                            //hostPort = "9655";
+                            //hostIp = "127.0.0.1";
+
+                            point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
+                            Console.WriteLine("Host EndPoint " + point);
+                            isConected = ((SmpServer)Server).Connect(point);
+                        }
+                        else
+                        {
+                            Console.WriteLine("BVC3");
+                            isConected = ((TurnBridgeServer)Server).Connect(UUID, clientUUID, out point);
+                            Console.WriteLine("BVC4");
+                        }
+
+                        Console.WriteLine("BVC5");
+                        AcceptingBlock.WaitOne();
+
+                        if (isConected)
+                        {
+                            Console.WriteLine("КОННЕКТ!!!");
+                            if (BeforeConnect(point))
+                            {
+                                Console.WriteLine("КОННЕКТ2!!!");
+                                SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
+                                ReadingWait.Set();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Пиздец");
+                                AcceptingBlock.Release();
+                            }
                         }
                         else
                         {
@@ -212,12 +231,8 @@ namespace Lexplosion.Logic.Network
                             AcceptingBlock.Release();
                         }
                     }
-                    else
-                    {
-                        Console.WriteLine("Пиздец");
-                        AcceptingBlock.Release();
-                    }
                 }
+                catch { }
             }
         }
 
