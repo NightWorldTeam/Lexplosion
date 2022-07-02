@@ -316,8 +316,8 @@
                                 <StackPanel Margin="30,0,30,30">
                                     <TextBlock Text="Теги" FontSize="16" Opacity="0.8" HorizontalAlignment="Left" Margin="0,0,0,5"/>
                                     <ListBox ItemsSource="{Binding ModCategoryNames}" 
-                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                 Background="#272727" BorderThickness="0" SelectionMode="Multiple" SelectedValue="{Binding BaseInstanceData.Categories.Name}">
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             Background="#272727" BorderThickness="0" SelectionMode="Multiple" SelectedValue="{Binding BaseInstanceData.Categories.Name}">
                                         
                                         <!-- Items Style -->
                                         <ListBox.ItemContainerStyle>

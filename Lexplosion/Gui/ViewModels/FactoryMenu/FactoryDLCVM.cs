@@ -17,7 +17,15 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private readonly MainViewModel _mainViewModel;
         private readonly InstanceClient _instanceClient;
 
-        public ObservableCollection<InstanceAddon> InstalledMods { get; private set; }
+        private ObservableCollection<InstanceAddon> _installedMods;
+        public ObservableCollection<InstanceAddon> InstalledMods 
+        {
+            get => _installedMods; set 
+            {
+                _installedMods = value;
+                OnPropertyChanged();
+            }
+        }
 
         private RelayCommand _curseforgeCommand;
         private RelayCommand _updateCommand;
@@ -76,7 +84,11 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             _mainViewModel = mainViewModel;
             _instanceClient = instanceClient;
-            InstalledMods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData));
+            
+            Lexplosion.Run.TaskRun(() => 
+            {
+                InstalledMods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData));
+            });
         }
     }
 }
