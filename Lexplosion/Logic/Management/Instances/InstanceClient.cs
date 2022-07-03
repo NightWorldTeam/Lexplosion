@@ -959,6 +959,11 @@ namespace Lexplosion.Logic.Management.Instances
             List<string> filesList = new List<string>();
             ParsePathLevel(ref filesList, exportList);
 
+            if (File.Exists(dirPath + "/installedAddons.json"))
+            {
+                filesList.Add(dirPath + "/installedAddons.json");
+            }
+
             VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
 
             string logoPath = (Logo != null ? WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName : null);

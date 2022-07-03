@@ -18,8 +18,10 @@ namespace Lexplosion.Logic.Management.Instances
 {
     public class InstanceAddon : VMBase
     {
+        private const string UnknownName = "Без названия";
+
         #region info
-        public string Name { get; private set; } = "Без названия";
+        public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
         public bool UpdateAvailable { get; private set; } = false;
@@ -480,7 +482,7 @@ namespace Lexplosion.Logic.Management.Instances
                 string extension = Path.GetExtension(fileAddr_);
                 if (extension == ".jar" || extension == ".disable")
                 {
-                    string displayName = "", authors = "", version = "", description = "", modId = "";
+                    string displayName = UnknownName, authors = "", version = "", description = "", modId = "";
 
                     // тут пытаемся получить инфу о моде
                     try
@@ -605,6 +607,8 @@ namespace Lexplosion.Logic.Management.Instances
                     });
                 }
             }
+
+            SaveInstalledAddons(modpackInfo.LocalId, actualAddonsList);
 
             return addons;
         }
