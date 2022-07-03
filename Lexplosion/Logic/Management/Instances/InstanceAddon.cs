@@ -29,6 +29,17 @@ namespace Lexplosion.Logic.Management.Instances
         public int DownloadCount { get; private set; } = 0;
         public string LastUpdated { get; private set; } = "";
 
+        private bool _isEnable = true;
+        public bool IsEnable 
+        {
+            get => _isEnable;
+            set
+            {
+                Disable();
+                _isEnable = value;
+            }
+        }
+
         private bool _isInstalled = false;
         public bool IsInstalled
         {
@@ -234,18 +245,18 @@ namespace Lexplosion.Logic.Management.Instances
             return addons;
         }
 
-        private void DeleteAddon(string instanceId, int projectID, InstalledAddonInfo installedAddon)
+        private void DeleteAddon()
         {
-            try
-            {
-                string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/" + installedAddon.ActualPath;
+            //try
+            //{
+            //    string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/" + installedAddon.ActualPath;
 
-                if (File.Exists(path))
-                {
-                    File.Delete(path);
-                }
-            }
-            catch { }
+            //    if (File.Exists(path))
+            //    {
+            //        File.Delete(path);
+            //    }
+            //}
+            //catch { }
         }
 
         private bool InstallAddon(CurseforgeFileInfo addonInfo)
@@ -599,6 +610,16 @@ namespace Lexplosion.Logic.Management.Instances
             return addons;
         }
 
+        public static List<InstanceAddon> GetInstalledResourcepacks(BaseInstanceData modpackInfo)
+        {
+            return new List<InstanceAddon>();
+        }
+
+        public static List<InstanceAddon> GetInstalledWorlds(BaseInstanceData modpackInfo)
+        {
+            return new List<InstanceAddon>();
+        }
+
         /// <summary>
         /// Ну бля, качает заглавную картинку (лого) по ссылке и записывает в переменную Logo. Делает это всё в пуле потоков.
         /// </summary>
@@ -617,7 +638,7 @@ namespace Lexplosion.Logic.Management.Instances
             });
         }
 
-        public void Disable()
+        private void Disable()
         {
             int projectID = _projectId;
             string instanceId = _modpackInfo.LocalId;
