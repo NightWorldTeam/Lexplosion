@@ -270,7 +270,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Point = this
             };
             _installingSemaphore.Release(_modInfo.id);
-            IsInstalling = true;
+            IsInstalling = true; 
 
             var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
             {
@@ -564,7 +564,7 @@ namespace Lexplosion.Logic.Management.Instances
                     catch { }
 
                     int addonId;
-                    string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/" + modpackInfo.LocalId + "/", "");
+                    string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
                     if (!existsAddons.ContainsKey(xyi)) // аддон есть в папке, но нет в списке, нужно добавить, так же генерируем айдишник для него
                     {
                         // собстна генерируем айдишник
@@ -606,7 +606,6 @@ namespace Lexplosion.Logic.Management.Instances
                 }
             }
 
-
             return addons;
         }
 
@@ -646,7 +645,7 @@ namespace Lexplosion.Logic.Management.Instances
             var installedAddons = GetInstalledAddons(instanceId);
             if (installedAddons.ContainsKey(projectID))
             {
-                try
+                //try
                 {
                     var installedAddon = installedAddons[projectID];
                     if (installedAddon.IsDisable)
@@ -672,7 +671,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                     }
                 }
-                catch { }
+                //catch { }
             }
         }
     }
