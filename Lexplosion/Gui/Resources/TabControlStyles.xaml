@@ -132,12 +132,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
-                    <Border x:Name="border" BorderBrush="#282828" BorderThickness="2">
-                        <ContentPresenter x:Name="ContentSite" ContentSource="Header" RecognizesAccessKey="True"/>
+                    <Border x:Name="border" BorderBrush="#282828" BorderThickness="2" Margin="0,0,3,0" CornerRadius="5">
+                        <ContentPresenter Margin="5,3,5,0" x:Name="ContentSite" ContentSource="Header" RecognizesAccessKey="True"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#AAAAAA"/>
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter TargetName="border" Property="Background" Value="#167FFC"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

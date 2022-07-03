@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
+using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -84,6 +85,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private readonly BaseInstanceData _baseInstanceData;
 
+        private readonly ObservableCollection<InstanceAddon> _instanceAddons;
+
         private int _pageSize = 10;
 
         #region commands
@@ -144,8 +147,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion props
 
-        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
+        public CurseforgeMarketViewModel(ObservableCollection<InstanceAddon> installedAddons, MainViewModel mainViewModel, InstanceClient instanceClient)
         {
+            _instanceAddons = installedAddons;
             _mainViewModel = mainViewModel;
             mainViewModel.IsShowInfoBar = false;
 

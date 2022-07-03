@@ -27,6 +27,28 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private ObservableCollection<InstanceAddon> _installedResourcepacks;
+        public ObservableCollection<InstanceAddon> InstalledResourcepacks
+        {
+            get => _installedResourcepacks; set 
+            {
+                _installedResourcepacks = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<InstanceAddon> _InstalledWorlds;
+        public ObservableCollection<InstanceAddon> InstalledWorlds
+        {
+            get => _InstalledWorlds; set 
+            {
+                _InstalledWorlds = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
         private RelayCommand _curseforgeCommand;
         private RelayCommand _updateCommand;
         private RelayCommand _deleteCommand;
@@ -48,7 +70,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => _updateCommand ?? (new RelayCommand(obj =>
             {
-
+                var instanceAddon = (InstanceAddon)obj;
             }));
         }
 
@@ -56,7 +78,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => _deleteCommand ?? (new RelayCommand(obj =>
             {
-
+                var instanceAddon = (InstanceAddon)obj;
+                InstalledMods.Remove(instanceAddon);
             }));
         }
 
@@ -69,7 +92,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 {
                     case MarketDLCType.Mods:
                         MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
-                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(_mainViewModel, _instanceClient);
+                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(InstalledMods, _mainViewModel, _instanceClient);
                         break;
                     case MarketDLCType.Resourcepacks:
                         break;
@@ -88,6 +111,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             Lexplosion.Run.TaskRun(() => 
             {
                 InstalledMods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData));
+                InstalledResourcepacks = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData));
+                InstalledWorlds = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData));
             });
         }
     }
