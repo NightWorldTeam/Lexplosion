@@ -1,53 +1,72 @@
-﻿<UserControl x:Class="Lexplosion.Gui.Views.Pages.MainMenu.CatalogView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:models="clr-namespace:Lexplosion.Gui.ViewModels"
-             xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls" xmlns:mainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu" d:DataContext="{d:DesignInstance Type=mainmenu:CatalogViewModel}"
-             mc:Ignorable="d" 
-            d:DesignHeight="450" d:DesignWidth="700">
+﻿<UserControl
+    x:Class="Lexplosion.Gui.Views.Pages.MainMenu.CatalogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Lexplosion.Gui.ViewModels"
+    d:DataContext="{d:DesignInstance Type=mainmenu:CatalogViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="700"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type models:InstanceFormViewModel}">
-            <customcontrols:InstanceForm  Margin="4,30,30,0"/>
+            <customcontrols:InstanceForm Margin="4,30,30,0" />
         </DataTemplate>
     </UserControl.Resources>
 
     <UserControl.Background>
-        <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/mainBG.png"/>
+        <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/mainBG.png" />
     </UserControl.Background>
 
     <Grid x:Name="MainGrid" Focusable="False">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" x:Name="ContainerPage_ScrollViewer">
+        <ScrollViewer x:Name="ContainerPage_ScrollViewer" VerticalScrollBarVisibility="Auto">
             <ScrollViewer.Background>
-                <!-- #1313131 0.8-->
-                <!-- "Black" 0.64 -->
-                <SolidColorBrush Color="#121212" Opacity="0.70"/>
+                <!--  #1313131 0.8  -->
+                <!--  "Black" 0.64  -->
+                <SolidColorBrush Opacity="0.70" Color="#121212" />
             </ScrollViewer.Background>
             <Grid x:Name="ControlElementsGrid" ShowGridLines="False">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
-                <customcontrols:SearchBox Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
-                    Margin="0,15,0,0" DataContext="{Binding SearchBoxVM}" HorizontalAlignment="Center"/>
-                <Grid ShowGridLines="False" x:Name="InstanceGrid" Grid.Row="1" Margin="0, 0, 0, 0">
-                    <TextBlock x:Name="LoadingLabel" 
-                               Text="Идёт загрузка. Пожалуйста подождите..." 
-                               Foreground="DarkGray"
-                               FontStyle="Italic"
-                               TextAlignment="Center"
-                               FontSize="22"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Top"
-                               Margin="0,30,0,0"
-                               Visibility="Hidden" Height="35" Width="480"/>
-                    <ItemsControl Margin="15,0,0,0" ItemsSource="{Binding InstanceForms}" BorderBrush="Transparent"/>
+                <customcontrols:SearchBox
+                    Margin="0,15,0,0"
+                    HorizontalAlignment="Center"
+                    DataContext="{Binding SearchBoxVM}"
+                    Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" />
+                <Grid
+                    x:Name="InstanceGrid"
+                    Grid.Row="1"
+                    Margin="0,0,0,0"
+                    ShowGridLines="False">
+                    <TextBlock
+                        x:Name="LoadingLabel"
+                        Width="480"
+                        Height="35"
+                        Margin="0,30,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        FontSize="22"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Text="Идёт загрузка. Пожалуйста подождите..."
+                        TextAlignment="Center"
+                        Visibility="Hidden" />
+                    <ItemsControl
+                        Margin="15,0,0,0"
+                        BorderBrush="Transparent"
+                        ItemsSource="{Binding InstanceForms}" />
                 </Grid>
-                <customcontrols:Paginator Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}"
-                                          Grid.Row="2" DataContext="{Binding PaginatorVM}"/>
+                <customcontrols:Paginator
+                    Grid.Row="2"
+                    DataContext="{Binding PaginatorVM}"
+                    Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" />
             </Grid>
         </ScrollViewer>
     </Grid>

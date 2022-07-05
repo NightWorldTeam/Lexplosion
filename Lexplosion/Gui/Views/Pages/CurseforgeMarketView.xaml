@@ -1,28 +1,43 @@
-﻿<UserControl x:Class="Lexplosion.Gui.Views.Pages.CurseforgeMarketView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="Lexplosion.Gui.Views.Pages.CurseforgeMarketView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
 
     <Grid Background="#19171c">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="270"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="270" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
-        <!-- Curseforge content categories container-->
-        <Border Background="#17141b" Width="270" HorizontalAlignment="Left">
-            <ListBox Background="Transparent" ItemsSource="{Binding ModCategories}" SelectedItem="" SelectedIndex="0" BorderThickness="1,0,1,1" BorderBrush="#232323" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+        <!--  Curseforge content categories container  -->
+        <Border
+            Width="270"
+            HorizontalAlignment="Left"
+            Background="#17141b">
+            <ListBox
+                Background="Transparent"
+                BorderBrush="#232323"
+                BorderThickness="1,0,1,1"
+                ItemsSource="{Binding ModCategories}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectedIndex="0"
+                SelectedItem="">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
                         <Setter Property="Margin" Value="0,5,0,0" />
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                    <Border x:Name="border" CornerRadius="5" Margin="10,0,10,0">
+                                    <Border
+                                        x:Name="border"
+                                        Margin="10,0,10,0"
+                                        CornerRadius="5">
                                         <ContentPresenter VerticalAlignment="Center" />
                                     </Border>
                                     <ControlTemplate.Triggers>
@@ -38,51 +53,84 @@
                         </Setter>
                     </Style>
                 </ListBox.ItemContainerStyle>
-                
+
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Height="45" Width="230">
-                            <Image Width="30" Height="30" Source="{Binding ImageSource}" />
-                            <TextBlock Text="{Binding Name}" 
-                                       Margin="10,0,10,0" 
-                                       Width="230"
-                                       VerticalAlignment="Center" 
-                                       Foreground="#e8dff7"/>
+                        <StackPanel
+                            Width="230"
+                            Height="45"
+                            Orientation="Horizontal">
+                            <Image
+                                Width="30"
+                                Height="30"
+                                Source="{Binding ImageSource}" />
+                            <TextBlock
+                                Width="230"
+                                Margin="10,0,10,0"
+                                VerticalAlignment="Center"
+                                Foreground="#e8dff7"
+                                Text="{Binding Name}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Border>
-        
-        <!-- Curseforge content viewer-->
-        <ScrollViewer Focusable="True" Grid.Column="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+
+        <!--  Curseforge content viewer  -->
+        <ScrollViewer
+            Grid.Column="1"
+            Focusable="True"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
 
-                <!-- Search Box -->
-                <customcontrols:SearchBox HorizontalAlignment="Center" VerticalAlignment="Center" DataContext="{Binding SearchBoxVM}"/>
-                
-                <!-- Close Button -->
-                <Button Width="34" Height="34" Background="Transparent" Style="{Binding IconicButton}" 
-                        BorderBrush="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
-                        Command="{Binding ClosePageCommand}">
+                <!--  Search Box  -->
+                <customcontrols:SearchBox
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    DataContext="{Binding SearchBoxVM}" />
+
+                <!--  Close Button  -->
+                <Button
+                    Width="34"
+                    Height="34"
+                    Margin="10"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Command="{Binding ClosePageCommand}"
+                    Style="{Binding IconicButton}">
                     <Viewbox>
-                        <Path Data="m 16.5 33.6 l 7.5 -7.5 l 7.5 7.5 l 2.1 -2.1 l -7.5 -7.5 l 7.5 -7.5 l -2.1 -2.1 l -7.5 7.5 l -7.5 -7.5 l -2.1 2.1 l 7.5 7.5 l -7.5 7.5 Z M 24 44 q -4.1 0 -7.75 -1.575 q -3.65 -1.575 -6.375 -4.3 q -2.725 -2.725 -4.3 -6.375 Q 4 28.1 4 24 q 0 -4.15 1.575 -7.8 q 1.575 -3.65 4.3 -6.35 q 2.725 -2.7 6.375 -4.275 Q 19.9 4 24 4 q 4.15 0 7.8 1.575 q 3.65 1.575 6.35 4.275 q 2.7 2.7 4.275 6.35 Q 44 19.85 44 24 q 0 4.1 -1.575 7.75 q -1.575 3.65 -4.275 6.375 t -6.35 4.3 Q 28.15 44 24 44 Z m 0 -3 q 7.1 0 12.05 -4.975 Q 41 31.05 41 24 q 0 -7.1 -4.95 -12.05 Q 31.1 7 24 7 q -7.05 0 -12.025 4.95 Q 7 16.9 7 24 q 0 7.05 4.975 12.025 Q 16.95 41 24 41 Z m 0 -17 Z" 
-                              Fill="White" Stretch="Fill"
-                              />
+                        <Path
+                            Data="m 16.5 33.6 l 7.5 -7.5 l 7.5 7.5 l 2.1 -2.1 l -7.5 -7.5 l 7.5 -7.5 l -2.1 -2.1 l -7.5 7.5 l -7.5 -7.5 l -2.1 2.1 l 7.5 7.5 l -7.5 7.5 Z M 24 44 q -4.1 0 -7.75 -1.575 q -3.65 -1.575 -6.375 -4.3 q -2.725 -2.725 -4.3 -6.375 Q 4 28.1 4 24 q 0 -4.15 1.575 -7.8 q 1.575 -3.65 4.3 -6.35 q 2.725 -2.7 6.375 -4.275 Q 19.9 4 24 4 q 4.15 0 7.8 1.575 q 3.65 1.575 6.35 4.275 q 2.7 2.7 4.275 6.35 Q 44 19.85 44 24 q 0 4.1 -1.575 7.75 q -1.575 3.65 -4.275 6.375 t -6.35 4.3 Q 28.15 44 24 44 Z m 0 -3 q 7.1 0 12.05 -4.975 Q 41 31.05 41 24 q 0 -7.1 -4.95 -12.05 Q 31.1 7 24 7 q -7.05 0 -12.025 4.95 Q 7 16.9 7 24 q 0 7.05 4.975 12.025 Q 16.95 41 24 41 Z m 0 -17 Z"
+                            Fill="White"
+                            Stretch="Fill" />
                     </Viewbox>
                 </Button>
 
-                <!-- Curseforge content container -->
-                <ItemsControl Grid.Row="1" Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding Mods}">
+                <!--  Curseforge content container  -->
+                <ItemsControl
+                    Grid.Row="1"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    ItemsSource="{Binding Mods}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Margin="20,10,20,0" Focusable="False" SnapsToDevicePixels="True" 
-                                    BorderBrush="#232323" CornerRadius="5" Height="60" Background="#17141b" BorderThickness="1">
+                            <Border
+                                Height="60"
+                                Margin="20,10,20,0"
+                                Background="#17141b"
+                                BorderBrush="#232323"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Focusable="False"
+                                SnapsToDevicePixels="True">
                                 <Grid ShowGridLines="False">
 
                                     <Grid.ColumnDefinitions>
@@ -92,162 +140,213 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Content Icon -->
-                                    <Border CornerRadius="5" Grid.Column="1" Height="50" Width="50">
+                                    <!--  Content Icon  -->
+                                    <Border
+                                        Grid.Column="1"
+                                        Width="50"
+                                        Height="50"
+                                        CornerRadius="5">
                                         <Border.Background>
-                                            <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}"/>
+                                            <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
                                         </Border.Background>
                                     </Border>
 
-                                    <!-- Content Name and Author Container -->
+                                    <!--  Content Name and Author Container  -->
                                     <Grid Grid.Column="2" ShowGridLines="False">
 
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
 
                                         <Grid ShowGridLines="False">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Style="{StaticResource DLCInfo}" FontWeight="Bold" Text="{Binding Name}"/>
-                                            <TextBlock Style="{StaticResource DLCInfo}" FontWeight="Medium" Grid.Column="1" Text="{Binding Author, StringFormat='by {0}'}" />
+                                            <TextBlock
+                                                FontWeight="Bold"
+                                                Style="{StaticResource DLCInfo}"
+                                                Text="{Binding Name}" />
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                FontWeight="Medium"
+                                                Style="{StaticResource DLCInfo}"
+                                                Text="{Binding Author, StringFormat='by {0}'}" />
                                         </Grid>
 
-                                        <!-- Donwload Count, Last Update Time, Created Time -->
+                                        <!--  Donwload Count, Last Update Time, Created Time  -->
                                         <Grid Grid.Row="1" ShowGridLines="False">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Style="{StaticResource DLCInfo}"
-                                            Text="{Binding DownloadCount, StringFormat='{}{0}M Downloads'}" Opacity="0.8" FontSize="12"/>
-                                            <TextBlock Style="{StaticResource DLCInfo}"
-                                                   Grid.Column="1" Opacity="0.8" Text="{Binding LastUpdated}" FontSize="12"/>
-                                            <TextBlock Style="{StaticResource DLCInfo}" 
-                                            Grid.Column="2" Text="{Binding CreatedTime}" Opacity="0.8" FontSize="12"/>
+                                            <TextBlock
+                                                FontSize="12"
+                                                Opacity="0.8"
+                                                Style="{StaticResource DLCInfo}"
+                                                Text="{Binding DownloadCount, StringFormat='{}{0}M Downloads'}" />
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                FontSize="12"
+                                                Opacity="0.8"
+                                                Style="{StaticResource DLCInfo}"
+                                                Text="{Binding LastUpdated}" />
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                FontSize="12"
+                                                Opacity="0.8"
+                                                Style="{StaticResource DLCInfo}"
+                                                Text="{Binding CreatedTime}" />
                                         </Grid>
 
-                                        <!-- Description -->
+                                        <!--  Description  -->
                                         <Grid Grid.Row="2" ShowGridLines="False">
-                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap"  TextTrimming="CharacterEllipsis"
-                                                   Style="{StaticResource DLCInfo}" FontSize="12"
-                                                   FontWeight="Normal" Foreground="WhiteSmoke">
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontWeight="Normal"
+                                                Foreground="WhiteSmoke"
+                                                Style="{StaticResource DLCInfo}"
+                                                Text="{Binding Description}"
+                                                TextTrimming="CharacterEllipsis"
+                                                TextWrapping="Wrap">
                                                 <TextBlock.ToolTip>
                                                     <ToolTip
-                                                        Placement="Relative" 
-                                                        Background="Black" 
+                                                        Background="Black"
                                                         BorderThickness="0"
-                                                        FontFamily="pack://application:,,,/assets/fonts/#Casper Bold" VerticalOffset="20">
-                                                        <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="WrapWithOverflow" MaxWidth="400"/>
+                                                        FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                                                        Placement="Relative"
+                                                        VerticalOffset="20">
+                                                        <TextBlock
+                                                            MaxWidth="400"
+                                                            Foreground="White"
+                                                            Text="{Binding Description}"
+                                                            TextWrapping="WrapWithOverflow" />
                                                     </ToolTip>
                                                 </TextBlock.ToolTip>
                                             </TextBlock>
                                         </Grid>
                                     </Grid>
 
-                                    <!-- Buttons - Download, Go to offical Page -->
-                                    <StackPanel Orientation="Horizontal" Grid.Column="3" VerticalAlignment="Center">
+                                    <!--  Buttons - Download, Go to offical Page  -->
+                                    <StackPanel
+                                        Grid.Column="3"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
 
-                                        <!-- Install Button-->
+                                        <!--  Install Button  -->
                                         <Grid>
-                                            <!-- Cancel Download Button -->
-                                            <Button Style="{StaticResource DefaultBrandColorButton}" Width="80" Height="30"
-                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" IsEnabled="{Binding IsInstalled, Converter={StaticResource InverseBooleanConverter}}">
+                                            <!--  Cancel Download Button  -->
+                                            <Button
+                                                Width="80"
+                                                Height="30"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center"
+                                                IsEnabled="{Binding IsInstalled, Converter={StaticResource InverseBooleanConverter}}"
+                                                Style="{StaticResource DefaultBrandColorButton}">
                                                 <WrapPanel>
                                                     <Path
-                                                    Height="19"
-                                                    Fill="White"
-                                                    Data="M 14 11 V 14 H 2 V 11 H 0 V 14 C 0 15.1 0.9 16 2 16 H 14 C 15.1 16 16 15.1 16 14 V 11 H 14 Z M 13 7 L 11.59 5.59 L 9 8.17 V 0 H 7 V 8.17 L 4.41 5.59 L 3 7 L 8 12 L 13 7 Z"
-                                                    />
-                                                    <TextBlock 
-                                                    Margin="5,0,0,0" 
-                                                    Text="Отмена"
-                                                    FontWeight="Bold"/>
+                                                        Height="19"
+                                                        Data="M 14 11 V 14 H 2 V 11 H 0 V 14 C 0 15.1 0.9 16 2 16 H 14 C 15.1 16 16 15.1 16 14 V 11 H 14 Z M 13 7 L 11.59 5.59 L 9 8.17 V 0 H 7 V 8.17 L 4.41 5.59 L 3 7 L 8 12 L 13 7 Z"
+                                                        Fill="White" />
+                                                    <TextBlock
+                                                        Margin="5,0,0,0"
+                                                        FontWeight="Bold"
+                                                        Text="Отмена" />
                                                 </WrapPanel>
                                                 <Button.ToolTip>
                                                     <ToolTip
-                                                    Style="{StaticResource CustomTipTool}"
-                                                    HorizontalOffset="-60"
-                                                    VerticalOffset="-27" 
-                                                    Content="Отменить скачивние" 
-                                                />
+                                                        Content="Отменить скачивние"
+                                                        HorizontalOffset="-60"
+                                                        Style="{StaticResource CustomTipTool}"
+                                                        VerticalOffset="-27" />
                                                 </Button.ToolTip>
                                             </Button>
 
-                                            <!-- Install Button-->
-                                            <Button Style="{StaticResource DefaultBrandColorButton}" Width="80" Height="30" Visibility="{Binding IsInstalling, Converter={StaticResource NegativeConvertBoolToVisibility}}"
-                                                HorizontalContentAlignment="Left" VerticalContentAlignment="Center" IsEnabled="{Binding IsInstalled, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding DataContext.InstallModCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
+                                            <!--  Install Button  -->
+                                            <Button
+                                                Width="80"
+                                                Height="30"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center"
+                                                Command="{Binding DataContext.InstallModCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                IsEnabled="{Binding IsInstalled, Converter={StaticResource InverseBooleanConverter}}"
+                                                Style="{StaticResource DefaultBrandColorButton}"
+                                                Visibility="{Binding IsInstalling, Converter={StaticResource NegativeConvertBoolToVisibility}}">
                                                 <WrapPanel>
                                                     <Path
-                                                    Height="19"
-                                                    Fill="White"
-                                                    Data="M 14 11 V 14 H 2 V 11 H 0 V 14 C 0 15.1 0.9 16 2 16 H 14 C 15.1 16 16 15.1 16 14 V 11 H 14 Z M 13 7 L 11.59 5.59 L 9 8.17 V 0 H 7 V 8.17 L 4.41 5.59 L 3 7 L 8 12 L 13 7 Z"
-                                                    />
-                                                    <TextBlock 
-                                                    Margin="5,0,0,0" 
-                                                    Text="Install"
-                                                    FontWeight="Bold"/>
+                                                        Height="19"
+                                                        Data="M 14 11 V 14 H 2 V 11 H 0 V 14 C 0 15.1 0.9 16 2 16 H 14 C 15.1 16 16 15.1 16 14 V 11 H 14 Z M 13 7 L 11.59 5.59 L 9 8.17 V 0 H 7 V 8.17 L 4.41 5.59 L 3 7 L 8 12 L 13 7 Z"
+                                                        Fill="White" />
+                                                    <TextBlock
+                                                        Margin="5,0,0,0"
+                                                        FontWeight="Bold"
+                                                        Text="Install" />
                                                 </WrapPanel>
                                                 <Button.ToolTip>
                                                     <ToolTip
-                                                    Style="{StaticResource CustomTipTool}"
-                                                    HorizontalOffset="-60"
-                                                    VerticalOffset="-27" 
-                                                    Content="Установить модификацию"
-                                                />
+                                                        Content="Установить модификацию"
+                                                        HorizontalOffset="-60"
+                                                        Style="{StaticResource CustomTipTool}"
+                                                        VerticalOffset="-27" />
                                                 </Button.ToolTip>
                                             </Button>
                                         </Grid>
 
-                                        <!-- Go to offical page button -->
-                                        <Button Margin="5,0,0,0" Style="{StaticResource DefaultBrandColorButton}" Height="30" Width="40"
-                                            HorizontalContentAlignment="Left" VerticalContentAlignment="Center" 
-                                                Command="{Binding DataContext.GoToCurseforgeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                                CommandParameter="{Binding WebsiteUrl}">
+                                        <!--  Go to offical page button  -->
+                                        <Button
+                                            Width="40"
+                                            Height="30"
+                                            Margin="5,0,0,0"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalContentAlignment="Center"
+                                            Command="{Binding DataContext.GoToCurseforgeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding WebsiteUrl}"
+                                            Style="{StaticResource DefaultBrandColorButton}">
                                             <WrapPanel>
                                                 <Viewbox Width="20" Height="20">
                                                     <Path
-                                                    Stretch="Fill"
-                                                    Fill="White"
-                                                    Data="M 6.307 0.581055 L 6.698 2.25605 H 0 C 0 2.25605 0.112 2.75805 0.167 2.81405 C 0.335 3.09305 0.502 3.42805 0.726 3.65105 C 1.786 4.87905 3.628 5.38105 5.135 5.66005 C 6.195 5.88405 7.256 5.94005 8.316 5.99505 L 9.544 9.28806 H 10.214 L 10.605 10.3491 H 10.047 L 9.098 13.4191 H 18.419 L 17.47 10.3491 H 16.912 L 17.302 9.28806 H 17.972 C 17.972 9.28806 18.53 5.88405 20.26 4.32105 C 21.935 2.75805 24 2.53505 24 2.53505 V 0.581055 H 6.307 Z M 15.684 9.00905 C 15.237 9.28805 14.735 9.28805 14.4 9.51205 C 14.177 9.62305 14.065 9.95806 14.065 9.95806 C 13.842 9.45606 13.563 9.28806 13.228 9.17706 C 12.893 9.06506 12.279 9.12106 11.442 8.39506 C 10.884 7.89306 10.828 7.22305 10.884 6.88805 V 6.72105 C 10.884 6.66505 10.884 6.60906 10.94 6.55306 C 11.051 6.21906 11.33 5.88405 11.888 5.66005 C 11.888 5.66005 11.498 6.21906 11.888 6.77706 C 12.112 7.11206 12.558 7.27905 12.949 7.05605 C 13.116 6.94405 13.228 6.72106 13.284 6.55306 C 13.395 6.16306 13.395 5.77205 13.06 5.49305 C 12.558 5.04705 12.447 4.43305 12.781 4.04205 C 12.781 4.04205 12.893 4.54405 13.395 4.48805 C 13.73 4.48805 13.73 4.37706 13.619 4.26506 C 13.563 4.09806 12.837 3.03705 13.898 2.25605 C 13.898 2.25605 14.567 1.80905 15.349 1.86505 C 14.902 1.92105 14.4 2.20005 14.233 2.64705 V 2.70205 C 14.065 3.14905 14.177 3.65105 14.512 4.09805 C 14.735 4.43305 15.014 4.71205 15.126 5.15805 C 14.958 5.10205 14.847 5.15806 14.735 5.27006 C 14.6755 5.33749 14.634 5.41888 14.6144 5.50665 C 14.5949 5.59442 14.5978 5.68573 14.623 5.77206 C 14.679 5.88406 14.791 5.99505 14.902 5.99505 H 15.07 C 15.237 5.94005 15.349 5.71605 15.293 5.54905 C 15.405 5.66005 15.46 5.94006 15.405 6.10706 C 15.405 6.27406 15.293 6.44206 15.237 6.55306 C 15.181 6.66506 15.07 6.77705 15.014 6.88805 C 14.958 7.00005 14.902 7.11205 14.902 7.22305 C 14.902 7.33505 14.902 7.50206 14.958 7.61406 C 15.181 7.94906 15.628 7.61405 15.74 7.33505 C 15.907 7.00005 15.851 6.60906 15.628 6.27406 C 15.628 6.27406 16.019 6.49806 16.298 7.27906 C 16.521 7.94906 16.13 8.73005 15.684 9.00905 V 9.00905 Z"
-                                                />
+                                                        Data="M 6.307 0.581055 L 6.698 2.25605 H 0 C 0 2.25605 0.112 2.75805 0.167 2.81405 C 0.335 3.09305 0.502 3.42805 0.726 3.65105 C 1.786 4.87905 3.628 5.38105 5.135 5.66005 C 6.195 5.88405 7.256 5.94005 8.316 5.99505 L 9.544 9.28806 H 10.214 L 10.605 10.3491 H 10.047 L 9.098 13.4191 H 18.419 L 17.47 10.3491 H 16.912 L 17.302 9.28806 H 17.972 C 17.972 9.28806 18.53 5.88405 20.26 4.32105 C 21.935 2.75805 24 2.53505 24 2.53505 V 0.581055 H 6.307 Z M 15.684 9.00905 C 15.237 9.28805 14.735 9.28805 14.4 9.51205 C 14.177 9.62305 14.065 9.95806 14.065 9.95806 C 13.842 9.45606 13.563 9.28806 13.228 9.17706 C 12.893 9.06506 12.279 9.12106 11.442 8.39506 C 10.884 7.89306 10.828 7.22305 10.884 6.88805 V 6.72105 C 10.884 6.66505 10.884 6.60906 10.94 6.55306 C 11.051 6.21906 11.33 5.88405 11.888 5.66005 C 11.888 5.66005 11.498 6.21906 11.888 6.77706 C 12.112 7.11206 12.558 7.27905 12.949 7.05605 C 13.116 6.94405 13.228 6.72106 13.284 6.55306 C 13.395 6.16306 13.395 5.77205 13.06 5.49305 C 12.558 5.04705 12.447 4.43305 12.781 4.04205 C 12.781 4.04205 12.893 4.54405 13.395 4.48805 C 13.73 4.48805 13.73 4.37706 13.619 4.26506 C 13.563 4.09806 12.837 3.03705 13.898 2.25605 C 13.898 2.25605 14.567 1.80905 15.349 1.86505 C 14.902 1.92105 14.4 2.20005 14.233 2.64705 V 2.70205 C 14.065 3.14905 14.177 3.65105 14.512 4.09805 C 14.735 4.43305 15.014 4.71205 15.126 5.15805 C 14.958 5.10205 14.847 5.15806 14.735 5.27006 C 14.6755 5.33749 14.634 5.41888 14.6144 5.50665 C 14.5949 5.59442 14.5978 5.68573 14.623 5.77206 C 14.679 5.88406 14.791 5.99505 14.902 5.99505 H 15.07 C 15.237 5.94005 15.349 5.71605 15.293 5.54905 C 15.405 5.66005 15.46 5.94006 15.405 6.10706 C 15.405 6.27406 15.293 6.44206 15.237 6.55306 C 15.181 6.66506 15.07 6.77705 15.014 6.88805 C 14.958 7.00005 14.902 7.11205 14.902 7.22305 C 14.902 7.33505 14.902 7.50206 14.958 7.61406 C 15.181 7.94906 15.628 7.61405 15.74 7.33505 C 15.907 7.00005 15.851 6.60906 15.628 6.27406 C 15.628 6.27406 16.019 6.49806 16.298 7.27906 C 16.521 7.94906 16.13 8.73005 15.684 9.00905 V 9.00905 Z"
+                                                        Fill="White"
+                                                        Stretch="Fill" />
                                                 </Viewbox>
                                             </WrapPanel>
                                             <Button.ToolTip>
                                                 <ToolTip
-                                                Style="{StaticResource CustomTipTool}"
-                                                HorizontalOffset="-60"
-                                                VerticalOffset="-27" 
-                                                Content="Перейти на curseforge" 
-                                            />
+                                                    Content="Перейти на curseforge"
+                                                    HorizontalOffset="-60"
+                                                    Style="{StaticResource CustomTipTool}"
+                                                    VerticalOffset="-27" />
                                             </Button.ToolTip>
                                         </Button>
-                                        
-                                        <!-- Progress Bar 'Procents' -->
-                                        <TextBlock Foreground="White" 
-                                                   VerticalAlignment="Center" 
-                                                   HorizontalAlignment="Center" 
-                                                   TextAlignment="Center" 
-                                                   Padding="0,6,0,0"
-                                                   Margin="8,0,0,0" 
-                                                   Width="30" 
-                                                   Text="{Binding DownloadPercentages, StringFormat='{}{0}%'}"
-                                                   Visibility="{Binding IsInstalling, Converter={StaticResource ConvertBoolToVisibility}}"
-                                                   Height="30" />
+
+                                        <!--  Progress Bar 'Procents'  -->
+                                        <TextBlock
+                                            Width="30"
+                                            Height="30"
+                                            Margin="8,0,0,0"
+                                            Padding="0,6,0,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Foreground="White"
+                                            Text="{Binding DownloadPercentages, StringFormat='{}{0}%'}"
+                                            TextAlignment="Center"
+                                            Visibility="{Binding IsInstalling, Converter={StaticResource ConvertBoolToVisibility}}" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                
-                <!-- Paginator -->
-                <customcontrols:Paginator Grid.Row="2" HorizontalAlignment="Center" DataContext="{Binding PaginatorVM}"/>
+
+                <!--  Paginator  -->
+                <customcontrols:Paginator
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    DataContext="{Binding PaginatorVM}" />
             </Grid>
         </ScrollViewer>
     </Grid>

@@ -118,7 +118,7 @@
                     <ToggleButton
                         Margin="5,0,0,0"
                         IsChecked="{Binding IsEnable}"
-                        Style="{StaticResource IconicToggleButton}">
+                        Style="{StaticResource EllipseToggleButton}">
                         <ToggleButton.ToolTip>
                             <ToolTip
                                 Content="Запускать модификацию"
