@@ -4,6 +4,7 @@ using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels

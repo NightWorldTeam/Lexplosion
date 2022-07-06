@@ -46,7 +46,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public InstanceFormModel(InstanceClient instanceClient)
         {
-
             InstanceClient = instanceClient;
 
             UpperButton = new UpperButton
@@ -148,6 +147,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     );
                     LowerButtons.Add(
                         new LowerButton("Удалить сборку", MultiButtonProperties.RemoveInstance, LowerButtonFunc.RemoveInstance)
+                    );
+                    LowerButtons.Add(
+                        new LowerButton("Экспорт", MultiButtonProperties.Export, LowerButtonFunc.Export)
                     );
                 }
             });

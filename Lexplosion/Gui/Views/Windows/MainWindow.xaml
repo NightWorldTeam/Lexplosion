@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
     Width="944"
     Height="528"
     AllowsTransparency="False"
@@ -27,34 +28,39 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TreeViewItem}">
                         <Grid>
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" MinWidth="19" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
+
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
+
+
                             <ToggleButton
                                 x:Name="Expander"
                                 ClickMode="Press"
-                                IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
-                                <Border
-                                    Name="border"
-                                    Grid.Column="1"
-                                    Padding="{TemplateBinding Padding}"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    SnapsToDevicePixels="true">
-                                    <ContentPresenter
-                                        x:Name="PART_Header"
-                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                        ContentSource="Header"
-                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                </Border>
-                            </ToggleButton>
+                                IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                Style="{StaticResource IconicToggleButton}" />
+
+                            <Border
+                                Name="border"
+                                Grid.Column="1"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="true">
+                                <ContentPresenter
+                                    x:Name="PART_Header"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    ContentSource="Header"
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Border>
 
                             <ItemsPresenter
                                 x:Name="ItemsHost"
@@ -218,7 +224,7 @@
 
         <!--  Popup  -->
 
-        <Grid Grid.Row="1" Visibility="Hidden">
+        <Grid Grid.Row="1" Visibility="{Binding IsExporting, Source={StaticResource MainVM}, }">
             <Grid.Background>
                 <SolidColorBrush Opacity="0.7" Color="Black" />
             </Grid.Background>
@@ -238,7 +244,7 @@
                         Text="Экспорт" />
 
                     <!--  Instance Modpack  -->
-                    <StackPanel Margin="19,53,0,0">
+                    <StackPanel Margin="19,53,19,0">
                         <TextBlock
                             FontSize="16"
                             Foreground="#9B9B9B"
@@ -255,44 +261,28 @@
 
                         <!--  Tree View : Files and Folders  -->
                         <StackPanel Margin="0,20,0,0">
-                            <TextBlock
-                                FontSize="16"
-                                Foreground="#9B9B9B"
-                                Text="Файлы и папки" />
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    FontSize="16"
+                                    Foreground="#9B9B9B"
+                                    Text="Файлы и папки" />
+
+                                <CheckBox
+                                    Width="160"
+                                    Margin="100,3,0,0"
+                                    Content="Полный экспорт"
+                                    FontSize="14"
+                                    Style="{StaticResource CustomCheckBox}" />
+                            </StackPanel>
 
                             <TreeView
+                                Height="180"
                                 Background="Transparent"
-                                BorderBrush="Transparent"
-                                ItemContainerStyle="{StaticResource DefaultTreeViewItem}">
-                                <!--<TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Margin="0,0,5,0" Source="/WpfTutorialSamples;component/Images/user.png" />
-                                            <TextBlock Margin="0,0,4,0" Text="{Binding Name}" />
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </TreeView.ItemTemplate>-->
+                                BorderBrush="Transparent" />
 
-                                <TreeViewItem Header="Mods">
-                                    <TreeViewItem Header="Basic">
-                                        <TreeViewItem Header="Visual Basic" />
-                                        <TreeViewItem Header="VB.Net" />
-                                        <TreeViewItem Header="PureBasic" />
-                                    </TreeViewItem>
-                                </TreeViewItem>
-                                <TreeViewItem Header="C-языки" />
-                                <TreeViewItem Header="C#" />
-                                <TreeViewItem Header="C/C++" />
-                                <TreeViewItem Header="Java" />
-                                <TreeViewItem Header="Basic">
-                                    <TreeViewItem Header="Visual Basic" />
-                                    <TreeViewItem Header="VB.Net" />
-                                    <TreeViewItem Header="PureBasic" />
-                                </TreeViewItem>
-                            </TreeView>
                         </StackPanel>
                     </StackPanel>
-
 
                     <!--  Buttons  -->
                     <StackPanel

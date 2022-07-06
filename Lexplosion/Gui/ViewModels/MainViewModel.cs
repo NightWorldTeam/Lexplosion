@@ -3,6 +3,7 @@ using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,12 @@ using System.Windows;
 
 namespace Lexplosion.Gui.ViewModels
 {
+    public class Dir
+    {
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public ObservableCollection<Dir> Files { get; set; }
+    }
     public class ImmutableList<T> : IEnumerable<T>
     {
         private readonly List<T> _list;
@@ -46,9 +53,9 @@ namespace Lexplosion.Gui.ViewModels
 
         public static bool IsInstanceRunning = false;
 
-        private RelayCommand _closeCommand;
-        private RelayCommand _hideCommand;
 
+
+        public static bool IsExporting = false;
 
         /// <summary>
         /// Данное свойство содержит в себе версии игры.
@@ -96,12 +103,25 @@ namespace Lexplosion.Gui.ViewModels
         public object InstanceForms { get; private set; }
         #endregion
 
+        public ObservableCollection<Dir> Dirs { get; } = new ObservableCollection<Dir>();
+
         #region commands
+
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки x, в Header окна.
+        /// Закрывает окно лаунчера (всё приложение).
+        /// </summary>
+        private RelayCommand _closeCommand;
         public RelayCommand CloseCommand 
         {
             get => _closeCommand ?? (_closeCommand = new RelayCommand(obj => Run.Exit()));
         }
 
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки -, в Header окна.
+        /// Сворачивает окно лаунчера.
+        /// </summary>
+        private RelayCommand _hideCommand;
         public RelayCommand HideCommand 
         {
             get => _hideCommand ?? (_hideCommand = new RelayCommand(obj => 
@@ -109,10 +129,53 @@ namespace Lexplosion.Gui.ViewModels
                 Application.Current.MainWindow.WindowState = WindowState.Minimized;
             }));
         }
+
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки Экспорт, в Export Popup.
+        /// Запускает экспорт модпака.
+        /// </summary>
+        public RelayCommand ExportInstance 
+        {
+            get => new RelayCommand(obj => 
+            {
+                IsExporting = false;
+            });
+        }
+
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
+        /// Отменяет экспорт, скрывает popup меню.
+        /// </summary>
+        public RelayCommand CancelExport 
+        {
+            get => new RelayCommand(obj => 
+            {
+                IsExporting = false;
+            });
+        }
+
         #endregion
 
         public MainViewModel()
         {
+            for (var i = 0; i < 10; i++)
+            {
+                var files = new ObservableCollection<Dir>();
+
+                for (var j = 0; j < 20; j++) 
+                {
+                    files.Add(new Dir() { Name = "File - " + i });
+                }
+
+                Dirs.Add(
+                    new Dir() 
+                    {
+                        Name = "Dir - " + i,
+                        Files = files
+                    }
+                );
+            }
+
             List<string> versions = new List<string>();
             Lexplosion.Run.TaskRun(() =>
             {

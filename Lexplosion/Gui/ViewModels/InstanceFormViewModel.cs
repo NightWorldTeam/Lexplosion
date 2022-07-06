@@ -70,6 +70,8 @@ namespace Lexplosion.Gui.ViewModels
                         break;
                     case LowerButtonFunc.RemoveInstance:
                         break;
+                    case LowerButtonFunc.Export:
+                        break;
                 }
             }));
         }

@@ -67,9 +67,11 @@
             Width="620"
             Height="120"
             CornerRadius="10">
+
             <Border.Background>
                 <SolidColorBrush Color="#151719" />
             </Border.Background>
+
             <Border.Effect>
                 <DropShadowEffect
                     BlurRadius="20"
@@ -77,12 +79,16 @@
                     ShadowDepth="10"
                     Color="#151719" />
             </Border.Effect>
+
+
             <Grid>
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="440" />
                     <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="120" />
                 </Grid.RowDefinitions>
@@ -92,11 +98,13 @@
                     Grid.Column="0"
                     MouseEnter="InstanceLogo_MouseEnter"
                     MouseLeave="InstanceLogo_MouseLeave">
+
                     <Border x:Name="InstanceLogo_Background" CornerRadius="10">
                         <Border.Background>
                             <ImageBrush ImageSource="{Binding Model.InstanceClient.Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
                         </Border.Background>
                     </Border>
+
                     <TextBlock
                         x:Name="InstanceLogo_Text"
                         HorizontalAlignment="Center"
@@ -106,6 +114,7 @@
                         Foreground="White"
                         Text="Больше"
                         Visibility="Collapsed" />
+
                     <Grid Background="Transparent">
                         <Grid.InputBindings>
                             <MouseBinding
@@ -115,17 +124,22 @@
                         </Grid.InputBindings>
                     </Grid>
                 </Grid>
+
+
                 <Grid Grid.Column="1" Margin="10,0,0,0">
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="135" />
                         </Grid.ColumnDefinitions>
+
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30" />
                         </Grid.RowDefinitions>
@@ -152,6 +166,7 @@
                                 </ToolTip>
                             </TextBlock.ToolTip>
                         </TextBlock>
+
                         <TextBlock
                             Grid.Column="1"
                             Margin="0,0,2,0"
@@ -163,15 +178,19 @@
                             Foreground="#a9b1ba"
                             Text="{Binding Model.InstanceClient.Author, StringFormat='by {0}'}"
                             TextTrimming="WordEllipsis" />
+
                     </Grid>
+
                     <Grid
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="0,5,0,0">
+
                         <Grid.RowDefinitions>
                             <RowDefinition Height="27" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
+
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
@@ -180,6 +199,7 @@
                             Foreground="#d5d5d5"
                             Text="{Binding Model.OverviewField}"
                             TextTrimming="WordEllipsis" />
+
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
@@ -188,6 +208,7 @@
                             Foreground="#f5f5f5"
                             TextTrimming="WordEllipsis"
                             Visibility="Collapsed" />
+
                         <ItemsControl
                             Grid.Row="1"
                             Margin="0,1,1,1"
@@ -201,19 +222,24 @@
                         </ItemsControl>
                     </Grid>
                 </Grid>
+
                 <Grid x:Name="MultiButtonsGrid" Grid.Column="2">
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60" />
                         <RowDefinition Height="60" />
                     </Grid.RowDefinitions>
+
                     <Grid Grid.Row="0">
                         <Border
                             Width="60"
                             Height="60"
                             CornerRadius="0,10,0,0">
+
                             <Border.Background>
                                 <SolidColorBrush x:Name="UpperButtonBackground" />
                             </Border.Background>
+
                             <Border.Triggers>
                                 <EventTrigger RoutedEvent="Border.MouseEnter">
                                     <BeginStoryboard>
@@ -240,12 +266,14 @@
                                     </BeginStoryboard>
                                 </EventTrigger>
                             </Border.Triggers>
+
                             <Border.InputBindings>
                                 <MouseBinding
                                     Command="{Binding UpperBtnCommand}"
                                     CommandParameter="{Binding Model.UpperButton.Func}"
                                     Gesture="LeftClick" />
                             </Border.InputBindings>
+
                             <Border.ToolTip>
                                 <ToolTip
                                     Background="Black"
@@ -260,6 +288,7 @@
                                         Text="{Binding Model.UpperButton.Tip.Text}" />
                                 </ToolTip>
                             </Border.ToolTip>
+
                             <Grid>
                                 <Viewbox Width="20" Height="20">
                                     <Path
@@ -269,6 +298,7 @@
                                         Stroke="White"
                                         Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                                 </Viewbox>
+
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
@@ -278,6 +308,7 @@
                                     Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
                                     Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />
                             </Grid>
+
                         </Border>
                     </Grid>
                     <controls:DropdownMenu Grid.Row="1" Background="#313131">
