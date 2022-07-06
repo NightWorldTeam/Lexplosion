@@ -224,7 +224,7 @@
 
         <!--  Popup  -->
 
-        <Grid Grid.Row="1" Visibility="{Binding IsExporting, Source={StaticResource MainVM}, }">
+        <Grid Grid.Row="1" Visibility="{Binding IsExporting, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
             <Grid.Background>
                 <SolidColorBrush Opacity="0.7" Color="Black" />
             </Grid.Background>

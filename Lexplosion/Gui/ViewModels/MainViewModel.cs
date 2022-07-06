@@ -11,12 +11,6 @@ using System.Windows;
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class Dir
-    {
-        public string Name { get; set; }
-        public string Path { get; set; }
-        public ObservableCollection<Dir> Files { get; set; }
-    }
     public class ImmutableList<T> : IEnumerable<T>
     {
         private readonly List<T> _list;
@@ -53,9 +47,15 @@ namespace Lexplosion.Gui.ViewModels
 
         public static bool IsInstanceRunning = false;
 
-
-
-        public static bool IsExporting = false;
+        private static bool _isExporting = false;
+        public bool IsExporting 
+        {
+            get => _isExporting; set 
+            {
+                _isExporting = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Данное свойство содержит в себе версии игры.
@@ -103,7 +103,7 @@ namespace Lexplosion.Gui.ViewModels
         public object InstanceForms { get; private set; }
         #endregion
 
-        public ObservableCollection<Dir> Dirs { get; } = new ObservableCollection<Dir>();
+        public ObservableCollection<string> Dirs { get; } = new ObservableCollection<string>();
 
         #region commands
 
@@ -158,24 +158,6 @@ namespace Lexplosion.Gui.ViewModels
 
         public MainViewModel()
         {
-            for (var i = 0; i < 10; i++)
-            {
-                var files = new ObservableCollection<Dir>();
-
-                for (var j = 0; j < 20; j++) 
-                {
-                    files.Add(new Dir() { Name = "File - " + i });
-                }
-
-                Dirs.Add(
-                    new Dir() 
-                    {
-                        Name = "Dir - " + i,
-                        Files = files
-                    }
-                );
-            }
-
             List<string> versions = new List<string>();
             Lexplosion.Run.TaskRun(() =>
             {
