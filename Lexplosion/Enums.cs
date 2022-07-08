@@ -168,4 +168,11 @@
         Survival,
         ModdedWorld,
     }
+
+    public enum OnlineGameStatus
+    {
+        None,
+        OpenWorld,
+        ConnectToUser
+    }
 }

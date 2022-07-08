@@ -17,11 +17,15 @@ namespace Lexplosion.Logic.Network
         private Thread ClientSimulatorThread;
         private Thread InformingThread;
 
-        ServerBridge Server = null;
-        string ControlServer = "";
+        private ServerBridge Server = null;
+        private string ControlServer = "";
 
-        string UUID;
-        string accessToken;
+        private string UUID;
+        private string accessToken;
+
+        public event Action<string> ConnectingUser;
+        public event Action<string> DisconnectedUser;
+        public event Action<OnlineGameStatus, string> StateChange;
 
         public Gateway(string uuid, string accessToken_, string controlServer)
         {
@@ -140,6 +144,10 @@ namespace Lexplosion.Logic.Network
                 InformingThread.Start();
                 Server = new ServerBridge(UUID, accessToken, port, true, ControlServer);
 
+                Server.ConnectingUser += ConnectingUser;
+                Server.DisconnectedUser += DisconnectedUser;
+                StateChange?.Invoke(OnlineGameStatus.OpenWorld, "");
+
                 while (true)
                 {
                     Console.WriteLine("GAME SERVER IS WORK");
@@ -152,6 +160,7 @@ namespace Lexplosion.Logic.Network
                     Thread.Sleep(3000);
                 }
 
+                StateChange?.Invoke(OnlineGameStatus.None, "");
                 waitingInforming.Set(); // высвобождаем поток InformingThread чтобы он не ждал лишнее время
                 Server.StopWork();
             }

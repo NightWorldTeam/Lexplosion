@@ -37,6 +37,9 @@ namespace Lexplosion.Logic.Network
 
         private readonly Socket controlConnection;
 
+        public event Action<string> ConnectingUser;
+        public event Action<string> DisconnectedUser;
+
         public NetworkServer(string uuid, string accessToken, string serverType, bool directConnection, string controlServer)
         {
             UUID = uuid;
@@ -217,6 +220,7 @@ namespace Lexplosion.Logic.Network
                             Console.WriteLine("КОННЕКТ!!!");
                             if (BeforeConnect(point))
                             {
+                                ConnectingUser?.Invoke(clientUUID);
                                 Console.WriteLine("КОННЕКТ2!!!");
                                 SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
                                 ReadingWait.Set();
