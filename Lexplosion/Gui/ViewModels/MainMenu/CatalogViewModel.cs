@@ -10,13 +10,16 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
     {
         private const int _pageSize = 10;
 
+        private readonly MainViewModel _mainViewModel;
+
         public ObservableCollection<InstanceFormViewModel> InstanceForms { get; set; } = new ObservableCollection<InstanceFormViewModel>();
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true);
 
-        public CatalogViewModel()
+        public CatalogViewModel(MainViewModel mainViewModel)
         {
+            _mainViewModel = mainViewModel;
             SearchBoxVM.SearchChanged += GetInitializeInstance;
             PaginatorVM.PageChanged += GetInitializeInstance;
             GetInitializeInstance();
@@ -54,7 +57,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                             }
                             else
                             {
-                                InstanceForms.Add(new InstanceFormViewModel(instance));
+                                InstanceForms.Add(new InstanceFormViewModel(_mainViewModel, instance));
                             }
                         }
                     });

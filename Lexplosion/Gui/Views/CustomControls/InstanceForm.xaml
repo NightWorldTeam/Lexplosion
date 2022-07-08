@@ -311,7 +311,10 @@
 
                         </Border>
                     </Grid>
-                    <controls:DropdownMenu Grid.Row="1" Background="#313131">
+                    <controls:DropdownMenu
+                        Grid.Row="1"
+                        Background="#313131"
+                        IsOpen="{Binding IsDropdownMenuOpen, Mode=TwoWay}">
                         <ItemsControl ItemsSource="{Binding Model.LowerButtons}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>

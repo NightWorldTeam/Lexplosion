@@ -50,12 +50,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }
         };
 
-        private readonly CatalogViewModel _catalogVM = new CatalogViewModel();
+        private readonly MainViewModel _mainViewModel;
+
+        private readonly CatalogViewModel _catalogVM;
         private readonly LibraryViewModel _libraryVM = new LibraryViewModel();
         private readonly TabMenuViewModel _tabMenuViewModel;
         private readonly TabMenuViewModel _tabMenuViewModel1;
-
-        private readonly MainViewModel _mainViewModel; 
 
         #region Commands
 
@@ -96,6 +96,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             _tabMenuViewModel1 = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");
 
             _mainViewModel = mainViewModel;
+
+            _catalogVM = new CatalogViewModel(mainViewModel);
 
             Tabs = new ObservableCollection<Tab>
             {

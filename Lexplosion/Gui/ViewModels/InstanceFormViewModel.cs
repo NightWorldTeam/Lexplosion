@@ -8,18 +8,44 @@ namespace Lexplosion.Gui.ViewModels
 {
     public class InstanceFormViewModel : VMBase
     {
-        private RelayCommand _upperBtnCommand;
-        private RelayCommand _lowerBtnCommand;
+        private InstanceClient _instanceClient; // Данные о Instance.
 
-        private InstanceClient _instanceClient;
+        private readonly MainViewModel _mainViewModel; // Ссылка на MainViewModel
 
+        #region props
+
+        /// <summary>
+        /// Свойство модели InstanceForm
+        /// </summary>
         public InstanceFormModel Model { get; }
 
+        /// <summary>
+        /// Свойтсво отвечает за видимость DropdownMenu.
+        /// Создано для возможности вручную скрывать DropdownMenu.
+        /// </summary>
+        private bool _isDropdownMenuOpen;
+        public bool IsDropdownMenuOpen
+        {
+            get => _isDropdownMenuOpen; set
+            {
+                _isDropdownMenuOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion props
+
+        #region commands
+
+        /// <summary>
+        /// Команда отвечает за функционал верхней кнопки в форме.
+        /// </summary>
+        private RelayCommand _upperBtnCommand;
         public RelayCommand UpperBtnCommand
         {
             get => _upperBtnCommand ?? (_upperBtnCommand = new RelayCommand(obj =>
             {
-                switch ((UpperButtonFunc)obj) 
+                switch ((UpperButtonFunc)obj)
                 {
                     case UpperButtonFunc.Download:
                         if (!MainModel.LibraryInstances.ContainsKey(_instanceClient))
@@ -39,6 +65,11 @@ namespace Lexplosion.Gui.ViewModels
                 }
             }));
         }
+
+        /// <summary>
+        /// Команда отвечает за функционал кнопок в DropdownMenu
+        /// </summary>
+        private RelayCommand _lowerBtnCommand;
         public RelayCommand LowerBtnCommand
         {
             get => _lowerBtnCommand ?? (_lowerBtnCommand = new RelayCommand(obj =>
@@ -59,26 +90,32 @@ namespace Lexplosion.Gui.ViewModels
                         Model.DownloadModel.DonwloadPrepare();
                         break;
                     case LowerButtonFunc.OpenWebsite:
-                            try
-                            {
-                                System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
-                            }
-                            catch
-                            {
-                                // message box here.
-                            }
+                        try
+                        {
+                            System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
+                        }
+                        catch
+                        {
+                            // message box here.
+                        }
                         break;
                     case LowerButtonFunc.RemoveInstance:
                         break;
                     case LowerButtonFunc.Export:
-                        
+                        IsDropdownMenuOpen = false;
+                        _mainViewModel.IsExporting = true;
+                        _mainViewModel.ExportInstanceName = _instanceClient.Name;
+                        _instanceClient.GetPathContent();
                         break;
                 }
             }));
         }
 
-        public InstanceFormViewModel(InstanceClient instanceClient)
+        #endregion commands
+
+        public InstanceFormViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
+            _mainViewModel = mainViewModel;
             Model = new InstanceFormModel(instanceClient);
             _instanceClient = instanceClient;
         }
