@@ -9,7 +9,17 @@ namespace Lexplosion.Gui.Helpers
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public new void Add(TKey key, TValue value) 
+        public ObservableDictionary() { }
+
+        public ObservableDictionary(Dictionary<TKey, TValue> dict) 
+        {
+            foreach (var key in dict.Keys) 
+            {
+                this.Add(key, dict[key]);
+            }
+        }
+
+        public new void Add(TKey key, TValue value)
         {
             base.Add(key, value);
             if (!TryGetValue(key, out _)) return;
@@ -18,6 +28,7 @@ namespace Lexplosion.Gui.Helpers
             OnPropertyChanged(nameof(Values));
             OnCollectionChanged(NotifyCollectionChangedAction.Add, value, index);
         }
+
         public new void Remove(TKey key)
         {
             if (!TryGetValue(key, out var value)) return;
@@ -27,7 +38,6 @@ namespace Lexplosion.Gui.Helpers
             OnCollectionChanged(NotifyCollectionChangedAction.Remove, value, index);
             base.Remove(key);
         }
-
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {

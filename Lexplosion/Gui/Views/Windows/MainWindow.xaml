@@ -2,9 +2,10 @@
     x:Class="Lexplosion.Gui.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:Lexplosion.Gui.Helpers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
     Width="944"
     Height="528"
     AllowsTransparency="False"
@@ -258,7 +259,7 @@
                             HorizontalAlignment="Left"
                             FontSize="14"
                             Style="{StaticResource SettingsTextBox}"
-                            Text="{Binding ExportInstanceName, Source={StaticResource MainVM}}" />
+                            Text="{Binding InstanceExport.InstanceName, Source={StaticResource MainVM}}" />
 
                         <!--  Tree View : Files and Folders  -->
                         <StackPanel Margin="0,20,0,0">
@@ -274,15 +275,29 @@
                                     Margin="100,3,0,0"
                                     Content="Полный экспорт"
                                     FontSize="14"
-                                    IsChecked="{Binding IsFullExport, Mode=TwoWay}"
+                                    IsChecked="{Binding InstanceExport.IsFullExport, Mode=TwoWay}"
                                     Style="{StaticResource CustomCheckBox}" />
                             </StackPanel>
 
                             <TreeView
                                 Height="180"
                                 Background="Transparent"
-                                BorderBrush="Transparent" />
-
+                                BorderBrush="Transparent"
+                                ItemsSource="{Binding InstanceExport.UnitsList}">
+                                <TreeView.Resources>
+                                    <Style TargetType="{x:Type TreeViewItem}">
+                                        <Setter Property="Foreground" Value="White" />
+                                        <Setter Property="FontWeight" Value="Medium" />
+                                        <Setter Property="behaviors:TreeViewItemExpanded.Command" Value="{Binding TreeViewItemExpanded, Source={StaticResource MainVM}}" />
+                                        <Setter Property="behaviors:TreeViewItemExpanded.CommandParameter" Value="{Binding Path=Header, RelativeSource={RelativeSource Self}}" />
+                                    </Style>
+                                </TreeView.Resources>
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Value}">
+                                        <TextBlock Text="{Binding Key}" />
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
                         </StackPanel>
                     </StackPanel>
 

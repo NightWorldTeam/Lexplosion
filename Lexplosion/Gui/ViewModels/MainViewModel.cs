@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Models;
+﻿using Lexplosion.Gui.Helpers;
+using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management.Instances;
@@ -8,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -86,13 +88,100 @@ namespace Lexplosion.Gui.ViewModels
         }
     }
 
+    public class InstanceExport : VMBase
+    {
+        /// <summary>
+        /// Список хранит в себе загруженные директории [string].
+        /// </summary>
+        private List<string> LoadedDirectories = new List<string>();
+
+        private string _instanceName;
+        public string InstanceName 
+        {
+            get => _instanceName; set 
+            {
+                _instanceName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Данные о сборке.
+        /// </summary>
+        private InstanceClient _instanceClient;
+        public InstanceClient InstanceClient
+        {
+            get => _instanceClient; set
+            {
+                _instanceClient = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        /// <summary>
+        /// Свойство содержит информацию - экспортируются ли все файлы сборки.
+        /// </summary>
+        private bool _isFullExport = true;
+        public bool IsFullExport
+        {
+            get => _isFullExport; set
+            {
+                _isFullExport = value;
+            }
+        }
+
+        /// <summary>
+        /// Коллекция [Словарь] который обновляется при добавлении в него значений.
+        /// </summary>
+        private ObservableDictionary<string, PathLevel> _unitsList;
+        public ObservableDictionary<string, PathLevel> UnitsList
+        {
+            get => _unitsList; set
+            {
+                _unitsList = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Команда отрабатывает при раскрытии TreeViewItem.
+        /// </summary>
+        public RelayCommand TreeViewItemExpanded
+        {
+            get => new RelayCommand(obj =>
+            {
+                var s = obj as string;
+                LoadDirContent(s);
+            });
+        }
+
+        /// <summary>
+        /// Загружает контент для директории. Если директория уже загружена, то производиться выход из метода.
+        /// </summary>
+        /// <param name="dir"></param>
+        private void LoadDirContent(string dir) 
+        {
+            if (LoadedDirectories.Contains(dir))
+                return;
+            if (!UnitsList[dir].IsFile)
+                UnitsList[dir].UnitsList = _instanceClient.GetPathContent(dir);
+            LoadedDirectories.Add(dir);
+        }
+    }
+
     public class MainViewModel : VMBase
     {
+        public InstanceExport InstanceExport { get; } = new InstanceExport();
 
         #region statics
 
         public static readonly NavigationStore NavigationStore = new NavigationStore();
+
         public static MainMenuViewModel MainMenuVM { get; private set; }
+
+        /// <summary>
+        /// Если запушена сборка true, иначе else.
+        /// </summary>
         public static bool IsInstanceRunning = false;
 
         /// <summary>
@@ -151,9 +240,6 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-
-        // Export Properties //
-
         /// <summary>
         /// Данное свойство содержить информации - открыт ли Экспорт [Popup].
         /// </summary>
@@ -164,31 +250,6 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _isExporting = value;
                 OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Данное свойство содержить информации - о названии экспортируемой сборки.
-        /// </summary>
-        private string _exportInstanceName = "Название сборки";
-        public string ExportInstanceName
-        {
-            get => _exportInstanceName; set
-            {
-                _exportInstanceName = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Свойство содержит информацию - экспортируются ли все файлы сборки.
-        /// </summary>
-        private bool _isFullExport = true;
-        public bool IsFullExport 
-        {
-            get => _isFullExport; set 
-            {
-                _isFullExport = value;
             }
         }
 

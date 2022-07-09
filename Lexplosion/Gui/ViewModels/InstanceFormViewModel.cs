@@ -1,8 +1,10 @@
-﻿using Lexplosion.Gui.Models;
+﻿using Lexplosion.Gui.Helpers;
+using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using System;
+using System.Linq;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -104,8 +106,10 @@ namespace Lexplosion.Gui.ViewModels
                     case LowerButtonFunc.Export:
                         IsDropdownMenuOpen = false;
                         _mainViewModel.IsExporting = true;
-                        _mainViewModel.ExportInstanceName = _instanceClient.Name;
-                        _instanceClient.GetPathContent();
+                        _mainViewModel.InstanceExport.InstanceName = _instanceClient.Name;
+                        _mainViewModel.InstanceExport.IsFullExport = true;
+                        _mainViewModel.InstanceExport.InstanceClient = _instanceClient;
+                        _mainViewModel.InstanceExport.UnitsList = new ObservableDictionary<string, PathLevel>(_instanceClient.GetPathContent());
                         break;
                 }
             }));
