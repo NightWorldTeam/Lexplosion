@@ -632,6 +632,7 @@ namespace Lexplosion.Logic.Management.Instances
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
+                UpdateAvailable = false;
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
 
@@ -657,6 +658,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                 launchGame.Run(data, ComplitedLaunch, GameExited, Name, true);
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                // TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
             }
             else
             {
@@ -692,24 +694,33 @@ namespace Lexplosion.Logic.Management.Instances
             switch (Type)
             {
                 case InstanceSource.Curseforge:
-                    if (!Int32.TryParse(infoData.id, out _))
                     {
-                        UpdateAvailable = true;
-                        return;
-                    }
-
-                    List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(infoData.id); //получем информацию об этом модпаке
-
-                    //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
-                    foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
-                    {
-                        if (ver.id > infoData.instanceVersion)
+                        if (!Int32.TryParse(infoData.id, out _))
                         {
                             UpdateAvailable = true;
                             return;
                         }
+
+                        List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(infoData.id); //получем информацию об этом модпаке
+
+                        //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
+                        foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
+                        {
+                            if (ver.id > infoData.instanceVersion)
+                            {
+                                UpdateAvailable = true;
+                                return;
+                            }
+                        }
                     }
                     break;
+                case InstanceSource.Nightworld:
+                    {
+                        int version = NightWorldApi.GetInstanceVersion(infoData.id);
+                        UpdateAvailable = (infoData.instanceVersion < version);
+                        return;
+                    }
+
             }
 
             UpdateAvailable = false;

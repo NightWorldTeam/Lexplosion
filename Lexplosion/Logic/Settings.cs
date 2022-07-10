@@ -81,7 +81,8 @@ namespace Lexplosion.Logic
                 WindowHeight = 480,
                 ShowConsole = false,
                 HiddenMode = false,
-                GameArgs = ""
+                GameArgs = "",
+                AutoUpdate = false
             };
         }
     }

@@ -32,8 +32,11 @@ namespace Lexplosion.Logic.Management
         private int stagesCount = 0;
         private int baseFaliseUpdatesCount = 0;
 
+        private int actualVersion = -1;
+
         public NightworldIntance(string instanceid, bool onlyBase_)
         {
+            Console.WriteLine("onlyBase_ = " + onlyBase_);
             InstanceId = instanceid;
             onlyBase = onlyBase_;
             installer = new NightWorldInstaller(instanceid);
@@ -54,6 +57,7 @@ namespace Lexplosion.Logic.Management
             {
                 version = NightWorldApi.GetInstanceVersion(InfoData.id);
                 requiresUpdates = version > InfoData.instanceVersion;
+                actualVersion = version;
             }
             else
             {
@@ -189,6 +193,13 @@ namespace Lexplosion.Logic.Management
 
                 gameVersion = manifest.version.gameVersion;
 
+                if (actualVersion == -1)
+                {
+                    int version_ = NightWorldApi.GetInstanceVersion(InfoData.id);
+                    if (version_ > 0)
+                        actualVersion = version_;
+                }
+
                 return InstanceInit.Successful;
             }
             else
@@ -199,6 +210,7 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
+            Console.WriteLine("NightWorld Update " + requiresUpdates);
             //Lexplosion.Run.TaskRun(delegate () {
             //    //try
             //    {
@@ -335,10 +347,19 @@ namespace Lexplosion.Logic.Management
                 errors = errors_;
             }
 
-            InstanceInit result = InstanceInit.Successful;
+            InstanceInit result;
             if (errors.Count > 0)
             {
                 result = InstanceInit.DownloadFilesError;
+            }
+            else
+            {
+                result = InstanceInit.Successful;
+                if (actualVersion != -1)
+                {
+                    InfoData.instanceVersion = actualVersion;
+                }
+                DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
             }
 
             return new InitData

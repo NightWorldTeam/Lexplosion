@@ -42,7 +42,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 try
                 {
-                    if (!updates.ContainsKey(dir) || updates[dir] < filesInfo.data[dir].folderVersion) //проверяем версию папки. если она старая - очищаем
+                    if (!updates.ContainsKey("/" + dir) || updates["/" + dir] < filesInfo.data[dir].folderVersion) //проверяем версию папки. если она старая - очищаем
                     {
                         if (Directory.Exists(folder))
                         {
@@ -50,7 +50,7 @@ namespace Lexplosion.Logic.FileSystem
                             Directory.CreateDirectory(folder);
                         }
 
-                        updates[dir] = filesInfo.data[dir].folderVersion;
+                        updates["/" + dir] = filesInfo.data[dir].folderVersion;
                     }
 
                     // TODO: тут из lastUpdates удалить все файлы из этой папки
@@ -118,7 +118,7 @@ namespace Lexplosion.Logic.FileSystem
                         //сверяем версию файла с его версией в списке, если версия старая, то отправляем файл на обновление
                         if (filesInfo.data[dir].objects.ContainsKey(fileName))
                         {
-                            if (!updates.ContainsKey(dir + "/" + fileName) || updates[dir + "/" + fileName] != filesInfo.data[dir].objects[fileName].lastUpdate)
+                            if (!updates.ContainsKey("/" + dir + "/" + fileName) || updates["/" + dir + "/" + fileName] != filesInfo.data[dir].objects[fileName].lastUpdate)
                             {
                                 if (!data.ContainsKey(dir)) //если директория отсутствует в data, то добавляем её 
                                 {
@@ -216,7 +216,7 @@ namespace Lexplosion.Logic.FileSystem
                     }
                     else
                     {
-                        updates[dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
+                        updates["/" + dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
                     }
 
                     updated++;
@@ -234,9 +234,9 @@ namespace Lexplosion.Logic.FileSystem
                 if (File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + file))
                 {
                     File.Delete(DirectoryPath + "/instances/" + instanceId + "/" + file);
-                    if (updates.ContainsKey(file))
+                    if (updates.ContainsKey("/" + file))
                     {
-                        updates.Remove(file);
+                        updates.Remove("/" + file);
 
                         updated++;
                         FilesDownloadEvent?.Invoke(updatesCount, updated);
@@ -263,7 +263,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     string path = DirectoryPath + "/instances/" + instanceId + "/" + file;
 
-                    if (!File.Exists(path) && !Directory.Exists(path))
+                    if (!File.Exists(path) && !Directory.Exists(path) && (file != "libraries" && file != "version"))
                     {
                         return true;
                     }

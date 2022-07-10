@@ -215,20 +215,20 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public InitData Update(ProgressHandlerCallback progressHandler)
+        public InitData Update(ProgressHandlerCallback progressHandler, bool onlyBase = false)
         {
             IPrototypeInstance instance;
 
             switch (_type)
             {
                 case InstanceSource.Nightworld:
-                    instance = new NightworldIntance(_instanceId, false);
+                    instance = new NightworldIntance(_instanceId, onlyBase);
                     break;
                 case InstanceSource.Local:
                     instance = new LocalInstance(_instanceId);
                     break;
                 case InstanceSource.Curseforge:
-                    instance = new CurseforgeInstance(_instanceId, false);
+                    instance = new CurseforgeInstance(_instanceId, onlyBase);
                     break;
                 default:
                     instance = null;
@@ -303,11 +303,9 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
-                bool autoUpdate = (_settings.AutoUpdate == true);
-
                 if (!UserData.Offline)
                 {
-                    return Update(progressHandler);
+                    return Update(progressHandler, (_settings.AutoUpdate == false));
                 }
                 else
                 {
