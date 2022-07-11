@@ -4,15 +4,17 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Windows;
+using System.Threading;
+using System.Runtime.InteropServices;
 using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
-using System.Threading;
 using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.Management.Instances;
+
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -30,6 +32,15 @@ namespace Lexplosion
 
         public static event Action ExitEvent;
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool ShowWindow(IntPtr hWnd, int showWindowCommand);
+
+
         [STAThread]
         static void Main()
         {
@@ -43,13 +54,24 @@ namespace Lexplosion
 
         private static void InitializedSystem()
         {
-            // получем количество процессов с таким же именем
-            int processesCount = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length;
+            // получем процессы с таким же именем (то есть пытаемся получить уже запущенную копию лаунчера)
+            Process[] procs = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
+            Process curenProcess = Process.GetCurrentProcess();
 
-            if (processesCount > 1)
+            // процессов больше одного. Знчит лаунечр уже запущен
+            if (procs.Length > 1)
             {
-                MessageBox.Show("Лаунчер уже запущен!");
-                Process.GetCurrentProcess().Kill(); //стопаем процесс
+                // делаем окно уже запущенного лаунечра активным
+                foreach (Process proc in procs)
+                {
+                    if (proc.Id != curenProcess.Id)
+                    {
+                        ShowWindow(proc.MainWindowHandle, 1);
+                        SetForegroundWindow(proc.MainWindowHandle);
+                    }
+                }
+
+                curenProcess.Kill(); //стопаем процесс
             }
 
             // Встраивание dll в exe
