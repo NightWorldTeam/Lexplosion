@@ -577,7 +577,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    try
+                    //try
                     {
                         List<List<string>> obtainingMethod = libraries[lib].obtainingMethod; // получаем метод
 
@@ -632,17 +632,39 @@ namespace Lexplosion.Logic.FileSystem
                                         break;
 
                                     case "moveFile":
-                                        string to = obtainingMethod[i][2].Replace("{DIR}", DirectoryPath).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
-                                        string from = obtainingMethod[i][1].Replace("{DIR}", DirectoryPath).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
-                                        if (File.Exists(to))
                                         {
-                                            File.Delete(to);
+                                            string from = obtainingMethod[i][1].Replace("{DIR}", DirectoryPath).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
+                                            string to = obtainingMethod[i][2].Replace("{DIR}", DirectoryPath).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
+                                            if (File.Exists(to))
+                                            {
+                                                File.Delete(to);
+                                            }
+                                            if (!Directory.Exists(to.Replace(Path.GetFileName(to), "")))
+                                            {
+                                                Directory.CreateDirectory(to.Replace(Path.GetFileName(to), ""));
+                                            }
+
+                                            File.Move(from, to);
+                                                
                                         }
-                                        if (!Directory.Exists(to.Replace(Path.GetFileName(to), "")))
+                                        break;
+                                    case "copyFile":
                                         {
-                                            Directory.CreateDirectory(to.Replace(Path.GetFileName(to), ""));
+                                            string from = obtainingMethod[i][1].Replace("{MINECRAFT_JAR}", DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name).Replace("//", "/");
+                                            string to = obtainingMethod[i][2].Replace("{DIR}", DirectoryPath).Replace("{TEMP_DIR}", tempDir).Replace("//", "/");
+                                            if (File.Exists(to))
+                                            {
+                                                File.Delete(to);
+                                            }
+
+                                            string d = to.Replace(Path.GetFileName(to), "");
+                                            if (!Directory.Exists(d))
+                                            {
+                                                Directory.CreateDirectory(d);
+                                            }
+
+                                            File.Copy(from, to);
                                         }
-                                        File.Move(from, to);
                                         break;
                                 }
                                 i++;
@@ -662,10 +684,10 @@ namespace Lexplosion.Logic.FileSystem
                             SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
                         }
                     }
-                    catch
+                    /*catch
                     {
                         errors.Add("libraries/" + lib);
-                    }
+                    }*/
 
                     updated++;
                     BaseDownloadEvent?.Invoke(updatesCount, updated);
