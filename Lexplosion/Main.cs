@@ -118,21 +118,21 @@ namespace Lexplosion
             //Console.WriteLine("TEST");
             ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=432&index=0&sortField=1&sortOrder=desc&pageSize=10&gameVersion=1.12.2&modLoaderType=0&searchFilter=
             ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&sortField=1&sortOrder=desc&pageSize=10&index=0
-            WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/minecraft/modloader/forge-14.23.5.2860");
-            req.Headers.Add("x-api-key", "$2a$10$d9HphjHPzYChRhMdu3gStu0DaJ5RGfgtogS1NIBG1c5sqhKSK6hBS");
-            ((HttpWebRequest)req).Accept = "application/json";
+            //WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/minecraft/modloader/forge-14.23.5.2860");
+            //req.Headers.Add("x-api-key", "$2a$10$d9HphjHPzYChRhMdu3gStu0DaJ5RGfgtogS1NIBG1c5sqhKSK6hBS");
+            //((HttpWebRequest)req).Accept = "application/json";
 
-            using (WebResponse resp = req.GetResponse())
-            {
-                using (Stream stream = resp.GetResponseStream())
-                {
-                    using (StreamReader sr = new StreamReader(stream))
-                    {
-                        Console.WriteLine("hfgjhf");
-                        Console.WriteLine(sr.ReadToEnd());
-                    }
-                }
-            }
+            //using (WebResponse resp = req.GetResponse())
+            //{
+            //    using (Stream stream = resp.GetResponseStream())
+            //    {
+            //        using (StreamReader sr = new StreamReader(stream))
+            //        {
+            //            Console.WriteLine("hfgjhf");
+            //            Console.WriteLine(sr.ReadToEnd());
+            //        }
+            //    }
+            //}
 
             Thread.Sleep(1000);
 
