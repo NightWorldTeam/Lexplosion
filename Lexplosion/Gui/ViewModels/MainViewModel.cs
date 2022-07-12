@@ -4,6 +4,7 @@ using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using Lexplosion.Tools.Immutable;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,81 +14,6 @@ using System.Windows.Controls;
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class ImmutableList<T> : IEnumerable<T>
-    {
-        private readonly List<T> _list;
-
-        public ImmutableList(List<T> list)
-        {
-            _list = list;
-        }
-
-        public List<T> ToList() => _list;
-
-        public T this[int index]
-        {
-            get => _list[index];
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return _list.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-    }
-
-    public class ImmutableArray<T> : IEnumerable<T>
-    {
-        private readonly T[] _array;
-
-        public ImmutableArray(T[]? array)
-        {
-            _array = _array;
-        }
-
-        public ImmutableArray(List<T> list)
-        {
-            _array = new T[list.Count];
-            for (var i = 0; i < list.Count; i++)
-            {
-                _array[i] = list[i];
-            }
-        }
-
-        public List<T> ToList()
-        {
-            var result = new List<T>();
-
-            foreach (var item in _array)
-            {
-                result.Add(item);
-            }
-
-            return result;
-        }
-
-        public T[] ToArray() => (T[])_array.Clone();
-
-        public T this[int index]
-        {
-            get => _array[index];
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return (IEnumerator<T>)_array.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-    }
-
     public class InstanceExport : VMBase
     {
         /// <summary>
@@ -195,6 +121,8 @@ namespace Lexplosion.Gui.ViewModels
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
         /// </summary>
         public static ImmutableArray<string> GameVersions { get; private set; }
+
+        public static ObservableCollection<object> Messages { get; private set; }
 
         #endregion statics
 

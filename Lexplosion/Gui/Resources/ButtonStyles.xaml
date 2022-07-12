@@ -84,7 +84,7 @@
 
     <Style x:Key="TagStyle" TargetType="Button">
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="TextBlock.SnapsToDevicePixels" Value="False" />
         <Setter Property="Height" Value="25" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontSize" Value="12" />
@@ -116,7 +116,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
     <Style x:Key="FolderBrowerButton" TargetType="{x:Type Button}">
         <Setter Property="Foreground" Value="#fff" />

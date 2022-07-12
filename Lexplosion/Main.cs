@@ -94,7 +94,7 @@ namespace Lexplosion
 
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri("pack://application:,,,/Controls/Themes/" + "Generic.xaml")
+                Source = new Uri("pack://application:,,,/Controls/DropdownMenu/Themes/" + "Generic.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
@@ -131,6 +131,10 @@ namespace Lexplosion
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(stylePath + "ComboBoxStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Controls/ToastMessage/" + "ToastMessage.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {

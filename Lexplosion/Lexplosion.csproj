@@ -97,7 +97,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
-    <Compile Include="Controls\DropdownMenu.cs" />
+    <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Gui\Converters\BooleanToColorConverter.cs" />
     <Compile Include="Gui\Converters\BytesToBitmapImageConventer.cs" />
@@ -220,6 +221,8 @@
     </Compile>
     <Compile Include="Logic\Pointer.cs" />
     <Compile Include="Logic\Management\User.cs" />
+    <Compile Include="Tools\Immutable\ImmutableArray.cs" />
+    <Compile Include="Tools\Immutable\ImmutableList.cs" />
     <Compile Include="Tools\ValuePair.cs" />
     <Compile Include="VMBase.cs" />
     <Compile Include="Logic\Aes.cs" />
@@ -270,9 +273,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Themes\Generic.xaml">
+    <Page Include="Controls\DropdownMenu\Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ToastMessage\ToastMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DataTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
