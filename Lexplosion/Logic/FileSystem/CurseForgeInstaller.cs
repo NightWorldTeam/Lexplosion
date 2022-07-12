@@ -14,6 +14,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -254,18 +255,14 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (filesCount != 0)
                 {
-                    Semaphore sem = new Semaphore(15, 15); // этот семафор нужен чтобы за раз не запустилось более 15 потоков
-                    ManualResetEvent endEvent = new ManualResetEvent(false); // эта хуйня сработает когда все потоки завершат работу и все аддоны будут скачаны
                     Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с фалом localFiles.json
+                    var perfomer = new TasksPerfomer(15, filesCount);
 
                     Console.WriteLine("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
                     foreach (InstanceManifest.FileData file in downloadList)
                     {
-                        sem.WaitOne();
-                        new Thread(delegate ()
+                        perfomer.ExecuteTask(delegate ()
                         {
-                            sem.WaitOne();
-
                             var result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
 
                             if (result.Value2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
@@ -286,7 +283,6 @@ namespace Lexplosion.Logic.FileSystem
                                     // все попытки были неудачными. возвращаем ошибку
                                     if (result.Value2 != CurseforgeApi.DownloadAddonRes.Successful)
                                     {
-                                        sem.Release();
                                         Console.WriteLine("GFDGS пизда " + result.Value2);
                                         //errors.Add(file.projectID + " " + file.fileID);
                                         return;
@@ -294,7 +290,6 @@ namespace Lexplosion.Logic.FileSystem
                                 }
                                 else
                                 {
-                                    sem.Release();
                                     //errors.Add(file.projectID + " " + file.fileID);
                                     return;
                                 }
@@ -308,21 +303,12 @@ namespace Lexplosion.Logic.FileSystem
 
                             i++;
                             AddonsDownloadEvent?.Invoke(addonsCount, i);
+                        });
 
-                            filesCount--;
-                            if (filesCount == 0)
-                            {
-                                endEvent.Set();
-                            }
-
-                            sem.Release();
-                        }).Start();
-
-                        sem.Release();
                     }
 
                     Console.WriteLine("ЖДЁМ КОНЦА ");
-                    endEvent.WaitOne();
+                    perfomer.WaitEnd();
                     Console.WriteLine("КОНЕЦ ");
                 }
 

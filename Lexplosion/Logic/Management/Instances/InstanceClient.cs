@@ -788,7 +788,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     using (var webClient = new WebClient())
                     {
-                        Logo = webClient.DownloadData(url);
+                        //Logo = webClient.DownloadData(url);
                         callback();
                     }
                 }
