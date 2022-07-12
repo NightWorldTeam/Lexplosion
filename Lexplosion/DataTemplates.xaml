@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
     xmlns:factorymenu="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
     xmlns:models="clr-namespace:Lexplosion.Gui.Models"
@@ -93,4 +94,5 @@
     <DataTemplate DataType="{x:Type vmfactorymenu:FactoryDLCVM}">
         <factorymenu:FactoryDLCView />
     </DataTemplate>
+
 </ResourceDictionary>

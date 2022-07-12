@@ -99,6 +99,7 @@
     <Compile Include="App.xaml.cs" />
     <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Gui\Converters\BooleanToColorConverter.cs" />
     <Compile Include="Gui\Converters\BytesToBitmapImageConventer.cs" />

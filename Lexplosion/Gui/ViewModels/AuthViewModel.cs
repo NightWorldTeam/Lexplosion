@@ -57,6 +57,8 @@ namespace Lexplosion.Gui.ViewModels
                     AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe);
                     App.Current.Dispatcher.Invoke(() => 
                     {
+                        MainViewModel.ShowToastMessage("Test Header", "Some Message...", Controls.ToastMessageState.Error);
+                        MainViewModel.ShowToastMessage("Test Header1", "Some Message...", Controls.ToastMessageState.Notification);
                         switch (authCode) 
                         {
                             case AuthCode.Successfully:

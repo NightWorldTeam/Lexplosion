@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Helpers;
+﻿using Lexplosion.Controls;
+using Lexplosion.Gui.Helpers;
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
@@ -122,10 +123,17 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public static ImmutableArray<string> GameVersions { get; private set; }
 
-        public static ObservableCollection<object> Messages { get; private set; }
+        public static ObservableCollection<ToastMessageModel> Messages { get; private set; } = new ObservableCollection<ToastMessageModel>();
+
+
+        public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification) 
+        {
+            var model = new ToastMessageModel(header, message, state);
+
+            Messages.Add(model);
+        }
 
         #endregion statics
-
 
         #region props
 

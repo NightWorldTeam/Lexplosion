@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Lexplosion.Controls
 {
@@ -24,8 +25,10 @@ namespace Lexplosion.Controls
             DependencyProperty.Register("Message", typeof(string), typeof(ToastMessage), new PropertyMetadata());
 
         public static readonly DependencyProperty StateProperty =
-            DependencyProperty.Register("State", typeof(ToastMessageState), typeof(ToastMessage), new PropertyMetadata());
+            DependencyProperty.Register("State", typeof(ToastMessageState), typeof(ToastMessage), new PropertyMetadata(ToastMessageState.Notification   ));
 
+        public static readonly DependencyProperty CloseCommandProperty = 
+            DependencyProperty.Register("CloseCommand", typeof(ICommand), typeof(ToastMessage), new PropertyMetadata());
 
         public string Header 
         {
@@ -43,6 +46,12 @@ namespace Lexplosion.Controls
         {
             get => (ToastMessageState)GetValue(StateProperty);
             set => SetValue(StateProperty, value);
+        }
+
+        public ICommand CloseCommand 
+        {
+            get => (ICommand)GetValue(CloseCommandProperty);
+            set => SetValue(CloseCommandProperty, value);
         }
 
         static ToastMessage() 

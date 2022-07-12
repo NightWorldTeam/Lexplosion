@@ -519,51 +519,31 @@
             </Border>
         </Grid>
 
-        <!--  Message Box without header  -->
-
-        <Border
+        <ScrollViewer
             Grid.Row="1"
-            Width="300"
-            Margin="0,15,30,0"
-            HorizontalAlignment="Right"
+            MaxHeight="300"
             VerticalAlignment="Top"
-            Background="#167FFC"
-            CornerRadius="5"
-            Visibility="Hidden">
-            <Grid>
-                <TextBlock
-                    Width="255"
-                    Margin="0,10,10,10"
-                    Background="Transparent"
-                    Foreground="White"
-                    Text="Please remember to close your threads by marking helpful posts as answer and then start a new thread if you have a new question. Please don't ask several questions in the same thread."
-                    TextWrapping="WrapWithOverflow" />
+            HorizontalAlignment="Right"
+            VerticalScrollBarVisibility="Hidden">
+            <ItemsControl
+                Width="360"
+                ItemsSource="{Binding Messages, Source={StaticResource MainVM}}"
+                ScrollViewer.CanContentScroll="True"
+                Padding="0,0,0,20">
+                <ItemsControl.Background>
+                    <SolidColorBrush Opacity="0.2" Color="Black" />
+                </ItemsControl.Background>
 
-                <Button
-                    Width="25"
-                    Height="25"
-                    Margin="0,0,10,10"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Style="{StaticResource IconicButton}">
-                    <Viewbox
-                        Width="16"
-                        Height="16"
-                        Stretch="Fill">
-                        <Path
-                            Data="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z"
-                            Fill="WhiteSmoke"
-                            StrokeThickness="2" />
-                    </Viewbox>
-                </Button>
-            </Grid>
-        </Border>
-
-        <!--  Message Box with header  -->
-        <!--<controls:ToastMessage
-            Grid.Row="1"
-            Header="TestHeader"
-            Message="TestMessage"
-            State="Notification" />-->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type controls:ToastMessageModel}">
+                        <controls:ToastMessage
+                            CloseCommand="{Binding CloseToastMessage}"
+                            Header="{Binding Header}"
+                            Message="{Binding Message}"
+                            State="{Binding State}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>
