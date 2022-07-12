@@ -122,30 +122,33 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public void InstanceDownloadCompleted(InstanceInit result, List<string> downloadErrors, bool IsGameRun)
         {
-            switch (result)
+            App.Current.Dispatcher.Invoke(() =>
             {
-                case InstanceInit.Successful:
-                    {
-                        IsDownloadInProgress = false;
-                        _instanceFormModel.UpperButton.ChangeFuncPlay();
-                        _instanceFormModel.UpdateLowerButton();
-                    }
-                    break;
-                case InstanceInit.DownloadFilesError:
-                    {
-                        IsDownloadInProgress = false;
-                        _instanceFormModel.UpperButton.ChangeFuncDownload(true);
-                        foreach (var de in downloadErrors)
+                switch (result)
+                {
+                    case InstanceInit.Successful:
                         {
-                            MainViewModel.ShowToastMessage("Download Complited with Error:", de, Controls.ToastMessageState.Error);
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncPlay();
+                            _instanceFormModel.UpdateLowerButton();
                         }
-                    }
-                    break;
-                default:
-                    IsDownloadInProgress = false;
-                    break;
-            }
-            _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
+                        break;
+                    case InstanceInit.DownloadFilesError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Download Complited with Error:", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    default:
+                        IsDownloadInProgress = false;
+                        break;
+                }
+                _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
+            }); 
         }
 
         public void CancelInstanceDownload() 
