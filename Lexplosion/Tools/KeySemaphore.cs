@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 
-namespace Lexplosion.Logic
+namespace Lexplosion.Tools
 {
     class KeySemaphore<T>
     {

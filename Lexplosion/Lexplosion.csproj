@@ -220,7 +220,7 @@
     <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Logic\Pointer.cs" />
+    <Compile Include="Tools\Pointer.cs" />
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Tools\Immutable\ImmutableArray.cs" />
     <Compile Include="Tools\Immutable\ImmutableList.cs" />
@@ -233,7 +233,7 @@
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
     <Compile Include="Logic\FileSystem\InstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\NightWorldInstaller.cs" />
-    <Compile Include="Logic\KeySemaphore.cs" />
+    <Compile Include="Tools\KeySemaphore.cs" />
     <Compile Include="Logic\Management\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
     <Compile Include="Logic\Management\Instances\InstanceAddon.cs" />
@@ -268,7 +268,7 @@
     <Compile Include="Logic\Objects\Curseforge.cs" />
     <Compile Include="Logic\Objects\Nightworld.cs" />
     <Compile Include="Logic\Settings.cs" />
-    <Compile Include="Logic\StreamList.cs" />
+    <Compile Include="Tools\StreamList.cs" />
     <Compile Include="Logic\Сryptography.cs" />
     <Compile Include="Main.cs" />
     <Page Include="App.xaml">

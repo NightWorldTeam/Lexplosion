@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows;
 
-namespace Lexplosion.Logic
+namespace Lexplosion.Tools
 {
     class StreamList
     {

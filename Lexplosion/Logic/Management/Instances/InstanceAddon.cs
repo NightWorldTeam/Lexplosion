@@ -5,14 +5,15 @@ using System.IO.Compression;
 using System.Threading;
 using System.Net;
 using System.Collections.Concurrent;
+using System;
 using Tommy;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Tools;
 using static Lexplosion.Logic.Network.CurseforgeApi;
-using System;
 
 namespace Lexplosion.Logic.Management.Instances
 {
