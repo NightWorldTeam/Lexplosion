@@ -13,6 +13,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Network;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -719,29 +720,45 @@ namespace Lexplosion.Logic.FileSystem
             // скачиваем файлы objects
             if (assets.objects != null)
             {
+                var perfomer = new TasksPerfomer(15, assets.objects.Count);
                 foreach (string asset in assets.objects.Keys)
                 {
-                    string assetHash = assets.objects[asset].hash;
-                    if (assetHash != null)
+                    perfomer.ExecuteTask(delegate ()
                     {
-                        string assetPath = "/" + assetHash.Substring(0, 2);
-                        if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
+                        string assetHash = assets.objects[asset].hash;
+                        if (assetHash != null)
                         {
-                            if (!InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
+                            string assetPath = "/" + assetHash.Substring(0, 2);
+                            if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                             {
-                                errors.Add("asstes: " + asset);
+                                bool flag = false;
+                                for (int i = 0; i < 3; i++) // 3 попытки делаем
+                                {
+                                    if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
+                                    {
+                                        flag = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!flag)
+                                {
+                                    errors.Add("asstes: " + asset);
+                                }
+
+
+                                updated++;
+                                BaseDownloadEvent?.Invoke(updatesCount, updated);
                             }
-
-                            updated++;
-                            BaseDownloadEvent?.Invoke(updatesCount, updated);
                         }
-                    }
-                    else
-                    {
-                        errors.Add("asstes: " + asset);
-                    }
-
+                        else
+                        {
+                            errors.Add("asstes: " + asset);
+                        }
+                    });
                 }
+
+                perfomer.WaitEnd();
             }
             else
             {

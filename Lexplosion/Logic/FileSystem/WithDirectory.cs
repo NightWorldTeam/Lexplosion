@@ -78,8 +78,9 @@ namespace Lexplosion.Logic.FileSystem
                 Console.WriteLine("RETURN TRUE ");
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(url + " " + ex);
                 if (tempDir != null)
                 {
                     DelFile(tempDir + fileName);

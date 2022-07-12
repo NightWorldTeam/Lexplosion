@@ -80,11 +80,11 @@ namespace Lexplosion.Logic.Network
             string url;
             if (categoriy == ModpacksCategories.All)
             {
-                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&index=0&sortField=1&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&sortField=1&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             }
             else
             {
-                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&index=0&sortField=1&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&sortField=1&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             }
 
             return GetApiData<List<CurseforgeInstanceInfo>>(url);

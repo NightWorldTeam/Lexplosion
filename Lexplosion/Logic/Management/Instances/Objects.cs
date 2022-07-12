@@ -25,15 +25,26 @@ namespace Lexplosion.Logic.Management.Instances
         /// Означает что все вложенные файлы и папки должны быть экспортированны из этой папки.
         /// </summary>
         public bool AllUnits = true;
+
+        /// <summary>
+        /// Ипсользуется только если этот элемент является папкой (IsFile равно false).  
+        /// Указывает на то, есть ли в папке файлы.
+        /// </summary>
+        public bool HasItems
+        {
+            get => IsFile;
+        }
+
         /// <summary>
         /// Собстна если этот эоемент файл - то значение true, если папка, то false.
         /// </summary>
         public bool IsFile;
+
+        private Dictionary<string, PathLevel> _unitsList;
         /// <summary>
         /// Ипсользуется только если этот элемент является папкой (IsFile равно false) и если AllUnits имеет значение false. 
         /// Содержит список вложенных элементов, которые должны быть экспортированы из этой папки.
         /// </summary>
-        private Dictionary<string, PathLevel> _unitsList;
         public Dictionary<string, PathLevel> UnitsList 
         {
             get => _unitsList; set 
