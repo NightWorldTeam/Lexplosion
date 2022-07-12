@@ -256,7 +256,10 @@ namespace Lexplosion.Logic.FileSystem
                 if (filesCount != 0)
                 {
                     Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с фалом localFiles.json
-                    var perfomer = new TasksPerfomer(15, filesCount);
+
+                    TasksPerfomer perfomer = null;
+                    if (filesCount > 0)
+                        perfomer = new TasksPerfomer(15, filesCount);
 
                     Console.WriteLine("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
                     foreach (InstanceManifest.FileData file in downloadList)
@@ -308,7 +311,7 @@ namespace Lexplosion.Logic.FileSystem
                     }
 
                     Console.WriteLine("ЖДЁМ КОНЦА ");
-                    perfomer.WaitEnd();
+                    perfomer?.WaitEnd();
                     Console.WriteLine("КОНЕЦ ");
                 }
 

@@ -720,7 +720,10 @@ namespace Lexplosion.Logic.FileSystem
             // скачиваем файлы objects
             if (assets.objects != null)
             {
-                var perfomer = new TasksPerfomer(15, assets.objects.Count);
+                TasksPerfomer perfomer = null;
+                if (assets.objects.Count > 0)
+                    perfomer = new TasksPerfomer(15, assets.objects.Count);
+
                 foreach (string asset in assets.objects.Keys)
                 {
                     perfomer.ExecuteTask(delegate ()
@@ -758,7 +761,7 @@ namespace Lexplosion.Logic.FileSystem
                     });
                 }
 
-                perfomer.WaitEnd();
+                perfomer?.WaitEnd();
             }
             else
             {

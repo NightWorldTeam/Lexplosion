@@ -637,6 +637,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
+            Console.WriteLine("UpdateInstance-end " + data.InitResult);
         }
 
         /// <summary>
@@ -664,6 +665,8 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
             }
+
+            Console.WriteLine("Run-end " + data.InitResult);
         }
 
         /// <summary>
@@ -788,7 +791,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     using (var webClient = new WebClient())
                     {
-                        //Logo = webClient.DownloadData(url);
+                        Logo = webClient.DownloadData(url);
                         callback();
                     }
                 }
