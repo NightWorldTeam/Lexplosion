@@ -133,8 +133,8 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Коллекция [Словарь] который обновляется при добавлении в него значений.
         /// </summary>
-        private ObservableDictionary<string, PathLevel> _unitsList;
-        public ObservableDictionary<string, PathLevel> UnitsList
+        private Dictionary<string, PathLevel> _unitsList;
+        public Dictionary<string, PathLevel> UnitsList
         {
             get => _unitsList; set
             {
@@ -150,8 +150,12 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => new RelayCommand(obj =>
             {
-                var s = obj as string;
-                LoadDirContent(s);
+                if (obj == null)
+                    return;
+
+                // key - directory, value - pathlevel class
+                var keyvaluepair = (KeyValuePair<string, PathLevel>)obj;
+                LoadDirContent(keyvaluepair.Key);
             });
         }
 
@@ -161,10 +165,12 @@ namespace Lexplosion.Gui.ViewModels
         /// <param name="dir"></param>
         private void LoadDirContent(string dir) 
         {
-            if (LoadedDirectories.Contains(dir))
+            if (LoadedDirectories.Contains(dir) || dir == null)
                 return;
+
             if (!UnitsList[dir].IsFile)
                 UnitsList[dir].UnitsList = _instanceClient.GetPathContent(dir);
+
             LoadedDirectories.Add(dir);
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lexplosion.Gui.Helpers;
 using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Instances
@@ -17,7 +18,7 @@ namespace Lexplosion.Logic.Management.Instances
     /// <summary>
     /// Нужен для экспорта сборки. Содержит описание элемента директории модпака (папки или файла)
     /// </summary>
-    public class PathLevel
+    public class PathLevel : VMBase
     {
         /// <summary>
         /// Ипсользуется только если этот элемент является папкой (IsFile равно false).  
@@ -32,7 +33,15 @@ namespace Lexplosion.Logic.Management.Instances
         /// Ипсользуется только если этот элемент является папкой (IsFile равно false) и если AllUnits имеет значение false. 
         /// Содержит список вложенных элементов, которые должны быть экспортированы из этой папки.
         /// </summary>
-        public Dictionary<string, PathLevel> UnitsList;
+        private Dictionary<string, PathLevel> _unitsList;
+        public Dictionary<string, PathLevel> UnitsList 
+        {
+            get => _unitsList; set 
+            {
+                _unitsList = value;
+                OnPropertyChanged();
+            }
+        }
     }
 
     /// <summary>

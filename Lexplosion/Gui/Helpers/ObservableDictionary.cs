@@ -9,7 +9,7 @@ namespace Lexplosion.Gui.Helpers
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableDictionary() { }
+        public  ObservableDictionary() { }
 
         public ObservableDictionary(Dictionary<TKey, TValue> dict) 
         {

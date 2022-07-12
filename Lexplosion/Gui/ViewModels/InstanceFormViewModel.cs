@@ -109,7 +109,12 @@ namespace Lexplosion.Gui.ViewModels
                         _mainViewModel.InstanceExport.InstanceName = _instanceClient.Name;
                         _mainViewModel.InstanceExport.IsFullExport = true;
                         _mainViewModel.InstanceExport.InstanceClient = _instanceClient;
-                        _mainViewModel.InstanceExport.UnitsList = new ObservableDictionary<string, PathLevel>(_instanceClient.GetPathContent());
+                        _mainViewModel.InstanceExport.UnitsList = _instanceClient.GetPathContent();
+
+                        foreach (var s in _mainViewModel.InstanceExport.UnitsList.Keys) 
+                        {
+                            Console.WriteLine(s);
+                        }
                         break;
                 }
             }));

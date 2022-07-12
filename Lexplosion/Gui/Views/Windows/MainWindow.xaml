@@ -283,17 +283,20 @@
                                 Height="180"
                                 Background="Transparent"
                                 BorderBrush="Transparent"
-                                ItemsSource="{Binding InstanceExport.UnitsList}">
+                                ItemsSource="{Binding InstanceExport.UnitsList, Source={StaticResource MainVM}}"
+                                VirtualizingStackPanel.IsVirtualizing="True"
+                                VirtualizingStackPanel.VirtualizationMode="Standard">
                                 <TreeView.Resources>
                                     <Style TargetType="{x:Type TreeViewItem}">
                                         <Setter Property="Foreground" Value="White" />
                                         <Setter Property="FontWeight" Value="Medium" />
-                                        <Setter Property="behaviors:TreeViewItemExpanded.Command" Value="{Binding TreeViewItemExpanded, Source={StaticResource MainVM}}" />
-                                        <Setter Property="behaviors:TreeViewItemExpanded.CommandParameter" Value="{Binding Path=Header, RelativeSource={RelativeSource Self}}" />
+                                        <Setter Property="IsExpanded" Value="True" />
+                                        <Setter Property="behaviors:TreeViewItemExpanded.Command" Value="{Binding InstanceExport.TreeViewItemExpanded, Source={StaticResource MainVM}}" />
+                                        <Setter Property="behaviors:TreeViewItemExpanded.CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
                                     </Style>
                                 </TreeView.Resources>
                                 <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding Value}">
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Value.UnitsList}">
                                         <TextBlock Text="{Binding Key}" />
                                     </HierarchicalDataTemplate>
                                 </TreeView.ItemTemplate>
