@@ -522,14 +522,14 @@
         <ScrollViewer
             Grid.Row="1"
             MaxHeight="300"
-            VerticalAlignment="Top"
             HorizontalAlignment="Right"
+            VerticalAlignment="Top"
             VerticalScrollBarVisibility="Hidden">
             <ItemsControl
                 Width="360"
+                Padding="0,0,0,20"
                 ItemsSource="{Binding Messages, Source={StaticResource MainVM}}"
-                ScrollViewer.CanContentScroll="True"
-                Padding="0,0,0,20">
+                ScrollViewer.CanContentScroll="True">
                 <ItemsControl.Background>
                     <SolidColorBrush Opacity="0.2" Color="Black" />
                 </ItemsControl.Background>
@@ -544,6 +544,15 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <ScrollViewer.Resources>
+                <Style TargetType="{x:Type ScrollViewer}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Messages.Count, Source={StaticResource MainVM}}" Value="0">
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Resources>
         </ScrollViewer>
     </Grid>
 </Window>
