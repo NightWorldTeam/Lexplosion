@@ -30,6 +30,9 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty CloseCommandProperty = 
             DependencyProperty.Register("CloseCommand", typeof(ICommand), typeof(ToastMessage), new PropertyMetadata());
 
+        //public static readonly DependencyProperty VisibilityTimeProperty =
+        //    DependencyProperty.Register("VisibilityTime", typeof(double), typeof(ToastMessage), new PropertyMetadata(-1));
+
         public string Header 
         {
             get => (string)GetValue(HeaderProperty);
@@ -53,6 +56,12 @@ namespace Lexplosion.Controls
             get => (ICommand)GetValue(CloseCommandProperty);
             set => SetValue(CloseCommandProperty, value);
         }
+
+        //public double VisibilityTime 
+        //{
+        //    get => (double)GetValue(VisibilityTimeProperty);
+        //    set => SetValue(VisibilityTimeProperty, value);
+        //}
 
         static ToastMessage() 
         {

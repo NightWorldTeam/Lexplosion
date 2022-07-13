@@ -69,10 +69,37 @@
                     </Border>
 
                     <ControlTemplate.Triggers>
+
+                        <!--<EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetProperty="Opacity"
+                                        From="1"
+                                        To="1"
+                                        Duration="0:0:3" />
+                        -->
+                        <!--  label shows for 3 sec  -->
+                        <!--
+                                    <DoubleAnimation
+                                        BeginTime="0:0:3"
+                                        DecelerationRatio=".5"
+                                        Storyboard.TargetProperty="Opacity"
+                                        From="1"
+                                        To="0"
+                                        Duration="0:0:2" />
+                        -->
+                        <!--  Fade out the label after 3 sec  -->
+                        <!--
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>-->
+
                         <DataTrigger Binding="{Binding State, RelativeSource={RelativeSource Self}}" Value="Error">
                             <Setter TargetName="Body" Property="Background" Value="#dc3546" />
                             <Setter TargetName="Header" Property="Background" Value="#d53243" />
                         </DataTrigger>
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

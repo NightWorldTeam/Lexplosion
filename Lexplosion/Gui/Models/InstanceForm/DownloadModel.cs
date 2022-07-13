@@ -129,6 +129,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     case InstanceInit.Successful:
                         {
                             IsDownloadInProgress = false;
+                            MainViewModel.ShowToastMessage(
+                                "Download Successfully Completed",
+                                "Название: " + _instanceFormModel.InstanceClient.Name + 
+                                "\nВерсия: " + _instanceFormModel.InstanceClient.GameVersion
+                                );
                             _instanceFormModel.UpperButton.ChangeFuncPlay();
                             _instanceFormModel.UpdateLowerButton();
                         }
@@ -139,12 +144,107 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             _instanceFormModel.UpperButton.ChangeFuncDownload(true);
                             foreach (var de in downloadErrors)
                             {
-                                MainViewModel.ShowToastMessage("Download Complited with Error:", de, Controls.ToastMessageState.Error);
+                                MainViewModel.ShowToastMessage("Download Files Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    case InstanceInit.NightworldIdError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Nightworld Id Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    case InstanceInit.CursforgeIdError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Curseforge Id Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    case InstanceInit.ServerError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Server Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    case InstanceInit.GuardError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Guard Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    case InstanceInit.VersionError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Version Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    case InstanceInit.ForgeVersionError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Forge Version Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    case InstanceInit.GamePathError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Game Path Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break;
+                    case InstanceInit.ManifestError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Manifest Error", de, Controls.ToastMessageState.Error);
+                            }
+                        }
+                        break; 
+                    case InstanceInit.JavaDownloadError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            foreach (var de in downloadErrors)
+                            {
+                                MainViewModel.ShowToastMessage("Java Download Error", de, Controls.ToastMessageState.Error);
                             }
                         }
                         break;
                     default:
                         IsDownloadInProgress = false;
+                        _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                        foreach (var de in downloadErrors)
+                        {
+                            MainViewModel.ShowToastMessage("Unknown Error", de, Controls.ToastMessageState.Error);
+                        }
                         break;
                 }
                 _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
