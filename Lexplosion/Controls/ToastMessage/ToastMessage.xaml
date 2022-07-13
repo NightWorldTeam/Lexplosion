@@ -96,8 +96,8 @@
                         </EventTrigger>-->
 
                         <DataTrigger Binding="{Binding State, RelativeSource={RelativeSource Self}}" Value="Error">
-                            <Setter TargetName="Body" Property="Background" Value="#dc3546" />
-                            <Setter TargetName="Header" Property="Background" Value="#d53243" />
+                            <Setter TargetName="Body" Property="Background" Value="#c21325" />
+                            <Setter TargetName="Header" Property="Background" Value="#b51828" />
                         </DataTrigger>
 
                     </ControlTemplate.Triggers>

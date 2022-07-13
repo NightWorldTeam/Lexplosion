@@ -531,7 +531,7 @@
                 ItemsSource="{Binding Messages, Source={StaticResource MainVM}}"
                 ScrollViewer.CanContentScroll="True">
                 <ItemsControl.Background>
-                    <SolidColorBrush Opacity="0.2" Color="Black" />
+                    <SolidColorBrush Opacity="0.1" Color="Transparent" />
                 </ItemsControl.Background>
 
                 <ItemsControl.ItemTemplate>

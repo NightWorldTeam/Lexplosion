@@ -131,7 +131,7 @@ namespace Lexplosion.Logic.Network
                 data.Add(new List<string>() { "str2", str2 });
                 data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
 
-                //try
+                try
                 {
                     string modloaderUrl = "";
                     if (!string.IsNullOrEmpty(modloaderVersion))
@@ -156,7 +156,6 @@ namespace Lexplosion.Logic.Network
                         answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
                         DataVersionManifest filesData = JsonConvert.DeserializeObject<DataVersionManifest>(answer);
-
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
                             Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
@@ -194,11 +193,11 @@ namespace Lexplosion.Logic.Network
                         return null;
                     }
                 }
-                /*catch
+                catch
                 {
                     MessageBox.Show("null3");
                     return null;
-                }*/
+                }
             }
         }
 

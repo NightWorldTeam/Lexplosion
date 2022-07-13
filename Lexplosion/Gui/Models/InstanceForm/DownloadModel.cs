@@ -172,10 +172,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload(true);
-                            foreach (var de in downloadErrors)
-                            {
-                                MainViewModel.ShowToastMessage("Server Error", de, Controls.ToastMessageState.Error);
-                            }
+                            MainViewModel.ShowToastMessage("Server Error", "Не удалось получить данные с сервера.\nИгорёша просто не хочет дописывать парсер.\nПростите)))", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.GuardError:
