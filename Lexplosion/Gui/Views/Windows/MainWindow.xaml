@@ -503,7 +503,7 @@
                             Width="100"
                             Height="31.5"
                             Background="DarkRed"
-                            Command="{Binding ExportInstance, Source={StaticResource MainVM}}"
+                            Command="{Binding CancelExport, Source={StaticResource MainVM}}"
                             Content="Отмена"
                             Style="{StaticResource DefaultCloseButton}" />
 
@@ -511,7 +511,7 @@
                             Width="100"
                             Height="30"
                             Margin="10,0,0,0"
-                            Command="{Binding CancelExport, Source={StaticResource MainVM}}"
+                            Command="{Binding ExportInstance, Source={StaticResource MainVM}}"
                             Content="Экспорт"
                             Style="{StaticResource DefaultBrandColorButton}" />
                     </StackPanel>

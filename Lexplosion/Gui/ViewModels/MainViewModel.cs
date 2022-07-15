@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -99,6 +100,19 @@ namespace Lexplosion.Gui.ViewModels
                 UnitsList[dir].UnitsList = _instanceClient.GetPathContent(dir);
 
             LoadedDirectories.Add(dir);
+        }
+
+        public void Export() 
+        {
+            var exportPath = @"C:\Users\GamerStorm_Hel2x_\night-world\export";
+            var fbd = new System.Windows.Forms.FolderBrowserDialog();
+            fbd.SelectedPath = exportPath;
+            var result = fbd.ShowDialog();
+            if (result.ToString() != String.Empty) 
+            {
+                exportPath = fbd.SelectedPath;
+            }
+            InstanceClient.Export(UnitsList, exportPath);
         }
     }
 
@@ -231,6 +245,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => new RelayCommand(obj =>
             {
+                InstanceExport.Export();
                 IsExporting = false;
             });
         }
@@ -246,7 +261,6 @@ namespace Lexplosion.Gui.ViewModels
                 IsExporting = false;
             });
         }
-
         #endregion
 
 
