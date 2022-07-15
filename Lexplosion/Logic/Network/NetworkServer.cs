@@ -104,7 +104,7 @@ namespace Lexplosion.Logic.Network
         {
             //подключаемся к управляющему серверу
             controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
-            controlConnection.ReceiveTimeout = 10000;
+            //controlConnection.ReceiveTimeout = 10000;
 
             string st =
                 "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\", \"sessionToken\" : \"" + _sessionToken + "\"}";
