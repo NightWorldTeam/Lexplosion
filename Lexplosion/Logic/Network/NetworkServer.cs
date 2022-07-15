@@ -1,9 +1,10 @@
-﻿using LumiSoft.Net.STUN.Client;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Collections.Concurrent;
+using LumiSoft.Net.STUN.Client;
 
 namespace Lexplosion.Logic.Network
 {
@@ -40,6 +41,9 @@ namespace Lexplosion.Logic.Network
         public event Action<string> ConnectingUser;
         public event Action<string> DisconnectedUser;
 
+        protected ConcurrentDictionary<string, IPEndPoint> UuidPointPair;
+        protected ConcurrentDictionary<IPEndPoint, string> PointUuidPair;
+
         public NetworkServer(string uuid, string accessToken, string serverType, bool directConnection, string controlServer)
         {
             UUID = uuid;
@@ -53,6 +57,10 @@ namespace Lexplosion.Logic.Network
 
             SendingWait = new AutoResetEvent(false);
             ReadingWait = new AutoResetEvent(false);
+
+            // тут хранится список клиентов. В одном соответсвие uuid и ip, в другом наоборот
+            UuidPointPair = new ConcurrentDictionary<string, IPEndPoint>();
+            PointUuidPair = new ConcurrentDictionary<IPEndPoint, string>();
 
             controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -220,6 +228,9 @@ namespace Lexplosion.Logic.Network
                             Console.WriteLine("КОННЕКТ!!!");
                             if (BeforeConnect(point))
                             {
+                                UuidPointPair[clientUUID] = point;
+                                PointUuidPair[point] = clientUUID;
+
                                 ConnectingUser?.Invoke(clientUUID);
                                 Console.WriteLine("КОННЕКТ2!!!");
                                 SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
@@ -261,6 +272,16 @@ namespace Lexplosion.Logic.Network
             Server.StopWork();
         }
 
+        public void KickClient(string uuid)
+        {
+            try
+            {
+                IPEndPoint point = UuidPointPair[uuid];
+                ClientAbort(point);
+            }
+            catch { }
+        }
+
         private void MaintainingConnection()
         {
             try
@@ -278,7 +299,13 @@ namespace Lexplosion.Logic.Network
             catch { }
         }
 
-        protected abstract void ClientAbort(IPEndPoint point); // мeтод который вызывается при обрыве соединения
+        protected virtual void ClientAbort(IPEndPoint point) // мeтод который вызывается при обрыве соединения
+        {
+            PointUuidPair.TryRemove(point, out string clientUuid);
+            UuidPointPair.TryRemove(clientUuid, out _);
+
+            DisconnectedUser?.Invoke(clientUuid);
+        }
 
         protected abstract bool BeforeConnect(IPEndPoint point); // это метод который запускается после установления соединения
 

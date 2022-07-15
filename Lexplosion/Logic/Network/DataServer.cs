@@ -157,6 +157,8 @@ namespace Lexplosion.Logic.Network
             AuthorizedClients.Remove(point);
             OffsetsList.Remove(point);
 
+            base.ClientAbort(point);
+
             AcceptingBlock.Release();
             SendingBlock.Release();
         }

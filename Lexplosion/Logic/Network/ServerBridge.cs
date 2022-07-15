@@ -46,6 +46,8 @@ namespace Lexplosion.Logic.Network
                 ClientsPoints.TryRemove(Connections[point], out _);
                 Connections.TryRemove(point, out Socket sock);
                 sock.Close(); //зыкрываем соединение
+
+                base.ClientAbort(point);
             }
 
             AcceptingBlock.Release();
