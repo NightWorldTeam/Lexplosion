@@ -877,7 +877,6 @@ namespace Lexplosion.Logic.Management.Instances
             DataFilesManager.SaveSettings(settings, _localId);
         }
 
-
         /// <summary>
         /// Возвращает список файлов и папок данной директории в папки модпака. 
         /// </summary>
@@ -932,6 +931,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <returns>Результат экспорта.</returns>
         public ExportResult Export(Dictionary<string, PathLevel> exportList, string exportFile)
         {
+            exportFile += "/" + _localId + ".zip";
             string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
 
             void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList)

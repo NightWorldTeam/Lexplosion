@@ -28,7 +28,7 @@ namespace Lexplosion.Logic.Network
             ControlServer = controlServer;
         }
 
-        public virtual bool Initialization(string UUID, string accessToken, string serverUUID)
+        public virtual bool Initialization(string UUID, string sessionToken, string serverUUID)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Lexplosion.Logic.Network
                 client.Connect(ControlServer, 4565);
 
                 NetworkStream stream = client.GetStream();
-                string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"accessToken\": \"" + accessToken + "\"}";
+                string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"sessionToken\": \"" + sessionToken + "\"}";
                 byte[] sendData = Encoding.UTF8.GetBytes(st);
                 stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
                 Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);
@@ -65,7 +65,6 @@ namespace Lexplosion.Logic.Network
                             string externalPort = result.PublicEndPoint.ToString();
                             externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
                             portData = Encoding.UTF8.GetBytes(externalPort);
-
 
                             DirectConnection = true;
                         }

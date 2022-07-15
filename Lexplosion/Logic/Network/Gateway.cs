@@ -21,16 +21,16 @@ namespace Lexplosion.Logic.Network
         private string ControlServer = "";
 
         private string UUID;
-        private string accessToken;
+        private string sessionToken;
 
         public event Action<string> ConnectingUser;
         public event Action<string> DisconnectedUser;
         public event Action<OnlineGameStatus, string> StateChange;
 
-        public Gateway(string uuid, string accessToken_, string controlServer)
+        public Gateway(string uuid, string sessionToken_, string controlServer)
         {
             UUID = uuid;
-            accessToken = accessToken_;
+            sessionToken = sessionToken_;
             ControlServer = controlServer;
         }
 
@@ -119,7 +119,7 @@ namespace Lexplosion.Logic.Network
                     List<List<string>> input = new List<List<string>>
                     {
                         new List<string>() { "UUID", UUID },
-                        new List<string>() { "accessToken", accessToken }
+                        new List<string>() { "sessionToken", sessionToken }
                     };
 
                     try
@@ -142,7 +142,7 @@ namespace Lexplosion.Logic.Network
                 });
 
                 InformingThread.Start();
-                Server = new ServerBridge(UUID, accessToken, port, false, ControlServer);
+                Server = new ServerBridge(UUID, sessionToken, port, false, ControlServer);
 
                 Server.ConnectingUser += ConnectingUser;
                 Server.DisconnectedUser += DisconnectedUser;
@@ -175,7 +175,7 @@ namespace Lexplosion.Logic.Network
         // Симуляция майнкрафт сервера. То есть используется если наш макрафт является клиентом
         public void ServerSimulator(int pid)
         {
-            ClientBridge bridge = new ClientBridge(UUID, accessToken, ControlServer);
+            ClientBridge bridge = new ClientBridge(UUID, sessionToken, ControlServer);
 
             UdpClient client = new UdpClient();
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
@@ -191,7 +191,7 @@ namespace Lexplosion.Logic.Network
                     List<List<string>> input = new List<List<string>>
                     {
                         new List<string>() { "UUID", UUID },
-                        new List<string>() { "accessToken", accessToken }
+                        new List<string>() { "sessionToken", sessionToken }
                     };
 
                     string data = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getGameServers", input);

@@ -36,6 +36,10 @@ namespace Lexplosion.Global
         {
             get => _user.AccessToken;
         }
+        public static string SessionToken
+        {
+            get => _user.SessionToken;
+        }
         public static AccountType AccountType
         {
             get => _user.AccountType;

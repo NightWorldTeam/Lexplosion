@@ -30,7 +30,7 @@ namespace Lexplosion.Logic.Network
         protected bool IsWork = false;
 
         protected string UUID;
-        protected string _accessToken;
+        protected string _sessionToken;
         protected bool DirectConnection;
         protected string ControlServer;
 
@@ -44,10 +44,10 @@ namespace Lexplosion.Logic.Network
         protected ConcurrentDictionary<string, IPEndPoint> UuidPointPair;
         protected ConcurrentDictionary<IPEndPoint, string> PointUuidPair;
 
-        public NetworkServer(string uuid, string accessToken, string serverType, bool directConnection, string controlServer)
+        public NetworkServer(string uuid, string sessionToken, string serverType, bool directConnection, string controlServer)
         {
             UUID = uuid;
-            _accessToken = accessToken;
+            _sessionToken = sessionToken;
             IsWork = true;
             ControlServer = controlServer;
             DirectConnection = directConnection;
@@ -104,9 +104,10 @@ namespace Lexplosion.Logic.Network
         {
             //подключаемся к управляющему серверу
             controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
+            controlConnection.ReceiveTimeout = 10000;
 
             string st =
-                "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\", \"accessToken\" : \"" + _accessToken + "\"}";
+                "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\", \"sessionToken\" : \"" + _sessionToken + "\"}";
             byte[] sendData = Encoding.UTF8.GetBytes(st);
             controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
             MaintainingThread.Start();

@@ -76,7 +76,7 @@ namespace Lexplosion.Logic.Management
             process = new Process();
             if (onlineGame)
             {
-                gameGateway = new Gateway(UserData.UUID, UserData.AccessToken, "194.61.2.176");
+                gameGateway = new Gateway(UserData.UUID, UserData.SessionToken, "194.61.2.176");
                 removeImportantTaskMark = false;
                 Lexplosion.Run.AddImportantTask();
             }

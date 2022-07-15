@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.Network
         private bool _isWork = true;
         private object _stopLosk = new object();
 
-        public ServerBridge(string uuid, string accessToken, int localGamePort, bool directConnection, string server) : base(uuid, accessToken, serverType, directConnection, server)
+        public ServerBridge(string uuid, string sessionToken, int localGamePort, bool directConnection, string server) : base(uuid, sessionToken, serverType, directConnection, server)
         {
             ConnectSemaphore = new Semaphore(1, 1);
             Connections = new ConcurrentDictionary<IPEndPoint, Socket>();

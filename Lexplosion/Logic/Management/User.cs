@@ -15,6 +15,7 @@ namespace Lexplosion.Logic
         public string Login { get; private set; } = "";
         public string UUID { get; private set; } = "00000000-0000-0000-0000-000000000000";
         public string AccessToken { get; private set; } = "null";
+        public string SessionToken { get; private set; } = "";
         public AccountType AccountType { get; private set; }
         public ActivityStatus Status { get; private set; }
 
@@ -31,6 +32,7 @@ namespace Lexplosion.Logic
                     Login = response["login"];
                     UUID = response["UUID"];
                     AccessToken = response["accesToken"];
+                    SessionToken = response["sessionToken"];
 
                     if (saveUser)
                     {
@@ -45,7 +47,7 @@ namespace Lexplosion.Logic
                     {
                         while (true)
                         {
-                            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=" + (int)Status + "&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken + "&gameClientName=" + _gameClientName);
+                            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
                             Thread.Sleep(54000); // Ждём 9 минут
                         }
                     });
@@ -69,7 +71,7 @@ namespace Lexplosion.Logic
             {
                 _gameClientName = clientName_;
                 Status = ActivityStatus.InGame;
-                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=2&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken + "&gameClientName=" + clientName_);
+                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=2&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + clientName_);
             }
         }
 
@@ -78,13 +80,13 @@ namespace Lexplosion.Logic
             if (Status == ActivityStatus.InGame)
             {
                 Status = ActivityStatus.Online;
-                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=1&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken);
+                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=1&UUID=" + UUID + "&sessionToken=" + SessionToken);
             }
         }
 
         public void Exit()
         {
-            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=0&UUID=" + UserData.UUID + "&accessToken=" + UserData.AccessToken);
+            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=0&UUID=" + UUID + "&sessionToken=" + SessionToken);
         }
     }
 }

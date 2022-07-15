@@ -264,6 +264,7 @@ namespace Lexplosion.Logic.Network
                                 response.Add("login", userData["login"]);
                                 response.Add("UUID", userData["UUID"]);
                                 response.Add("accesToken", userData["accesToken"]);
+                                response.Add("sessionToken", userData["sessionToken"]);
 
                                 return response;
                             }
