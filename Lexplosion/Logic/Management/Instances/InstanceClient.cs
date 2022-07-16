@@ -885,7 +885,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// Если нужно получить список элементов из корня папки модпака, то ничего передавать не надо.
         /// </param>
         /// <returns>Элементы данной директории. Ключ - путь относительно папки модпака, значение - описание элемента директории.</returns>
-        public Dictionary<string, PathLevel> GetPathContent(string path = "/")
+        public Dictionary<string, PathLevel> GetPathContent(string path = "/", PathLevel parentUnit = null)
         {
             Dictionary<string, PathLevel> pathContent = new Dictionary<string, PathLevel>();
             string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
@@ -900,7 +900,8 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         pathContent["/" + item.Name] = new PathLevel
                         {
-                            IsFile = false
+                            IsFile = false,
+                            FullPath = path + "/" + item.Name
                         };
                     }
                 }
@@ -912,7 +913,8 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         pathContent["/" + item.Name] = new PathLevel
                         {
-                            IsFile = true
+                            IsFile = true,
+                            FullPath = path + "/" + item.Name
                         };
                     }
                 }

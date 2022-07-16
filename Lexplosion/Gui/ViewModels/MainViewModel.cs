@@ -84,7 +84,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 // key - directory, value - pathlevel class
                 var keyvaluepair = (KeyValuePair<string, PathLevel>)obj;
-                LoadDirContent(keyvaluepair.Key, keyvaluepair.Value);
+                LoadDirContent(keyvaluepair.Value.FullPath, keyvaluepair.Value);
             });
         }
 
@@ -98,8 +98,8 @@ namespace Lexplosion.Gui.ViewModels
                 return;
 
             if (!pathLevel.IsFile)
-                UnitsList[dir].UnitsList = _instanceClient.GetPathContent(dir);
-           
+                pathLevel.UnitsList = _instanceClient.GetPathContent(dir, pathLevel);
+
             LoadedDirectories.Add(dir);
         }
 

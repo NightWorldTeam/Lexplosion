@@ -20,10 +20,11 @@ namespace Lexplosion.Logic.Management.Instances
     /// </summary>
     public class PathLevel : VMBase
     {
+
         /// <summary>
-        /// Содержит родительский элемент.  
+        /// Содержит полный путь до юнита, начиная от папки модпака.
         /// </summary>
-        public PathLevel ParentUnit { get; set; } = null;
+        public string FullPath;
 
         /// <summary>
         /// Используется только если этот элемент является папкой (IsFile равно false).  
