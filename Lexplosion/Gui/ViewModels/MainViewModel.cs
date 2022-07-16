@@ -104,21 +104,20 @@ namespace Lexplosion.Gui.ViewModels
 
         public void Export() 
         {
-            var exportPath = @"C:\Users\GamerStorm_Hel2x_\night-world\export";
             var saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-
-            saveFileDialog1.InitialDirectory = exportPath;
-            saveFileDialog1.Filter = "zip files (*.zip)|*.zip|All files (*.*)|*.*";
+            saveFileDialog1.Filter = "zip files (*.zip)|*.zip";
             saveFileDialog1.FilterIndex = 2;
             saveFileDialog1.RestoreDirectory = true;
             saveFileDialog1.FileName = InstanceName + ".zip";
 
             var result = saveFileDialog1.ShowDialog();
-
-            Lexplosion.Run.TaskRun(() =>
+            if (result == System.Windows.Forms.DialogResult.OK)
             {
-                InstanceClient.Export(UnitsList, exportPath);
-            });
+                Lexplosion.Run.TaskRun(() =>
+                {
+                    InstanceClient.Export(UnitsList, saveFileDialog1.FileName);
+                });
+            }
         }
     }
 
