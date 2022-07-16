@@ -80,18 +80,24 @@ namespace Lexplosion.Gui.ViewModels
                 switch ((LowerButtonFunc)obj)
                 {
                     case LowerButtonFunc.AddToLibrary:
+                        IsDropdownMenuOpen = false;
                         break;
                     case LowerButtonFunc.DeleteFromLibrary:
+                        IsDropdownMenuOpen = false;
                         break;
                     case LowerButtonFunc.OpenFolder:
+                        IsDropdownMenuOpen = false;
                         Model.OpenInstanceFolder();
                         break;
                     case LowerButtonFunc.CancelDownload:
+                        IsDropdownMenuOpen = false;
                         break;
                     case LowerButtonFunc.Update:
+                        IsDropdownMenuOpen = false;
                         Model.DownloadModel.DonwloadPrepare();
                         break;
                     case LowerButtonFunc.OpenWebsite:
+                        IsDropdownMenuOpen = false;
                         try
                         {
                             System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
@@ -102,6 +108,7 @@ namespace Lexplosion.Gui.ViewModels
                         }
                         break;
                     case LowerButtonFunc.RemoveInstance:
+                        IsDropdownMenuOpen = false;
                         break;
                     case LowerButtonFunc.Export:
                         IsDropdownMenuOpen = false;
