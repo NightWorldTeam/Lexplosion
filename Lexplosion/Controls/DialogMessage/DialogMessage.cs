@@ -4,32 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Lexplosion.Controls
 {
+    public enum DialogResult 
+    {
+        Undefined,
+        Yes,
+        No
+    }
+
     public class DialogMessage : ToastMessage
     {
         public static readonly DependencyProperty LeftButtonCommandProperty
-            = DependencyProperty.Register("LeftButtonCommand", typeof(string), typeof(DialogMessage), new PropertyMetadata());
+            = DependencyProperty.Register("LeftButtonCommand", typeof(ICommand), typeof(DialogMessage), new PropertyMetadata());
 
         public static readonly DependencyProperty RightButtonCommandProperty
-            = DependencyProperty.Register("RightButtonCommand", typeof(string), typeof(DialogMessage), new PropertyMetadata());
+            = DependencyProperty.Register("RightButtonCommand", typeof(ICommand), typeof(DialogMessage), new PropertyMetadata());
 
         public static readonly DependencyProperty LeftButtonContentProperty
-            = DependencyProperty.Register("LeftButtonContent", typeof(string), typeof(DialogMessage), new PropertyMetadata());
+            = DependencyProperty.Register("LeftButtonContent", typeof(string), typeof(DialogMessage), new PropertyMetadata("Yes"));
 
         public static readonly DependencyProperty RightButtonContentProperty
-            = DependencyProperty.Register("RightButtonContent", typeof(string), typeof(DialogMessage), new PropertyMetadata());
+            = DependencyProperty.Register("RightButtonContent", typeof(string), typeof(DialogMessage), new PropertyMetadata("No"));
 
-        public string LeftButtonCommand
+        public ICommand LeftButtonCommand
         {
-            get => (string)GetValue(LeftButtonCommandProperty);
+            get => (ICommand)GetValue(LeftButtonCommandProperty);
             set => SetValue(LeftButtonCommandProperty, value);
         }
 
-        public string RightButtonCommand
+        public ICommand RightButtonCommand
         {
-            get => (string)GetValue(RightButtonCommandProperty);
+            get => (ICommand)GetValue(RightButtonCommandProperty);
             set => SetValue(RightButtonCommandProperty, value);
         }
 

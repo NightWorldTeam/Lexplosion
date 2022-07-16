@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -24,9 +25,9 @@ namespace Lexplosion.Gui.ViewModels
         private List<string> LoadedDirectories = new List<string>();
 
         private string _instanceName;
-        public string InstanceName 
+        public string InstanceName
         {
-            get => _instanceName; set 
+            get => _instanceName; set
             {
                 _instanceName = value;
                 OnPropertyChanged();
@@ -45,7 +46,7 @@ namespace Lexplosion.Gui.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         /// <summary>
         /// Свойство содержит информацию - экспортируются ли все файлы сборки.
         /// </summary>
@@ -83,7 +84,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 // key - directory, value - pathlevel class
                 var keyvaluepair = (KeyValuePair<string, PathLevel>)obj;
-                LoadDirContent(keyvaluepair.Key);
+                LoadDirContent(keyvaluepair.Key, keyvaluepair.Value);
             });
         }
 
@@ -91,31 +92,42 @@ namespace Lexplosion.Gui.ViewModels
         /// Загружает контент для директории. Если директория уже загружена, то производиться выход из метода.
         /// </summary>
         /// <param name="dir"></param>
-        private void LoadDirContent(string dir) 
+        private void LoadDirContent(string dir, PathLevel pathLevel)
         {
             if (LoadedDirectories.Contains(dir) || dir == null)
                 return;
 
-            if (!UnitsList[dir].IsFile)
+            if (!pathLevel.IsFile)
                 UnitsList[dir].UnitsList = _instanceClient.GetPathContent(dir);
-
+           
             LoadedDirectories.Add(dir);
         }
 
-        public void Export() 
+        public void Export()
         {
             var saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+
+            saveFileDialog1.InitialDirectory = @"C:\Users\GamerStorm_Hel2x_\night-world\export";
             saveFileDialog1.Filter = "zip files (*.zip)|*.zip";
             saveFileDialog1.FilterIndex = 2;
             saveFileDialog1.RestoreDirectory = true;
             saveFileDialog1.FileName = InstanceName + ".zip";
 
             var result = saveFileDialog1.ShowDialog();
+
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 Lexplosion.Run.TaskRun(() =>
                 {
-                    InstanceClient.Export(UnitsList, saveFileDialog1.FileName);
+                    var result = InstanceClient.Export(UnitsList, saveFileDialog1.FileName);
+                    if (result == ExportResult.Successful)
+                    {
+                        MainViewModel.ShowToastMessage("Экспорт сборки", String.Format("Экспорт сборки {0} был успешно завершён. Открыть папку с файлом?", InstanceName), ToastMessageState.Notification);
+                    }
+                    else
+                    {
+                        MainViewModel.ShowToastMessage(result.ToString(), String.Format("Экспорт сборки {0} не успешно завершён. Открыть папку с файлом?", InstanceName), ToastMessageState.Error);
+                    }
                 });
             }
         }
@@ -142,14 +154,25 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public static ImmutableArray<string> GameVersions { get; private set; }
 
-        public static ObservableCollection<ToastMessageModel> Messages { get; private set; } = new ObservableCollection<ToastMessageModel>();
+        public static ObservableCollection<MessageModel> Messages { get; private set; } = new ObservableCollection<MessageModel>();
 
 
-        public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification) 
+        public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
             var model = new ToastMessageModel(header, message, state);
+            App.Current.Dispatcher.Invoke(() => {
+                Messages.Add(model);
+            });
+        }
 
-            Messages.Add(model);
+        public static void ShowDialogMessage(string header, string message, Action leftButtonCommand, Action rightButtonCommand, string leftButtonContent, string rightButtonContent) 
+        {
+            var model = new DialogMessageModel(header, message, leftButtonCommand, rightButtonCommand, leftButtonContent, rightButtonContent);
+
+            App.Current.Dispatcher.Invoke(() => 
+            {
+                Messages.Add(model);
+            });
         }
 
         #endregion statics
@@ -250,7 +273,6 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => new RelayCommand(obj =>
             {
-
                 InstanceExport.Export();
                 IsExporting = false;
             });
@@ -273,6 +295,8 @@ namespace Lexplosion.Gui.ViewModels
         public MainViewModel()
         {
             PreLoadGameVersions();
+
+            //MainViewModel.ShowDialogMessage("Test", "Test123", () => { Console.WriteLine(123); }, () => { Console.WriteLine(321); }, "Yes", "No");
 
             Model = new MainModel();
             MainMenuVM = new MainMenuViewModel(this);

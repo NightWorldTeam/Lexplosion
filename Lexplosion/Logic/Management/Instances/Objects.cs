@@ -21,13 +21,18 @@ namespace Lexplosion.Logic.Management.Instances
     public class PathLevel : VMBase
     {
         /// <summary>
-        /// Ипсользуется только если этот элемент является папкой (IsFile равно false).  
+        /// Содержит родительский элемент.  
+        /// </summary>
+        public PathLevel ParentUnit { get; set; } = null;
+
+        /// <summary>
+        /// Используется только если этот элемент является папкой (IsFile равно false).  
         /// Означает что все вложенные файлы и папки должны быть экспортированны из этой папки.
         /// </summary>
         public bool AllUnits = true;
 
         /// <summary>
-        /// Ипсользуется только если этот элемент является папкой (IsFile равно false).  
+        /// Используется только если этот элемент является папкой (IsFile равно false).  
         /// Указывает на то, есть ли в папке файлы.
         /// </summary>
         public bool HasItems
@@ -42,7 +47,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         private Dictionary<string, PathLevel> _unitsList;
         /// <summary>
-        /// Ипсользуется только если этот элемент является папкой (IsFile равно false) и если AllUnits имеет значение false. 
+        /// Используется только если этот элемент является папкой (IsFile равно false) и если AllUnits имеет значение false. 
         /// Содержит список вложенных элементов, которые должны быть экспортированы из этой папки.
         /// </summary>
         public Dictionary<string, PathLevel> UnitsList 

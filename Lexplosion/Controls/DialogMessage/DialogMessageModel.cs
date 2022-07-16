@@ -9,10 +9,10 @@ using System.Windows.Input;
 
 namespace Lexplosion.Controls
 {
-    public class DialogMessageModel : ToastMessageModel
+    public class DialogMessageModel : MessageModel
     {
-        private Action _leftButtonContent;
-        public Action rightButtonContent;
+        private Action _leftButtonCommand;
+        public Action _rightButtonCommand;
 
         public DialogMessageModel(
             string header, 
@@ -24,7 +24,10 @@ namespace Lexplosion.Controls
             ToastMessageState state = ToastMessageState.Notification
             ) : base(header, message,  state)
         {
-
+            _leftButtonCommand = leftButtonCommand;
+            _rightButtonCommand = rightButtonCommand;
+            LeftButtonContent = leftButtonContent;
+            RightButtonContent = rightButtonContent;
         }
 
         public string LeftButtonContent { get; set; }
@@ -34,7 +37,15 @@ namespace Lexplosion.Controls
         {
             get => new RelayCommand(obj => 
             {
-                //_leftButtonContent.Method.Invoke();
+                _leftButtonCommand();
+            });
+        }
+        
+        public RelayCommand RightButtonCommand 
+        {
+            get => new RelayCommand(obj => 
+            {
+                _rightButtonCommand();
             });
         }
     }

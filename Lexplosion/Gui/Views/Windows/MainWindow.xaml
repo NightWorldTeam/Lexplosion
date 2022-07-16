@@ -535,7 +535,7 @@
                 </ItemsControl.Background>
             </ItemsControl>
             <ScrollViewer.Resources>
-                
+
                 <DataTemplate DataType="{x:Type controls:ToastMessageModel}">
                     <controls:ToastMessage
                         CloseCommand="{Binding CloseToastMessage}"
@@ -543,7 +543,7 @@
                         Message="{Binding Message}"
                         State="{Binding State}" />
                 </DataTemplate>
-                
+
                 <DataTemplate DataType="{x:Type controls:DialogMessageModel}">
                     <controls:DialogMessage
                         CloseCommand="{Binding CloseToastMessage}"

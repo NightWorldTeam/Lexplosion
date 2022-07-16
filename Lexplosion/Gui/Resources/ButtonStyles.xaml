@@ -145,7 +145,7 @@
         BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
         TargetType="Button">
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="False" />
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Template">
@@ -155,9 +155,9 @@
                         x:Name="Border"
                         Padding="{TemplateBinding Padding}"
                         Background="#167FFC"
-                        BorderBrush="#1c91a6"
                         BorderThickness="0"
-                        CornerRadius="5">
+                        CornerRadius="5"
+                        SnapsToDevicePixels="True">
                         <Border.Effect>
                             <DropShadowEffect
                                 BlurRadius="4"
@@ -178,6 +178,55 @@
                         <Trigger Property="IsMouseOver" Value="False">
                             <Setter TargetName="Border" Property="BorderBrush" Value="#167FFC" />
                             <Setter TargetName="Border" Property="Background" Value="#167FFC" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="#5a5a5a" />
+                            <Setter TargetName="Border" Property="DropShadowEffect.Color" Value="#5a5a5a" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="DefaultWhiteButton"
+        BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+        TargetType="Button">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="False" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="#167FFC" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        x:Name="Border"
+                        Padding="{TemplateBinding Padding}"
+                        Background="#efefef"
+                        BorderThickness="0"
+                        CornerRadius="5"
+                        SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect
+                                BlurRadius="1"
+                                ShadowDepth="1"
+                                Color="White" />
+                        </Border.Effect>
+                        <ContentPresenter
+                            Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                            <Setter TargetName="Border" Property="Background" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                            <Setter TargetName="Border" Property="Background" Value="White" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Border" Property="Background" Value="#5a5a5a" />
@@ -357,6 +406,36 @@
                             <Setter TargetName="RadioButton" Property="Stroke" Value="#167FFC" />
                             <Setter TargetName="RadioButton" Property="StrokeThickness" Value="6" />
                             <Setter TargetName="RadioButton" Property="Fill" Value="#EDEDED" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="DefaultTestButton"
+        BasedOn="{StaticResource Pattern}"
+        TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                        x:Name="border"
+                        BorderBrush="White"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                        <ContentPresenter
+                            Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="DarkGray" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

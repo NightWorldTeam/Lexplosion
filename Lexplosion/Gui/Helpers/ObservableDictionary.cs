@@ -21,6 +21,9 @@ namespace Lexplosion.Gui.Helpers
 
         public new void Add(TKey key, TValue value)
         {
+            if (base.ContainsKey(key))
+                return;
+
             base.Add(key, value);
             if (!TryGetValue(key, out _)) return;
             var index = Keys.Count;

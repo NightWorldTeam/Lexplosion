@@ -19,7 +19,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="30" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
                             <Border
@@ -56,7 +56,6 @@
                                     </Button>
                                 </Grid>
                             </Border>
-
                             <Grid Grid.Row="1">
                                 <TextBlock
                                     Width="255"
@@ -67,15 +66,23 @@
                                     TextWrapping="WrapWithOverflow" />
                             </Grid>
 
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel
+                                Grid.Row="2"
+                                Margin="0,0,20,5"
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                                <StackPanel.Resources />
                                 <Button
-                                    Height="30"
-                                    Command="{Binding LeftButtonCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Content="{Binding LeftButtonContent, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    MinWidth="40"
+                                    Margin="5"
+                                    Command="{Binding LeftButtonCommand}"
+                                    Content="{Binding LeftButtonContent, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Style="{StaticResource DefaultWhiteButton}" />
                                 <Button
-                                    Height="30"
-                                    Command="{Binding LeftButtonCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Content="{Binding LeftButtonContent, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    MinWidth="40"
+                                    Command="{Binding RightButtonCommand}"
+                                    Content="{Binding RightButtonContent, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Style="{StaticResource DefaultTestButton}" />
                             </StackPanel>
                         </Grid>
                     </Border>
