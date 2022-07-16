@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Controls
 {
-    public sealed class ToastMessageModel
+    public class ToastMessageModel
     {
         public string Header { get; set; }
         public string Message { get; set; }

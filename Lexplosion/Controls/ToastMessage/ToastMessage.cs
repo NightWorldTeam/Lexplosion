@@ -25,7 +25,7 @@ namespace Lexplosion.Controls
             DependencyProperty.Register("Message", typeof(string), typeof(ToastMessage), new PropertyMetadata());
 
         public static readonly DependencyProperty StateProperty =
-            DependencyProperty.Register("State", typeof(ToastMessageState), typeof(ToastMessage), new PropertyMetadata(ToastMessageState.Notification   ));
+            DependencyProperty.Register("State", typeof(ToastMessageState), typeof(ToastMessage), new PropertyMetadata(ToastMessageState.Notification));
 
         public static readonly DependencyProperty CloseCommandProperty = 
             DependencyProperty.Register("CloseCommand", typeof(ICommand), typeof(ToastMessage), new PropertyMetadata());

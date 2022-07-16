@@ -533,18 +533,27 @@
                 <ItemsControl.Background>
                     <SolidColorBrush Opacity="0.1" Color="Transparent" />
                 </ItemsControl.Background>
-
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type controls:ToastMessageModel}">
-                        <controls:ToastMessage
-                            CloseCommand="{Binding CloseToastMessage}"
-                            Header="{Binding Header}"
-                            Message="{Binding Message}"
-                            State="{Binding State}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
             </ItemsControl>
             <ScrollViewer.Resources>
+                
+                <DataTemplate DataType="{x:Type controls:ToastMessageModel}">
+                    <controls:ToastMessage
+                        CloseCommand="{Binding CloseToastMessage}"
+                        Header="{Binding Header}"
+                        Message="{Binding Message}"
+                        State="{Binding State}" />
+                </DataTemplate>
+                
+                <DataTemplate DataType="{x:Type controls:DialogMessageModel}">
+                    <controls:DialogMessage
+                        CloseCommand="{Binding CloseToastMessage}"
+                        Header="{Binding Header}"
+                        LeftButtonContent="Yes"
+                        Message="{Binding Message}"
+                        RightButtonContent="No"
+                        State="{Binding State}" />
+                </DataTemplate>
+
                 <Style TargetType="{x:Type ScrollViewer}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Messages.Count, Source={StaticResource MainVM}}" Value="0">
