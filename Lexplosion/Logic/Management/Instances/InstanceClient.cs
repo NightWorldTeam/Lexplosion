@@ -941,32 +941,35 @@ namespace Lexplosion.Logic.Management.Instances
                 foreach (string key in exportList.Keys)
                 {
                     PathLevel elem = exportList[key];
-                    if (elem.IsFile)
+                    if (elem.IsSelected)
                     {
-                        list.Add(dirPath + key);
-                    }
-                    else
-                    {
-                        if (elem.AllUnits)
+                        if (elem.IsFile)
                         {
-                            string[] files;
-                            try
-                            {
-                                files = Directory.GetFiles(dirPath + key, "*", SearchOption.AllDirectories);
-                            }
-                            catch 
-                            {
-                                files = new string[0];
-                            }
-
-                            foreach (string file in files)
-                            {
-                                list.Add(file);
-                            }
+                            list.Add(dirPath + key);
                         }
                         else
                         {
-                            ParsePathLevel(ref list, elem.UnitsList);
+                            if (elem.AllUnits)
+                            {
+                                string[] files;
+                                try
+                                {
+                                    files = Directory.GetFiles(dirPath + key, "*", SearchOption.AllDirectories);
+                                }
+                                catch
+                                {
+                                    files = new string[0];
+                                }
+
+                                foreach (string file in files)
+                                {
+                                    list.Add(file);
+                                }
+                            }
+                            else
+                            {
+                                ParsePathLevel(ref list, elem.UnitsList);
+                            }
                         }
                     }
                 }
