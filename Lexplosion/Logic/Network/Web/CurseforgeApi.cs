@@ -16,6 +16,7 @@ namespace Lexplosion.Logic.Network
 {
     static class CurseforgeApi
     {
+        private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
         public enum DownloadAddonRes
         {
             Successful,
@@ -52,7 +53,7 @@ namespace Lexplosion.Logic.Network
             {
 
                 List<KeyValuePair<string, string>> headers = new List<KeyValuePair<string, string>>();
-                headers.Add(new KeyValuePair<string, string>("x-api-key", "$2a$10$d9HphjHPzYChRhMdu3gStu0DaJ5RGfgtogS1NIBG1c5sqhKSK6hBS"));
+                headers.Add(new KeyValuePair<string, string>("x-api-key", Token));
                 string answer = ToServer.HttpGet(url, headers);
 
                 if (answer != null)
@@ -125,6 +126,58 @@ namespace Lexplosion.Logic.Network
         public static CurseforgeFileInfo GetProjectFile(string projecrId, string fileId)
         {
             return GetApiData<CurseforgeFileInfo>("https://api.curseforge.com/v1/mods/" + projecrId + "/files/" + fileId);
+        }
+
+        public static CurseforgeAddonInfo GetAddonInfo(string id)
+        {
+            return GetApiData<CurseforgeAddonInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
+        }
+
+        public static List<CurseforgeAddonInfo> GetAddonsInfo(int[] ids)
+        {
+            string jsonContent = "{\"modIds\": ["+string.Join(",", ids) +"]}";
+
+            //try
+            {
+                WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods");
+                req.Method = "POST";
+                req.Headers.Add("x-api-key", Token);
+                req.ContentType = "application/json";
+
+                byte[] byteArray = Encoding.UTF8.GetBytes(jsonContent);
+                req.ContentLength = byteArray.Length;
+
+                using (Stream dataStream = req.GetRequestStream())
+                {
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                }
+
+                string answer;
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeAddonInfo>>>(answer);
+                if (data.data == null)
+                {
+                    return new List<CurseforgeAddonInfo>();
+                }
+                else
+                {
+                    return data.data;
+                }
+            }
+            //catch
+            //{
+            //    return new List<CurseforgeAddonInfo>();
+            //}
         }
 
         public static CurseforgeInstanceInfo GetInstance(string id)
@@ -253,7 +306,8 @@ namespace Lexplosion.Logic.Network
                         {
                             ProjectID = projectID,
                             FileID = fileID,
-                            Path = folderName + "/" + fileName
+                            Path = folderName + "/" + fileName,
+                            Type = addonType
                         },
                         Value2 = DownloadAddonRes.Successful
                     };
@@ -277,7 +331,7 @@ namespace Lexplosion.Logic.Network
             //}
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(int projectID, long fileID, string path)
+        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(int projectID, int fileID, string path)
         {
             Console.WriteLine("");
             Console.WriteLine("PR ID " + projectID);

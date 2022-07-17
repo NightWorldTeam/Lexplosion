@@ -52,7 +52,7 @@ namespace Lexplosion.Logic.FileSystem
         public class LocalFiles
         {
             public InstalledAddons InstalledAddons;
-            public List<string> Files;
+            public List<string> Files { get; set; }
             public bool FullClient = false;
         }
 

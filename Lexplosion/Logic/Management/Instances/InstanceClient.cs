@@ -901,7 +901,8 @@ namespace Lexplosion.Logic.Management.Instances
                         pathContent["/" + item.Name] = new PathLevel
                         {
                             IsFile = false,
-                            FullPath = path + "/" + item.Name
+                            FullPath = path + "/" + item.Name,
+                            IsSelected = (item.Name == "mods" || item.Name == "scripts" || item.Name == "resources" || item.Name == "resourcepacks" || item.Name == "config")
                         };
                     }
                 }

@@ -26,16 +26,16 @@ namespace Lexplosion.Logic.Management.Instances
         public string FullPath;
 
         /// <summary>
-        /// Выбран ил элемент.
+        /// Выбран ли элемент.
         /// </summary>
-        private bool _isSelected = true;
-        public bool IsSelected 
-        { 
-            get => _isSelected; set 
+        private bool _isSelected = false;
+        public bool IsSelected
+        {
+            get => _isSelected; set
             {
                 _isSelected = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         /// <summary>
@@ -63,9 +63,9 @@ namespace Lexplosion.Logic.Management.Instances
         /// Используется только если этот элемент является папкой (IsFile равно false) и если AllUnits имеет значение false. 
         /// Содержит список вложенных элементов, которые должны быть экспортированы из этой папки.
         /// </summary>
-        public Dictionary<string, PathLevel> UnitsList 
+        public Dictionary<string, PathLevel> UnitsList
         {
-            get => _unitsList; set 
+            get => _unitsList; set
             {
                 _unitsList = value;
                 OnPropertyChanged();
@@ -111,6 +111,7 @@ namespace Lexplosion.Logic.Management.Instances
 
     /// <summary>
     /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
+    /// Ключ - курсфордж id.
     /// </summary>
-    public class InstalledAddons : Dictionary<long, InstalledAddonInfo> { }
+    public class InstalledAddons : Dictionary<int, InstalledAddonInfo> { }
 }

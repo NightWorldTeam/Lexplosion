@@ -29,8 +29,8 @@ namespace Lexplosion.Logic.Objects
     /// </summary>
     public class InstalledAddonInfo
     {
-        public long ProjectID;
-        public long FileID;
+        public int ProjectID;
+        public int FileID;
         public AddonType Type;
         public string Path;
         public bool IsDisable = false;
