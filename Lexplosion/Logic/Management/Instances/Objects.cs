@@ -28,7 +28,15 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Выбран ил элемент.
         /// </summary>
-        public bool IsSelected { get; set; } = true;
+        private bool _isSelected = true;
+        public bool IsSelected 
+        { 
+            get => _isSelected; set 
+            {
+                _isSelected = value;
+                OnPropertyChanged();
+            } 
+        }
 
         /// <summary>
         /// Используется только если этот элемент является папкой (IsFile равно false).  

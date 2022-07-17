@@ -299,7 +299,6 @@
                                                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
                                                     <Grid ShowGridLines="False">
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="15" />
                                                             <ColumnDefinition Width="20" />
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="Auto" />
@@ -310,73 +309,6 @@
                                                             <RowDefinition Height="Auto" />
                                                             <RowDefinition />
                                                         </Grid.RowDefinitions>
-
-
-                                                        <CheckBox
-                                                            Grid.Column="1"
-                                                            Width="14"
-                                                            VerticalAlignment="Center">
-                                                            <CheckBox.Resources>
-                                                                <Style TargetType="{x:Type CheckBox}">
-                                                                    <Setter Property="SnapsToDevicePixels" Value="true" />
-                                                                    <Setter Property="OverridesDefaultStyle" Value="true" />
-                                                                    <Setter Property="IsTabStop" Value="True" />
-                                                                    <Setter Property="IsChecked" Value="{Binding IsSelected, RelativeSource={RelativeSource Self}, Mode=TwoWay}" />
-                                                                    <Setter Property="Template">
-                                                                        <Setter.Value>
-                                                                            <ControlTemplate TargetType="{x:Type CheckBox}">
-                                                                                <BulletDecorator
-                                                                                    x:Name="bullet"
-                                                                                    Width="13"
-                                                                                    Background="Transparent">
-                                                                                    <BulletDecorator.Bullet>
-                                                                                        <Border
-                                                                                            x:Name="border"
-                                                                                            Width="13"
-                                                                                            Height="13"
-                                                                                            BorderBrush="#167FFC"
-                                                                                            BorderThickness="2"
-                                                                                            CornerRadius="0">
-                                                                                            <Viewbox
-                                                                                                Width="7"
-                                                                                                Height="7"
-                                                                                                Stretch="Fill">
-                                                                                                <Path
-                                                                                                    x:Name="path"
-                                                                                                    Margin="0,0,0,4"
-                                                                                                    Data="M 18.9 35.7 L 7.7 24.5 l 2.15 -2.15 l 9.05 9.05 l 19.2 -19.2 l 2.15 2.15 Z"
-                                                                                                    Fill="White"
-                                                                                                    RenderTransformOrigin="0.5, 0.5"
-                                                                                                    SnapsToDevicePixels="False"
-                                                                                                    Stroke="White"
-                                                                                                    StrokeThickness="2"
-                                                                                                    Visibility="Collapsed">
-                                                                                                    <Path.RenderTransform>
-                                                                                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-                                                                                                    </Path.RenderTransform>
-                                                                                                </Path>
-                                                                                            </Viewbox>
-                                                                                        </Border>
-                                                                                    </BulletDecorator.Bullet>
-                                                                                </BulletDecorator>
-
-                                                                                <ControlTemplate.Triggers>
-                                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                                        <!--<Setter TargetName="border" Property="Background" Value="lightgray" />-->
-
-                                                                                    </Trigger>
-                                                                                    <Trigger Property="IsChecked" Value="True">
-                                                                                        <Setter TargetName="path" Property="Visibility" Value="Visible" />
-                                                                                        <Setter TargetName="bullet" Property="Background" Value="#167FFC" />
-                                                                                    </Trigger>
-                                                                                </ControlTemplate.Triggers>
-                                                                            </ControlTemplate>
-                                                                        </Setter.Value>
-                                                                    </Setter>
-                                                                </Style>
-                                                            </CheckBox.Resources>
-                                                        </CheckBox>
-
                                                         <ToggleButton
                                                             x:Name="Expander"
                                                             Width="20"
@@ -487,7 +419,74 @@
                                 </TreeView.Resources>
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate ItemsSource="{Binding Value.UnitsList}">
-                                        <TextBlock Text="{Binding Key}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox
+                                                Grid.Column="1"
+                                                Width="14"
+                                                Margin="0,0,5,0"
+                                                VerticalAlignment="Center"
+                                                IsChecked="{Binding Value.IsSelected, Mode=TwoWay}">
+                                                <CheckBox.Resources>
+                                                    <Style TargetType="{x:Type CheckBox}">
+                                                        <Setter Property="SnapsToDevicePixels" Value="true" />
+                                                        <Setter Property="OverridesDefaultStyle" Value="true" />
+                                                        <Setter Property="IsTabStop" Value="True" />
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type CheckBox}">
+                                                                    <BulletDecorator
+                                                                        x:Name="bullet"
+                                                                        Width="13"
+                                                                        Background="Transparent">
+                                                                        <BulletDecorator.Bullet>
+                                                                            <Border
+                                                                                x:Name="border"
+                                                                                Width="13"
+                                                                                Height="13"
+                                                                                BorderBrush="#167FFC"
+                                                                                BorderThickness="2"
+                                                                                CornerRadius="0">
+                                                                                <Viewbox
+                                                                                    Width="7"
+                                                                                    Height="7"
+                                                                                    Stretch="Fill">
+                                                                                    <Path
+                                                                                        x:Name="path"
+                                                                                        Margin="0,0,0,4"
+                                                                                        Data="M 18.9 35.7 L 7.7 24.5 l 2.15 -2.15 l 9.05 9.05 l 19.2 -19.2 l 2.15 2.15 Z"
+                                                                                        Fill="White"
+                                                                                        RenderTransformOrigin="0.5, 0.5"
+                                                                                        SnapsToDevicePixels="False"
+                                                                                        Stroke="White"
+                                                                                        StrokeThickness="2"
+                                                                                        Visibility="Collapsed">
+                                                                                        <Path.RenderTransform>
+                                                                                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                                                                        </Path.RenderTransform>
+                                                                                    </Path>
+                                                                                </Viewbox>
+                                                                            </Border>
+                                                                        </BulletDecorator.Bullet>
+                                                                    </BulletDecorator>
+
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <!--<Setter TargetName="border" Property="Background" Value="lightgray" />-->
+
+                                                                        </Trigger>
+                                                                        <Trigger Property="IsChecked" Value="True">
+                                                                            <Setter TargetName="path" Property="Visibility" Value="Visible" />
+                                                                            <Setter TargetName="bullet" Property="Background" Value="#167FFC" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </CheckBox.Resources>
+                                            </CheckBox>
+                                            <TextBlock Text="{Binding Key}" />
+                                        </StackPanel>
                                     </HierarchicalDataTemplate>
                                 </TreeView.ItemTemplate>
                             </TreeView>
