@@ -78,8 +78,11 @@
                     Grid.Column="0"
                     Width="40"
                     Height="40"
-                    Background="Purple"
-                    CornerRadius="5" />
+                    CornerRadius="5">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                    </Border.Background>
+                </Border>
                 <TextBlock
                     Grid.Column="1"
                     Margin="10,0,0,10"

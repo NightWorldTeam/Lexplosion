@@ -60,8 +60,13 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => _curseforgeCommand ?? (new RelayCommand(obj =>
             {
-                if (obj != null) { 
+                if (obj != null)
+                {
                     System.Diagnostics.Process.Start((string)obj);
+                }
+                else 
+                {
+                    MainViewModel.ShowToastMessage("Link null", "Отсутсвует ссылка на страницу curseforge.", Controls.ToastMessageState.Error);
                 }
             }));
         }

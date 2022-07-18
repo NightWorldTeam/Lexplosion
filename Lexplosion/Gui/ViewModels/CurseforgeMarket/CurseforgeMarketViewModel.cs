@@ -130,6 +130,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                 Lexplosion.Run.TaskRun(delegate
                 {
                     instanceAddon.InstallLatestVersion();
+                    App.Current.Dispatcher.Invoke(() => 
+                    { 
+                        _instanceAddons.Add(instanceAddon);
+                    });
                 });
                 
             });

@@ -563,5 +563,28 @@
                 </Style>
             </ScrollViewer.Resources>
         </ScrollViewer>
+
+        <Grid
+            Grid.Row="1"
+            Background="Black"
+            Visibility="Hidden">
+            <Border
+                x:Name="border"
+                Width="150"
+                Height="150"
+                Padding="2"
+                BorderBrush="White"
+                BorderThickness="3"
+                RenderTransformOrigin="0.5, 0.5">
+                <Border.RenderTransform>
+                    <!--  giving the transform a name tells the framework not to freeze it  -->
+                    <RotateTransform x:Name="noFreeze" />
+                </Border.RenderTransform>
+                <Rectangle
+                    x:Name="rect1"
+                    VerticalAlignment="Bottom"
+                    Fill="White" />
+            </Border>
+        </Grid>
     </Grid>
 </Window>
