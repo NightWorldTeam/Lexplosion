@@ -133,7 +133,7 @@ namespace Lexplosion.Logic.Network
             return GetApiData<CurseforgeAddonInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
         }
 
-        public static List<CurseforgeAddonInfo> GetAddonsInfo(int[] ids)
+        public static List<CurseforgeAddonInfo> GetAddonsInfo(int[] ids, out bool successful)
         {
             Console.WriteLine("GetAddonsInfo");
             string jsonContent = "{\"modIds\": ["+string.Join(",", ids) +"]}";
@@ -168,18 +168,14 @@ namespace Lexplosion.Logic.Network
                 Console.WriteLine("End GetAddonsInfo");
 
                 var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeAddonInfo>>>(answer);
-                if (data.data == null)
-                {
-                    return new List<CurseforgeAddonInfo>();
-                }
-                else
-                {
-                    return data.data;
-                }
+
+                successful = (data.data != null);
+                return data.data;
             }
             //catch
             //{
-            //    return new List<CurseforgeAddonInfo>();
+            //    successful = false;
+            //    return null;
             //}
         }
 

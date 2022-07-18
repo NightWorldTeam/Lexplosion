@@ -433,7 +433,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             InstalledAddons actualAddonsList = new InstalledAddons(); //актуальный список аддонов, то есть те аддоны которы действительно существуют и есть в списке. В конце именно этот спсиок будет сохранен в файл
             HashSet<int> existsCfMods = new HashSet<int>(); // айдишники модов которые действителньо существуют (есть и в списке и в папке) и скачаны с курсфорджа
-            var existsAddons = new Dictionary<string, int>(); // ключ - имя файла, значение - айди. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
+            var existsAddons = new Dictionary<string, ValuePair<InstanceAddon, int>>(); // ключ - имя файла, значение - экзмепляр и айдишник. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
 
             // Составляем список известных нам аддонов. То есть читаем спсиок аддонов из файла, проходимся по каждому
             // если он существует, то добавляем в existsAddons и actualAddonsList.
@@ -457,38 +457,58 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             // теперь получаем инфу об известных нам модов с курсфорджа
+            bool cfSuccessful = false; // был ли запрос к курсфорджу успешным
             if (existsCfMods.Count > 0)
             {
-                List<CurseforgeAddonInfo> cfData = CurseforgeApi.GetAddonsInfo(existsCfMods.ToArray());
+                List<CurseforgeAddonInfo> cfData = CurseforgeApi.GetAddonsInfo(existsCfMods.ToArray(), out cfSuccessful);
 
-                foreach (CurseforgeAddonInfo addon in cfData)
+                if (cfSuccessful)
                 {
-                    int projectId = addon.id;
-                    if (existsCfMods.Contains(projectId))
+                    foreach (CurseforgeAddonInfo addon in cfData)
                     {
-                        InstalledAddonInfo info = installedAddons[projectId];
-                        existsAddons[info.ActualPath] = projectId; // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
-                        var obj = new InstanceAddon(projectId, modpackInfo)
+                        int projectId = addon.id;
+                        if (existsCfMods.Contains(projectId))
                         {
-                            Author = addon.GetAuthorName,
-                            Description = addon.summary,
-                            Name = addon.name,
-                            Version = "",
-                            WebsiteUrl = addon.links?.websiteUrl,
-                            IsUrlExist = (addon.links?.websiteUrl != null)
-                        };
+                            InstalledAddonInfo info = installedAddons[projectId];
+                            var obj = new InstanceAddon(projectId, modpackInfo)
+                            {
+                                Author = addon.GetAuthorName,
+                                Description = addon.summary,
+                                Name = addon.name,
+                                Version = "",
+                                WebsiteUrl = addon.links?.websiteUrl,
+                                IsUrlExist = (addon.links?.websiteUrl != null)
+                            };
 
-                        obj.DownloadLogo(addon.logo.url);
-                        addons.Add(obj);
+                            existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, int> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
+                            {
+                                Value1 = obj,
+                                Value2 = projectId
+                            }; 
 
+                            obj.DownloadLogo(addon.logo.url);
+                            addons.Add(obj);
+                        }
                     }
                 }
+                else // курсфордж выебнулся или упал интрнет. Заполняем список чтобы потом, в следующем цикле всю инфу вытащить из джарников
+                {
+                    foreach (var addonId in existsCfMods)
+                    {
+                        InstalledAddonInfo elem = actualAddonsList[addonId];
+                        existsAddons[elem.ActualPath] = new ValuePair<InstanceAddon, int> 
+                        {
+                            Value1 = null,
+                            Value2 = addonId
+                        };
+                    }
+                }      
             }
             
             string[] files;
             try
             {
-                files = Directory.GetFiles(clientPath + "/", "*.*", SearchOption.TopDirectoryOnly);
+                files = Directory.GetFiles(clientPath + "mods", "*.*", SearchOption.TopDirectoryOnly);
             }
             catch
             {
@@ -505,8 +525,16 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
 
+                    string filename = "";
+                    try
+                    {
+                        filename = Path.GetFileName(fileAddr);
+                    }
+                    catch { }
+
                     // аддон есть в папке, но нет в списке, или он есть и в папке и в списке, но скачан нее с курсфорджа, то нужно добавить, так же генерируем айдишник для него
-                    if (!existsAddons.ContainsKey(xyi))
+                    // ну или просто запрос был не успешным
+                    if (!existsAddons.ContainsKey(xyi) || !cfSuccessful)
                     {
                         string displayName = UnknownName, authors = "", version = "", description = "", modId = "";
 
@@ -591,29 +619,31 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         catch { }
 
-                        // собстна генерируем айдишник
-                        int addonId = generatedAddonId;
-                        while (actualAddonsList.ContainsKey(addonId))
+                        // лпределяем айдишник
+                        int addonId;
+                        if (cfSuccessful)
                         {
-                            addonId--;
+                            // собстна генерируем айдишник
+                            addonId = generatedAddonId;
+                            while (actualAddonsList.ContainsKey(addonId))
+                            {
+                                addonId--;
+                            }
+                            generatedAddonId = addonId - 1;
                         }
-                        generatedAddonId = addonId - 1;
+                        else
+                        {
+                            addonId = existsAddons[xyi].Value2;
+                        }
 
                         actualAddonsList[addonId] = new InstalledAddonInfo
                         {
-                            FileID = -1,
+                            FileID = cfSuccessful ? -1 : actualAddonsList[existsAddons[xyi].Value2].FileID,
                             ProjectID = addonId,
                             Type = AddonType.Mods,
                             IsDisable = (extension == ".disable"),
                             Path = (extension == ".jar") ? xyi : xyi.Remove(xyi.Length - 8) // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
                         };
-
-                        string filename = "";
-                        try
-                        {
-                            filename = Path.GetFileName(fileAddr);
-                        }
-                        catch { }
 
                         addons.Add(new InstanceAddon(addonId, modpackInfo)
                         {
@@ -624,7 +654,10 @@ namespace Lexplosion.Logic.Management.Instances
                             Version = (!version.Contains("{") ? version : "")
                         });
                     }
-                    
+                    else
+                    {
+                        existsAddons[xyi].Value1.FileName = filename;
+                    }
                 }
             }
 
