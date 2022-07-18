@@ -22,6 +22,30 @@ namespace Lexplosion.Logic.Management.Instances
     {
         private const string UnknownName = "Без названия";
 
+        class McmodInfo
+        {
+            public string modid;
+            public string name;
+            public string description;
+            public string version;
+            public List<string> authorList;
+            public List<string> authors;
+        }
+
+        class McmodInfoContainer
+        {
+            public List<McmodInfo> modList;
+        }
+
+        class FabricModJson
+        {
+            public string id;
+            public string name;
+            public string description;
+            public string version;
+            public List<string> authors;
+        }
+
         #region info
         public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";
@@ -122,6 +146,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// Тут хранится список аддонов из метода GetAddonsCatalog. При каждом вызове GetAddonsCatalog этот список обновляется.
         /// </summary>
         private static Dictionary<int, InstanceAddon> _addonsCatalogChache;
+
         /// <summary>
         /// Аддоны, которые устанавливаются в данный момент. После окончания установки они удаляются из этого списка.
         /// </summary>
@@ -134,6 +159,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public static void ClearAddonsListCache()
         {
+            Console.WriteLine("CHACHE");
             _chacheSemaphore.WaitOne();
             _addonsCatalogChache = null;
             _chacheSemaphore.Release();
@@ -230,7 +256,13 @@ namespace Lexplosion.Logic.Management.Instances
                 instanceAddon.DownloadLogo(addon.logo.url);
 
                 addons.Add(instanceAddon);
-                _addonsCatalogChache[addonId] = instanceAddon;
+                _chacheSemaphore.WaitOne();
+                if (_addonsCatalogChache != null)
+                {
+                    _addonsCatalogChache[addonId] = instanceAddon;
+                }
+                _chacheSemaphore.Release();
+
                 i++;
             }
 
@@ -387,30 +419,6 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        class McmodInfo
-        {
-            public string modid;
-            public string name;
-            public string description;
-            public string version;
-            public List<string> authorList;
-            public List<string> authors;
-        }
-
-        class McmodInfoContainer
-        {
-            public List<McmodInfo> modList;
-        }
-
-        class FabricModJson
-        {
-            public string id;
-            public string name;
-            public string description;
-            public string version;
-            public List<string> authors;
-        }
-
         /// <summary>
         /// Возвращает список модов. При вызове так же сохраняет спсиок модов, 
         /// анализирует папку mods и пихает в список моды которые были в папке, но которых не было в списке.
@@ -457,7 +465,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             // теперь получаем инфу об известных нам модов с курсфорджа
-            bool cfSuccessful = false; // был ли запрос к курсфорджу успешным
+            bool cfSuccessful = (existsCfMods.Count == 0); // был ли запрос к курсфорджу успешным. Если аддонов 0 ставим true, ведь запрос к курсфорджу нам делать не надо, а все моды нужно обработать как локлаьные
             if (existsCfMods.Count > 0)
             {
                 List<CurseforgeAddonInfo> cfData = CurseforgeApi.GetAddonsInfo(existsCfMods.ToArray(), out cfSuccessful);
