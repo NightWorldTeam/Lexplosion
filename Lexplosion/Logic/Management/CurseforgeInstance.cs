@@ -162,12 +162,7 @@ namespace Lexplosion.Logic.Management
             //    catch { }
             //});
 
-            var localFiles = DataFilesManager.GetFile<CurseforgeInstaller.LocalFiles>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/localFiles.json"); //получем список всех файлов модпака
-
-            if (localFiles == null)
-            {
-                localFiles = new CurseforgeInstaller.LocalFiles();
-            }
+            var localFiles = installer.GetInstanceContent(); //получем список всех файлов модпака
 
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
             if (Info != null || installer.InvalidStruct(localFiles))

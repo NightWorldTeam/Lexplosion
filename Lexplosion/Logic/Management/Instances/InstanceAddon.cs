@@ -118,41 +118,6 @@ namespace Lexplosion.Logic.Management.Instances
             _gameVersion = modpackInfo.GameVersion;
         }
 
-        private static InstalledAddons GetInstalledAddons(BaseInstanceData instance)
-        {
-            var data = DataFilesManager.GetFile<InstalledAddons>(WithDirectory.DirectoryPath + "/instances/" + instance.LocalId + "/installedAddons.json");
-            if (data == null)
-            {
-                var localFiles = DataFilesManager.GetFile<CurseforgeInstaller.LocalFiles>(WithDirectory.DirectoryPath + "/instances/" + instance.LocalId + "/localFiles.json");
-                if (localFiles == null)
-                {
-                    return new InstalledAddons();
-                }
-                else
-                {
-                    return localFiles.InstalledAddons;
-                }
-            }
-
-            if (instance.Type == InstanceSource.Curseforge)
-            {
-                var localFiles = DataFilesManager.GetFile<CurseforgeInstaller.LocalFiles>(WithDirectory.DirectoryPath + "/instances/" + instance.LocalId + "/localFiles.json");
-                InstalledAddons addons = localFiles.InstalledAddons;
-
-                foreach (var key in addons.Keys)
-                {
-                    data[key] = addons[key];
-                }
-            }
-
-            return data;
-        }
-
-        private static void SaveInstalledAddons(string instanceId, InstalledAddons data)
-        {
-            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json", JsonConvert.SerializeObject(data));
-        }
-
         /// <summary>
         /// Тут хранится список аддонов из метода GetAddonsCatalog. При каждом вызове GetAddonsCatalog этот список обновляется.
         /// </summary>
@@ -195,7 +160,7 @@ namespace Lexplosion.Logic.Management.Instances
             List<CurseforgeAddonInfo> addonsList = CurseforgeApi.GetAddonsList(pageSize, index, type, category, modpackInfo.Modloader, searchFilter, modpackInfo.GameVersion);
 
             // получаем список установленных аддонов
-            var installedAddons = GetInstalledAddons(modpackInfo);
+            var installedAddons = DataFilesManager.GetInstalledAddons(modpackInfo.LocalId);
 
             // проходимся по аддонам с курсфорджа
             int i = 0;
@@ -289,7 +254,7 @@ namespace Lexplosion.Logic.Management.Instances
         private bool InstallAddon(CurseforgeFileInfo addonInfo)
         {
             string instanceId = _modpackInfo.LocalId;
-            var installedAddons = GetInstalledAddons(_modpackInfo);
+            var installedAddons = DataFilesManager.GetInstalledAddons(_modpackInfo.LocalId);
 
             _installingSemaphore.WaitOne(_modInfo.id);
             _installingAddons[_modInfo.id] = new Pointer<InstanceAddon>
@@ -382,7 +347,7 @@ namespace Lexplosion.Logic.Management.Instances
                     }
                 }
 
-                SaveInstalledAddons(instanceId, installedAddons);
+                DataFilesManager.SaveInstalledAddons(instanceId, installedAddons);
             }
 
             return true;
@@ -472,7 +437,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             // Составляем список известных нам аддонов. То есть читаем спсиок аддонов из файла, проходимся по каждому
             // если он существует, то добавляем в existsAddons и actualAddonsList.
-            InstalledAddons installedAddons = GetInstalledAddons(modpackInfo);
+            InstalledAddons installedAddons = DataFilesManager.GetInstalledAddons(modpackInfo.LocalId);
             foreach (int installedAddonId in installedAddons.Keys)
             {
                 InstalledAddonInfo installedAddon = installedAddons[installedAddonId];
@@ -663,7 +628,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
             }
 
-            SaveInstalledAddons(modpackInfo.LocalId, actualAddonsList);
+            DataFilesManager.SaveInstalledAddons(modpackInfo.LocalId, actualAddonsList);
 
             return addons;
         }
@@ -701,7 +666,7 @@ namespace Lexplosion.Logic.Management.Instances
             int projectID = _projectId;
             string instanceId = _modpackInfo.LocalId;
 
-            var installedAddons = GetInstalledAddons(_modpackInfo);
+            var installedAddons = DataFilesManager.GetInstalledAddons(_modpackInfo.LocalId);
             if (installedAddons.ContainsKey(projectID))
             {
                 //try
@@ -715,7 +680,7 @@ namespace Lexplosion.Logic.Management.Instances
                             File.Move(dir + installedAddon.ActualPath, dir + installedAddon.Path);
                             installedAddon.IsDisable = false;
 
-                            SaveInstalledAddons(instanceId, installedAddons);
+                            DataFilesManager.SaveInstalledAddons(instanceId, installedAddons);
                         }
                     }
                     else
@@ -726,7 +691,7 @@ namespace Lexplosion.Logic.Management.Instances
                             installedAddon.IsDisable = true;
                             File.Move(dir + installedAddon.Path, dir + installedAddon.ActualPath);
 
-                            SaveInstalledAddons(instanceId, installedAddons);
+                            DataFilesManager.SaveInstalledAddons(instanceId, installedAddons);
                         }
                     }
                 }

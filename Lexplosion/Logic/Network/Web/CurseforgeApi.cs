@@ -135,6 +135,7 @@ namespace Lexplosion.Logic.Network
 
         public static List<CurseforgeAddonInfo> GetAddonsInfo(int[] ids)
         {
+            Console.WriteLine("GetAddonsInfo");
             string jsonContent = "{\"modIds\": ["+string.Join(",", ids) +"]}";
 
             //try
@@ -163,6 +164,8 @@ namespace Lexplosion.Logic.Network
                         }
                     }
                 }
+
+                Console.WriteLine("End GetAddonsInfo");
 
                 var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeAddonInfo>>>(answer);
                 if (data.data == null)
@@ -419,7 +422,8 @@ namespace Lexplosion.Logic.Network
                         {
                             ProjectID = projectID,
                             FileID = fileID,
-                            Path = folderName + "/" + fileName
+                            Path = folderName + "/" + fileName,
+                            Type = addonType
                         },
                         Value2 = DownloadAddonRes.Successful
                     };
@@ -432,7 +436,6 @@ namespace Lexplosion.Logic.Network
                         Value2 = DownloadAddonRes.DownloadError
                     };
                 }
-
             }
             //catch
             //{

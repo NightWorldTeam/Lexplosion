@@ -8,6 +8,8 @@ using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 
 namespace Lexplosion.Logic.FileSystem
@@ -18,6 +20,8 @@ namespace Lexplosion.Logic.FileSystem
         {
             public LocalVersionInfo version;
         }
+
+        private static KeySemaphore<string> _semaphore = new KeySemaphore<string>();
 
         public static void SaveAccount(string login, string password)
         {
@@ -306,6 +310,30 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             return data;
+        }
+
+        public static InstalledAddons GetInstalledAddons(string instanceId)
+        {
+            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
+            _semaphore.WaitOne(path);
+
+            var data = DataFilesManager.GetFile<InstalledAddons>(path);
+            if (data == null)
+            {
+                _semaphore.Release(path);
+                return new InstalledAddons();
+            }
+                
+            _semaphore.Release(path);
+            return data;
+        }
+
+        public static void SaveInstalledAddons(string instanceId, InstalledAddons data)
+        {
+            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
+            _semaphore.WaitOne(path);
+            DataFilesManager.SaveFile(path, JsonConvert.SerializeObject(data));
+            _semaphore.Release(path);
         }
     }
 }

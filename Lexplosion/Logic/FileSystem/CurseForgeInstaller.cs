@@ -2,20 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Newtonsoft.Json;
-using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
-using Lexplosion.Tools;
-
 namespace Lexplosion.Logic.FileSystem
 {
     class CurseforgeInstaller : InstanceInstaller
@@ -56,10 +51,81 @@ namespace Lexplosion.Logic.FileSystem
             public bool FullClient = false;
         }
 
+        private class InstanceContent
+        {
+            public List<int> InstalledAddons;
+            public List<string> Files { get; set; }
+            public bool FullClient = false;
+        }
+
         public delegate void Procent(int procent);
 
         public event Procent MainFileDownloadEvent;
         public event ProcentUpdate AddonsDownloadEvent;
+
+        public LocalFiles GetInstanceContent()
+        {
+            var content = DataFilesManager.GetFile<InstanceContent>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json");
+            var installedAddons = DataFilesManager.GetInstalledAddons(instanceId);
+
+            if (content != null)
+            {
+                var data = new LocalFiles
+                {
+                    Files = content.Files,
+                    FullClient = content.FullClient,
+                    InstalledAddons = null
+                };
+
+                if (content.InstalledAddons != null)
+                {
+                    data.InstalledAddons = new InstalledAddons();
+
+                    foreach (int addonId in content.InstalledAddons)
+                    {
+                        if (installedAddons.ContainsKey(addonId))
+                        {
+                            data.InstalledAddons[addonId] = installedAddons[addonId];
+                        }
+                        else
+                        {
+                            data.InstalledAddons[addonId] = null;
+                        }    
+                    }
+                }
+
+                return data;
+            }
+            else
+            {
+                return new LocalFiles();
+            }
+        }
+
+        public void SaveInstanceContent(LocalFiles content)
+        {
+
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json", 
+                JsonConvert.SerializeObject(new InstanceContent
+                {
+                    FullClient = content.FullClient,
+                    Files = content.Files,
+                    InstalledAddons = new List<int>(content.InstalledAddons.Keys.ToArray())
+                }));
+
+            var installedAddons = DataFilesManager.GetInstalledAddons(instanceId);
+
+            foreach (var key in content.InstalledAddons.Keys)
+            {
+                var elem = content.InstalledAddons[key];
+                if (elem != null)
+                {
+                    installedAddons[key] = elem;
+                }
+            }
+
+            DataFilesManager.SaveInstalledAddons(instanceId, installedAddons);
+        }
 
         /// <summary>
         /// Проверяет все ли файлы клиента присутсвуют
@@ -73,6 +139,11 @@ namespace Lexplosion.Logic.FileSystem
 
             foreach (InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
             {
+                if (addon == null)
+                {
+                    return true;
+                }
+
                 string filePath = DirectoryPath + "/instances/" + instanceId + "/" + addon.ActualPath;
 
                 if (!File.Exists(filePath))
@@ -197,7 +268,6 @@ namespace Lexplosion.Logic.FileSystem
                     Files = localFiles.Files
                 };
 
-                List<string> delList = new List<string>();
                 List<InstanceManifest.FileData> downloadList = new List<InstanceManifest.FileData>();
 
                 int test = 0;
@@ -255,7 +325,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (filesCount != 0)
                 {
-                    Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с фалом localFiles.json
+                    Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с json файлами
 
                     TasksPerfomer perfomer = null;
                     if (filesCount > 0)
@@ -301,13 +371,12 @@ namespace Lexplosion.Logic.FileSystem
                             fileBlock.WaitOne();
                             compliteDownload.InstalledAddons[file.projectID] = result.Value1;
                             Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
-                            DataFilesManager.SaveFile(DirectoryPath + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
+                            SaveInstanceContent(compliteDownload);
                             fileBlock.Release();
 
                             i++;
                             AddonsDownloadEvent?.Invoke(addonsCount, i);
                         });
-
                     }
 
                     Console.WriteLine("ЖДЁМ КОНЦА ");
@@ -320,7 +389,7 @@ namespace Lexplosion.Logic.FileSystem
                     compliteDownload.FullClient = true; // TODO: учитывать ошибки
                 }
 
-                DataFilesManager.SaveFile(DirectoryPath + "/instances/" + instanceId + "/localFiles.json", JsonConvert.SerializeObject(compliteDownload));
+                SaveInstanceContent(compliteDownload);
 
                 return errors;
             }
