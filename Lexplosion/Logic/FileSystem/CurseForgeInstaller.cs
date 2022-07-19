@@ -44,14 +44,14 @@ namespace Lexplosion.Logic.FileSystem
             public List<FileData> files;
         }
 
-        public class LocalFiles
+        public class InstanceContent
         {
             public InstalledAddons InstalledAddons;
             public List<string> Files { get; set; }
             public bool FullClient = false;
         }
 
-        private class InstanceContent
+        private class InstanceContentFile
         {
             public List<int> InstalledAddons;
             public List<string> Files { get; set; }
@@ -63,14 +63,14 @@ namespace Lexplosion.Logic.FileSystem
         public event Procent MainFileDownloadEvent;
         public event ProcentUpdate AddonsDownloadEvent;
 
-        public LocalFiles GetInstanceContent()
+        public InstanceContent GetInstanceContent()
         {
-            var content = DataFilesManager.GetFile<InstanceContent>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json");
+            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json");
             var installedAddons = DataFilesManager.GetInstalledAddons(instanceId);
 
             if (content != null)
             {
-                var data = new LocalFiles
+                var data = new InstanceContent
                 {
                     Files = content.Files,
                     FullClient = content.FullClient,
@@ -98,15 +98,15 @@ namespace Lexplosion.Logic.FileSystem
             }
             else
             {
-                return new LocalFiles();
+                return new InstanceContent();
             }
         }
 
-        public void SaveInstanceContent(LocalFiles content)
+        public void SaveInstanceContent(InstanceContent content)
         {
 
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json", 
-                JsonConvert.SerializeObject(new InstanceContent
+                JsonConvert.SerializeObject(new InstanceContentFile
                 {
                     FullClient = content.FullClient,
                     Files = content.Files,
@@ -130,7 +130,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <summary>
         /// Проверяет все ли файлы клиента присутсвуют
         /// </summary>
-        public bool InvalidStruct(LocalFiles localFiles)
+        public bool InvalidStruct(InstanceContent localFiles)
         {
             if (localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
             {
@@ -169,7 +169,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает манифест, полученный из архива.
         /// </returns>
-        public InstanceManifest DownloadInstance(string downloadUrl, string fileName, ref LocalFiles localFiles)
+        public InstanceManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles)
         {
             //try
             {
@@ -253,7 +253,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список ошибок.
         /// </returns>
-        public List<string> InstallInstance(InstanceManifest data, LocalFiles localFiles)
+        public List<string> InstallInstance(InstanceManifest data, InstanceContent localFiles)
         {
             InstalledAddons installedAddons = null;
             installedAddons = localFiles.InstalledAddons;
@@ -262,7 +262,7 @@ namespace Lexplosion.Logic.FileSystem
 
             //try
             {
-                LocalFiles compliteDownload = new LocalFiles
+                InstanceContent compliteDownload = new InstanceContent
                 {
                     InstalledAddons = new InstalledAddons(),
                     Files = localFiles.Files
