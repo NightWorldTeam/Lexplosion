@@ -11,6 +11,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private int _stagesCount;
         private DownloadStageTypes _downloadStageType;
 
+        private bool _isPrepareOnly = true;
+
         private InstanceFormModel _instanceFormModel;
 
         private bool _isIndeterminate;
@@ -103,6 +105,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
             DownloadProgress = procent;
             DownloadStageType = downloadStageType;
 
+            if (downloadStageType != DownloadStageTypes.Prepare) 
+            {
+                _isPrepareOnly = false;
+            }
+
             if (downloadStageType == DownloadStageTypes.Java)
             {
                 _instanceFormModel.OverviewField = "Идёт скачивание Java...";
@@ -124,16 +131,19 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             App.Current.Dispatcher.Invoke(() =>
             {
+                Console.WriteLine("Strange Test");
                 switch (result)
                 {
                     case InstanceInit.Successful:
                         {
                             IsDownloadInProgress = false;
-                            MainViewModel.ShowToastMessage(
-                                "Download Successfully Completed",
-                                "Название: " + _instanceFormModel.InstanceClient.Name + 
-                                "\nВерсия: " + _instanceFormModel.InstanceClient.GameVersion
-                                );
+                            if (!_isPrepareOnly) { 
+                                MainViewModel.ShowToastMessage(
+                                    "Download Successfully Completed",
+                                    "Название: " + _instanceFormModel.InstanceClient.Name + 
+                                    "\nВерсия: " + _instanceFormModel.InstanceClient.GameVersion
+                                    );
+                            }
                             _instanceFormModel.UpperButton.ChangeFuncPlay();
                             _instanceFormModel.UpdateLowerButton();
                         }
@@ -252,6 +262,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             
         }
+
         #endregion
     }
 }

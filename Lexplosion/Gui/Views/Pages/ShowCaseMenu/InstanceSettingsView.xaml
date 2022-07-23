@@ -176,10 +176,7 @@
                     </Grid>
                 </Grid>
                 <StackPanel Grid.Row="4" Grid.Column="1">
-                    <CheckBox
-                        Margin="0,0,0,2"
-                        Content="Обновлять автоматически"
-                        Style="{StaticResource CustomCheckBox}" />
+                    <CheckBox Margin="0,0,0,2" Content="Обновлять автоматически" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

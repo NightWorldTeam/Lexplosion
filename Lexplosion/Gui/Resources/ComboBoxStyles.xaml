@@ -249,4 +249,109 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--  Default ComboBox  -->
+    <ControlTemplate x:Key="LighterDefaultComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <Border
+            Width="{TemplateBinding Width}"
+            Height="{TemplateBinding Height}"
+            Background="#1f1f1f"
+            BorderBrush="#121212"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="6">
+            <ContentPresenter
+                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalAlignment="Center"
+                IsHitTestVisible="False" />
+        </Border>
+    </ControlTemplate>
+
+    <Style x:Key="LighterDefaultComboBox" TargetType="{x:Type ComboBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Border>
+                        <Grid>
+                            <ToggleButton
+                                Name="ToggleButton"
+                                Grid.Column="2"
+                                ClickMode="Press"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                FontSize="14"
+                                Foreground="White"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                IsTabStop="False"
+                                Template="{StaticResource LighterDefaultComboBoxToggleButton}" />
+                            <ContentPresenter
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="True" />
+                            <TextBox
+                                x:Name="PART_EditableTextBox"
+                                Margin="3,3,23,3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Background="#FF3F3F3F"
+                                Focusable="True"
+                                Foreground="Green"
+                                IsReadOnly="{TemplateBinding IsReadOnly}"
+                                Style="{x:Null}"
+                                Visibility="Hidden" />
+                            <!--  None, Fade, Scroll, Slide  -->
+                            <Popup
+                                Name="Popup"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                Placement="Bottom"
+                                PopupAnimation="Scroll">
+                                <Grid
+                                    Name="DropDown"
+                                    MinWidth="140"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    SnapsToDevicePixels="True">
+                                    <Border
+                                        x:Name="DropDownBorder"
+                                        Background="#1f1f1f"
+                                        BorderBrush="#167FFC"
+                                        BorderThickness="2"
+                                        CornerRadius="2" />
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  SimpleStyles: ComboBoxItem  -->
+    <Style x:Key="LighterDefaultComboBoxItem" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="DemiBold" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border Name="Border" SnapsToDevicePixels="true">
+                        <ContentPresenter Margin="3" HorizontalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="#167FFC" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

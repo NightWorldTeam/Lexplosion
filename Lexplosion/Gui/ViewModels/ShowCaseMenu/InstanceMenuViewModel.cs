@@ -83,7 +83,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
             if (instanceClient.Type == InstanceSource.Local) 
             { 
-                _settingsTabs.Add(new Tab { Id = 1, Header = "О Сборке", Content = new InstanceCreationViewModel(instanceClient) });
+                _settingsTabs.Add(new Tab { Id = 1, Header = "О Сборке", Content = new InstanceProfileViewModel(instanceClient) });
             }
 
             _settingsTabs.Sort();

@@ -145,69 +145,6 @@
         </Setter>
     </Style>
 
-    <Style x:Key="CustomCheckBox" TargetType="{x:Type CheckBox}">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontWeight" Value="Medium" />
-        <Setter Property="FontSize" Value="15" />
-        <Setter Property="FontFamily" Value="{StaticResource FuturaBookC}" />
-        <Setter Property="Height" Value="20" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type CheckBox}">
-                    <BulletDecorator VerticalAlignment="Center" Background="Transparent">
-                        <BulletDecorator.Bullet>
-                            <Grid
-                                Width="15"
-                                Height="15"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center">
-                                <Border
-                                    x:Name="Border"
-                                    Background="Transparent"
-                                    BorderBrush="#167FFC"
-                                    BorderThickness="2.5">
-                                    <Path
-                                        x:Name="CheckMark"
-                                        Width="7"
-                                        Height="7"
-                                        Data="M 0 0 L 7 7 M 0 7 L 7 0"
-                                        SnapsToDevicePixels="False"
-                                        StrokeThickness="2"
-                                        Visibility="Collapsed">
-                                        <Path.Stroke>
-                                            <SolidColorBrush Color="White" />
-                                        </Path.Stroke>
-                                    </Path>
-                                </Border>
-                            </Grid>
-                        </BulletDecorator.Bullet>
-                        <ContentPresenter
-                            Margin="4,0,0,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            RecognizesAccessKey="True" />
-                    </BulletDecorator>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="False">
-                            <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed" />
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="Transparent" />
-                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="White" />
-                        </Trigger>
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="CustomTipTool" TargetType="{x:Type ToolTip}">
         <Setter Property="Placement" Value="Relative" />
         <Setter Property="Background" Value="Black" />
@@ -215,5 +152,76 @@
         <Setter Property="FontFamily" Value="{StaticResource CasperBold}" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!--  Default Check Box  -->
+
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="True" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontFamily" Value="{StaticResource FuturaBookC}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <StackPanel Orientation="Horizontal">
+                        <BulletDecorator
+                            x:Name="bullet"
+                            Width="13"
+                            Background="Transparent">
+                            <BulletDecorator.Bullet>
+                                <Border
+                                    x:Name="border"
+                                    Width="13"
+                                    Height="13"
+                                    BorderBrush="#167FFC"
+                                    BorderThickness="2"
+                                    CornerRadius="0">
+                                    <Viewbox
+                                        Width="7"
+                                        Height="7"
+                                        Stretch="Fill">
+                                        <Path
+                                            x:Name="path"
+                                            Margin="0,0,0,4"
+                                            Data="M 18.9 35.7 L 7.7 24.5 l 2.15 -2.15 l 9.05 9.05 l 19.2 -19.2 l 2.15 2.15 Z"
+                                            Fill="White"
+                                            RenderTransformOrigin="0.5, 0.5"
+                                            SnapsToDevicePixels="False"
+                                            Stroke="White"
+                                            StrokeThickness="2"
+                                            Visibility="Collapsed">
+                                            <Path.RenderTransform>
+                                                <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                            </Path.RenderTransform>
+                                        </Path>
+                                    </Viewbox>
+                                </Border>
+                            </BulletDecorator.Bullet>
+                        </BulletDecorator>
+
+                        <ContentPresenter
+                            Margin="5,-2,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True" />
+
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <!--<Setter TargetName="border" Property="Background" Value="lightgray" />-->
+
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="path" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="border" Property="Background" Value="#167FFC" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

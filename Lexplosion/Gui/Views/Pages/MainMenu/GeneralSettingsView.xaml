@@ -150,7 +150,6 @@
                     <TextBlock
                         Width="87"
                         Height="30"
-                        Margin="5,0,0,0"
                         HorizontalAlignment="Left"
                         FontSize="16"
                         FontWeight="Medium"
@@ -160,6 +159,7 @@
                         Grid.Row="1"
                         Width="125"
                         Height="42"
+                        HorizontalAlignment="Left"
                         helpers:TextBoxHelper.DefaultValue="512"
                         helpers:TextBoxHelper.OnlyNumeric="Uint"
                         BorderBrush="#121212"
@@ -178,7 +178,6 @@
                     </Grid.RowDefinitions>
                     <TextBlock
                         Height="35"
-                        Margin="5,0,0,0"
                         FontSize="16"
                         FontWeight="Medium"
                         Foreground="#ddd"
@@ -192,7 +191,6 @@
                         <TextBox
                             Grid.Column="0"
                             Height="42"
-                            Margin="5,0,0,0"
                             BorderBrush="#121212"
                             BorderThickness="0"
                             FontSize="20"
@@ -211,19 +209,20 @@
                 <StackPanel
                     Grid.Row="5"
                     Grid.Column="1"
-                    Margin="5,0,0,0">
+                    Margin="5,0,0,0"
+                    HorizontalAlignment="Left">
                     <CheckBox
+                        Margin="0,0,0,5"
                         Content="Обновлять сборки автоматически"
-                        IsChecked="{Binding GeneralSettings.IsAutoUpdate}"
-                        Style="{StaticResource CustomCheckBox}" />
+                        IsChecked="{Binding GeneralSettings.IsAutoUpdate}" />
                     <CheckBox
+                        Margin="0,0,0,5"
                         Content="Скрывать лаунчер при запуске игры"
-                        IsChecked="{Binding GeneralSettings.IsHiddenMode}"
-                        Style="{StaticResource CustomCheckBox}" />
+                        IsChecked="{Binding GeneralSettings.IsHiddenMode}" />
                     <CheckBox
+                        Margin="0,0,0,5"
                         Content="Показывать консоль"
-                        IsChecked="{Binding GeneralSettings.IsShowConsole}"
-                        Style="{StaticResource CustomCheckBox}" />
+                        IsChecked="{Binding GeneralSettings.IsShowConsole}" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

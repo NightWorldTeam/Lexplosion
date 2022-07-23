@@ -5,9 +5,9 @@ namespace Lexplosion.Gui.Views.Pages.ShowCaseMenu
     /// <summary>
     /// Логика взаимодействия для InstanceCreationForm.xaml
     /// </summary>
-    public partial class InstanceCreationForm : UserControl
+    public partial class InstanceProfileForm : UserControl
     {
-        public InstanceCreationForm()
+        public InstanceProfileForm()
         {
             InitializeComponent();
         }

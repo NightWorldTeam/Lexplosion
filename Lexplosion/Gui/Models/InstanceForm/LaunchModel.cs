@@ -32,7 +32,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             if (successful)
             {
-
+                MainViewModel.ShowToastMessage(
+                    "Launch Successfully Completed",
+                    "Название: " + id
+                );
             }
             else 
             {

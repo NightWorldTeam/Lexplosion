@@ -226,6 +226,8 @@
 
         <!--  Popup  -->
 
+
+        <!--  Export  -->
         <Grid Grid.Row="1" Visibility="{Binding IsExporting, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
             <Grid.Background>
                 <SolidColorBrush Opacity="0.7" Color="Black" />
@@ -276,8 +278,7 @@
                                     Margin="100,3,0,0"
                                     Content="Полный экспорт"
                                     FontSize="14"
-                                    IsChecked="{Binding InstanceExport.IsFullExport, Mode=TwoWay}"
-                                    Style="{StaticResource CustomCheckBox}" />
+                                    IsChecked="{Binding InstanceExport.IsFullExport, Mode=TwoWay}" />
                             </StackPanel>
 
                             <TreeView
@@ -425,66 +426,7 @@
                                                 Width="14"
                                                 Margin="0,0,5,0"
                                                 VerticalAlignment="Center"
-                                                IsChecked="{Binding Value.IsSelected, Mode=TwoWay}">
-                                                <CheckBox.Resources>
-                                                    <Style TargetType="{x:Type CheckBox}">
-                                                        <Setter Property="SnapsToDevicePixels" Value="true" />
-                                                        <Setter Property="OverridesDefaultStyle" Value="true" />
-                                                        <Setter Property="IsTabStop" Value="True" />
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate TargetType="{x:Type CheckBox}">
-                                                                    <BulletDecorator
-                                                                        x:Name="bullet"
-                                                                        Width="13"
-                                                                        Background="Transparent">
-                                                                        <BulletDecorator.Bullet>
-                                                                            <Border
-                                                                                x:Name="border"
-                                                                                Width="13"
-                                                                                Height="13"
-                                                                                BorderBrush="#167FFC"
-                                                                                BorderThickness="2"
-                                                                                CornerRadius="0">
-                                                                                <Viewbox
-                                                                                    Width="7"
-                                                                                    Height="7"
-                                                                                    Stretch="Fill">
-                                                                                    <Path
-                                                                                        x:Name="path"
-                                                                                        Margin="0,0,0,4"
-                                                                                        Data="M 18.9 35.7 L 7.7 24.5 l 2.15 -2.15 l 9.05 9.05 l 19.2 -19.2 l 2.15 2.15 Z"
-                                                                                        Fill="White"
-                                                                                        RenderTransformOrigin="0.5, 0.5"
-                                                                                        SnapsToDevicePixels="False"
-                                                                                        Stroke="White"
-                                                                                        StrokeThickness="2"
-                                                                                        Visibility="Collapsed">
-                                                                                        <Path.RenderTransform>
-                                                                                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-                                                                                        </Path.RenderTransform>
-                                                                                    </Path>
-                                                                                </Viewbox>
-                                                                            </Border>
-                                                                        </BulletDecorator.Bullet>
-                                                                    </BulletDecorator>
-
-                                                                    <ControlTemplate.Triggers>
-                                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                                            <!--<Setter TargetName="border" Property="Background" Value="lightgray" />-->
-
-                                                                        </Trigger>
-                                                                        <Trigger Property="IsChecked" Value="True">
-                                                                            <Setter TargetName="path" Property="Visibility" Value="Visible" />
-                                                                            <Setter TargetName="bullet" Property="Background" Value="#167FFC" />
-                                                                        </Trigger>
-                                                                    </ControlTemplate.Triggers>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </Style>
-                                                </CheckBox.Resources>
-                                            </CheckBox>
+                                                IsChecked="{Binding Value.IsSelected, Mode=TwoWay}" />
                                             <TextBlock Text="{Binding Key}" />
                                         </StackPanel>
                                     </HierarchicalDataTemplate>
@@ -518,7 +460,6 @@
                 </Grid>
             </Border>
         </Grid>
-
         <ScrollViewer
             Grid.Row="1"
             MaxHeight="300"
@@ -563,28 +504,5 @@
                 </Style>
             </ScrollViewer.Resources>
         </ScrollViewer>
-
-        <Grid
-            Grid.Row="1"
-            Background="Black"
-            Visibility="Hidden">
-            <Border
-                x:Name="border"
-                Width="150"
-                Height="150"
-                Padding="2"
-                BorderBrush="White"
-                BorderThickness="3"
-                RenderTransformOrigin="0.5, 0.5">
-                <Border.RenderTransform>
-                    <!--  giving the transform a name tells the framework not to freeze it  -->
-                    <RotateTransform x:Name="noFreeze" />
-                </Border.RenderTransform>
-                <Rectangle
-                    x:Name="rect1"
-                    VerticalAlignment="Bottom"
-                    Fill="White" />
-            </Border>
-        </Grid>
     </Grid>
 </Window>

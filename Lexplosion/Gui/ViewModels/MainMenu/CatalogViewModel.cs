@@ -17,6 +17,16 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true);
 
+        private bool _isLoaded = false;
+        public bool IsLoaded 
+        {
+            get => _isLoaded; set 
+            {
+                _isLoaded = value;
+                OnPropertyChanged();
+            }
+        }
+
         public CatalogViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
@@ -65,6 +75,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 }
                 SearchBoxVM.IsLoaded = true;
                 PaginatorVM.IsLoaded = true;
+
+                IsLoaded = true;
             });
         }
     }

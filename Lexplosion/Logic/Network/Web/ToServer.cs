@@ -183,19 +183,16 @@ namespace Lexplosion.Logic.Network
                         }
                         else
                         {
-                            MessageBox.Show("null1");
                             return null;
                         }
                     }
                     else
                     {
-                        MessageBox.Show("null2");
                         return null;
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("null3");
                     return null;
                 }
             }

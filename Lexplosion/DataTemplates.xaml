@@ -76,8 +76,8 @@
     <DataTemplate DataType="{x:Type showcasemenu:InstanceSettingsViewModel}">
         <showcasepage:InstanceSettingsView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type showcasemenu:InstanceCreationViewModel}">
-        <showcasepage:InstanceCreationForm />
+    <DataTemplate DataType="{x:Type showcasemenu:InstanceProfileViewModel}">
+        <showcasepage:InstanceProfileForm />
     </DataTemplate>
 
     <!--  InstanceFactory DataTemplate  -->

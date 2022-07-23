@@ -91,8 +91,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #region commands
 
+        /// <summary>
+        /// Закрывает CurseforgeMarket
+        /// </summary>
         private RelayCommand _closePage;
-
         public RelayCommand ClosePageCommand
         {
             get => _closePage ?? (new RelayCommand(obj =>
@@ -103,6 +105,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }));
         }
 
+        /// <summary>
+        /// Переводит пользователя на официальную страницу curseforge.
+        /// </summary>
         public RelayCommand GoToCurseforgeCommand
         {
             get => new RelayCommand(obj =>
@@ -121,6 +126,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             });
         }
 
+        /// <summary>
+        /// Вызывает установку мода.
+        /// </summary>
         public RelayCommand InstallModCommand
         {
             get => new RelayCommand(obj =>
@@ -148,6 +156,16 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel();
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
+
+        private bool _isLoaded;
+        public bool IsLoaded 
+        {
+            get => _isLoaded; set 
+            {
+                _isLoaded = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion props
 
@@ -200,6 +218,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                     });
 
                 }
+
+                IsLoaded = true;
             });
         }
     }

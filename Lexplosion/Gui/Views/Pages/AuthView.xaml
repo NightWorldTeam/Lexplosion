@@ -183,8 +183,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Content="Запомнить меня"
-                        IsChecked="{Binding IsSaveMe}"
-                        Style="{StaticResource CustomCheckBox}" />
+                        IsChecked="{Binding IsSaveMe}" />
                     <Button
                         Grid.Row="1"
                         Width="166"

@@ -1,0 +1,91 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Lexplosion.Controls"
+    xmlns:сonverters="clr-namespace:Lexplosion.Gui.Converters">
+    <Style TargetType="{x:Type local:LoadingBoard}">
+
+        <Style.Resources>
+            <BooleanToVisibilityConverter x:Key="ConvertBoolToVisibility" />
+            <сonverters:NegativeBooleanToVisibilityConverter x:Key="NegativeConvertBoolToVisibility" />
+        </Style.Resources>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:LoadingBoard}">
+                    <Grid Grid.Row="1">
+                        <Grid.Background>
+                            <SolidColorBrush Opacity="0.5" Color="Black" />
+                        </Grid.Background>
+                        <Border
+                            x:Name="AnimatedBorder"
+                            Width="100"
+                            Height="100"
+                            Padding="2"
+                            BorderBrush="White"
+                            BorderThickness="3"
+                            RenderTransformOrigin="0.5, 0.5">
+                            <Border.RenderTransform>
+                                <!--  giving the transform a name tells the framework not to freeze it  -->
+                                <RotateTransform x:Name="noFreeze" />
+                            </Border.RenderTransform>
+                            <Rectangle
+                                x:Name="AnimatedRect"
+                                Height="98"
+                                Margin="0,0,0,148"
+                                VerticalAlignment="Bottom"
+                                Fill="White" />
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsLoadingFinished" Value="False">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="BorderBeginStoryboard">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames
+                                            RepeatBehavior="Forever"
+                                            Storyboard.TargetName="AnimatedBorder"
+                                            Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)"
+                                            Duration="0:0:1">
+                                            <LinearDoubleKeyFrame KeyTime="0%" Value="-180" />
+                                            <LinearDoubleKeyFrame KeyTime="50%" Value="-180" />
+                                            <LinearDoubleKeyFrame KeyTime="100%" Value="0" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+
+                                <BeginStoryboard x:Name="RectangleBeginStoryboard">
+                                    <Storyboard>
+                                        <ThicknessAnimationUsingKeyFrames
+                                            RepeatBehavior="Forever"
+                                            Storyboard.TargetName="AnimatedRect"
+                                            Storyboard.TargetProperty="Margin"
+                                            Duration="0:0:2">
+                                            <LinearThicknessKeyFrame KeyTime="0%" Value="0,0,0,98" />
+                                            <LinearThicknessKeyFrame KeyTime="25%" Value="0" />
+                                            <LinearThicknessKeyFrame KeyTime="50%" Value="0,0,0,0" />
+                                            <LinearThicknessKeyFrame KeyTime="75%" Value="0,0,0,98" />
+                                            <LinearThicknessKeyFrame KeyTime="100%" Value="0,0,0,98" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <Setter Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <Trigger Property="IsLoadingFinished" Value="True">
+                            <Trigger.EnterActions>
+                                <PauseStoryboard BeginStoryboardName="BorderBeginStoryboard" />
+                                <PauseStoryboard BeginStoryboardName="RectangleBeginStoryboard" />
+                            </Trigger.EnterActions>
+
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

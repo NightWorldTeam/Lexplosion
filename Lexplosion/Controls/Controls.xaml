@@ -6,5 +6,6 @@
         <ResourceDictionary Source="DropdownMenu/DropdownMenu.xaml" />
         <ResourceDictionary Source="ToastMessage/ToastMessage.xaml" />
         <ResourceDictionary Source="DialogMessage/DialogMessage.xaml" />
+        <ResourceDictionary Source="LoadingBoard/LoadingBoard.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

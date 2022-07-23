@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
-    public class InstanceCreationViewModel : VMBase
+    public class InstanceProfileViewModel : VMBase
     {
         public InstanceClient CurrentInstanceClient { get; }
 
@@ -75,7 +75,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             "Vanilla+"
         };
 
-        public InstanceCreationViewModel(InstanceClient instanceClient)
+        public InstanceProfileViewModel(InstanceClient instanceClient)
         {
             CurrentInstanceClient = instanceClient;
             BaseInstanceData = CurrentInstanceClient.GetBaseData;

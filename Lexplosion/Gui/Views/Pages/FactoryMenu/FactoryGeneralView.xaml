@@ -40,14 +40,6 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-        <ControlTemplate x:Key="ComboBoxCheckBox" TargetType="{x:Type CheckBox}">
-            <Grid
-                Margin="10,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center">
-                <ContentPresenter />
-            </Grid>
-        </ControlTemplate>
 
         <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
             <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -145,43 +137,6 @@
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type RadioButton}">
-            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
-            <Setter Property="SnapsToDevicePixels" Value="False" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Width" Value="Auto" />
-            <Setter Property="Height" Value="Auto" />
-            <Setter Property="FontSize" Value="22" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RadioButton">
-                        <Border>
-                            <Grid>
-                                <Ellipse
-                                    x:Name="RadioButton"
-                                    Width="20"
-                                    Height="20"
-                                    Margin="2,0,0,0"
-                                    HorizontalAlignment="Left"
-                                    Fill="#505050"
-                                    SnapsToDevicePixels="False"
-                                    Stroke="#131313"
-                                    StrokeThickness="1" />
-                                <ContentPresenter Margin="35,-2,0,0" />
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="RadioButton" Property="Stroke" Value="#167FFC" />
-                                <Setter TargetName="RadioButton" Property="StrokeThickness" Value="6" />
-                                <Setter TargetName="RadioButton" Property="Fill" Value="#EDEDED" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

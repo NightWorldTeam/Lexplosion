@@ -137,6 +137,8 @@ namespace Lexplosion.Gui.ViewModels
     {
         public InstanceExport InstanceExport { get; } = new InstanceExport();
 
+        public LoadingBoard LoadingBoard { get; set; } = new LoadingBoard();
+
         #region statics
 
         public static readonly NavigationStore NavigationStore = new NavigationStore();
@@ -236,7 +238,6 @@ namespace Lexplosion.Gui.ViewModels
                 OnPropertyChanged();
             }
         }
-
         #endregion
 
 
