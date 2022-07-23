@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
@@ -791,7 +792,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     using (var webClient = new WebClient())
                     {
-                        Logo = webClient.DownloadData(url);
+                        Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 120, 120);
                         callback();
                     }
                 }

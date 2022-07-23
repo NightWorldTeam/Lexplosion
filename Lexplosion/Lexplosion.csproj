@@ -223,6 +223,7 @@
     <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tools\ImageTools.cs" />
     <Compile Include="Tools\Pointer.cs" />
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Tools\Immutable\ImmutableArray.cs" />

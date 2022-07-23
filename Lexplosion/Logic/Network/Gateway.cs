@@ -5,9 +5,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
-using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Network
 {
