@@ -11,113 +11,95 @@ namespace Lexplosion.Gui.ViewModels
             Value2 = 1638
         }; //min = value1, max = value2
 
-        private RelayCommand _nextPageCommand;
-        private RelayCommand _prevPageCommand;
-        private RelayCommand _textBoxPageIndexChanged;
-
-        private bool _canGoBack = false;
-        private bool _canGoNext = true;
-
-        private ushort _pageIndex = 0;
-        private ushort _pageNum = 1;
 
         private InstanceSource _source;
 
         public delegate void PageChangedCallback();
         public event PageChangedCallback PageChanged;
 
-        private bool _isLoaded;
+        #region command
 
-        public bool IsLoaded
-        {
-            get => _isLoaded; set
-            {
-                _isLoaded = value;
-                OnPropertyChanged(nameof(IsLoaded));
-            }
-        }
 
+        private RelayCommand _nextPageCommand;
         public RelayCommand NextPageCommand
         {
             get => _nextPageCommand ?? (new RelayCommand(obj =>
             {
-                if (PageIndex < PageLimit.Value2)
+                if (PageIndex < PageLimit.Value2) 
                 {
-                    if (!CanGoNext) CanGoNext = true;
-                    if (!CanGoBack) CanGoBack = true;
+                    if (CanGoNext) CanGoNext = true;
+                    if (CanGoBack) CanGoBack = true;
                     PageIndex++;
                 }
-                if (PageIndex == PageLimit.Value2) CanGoNext = false;
+                else if (PageIndex == 1) CanGoBack = false;
             }));
         }
 
+        private RelayCommand _prevPageCommand;
         public RelayCommand PrevPageCommand
         {
             get => _prevPageCommand ?? (new RelayCommand(obj =>
             {
-                if (PageIndex - 1 >= 0)
+                if (PageIndex != 1)
                 {
                     if (!CanGoNext) CanGoNext = true;
                     if (!CanGoBack) CanGoBack = true;
                     PageIndex--;
                 }
-                else if (PageIndex == 0) CanGoBack = false;
+                else if (PageIndex == 1) CanGoBack = false;
             }));
         }
 
+        private RelayCommand _textBoxPageIndexChanged;
         public RelayCommand TextBoxPageIndexChanged
         {
             get => _textBoxPageIndexChanged ?? (new RelayCommand(obj =>
             {
-                if (PageNum < 1)
-                {
-                    PageNum = 1;
-                }
-                if (PageNum >= 1)
-                {
-                    PageIndex = PageNum--;
-                }
-                else PageIndex = 0;
+                PageIndex = PageNum--;
             }));
         }
 
+        #endregion
+
+        #region props
+
+        private ushort _pageIndex = 1;
         public ushort PageIndex
         {
             get => _pageIndex; set
             {
                 _pageIndex = value;
-                PageNum = value++;
                 PageChanged?.Invoke();
-                OnPropertyChanged(nameof(PageIndex));
+                OnPropertyChanged();
             }
         }
 
+        private bool _canGoBack = false;
         public bool CanGoBack
         {
             get => _canGoBack; set
             {
                 _canGoBack = value;
-                OnPropertyChanged(nameof(CanGoBack));
+                OnPropertyChanged();
             }
         }
+
+        private bool _canGoNext = true;
         public bool CanGoNext
         {
             get => _canGoNext; set
             {
                 _canGoNext = value;
-                OnPropertyChanged(nameof(CanGoNext));
+                OnPropertyChanged();
             }
         }
 
         public ushort PageNum
         {
-            get => _pageNum; set
+            get => PageIndex; set
             {
-                if (value <= 0)
-                    _pageNum = 1;
-                else
-                    _pageNum = value;
-                OnPropertyChanged(nameof(PageNum));
+                PageIndex = value;
+                OnPropertyChanged();
             }
         }
 
@@ -126,8 +108,19 @@ namespace Lexplosion.Gui.ViewModels
             get => _source; set
             {
                 _source = value;
-                OnPropertyChanged(nameof(Source));
+                OnPropertyChanged();
             }
         }
+
+        private bool _isLoaded;
+        public bool IsLoaded
+        {
+            get => _isLoaded; set
+            {
+                _isLoaded = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion props
     }
 }

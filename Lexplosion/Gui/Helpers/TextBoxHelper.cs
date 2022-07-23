@@ -14,7 +14,9 @@ namespace Lexplosion.Gui.Helpers
             Double,
             Int,
             Uint,
-            Natural
+            Natural,
+            Short,
+            Ushort
         }
 
         public enum EvenOddConstraint
@@ -222,6 +224,59 @@ namespace Lexplosion.Gui.Helpers
                             e.Handled = true;
                         break;
                     }
+
+                case NumericFormat.Short:
+                    {
+                        if (short.TryParse(newText, out short number))
+                        {
+                            switch (evenOddConstraint)
+                            {
+                                case EvenOddConstraint.OnlyEven:
+                                    if (number % 2 != 0)
+                                        e.Handled = true;
+                                    else
+                                        e.Handled = false;
+                                    break;
+
+                                case EvenOddConstraint.OnlyOdd:
+                                    if (number % 2 == 0)
+                                        e.Handled = true;
+                                    else
+                                        e.Handled = false;
+                                    break;
+                            }
+                        }
+                        else
+                            e.Handled = true;
+                        break;
+                    }
+
+                case NumericFormat.Ushort:
+                    {
+                        if (ushort.TryParse(newText, out ushort number))
+                        {
+                            switch (evenOddConstraint)
+                            {
+                                case EvenOddConstraint.OnlyEven:
+                                    if (number % 2 != 0)
+                                        e.Handled = true;
+                                    else
+                                        e.Handled = false;
+                                    break;
+
+                                case EvenOddConstraint.OnlyOdd:
+                                    if (number % 2 == 0)
+                                        e.Handled = true;
+                                    else
+                                        e.Handled = false;
+                                    break;
+                            }
+                        }
+                        else
+                            e.Handled = true;
+
+                        break;
+                    }
             }
         }
 
@@ -323,6 +378,50 @@ namespace Lexplosion.Gui.Helpers
                                                 e.CancelCommand();
                                             break;
                                     }
+                                }
+                            }
+                            else
+                                e.CancelCommand();
+                            break;
+                        }
+
+                    case NumericFormat.Short:
+                        {
+                            if (short.TryParse(newText, out short number))
+                            {
+                                switch (evenOddConstraint)
+                                {
+                                    case EvenOddConstraint.OnlyEven:
+                                        if (number % 2 != 0)
+                                            e.CancelCommand();
+                                        break;
+
+                                    case EvenOddConstraint.OnlyOdd:
+                                        if (number % 2 == 0)
+                                            e.CancelCommand();
+                                        break;
+                                }
+                            }
+                            else
+                                e.CancelCommand();
+                            break;
+                        }
+
+                    case NumericFormat.Ushort:
+                        {
+                            if (ushort.TryParse(newText, out ushort number))
+                            {
+                                switch (evenOddConstraint)
+                                {
+                                    case EvenOddConstraint.OnlyEven:
+                                        if (number % 2 != 0)
+                                            e.CancelCommand();
+                                        break;
+
+                                    case EvenOddConstraint.OnlyOdd:
+                                        if (number % 2 == 0)
+                                            e.CancelCommand();
+                                        break;
                                 }
                             }
                             else
@@ -433,6 +532,49 @@ namespace Lexplosion.Gui.Helpers
                         {
                             textBox.Text = defaultValue;
                         }
+                        break;
+                    }
+
+                case NumericFormat.Short:
+                    {
+                        if (short.TryParse(textBox.Text, out short number))
+                        {
+                            switch (evenOddConstraint)
+                            {
+                                case EvenOddConstraint.OnlyEven:
+                                    if (number % 2 != 0)
+                                        textBox.Text = defaultValue;
+                                    break;
+
+                                case EvenOddConstraint.OnlyOdd:
+                                    if (number % 2 == 0)
+                                        textBox.Text = defaultValue;
+                                    break;
+                            }
+                        }
+                        else
+                            textBox.Text = defaultValue;
+                        break;
+                    }
+
+                case NumericFormat.Ushort:
+                    {
+                        if (ushort.TryParse(textBox.Text, out ushort number))
+                        {
+                            switch (evenOddConstraint)
+                            {
+                                case EvenOddConstraint.OnlyEven:
+                                    if (number % 2 != 0)
+                                        textBox.Text = defaultValue;
+                                    break;
+                                case EvenOddConstraint.OnlyOdd:
+                                    if (number % 2 == 0)
+                                        textBox.Text = defaultValue;
+                                    break;
+                            }
+                        }
+                        else
+                            textBox.Text = defaultValue;
                         break;
                     }
             }

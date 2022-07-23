@@ -200,7 +200,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         {
             Lexplosion.Run.TaskRun(delegate ()
             {
-                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex, AddonType.Mods, -1, SearchBoxVM.SearchTextComfirmed);
+                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1, AddonType.Mods, -1, SearchBoxVM.SearchTextComfirmed);
 
                 if (instances.Count == 0)
                 {

@@ -80,9 +80,9 @@
             Width="60"
             Height="40"
             helpers:TextBoxHelper.DefaultValue="1"
-            helpers:TextBoxHelper.OnlyNumeric="Int"
+            helpers:TextBoxHelper.OnlyNumeric="Ushort"
             Background="#131313"
-            Text="{Binding PageNum, UpdateSourceTrigger=PropertyChanged}">
+            Text="{Binding PageIndex, UpdateSourceTrigger=PropertyChanged}">
             <TextBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{Binding TextBoxPageIndexChanged}" />
             </TextBox.InputBindings>
