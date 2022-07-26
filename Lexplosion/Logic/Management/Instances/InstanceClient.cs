@@ -951,7 +951,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         else
                         {
-                            if (elem.AllUnits)
+                            if (elem.UnitsList == null)
                             {
                                 string[] files;
                                 try

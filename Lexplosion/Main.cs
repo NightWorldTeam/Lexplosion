@@ -16,7 +16,6 @@ using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 
-
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
  * Последнее обновление в феврале 2021 года
@@ -40,7 +39,6 @@ namespace Lexplosion
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool ShowWindow(IntPtr hWnd, int showWindowCommand);
-
 
         [STAThread]
         static void Main()

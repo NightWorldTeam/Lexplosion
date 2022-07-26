@@ -139,7 +139,6 @@ namespace Lexplosion.Logic.FileSystem
                 //ищем отсутвующие файлы
                 foreach (string file in filesInfo.data[dir].objects.Keys)
                 {
-
                     if (!File.Exists(folder + "/" + file))
                     {
                         if (!data.ContainsKey(dir))
