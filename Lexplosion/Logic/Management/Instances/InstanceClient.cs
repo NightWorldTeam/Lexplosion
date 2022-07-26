@@ -1009,10 +1009,11 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         /// <param name="zipFile">Путь до zip файла, содержащего клиент.</param>
         /// <returns>Результат импорта.</returns>
-        public static ImportResult Import(string zipFile)
+        public static ImportResult Import(string zipFile, out InstanceClient instanceClient)
         {
             ArchivedClientData parameters;
             string unzipPath;
+            instanceClient = null;
 
             ImportResult res = WithDirectory.UnzipInstance(zipFile, out parameters, out unzipPath);
             if (res == ImportResult.Successful)
@@ -1047,6 +1048,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                     _installedInstances[client._localId] = client;
                     client.SaveInstalledInstancesList();
+                    instanceClient = client;
 
                     res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
                 }       
