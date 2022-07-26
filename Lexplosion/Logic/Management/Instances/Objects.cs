@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Lexplosion.Gui.Helpers;
+using Lexplosion.Gui.Extension;
 using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Instances
@@ -35,14 +35,14 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _isSelected = value;
                 OnPropertyChanged();
+
+                if (UnitsList != null)
+                    foreach (var val in UnitsList.Values) 
+                    {
+                        val.IsSelected = value;
+                    }
             }
         }
-
-        /// <summary>
-        /// Используется только если этот элемент является папкой (IsFile равно false).  
-        /// Означает что все вложенные файлы и папки должны быть экспортированны из этой папки.
-        /// </summary>
-        public bool AllUnits = true;
 
         /// <summary>
         /// Используется только если этот элемент является папкой (IsFile равно false).  

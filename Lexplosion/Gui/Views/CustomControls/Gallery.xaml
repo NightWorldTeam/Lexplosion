@@ -8,6 +8,7 @@
     d:DesignWidth="450"
     mc:Ignorable="d">
     <Grid>
+
         <Image
             Width="450"
             Height="240"
@@ -16,6 +17,7 @@
                 <BlurEffect Radius="{Binding OverviewModel.GalleryVM.BlurEffectRadius}" />
             </Image.Effect>
         </Image>
+
         <TextBlock
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
@@ -24,12 +26,14 @@
             Foreground="White"
             Text="Изображения отсутствуют"
             Visibility="{Binding OverviewModel.GalleryVM.IsNoneImages, Converter={StaticResource ConvertBoolToVisibility}}" />
+
         <Border
             x:Name="ButtonLeft"
             Width="25"
             Height="240"
             HorizontalAlignment="Left"
             Visibility="{Binding OverviewModel.GalleryVM.IsLeftBorder, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+
             <Path
                 x:Name="LeftArrow"
                 HorizontalAlignment="Center"
@@ -38,15 +42,18 @@
                 Fill="White"
                 Opacity="0.8"
                 Stroke="White" />
+
             <Border.Background>
                 <SolidColorBrush
                     x:Name="LeftButtonBackground"
                     Opacity="0"
                     Color="Black" />
             </Border.Background>
+
             <Border.InputBindings>
                 <MouseBinding Command="{Binding OverviewModel.GalleryVM.PrevImage}" Gesture="LeftClick" />
             </Border.InputBindings>
+
             <Border.Triggers>
                 <EventTrigger RoutedEvent="Border.MouseEnter">
                     <BeginStoryboard>
@@ -94,12 +101,14 @@
                 </EventTrigger>
             </Border.Triggers>
         </Border>
+
         <Border
             x:Name="ButtonRight"
             Width="25"
             Height="240"
             HorizontalAlignment="Right"
             Visibility="{Binding OverviewModel.GalleryVM.IsRightBorder, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+
             <Path
                 x:Name="RightArrow"
                 HorizontalAlignment="Center"
@@ -114,9 +123,11 @@
                     Opacity="0"
                     Color="Black" />
             </Border.Background>
+
             <Border.InputBindings>
                 <MouseBinding Command="{Binding OverviewModel.GalleryVM.NextImage}" Gesture="LeftClick" />
             </Border.InputBindings>
+
             <Border.Triggers>
                 <EventTrigger RoutedEvent="Border.MouseEnter">
                     <BeginStoryboard>

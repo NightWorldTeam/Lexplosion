@@ -7,22 +7,22 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Lexplosion.Gui.Helpers
+namespace Lexplosion.Gui.Extension
 {
-    public class TreeViewItemExpanded
+    public class TreeViewItem
     {
         public static DependencyProperty CommandProperty =
             DependencyProperty.RegisterAttached(
                 "Command",
                 typeof(ICommand),
-                typeof(TreeViewItemExpanded),
+                typeof(TreeViewItem),
                 new UIPropertyMetadata(OnCommandChanged));
         
         public static DependencyProperty CommandParameterProperty =
             DependencyProperty.RegisterAttached(
                 "CommandParameter",
                 typeof(object),
-                typeof(TreeViewItemExpanded),
+                typeof(TreeViewItem),
                 new UIPropertyMetadata(null));
 
         public static void SetCommand(DependencyObject target, ICommand value) 
@@ -42,7 +42,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            TreeViewItem control = d as TreeViewItem;
+            System.Windows.Controls.TreeViewItem control = d as System.Windows.Controls.TreeViewItem;
 
             if (control == null) 
                 return;
@@ -59,7 +59,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void OnExpanded(object sender, RoutedEventArgs e) 
         {
-            TreeViewItem control = sender as TreeViewItem;
+            System.Windows.Controls.TreeViewItem control = sender as System.Windows.Controls.TreeViewItem;
             ICommand command = (ICommand)control.GetValue(CommandProperty);
             object commandParameter = control.GetValue(CommandParameterProperty);
             command.Execute(commandParameter);

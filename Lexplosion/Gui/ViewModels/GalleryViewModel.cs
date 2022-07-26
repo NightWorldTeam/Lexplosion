@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
@@ -112,7 +113,7 @@ namespace Lexplosion.Gui.ViewModels
             submenuViewModel.NavigationToMainMenu += ClearGallery;
             App.Current.Dispatcher.Invoke(() => {
                 foreach (var i in images)
-                    Images.Add(Utilities.ToImage(i));
+                    Images.Add(ImageTools.ToImageWithResize(i, 450, 240));
 
                 IsLeftBorder = true;
 

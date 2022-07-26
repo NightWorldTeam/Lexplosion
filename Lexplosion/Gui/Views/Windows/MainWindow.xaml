@@ -2,9 +2,9 @@
     x:Class="Lexplosion.Gui.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="clr-namespace:Lexplosion.Gui.Helpers"
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="944"
@@ -278,7 +278,7 @@
                                     Margin="100,3,0,0"
                                     Content="Полный экспорт"
                                     FontSize="14"
-                                    IsChecked="{Binding InstanceExport.IsFullExport, Mode=TwoWay}" />
+                                    IsChecked="{Binding InstanceExport.IsFullExport}" />
                             </StackPanel>
 
                             <TreeView
@@ -292,8 +292,8 @@
                                     <Style TargetType="{x:Type TreeViewItem}">
                                         <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Padding" Value="1,0,0,0" />
-                                        <Setter Property="behaviors:TreeViewItemExpanded.Command" Value="{Binding InstanceExport.TreeViewItemExpanded, Source={StaticResource MainVM}}" />
-                                        <Setter Property="behaviors:TreeViewItemExpanded.CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
+                                        <Setter Property="extension:TreeViewItem.Command" Value="{Binding InstanceExport.TreeViewItemExpanded, Source={StaticResource MainVM}}" />
+                                        <Setter Property="extension:TreeViewItem.CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
                                         <Setter Property="Foreground" Value="White" />
                                         <Setter Property="Template">
                                             <Setter.Value>

@@ -1,5 +1,5 @@
 ﻿using Lexplosion.Controls;
-using Lexplosion.Gui.Helpers;
+using Lexplosion.Gui.Extension;
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
@@ -56,6 +56,17 @@ namespace Lexplosion.Gui.ViewModels
             get => _isFullExport; set
             {
                 _isFullExport = value;
+                OnPropertyChanged();
+
+                Console.WriteLine("Full Export: ", value);
+
+                if (UnitsList != null) 
+                {
+                    foreach (var val in UnitsList.Values) 
+                    {
+                        val.IsSelected = value;
+                    }
+                }
             }
         }
 
@@ -94,12 +105,14 @@ namespace Lexplosion.Gui.ViewModels
         /// <param name="dir"></param>
         private void LoadDirContent(string dir, PathLevel pathLevel)
         {
-            if (LoadedDirectories.Contains(dir) || dir == null)
+            if (LoadedDirectories.Contains(dir) || dir == null || pathLevel.IsFile)
                 return;
 
-            if (!pathLevel.IsFile)
                 pathLevel.UnitsList = _instanceClient.GetPathContent(dir, pathLevel);
 
+            if (pathLevel.IsSelected)
+                pathLevel.IsSelected = true;
+            
             LoadedDirectories.Add(dir);
         }
 

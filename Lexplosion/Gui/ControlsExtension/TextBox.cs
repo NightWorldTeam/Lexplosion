@@ -3,9 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Lexplosion.Gui.Helpers
+namespace Lexplosion.Gui.Extension
 {
-    public static class TextBoxHelper
+    public static class TextBox
     {
         #region Enum Declarations
 
@@ -31,28 +31,28 @@ namespace Lexplosion.Gui.Helpers
         #region Dependency Properties & CLR Wrappers
 
         public static readonly DependencyProperty OnlyNumericProperty =
-            DependencyProperty.RegisterAttached("OnlyNumeric", typeof(NumericFormat?), typeof(TextBoxHelper),
+            DependencyProperty.RegisterAttached("OnlyNumeric", typeof(NumericFormat?), typeof(TextBox),
                 new PropertyMetadata(null, DependencyPropertiesChanged));
-        public static void SetOnlyNumeric(TextBox element, NumericFormat value) =>
+        public static void SetOnlyNumeric(System.Windows.Controls.TextBox element, NumericFormat value) =>
             element.SetValue(OnlyNumericProperty, value);
-        public static NumericFormat GetOnlyNumeric(TextBox element) =>
+        public static NumericFormat GetOnlyNumeric(System.Windows.Controls.TextBox element) =>
             (NumericFormat)element.GetValue(OnlyNumericProperty);
 
 
         public static readonly DependencyProperty DefaultValueProperty =
-            DependencyProperty.RegisterAttached("DefaultValue", typeof(string), typeof(TextBoxHelper),
+            DependencyProperty.RegisterAttached("DefaultValue", typeof(string), typeof(TextBox),
                 new PropertyMetadata(null, DependencyPropertiesChanged));
-        public static void SetDefaultValue(TextBox element, string value) =>
+        public static void SetDefaultValue(System.Windows.Controls.TextBox element, string value) =>
             element.SetValue(DefaultValueProperty, value);
-        public static string GetDefaultValue(TextBox element) => (string)element.GetValue(DefaultValueProperty);
+        public static string GetDefaultValue(System.Windows.Controls.TextBox element) => (string)element.GetValue(DefaultValueProperty);
 
 
         public static readonly DependencyProperty EvenOddConstraintProperty =
-            DependencyProperty.RegisterAttached("EvenOddConstraint", typeof(EvenOddConstraint), typeof(TextBoxHelper),
+            DependencyProperty.RegisterAttached("EvenOddConstraint", typeof(EvenOddConstraint), typeof(TextBox),
                 new PropertyMetadata(EvenOddConstraint.All, DependencyPropertiesChanged));
-        public static void SetEvenOddConstraint(TextBox element, EvenOddConstraint value) =>
+        public static void SetEvenOddConstraint(System.Windows.Controls.TextBox element, EvenOddConstraint value) =>
             element.SetValue(EvenOddConstraintProperty, value);
-        public static EvenOddConstraint GetEvenOddConstraint(TextBox element) =>
+        public static EvenOddConstraint GetEvenOddConstraint(System.Windows.Controls.TextBox element) =>
             (EvenOddConstraint)element.GetValue(EvenOddConstraintProperty);
 
         #endregion
@@ -61,7 +61,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void DependencyPropertiesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!(d is TextBox textBox))
+            if (!(d is System.Windows.Controls.TextBox textBox))
                 throw new Exception("Attached property must be used with TextBox.");
 
             switch (e.Property.Name)
@@ -100,7 +100,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            var textBox = (TextBox)sender;
+            var textBox = (System.Windows.Controls.TextBox)sender;
             string newText;
 
             if (textBox.SelectionLength == 0)
@@ -282,7 +282,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void TextBox_PasteEventHandler(object sender, DataObjectPastingEventArgs e)
         {
-            var textBox = (TextBox)sender;
+            var textBox = (System.Windows.Controls.TextBox)sender;
 
             if (e.DataObject.GetDataPresent(typeof(string)))
             {
@@ -436,7 +436,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var textBox = (TextBox)sender;
+            var textBox = (System.Windows.Controls.TextBox)sender;
             var defaultValue = GetDefaultValue(textBox);
             var evenOddConstraint = GetEvenOddConstraint(textBox);
 

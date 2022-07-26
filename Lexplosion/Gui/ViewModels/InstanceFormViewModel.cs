@@ -1,4 +1,4 @@
-﻿using Lexplosion.Gui.Helpers;
+﻿using Lexplosion.Gui.Extension;
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Logic.Management;

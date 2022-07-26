@@ -1,16 +1,16 @@
-﻿using Lexplosion.Tools;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Data;
 
 namespace Lexplosion.Gui.Converters
 {
-    public class BytesToBitmapImageConventer : IValueConverter
+    public class ConvertObjectToBoolean : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var bytes = (byte[])value;
-            return ImageTools.ToImage(bytes);
+            if (value == null)
+                return false;
+            return true;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

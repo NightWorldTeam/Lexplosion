@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Lexplosion.Gui.Helpers
+namespace Lexplosion.Gui.Extension
 {
     public class GridHelpers
     {

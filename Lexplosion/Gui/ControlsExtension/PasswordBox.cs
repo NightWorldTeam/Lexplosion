@@ -1,18 +1,18 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Lexplosion.Gui.Helpers
+namespace Lexplosion.Gui.Extension
 {
-    public static class PasswordBoxHelper
+    public static class PasswordBox
     {
-        public static readonly DependencyProperty PasswordProperty = DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBoxHelper),
+        public static readonly DependencyProperty PasswordProperty = DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBox),
             new FrameworkPropertyMetadata(string.Empty, OnPasswordPropertyChanged));
 
-        public static readonly DependencyProperty AttachProperty = DependencyProperty.RegisterAttached("Attach", typeof(bool), typeof(PasswordBoxHelper),
+        public static readonly DependencyProperty AttachProperty = DependencyProperty.RegisterAttached("Attach", typeof(bool), typeof(PasswordBox),
             new PropertyMetadata(false, Attach));
 
         private static readonly DependencyProperty IsUpdatingProperty = DependencyProperty.RegisterAttached("IsUpdating", typeof(bool),
-           typeof(PasswordBoxHelper));
+           typeof(PasswordBox));
 
 
         public static void SetAttach(DependencyObject dp, bool value)
@@ -47,7 +47,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void OnPasswordPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            PasswordBox passwordBox = sender as PasswordBox;
+            System.Windows.Controls.PasswordBox passwordBox = sender as System.Windows.Controls.PasswordBox;
             passwordBox.PasswordChanged -= PasswordChanged;
 
             if (!(bool)GetIsUpdating(passwordBox))
@@ -59,7 +59,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void Attach(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            PasswordBox passwordBox = sender as PasswordBox;
+            System.Windows.Controls.PasswordBox passwordBox = sender as System.Windows.Controls.PasswordBox;
 
             if (passwordBox == null)
                 return;
@@ -77,7 +77,7 @@ namespace Lexplosion.Gui.Helpers
 
         private static void PasswordChanged(object sender, RoutedEventArgs e)
         {
-            PasswordBox passwordBox = sender as PasswordBox;
+            System.Windows.Controls.PasswordBox passwordBox = sender as System.Windows.Controls.PasswordBox;
             SetIsUpdating(passwordBox, true);
             SetPassword(passwordBox, passwordBox.Password);
             SetIsUpdating(passwordBox, false);

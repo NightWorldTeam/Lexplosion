@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace Lexplosion.Gui
 {
@@ -9,6 +8,7 @@ namespace Lexplosion.Gui
         public ushort Id { get; set; }
         public string Header { get; set; }
         public VMBase Content { get; set; }
+        public ICommand Command { get; set; } = new RelayCommand(obj => { });
 
         public int CompareTo(Tab? tab)
         {

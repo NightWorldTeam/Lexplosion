@@ -25,9 +25,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
 
         private FactoryGeneralViewModel _factoryGeneralVM;
-        private FactoryDLCVM _factoryDLCVM;
-
-        private List<Tab> FactoryTabs;
 
         public InstanceFactoryViewModel()
         {

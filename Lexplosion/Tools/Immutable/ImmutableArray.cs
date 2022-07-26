@@ -13,7 +13,7 @@ namespace Lexplosion.Tools.Immutable
 
         public ImmutableArray(T[]? array)
         {
-            _array = _array;
+            _array = array;
         }
 
         public ImmutableArray(List<T> list)

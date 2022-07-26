@@ -136,6 +136,7 @@ namespace Lexplosion
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
 
+
             //Console.WriteLine("TEST");
             ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=432&index=0&sortField=1&sortOrder=desc&pageSize=10&gameVersion=1.12.2&modLoaderType=0&searchFilter=
             ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&sortField=1&sortOrder=desc&pageSize=10&index=0

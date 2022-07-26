@@ -1,4 +1,4 @@
-﻿using Lexplosion.Gui.Helpers;
+﻿using Lexplosion.Gui.Extension;
 using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management.Instances;
 using System;

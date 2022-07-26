@@ -2,6 +2,7 @@
 using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.Management.Instances;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -42,6 +43,16 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         }
 
         #endregion
+
+        private RelayCommand ClearMemory 
+        {
+            get => new RelayCommand(obj => 
+            {
+                Console.WriteLine("test");
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            });
+        }
 
         public InstanceMenuViewModel(InstanceClient instanceClient, MainViewModel mainViewModel = null )
         {
@@ -103,7 +114,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 new Tab
                 {
                     Header = "Назад",
-                    Content = null
+                    Content = null,
+                    Command = ClearMemory
                 },
             };
             SelectedTab = Tabs[0];
