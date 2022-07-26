@@ -31,6 +31,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                         return;
                     }
 
+                    MainModel.LibraryInstances.Add(
+                        instanceClient, new InstanceFormViewModel(_mainViewModel, instanceClient)
+                        );
+
                     MainViewModel.ShowToastMessage("Результат импорта", "Импорт завершился успешно, хотите запустить сборку?", Controls.ToastMessageState.Notification);
                 }
             }); 
