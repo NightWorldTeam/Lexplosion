@@ -93,5 +93,8 @@
     <DataTemplate DataType="{x:Type vmfactorymenu:FactoryDLCVM}">
         <factorymenu:FactoryDLCView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vmfactorymenu:ImportViewModel}">
+        <factorymenu:ImportView />
+    </DataTemplate>
 
 </ResourceDictionary>

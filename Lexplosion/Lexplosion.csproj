@@ -141,6 +141,7 @@
     <Compile Include="Gui\ViewModels\CurseforgeMarket\CurseforgeMarketViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryDLCVM.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />
+    <Compile Include="Gui\ViewModels\FactoryMenu\ImportViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\InstanceFactoryViewModel.cs" />
     <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
@@ -181,6 +182,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\FactoryMenu\FactoryGeneralView.xaml.cs">
       <DependentUpon>FactoryGeneralView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\ImportView.xaml.cs">
+      <DependentUpon>ImportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\FactoryMenu\InstanceFactoryView.xaml.cs">
       <DependentUpon>InstanceFactoryView.xaml</DependentUpon>
@@ -373,6 +377,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\FactoryMenu\FactoryGeneralView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\ImportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

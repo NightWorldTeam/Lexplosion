@@ -25,13 +25,15 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
 
         private FactoryGeneralViewModel _factoryGeneralVM;
+        private ImportViewModel _importViewModel;
 
-        public InstanceFactoryViewModel()
+        public InstanceFactoryViewModel(MainViewModel mainViewModel)
         {
             NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
 
             _factoryGeneralVM = new FactoryGeneralViewModel();
+            _importViewModel = new ImportViewModel(mainViewModel);
 
             var FactoryTabs = new List<Tab>()
             {
@@ -39,6 +41,11 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 {
                     Header = "Основное",
                     Content = _factoryGeneralVM
+                },
+                new Tab
+                {
+                    Header = "Импорт",
+                    Content = _importViewModel
                 }
             }; 
 

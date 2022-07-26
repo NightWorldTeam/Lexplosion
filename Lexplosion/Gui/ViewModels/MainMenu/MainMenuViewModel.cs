@@ -90,7 +90,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public MainMenuViewModel(MainViewModel mainViewModel)
         {
             NavigationFactoryCommand = new NavigateCommand<InstanceFactoryViewModel>(
-                 MainViewModel.NavigationStore, () => new InstanceFactoryViewModel());
+                 MainViewModel.NavigationStore, () => new InstanceFactoryViewModel(_mainViewModel));
 
             _tabMenuViewModel = new TabMenuViewModel(MultiplayerTabs, "Сетевая игра");
             _tabMenuViewModel1 = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");

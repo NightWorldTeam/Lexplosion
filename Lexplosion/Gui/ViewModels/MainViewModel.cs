@@ -180,11 +180,11 @@ namespace Lexplosion.Gui.ViewModels
             });
         }
 
-        public static void ShowDialogMessage(string header, string message, Action leftButtonCommand, Action rightButtonCommand, string leftButtonContent, string rightButtonContent) 
+        public static void ShowDialogMessage(string header, string message, Action leftButtonCommand, Action rightButtonCommand, string leftButtonContent, string rightButtonContent)
         {
             var model = new DialogMessageModel(header, message, leftButtonCommand, rightButtonCommand, leftButtonContent, rightButtonContent);
 
-            App.Current.Dispatcher.Invoke(() => 
+            App.Current.Dispatcher.Invoke(() =>
             {
                 Messages.Add(model);
             });
@@ -337,6 +337,11 @@ namespace Lexplosion.Gui.ViewModels
                     instanceClient, new InstanceFormViewModel(this, instanceClient)
                 );
             }
+        }
+
+        private void AddInstanceToLibrary() 
+        {
+            
         }
 
         /// <summary>
