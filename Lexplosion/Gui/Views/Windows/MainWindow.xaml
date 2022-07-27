@@ -177,18 +177,101 @@
             VerticalAlignment="Bottom"
             Background="#151719"
             Visibility="{Binding IsShowInfoBar, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="32" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="34" />
-                </Grid.ColumnDefinitions>
-                <Ellipse
-                    Width="12"
-                    Height="12"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Fill="Green" />
+            <Grid
+                Width="248"
+                Height="34"
+                HorizontalAlignment="Center">
+
+                <ToggleButton
+                    x:Name="StatusButton"
+                    Margin="11"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Grid>
+                                <Ellipse
+                                    Width="12"
+                                    Height="12"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Fill="Green" />
+                                <Popup
+                                    Width="140"
+                                    Height="80"
+                                    AllowsTransparency="True"
+                                    IsOpen="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Placement="Top"
+                                    PopupAnimation="Fade"
+                                    StaysOpen="False"
+                                    VerticalOffset="-20">
+
+                                    <Border
+                                        Padding="5"
+                                        Background="#222222"
+                                        CornerRadius="2">
+                                        <StackPanel>
+
+                                            <StackPanel.Resources>
+                                                <Style TargetType="{x:Type Button}">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                                <Border
+                                                                    x:Name="border"
+                                                                    Padding="2"
+                                                                    CornerRadius="2">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <Ellipse
+                                                                            Width="10"
+                                                                            Height="10"
+                                                                            HorizontalAlignment="Center"
+                                                                            VerticalAlignment="Center"
+                                                                            Fill="{TemplateBinding Background}" />
+
+                                                                        <ContentPresenter Margin="5,0,0,0" />
+                                                                    </StackPanel>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </StackPanel.Resources>
+
+                                            <Button Background="Green">
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Foreground="White"
+                                                    Text="В сети" />
+                                            </Button>
+
+                                            <Button Background="Yellow">
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Foreground="White"
+                                                    Text="Не беспокоить" />
+                                            </Button>
+
+                                            <Button Background="Gray">
+                                                <TextBlock
+                                                    FontSize="14"
+                                                    Foreground="White"
+                                                    Text="Невидимый" />
+                                            </Button>
+
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+
                 <TextBlock
                     Grid.Column="1"
                     Width="120"
@@ -198,8 +281,11 @@
                     Foreground="#fff"
                     Text="{Binding Nickname, Source={StaticResource MainVM}}"
                     TextAlignment="Center" />
+
                 <Button
                     Grid.Column="2"
+                    Margin="0,0,10,0"
+                    HorizontalAlignment="Right"
                     Background="Transparent"
                     BorderBrush="Transparent"
                     Command=""
@@ -227,8 +313,8 @@
         <!--  Popup  -->
 
 
-        <!--  Export  -->
-        <Grid Grid.Row="1" Visibility="{Binding IsExporting, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
+        <!--  Export {Binding IsExporting, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}  -->
+        <Grid Grid.Row="1" Visibility="Hidden">
             <Grid.Background>
                 <SolidColorBrush Opacity="0.7" Color="Black" />
             </Grid.Background>
