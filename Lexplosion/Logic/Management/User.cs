@@ -10,7 +10,7 @@ using Lexplosion.Logic.Network;
 
 namespace Lexplosion.Logic
 {
-    class User
+    class User : VMBase
     {
         public string Login { get; private set; } = "";
         public string UUID { get; private set; } = "00000000-0000-0000-0000-000000000000";

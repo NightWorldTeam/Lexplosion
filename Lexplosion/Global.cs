@@ -44,8 +44,17 @@ namespace Lexplosion.Global
         {
             get => _user.AccountType;
         }
+        public static ActivityStatus Status
+        {
+            get => _user.Status;
+        }
 
         public static readonly bool Offline = false;
+
+        public static void ChangeBaseStatus(ActivityStatus status)
+        {
+
+        }
 
         public static Settings GeneralSettings { get; private set; } // инициализируется в методе Main
 
