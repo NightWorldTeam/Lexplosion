@@ -58,11 +58,11 @@ namespace Lexplosion.Logic.Management
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-            command += data.VersionFile.mainClass + " --username " + UserData.Login + " --version " + data.VersionFile.gameVersion;
+            command += data.VersionFile.mainClass + " --username " + UserData.User.Login + " --version " + data.VersionFile.gameVersion;
             command += " --gameDir \"" + _settings.GamePath + "/instances/" + _instanceId + "\"";
             command += " --assetsDir \"" + _settings.GamePath + "/assets" + "\"";
             command += " --assetIndex " + data.VersionFile.assetsVersion;
-            command += " --uuid " + UserData.UUID + " --accessToken " + UserData.AccessToken + " --userProperties [] --userType legacy ";
+            command += " --uuid " + UserData.User.UUID + " --accessToken " + UserData.User.AccessToken + " --userProperties [] --userType legacy ";
             command += data.VersionFile.arguments;
             command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
 
@@ -76,7 +76,7 @@ namespace Lexplosion.Logic.Management
             process = new Process();
             if (onlineGame)
             {
-                gameGateway = new Gateway(UserData.UUID, UserData.SessionToken, "194.61.2.176");
+                gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176");
                 removeImportantTaskMark = false;
                 Lexplosion.Run.AddImportantTask();
             }

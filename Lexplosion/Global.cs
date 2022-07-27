@@ -24,37 +24,13 @@ namespace Lexplosion.Global
             return _user.Auth(login, password, saveUser);
         }
 
-        public static string Login
+        public static User User
         {
-            get =>_user.Login;
-        }
-        public static string UUID
-        {
-            get => _user.UUID;
-        }
-        public static string AccessToken
-        {
-            get => _user.AccessToken;
-        }
-        public static string SessionToken
-        {
-            get => _user.SessionToken;
-        }
-        public static AccountType AccountType
-        {
-            get => _user.AccountType;
-        }
-        public static ActivityStatus Status
-        {
-            get => _user.Status;
+            get => _user;
         }
 
         public static readonly bool Offline = false;
 
-        public static void ChangeBaseStatus(ActivityStatus status)
-        {
-
-        }
 
         public static Settings GeneralSettings { get; private set; } // инициализируется в методе Main
 

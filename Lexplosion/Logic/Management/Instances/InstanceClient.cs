@@ -187,7 +187,7 @@ namespace Lexplosion.Logic.Management.Instances
             var client = new InstanceClient(name, type, gameVersion)
             {
                 InLibrary = true,
-                Author = UserData.Login,
+                Author = UserData.User.Login,
                 Description = NoDescription
             };
 

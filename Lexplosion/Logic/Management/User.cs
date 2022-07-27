@@ -88,5 +88,10 @@ namespace Lexplosion.Logic
         {
             ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=0&UUID=" + UUID + "&sessionToken=" + SessionToken);
         }
+
+        public static void ChangeBaseStatus(ActivityStatus status)
+        {
+
+        }
     }
 }

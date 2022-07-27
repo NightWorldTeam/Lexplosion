@@ -60,7 +60,7 @@ namespace Lexplosion.Gui.ViewModels
                         switch (authCode) 
                         {
                             case AuthCode.Successfully:
-                                _model.Nickname = UserData.Login;
+                                _model.Nickname = UserData.User.Login;
                                 _model.IsAuthorized = true;
                                 _libraryInstancesLoading();
                                 NavigationCommand.Execute(null);
