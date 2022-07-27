@@ -12,12 +12,35 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
-                    dialog.SelectedPath = GeneralSettings.SystemPath;
+                    dialog.SelectedPath = GeneralSettings.SystemPath.Replace("/", @"\");
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
                         GeneralSettings.SystemPath = dialog.SelectedPath;
                     }
                 }
+            });
+        }
+
+        public RelayCommand OpenJavaFolderBrowser
+        {
+            get => new RelayCommand(obj =>
+            {
+                using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+                {
+                    dialog.SelectedPath = GeneralSettings.JavaPath.Replace("/", @"\");
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        GeneralSettings.JavaPath = dialog.SelectedPath;
+                    }
+                }
+            });
+        }
+
+        public RelayCommand SetDefaultJavaPath
+        {
+            get => new RelayCommand(obj =>
+            {
+                GeneralSettings.JavaPath = "";
             });
         }
 

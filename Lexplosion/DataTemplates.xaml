@@ -25,6 +25,7 @@
     <сonverters:MultiBindingConverter x:Key="MultiBiningConverter" />
     <сonverters:BytesToBitmapImageConventer x:Key="BytesToBitmapImageConverter" />
     <сonverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <сonverters:NotEqualZeroConverter x:Key="NotEqualZeroConverter" />
 
     <models:MainModel x:Key="MainModel" />
 

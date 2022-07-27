@@ -9,51 +9,66 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
     <UserControl.Resources>
         <gui:Constants x:Key="Const" />
     </UserControl.Resources>
+
     <Grid Margin="25,0,0,0">
+
         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <Grid Height="460" ShowGridLines="False">
+
+            <Grid Height="630" ShowGridLines="False">
+
                 <Grid.Background>
                     <!--  "Black" 0.64  -->
                     <SolidColorBrush Opacity="0.65" Color="#191919" />
                 </Grid.Background>
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="100" />
-                    <RowDefinition Height="100" />
+                    <RowDefinition Height="95" />
+                    <RowDefinition Height="95" />
+                    <RowDefinition Height="95" />
                     <RowDefinition Height="100" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+
                 <Grid Grid.Row="0" Grid.Column="1">
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
                     <Grid
                         Grid.Column="0"
                         Width="15"
                         Height="15"
                         Margin="0,0,3,2"
                         VerticalAlignment="Bottom">
+
                         <Ellipse
                             Grid.Column="0"
                             Width="15"
                             Height="15"
                             Stroke="White"
                             StrokeThickness="1" />
+
                         <TextBlock
                             HorizontalAlignment="Center"
                             FontSize="11"
                             Foreground="White"
                             Text="i" />
                     </Grid>
+
                     <TextBlock
                         Grid.Column="1"
                         VerticalAlignment="Bottom"
@@ -66,12 +81,14 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     ShowGridLines="False">
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="160" />
                         <ColumnDefinition Width="160" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
                     <ComboBox
                         Grid.Column="0"
                         Width="44"
@@ -83,10 +100,12 @@
                         SelectedValue="{Binding GeneralSettings.ScreenResolution}"
                         Style="{StaticResource SettingsComboBox}" />
                     <Grid Grid.Column="1" ShowGridLines="False">
+
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20" />
                             <RowDefinition Height="60" />
                         </Grid.RowDefinitions>
+
                         <TextBlock
                             Width="87"
                             Height="30"
@@ -96,6 +115,7 @@
                             FontWeight="Medium"
                             Foreground="#eee"
                             Text="Ширина" />
+
                         <TextBox
                             Grid.Row="1"
                             Width="125"
@@ -139,14 +159,17 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     ShowGridLines="False">
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20" />
                         <RowDefinition Height="60" />
                     </Grid.RowDefinitions>
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="160" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
                     <TextBlock
                         Width="87"
                         Height="30"
@@ -155,6 +178,7 @@
                         FontWeight="Medium"
                         Foreground="#ddd"
                         Text="ОЗУ" />
+
                     <TextBox
                         Grid.Row="1"
                         Width="125"
@@ -172,22 +196,27 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     ShowGridLines="False">
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20" />
                         <RowDefinition Height="60" />
                     </Grid.RowDefinitions>
+
                     <TextBlock
                         Height="35"
                         FontSize="16"
                         FontWeight="Medium"
                         Foreground="#ddd"
                         Text="Папка с игрой" />
+
                     <Grid Grid.Row="1">
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="400" />
-                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
+
                         <TextBox
                             Grid.Column="0"
                             Height="42"
@@ -197,8 +226,10 @@
                             Foreground="#bbb"
                             Style="{StaticResource SettingsTextBox}"
                             Text="{Binding GeneralSettings.SystemPath, UpdateSourceTrigger=PropertyChanged}" />
+
                         <Button
                             Grid.Column="1"
+                            Width="70"
                             Height="38"
                             Command="{Binding OpenFolderBrowser}"
                             Content="Обзор"
@@ -206,19 +237,173 @@
                             Style="{StaticResource FolderBrowerButton}" />
                     </Grid>
                 </Grid>
-                <StackPanel
+
+                <!--  Java  -->
+
+                <Grid
                     Grid.Row="5"
+                    Grid.Column="1"
+                    ShowGridLines="False">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="60" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Height="35"
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#ddd"
+                        Text="Путь к Java" />
+
+                    <Grid Grid.Row="1">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="75" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            Grid.Column="0"
+                            Height="42"
+                            BorderBrush="#121212"
+                            BorderThickness="0"
+                            FontSize="20"
+                            Foreground="#bbb"
+                            Text="{Binding GeneralSettings.JavaPath, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="FontSize" Value="20" />
+                                    <Setter Property="OverridesDefaultStyle" Value="True" />
+                                    <Setter Property="Foreground" Value="#b9b7b7" />
+                                    <Setter Property="Height" Value="40" />
+                                    <Setter Property="CaretBrush" Value="#167FFC" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type TextBox}">
+                                                <Border
+                                                    x:Name="Border"
+                                                    Background="#1f1f1f"
+                                                    BorderBrush="#121212"
+                                                    BorderThickness="1"
+                                                    CornerRadius="10">
+                                                    <Grid>
+                                                        <TextBlock
+                                                            x:Name="Watermark"
+                                                            Margin="5,0,0,0"
+                                                            Padding="2"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="20"
+                                                            Foreground="#b9b7b7"
+                                                            Text="Использовать встроенную Java" />
+
+                                                        <ScrollViewer
+                                                            x:Name="PART_ContentHost"
+                                                            Margin="5,0,0,0"
+                                                            Padding="2"
+                                                            HorizontalContentAlignment="Center"
+                                                            VerticalContentAlignment="Center"
+                                                            HorizontalScrollBarVisibility="Disabled"
+                                                            VerticalScrollBarVisibility="Disabled" />
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsFocused" Value="True">
+                                                        <Setter TargetName="Watermark" Property="Visibility" Value="Hidden" />
+                                                    </Trigger>
+
+                                                    <DataTrigger Binding="{Binding Text.Length, RelativeSource={RelativeSource Self}, Converter={StaticResource NotEqualZeroConverter}}" Value="True">
+                                                        <Setter TargetName="Watermark" Property="Visibility" Value="Hidden" />
+                                                    </DataTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+
+                        <Button
+                            Grid.Column="1"
+                            Width="70"
+                            Height="38"
+                            Command="{Binding OpenJavaFolderBrowser}"
+                            Content="Обзор"
+                            FontWeight="Medium"
+                            Style="{StaticResource FolderBrowerButton}" />
+
+                        <Button
+                            Grid.Column="2"
+                            Width="70"
+                            Height="38"
+                            Command="{Binding SetDefaultJavaPath}"
+                            Content="Сбросить"
+                            FontWeight="Medium"
+                            Style="{StaticResource FolderBrowerButton}" />
+                    </Grid>
+                </Grid>
+
+                <!--  JVM  -->
+                <Grid
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    ShowGridLines="False">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="60" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Height="35"
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#ddd"
+                        Text="JVM Arguments" />
+
+                    <Grid Grid.Row="1">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            Grid.Column="0"
+                            Height="42"
+                            BorderBrush="#121212"
+                            BorderThickness="0"
+                            FontSize="20"
+                            Foreground="#bbb"
+                            Style="{StaticResource SettingsTextBox}"
+                            Text="{Binding GeneralSettings.GameArgs, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Grid>
+
+                <!--  CheckBoxes  -->
+
+                <StackPanel
+                    Grid.Row="7"
                     Grid.Column="1"
                     Margin="5,0,0,0"
                     HorizontalAlignment="Left">
+
                     <CheckBox
                         Margin="0,0,0,5"
                         Content="Обновлять сборки автоматически"
                         IsChecked="{Binding GeneralSettings.IsAutoUpdate}" />
+
                     <CheckBox
                         Margin="0,0,0,5"
                         Content="Скрывать лаунчер при запуске игры"
                         IsChecked="{Binding GeneralSettings.IsHiddenMode}" />
+
                     <CheckBox
                         Margin="0,0,0,5"
                         Content="Показывать консоль"

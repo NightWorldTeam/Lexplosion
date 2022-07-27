@@ -46,15 +46,32 @@
                         BorderBrush="#121212"
                         BorderThickness="1"
                         CornerRadius="10">
-                        <ScrollViewer
-                            x:Name="PART_ContentHost"
-                            Margin="2,0,0,0"
-                            Padding="2"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            HorizontalScrollBarVisibility="Disabled"
-                            VerticalScrollBarVisibility="Disabled" />
+                        <Grid>
+                            <TextBlock
+                                x:Name="Watermark"
+                                Margin="5,0,0,0"
+                                Padding="2"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                Foreground="#b9b7b7"
+                                Text="Использовать встроенную Java"
+                                Visibility="Hidden" />
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Margin="5,0,0,0"
+                                Padding="2"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Disabled" />
+                        </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Watermark" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

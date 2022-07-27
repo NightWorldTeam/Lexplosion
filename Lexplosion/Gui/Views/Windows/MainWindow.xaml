@@ -2,10 +2,13 @@
     x:Class="Lexplosion.Gui.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
+    xmlns:global="clr-namespace:Lexplosion.Global"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="944"
     Height="528"
@@ -80,6 +83,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <ObjectDataProvider
+            x:Key="ActivityStatus"
+            MethodName="GetValues"
+            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="lexplosion:ActivityStatus" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Window.Resources>
 
     <Grid Margin="0,0,0,0" ShowGridLines="False">
@@ -195,7 +207,20 @@
                                     Height="12"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Fill="Green" />
+                                    Fill="Green">
+                                    <Ellipse.Style>
+                                        <Style TargetType="{x:Type Ellipse}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status, Source={x:Static global:UserData.User}}" Value="{x:Static lexplosion:ActivityStatus.Online}">
+                                                    <Setter Property="Fill" Value="Green" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status, Source={x:Static global:UserData.User}}" Value="{x:Static lexplosion:ActivityStatus.Offline}">
+                                                    <Setter Property="Fill" Value="Gray" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
                                 <Popup
                                     Width="140"
                                     Height="80"
@@ -243,26 +268,29 @@
                                                 </Style>
                                             </StackPanel.Resources>
 
-                                            <Button Background="Green">
-                                                <TextBlock
-                                                    FontSize="14"
-                                                    Foreground="White"
-                                                    Text="В сети" />
-                                            </Button>
+                                            <Button
+                                                Background="Green"
+                                                Command="{Binding ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                CommandParameter="Online"
+                                                Content="В сети"
+                                                FontSize="14"
+                                                Foreground="White" />
 
-                                            <Button Background="Yellow">
-                                                <TextBlock
-                                                    FontSize="14"
-                                                    Foreground="White"
-                                                    Text="Не беспокоить" />
-                                            </Button>
+                                            <Button
+                                                Background="Yellow"
+                                                Command="{Binding ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                CommandParameter="Online"
+                                                Content="Не беспокоить"
+                                                FontSize="14"
+                                                Foreground="White" />
 
-                                            <Button Background="Gray">
-                                                <TextBlock
-                                                    FontSize="14"
-                                                    Foreground="White"
-                                                    Text="Невидимый" />
-                                            </Button>
+                                            <Button
+                                                Background="Gray"
+                                                Command="{Binding ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                CommandParameter="Offline"
+                                                Content="Невидимый"
+                                                FontSize="14"
+                                                Foreground="White" />
 
                                         </StackPanel>
                                     </Border>

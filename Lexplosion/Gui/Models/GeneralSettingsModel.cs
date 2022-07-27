@@ -10,7 +10,7 @@ namespace Lexplosion.Gui.Models
             get => UserData.GeneralSettings.GamePath.Replace(@"\", "/"); set
             {
                 UserData.GeneralSettings.GamePath = value.Replace(@"\", "/");
-                OnPropertyChanged("SystemPath");
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
@@ -20,7 +20,7 @@ namespace Lexplosion.Gui.Models
             get => (uint)UserData.GeneralSettings.WindowHeight; set
             {
                 UserData.GeneralSettings.WindowHeight = value;
-                OnPropertyChanged("WindowHeight");
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
@@ -30,7 +30,7 @@ namespace Lexplosion.Gui.Models
             get => (uint)UserData.GeneralSettings.WindowWidth; set
             {
                 UserData.GeneralSettings.WindowWidth = value;
-                OnPropertyChanged("WindowWidth");
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
@@ -51,7 +51,7 @@ namespace Lexplosion.Gui.Models
             get => (uint)UserData.GeneralSettings.Xmx; set
             {
                 UserData.GeneralSettings.Xmx = value;
-                OnPropertyChanged("Xmx");
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
@@ -61,7 +61,7 @@ namespace Lexplosion.Gui.Models
             get => (uint)UserData.GeneralSettings.Xms; set
             {
                 UserData.GeneralSettings.Xms = value;
-                OnPropertyChanged("Xms");
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
@@ -71,7 +71,7 @@ namespace Lexplosion.Gui.Models
             get => UserData.GeneralSettings.GameArgs; set
             {
                 UserData.GeneralSettings.GameArgs = value;
-                OnPropertyChanged("GameArgs");
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
@@ -81,7 +81,7 @@ namespace Lexplosion.Gui.Models
             get => UserData.GeneralSettings.ShowConsole; set
             {
                 UserData.GeneralSettings.ShowConsole = value;
-                OnPropertyChanged("IsShowConsole");
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
@@ -91,7 +91,7 @@ namespace Lexplosion.Gui.Models
             get => UserData.GeneralSettings.HiddenMode; set
             {
                 UserData.GeneralSettings.HiddenMode = value;
-                OnPropertyChanged("IsHiddenMode");
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
@@ -101,7 +101,33 @@ namespace Lexplosion.Gui.Models
             get => UserData.GeneralSettings.AutoUpdate; set
             {
                 UserData.GeneralSettings.AutoUpdate = value;
-                OnPropertyChanged("IsAutoUpdate");
+                OnPropertyChanged();
+                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+            }
+        }
+
+        public string JavaPath 
+        {
+            get => UserData.GeneralSettings.JavaPath; set 
+            {
+                UserData.GeneralSettings.JavaPath = value;
+                OnPropertyChanged();
+
+                if (value.Length == 0)
+                    UserData.GeneralSettings.CustomJava = false;
+                else 
+                    UserData.GeneralSettings.CustomJava = true;
+
+                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+            }
+        }
+
+        public string JVMArgs
+        {
+            get => UserData.GeneralSettings.GameArgs; set
+            {
+                UserData.GeneralSettings.GameArgs = value;
+                OnPropertyChanged();
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }

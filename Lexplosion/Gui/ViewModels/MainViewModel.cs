@@ -303,6 +303,20 @@ namespace Lexplosion.Gui.ViewModels
                 IsExporting = false;
             });
         }
+
+        public RelayCommand ChangeStatusCommand
+        {
+            get => new RelayCommand(obj =>
+            {
+                if (obj == null)
+                    return;
+
+                ActivityStatus newStatus;
+
+                Enum.TryParse((string)obj, out newStatus);
+                Global.UserData.User.ChangeBaseStatus(newStatus);
+            });
+        }
         #endregion
 
 
