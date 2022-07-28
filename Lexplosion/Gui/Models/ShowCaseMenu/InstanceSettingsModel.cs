@@ -9,16 +9,6 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
         private InstanceClient _instanceClient;
         private Settings _instanceSettings;
 
-        public string JavaPath
-        {
-            get => UserData.GeneralSettings.JavaPath.Replace(@"\", "/"); set
-            {
-                UserData.GeneralSettings.JavaPath = value.Replace(@"\", "/");
-                OnPropertyChanged("JavaPath");
-                _instanceClient.SaveSettings(InstanceSettings);
-            }
-        }
-
         public Settings InstanceSettings 
         {
             get => _instanceSettings; set
@@ -95,6 +85,32 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.AutoUpdate = value;
                 OnPropertyChanged("IsAutoUpdate");
+                _instanceClient.SaveSettings(InstanceSettings);
+            }
+        }
+
+        public string JavaPath
+        {
+            get => InstanceSettings.JavaPath; set
+            {
+                InstanceSettings.JavaPath = value;
+                OnPropertyChanged();
+
+                if (value.Length == 0)
+                    UserData.GeneralSettings.CustomJava = false;
+                else
+                    UserData.GeneralSettings.CustomJava = true;
+
+                _instanceClient.SaveSettings(InstanceSettings);
+            }
+        }
+
+        public string JVMArgs
+        {
+            get => InstanceSettings.GameArgs; set
+            {
+                InstanceSettings.GameArgs = value;
+                OnPropertyChanged();
                 _instanceClient.SaveSettings(InstanceSettings);
             }
         }

@@ -22,6 +22,29 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             });
         }
 
+        public RelayCommand OpenJavaFolderBrowser
+        {
+            get => new RelayCommand(obj =>
+            {
+                using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+                {
+                    dialog.SelectedPath = InstanceSettings.JavaPath.Replace("/", @"\");
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        InstanceSettings.JavaPath = dialog.SelectedPath;
+                    }
+                }
+            });
+        }
+
+        public RelayCommand SetDefaultJavaPath
+        {
+            get => new RelayCommand(obj =>
+            {
+                InstanceSettings.JavaPath = "";
+            });
+        }
+
         public InstanceSettingsViewModel(InstanceClient instanceClient)
         {
             InstanceSettings = new InstanceSettingsModel(instanceClient);
