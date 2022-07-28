@@ -100,8 +100,12 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                         MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(InstalledMods, _mainViewModel, _instanceClient);
                         break;
                     case MarketDLCType.Resourcepacks:
+                        MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
+                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(InstalledResourcepacks, _mainViewModel, _instanceClient);
                         break;
                     case MarketDLCType.World:
+                        MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
+                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(InstalledWorlds, _mainViewModel, _instanceClient);
                         break;
                 }
             }));

@@ -52,5 +52,10 @@ namespace Lexplosion.Controls
             get => (string)GetValue(RightButtonContentProperty);
             set => SetValue(RightButtonContentProperty, value);
         }
+
+        static DialogMessage()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DialogMessage), new FrameworkPropertyMetadata(typeof(DialogMessage)));
+        }
     }
 }

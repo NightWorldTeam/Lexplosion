@@ -84,17 +84,17 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     Header = "Дополнения",
                     Content = new FactoryDLCVM(mainViewModel, instanceClient)
                 },
-                new Tab 
-                {
-                    Id = 4,
-                    Header = "Журнал изменений",
-                    Content = null
-                },
             };
 
             if (instanceClient.Type == InstanceSource.Local) 
             { 
                 _settingsTabs.Add(new Tab { Id = 1, Header = "О Сборке", Content = new InstanceProfileViewModel(instanceClient) });
+                _settingsTabs.Add(new Tab
+                {
+                    Id = 4,
+                    Header = "Журнал изменений",
+                    Content = null
+                });
             }
 
             _settingsTabs.Sort();

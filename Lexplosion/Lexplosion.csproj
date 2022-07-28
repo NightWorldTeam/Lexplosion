@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
+    <Compile Include="Controls\ChangelogItem\ChangelogItem.cs" />
     <Compile Include="Controls\DialogMessage\DialogMessage.cs" />
     <Compile Include="Controls\DialogMessage\DialogMessageModel.cs" />
     <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Gui\Commands\RelayCommand.cs" />
     <Compile Include="Gui\Constants.cs" />
     <Compile Include="Gui\Converters\ConvertObjectToBoolean.cs" />
+    <Compile Include="Gui\Converters\EnumToStringConverter.cs" />
     <Compile Include="Gui\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Gui\ControlsExtension\AsyncObservableCollection.cs" />
     <Compile Include="Gui\ControlsExtension\Grid.cs" />
@@ -154,6 +156,7 @@
     <Compile Include="Gui\ViewModels\MainViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\ChangelogViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceProfileViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceMenuViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceSettingsViewModel.cs" />
@@ -204,6 +207,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml.cs">
       <DependentUpon>GeneralMultiplayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\ChangelogView.xaml.cs">
+      <DependentUpon>ChangelogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstanceProfileForm.xaml.cs">
       <DependentUpon>InstanceProfileForm.xaml</DependentUpon>
@@ -284,6 +290,10 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ChangelogItem\ChangelogItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Controls.xaml">
       <SubType>Designer</SubType>
@@ -406,6 +416,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\ChangelogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

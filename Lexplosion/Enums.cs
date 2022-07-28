@@ -175,4 +175,23 @@
         OpenWorld,
         ConnectToUser
     }
+
+    public enum InstanceChangelog 
+    {
+        Fixes,
+        Changes,
+        ModsRemoved,
+        ModsAdded,
+        ModsUpdated,
+        ModsDowngraded,
+        ModloaderUpdated,
+        ModloaderDowngraded,
+    }
+
+    public enum UpdateType 
+    {
+        Alpha,
+        Beta,
+        Release
+    } 
 }

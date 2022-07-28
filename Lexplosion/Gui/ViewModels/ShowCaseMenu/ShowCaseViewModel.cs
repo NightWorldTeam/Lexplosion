@@ -37,7 +37,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     NavigationMainMenuCommand.Execute(null);
             }
         }
-        
+
 
         public ShowCaseViewModel(InstanceClient instanceClient)
         {
@@ -54,10 +54,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     Header = "Mods",
                     Content = null
                 },
-                new Tab() 
+                                new Tab()
                 {
                     Header = "Changelog",
-                    Content = null
+                    Content = new ChangelogViewModel()
                 }
             };
 

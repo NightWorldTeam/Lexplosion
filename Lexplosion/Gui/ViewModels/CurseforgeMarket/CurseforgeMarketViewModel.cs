@@ -58,29 +58,6 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
     public class CurseforgeMarketViewModel : VMBase
     {
-        private readonly string[] ModCategoryNames = new string[19]
-        {
-            "All Mods",
-            "WorldGen",
-            "Technology",
-            "Magic",
-            "Storage",
-            "API and Library",
-            "Adventure and RPG",
-            "Map and Information",
-            "Cosmetics",
-            "Miscellaneous",
-            "Addons",
-            "Armor, Tools, and Weapon",
-            "Server Utility",
-            "Food",
-            "Redstone",
-            "Twitch Integration",
-            "MCreator",
-            "Utility & QoL",
-            "Education"
-        };
-
         private readonly MainViewModel _mainViewModel;
 
         private readonly BaseInstanceData _baseInstanceData;
@@ -152,7 +129,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         #region props 
 
         public ObservableCollection<AddonCategory> ModCategories { get; } = new ObservableCollection<AddonCategory>();
-        public ObservableCollection<InstanceAddon> Mods { get; }
+        public ObservableCollection<InstanceAddon> InstanceAddons { get; }
 
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel();
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
@@ -177,7 +154,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             _baseInstanceData = instanceClient.GetBaseData;
 
-            Mods = new ObservableCollection<InstanceAddon>();
+            InstanceAddons = new ObservableCollection<InstanceAddon>();
 
             ;
 
@@ -210,10 +187,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        Mods.Clear();
+                        InstanceAddons.Clear();
                         foreach (var instance in instances)
                         {
-                            Mods.Add(instance);
+                            InstanceAddons.Add(instance);
                         }
                     });
 

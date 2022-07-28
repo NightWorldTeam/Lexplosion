@@ -26,6 +26,7 @@
     <сonverters:BytesToBitmapImageConventer x:Key="BytesToBitmapImageConverter" />
     <сonverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     <сonverters:NotEqualZeroConverter x:Key="NotEqualZeroConverter" />
+    <сonverters:EnumToStringConverter x:Key="EnumToStringConverter" />
 
     <models:MainModel x:Key="MainModel" />
 
@@ -79,6 +80,9 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type showcasemenu:InstanceProfileViewModel}">
         <showcasepage:InstanceProfileForm />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:ChangelogViewModel}">
+        <showcasepage:ChangelogView />
     </DataTemplate>
 
     <!--  InstanceFactory DataTemplate  -->

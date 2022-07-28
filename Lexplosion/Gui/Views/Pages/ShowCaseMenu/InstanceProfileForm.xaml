@@ -12,7 +12,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
 
-        <Style TargetType="{x:Type TextBlock}">
+        <Style x:Key="Tex" TargetType="{x:Type TextBlock}">
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="FontSize" Value="24" />
             <Setter Property="Foreground" Value="WhiteSmoke" />
@@ -93,6 +93,7 @@
                                     <TextBlock
                                         HorizontalAlignment="Left"
                                         FontSize="16"
+                                        Style="{StaticResource Tex}"
                                         Text="ОСНОВНОЕ" />
                                 </Border>
 
@@ -107,6 +108,7 @@
                                         FontSize="14"
                                         Foreground="White"
                                         Opacity="0.8"
+                                        Style="{StaticResource Tex}"
                                         Text="НАЗВАНИЕ" />
                                     <TextBox
                                         Width="400"
@@ -127,6 +129,7 @@
                                         FontSize="14"
                                         Foreground="White"
                                         Opacity="0.8"
+                                        Style="{StaticResource Tex}"
                                         Text="ВЕРСИЯ" />
                                     <ComboBox
                                         Width="400"
@@ -148,6 +151,7 @@
                                         FontSize="14"
                                         Foreground="White"
                                         Opacity="0.8"
+                                        Style="{StaticResource Tex}"
                                         Text="MODLOADER" />
                                     <ComboBox
                                         Width="400"
@@ -170,6 +174,7 @@
                                         FontSize="14"
                                         Foreground="White"
                                         Opacity="0.8"
+                                        Style="{StaticResource Tex}"
                                         Text="ВЕРСИЯ MODLOADER" />
                                     <ComboBox
                                         Width="400"
@@ -200,11 +205,13 @@
                                         <TextBlock
                                             HorizontalAlignment="Left"
                                             FontSize="18"
+                                            Style="{StaticResource Tex}"
                                             Text="Аватар" />
                                         <TextBlock
                                             HorizontalAlignment="Left"
                                             FontSize="14"
                                             Opacity="0.8"
+                                            Style="{StaticResource Tex}"
                                             Text="Выберите изображение для вашего модпака." />
                                         <StackPanel Orientation="Horizontal">
                                             <Border
@@ -251,6 +258,7 @@
                                         <TextBlock
                                             Margin="11,5,0,0"
                                             FontSize="14"
+                                            Style="{StaticResource Tex}"
                                             Text="Вы можете загрузить свой аватар, но видеть его будете только вы."
                                             TextAlignment="Left"
                                             TextWrapping="WrapWithOverflow" />
@@ -273,10 +281,11 @@
                                     <TextBlock
                                         Margin="0,0,0,5"
                                         HorizontalAlignment="Left"
-                                        FontSize="16"
+                                        FontSize="15"
                                         Opacity="0.8"
+                                        Style="{StaticResource Tex}"
                                         Text="Краткое Описание" />
-                                    <TextBox Text="{Binding BaseInstanceData.Summary, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox FontSize="14" Text="{Binding BaseInstanceData.Summary, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
 
                                 <!--  Description  -->
@@ -286,11 +295,13 @@
                                         HorizontalAlignment="Left"
                                         FontSize="16"
                                         Opacity="0.8"
+                                        Style="{StaticResource Tex}"
                                         Text="Полное Описание" />
                                     <TextBox
                                         Height="150"
                                         VerticalContentAlignment="Top"
                                         AcceptsReturn="True"
+                                        FontSize="15"
                                         Text="{Binding BaseInstanceData.Description, UpdateSourceTrigger=PropertyChanged}"
                                         TextWrapping="Wrap"
                                         VerticalScrollBarVisibility="Auto" />
@@ -303,6 +314,7 @@
                                         HorizontalAlignment="Left"
                                         FontSize="16"
                                         Opacity="0.8"
+                                        Style="{StaticResource Tex}"
                                         Text="Теги" />
                                     <ListBox
                                         Background="#272727"
@@ -352,6 +364,7 @@
                                                     VerticalAlignment="Center"
                                                     FontSize="12"
                                                     Foreground="#f2f2f3"
+                                                    Style="{StaticResource Tex}"
                                                     Text="{Binding}" />
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>

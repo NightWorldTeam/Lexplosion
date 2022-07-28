@@ -260,9 +260,11 @@
             BorderThickness="{TemplateBinding BorderThickness}"
             CornerRadius="6">
             <ContentPresenter
+                Margin="10,0,0,0"
                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalAlignment="Center"
-                IsHitTestVisible="False" />
+                IsHitTestVisible="False"
+                TextBlock.FontSize="14" />
         </Border>
     </ControlTemplate>
 
@@ -275,28 +277,14 @@
                             <ToggleButton
                                 Name="ToggleButton"
                                 Grid.Column="2"
+                                HorizontalContentAlignment="Left"
                                 ClickMode="Press"
                                 Content="{TemplateBinding SelectionBoxItem}"
-                                FontSize="14"
-                                Foreground="White"
+                                Foreground="#b9b7b7"
                                 IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                 IsTabStop="False"
                                 Template="{StaticResource LighterDefaultComboBoxToggleButton}" />
-                            <ContentPresenter
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                RecognizesAccessKey="True" />
-                            <TextBox
-                                x:Name="PART_EditableTextBox"
-                                Margin="3,3,23,3"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Background="#FF3F3F3F"
-                                Focusable="True"
-                                Foreground="Green"
-                                IsReadOnly="{TemplateBinding IsReadOnly}"
-                                Style="{x:Null}"
-                                Visibility="Hidden" />
+                            <ContentPresenter VerticalAlignment="Center" RecognizesAccessKey="True" />
                             <!--  None, Fade, Scroll, Slide  -->
                             <Popup
                                 Name="Popup"
@@ -317,7 +305,10 @@
                                         BorderThickness="2"
                                         CornerRadius="2" />
                                     <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        <StackPanel
+                                            IsItemsHost="True"
+                                            KeyboardNavigation.DirectionalNavigation="Contained"
+                                            TextBlock.FontSize="14" />
                                     </ScrollViewer>
                                 </Grid>
                             </Popup>
