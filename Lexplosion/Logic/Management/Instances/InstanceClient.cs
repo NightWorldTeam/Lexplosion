@@ -182,7 +182,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="gameVersion">Версия игры</param>
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion = null)
+        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion = null, string logoPath = null)
         {
             var client = new InstanceClient(name, type, gameVersion)
             {
@@ -190,6 +190,15 @@ namespace Lexplosion.Logic.Management.Instances
                 Author = UserData.User.Login,
                 Description = NoDescription
             };
+
+            try
+            {
+                if (logoPath != null && File.Exists(logoPath))
+                {
+                    client.Logo = File.ReadAllBytes(logoPath);
+                }
+            }
+            catch { }
 
             client.CreateFileStruct(modloader, modloaderVersion);
             client.SaveAssets();
@@ -587,18 +596,11 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
-        /// Изменяет параметры клиента. Клиент должен быть добавлен в библиотеку.
-        /// Если параметр не нужно менять, то в него передавать null.
-        /// Если нужно сменить тип модлоадера, то обязательно ещё нужно передать его версию.
+        /// Изменяет параметры установленного модпака
         /// </summary>
-        /// <param name="name">Им клиента.</param>
-        /// <param name="desc">Описание.</param>
-        /// <param name="gameVersion">Версия игры.</param>
-        /// <param name="summary">Краткое описание.</param>
-        /// <param name="categories">Категории.</param>
-        /// <param name="modloader">Тип модлоадера. Если его нужно изменить, то обязательно нужно передать и modloaderVersion.</param>
-        /// <param name="modloaderVersion">Версия модлоадера.</param>s
-        public void ChangeParameters(BaseInstanceData data)
+        /// <param name="data">Вся инфа.</param>
+        /// <param name="logoPath">Путь до лого. Если логотип изменять не нужно, то null</param>
+        public void ChangeParameters(BaseInstanceData data, string logoPath)
         {
             VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
             if (manifest != null)
@@ -608,6 +610,15 @@ namespace Lexplosion.Logic.Management.Instances
                 manifest.version.gameVersion = data.GameVersion;
                 DataFilesManager.SaveManifest(_localId, manifest);
             }
+
+            try
+            {
+                if (logoPath != null && File.Exists(logoPath))
+                {
+                    Logo = File.ReadAllBytes(logoPath);
+                }
+            }
+            catch { }
 
             Description = data.Description;
             GameVersion = data.GameVersion;
