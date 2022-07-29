@@ -9,11 +9,13 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <Button
-            Width="120"
-            Height="40"
-            Command="{Binding ImportCommand}"
-            Content="Импорт"
-            Style="{StaticResource DefaultBrandColorButton}" />
+        <Grid Drop="">
+            <Button
+                Width="120"
+                Height="40"
+                Command="{Binding ImportCommand}"
+                Content="Импорт"
+                Style="{StaticResource DefaultBrandColorButton}" />
+        </Grid>
     </Grid>
 </UserControl>

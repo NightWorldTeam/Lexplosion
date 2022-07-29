@@ -117,14 +117,28 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 return _createInstance ?? (new RelayCommand(obj =>
                 {
-                NavigationMainMenuCommand.Execute(null);
+                    NavigationMainMenuCommand.Execute(null);
 
-                var instanceClient = InstanceClient.CreateClient(
-                    Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion);
+                    var instanceClient = InstanceClient.CreateClient(
+                        Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion);
 
                     MainModel.LibraryInstances.Add(instanceClient, new InstanceFormViewModel(null, instanceClient));
                 }));
             }
+        }
+
+        public RelayCommand LogoImportCommand 
+        {
+            get => new RelayCommand(obj =>
+            {
+                var dialog = new System.Windows.Forms.OpenFileDialog();
+
+                // Process open file dialog box results
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+
+                }
+            });
         }
         #endregion commands
 

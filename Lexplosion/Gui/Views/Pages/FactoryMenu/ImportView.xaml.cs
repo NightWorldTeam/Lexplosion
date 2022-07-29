@@ -24,5 +24,10 @@ namespace Lexplosion.Gui.Views.Pages.FactoryMenu
         {
             InitializeComponent();
         }
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+
+        }
     }
 }

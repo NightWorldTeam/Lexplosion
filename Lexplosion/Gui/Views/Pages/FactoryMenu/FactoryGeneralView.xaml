@@ -296,16 +296,16 @@
                 <!--  SelectionChanged="VersionCB_SelectionChanged"  -->
 
                 <!--  Logo  -->
-                <!--<Button x:Name="InstanceLogo"
+                <Button x:Name="InstanceLogo"
                     Style="{StaticResource LogoButton}"
                     Content="Logo"
                     Width="120"
                     Height="120"
                     VerticalAlignment="Top"
                     Margin="0,20,50,0"
-                    HorizontalAlignment="Right"/>-->
+                    HorizontalAlignment="Right"/>
 
-                <!--  Modloader  -->
+                    <!--  Modloader  -->
                 <TextBlock
                     Margin="26,130,0,0"
                     HorizontalAlignment="Left"
