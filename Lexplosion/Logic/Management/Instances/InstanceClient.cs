@@ -953,7 +953,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="exportList">Список файлов и папок на экспорт. Ключ - путь относительно папки модпака, значение - описание элемента директории.</param>
         /// <param name="exportFile">Полноый путь к архиву, в который будет производиться экспорт.</param>
         /// <returns>Результат экспорта.</returns>
-        public ExportResult Export(Dictionary<string, PathLevel> exportList, string exportFile)
+        public ExportResult Export(Dictionary<string, PathLevel> exportList, string exportFile, string name)
         {
             //exportFile += "/" + _localId + ".zip";
             string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
