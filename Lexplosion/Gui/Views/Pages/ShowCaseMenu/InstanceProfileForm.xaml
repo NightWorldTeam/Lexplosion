@@ -15,7 +15,7 @@
         <Style x:Key="Tex" TargetType="{x:Type TextBlock}">
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="FontSize" Value="24" />
-            <Setter Property="Foreground" Value="WhiteSmoke" />
+            <Setter Property="Foreground" Value="White" />
             <Setter Property="Padding" Value="5,0,0,0" />
         </Style>
 
@@ -109,7 +109,7 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="НАЗВАНИЕ" />
+                                        Text="Название" />
                                     <TextBox
                                         Width="400"
                                         Height="40"
@@ -130,13 +130,14 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="ВЕРСИЯ" />
+                                        Text="Версия (неизменяется)" />
                                     <ComboBox
                                         Width="400"
                                         Height="40"
                                         HorizontalContentAlignment="Left"
+                                        IsEnabled="False"
                                         ItemsSource="{Binding GameVersions}"
-                                        SelectedValue="{Binding BaseInstanceData.GameVersion, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedValue="{Binding GameVersion, UpdateSourceTrigger=PropertyChanged}"
                                         Style="{StaticResource LighterDefaultComboBox}" />
                                 </StackPanel>
 
@@ -152,13 +153,14 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="MODLOADER" />
+                                        Text="Game Type (неизменяется)" />
                                     <ComboBox
                                         Width="400"
                                         Height="40"
                                         HorizontalContentAlignment="Left"
+                                        IsEnabled="False"
                                         ItemsSource="{Binding Source={StaticResource ModloaderType}}"
-                                        SelectedValue="{Binding BaseInstanceData.Modloader}"
+                                        SelectedValue="{Binding ModloaderType}"
                                         Style="{StaticResource LighterDefaultComboBox}" />
                                 </StackPanel>
 
@@ -175,11 +177,12 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="ВЕРСИЯ MODLOADER" />
+                                        Text="Версия Modloader" />
                                     <ComboBox
                                         Width="400"
                                         Height="40"
-                                        SelectedValue="{Binding BaseInstanceData.ModloaderVersion}"
+                                        ItemsSource="{Binding ModloaderVersions}"
+                                        SelectedValue="{Binding ModloaderVersion}"
                                         Style="{StaticResource LighterDefaultComboBox}" />
                                 </StackPanel>
                             </StackPanel>
@@ -190,11 +193,14 @@
                     <TabItem Header="Аватар">
                         <Border Margin="20,0,0,0" Background="Transparent">
                             <Grid ShowGridLines="True">
+
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="170" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
+
                                 <Grid>
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="300" />
                                         <ColumnDefinition Width="*" />
@@ -213,6 +219,7 @@
                                             Opacity="0.8"
                                             Style="{StaticResource Tex}"
                                             Text="Выберите изображение для вашего модпака." />
+
                                         <StackPanel Orientation="Horizontal">
                                             <Border
                                                 Width="120"

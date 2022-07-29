@@ -1,7 +1,9 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,24 +12,117 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
     public class InstanceProfileViewModel : VMBase
     {
+        public InstanceProfileViewModel(InstanceClient instanceClient)
+        {
+            CurrentInstanceClient = instanceClient;
+            BaseInstanceData = CurrentInstanceClient.GetBaseData;
+            IsModloader = BaseInstanceData.Modloader != ModloaderType.None;
+            ModloaderType = BaseInstanceData.Modloader;
+            ModloaderVersion = BaseInstanceData.ModloaderVersion;
+            GameVersion = BaseInstanceData.GameVersion ?? GameVersions[0];
+        }
+
+        /// <summary>
+        /// Версия игры.
+        /// </summary>
+        private string _gameVersion;
+        public string GameVersion 
+        {
+            get => _gameVersion; set
+            {
+                _gameVersion = BaseInstanceData.GameVersion = value;
+
+                if (ModloaderType != ModloaderType.None) 
+                {
+                    GetModloaderVersions(value, ModloaderType);
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Ссылка на изменяемую сборку.
+        /// </summary>
         public InstanceClient CurrentInstanceClient { get; }
 
+        /// <summary>
+        /// Основная информация об изменяемой сборке.
+        /// </summary>
         public BaseInstanceData BaseInstanceData { get; }
 
+        /// <summary>
+        /// Список версий майнкрафта.
+        /// </summary>
         public List<string> GameVersions { get; } = MainViewModel.GameVersions.ToList();
+
+        /// <summary>
+        /// Список версий конкретного modloader, для конкретной версии.
+        /// </summary>
+        private ObservableCollection<string> _modloaderVersions;
+        public ObservableCollection<string> ModloaderVersions 
+        {
+            get => _modloaderVersions; set 
+            {
+                _modloaderVersions = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Свойство содержит путь к выбранной картинке
+        /// </summary>
+        private string _logoPath;
+        private string LogoPath
+        {
+            get => _logoPath; set
+            {
+                _logoPath = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Свойство которое содержит результат проверки наличия modloader'a
         /// Используется для скрытия поля версии modloader'a, если он отсутствует.
         /// </summary>
-        public bool IsModloader { get => BaseInstanceData.Modloader != ModloaderType.None; }
 
-        private string _logoPath;
-        private string LogoPath 
+        private bool _isModloader;
+        public bool IsModloader 
         {
-            get => _logoPath; set 
+            get => _isModloader; set 
             {
-                _logoPath = value;
+                _isModloader = value;
+                OnPropertyChanged();
+            } 
+        }
+
+        private ModloaderType modloaderType;
+        public ModloaderType ModloaderType
+        {
+            get => modloaderType; set 
+            {
+                modloaderType = BaseInstanceData.Modloader = value;
+
+                // проверяем выбран ли modloader
+                IsModloader = modloaderType != ModloaderType.None;
+
+                // загружаем версии modloader для конкретной версии.
+                GetModloaderVersions(BaseInstanceData.GameVersion, value);
+
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Выбранная версия modloader
+        /// </summary>
+        private string _modloaderVersion;
+        public string ModloaderVersion 
+        {
+            get => _modloaderVersion; set 
+            {
+                _modloaderVersion = BaseInstanceData.ModloaderVersion = value;
                 OnPropertyChanged();
             }
         }
@@ -67,30 +162,19 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         #endregion commands
 
-        public string[] ModpacksCategoryNames { get; } = new string[16]
-        {
-            "Tech",
-            "Magic",
-            "Sci-Fi",
-            "Adventure and RPG",
-            "Exploration",
-            "Mini Game",
-            "Quests",
-            "Hardcore",
-            "Map Based",
-            "Small/Ligth",
-            "Extra/Large",
-            "Combat / PVP",
-            "Multiplayer",
-            "FTB Offical Pack",
-            "Skyblock",
-            "Vanilla+"
-        };
+        #region methods
 
-        public InstanceProfileViewModel(InstanceClient instanceClient)
+        private void GetModloaderVersions(string gameVersion, ModloaderType modloader)
         {
-            CurrentInstanceClient = instanceClient;
-            BaseInstanceData = CurrentInstanceClient.GetBaseData;
+            Lexplosion.Run.TaskRun(() =>
+            {
+                ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(gameVersion, modloader));
+                if (ModloaderVersions.Count > 0)
+                    ModloaderVersion = ModloaderVersions[0];
+                Console.WriteLine(gameVersion + " " + modloader);
+            });
         }
+
+        #endregion
     }
 }

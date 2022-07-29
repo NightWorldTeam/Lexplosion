@@ -127,7 +127,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
-        public RelayCommand LogoImportCommand 
+        public RelayCommand LogoImportCommand
         {
             get => new RelayCommand(obj =>
             {

@@ -85,7 +85,7 @@
             Height="40"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Background="#151519"
+            Background="#151719"
             Command="{Binding SearchCommand}"
             Style="{StaticResource SearchButtonStyle}" />
 
@@ -96,7 +96,6 @@
             Height="30"
             Margin="0,5,0,0"
             VerticalAlignment="Top"
-            Background="#131313"
             SelectedIndex="{Binding SelectedSourceIndex}"
             Visibility="{Binding IsMultiSource, Converter={StaticResource ConvertBoolToVisibility}}">
             <ComboBoxItem>NightWorld</ComboBoxItem>

@@ -37,5 +37,25 @@ namespace Lexplosion.Gui
             "Utility & QoL",
             "Education"
         };
+
+        public string[] ModpacksCategoryNames { get; } = new string[16]
+        {
+            "Tech",
+            "Magic",
+            "Sci-Fi",
+            "Adventure and RPG",
+            "Exploration",
+            "Mini Game",
+            "Quests",
+            "Hardcore",
+            "Map Based",
+            "Small/Ligth",
+            "Extra/Large",
+            "Combat / PVP",
+            "Multiplayer",
+            "FTB Offical Pack",
+            "Skyblock",
+            "Vanilla+"
+        };
     }
 }

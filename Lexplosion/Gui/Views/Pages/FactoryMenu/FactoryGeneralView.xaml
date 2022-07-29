@@ -12,168 +12,9 @@
         <!--  TextBlock  -->
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="Foreground" Value="WhiteSmoke" />
-            <Setter Property="Padding" Value="5,0,0,0" />
-        </Style>
-        <!--  Flat ComboBox  -->
-        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
-            <Border
-                x:Name="border"
-                Width="{TemplateBinding Width}"
-                Height="{TemplateBinding Height}"
-                Background="#171717"
-                BorderBrush="#121212"
-                BorderThickness="1.5"
-                CornerRadius="6">
-                <Grid
-                    Margin="10,0,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
-                    <ContentPresenter />
-                </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="border" Property="BorderBrush" Value="#167FFC" />
-                    <Setter TargetName="border" Property="BorderThickness" Value="2" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-        <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
-            <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ComboBox}">
-                        <Grid>
-                            <ToggleButton
-                                Name="ToggleButton"
-                                Grid.Column="2"
-                                ClickMode="Press"
-                                Content="{TemplateBinding SelectionBoxItem}"
-                                Focusable="False"
-                                FontSize="18"
-                                Foreground="White"
-                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                IsTabStop="False"
-                                Template="{StaticResource ComboBoxToggleButton}" />
-                            <ContentPresenter
-                                Name="ContentSite"
-                                Margin="3,3,23,3"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                IsHitTestVisible="False" />
-                            <!--  None, Fade, Scroll, Slide  -->
-                            <Popup
-                                Name="Popup"
-                                AllowsTransparency="True"
-                                Focusable="False"
-                                IsOpen="{TemplateBinding IsDropDownOpen}"
-                                Placement="Bottom"
-                                PopupAnimation="Scroll">
-                                <Grid
-                                    Name="DropDown"
-                                    MinWidth="200"
-                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                                    SnapsToDevicePixels="True">
-                                    <Border
-                                        x:Name="DropDownBorder"
-                                        Background="#1f1f1f"
-                                        BorderBrush="#167FFC"
-                                        BorderThickness="2"
-                                        CornerRadius="6" />
-                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
-                                    </ScrollViewer>
-                                </Grid>
-                            </Popup>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="HasItems" Value="false">
-                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                            <Trigger Property="IsGrouping" Value="true">
-                                <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
-                            </Trigger>
-                            <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="true">
-                                <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="0" />
-                                <Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0" />
-                            </Trigger>
-                            <Trigger Property="IsEditable" Value="true">
-                                <Setter Property="IsTabStop" Value="false" />
-                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers />
-        </Style>
-
-        <!--  SimpleStyles: ComboBoxItem  -->
-        <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="Foreground" Value="White" />
             <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="DemiBold" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                        <Border Name="Border" SnapsToDevicePixels="true">
-                            <ContentPresenter Margin="3" HorizontalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsHighlighted" Value="true">
-                                <Setter TargetName="Border" Property="Background" Value="#167FFC" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="CaretBrush" Value="#167FFC" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Border
-                            x:Name="border"
-                            Background="#171717"
-                            BorderBrush="#167FFC"
-                            BorderThickness="1.5"
-                            CornerRadius="6">
-                            <ScrollViewer
-                                x:Name="PART_ContentHost"
-                                Margin="10,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="#167FFC" />
-                            </Trigger>
-                            <Trigger Property="IsFocused" Value="False">
-                                <Setter TargetName="border" Property="BorderBrush" Value="#121212" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Padding" Value="5,0,0,0" />
         </Style>
 
         <Style x:Key="LogoButton" TargetType="{x:Type Button}">
@@ -199,26 +40,27 @@
             </Setter>
         </Style>
 
-        <Style x:Name="Buttn" TargetType="{x:Type Button}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ButtonBase}">
-                        <Border
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="7">
-                            <Grid>
-                                <ContentPresenter
-                                    Margin="-2,0,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center" />
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ControlTemplate x:Key="Test" TargetType="{x:Type GroupBox}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <ContentPresenter
+                    Margin="4"
+                    ContentSource="Header"
+                    RecognizesAccessKey="True" />
+
+                <Border
+                    Grid.Row="1"
+                    BorderBrush="#167FFC"
+                    BorderThickness="1,0,1,1">
+                    <ContentPresenter Margin="4" />
+                </Border>
+
+            </Grid>
+        </ControlTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -312,7 +154,7 @@
                     Margin="26,130,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Text="Modloader" />
+                    Text="Game Type" />
 
                 <RadioButton
                     x:Name="NoneSelected"
