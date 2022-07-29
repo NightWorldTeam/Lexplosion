@@ -181,8 +181,9 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="name">Название сборки</param>
         /// <param name="gameVersion">Версия игры</param>
         /// <param name="modloader">Тип модлоадера</param>
+        /// <param name="logoPath">Путь до логотипа. Если устанавливать не надо, то null.</param>
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string modloaderVersion = null, string logoPath = null)
+        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string logoPath, string modloaderVersion = null)
         {
             var client = new InstanceClient(name, type, gameVersion)
             {
