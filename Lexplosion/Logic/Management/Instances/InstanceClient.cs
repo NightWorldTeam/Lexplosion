@@ -80,7 +80,15 @@ namespace Lexplosion.Logic.Management.Instances
             get => _logo;
             private set
             {
-                _logo = ImageTools.ResizeImage(value, 120, 120);
+                if (value != null)
+                {
+                    _logo = ImageTools.ResizeImage(value, 120, 120);
+                }
+                else
+                {
+                    _logo = null;
+                }
+
                 OnPropertyChanged();
             }
         }
