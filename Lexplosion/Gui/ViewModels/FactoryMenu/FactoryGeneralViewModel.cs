@@ -120,7 +120,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                     NavigationMainMenuCommand.Execute(null);
 
                     var instanceClient = InstanceClient.CreateClient(
-                        Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion);
+                        Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion, Model.LogoPath);
 
                     MainModel.LibraryInstances.Add(instanceClient, new InstanceFormViewModel(null, instanceClient));
                 }));
@@ -136,10 +136,11 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 // Process open file dialog box results
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-
+                    Model.LogoPath = dialog.FileName;
                 }
             });
         }
+
         #endregion commands
 
         public FactoryGeneralViewModel()

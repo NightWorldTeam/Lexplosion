@@ -22,6 +22,16 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// </summary>
         public bool IsModloader { get => BaseInstanceData.Modloader != ModloaderType.None; }
 
+        private string _logoPath;
+        private string LogoPath 
+        {
+            get => _logoPath; set 
+            {
+                _logoPath = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region commands
 
         /// <summary>
@@ -31,7 +41,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => new RelayCommand(obj =>
             {
-                CurrentInstanceClient.ChangeParameters(BaseInstanceData);
+                CurrentInstanceClient.ChangeParameters(BaseInstanceData, LogoPath);
             });
         }
 
@@ -42,13 +52,15 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => new RelayCommand(obj => 
             {
-                var ofd = new OpenFileDialog();
-                ofd.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
-                ofd.FilterIndex = 1;
+                using (var dialog = new System.Windows.Forms.OpenFileDialog()) 
+                { 
+                    dialog.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
 
-                if (ofd.ShowDialog() == true) 
-                {
-                    //BaseInstanceData.Logo = 
+                    // Process open file dialog box results
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
+                    {
+                        LogoPath = _logoPath;
+                    }
                 }
             });
         }

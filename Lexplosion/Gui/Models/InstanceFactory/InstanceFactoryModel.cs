@@ -12,7 +12,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         private string _selectedVersion;
         private ModloaderType _modloaderType;
         private bool _isAvaliableName;
-
+        private string _logoPath = null;
         public List<string> UnavailableNames { get; } = new List<string>();
         public Dictionary<string, List<string>> ForgeVersions { get; }
         public Dictionary<string, List<string>> FabricVersions { get; }
@@ -49,9 +49,17 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         {
             get => _modloaderType; set
             {
-
                 _modloaderType = value;
                 OnPropertyChanged(nameof(ModloaderType));
+            }
+        }
+
+        public string LogoPath 
+        {
+            get => _logoPath; set 
+            {
+                _logoPath = value; 
+                OnPropertyChanged(nameof(LogoPath));
             }
         }
 

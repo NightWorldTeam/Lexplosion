@@ -97,9 +97,9 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
                 OnPropertyChanged();
 
                 if (value.Length == 0)
-                    UserData.GeneralSettings.CustomJava = false;
+                    InstanceSettings.CustomJava = false;
                 else
-                    UserData.GeneralSettings.CustomJava = true;
+                    InstanceSettings.CustomJava = true;
 
                 _instanceClient.SaveSettings(InstanceSettings);
             }
