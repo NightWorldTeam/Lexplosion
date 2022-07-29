@@ -492,9 +492,12 @@ namespace Lexplosion.Logic.Management.Instances
                             {
                                 Value1 = obj,
                                 Value2 = projectId
-                            }; 
+                            };
 
-                            obj.DownloadLogo(addon.logo.url);
+                            if (addon.logo != null)
+                            {
+                                obj.DownloadLogo(addon.logo.url);
+                            }
                             addons.Add(obj);
                         }
                     }
