@@ -139,7 +139,7 @@
                         Grid.Row="1"
                         Background="Transparent"
                         BorderBrush="Transparent"
-                        ItemsSource="{Binding Mods}">
+                        ItemsSource="{Binding InstanceAddons}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border
