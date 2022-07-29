@@ -80,7 +80,7 @@ namespace Lexplosion.Logic.Management.Instances
             get => _logo;
             private set
             {
-                _logo = value;
+                _logo = ImageTools.ResizeImage(value, 120, 120);
                 OnPropertyChanged();
             }
         }
@@ -804,7 +804,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     using (var webClient = new WebClient())
                     {
-                        Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 120, 120);
+                        Logo = webClient.DownloadData(url);
                         callback();
                     }
                 }
