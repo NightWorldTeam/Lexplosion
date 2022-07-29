@@ -132,7 +132,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 Lexplosion.Run.TaskRun(() =>
                 {
-                    var result = InstanceClient.Export(UnitsList, saveFileDialog1.FileName);
+                    var result = InstanceClient.Export(UnitsList, saveFileDialog1.FileName, InstanceName);
                     if (result == ExportResult.Successful)
                     {
                         MainViewModel.ShowToastMessage("Экспорт сборки", String.Format("Экспорт сборки {0} был успешно завершён. Открыть папку с файлом?", InstanceName), ToastMessageState.Notification);
