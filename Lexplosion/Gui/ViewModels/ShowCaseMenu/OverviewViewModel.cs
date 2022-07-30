@@ -8,33 +8,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
     public class OverviewViewModel : VMBase
     {
-        private readonly Dictionary<string, double> tagSizes = new Dictionary<string, double>()
-        {
-            { "Tech", 36.5333333333333 },
-            { "Magic", 46.9233333333333},
-            { "Sci-Fi", 49.88},
-            { "Adventure and RPG", 132.433333333333},
-            { "Exploration", 80.4466666666667},
-            { "Mini Game", 77.18},
-            { "Quests", 51.3233333333333},
-            { "Hardcore", 66.5366666666667},
-            { "Map Based", 78.2066666666667},
-            { "Small / Light", 88.28},
-            { "Extra Large", 78.74},
-            { "Combat / PvP", 95.0533333333333},
-            { "Multiplayer", 80.5133333333333},
-            { "FTB Official Pack", 113.16},
-            { "Skyblock", 64.4766666666667},
-            { "Vanilla+", 49.71}
-        };
-
-        private bool _isLoaded = true;
-
-        private double _categoryPanelBorderHeight;
-        private OverviewModel _overviewModel;
-        
         #region props
 
+        private OverviewModel _overviewModel;
         public OverviewModel OverviewModel 
         { 
             get => _overviewModel; set 
@@ -44,6 +20,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             } 
         }
 
+        private double _categoryPanelBorderHeight;
         public double CategoryPanelBorderHeight
         {
             get => _categoryPanelBorderHeight; set 
@@ -53,6 +30,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
+        private bool _isLoaded = true;
         public bool IsLoaded
         {
             get => _isLoaded;
@@ -64,7 +42,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         }
 
         public bool IsCategoriesExist { get; set; }
-
         public bool IsDownloadsCountExists { get; set; }
 
         #endregion props
@@ -114,7 +91,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             var childWidth = 0.0;
             foreach (var item in _overviewModel.InstanceData.Categories)
             {
-                childWidth += tagSizes[item.name];
+                childWidth += TagSizes[item.name];
             }
             if (childWidth < 326.5)
                 return 40;

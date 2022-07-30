@@ -15,7 +15,7 @@ namespace Lexplosion.Gui
             "1024x768", "800x600", "720x576", "720x480", "640x480"
         };
 
-        private readonly string[] ModCategoryNames = new string[19]
+        public static readonly string[] ModCategoryNames = new string[19]
         {
             "All Mods",
             "WorldGen",
@@ -38,7 +38,7 @@ namespace Lexplosion.Gui
             "Education"
         };
 
-        public string[] ModpacksCategoryNames { get; } = new string[16]
+        public static string[] ModpacksCategoryNames { get; } = new string[16]
         {
             "Tech",
             "Magic",
@@ -56,6 +56,26 @@ namespace Lexplosion.Gui
             "FTB Offical Pack",
             "Skyblock",
             "Vanilla+"
+        };
+
+        public static readonly Dictionary<string, double> TagSizes = new Dictionary<string, double>()
+        {
+            { "Tech", 36.5333333333333 },
+            { "Magic", 46.9233333333333},
+            { "Sci-Fi", 49.88},
+            { "Adventure and RPG", 132.433333333333},
+            { "Exploration", 80.4466666666667},
+            { "Mini Game", 77.18},
+            { "Quests", 51.3233333333333},
+            { "Hardcore", 66.5366666666667},
+            { "Map Based", 78.2066666666667},
+            { "Small / Light", 88.28},
+            { "Extra Large", 78.74},
+            { "Combat / PvP", 95.0533333333333},
+            { "Multiplayer", 80.5133333333333},
+            { "FTB Official Pack", 113.16},
+            { "Skyblock", 64.4766666666667},
+            { "Vanilla+", 49.71}
         };
     }
 }
