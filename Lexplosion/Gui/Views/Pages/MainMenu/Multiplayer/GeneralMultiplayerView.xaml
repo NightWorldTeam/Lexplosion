@@ -8,39 +8,86 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <Grid>
 
-    <StackPanel>
-        <StackPanel Margin="28,20,0,0">
-            <TextBlock
-                FontSize="16"
-                FontWeight="Medium"
-                Foreground="White"
-                Text="Статус" />
-            <TextBlock
-                FontSize="16"
-                FontWeight="Medium"
-                Foreground="White"
-                Opacity="0.8"
-                Text="Нет открытого мира" />
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
 
-        <StackPanel Margin="28,40,0,0">
-            <TextBlock
-                FontSize="18"
-                FontWeight="Medium"
-                Foreground="White"
-                Text="Приоритетный метод подключения" />
-            <StackPanel Orientation="Horizontal">
-                <RadioButton
-                    Margin="0,5,20,5"
-                    Content="Прямое"
-                    GroupName="ConnectType"
-                    IsChecked="True" />
-                <RadioButton
-                    Margin="20,5,0,5"
-                    Content="Через ретранслятор"
-                    GroupName="ConnectType" />
+        <StackPanel>
+            <StackPanel Margin="28,20,0,0">
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Text="Статус" />
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Opacity="0.8"
+                    Text="Нет открытого мира" />
+            </StackPanel>
+
+            <StackPanel Margin="28,40,0,0">
+                <TextBlock
+                    FontSize="18"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Text="Приоритетный метод подключения" />
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton
+                        Margin="0,5,20,5"
+                        Content="Прямое"
+                        GroupName="ConnectType"
+                        IsChecked="True" />
+                    <RadioButton
+                        Margin="20,5,0,5"
+                        Content="Через ретранслятор"
+                        GroupName="ConnectType" />
+                </StackPanel>
             </StackPanel>
         </StackPanel>
-    </StackPanel>
+
+        <StackPanel
+            Grid.Row="1"
+            Margin="10,0,0,0"
+            Orientation="Horizontal">
+            <Button Command="{Binding MultiplayerOff}" Style="{StaticResource IconicButton}">
+                <Viewbox
+                    Width="24"
+                    Height="24"
+                    Stretch="Fill">
+                    <Path Data="M22.5 26.1V5.8h3v20.3Zm1.5 16q-3.7 0-6.975-1.425Q13.75 39.25 11.3 36.8q-2.45-2.45-3.875-5.725Q6 27.8 6 24.1q0-4 1.7-7.475 1.7-3.475 4.8-6.175l2.1 2.1q-2.65 2.15-4.125 5.125T9 24.1q0 6.25 4.375 10.625T24 39.1q6.25 0 10.625-4.375T39 24.1q0-3.45-1.475-6.475Q36.05 14.6 33.5 12.55l2.15-2.1q3 2.55 4.675 6.1Q42 20.1 42 24.1q0 3.7-1.425 6.975-1.425 3.275-3.85 5.725-2.425 2.45-5.7 3.875Q27.75 42.1 24 42.1Z" Fill="White" />
+
+                </Viewbox>
+                <Button.ToolTip>
+                    <ToolTip
+                        Content="Выключить сетевую игру"
+                        HorizontalOffset="-50"
+                        Style="{StaticResource CustomTipTool}"
+                        VerticalOffset="-30" />
+                </Button.ToolTip>
+            </Button>
+            <Button
+                Margin="5,0,0,0"
+                Command="{Binding MultiplayerRefresh}"
+                Style="{StaticResource IconicButton}">
+                <Viewbox
+                    Width="24"
+                    Height="24"
+                    Stretch="Fill">
+                    <Path Data="M24 40q-6.65 0-11.325-4.675Q8 30.65 8 24q0-6.65 4.675-11.325Q17.35 8 24 8q4.25 0 7.45 1.725T37 14.45V8h3v12.7H27.3v-3h8.4q-1.9-3-4.85-4.85Q27.9 11 24 11q-5.45 0-9.225 3.775Q11 18.55 11 24q0 5.45 3.775 9.225Q18.55 37 24 37q4.15 0 7.6-2.375 3.45-2.375 4.8-6.275h3.1q-1.45 5.25-5.75 8.45Q29.45 40 24 40Z" Fill="White" />
+                </Viewbox>
+                <Button.ToolTip>
+                    <ToolTip
+                        Content="Перезапустить сетевую игру"
+                        HorizontalOffset="-50"
+                        Style="{StaticResource CustomTipTool}"
+                        VerticalOffset="-30" />
+                </Button.ToolTip>
+            </Button>
+        </StackPanel>
+    </Grid>
 </UserControl>
