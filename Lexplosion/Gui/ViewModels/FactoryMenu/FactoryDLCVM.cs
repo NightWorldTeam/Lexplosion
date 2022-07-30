@@ -1,61 +1,44 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Gui.Models.InstanceFactory;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Management.Instances;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
-    public enum MarketDLCType 
-    {
-        Mods,
-        Resourcepacks,
-        World
-    }
-
     public class FactoryDLCVM : VMBase
     {
         private readonly MainViewModel _mainViewModel;
         private readonly InstanceClient _instanceClient;
 
-        private ObservableCollection<InstanceAddon> _installedMods;
-        public ObservableCollection<InstanceAddon> InstalledMods 
+        private List<FactoryDLCModel> _models = new List<FactoryDLCModel>();
+
+        private FactoryDLCModel _currentAddon;
+        public FactoryDLCModel CurrentAddon 
         {
-            get => _installedMods; set 
+            get => _currentAddon; set 
             {
-                _installedMods = value;
+                _currentAddon = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<InstanceAddon> _installedResourcepacks;
-        public ObservableCollection<InstanceAddon> InstalledResourcepacks
+        private int _selectedAddonIndex;
+        public int SelectedAddonIndex
         {
-            get => _installedResourcepacks; set 
+            get => _selectedAddonIndex; set
             {
-                _installedResourcepacks = value;
+                _selectedAddonIndex = value;
+                ChangeCurrentAddonModel(value);
                 OnPropertyChanged();
             }
         }
-
-        private ObservableCollection<InstanceAddon> _InstalledWorlds;
-        public ObservableCollection<InstanceAddon> InstalledWorlds
-        {
-            get => _InstalledWorlds; set 
-            {
-                _InstalledWorlds = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-
-        private RelayCommand _curseforgeCommand;
-        private RelayCommand _updateCommand;
-        private RelayCommand _deleteCommand;
-        private RelayCommand _openMarket;
 
         #region Command
 
+        private RelayCommand _curseforgeCommand;
         public RelayCommand CurseforgeCommand
         {
             get => _curseforgeCommand ?? (new RelayCommand(obj =>
@@ -64,13 +47,14 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 {
                     System.Diagnostics.Process.Start((string)obj);
                 }
-                else 
+                else
                 {
                     MainViewModel.ShowToastMessage("Link null", "Отсутсвует ссылка на страницу curseforge.", Controls.ToastMessageState.Error);
                 }
             }));
         }
 
+        private RelayCommand _updateCommand;
         public RelayCommand UpdateCommand
         {
             get => _updateCommand ?? (new RelayCommand(obj =>
@@ -79,50 +63,54 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }));
         }
 
+        private RelayCommand _deleteCommand;
         public RelayCommand DeleteCommand
         {
             get => _deleteCommand ?? (new RelayCommand(obj =>
             {
                 var instanceAddon = (InstanceAddon)obj;
-                InstalledMods.Remove(instanceAddon);
+                CurrentAddon.Uninstall(instanceAddon);
             }));
         }
 
-        public RelayCommand OpenMarket 
+        private RelayCommand _openMarket;
+        public RelayCommand OpenMarket
         {
-            get => _openMarket ?? (new RelayCommand(obj => 
+            get => _openMarket ?? (new RelayCommand(obj =>
             {
-                var type = (MarketDLCType)obj;
-                switch (type) 
-                {
-                    case MarketDLCType.Mods:
-                        MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
-                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(InstalledMods, _mainViewModel, _instanceClient);
-                        break;
-                    case MarketDLCType.Resourcepacks:
-                        MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
-                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(InstalledResourcepacks, _mainViewModel, _instanceClient);
-                        break;
-                    case MarketDLCType.World:
-                        MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
-                        MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(InstalledWorlds, _mainViewModel, _instanceClient);
-                        break;
-                }
+                MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
+                MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(CurrentAddon.InstalledAddons, _mainViewModel, _instanceClient);
             }));
         }
+
+        private RelayCommand _openAddonsFolder;
+        public RelayCommand OpenAddonsFolder 
+        {
+            get => _openAddonsFolder ?? new RelayCommand(obj => 
+            {
+                System.Diagnostics.Process.Start("explorer", GetAddonsFolder());
+            });
+        }
+
         #endregion
 
         public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
             _mainViewModel = mainViewModel;
             _instanceClient = instanceClient;
-            
-            Lexplosion.Run.TaskRun(() => 
+
+            Lexplosion.Run.TaskRun(() =>
             {
-                InstalledMods = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData));
-                InstalledResourcepacks = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData));
-                InstalledWorlds = new ObservableCollection<InstanceAddon>(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData)));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData)));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData)));
+
+                CurrentAddon = _models[0];
             });
         }
+
+        public void ChangeCurrentAddonModel(int index) => CurrentAddon = _models[index];
+
+        public string GetAddonsFolder() => _instanceClient.GetDirectoryPath();
     }
 }

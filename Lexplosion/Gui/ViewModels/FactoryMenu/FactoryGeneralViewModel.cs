@@ -120,7 +120,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                     NavigationMainMenuCommand.Execute(null);
 
                     var instanceClient = InstanceClient.CreateClient(
-                        Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, SelectedModloaderVersion, Model.LogoPath);
+                        Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, Model.LogoPath, SelectedModloaderVersion);
 
                     MainModel.LibraryInstances.Add(instanceClient, new InstanceFormViewModel(null, instanceClient));
                 }));
@@ -131,12 +131,16 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => new RelayCommand(obj =>
             {
-                var dialog = new System.Windows.Forms.OpenFileDialog();
-
-                // Process open file dialog box results
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                using (var dialog = new System.Windows.Forms.OpenFileDialog())
                 {
-                    Model.LogoPath = dialog.FileName;
+                    dialog.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
+
+                    // Process open file dialog box results
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        Model.LogoPath = dialog.FileName;
+                    }
+
                 }
             });
         }

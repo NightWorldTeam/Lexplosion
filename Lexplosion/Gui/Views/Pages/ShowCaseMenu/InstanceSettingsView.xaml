@@ -193,7 +193,7 @@
                             BorderThickness="0"
                             FontSize="20"
                             Foreground="#bbb"
-                            Text="{Binding GeneralSettings.JavaPath, UpdateSourceTrigger=PropertyChanged}">
+                            Text="{Binding InstanceSettings.JavaPath, UpdateSourceTrigger=PropertyChanged}">
                             <TextBox.Style>
                                 <Style TargetType="{x:Type TextBox}">
                                     <Setter Property="FontSize" Value="20" />
@@ -302,7 +302,7 @@
                             FontSize="20"
                             Foreground="#bbb"
                             Style="{StaticResource SettingsTextBox}"
-                            Text="{Binding GeneralSettings.GameArgs, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding InstanceSettings.GameArgs, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </Grid>
 

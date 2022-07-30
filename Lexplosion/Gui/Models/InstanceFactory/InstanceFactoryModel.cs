@@ -8,15 +8,11 @@ namespace Lexplosion.Gui.Models.InstanceFactory
     {
         #region prop
 
-        private string _name;
-        private string _selectedVersion;
-        private ModloaderType _modloaderType;
-        private bool _isAvaliableName;
-        private string _logoPath = null;
         public List<string> UnavailableNames { get; } = new List<string>();
         public Dictionary<string, List<string>> ForgeVersions { get; }
         public Dictionary<string, List<string>> FabricVersions { get; }
 
+        private bool _isAvaliableName;
         public bool IsAvaliableName 
         {
             get => _isAvaliableName; set
@@ -26,6 +22,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             }
         }
 
+        private string _name;
         public string Name
         {
             get => _name; set
@@ -36,6 +33,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             }
         }
 
+        private string _selectedVersion;
         public string SelectedVersion
         {
             get => _selectedVersion; set
@@ -45,6 +43,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             }
         }
 
+        private ModloaderType _modloaderType;
         public ModloaderType ModloaderType
         {
             get => _modloaderType; set
@@ -54,12 +53,13 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             }
         }
 
+        private string _logoPath = "";
         public string LogoPath 
         {
             get => _logoPath; set 
             {
                 _logoPath = value; 
-                OnPropertyChanged(nameof(LogoPath));
+                OnPropertyChanged();
             }
         }
 

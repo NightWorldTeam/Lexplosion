@@ -26,7 +26,7 @@
             <SolidColorBrush Opacity="0.55" Color="#121212" />
         </Grid.Background>
 
-        <ListBox
+        <ListBox Margin="0,0,0,30"
             ItemContainerStyle="{StaticResource LibraryListBoxItem}"
             ScrollViewer.CanContentScroll="False"
             Style="{StaticResource LibraryListBox}">

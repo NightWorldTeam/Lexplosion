@@ -19,12 +19,16 @@
                         <ScrollViewer
                             x:Name="PART_ContentHost"
                             Margin="10,0,0,0"
-                            Padding="2"
                             HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"
                             HorizontalScrollBarVisibility="Disabled"
                             VerticalScrollBarVisibility="Disabled" />
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="AcceptsReturn" Value="True">
+                            <Setter TargetName="PART_ContentHost" Property="Margin" Value="10,10,0,0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

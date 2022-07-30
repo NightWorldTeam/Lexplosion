@@ -1,0 +1,32 @@
+﻿using Lexplosion.Logic.Management.Instances;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Lexplosion.Gui.Models.InstanceFactory
+{
+    public class FactoryDLCModel : VMBase
+    {
+        public readonly AddonType Type;
+
+        private ObservableCollection<InstanceAddon> _instanceAddons;
+        public ObservableCollection<InstanceAddon> InstalledAddons 
+        {
+            get => _instanceAddons; set
+            {
+                _instanceAddons = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FactoryDLCModel(List<InstanceAddon> addons)
+        {
+            InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
+        }
+
+        public void Uninstall(InstanceAddon addon) => InstalledAddons.Remove(addon);
+    }
+}

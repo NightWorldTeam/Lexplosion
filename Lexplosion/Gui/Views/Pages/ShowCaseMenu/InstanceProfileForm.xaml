@@ -227,7 +227,7 @@
                                                 Margin="5"
                                                 VerticalAlignment="Bottom">
                                                 <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding BaseInstanceData.Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                                                    <ImageBrush ImageSource="{Binding LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
                                                 </Border.Background>
                                             </Border>
                                             <Border
@@ -236,7 +236,7 @@
                                                 Margin="5"
                                                 VerticalAlignment="Bottom">
                                                 <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding BaseInstanceData.Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                                                    <ImageBrush ImageSource="{Binding LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
                                                 </Border.Background>
                                             </Border>
                                             <Border
@@ -245,7 +245,7 @@
                                                 Margin="5"
                                                 VerticalAlignment="Bottom">
                                                 <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding BaseInstanceData.Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                                                    <ImageBrush ImageSource="{Binding LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
                                                 </Border.Background>
                                             </Border>
                                         </StackPanel>

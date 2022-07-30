@@ -104,5 +104,10 @@ namespace Lexplosion.Tools
             }
             else return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
         }
+
+        public static byte[] GetImageBytes(string path) 
+        {
+            return File.ReadAllBytes(path);
+        }
     }
 }

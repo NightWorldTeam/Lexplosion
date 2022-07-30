@@ -14,6 +14,7 @@
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Padding" Value="5,0,0,0" />
         </Style>
 
@@ -39,28 +40,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <ControlTemplate x:Key="Test" TargetType="{x:Type GroupBox}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <ContentPresenter
-                    Margin="4"
-                    ContentSource="Header"
-                    RecognizesAccessKey="True" />
-
-                <Border
-                    Grid.Row="1"
-                    BorderBrush="#167FFC"
-                    BorderThickness="1,0,1,1">
-                    <ContentPresenter Margin="4" />
-                </Border>
-
-            </Grid>
-        </ControlTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -73,14 +52,14 @@
                 <TextBlock
                     Width="244"
                     Height="30"
-                    Margin="26,24,0,0"
+                    Margin="26,26,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Text="Название"
                     TextAlignment="Left" />
 
                 <Grid
-                    Margin="30,60,0,0"
+                    Margin="30,55,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top">
                     <TextBox
@@ -90,7 +69,7 @@
                         Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                     <TextBlock
-                        Margin="10"
+                        Margin="10,0,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         IsHitTestVisible="False"
@@ -116,7 +95,6 @@
                         </TextBlock.Style>
                     </TextBlock>
                 </Grid>
-                <!--  TextChanged="InstanceNameTB_TextChanged"  -->
 
                 <!--  Version  -->
                 <TextBlock
@@ -130,12 +108,11 @@
                 <ComboBox
                     Width="200"
                     Height="40"
-                    Margin="304,60,0,0"
+                    Margin="302,55,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     ItemsSource="{Binding GameVersions}"
                     SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
-                <!--  SelectionChanged="VersionCB_SelectionChanged"  -->
 
                 <!--  Logo  -->
                 <Button
@@ -151,54 +128,61 @@
 
                 <!--  Modloader  -->
                 <TextBlock
-                    Margin="26,130,0,0"
+                    Margin="30,120,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Text="Game Type" />
 
-                <RadioButton
-                    x:Name="NoneSelected"
-                    Height="30"
-                    Margin="30,170,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Command="{Binding SwitchModloaderType}"
-                    CommandParameter="{x:Static objects:ModloaderType.None}"
-                    Content="Отсутствует"
-                    IsChecked="True" />
-                <!--  Click="SelectInstanceRadioButton_Click"  -->
-                <RadioButton
-                    x:Name="ForgeSelected"
-                    Height="30"
-                    Margin="205,170,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Command="{Binding SwitchModloaderType}"
-                    CommandParameter="{x:Static objects:ModloaderType.Forge}"
-                    Content="Forge" />
-                <!--  Click="SelectInstanceRadioButton_Click"  -->
-                <RadioButton
-                    x:Name="FabricSelected"
-                    Height="30"
-                    Margin="320,170,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Command="{Binding SwitchModloaderType}"
-                    CommandParameter="{x:Static objects:ModloaderType.Fabric}"
-                    Content="Fabric" />
-                <!--  Click="SelectInstanceRadioButton_Click"  -->
+                <StackPanel Margin="35,150,0,0" Orientation="Horizontal">
+                    <RadioButton
+                        x:Name="NoneSelected"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{Binding SwitchModloaderType}"
+                        CommandParameter="{x:Static objects:ModloaderType.None}"
+                        Content="Vanilla"
+                        FontSize="18"
+                        IsChecked="True" />
+                    <!--  Click="SelectInstanceRadioButton_Click"  -->
+                    <RadioButton
+                        x:Name="ForgeSelected"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{Binding SwitchModloaderType}"
+                        CommandParameter="{x:Static objects:ModloaderType.Forge}"
+                        Content="Forge"
+                        FontSize="18" />
+                    <!--  Click="SelectInstanceRadioButton_Click"  -->
+                    <RadioButton
+                        x:Name="FabricSelected"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{Binding SwitchModloaderType}"
+                        CommandParameter="{x:Static objects:ModloaderType.Fabric}"
+                        Content="Fabric"
+                        FontSize="18" />
+                </StackPanel>
+
+                <!--  Line Margin="35,0,0,0"  X1="1" X2="40" Y1="200" Y2="200" StrokeThickness="1" Stroke="Red"/  -->
 
                 <!--  More  -->
-                <ComboBox
-                    Width="180"
-                    Height="40"
-                    Margin="30,20,0,0"
-                    HorizontalAlignment="Left"
-                    Background="Red"
-                    ItemsSource="{Binding ModloaderVersions}"
-                    SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}"
-                    Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}" />
+                <StackPanel Margin="30,195,0,0" Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
+                    <TextBlock HorizontalAlignment="Left" Text="Modloader Version" />
 
+                    <ComboBox
+                        Width="180"
+                        Height="40"
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Left"
+                        Background="Red"
+                        ItemsSource="{Binding ModloaderVersions}"
+                        SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
                 <Button
                     Width="105"
                     Height="35"
@@ -209,18 +193,6 @@
                     FontSize="14"
                     FontWeight="DemiBold"
                     Style="{StaticResource DefaultBrandColorButton}" />
-                <!--  Click="CreateInstanceButton_Click"  -->
-                <Button
-                    Width="105"
-                    Height="35"
-                    Margin="150,250,0,0"
-                    HorizontalAlignment="Left"
-                    Background="#232527"
-                    BorderThickness="0"
-                    Content="Больше"
-                    FontSize="14"
-                    FontWeight="DemiBold"
-                    Foreground="White" />
             </Grid>
         </ScrollViewer>
     </Grid>

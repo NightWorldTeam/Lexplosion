@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using Lexplosion.Tools;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             ModloaderType = BaseInstanceData.Modloader;
             ModloaderVersion = BaseInstanceData.ModloaderVersion;
             GameVersion = BaseInstanceData.GameVersion ?? GameVersions[0];
+            LogoBytes = CurrentInstanceClient.Logo;
         }
 
         /// <summary>
@@ -73,11 +75,22 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// Свойство содержит путь к выбранной картинке
         /// </summary>
         private string _logoPath;
-        private string LogoPath
+        public string LogoPath
         {
             get => _logoPath; set
             {
                 _logoPath = value;
+                LogoBytes = ImageTools.GetImageBytes(value);
+                OnPropertyChanged();
+            }
+        }
+
+        private byte[] _logoBytes;
+        public byte[] LogoBytes 
+        {
+            get => _logoBytes; set 
+            {
+                _logoBytes = value;
                 OnPropertyChanged();
             }
         }
@@ -154,7 +167,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     // Process open file dialog box results
                     if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
                     {
-                        LogoPath = _logoPath;
+                        LogoPath = dialog.FileName;
                     }
                 }
             });
