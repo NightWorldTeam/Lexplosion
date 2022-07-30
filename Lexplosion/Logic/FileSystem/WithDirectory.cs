@@ -417,29 +417,6 @@ namespace Lexplosion.Logic.FileSystem
             return ImportResult.Successful;
         }
 
-        public static void RemoveInstanceDirecory(string instanceId)
-        {
-            try
-            {
-                if (Directory.Exists(DirectoryPath + "/instances/" + instanceId))
-                {
-                    Directory.Delete(DirectoryPath + "/instances/" + instanceId, true);
-                }
-            }
-            catch
-            {
-                //MainWindow.Obj.Dispatcher.Invoke(delegate
-                //{
-                //    MainWindow.Obj.SetMessageBox("Произошла ошибка при удалении.");
-                //});
-            }
-
-            //MainWindow.Obj.Dispatcher.Invoke(delegate
-            //{
-            //    //MainWindow.window.InitProgressBar.Visibility = Visibility.Collapsed;
-            //});
-        }
-
         public static bool DonwloadJava(string javaName, Action<int> percentHandler)
         {
             string tempDir = CreateTempDir();
@@ -522,6 +499,29 @@ namespace Lexplosion.Logic.FileSystem
             {
                 return screenshot;
             }
+        }
+
+        public static void DeleteInstance(string instanceId)
+        {
+            try
+            {
+                string path = DirectoryPath + "/instances/" + instanceId;
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+            }
+            catch { }
+
+            try
+            {
+                string path = DirectoryPath + "/instances-assets/" + instanceId;
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+            }
+            catch { }
         }
     }
 }
