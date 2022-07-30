@@ -7,14 +7,31 @@
     Width="750"
     Height="450"
     AllowsTransparency="True"
+    Background="Transparent"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
 
+    <Window.Resources>
+
+        <DropShadowEffect x:Key="BackgroundEffectKey" BlurRadius="6" ShadowDepth="0" Opacity="0.6"/>
+
+        <Style x:Key="WindowBackgroundStyle"
+               TargetType="Border">
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="6" />
+            <Setter Property="Background" Value="#FCF0E2" />
+            <Setter Property="BorderBrush" Value="#F5C58D" />
+            <Setter Property="Effect" Value="{StaticResource BackgroundEffectKey}"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="pack://application:,,,/launcher_loading.png" />
         </Grid.Background>
+        <Border></Border>
     </Grid>
 </Window>

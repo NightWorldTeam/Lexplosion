@@ -160,13 +160,16 @@ namespace Lexplosion
 
             app.Dispatcher.Invoke(() =>
             {
+                app.MainWindow.Topmost = true;
+
                 var mainWindow = new MainWindow()
                 {
                     Left = app.MainWindow.Left - 97,
                     Top = app.MainWindow.Top - 39
                 };
-                mainWindow.Show();
-                app.MainWindow.Close();
+
+                mainWindow.Show();              
+                ((SplashWindow)app.MainWindow).SmoothClosing();
                 app.MainWindow = mainWindow;
             });
         }
