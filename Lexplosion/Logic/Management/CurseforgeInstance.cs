@@ -102,66 +102,6 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
-            // асинхронно скачиваем иконку
-            //Lexplosion.Run.TaskRun(delegate () {
-            //    try
-            //    {
-            //        CurseforgeInstanceInfo info = CurseforgeApi.GetInstance(InfoData.id);
-            //        string dir = WithDirectory.DirectoryPath + "/instances-assets/" + InstanceId;
-
-            //        InstanceAssets assets = new InstanceAssets();
-
-            //        if (info.attachments.Count > 0)
-            //        {
-            //            // TODO: написать где-то отдельную функцию для скачивания файла
-            //            string attachmentUrl = info.attachments[0].thumbnailUrl;
-            //            foreach (var attachment in info.attachments)
-            //            {
-            //                if (attachment.isDefault)
-            //                {
-            //                    attachmentUrl = attachment.thumbnailUrl;
-            //                }
-            //            }
-
-            //            string[] a = attachmentUrl.Split('/');
-            //            string fileName = dir + "/" + a[a.Length - 1];
-
-            //            using (WebClient wc = new WebClient())
-            //            {
-            //                if (!Directory.Exists(dir))
-            //                {
-            //                    Directory.CreateDirectory(dir);
-            //                }
-
-            //                if (File.Exists(fileName)) // TODO: вылетает исключение о том что файл уже используется. видимо из-за того что этот файл используется интерфейсом
-            //                {
-            //                    File.Delete(fileName);
-            //                }
-
-            //                wc.DownloadFile(attachmentUrl, fileName);
-            //            }
-
-            //            assets.Logo = InstanceId + "/" + a[a.Length - 1];
-            //        }
-
-            //        //устанавливаем описание
-            //        assets.Description = info.summary ?? "";
-            //        assets.Summary = info.summary ?? "";
-
-            //        //устанавливаем автора
-            //        if (info.authors.Count > 0 && info.authors[0].name != null)
-            //        {
-            //            assets.Author = info.authors[0].name;
-            //        }
-
-            //        assets.Categories = info.categories; // устанавливаем теги
-
-            //        // сохраняем асетсы модпака
-            //        //UserData.Instances.SetAssets(InstanceId, assets);
-            //    }
-            //    catch { }
-            //});
-
             var localFiles = installer.GetInstanceContent(); //получем список всех файлов модпака
 
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем

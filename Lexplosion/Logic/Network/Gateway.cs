@@ -27,6 +27,8 @@ namespace Lexplosion.Logic.Network
         public event Action<string> DisconnectedUser;
         public event Action<OnlineGameStatus, string> StateChange;
 
+        private bool _isInit = false;
+
         public Gateway(string uuid, string sessionToken_, string controlServer)
         {
             UUID = uuid;
@@ -36,19 +38,24 @@ namespace Lexplosion.Logic.Network
 
         public void Initialization(int pid)
         {
-            ServerSimulatorThread = new Thread(delegate ()
+            if (!_isInit)
             {
-                ServerSimulator(pid);
-            });
+                ServerSimulatorThread = new Thread(delegate ()
+                {
+                    ServerSimulator(pid);
+                });
 
-            ServerSimulatorThread.Start();
+                ServerSimulatorThread.Start();
 
-            ClientSimulatorThread = new Thread(delegate ()
-            {
-                ClientSimulator(pid);
-            });
+                ClientSimulatorThread = new Thread(delegate ()
+                {
+                    ClientSimulator(pid);
+                });
 
-            ClientSimulatorThread.Start();
+                ClientSimulatorThread.Start();
+
+                _isInit = true;
+            }     
         }
 
         public bool ListenGameSrvers(UdpClient client, out string name, out int port, int pid)

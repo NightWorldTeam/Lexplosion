@@ -28,6 +28,8 @@ namespace Lexplosion.Logic.Management
         public static event Action<string> GameStartEvent;
         public static event Action GameStopEvent;
 
+        private static object loocker = new object();
+
         public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type)
         {
             classInstance = this;
@@ -76,9 +78,12 @@ namespace Lexplosion.Logic.Management
             process = new Process();
             if (onlineGame)
             {
-                gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176");
-                removeImportantTaskMark = false;
-                Lexplosion.Run.AddImportantTask();
+                lock (loocker)
+                {
+                    gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176");
+                    removeImportantTaskMark = false;
+                    Lexplosion.Run.AddImportantTask();
+                }  
             }
             
             GameStartEvent?.Invoke(gameClientName);
@@ -164,7 +169,11 @@ namespace Lexplosion.Logic.Management
 
                     try
                     {
-                        gameGateway?.StopWork();
+                        lock (loocker)
+                        {
+                            gameGateway?.StopWork();
+                            gameGateway = null;
+                        }                
                     }
                     catch { }
 
@@ -203,8 +212,11 @@ namespace Lexplosion.Logic.Management
                 process.Start();
                 process.BeginOutputReadLine();
 
-                gameGateway?.Initialization(process.Id);
-
+                lock (loocker)
+                {
+                    gameGateway?.Initialization(process.Id);
+                }
+                    
                 return true;
             }
             catch
@@ -355,7 +367,11 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-                gameGateway?.StopWork();
+                lock (loocker)
+                {
+                    gameGateway?.StopWork();
+                    gameGateway = null;
+                }               
             }
             catch { }
 
@@ -365,6 +381,27 @@ namespace Lexplosion.Logic.Management
                 {
                     removeImportantTaskMark = true;
                     Lexplosion.Run.RemoveImportantTask();
+                }
+            }
+        }
+
+        public static void RebootOnlineGame()
+        {
+            if (classInstance != null)
+            {
+                lock (loocker)
+                {
+                    if (classInstance.gameGateway != null)
+                    {
+                        try
+                        {
+                            classInstance.gameGateway.StopWork();
+                        }
+                        catch { }
+
+                        classInstance.gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176");
+                        classInstance.gameGateway.Initialization(classInstance.process.Id);
+                    }
                 }
             }
         }
