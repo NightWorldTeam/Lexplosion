@@ -293,7 +293,7 @@ namespace Lexplosion.Logic.Management.Instances
             //catch { }
         }
 
-        private bool InstallAddon(CurseforgeFileInfo addonInfo)
+        private bool InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies)
         {
             string instanceId = _modpackInfo.LocalId;
             var installedAddons = DataFilesManager.GetInstalledAddons(_modpackInfo.LocalId);
@@ -337,7 +337,7 @@ namespace Lexplosion.Logic.Management.Instances
                 installedAddons[addonInfo.modId] = ressult.Value1;
 
                 //так же скачиваем зависимости
-                if (addonInfo.dependencies.Count > 0)
+                if (addonInfo.dependencies.Count > 0 && downloadDependencies)
                 {
                     List<Dictionary<string, int>> dependencies = addonInfo.dependencies;
 
@@ -445,7 +445,7 @@ namespace Lexplosion.Logic.Management.Instances
             return file;
         }
 
-        public void InstallLatestVersion()
+        public void InstallLatestVersion(bool downloadDependencies = true)
         {
             var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles);
             if (file == null)
@@ -453,12 +453,12 @@ namespace Lexplosion.Logic.Management.Instances
                 file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString()));
                 if (file != null)
                 {
-                    InstallAddon(file);
+                    InstallAddon(file, downloadDependencies);
                 }
             }
             else
             {
-                InstallAddon(file);
+                InstallAddon(file, downloadDependencies);
             }
         }
 
@@ -805,7 +805,7 @@ namespace Lexplosion.Logic.Management.Instances
             var installedAddons = DataFilesManager.GetInstalledAddons(_modpackInfo.LocalId);
             if (installedAddons.ContainsKey(projectID))
             {
-                InstallLatestVersion();
+                InstallLatestVersion(false);
                 UpdateAvailable = false;
             }
         }
