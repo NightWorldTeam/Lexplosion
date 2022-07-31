@@ -64,7 +64,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private readonly ObservableCollection<InstanceAddon> _instanceAddons;
 
-        private int _pageSize = 10;
+        private int _pageSize = 20;
 
         #region commands
 

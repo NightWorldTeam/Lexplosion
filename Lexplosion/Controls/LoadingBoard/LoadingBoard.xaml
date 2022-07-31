@@ -19,7 +19,10 @@
                             <SolidColorBrush Opacity="0.5" Color="{TemplateBinding Background}" />
                         </Grid.Background>
 
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
                             <Border
                                 x:Name="AnimatedBorder"
                                 Width="100"
