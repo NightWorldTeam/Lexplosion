@@ -61,9 +61,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                         InstanceForms.Clear();
                         foreach (var instance in instances)
                         {
-                            if (_mainViewModel.Model.LibraryInstances.ContainsKey(instance))
+                            if (_mainViewModel.Model.IsLibraryContainsInstance(instance))
                             {
-                                InstanceForms.Add(_mainViewModel.Model.LibraryInstances[instance]);
+                                InstanceForms.Add(_mainViewModel.Model.GetInstance(instance));
                             }
                             else
                             {
