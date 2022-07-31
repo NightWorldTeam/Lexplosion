@@ -156,7 +156,7 @@ namespace Lexplosion
             //    }
             //}
 
-            Thread.Sleep(1000);
+            Thread.Sleep(800);
 
             app.Dispatcher.Invoke(() =>
             {
@@ -168,7 +168,7 @@ namespace Lexplosion
                     Top = app.MainWindow.Top - 39
                 };
 
-                mainWindow.Show();      
+                mainWindow.Show();
                 ((SplashWindow)app.MainWindow).SmoothClosing();
                 app.MainWindow = mainWindow;
             });
@@ -290,7 +290,7 @@ namespace Lexplosion
             threads.StopThreads();
 
             waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
-            ExitEvent?.Invoke();  
+            ExitEvent?.Invoke();
         }
 
         public static StopTask TaskRun(ThreadStart ThreadFunc)
