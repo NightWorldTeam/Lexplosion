@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Logic.Management;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         {
             get => _multiplayerOff ?? new RelayCommand(obj => 
             {
-                
+                LaunchGame.RebootOnlineGame();
             });
         }
 
@@ -22,7 +23,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         {
             get => _multiplayerRefresh ?? new RelayCommand(obj =>
             {
-
             });
         }
     }

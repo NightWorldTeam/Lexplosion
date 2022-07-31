@@ -10,7 +10,7 @@ namespace Lexplosion.Gui.Models
 {
     public class MainModel : VMBase
     { 
-        public static ObservableDictionary<InstanceClient, InstanceFormViewModel> LibraryInstances { get; } 
+        public ObservableDictionary<InstanceClient, InstanceFormViewModel> LibraryInstances { get; } 
             = new ObservableDictionary<InstanceClient, InstanceFormViewModel>();
     }
 }

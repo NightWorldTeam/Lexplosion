@@ -28,8 +28,6 @@
     <сonverters:NotEqualZeroConverter x:Key="NotEqualZeroConverter" />
     <сonverters:EnumToStringConverter x:Key="EnumToStringConverter" />
 
-    <models:MainModel x:Key="MainModel" />
-
     <!--<DataTemplate DataType="{x:Type viewmodels:InstanceFormViewModel}">
         <customcontrols:InstanceForm  Margin="4,30,30,0"/>
     </DataTemplate>-->

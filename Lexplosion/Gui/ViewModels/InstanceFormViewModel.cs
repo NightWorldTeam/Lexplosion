@@ -50,8 +50,8 @@ namespace Lexplosion.Gui.ViewModels
                 switch ((UpperButtonFunc)obj)
                 {
                     case UpperButtonFunc.Download:
-                        if (!MainModel.LibraryInstances.ContainsKey(_instanceClient))
-                            MainModel.LibraryInstances.Add(_instanceClient, this);
+                        if (!_mainViewModel.Model.LibraryInstances.ContainsKey(_instanceClient))
+                            _mainViewModel.Model.LibraryInstances.Add(_instanceClient, this);
                         Model.DownloadModel.DonwloadPrepare();
                         break;
                     case UpperButtonFunc.ProgressBar:
@@ -84,6 +84,8 @@ namespace Lexplosion.Gui.ViewModels
                         break;
                     case LowerButtonFunc.DeleteFromLibrary:
                         IsDropdownMenuOpen = false;
+                        Model.InstanceClient.Delete();
+                        _mainViewModel.Model.LibraryInstances.Remove(Model.InstanceClient);
                         break;
                     case LowerButtonFunc.OpenFolder:
                         IsDropdownMenuOpen = false;
@@ -109,6 +111,7 @@ namespace Lexplosion.Gui.ViewModels
                         break;
                     case LowerButtonFunc.RemoveInstance:
                         IsDropdownMenuOpen = false;
+                        Model.InstanceClient.Delete();
                         break;
                     case LowerButtonFunc.Export:
                         IsDropdownMenuOpen = false;

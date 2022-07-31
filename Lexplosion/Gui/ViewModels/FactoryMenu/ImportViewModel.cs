@@ -31,7 +31,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                         return;
                     }
 
-                    MainModel.LibraryInstances.Add(
+                    _mainViewModel.Model.LibraryInstances.Add(
                         instanceClient, new InstanceFormViewModel(_mainViewModel, instanceClient)
                         );
 

@@ -26,13 +26,18 @@
             <SolidColorBrush Opacity="0.55" Color="#121212" />
         </Grid.Background>
 
-        <ListBox Margin="0,0,0,30"
+        <ListBox
+            x:Name="LibraryListBox"
+            Margin="0,0,0,30"
             ItemContainerStyle="{StaticResource LibraryListBoxItem}"
             ScrollViewer.CanContentScroll="False"
             Style="{StaticResource LibraryListBox}">
+            <ListBox.Resources>
+                <CollectionViewSource x:Key="InstanceCollection" Source="{Binding MainVM.Model.LibraryInstances.Values}" />
+            </ListBox.Resources>
             <ListBox.ItemsSource>
                 <CompositeCollection>
-                    <CollectionContainer Collection="{Binding LibraryInstances.Values, Source={StaticResource MainModel}}" />
+                    <CollectionContainer Collection="{Binding Source={StaticResource InstanceCollection}}" />
                     <ListBoxItem
                         Margin="30,15,30,0"
                         HorizontalContentAlignment="Center"
@@ -40,7 +45,7 @@
                         <Button
                             Width="620"
                             Height="120"
-                            Command="{Binding MainMenuVM.NavigationFactoryCommand, Source={StaticResource MainVM}}"
+                            Command="{Binding DataContext.MainVM.MainMenuVM.NavigationFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             Content="Добавить сборку"
                             Style="{StaticResource LibraryAddBtn}" />
                     </ListBoxItem>

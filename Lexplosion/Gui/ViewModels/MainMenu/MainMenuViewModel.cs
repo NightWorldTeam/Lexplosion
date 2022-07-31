@@ -53,7 +53,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private readonly MainViewModel _mainViewModel;
 
         private readonly CatalogViewModel _catalogVM;
-        private readonly LibraryViewModel _libraryVM = new LibraryViewModel();
+        private readonly LibraryViewModel _libraryVM;
         private readonly TabMenuViewModel _tabMenuViewModel;
         private readonly TabMenuViewModel _tabMenuViewModel1;
 
@@ -98,6 +98,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             _mainViewModel = mainViewModel;
 
             _catalogVM = new CatalogViewModel(mainViewModel);
+            _libraryVM = new LibraryViewModel(mainViewModel);
 
             Tabs = new ObservableCollection<Tab>
             {

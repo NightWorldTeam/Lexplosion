@@ -347,15 +347,10 @@ namespace Lexplosion.Gui.ViewModels
         {
             foreach (var instanceClient in InstanceClient.GetInstalledInstances())
             {
-                MainModel.LibraryInstances.Add(
+                Model.LibraryInstances.Add(
                     instanceClient, new InstanceFormViewModel(this, instanceClient)
                 );
             }
-        }
-
-        private void AddInstanceToLibrary() 
-        {
-            
         }
 
         /// <summary>

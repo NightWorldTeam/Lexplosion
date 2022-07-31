@@ -30,6 +30,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         private bool _isModloaderSelected = false;
 
+        private MainViewModel _mainViewModel;
+
         public ICommand NavigationMainMenuCommand { get; set; }
 
         #region prop
@@ -122,7 +124,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                     var instanceClient = InstanceClient.CreateClient(
                         Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, Model.LogoPath, SelectedModloaderVersion);
 
-                    MainModel.LibraryInstances.Add(instanceClient, new InstanceFormViewModel(null, instanceClient));
+                    _mainViewModel.Model.LibraryInstances.Add(instanceClient, new InstanceFormViewModel(_mainViewModel, instanceClient));
                 }));
             }
         }
@@ -147,8 +149,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         #endregion commands
 
-        public FactoryGeneralViewModel()
+        public FactoryGeneralViewModel(MainViewModel mainViewModel)
         {
+            _mainViewModel = mainViewModel;
+
             NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
                  MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
 
