@@ -229,7 +229,7 @@ namespace Lexplosion.Logic.Network
 
         public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, Action<int> percentHandler)
         {
-            Console.WriteLine("");
+            //Console.WriteLine("");
             Console.WriteLine("PR ID " + addonInfo.id);
             int projectID = addonInfo.modId;
             int fileID = addonInfo.id;

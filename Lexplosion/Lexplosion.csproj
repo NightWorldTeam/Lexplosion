@@ -57,7 +57,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\images\icons\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
@@ -511,9 +511,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\images\background\regBG.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\images\background\mainBG.png" />
   </ItemGroup>
   <ItemGroup>
@@ -536,14 +533,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DLL\Tommy.dll" />
-    <Resource Include="logo.ico" />
     <Resource Include="Assets\images\icons\more_blue.png" />
     <Resource Include="Assets\images\icons\logo.ico" />
     <Resource Include="Assets\images\icons\curseforge\worldgen.png" />
     <None Include="DLL\Compression.dll" />
     <Content Include="DLL\LumiSoft.Net.dll" />
     <Content Include="DLL\NewtonsoftJson.dll" />
-    <Resource Include="launcher_loading.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
