@@ -27,8 +27,8 @@ namespace Lexplosion.Gui.ViewModels
             {
                 if (PageIndex < PageLimit.Value2) 
                 {
-                    if (CanGoNext) CanGoNext = true;
-                    if (CanGoBack) CanGoBack = true;
+                    if (!CanGoNext) CanGoNext = true;
+                    if (!CanGoBack) CanGoBack = true;
                     PageIndex++;
                 }
                 else if (PageIndex == 1) CanGoBack = false;
@@ -40,7 +40,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _prevPageCommand ?? (new RelayCommand(obj =>
             {
-                if (PageIndex != 1)
+                if (PageIndex > 1)
                 {
                     if (!CanGoNext) CanGoNext = true;
                     if (!CanGoBack) CanGoBack = true;

@@ -120,10 +120,23 @@
                             Content="{Binding Header}"
                             ContentSource="Header" />
                     </Grid>
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Border" Property="BorderBrush" Value="#167FFC" />
                             <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="#167FFC" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="Border"
+                                            Storyboard.TargetProperty="Height"
+                                            From="0"
+                                            To="60"
+                                            Duration="0:0:0.35" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
