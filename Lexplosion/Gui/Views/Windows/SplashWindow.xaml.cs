@@ -14,7 +14,7 @@ namespace Lexplosion.Gui.Views.Windows
         public SplashWindow()
         {
             InitializeComponent();
-            MouseDown += delegate { try { DragMove(); } catch { } };
+            MouseDown += delegate { DragMove(); };
         }
 
         public void SmoothClosing()

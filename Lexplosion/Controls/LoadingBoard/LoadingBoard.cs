@@ -16,10 +16,19 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty IsLoadingFinishedProperty =
             DependencyProperty.Register("IsLoadingFinished", typeof(bool), typeof(LoadingBoard), new PropertyMetadata(false));
 
+        public static readonly DependencyProperty PlaceholderProperty =
+            DependencyProperty.Register("Placeholder", typeof(string), typeof(LoadingBoard), new PropertyMetadata(string.Empty));
+
         public bool IsLoadingFinished
         {
             get => (bool)GetValue(IsLoadingFinishedProperty);
             set => SetValue(IsLoadingFinishedProperty, value);
+        }
+
+        public string Placeholder 
+        {
+            get => (string)GetValue(PlaceholderProperty);
+            set => SetValue(PlaceholderProperty, value);
         }
 
         #endregion

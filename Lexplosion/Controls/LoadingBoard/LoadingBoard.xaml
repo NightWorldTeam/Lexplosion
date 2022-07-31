@@ -14,28 +14,43 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:LoadingBoard}">
                     <Grid Grid.Row="1">
+
                         <Grid.Background>
-                            <SolidColorBrush Opacity="0.5" Color="Black" />
+                            <SolidColorBrush Opacity="0.5" Color="{TemplateBinding Background}" />
                         </Grid.Background>
-                        <Border
-                            x:Name="AnimatedBorder"
-                            Width="100"
-                            Height="100"
-                            Padding="2"
-                            BorderBrush="White"
-                            BorderThickness="3"
-                            RenderTransformOrigin="0.5, 0.5">
-                            <Border.RenderTransform>
-                                <!--  giving the transform a name tells the framework not to freeze it  -->
-                                <RotateTransform x:Name="noFreeze" />
-                            </Border.RenderTransform>
-                            <Rectangle
-                                x:Name="AnimatedRect"
-                                Height="98"
-                                Margin="0,0,0,148"
-                                VerticalAlignment="Bottom"
-                                Fill="White" />
-                        </Border>
+
+                        <StackPanel Orientation="Vertical">
+                            <Border
+                                x:Name="AnimatedBorder"
+                                Width="100"
+                                Height="100"
+                                Padding="2"
+                                BorderBrush="White"
+                                BorderThickness="3"
+                                RenderTransformOrigin="0.5, 0.5">
+
+                                <Border.RenderTransform>
+                                    <!--  giving the transform a name tells the framework not to freeze it  -->
+                                    <RotateTransform x:Name="noFreeze" />
+                                </Border.RenderTransform>
+
+                                <Rectangle
+                                    x:Name="AnimatedRect"
+                                    Height="98"
+                                    Margin="0,0,0,148"
+                                    VerticalAlignment="Bottom"
+                                    Fill="White" />
+                            </Border>
+
+                            <TextBlock
+                                Margin="0,25,0,0"
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="White"
+                                SnapsToDevicePixels="False"
+                                Text="{TemplateBinding Placeholder}" />
+                        </StackPanel>
                     </Grid>
 
                     <ControlTemplate.Triggers>

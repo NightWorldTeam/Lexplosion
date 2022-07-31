@@ -168,9 +168,9 @@ namespace Lexplosion
                     Top = app.MainWindow.Top - 39
                 };
 
-                mainWindow.Show();
-                ((SplashWindow)app.MainWindow).SmoothClosing();
-                app.MainWindow = mainWindow;
+                //mainWindow.Show();
+                //((SplashWindow)app.MainWindow).SmoothClosing();
+                //app.MainWindow = mainWindow;
             });
         }
 
