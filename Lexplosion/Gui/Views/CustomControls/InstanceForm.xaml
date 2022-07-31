@@ -249,7 +249,7 @@
                                                 Storyboard.TargetProperty="Color"
                                                 From="Transparent"
                                                 To="{StaticResource ActivityColor}"
-                                                Duration="0:0:0.02" />
+                                                Duration="0:0:0.1" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
