@@ -127,66 +127,81 @@
                     Style="{StaticResource LogoButton}" />
 
                 <!--  Modloader  -->
-                <TextBlock
-                    Margin="30,120,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Text="Game Type" />
+                <StackPanel Margin="30,120,0,0">
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Text="Game Type" />
 
-                <StackPanel Margin="35,150,0,0" Orientation="Horizontal">
-                    <RadioButton
-                        x:Name="NoneSelected"
-                        Height="30"
+                    <StackPanel
+                        Width="280"
+                        Margin="0,10,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Command="{Binding SwitchModloaderType}"
-                        CommandParameter="{x:Static objects:ModloaderType.None}"
-                        Content="Vanilla"
-                        FontSize="18"
-                        IsChecked="True" />
-                    <!--  Click="SelectInstanceRadioButton_Click"  -->
-                    <RadioButton
-                        x:Name="ForgeSelected"
-                        Height="30"
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Command="{Binding SwitchModloaderType}"
-                        CommandParameter="{x:Static objects:ModloaderType.Forge}"
-                        Content="Forge"
-                        FontSize="18" />
-                    <!--  Click="SelectInstanceRadioButton_Click"  -->
-                    <RadioButton
-                        x:Name="FabricSelected"
-                        Height="30"
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Command="{Binding SwitchModloaderType}"
-                        CommandParameter="{x:Static objects:ModloaderType.Fabric}"
-                        Content="Fabric"
-                        FontSize="18" />
+                        Orientation="Vertical">
+                        <RadioButton
+                            x:Name="NoneSelected"
+                            Height="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Command="{Binding SwitchModloaderType}"
+                            CommandParameter="{x:Static objects:ModloaderType.None}"
+                            Content="Vanilla"
+                            FontSize="18"
+                            IsChecked="True" />
+                        <!--  Click="SelectInstanceRadioButton_Click"  -->
+                        <RadioButton
+                            x:Name="ForgeSelected"
+                            Height="30"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Command="{Binding SwitchModloaderType}"
+                            CommandParameter="{x:Static objects:ModloaderType.Forge}"
+                            Content="Forge"
+                            FontSize="18" />
+                        <!--  Click="SelectInstanceRadioButton_Click"  -->
+                        <RadioButton
+                            x:Name="FabricSelected"
+                            Height="30"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Command="{Binding SwitchModloaderType}"
+                            CommandParameter="{x:Static objects:ModloaderType.Fabric}"
+                            Content="Fabric"
+                            FontSize="18" />
+                    </StackPanel>
+
+                    <StackPanel Margin="300,195,0,0" Orientation="Vertical">
+                        <TextBlock HorizontalAlignment="Left" Text="Modloader Version" />
+                        <RadioButton
+                            Margin="0,10,0,0"
+                            Content="Установить Optifine"
+                            FontSize="16" />
+                    </StackPanel>
                 </StackPanel>
 
-                <!--  Line Margin="35,0,0,0"  X1="1" X2="40" Y1="200" Y2="200" StrokeThickness="1" Stroke="Red"/  -->
-
-                <!--  More  -->
-                <StackPanel Margin="30,195,0,0" Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
+                <StackPanel
+                        Margin="150,120,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
                     <TextBlock HorizontalAlignment="Left" Text="Modloader Version" />
 
                     <ComboBox
-                        Width="180"
-                        Height="40"
-                        Margin="0,10,0,0"
-                        HorizontalAlignment="Left"
-                        Background="Red"
-                        ItemsSource="{Binding ModloaderVersions}"
-                        SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}" />
+                            Width="180"
+                            Height="40"
+                            Margin="0,10,0,0"
+                            HorizontalAlignment="Left"
+                            Background="Red"
+                            ItemsSource="{Binding ModloaderVersions}"
+                            SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <Button
                     Width="105"
                     Height="35"
-                    Margin="26,250,0,0"
+                    Margin="26,280,0,0"
                     HorizontalAlignment="Left"
                     Command="{Binding CreateInstance}"
                     Content="Собрать"

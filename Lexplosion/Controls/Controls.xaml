@@ -1,12 +1,10 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Lexplosion.Controls">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="DropdownMenu/DropdownMenu.xaml" />
         <ResourceDictionary Source="ToastMessage/ToastMessage.xaml" />
         <ResourceDictionary Source="DialogMessage/DialogMessage.xaml" />
         <ResourceDictionary Source="LoadingBoard/LoadingBoard.xaml" />
         <ResourceDictionary Source="ChangelogItem/ChangelogItem.xaml" />
+        <ResourceDictionary Source="ModalControl/Modal.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

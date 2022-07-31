@@ -104,6 +104,7 @@
     <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Controls\MessageModel.cs" />
+    <Compile Include="Controls\ModalControl\Modal.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
     <Compile Include="Global.cs" />
@@ -310,6 +311,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\LoadingBoard\LoadingBoard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ModalControl\Modal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

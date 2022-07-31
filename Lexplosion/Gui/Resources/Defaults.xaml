@@ -164,6 +164,7 @@
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="FontFamily" Value="{StaticResource FuturaBookC}" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
