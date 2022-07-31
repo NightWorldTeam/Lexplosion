@@ -74,12 +74,8 @@ namespace Lexplosion
                 curenProcess.Kill(); //стопаем процесс
             }
 
-            // Загружаем все встроенные dll'ники
+            // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
-            AppDomain.CurrentDomain.Load("Newtonsoft.Json");
-            AppDomain.CurrentDomain.Load("LumiSoft.Net");
-            AppDomain.CurrentDomain.Load("Tommy");
-            AppDomain.CurrentDomain.Load("System.IO.Compression");
 
             // инициализация
             UserData.InitSetting();
@@ -222,6 +218,7 @@ namespace Lexplosion
 
         private static byte[] UnzipBytesArray(byte[] zipBytes)
         {
+            Console.WriteLine("UnzipBytesArray");
             using (Stream archivedBytes = new MemoryStream(zipBytes))
             {
                 using (var zip = new ZipArchive(archivedBytes, ZipArchiveMode.Read))
@@ -241,6 +238,7 @@ namespace Lexplosion
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
+            Console.WriteLine("DLL LOAD " + string.Join(", ", args.Name));
             if (args.Name.Contains("Newtonsoft.Json"))
             {
                 return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson_zip));
