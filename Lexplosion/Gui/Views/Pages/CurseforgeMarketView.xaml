@@ -371,7 +371,9 @@
                 </Grid>
             </ScrollViewer>
         </Grid>
-
-        <controls:LoadingBoard IsLoadingFinished="{Binding IsLoaded}" />
+        <controls:LoadingBoard
+            Background="Black"
+            IsLoadingFinished="{Binding IsLoaded}"
+            Placeholder="Идет загрузка данных с curseforge.com..." />
     </Grid>
 </UserControl>

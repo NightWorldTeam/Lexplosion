@@ -13,12 +13,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:LoadingBoard}">
-                    <Grid Grid.Row="1">
-
-                        <Grid.Background>
-                            <SolidColorBrush Opacity="0.5" Color="{TemplateBinding Background}" />
-                        </Grid.Background>
-
+                    <Grid Grid.Row="1" Background="{TemplateBinding Background}">
                         <StackPanel
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -28,7 +23,7 @@
                                 Width="100"
                                 Height="100"
                                 Padding="2"
-                                BorderBrush="#1355ff"
+                                BorderBrush="{TemplateBinding BorderColor}"
                                 BorderThickness="3"
                                 Opacity="{TemplateBinding Opacity}"
                                 RenderTransformOrigin="0.5, 0.5">
@@ -43,7 +38,7 @@
                                     Height="98"
                                     Margin="0,0,0,148"
                                     VerticalAlignment="Bottom"
-                                    Fill="#1355ff" />
+                                    Fill="{TemplateBinding RectangeColor}" />
                             </Border>
 
                             <TextBlock

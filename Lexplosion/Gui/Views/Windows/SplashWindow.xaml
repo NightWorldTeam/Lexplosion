@@ -22,8 +22,10 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Background="#0b101c"
+            BorderColor="#1355ff"
             Opacity="0.7"
-            Placeholder="Идет загрузка..." />
+            Placeholder="Идет загрузка..."
+            RectangeColor="#1355ff" />
 
         <StackPanel
             Margin="0,0,0,13"
