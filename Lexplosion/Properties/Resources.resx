@@ -121,13 +121,13 @@
   <data name="Compression" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\DLL\Compression.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="LumiSoftNet" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\dll\lumisoft.net.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="LumiSoftNet_zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\DLL\LumiSoft.Net.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="NewtonsoftJson" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\dll\newtonsoftjson.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="NewtonsoftJson_zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\DLL\NewtonsoftJson.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Tommy" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\DLL\Tommy.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="Tommy_zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\DLL\Tommy.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

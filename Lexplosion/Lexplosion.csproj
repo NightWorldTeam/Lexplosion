@@ -489,6 +489,9 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="App.config" />
+    <None Include="DLL\LumiSoft.Net.zip" />
+    <None Include="DLL\NewtonsoftJson.zip" />
+    <None Include="DLL\Tommy.zip" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -532,13 +535,10 @@
     <Resource Include="Assets\images\icons\visible_password.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DLL\Tommy.dll" />
     <Resource Include="Assets\images\icons\more_blue.png" />
     <Resource Include="Assets\images\icons\logo.ico" />
     <Resource Include="Assets\images\icons\curseforge\worldgen.png" />
     <None Include="DLL\Compression.dll" />
-    <Content Include="DLL\LumiSoft.Net.dll" />
-    <Content Include="DLL\NewtonsoftJson.dll" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

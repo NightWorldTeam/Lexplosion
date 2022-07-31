@@ -15,6 +15,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
+using System.IO.Compression;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -215,21 +216,40 @@ namespace Lexplosion
             }
         }
 
+        private static byte[] UnzipBytesArray(byte[] zipBytes)
+        {
+            using (Stream archivedBytes = new MemoryStream(zipBytes))
+            {
+                using (var zip = new ZipArchive(archivedBytes, ZipArchiveMode.Read))
+                {
+                    var entry = zip.Entries[0];
+                    using (Stream stream = entry.Open())
+                    {
+                        using (MemoryStream fileBytes = new MemoryStream())
+                        {
+                            stream.CopyTo(fileBytes);
+                            return fileBytes.ToArray();
+                        }
+                    }
+                }
+            }
+        }
+
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
             if (args.Name.Contains("Newtonsoft.Json"))
             {
-                return Assembly.Load(Resources.NewtonsoftJson);
+                return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson_zip));
             }
 
             if (args.Name.Contains("LumiSoft.Net"))
             {
-                return Assembly.Load(Resources.LumiSoftNet);
+                return Assembly.Load(UnzipBytesArray(Resources.LumiSoftNet_zip));
             }
 
             if (args.Name.Contains("Tommy"))
             {
-                return Assembly.Load(Resources.Tommy);
+                return Assembly.Load(UnzipBytesArray(Resources.Tommy_zip));
             }
 
             if (args.Name.Contains("System.IO.Compression"))
