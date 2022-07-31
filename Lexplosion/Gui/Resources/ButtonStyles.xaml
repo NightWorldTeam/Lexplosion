@@ -128,7 +128,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="False">
-                            <Setter TargetName="border" Property="Background" Value="#167FFC" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="border" Property="Background" Value="#1EAFDD" />
@@ -154,7 +154,7 @@
                     <Border
                         x:Name="Border"
                         Padding="{TemplateBinding Padding}"
-                        Background="#167FFC"
+                        Background="{DynamicResource BrandSolidColorBrush}"
                         BorderThickness="0"
                         CornerRadius="5"
                         SnapsToDevicePixels="True">
@@ -176,8 +176,8 @@
                             <Setter TargetName="Border" Property="Background" Value="#1472e3" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="False">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#167FFC" />
-                            <Setter TargetName="Border" Property="Background" Value="#167FFC" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Border" Property="Background" Value="#5a5a5a" />
@@ -196,7 +196,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="False" />
         <Setter Property="FontWeight" Value="Medium" />
-        <Setter Property="Foreground" Value="#167FFC" />
+        <Setter Property="Foreground" Value="{DynamicResource BrandSolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -402,7 +402,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="RadioButton" Property="Stroke" Value="#167FFC" />
+                            <Setter TargetName="RadioButton" Property="Stroke" Value="{DynamicResource BrandSolidColorBrush}" />
                             <Setter TargetName="RadioButton" Property="StrokeThickness" Value="6" />
                             <Setter TargetName="RadioButton" Property="Fill" Value="#EDEDED" />
                         </Trigger>

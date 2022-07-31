@@ -70,8 +70,8 @@
                             <Setter TargetName="BorderButton" Property="Height" Value="0" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Foreground" Value="#167FFC" />
-                            <Setter TargetName="BorderButton" Property="Background" Value="#167FFC" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrandSolidColorBrush}" />
+                            <Setter TargetName="BorderButton" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
                         </Trigger>
                         <EventTrigger RoutedEvent="Button.Click">
                             <BeginStoryboard>
@@ -117,7 +117,7 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#167FFC" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
                             <Setter Property="Foreground" Value="White" />
                         </Trigger>
                     </ControlTemplate.Triggers>

@@ -98,14 +98,22 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 return _switchModloaderType ?? (new RelayCommand(obj =>
                 {
                     Model.ModloaderType = (ModloaderType)obj;
+
                     if (Model.ModloaderType != ModloaderType.None)
                     {
                         IsModloaderSelected = true;
                     }
                     else IsModloaderSelected = false;
+
                     Lexplosion.Run.TaskRun(() =>
                     {
-                        ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(SelectedVersion, Model.ModloaderType));
+                        var versions = ToServer.GetModloadersList(SelectedVersion, Model.ModloaderType);
+
+                        if (Model.ModloaderType == ModloaderType.Forge)
+                            versions.Reverse();
+
+                        ModloaderVersions = new ObservableCollection<string>(versions);
+
                         if (ModloaderVersions.Count > 0)
                             SelectedModloaderVersion = ModloaderVersions[0];
                     });

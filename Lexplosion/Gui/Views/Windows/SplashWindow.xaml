@@ -22,7 +22,8 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Background="#0b101c"
-            Placeholder="Идет загрузка" />
+            Opacity="0.7"
+            Placeholder="Идет загрузка..." />
 
         <StackPanel
             Margin="0,0,0,13"

@@ -25,8 +25,9 @@
                                 Width="100"
                                 Height="100"
                                 Padding="2"
-                                BorderBrush="White"
+                                BorderBrush="#1355ff"
                                 BorderThickness="3"
+                                Opacity="{TemplateBinding Opacity}"
                                 RenderTransformOrigin="0.5, 0.5">
 
                                 <Border.RenderTransform>
@@ -39,7 +40,7 @@
                                     Height="98"
                                     Margin="0,0,0,148"
                                     VerticalAlignment="Bottom"
-                                    Fill="White" />
+                                    Fill="#1355ff" />
                             </Border>
 
                             <TextBlock

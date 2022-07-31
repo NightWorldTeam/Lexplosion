@@ -5,7 +5,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Foreground" Value="#b9b7b7" />
         <Setter Property="Height" Value="40" />
-        <Setter Property="CaretBrush" Value="#167FFC" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandSolidColorBrush}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
@@ -39,7 +39,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Foreground" Value="#b9b7b7" />
         <Setter Property="Height" Value="40" />
-        <Setter Property="CaretBrush" Value="#167FFC" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandSolidColorBrush}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
@@ -92,7 +92,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Foreground" Value="#b9b7b7" />
-        <Setter Property="CaretBrush" Value="#167FFC" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandSolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
@@ -102,7 +102,7 @@
                         BorderThickness="0,0,0,2"
                         CornerRadius="2">
                         <Border.BorderBrush>
-                            <SolidColorBrush Color="#167FFC" />
+                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
                         </Border.BorderBrush>
                         <Border.Background>
                             <SolidColorBrush Color="Transparent" />
@@ -164,9 +164,9 @@
 
     <Style x:Key="CustomPasswordBox" TargetType="{x:Type PasswordBox}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="#167FFC" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
         <Setter Property="BorderThickness" Value="0,0,0,2" />
-        <Setter Property="CaretBrush" Value="#167FFC" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandSolidColorBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Foreground" Value="#b9b7b7" />

@@ -41,7 +41,7 @@
                             Margin="10,0,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            BorderBrush="#167FFC"
+                            BorderBrush="{DynamicResource BrandSolidColorBrush}"
                             BorderThickness="0,0,0,3"
                             Focusable="False">
                             <Border.RenderTransform>
@@ -123,8 +123,8 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#167FFC" />
-                            <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="#167FFC" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                            <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{DynamicResource BrandSolidColorBrush}" />
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -170,7 +170,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="White" />
-                            <Setter TargetName="border" Property="Background" Value="#167FFC" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

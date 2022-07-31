@@ -200,7 +200,7 @@
                                     <Setter Property="OverridesDefaultStyle" Value="True" />
                                     <Setter Property="Foreground" Value="#b9b7b7" />
                                     <Setter Property="Height" Value="40" />
-                                    <Setter Property="CaretBrush" Value="#167FFC" />
+                                    <Setter Property="CaretBrush" Value="{DynamicResource BrandSolidColorBrush}" />
                                     <Setter Property="VerticalContentAlignment" Value="Center" />
                                     <Setter Property="Template">
                                         <Setter.Value>

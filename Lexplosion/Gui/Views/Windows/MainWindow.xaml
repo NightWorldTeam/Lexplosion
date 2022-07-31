@@ -446,7 +446,7 @@
                                                                                         VerticalAlignment="Center"
                                                                                         Data="M 4 0 L 8 4 L 4 8 Z">
                                                                                         <Path.Fill>
-                                                                                            <SolidColorBrush Color="#167FFC" />
+                                                                                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
                                                                                         </Path.Fill>
                                                                                     </Path>
                                                                                     <Path
@@ -457,7 +457,7 @@
                                                                                         Data="M 0 4 L 8 4 L 4 8 Z"
                                                                                         Visibility="Hidden">
                                                                                         <Path.Fill>
-                                                                                            <SolidColorBrush Color="#167FFC" />
+                                                                                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
                                                                                         </Path.Fill>
                                                                                     </Path>
                                                                                     <VisualStateManager.VisualStateGroups>

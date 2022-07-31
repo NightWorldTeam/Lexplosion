@@ -296,7 +296,7 @@
                     Visibility="Visible">
 
                     <Border.BorderBrush>
-                        <SolidColorBrush Color="#167FFC" />
+                        <SolidColorBrush Color="{DynamicResource BrandSolidColorBrush}" />
                     </Border.BorderBrush>
 
                     <Grid ShowGridLines="False">
