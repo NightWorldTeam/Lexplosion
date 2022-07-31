@@ -164,8 +164,8 @@ namespace Lexplosion
 
                 var mainWindow = new MainWindow()
                 {
-                    Left = app.MainWindow.Left - 97,
-                    Top = app.MainWindow.Top - 39
+                    Left = app.MainWindow.Left - 322,
+                    Top = app.MainWindow.Top - 89
                 };
 
                 mainWindow.Show();
