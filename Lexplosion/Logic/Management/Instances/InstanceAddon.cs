@@ -50,13 +50,23 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
-        public bool UpdateAvailable { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
         public bool IsUrlExist { get; set; }
         public string FileName { get; private set; } = "";
         public string Version { get; private set; } = "";
         public int DownloadCount { get; private set; } = 0;
         public string LastUpdated { get; private set; } = "";
+
+        private bool _updateAvailable = false;
+        public bool UpdateAvailable
+        {
+            get => _updateAvailable;
+            private set
+            {
+                _updateAvailable = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool _isEnable = true;
         public bool IsEnable 
@@ -294,7 +304,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Point = this
             };
             _installingSemaphore.Release(_modInfo.id);
-            IsInstalling = true; 
+            IsInstalling = true;
 
             var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
             {
@@ -309,6 +319,21 @@ namespace Lexplosion.Logic.Management.Instances
             if (ressult.Value2 == DownloadAddonRes.Successful)
             {
                 IsInstalled = true;
+
+                // удаляем старый файл
+                if (installedAddons.ContainsKey(addonInfo.modId) && installedAddons[addonInfo.modId].ActualPath != ressult.Value1.ActualPath)
+                {
+                    try
+                    {
+                        string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/mods/" + installedAddons[addonInfo.modId].ActualPath;
+                        if (File.Exists(path))
+                        {
+                            File.Delete(path);
+                        }
+                    }
+                    catch { }
+                }
+
                 installedAddons[addonInfo.modId] = ressult.Value1;
 
                 //так же скачиваем зависимости
@@ -360,6 +385,21 @@ namespace Lexplosion.Logic.Management.Instances
                                 if (res.Value2 == DownloadAddonRes.Successful)
                                 {
                                     IsInstalled = true;
+
+                                    // удаляем старый файл
+                                    if (installedAddons.ContainsKey(file.modId) && installedAddons[res.Value1.ProjectID].ActualPath != res.Value1.ActualPath)
+                                    {
+                                        try
+                                        {
+                                            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/mods/" + installedAddons[res.Value1.ProjectID].ActualPath;
+                                            if (File.Exists(path))
+                                            {
+                                                File.Delete(path);
+                                            }
+                                        }
+                                        catch { }
+                                    }
+
                                     installedAddons[res.Value1.ProjectID] = res.Value1;
 
                                     // в список зависимостей добавляем зависимости и этого аддона, если они есть
@@ -388,14 +428,17 @@ namespace Lexplosion.Logic.Management.Instances
         private static CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo)
         {
             CurseforgeFileInfo file = null;
-            int maxId = 0;
-            foreach (var fileInfo in addonInfo)
+            if (addonInfo != null)
             {
-                if (fileInfo.gameVersions != null && fileInfo.gameVersions.Contains(gameVersion) && maxId < fileInfo.id)
+                int maxId = 0;
+                foreach (var fileInfo in addonInfo)
                 {
-                    file = fileInfo;
-                    maxId = fileInfo.id;
-                    break;
+                    if (fileInfo.gameVersions != null && fileInfo.gameVersions.Contains(gameVersion) && maxId < fileInfo.id)
+                    {
+                        file = fileInfo;
+                        maxId = fileInfo.id;
+                        break;
+                    }
                 }
             }
 
@@ -404,7 +447,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public void InstallLatestVersion()
         {
-            var file = GetLastFile(_modpackInfo.GameVersion, _modInfo.latestFiles);
+            var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles);
             if (file == null)
             {
                 file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString()));
@@ -477,8 +520,8 @@ namespace Lexplosion.Logic.Management.Instances
                         int projectId = addon.id;
                         if (existsCfMods.Contains(projectId))
                         {
-                            InstalledAddonInfo info = installedAddons[projectId];
-                            var obj = new InstanceAddon(projectId, modpackInfo)
+                            InstalledAddonInfo info = actualAddonsList[projectId];
+                            var obj = new InstanceAddon(addon, modpackInfo)
                             {
                                 Author = addon.GetAuthorName,
                                 Description = addon.summary,
@@ -487,6 +530,16 @@ namespace Lexplosion.Logic.Management.Instances
                                 WebsiteUrl = addon.links?.websiteUrl,
                                 IsUrlExist = (addon.links?.websiteUrl != null)
                             };
+
+                            // проверяем наличие обновлений для мода
+                            if (modpackInfo.Type == InstanceSource.Local)
+                            {
+                                CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles);
+                                if (lastFile != null && lastFile.id > actualAddonsList[projectId].FileID)
+                                {
+                                    obj.UpdateAvailable = true;
+                                }
+                            }
 
                             existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, int> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
                             {
@@ -630,7 +683,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         catch { }
 
-                        // лпределяем айдишник
+                        // определяем айдишник
                         int addonId;
                         if (cfSuccessful)
                         {
@@ -741,6 +794,19 @@ namespace Lexplosion.Logic.Management.Instances
                     }
                 }
                 //catch { }
+            }
+        }
+
+        public void Update()
+        {
+            int projectID = _projectId;
+            string instanceId = _modpackInfo.LocalId;
+
+            var installedAddons = DataFilesManager.GetInstalledAddons(_modpackInfo.LocalId);
+            if (installedAddons.ContainsKey(projectID))
+            {
+                InstallLatestVersion();
+                UpdateAvailable = false;
             }
         }
     }
