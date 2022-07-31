@@ -74,8 +74,12 @@ namespace Lexplosion
                 curenProcess.Kill(); //стопаем процесс
             }
 
-            // Встраивание dll в exe
+            // Загружаем все встроенные dll'ники
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+            AppDomain.CurrentDomain.Load("Newtonsoft.Json");
+            AppDomain.CurrentDomain.Load("LumiSoft.Net");
+            AppDomain.CurrentDomain.Load("Tommy");
+            AppDomain.CurrentDomain.Load("System.IO.Compression");
 
             // инициализация
             UserData.InitSetting();
