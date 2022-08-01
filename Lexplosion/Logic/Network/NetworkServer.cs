@@ -104,7 +104,6 @@ namespace Lexplosion.Logic.Network
         {
             //подключаемся к управляющему серверу
             controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
-            controlConnection.ReceiveTimeout = 10000;
 
             string st =
                 "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\", \"sessionToken\" : \"" + _sessionToken + "\"}";
@@ -124,8 +123,10 @@ namespace Lexplosion.Logic.Network
 
                         Console.WriteLine("ControlServerRecv");
                         ControlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
+                        controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
                         int bytes = controlConnection.Receive(data); // TODO: в трай запихать
                         ControlConnectionBlock.WaitOne(); // блочим семофор
+                        controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
                         Console.WriteLine("ControlServerEndRecv");
 
                         if (bytes > 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
