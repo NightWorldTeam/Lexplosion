@@ -6,17 +6,14 @@ using System.Reflection;
 using System.Windows;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.IO.Compression;
 using Lexplosion.Properties;
 using Lexplosion.Global;
-using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
-using System.IO.Compression;
-
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
  * Последнее обновление в феврале 2021 года
@@ -90,8 +87,8 @@ namespace Lexplosion
             // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
             InstanceClient.DefineInstalledInstances();
 
+            // Встраеваем стиили
             var stylePath = "pack://application:,,,/Gui/Resources/";
-
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(stylePath + "Fonts.xaml")
@@ -137,6 +134,12 @@ namespace Lexplosion
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
 
+            CommandReceiver.OpenModpackPage += delegate (string modpackId)
+            {
+                Console.WriteLine("open " + modpackId);
+            };
+
+            CommandReceiver.StartCommandServer();
 
             //Console.WriteLine("TEST");
             ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=432&index=0&sortField=1&sortOrder=desc&pageSize=10&gameVersion=1.12.2&modLoaderType=0&searchFilter=
