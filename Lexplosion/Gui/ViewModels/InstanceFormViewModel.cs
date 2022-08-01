@@ -122,12 +122,12 @@ namespace Lexplosion.Gui.ViewModels
                     case LowerButtonFunc.Export:
                         IsDropdownMenuOpen = false;
                         _mainViewModel.IsExporting = true;
-                        _mainViewModel.InstanceExport.InstanceName = _instanceClient.Name;
-                        _mainViewModel.InstanceExport.IsFullExport = true;
-                        _mainViewModel.InstanceExport.InstanceClient = _instanceClient;
-                        _mainViewModel.InstanceExport.UnitsList = _instanceClient.GetPathContent();
+                        _mainViewModel.ExportViewModel.InstanceName = _instanceClient.Name;
+                        _mainViewModel.ExportViewModel.IsFullExport = true;
+                        _mainViewModel.ExportViewModel.InstanceClient = _instanceClient;
+                        _mainViewModel.ExportViewModel.UnitsList = _instanceClient.GetPathContent();
 
-                        foreach (var s in _mainViewModel.InstanceExport.UnitsList.Keys) 
+                        foreach (var s in _mainViewModel.ExportViewModel.UnitsList.Keys) 
                         {
                             Console.WriteLine(s);
                         }
