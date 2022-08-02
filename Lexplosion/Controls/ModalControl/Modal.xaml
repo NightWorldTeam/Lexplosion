@@ -17,7 +17,7 @@
                         <Border
                             Width="360"
                             Height="420"
-                            Background="#151719">
+                            Background="#151719" CornerRadius="5">
                             <ContentPresenter />
                         </Border>
                     </Grid>

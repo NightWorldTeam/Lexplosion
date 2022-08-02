@@ -45,7 +45,7 @@
                         <Button
                             Width="620"
                             Height="120"
-                            Command="{Binding DataContext.MainVM.MainMenuVM.NavigationFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                            Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             Content="Добавить сборку"
                             Style="{StaticResource LibraryAddBtn}" />
                     </ListBoxItem>

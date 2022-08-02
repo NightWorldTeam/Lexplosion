@@ -51,10 +51,13 @@
             </Grid.RowDefinitions>
 
 
-            <TabControl
-                BorderThickness="0"
-                ItemContainerStyle="{StaticResource SwitcherTabItem}"
-                Style="{StaticResource TabControlStyle}">
+            <TabControl BorderThickness="0" Style="{StaticResource TabControlStyle}">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabPanel}">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </TabControl.Resources>
+
                 <TabItem BorderBrush="Transparent" Header="Создание">
                     <ScrollViewer Grid.Row="1">
                         <StackPanel Margin="20" Orientation="Vertical">
@@ -66,19 +69,25 @@
 
                             <StackPanel
                                 Width="313"
-                                Margin="0,0,0,10"
+                                Margin="0,0,0,15"
                                 HorizontalAlignment="Left"
                                 Orientation="Vertical">
                                 <TextBlock HorizontalAlignment="Left" Text="Название сборки" />
-                                <TextBox Margin="0,5,0,0" />
+                                <TextBox
+                                    Margin="0,5,0,0"
+                                    FontSize="16"
+                                    FontWeight="Normal" />
                             </StackPanel>
 
                             <StackPanel Orientation="Vertical">
                                 <TextBlock HorizontalAlignment="Left" Text="Версия Minecraft" />
-                                <ComboBox Margin="0,5,0,0" />
+                                <ComboBox
+                                    Margin="0,5,0,0"
+                                    ItemsSource="{Binding GameVersions}"
+                                    SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
 
-                            <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                            <StackPanel Margin="0,15,0,0" Orientation="Vertical">
                                 <TextBlock HorizontalAlignment="Left" Text="Game Type" />
                                 <StackPanel Orientation="Horizontal">
                                     <RadioButton
@@ -96,39 +105,47 @@
                                 </StackPanel>
                             </StackPanel>
 
-                            <StackPanel Margin="0,10,0,0">
+                            <StackPanel Margin="0,15,0,0">
                                 <TextBlock HorizontalAlignment="Left" Text="Версия Modloader" />
-                                <ComboBox />
+                                <ComboBox Margin="0,5,0,0" />
                             </StackPanel>
 
-                            <StackPanel Margin="0,10,0,0">
+                            <StackPanel Margin="0,15,0,0">
                                 <CheckBox Content="Установить optifine" />
-                                <CheckBox Content="Установить iris + sodium" Margin="0,2,0,0"/>
+                                <CheckBox Margin="0,2,0,0" Content="Установить iris + sodium" />
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="Импорт" />
+                <TabItem Header="Импорт">
+                    
+                </TabItem>
             </TabControl>
 
 
+            <Border
+                Grid.Row="2"
+                BorderBrush="#131313"
+                BorderThickness="0,1,0,0">
+                <StackPanel>
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Button
+                            Width="100"
+                            Height="30"
+                            Command="{Binding CloseModalWindow}"
+                            Content="Отмена"
+                            Style="{StaticResource DefaultCloseButton}" />
 
-            <StackPanel Grid.Row="2">
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button
-                        Width="100"
-                        Height="30"
-                        Content="Отмена"
-                        Style="{StaticResource DefaultCloseButton}" />
-
-                    <Button
-                        Width="100"
-                        Height="30"
-                        Margin="10"
-                        Content="Создать"
-                        Style="{StaticResource DefaultBrandColorButton}" />
+                        <Button
+                            Width="100"
+                            Height="30"
+                            Margin="10"
+                            Command="{Binding Action}"
+                            Content="Создать"
+                            Style="{StaticResource DefaultBrandColorButton}" />
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>

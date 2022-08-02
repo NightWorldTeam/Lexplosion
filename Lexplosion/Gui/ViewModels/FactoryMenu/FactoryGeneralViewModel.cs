@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Commands;
+using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.Models.InstanceForm;
@@ -17,7 +18,7 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
-    public class FactoryGeneralViewModel : VMBase
+    public class FactoryGeneralViewModel : ModalVMBase
     {
         private RelayCommand _switchModloaderType;
         private RelayCommand _createInstance;
@@ -31,8 +32,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private bool _isModloaderSelected = false;
 
         private MainViewModel _mainViewModel;
-
-        public ICommand NavigationMainMenuCommand { get; set; }
 
         #region prop
         public bool IsModloaderSelected
@@ -89,8 +88,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         #endregion props
 
-
         #region commands
+
         public RelayCommand SwitchModloaderType
         {
             get
@@ -121,20 +120,27 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
-        public RelayCommand CreateInstance
+        public override RelayCommand Action
         {
             get
             {
                 return _createInstance ?? (new RelayCommand(obj =>
                 {
-                    NavigationMainMenuCommand.Execute(null);
-
                     var instanceClient = InstanceClient.CreateClient(
                         Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, Model.LogoPath, SelectedModloaderVersion);
 
                     _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
+                    _mainViewModel.ModalWindowVM.IsModalOpen = false;
                 }));
             }
+        }
+
+        public override RelayCommand CloseModalWindow
+        {
+            get => new RelayCommand(obj =>
+            {
+                _mainViewModel.ModalWindowVM.IsModalOpen = false;
+            });
         }
 
         public RelayCommand LogoImportCommand
@@ -160,9 +166,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         public FactoryGeneralViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
-
-            NavigationMainMenuCommand = new NavigateCommand<MainMenuViewModel>(
-                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
 
             GameVersions = new ObservableCollection<string>(MainViewModel.GameVersions.ToList());
             SelectedVersion = GameVersions[0];
