@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Controls;
+using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public class ExportViewModel : VMBase
+    public class ExportViewModel : ModalVMBase
     {
         private MainViewModel _mainViewModel;
 
@@ -17,10 +18,40 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             get => _mainViewModel;
         }
 
-        public ExportViewModel()
+        public ExportViewModel(MainViewModel mainViewModel)
         {
-            _mainViewModel = null;
+            _mainViewModel = mainViewModel;
         }
+
+
+        #region commands
+
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки Экспорт, в Export Popup.
+        /// Запускает экспорт модпака.
+        /// </summary>
+        public override RelayCommand Action
+        {
+            get => new RelayCommand(obj =>
+            {
+                Export();
+                _mainViewModel.ModalWindowVM.IsModalOpen = false;
+            });
+        }
+
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
+        /// Отменяет экспорт, скрывает popup меню.
+        /// </summary>
+        public override RelayCommand CloseModalWindow
+        {
+            get => new RelayCommand(obj =>
+            {
+                _mainViewModel.ModalWindowVM.IsModalOpen = false;
+            });
+        }
+
+        #endregion commands
 
         /// <summary>
         /// Список хранит в себе загруженные директории [string].
@@ -119,7 +150,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             LoadedDirectories.Add(dir);
         }
 
-        public void Export()
+        /// <summary>
+        /// Собственно, открытие диалогового окна.
+        /// Вызов экспорта.
+        /// </summary>
+        private void Export()
         {
             var saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 

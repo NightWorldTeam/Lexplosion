@@ -82,7 +82,7 @@ namespace Lexplosion.Gui.ViewModels
                 _isNoneImages = value;
                 OnPropertyChanged(nameof(IsNoneImages));
                 SelectedImage = new BitmapImage(
-                    new System.Uri("pack://application:,,,/assets/images/background/regBG.png")
+                    new System.Uri("pack://application:,,,/assets/images/background/authBG.png")
                 );
                 BlurEffectRadius = 10;
             }

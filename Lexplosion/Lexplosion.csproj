@@ -117,15 +117,15 @@
     <Compile Include="Gui\Converters\EnumToStringConverter.cs" />
     <Compile Include="Gui\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Gui\ControlsExtension\AsyncObservableCollection.cs" />
-    <Compile Include="Gui\ControlsExtension\Grid.cs" />
-    <Compile Include="Gui\ControlsExtension\ObservableDictionary.cs" />
     <Compile Include="Gui\ControlsExtension\PasswordBox.cs" />
     <Compile Include="Gui\ControlsExtension\TabItem.cs" />
     <Compile Include="Gui\ControlsExtension\TextBox.cs" />
     <Compile Include="Gui\ControlsExtension\TreeViewItem.cs" />
     <Compile Include="Gui\Converters\NotEqualZeroConverter.cs" />
+    <Compile Include="Gui\ModalWindow\IModalContent.cs" />
     <Compile Include="Gui\IPaginable.cs" />
     <Compile Include="Gui\ISubmenu.cs" />
+    <Compile Include="Gui\ModalWindow\ModalVMBase.cs" />
     <Compile Include="Gui\Models\GeneralSettingsModel.cs" />
     <Compile Include="Gui\Models\InstanceFactory\FactoryDLCModel.cs" />
     <Compile Include="Gui\Models\InstanceFactory\InstanceFactoryModel.cs" />

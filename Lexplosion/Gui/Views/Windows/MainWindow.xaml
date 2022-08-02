@@ -6,6 +6,7 @@
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
+    xmlns:factorymenu="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
     xmlns:global="clr-namespace:Lexplosion.Global"
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -126,7 +127,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             Background="#151719"
-            Visibility="{Binding IsShowInfoBar, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
+            Visibility="{Binding UserProfile.IsShowInfoBar, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
             <Grid
                 Width="248"
                 Height="34"
@@ -208,7 +209,7 @@
 
                                             <Button
                                                 Background="Green"
-                                                Command="{Binding ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Online"
                                                 Content="В сети"
                                                 FontSize="14"
@@ -216,7 +217,7 @@
 
                                             <Button
                                                 Background="Yellow"
-                                                Command="{Binding ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Online"
                                                 Content="Не беспокоить"
                                                 FontSize="14"
@@ -224,7 +225,7 @@
 
                                             <Button
                                                 Background="Gray"
-                                                Command="{Binding ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Offline"
                                                 Content="Невидимый"
                                                 FontSize="14"
@@ -245,7 +246,7 @@
                     FontSize="18"
                     FontWeight="Bold"
                     Foreground="#fff"
-                    Text="{Binding Nickname, Source={StaticResource MainVM}}"
+                    Text="{Binding UserProfile.Nickname, Source={StaticResource MainVM}}"
                     TextAlignment="Center" />
 
                 <Button
@@ -277,8 +278,12 @@
         </Border>
 
 
-        <!--  Export  -->
-        <controls:Modal Grid.Row="1" IsOpen="{Binding IsExporting, Source={StaticResource MainVM}}" />
+        <!--  Modal Window  -->
+        <controls:Modal Grid.Row="1" IsOpen="{Binding ModalWindowVM.IsModalOpen, Source={StaticResource MainVM}}">
+            <ContentControl Content="{Binding ModalWindowVM.CurrentModalContent, Source={StaticResource MainVM}}" />
+        </controls:Modal>
+
+
         <!--  Messages Container  -->
         <ScrollViewer
             Grid.Row="1"

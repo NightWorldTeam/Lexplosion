@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion"
-    d:DesignHeight="450"
-    d:DesignWidth="700"
+    d:DesignHeight="420"
+    d:DesignWidth="360"
     mc:Ignorable="d">
     <UserControl.Resources>
         <!--  TextBlock  -->
@@ -43,172 +43,92 @@
     </UserControl.Resources>
 
     <Grid>
-        <ScrollViewer>
-            <Grid Height="450" ShowGridLines="True">
-                <Grid.Background>
-                    <SolidColorBrush Opacity="0.60" Color="#171717" />
-                </Grid.Background>
-                <!--  Name  -->
-                <TextBlock
-                    Width="244"
-                    Height="30"
-                    Margin="26,26,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Text="Название"
-                    TextAlignment="Left" />
+        <Grid>
 
-                <Grid
-                    Margin="30,55,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top">
-                    <TextBox
-                        x:Name="InstanceNameTB"
-                        Width="244"
-                        Height="40"
-                        Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
 
-                    <TextBlock
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        IsHitTestVisible="False"
-                        Opacity="0.8"
-                        Text="Название сборки">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter Property="FontSize" Value="18" />
-                                <Style.Triggers>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding Text, ElementName=InstanceNameTB}" Value="" />
-                                            <Condition Binding="{Binding IsFocused, ElementName=InstanceNameTB}" Value="false" />
-                                        </MultiDataTrigger.Conditions>
-                                        <MultiDataTrigger.Setters>
-                                            <Setter Property="Visibility" Value="Visible" />
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Grid>
 
-                <!--  Version  -->
-                <TextBlock
-                    Width="244"
-                    Height="30"
-                    Margin="300,26,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Text="Версия"
-                    TextAlignment="Left" />
-                <ComboBox
-                    Width="200"
-                    Height="40"
-                    Margin="302,55,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    ItemsSource="{Binding GameVersions}"
-                    SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
+            <TabControl
+                BorderThickness="0"
+                ItemContainerStyle="{StaticResource SwitcherTabItem}"
+                Style="{StaticResource TabControlStyle}">
+                <TabItem BorderBrush="Transparent" Header="Создание">
+                    <ScrollViewer Grid.Row="1">
+                        <StackPanel Margin="20" Orientation="Vertical">
+                            <!--<Button
+                        Width="100"
+                        Height="100"
+                        Margin="0,0,0,20"
+                        Style="{StaticResource LogoButton}" />-->
 
-                <!--  Logo  -->
-                <Button
-                    x:Name="InstanceLogo"
-                    Width="120"
-                    Height="120"
-                    Margin="0,20,50,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Command="{Binding LogoImportCommand}"
-                    Content="Logo"
-                    Style="{StaticResource LogoButton}" />
+                            <StackPanel
+                                Width="313"
+                                Margin="0,0,0,10"
+                                HorizontalAlignment="Left"
+                                Orientation="Vertical">
+                                <TextBlock HorizontalAlignment="Left" Text="Название сборки" />
+                                <TextBox Margin="0,5,0,0" />
+                            </StackPanel>
 
-                <!--  Modloader  -->
-                <StackPanel Margin="30,120,0,0">
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Text="Game Type" />
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock HorizontalAlignment="Left" Text="Версия Minecraft" />
+                                <ComboBox Margin="0,5,0,0" />
+                            </StackPanel>
 
-                    <StackPanel
-                        Width="280"
-                        Margin="0,10,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Orientation="Vertical">
-                        <RadioButton
-                            x:Name="NoneSelected"
-                            Height="30"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Command="{Binding SwitchModloaderType}"
-                            CommandParameter="{x:Static objects:ModloaderType.None}"
-                            Content="Vanilla"
-                            FontSize="18"
-                            IsChecked="True" />
-                        <!--  Click="SelectInstanceRadioButton_Click"  -->
-                        <RadioButton
-                            x:Name="ForgeSelected"
-                            Height="30"
-                            Margin="0,0,0,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Command="{Binding SwitchModloaderType}"
-                            CommandParameter="{x:Static objects:ModloaderType.Forge}"
-                            Content="Forge"
-                            FontSize="18" />
-                        <!--  Click="SelectInstanceRadioButton_Click"  -->
-                        <RadioButton
-                            x:Name="FabricSelected"
-                            Height="30"
-                            Margin="0,0,0,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Command="{Binding SwitchModloaderType}"
-                            CommandParameter="{x:Static objects:ModloaderType.Fabric}"
-                            Content="Fabric"
-                            FontSize="18" />
-                    </StackPanel>
+                            <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                                <TextBlock HorizontalAlignment="Left" Text="Game Type" />
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton
+                                        Margin="10"
+                                        Content="Vanilla"
+                                        FontSize="16" />
+                                    <RadioButton
+                                        Margin="10,0,0,0"
+                                        Content="Forge"
+                                        FontSize="16" />
+                                    <RadioButton
+                                        Margin="10,0,0,0"
+                                        Content="Fabric"
+                                        FontSize="16 " />
+                                </StackPanel>
+                            </StackPanel>
 
-                    <StackPanel Margin="300,195,0,0" Orientation="Vertical">
-                        <TextBlock HorizontalAlignment="Left" Text="Modloader Version" />
-                        <RadioButton
-                            Margin="0,10,0,0"
-                            Content="Установить Optifine"
-                            FontSize="16" />
-                    </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock HorizontalAlignment="Left" Text="Версия Modloader" />
+                                <ComboBox />
+                            </StackPanel>
+
+                            <StackPanel Margin="0,10,0,0">
+                                <CheckBox Content="Установить optifine" />
+                                <CheckBox Content="Установить iris + sodium" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="Импорт" />
+            </TabControl>
+
+
+
+            <StackPanel Grid.Row="2">
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button
+                        Width="100"
+                        Height="30"
+                        Content="Отмена"
+                        Style="{StaticResource DefaultCloseButton}" />
+
+                    <Button
+                        Width="100"
+                        Height="30"
+                        Margin="10"
+                        Content="Создать"
+                        Style="{StaticResource DefaultBrandColorButton}" />
                 </StackPanel>
-
-                <StackPanel
-                        Margin="150,120,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
-                    <TextBlock HorizontalAlignment="Left" Text="Modloader Version" />
-
-                    <ComboBox
-                            Width="180"
-                            Height="40"
-                            Margin="0,10,0,0"
-                            HorizontalAlignment="Left"
-                            Background="Red"
-                            ItemsSource="{Binding ModloaderVersions}"
-                            SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
-                <Button
-                    Width="105"
-                    Height="35"
-                    Margin="26,280,0,0"
-                    HorizontalAlignment="Left"
-                    Command="{Binding CreateInstance}"
-                    Content="Собрать"
-                    FontSize="14"
-                    FontWeight="DemiBold"
-                    Style="{StaticResource DefaultBrandColorButton}" />
-            </Grid>
-        </ScrollViewer>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

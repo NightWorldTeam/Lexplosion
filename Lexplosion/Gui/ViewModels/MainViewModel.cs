@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Controls;
 using Lexplosion.Gui.Extension;
+using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
@@ -18,11 +19,101 @@ using System.Windows.Controls;
 
 namespace Lexplosion.Gui.ViewModels
 {
+    public class UserProfile : VMBase 
+    {
+        /// <summary>
+        /// Данное свойство содержить информации - о том показан ли InfoBar.
+        /// </summary>
+        private static bool _isShowInfoBar;
+        public bool IsShowInfoBar
+        {
+            get => _isShowInfoBar; set
+            {
+                _isShowInfoBar = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Данное свойство содержить информации - о том авторизован ли пользователь.
+        /// </summary>
+        private bool _isAuthorized;
+        public bool IsAuthorized
+        {
+            get => _isAuthorized; set
+            {
+                _isAuthorized = value;
+                IsShowInfoBar = value;
+                OnPropertyChanged(nameof(IsAuthorized));
+            }
+        }
+
+        /// <summary>
+        /// Данное свойство содержить ник пользователя.
+        /// </summary>
+        private string _nickname;
+        public string Nickname
+        {
+            get => _nickname; set
+            {
+                _nickname = value;
+                OnPropertyChanged(nameof(Nickname));
+            }
+        }
+
+        public RelayCommand ChangeStatusCommand
+        {
+            get => new RelayCommand(obj =>
+            {
+                if (obj == null)
+                    return;
+
+                ActivityStatus newStatus;
+
+                Enum.TryParse((string)obj, out newStatus);
+                Global.UserData.User.ChangeBaseStatus(newStatus);
+            });
+        }
+    }
+
+    public class ModalWindowViewModel : VMBase
+    {
+        private readonly NavigationStore ModalWindowNavigationStore = new NavigationStore();
+
+        public VMBase CurrentModalContent => ModalWindowNavigationStore.CurrentViewModel;
+        
+        /// <summary>
+        /// Данное свойство содержить информации - открыт ли Экспорт [Popup].
+        /// </summary>
+        private bool _isModalOpen = false;
+        public bool IsModalOpen
+        {
+            get => _isModalOpen; set
+            {
+                _isModalOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ModalWindowViewModel()
+        {
+            ModalWindowNavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+        }
+
+
+        public void ChangeCurrentModalContent(ModalVMBase modalVM) 
+        {
+            ModalWindowNavigationStore.CurrentViewModel = modalVM;
+        }
+
+        private void OnCurrentViewModelChanged()
+        {
+            OnPropertyChanged(nameof(CurrentModalContent));
+        }
+    }
+
     public class MainViewModel : VMBase
     {
-        public ExportViewModel ExportViewModel { get; } = new ExportViewModel();
-
-        public LoadingBoard LoadingBoard { get; set; } = new LoadingBoard();
 
         #region statics
 
@@ -68,65 +159,17 @@ namespace Lexplosion.Gui.ViewModels
 
         public MainModel Model { get; }
         public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
+        public ExportViewModel ExportViewModel { get; set; }
+        public LoadingBoard LoadingBoard { get; } = new LoadingBoard();
+        public UserProfile UserProfile { get; } = new UserProfile();
+        public ModalWindowViewModel ModalWindowVM { get; } = new ModalWindowViewModel();
 
-        /// InfoBar ///
-
-        /// <summary>
-        /// Данное свойство содержить информации - о том показан ли InfoBar.
-        /// </summary>
-        private static bool _isShowInfoBar;
-        public bool IsShowInfoBar
-        {
-            get => _isShowInfoBar; set
-            {
-                _isShowInfoBar = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Данное свойство содержить информации - о том авторизован ли пользователь.
-        /// </summary>
-        private bool _isAuthorized;
-        public bool IsAuthorized
-        {
-            get => _isAuthorized; set
-            {
-                _isAuthorized = value;
-                IsShowInfoBar = value;
-                OnPropertyChanged(nameof(IsAuthorized));
-            }
-        }
-
-        /// <summary>
-        /// Данное свойство содержить ник пользователя.
-        /// </summary>
-        private string _nickname;
-        public string Nickname
-        {
-            get => _nickname; set
-            {
-                _nickname = value;
-                OnPropertyChanged(nameof(Nickname));
-            }
-        }
-
-        /// <summary>
-        /// Данное свойство содержить информации - открыт ли Экспорт [Popup].
-        /// </summary>
-        private bool _isExporting = false;
-        public bool IsExporting
-        {
-            get => _isExporting; set
-            {
-                _isExporting = value;
-                OnPropertyChanged();
-            }
-        }
         #endregion
 
 
         #region commands
+
+        // MainWindow base
 
         /// <summary>
         /// Свойтсво отрабатывает при нажатии кнопки x, в Header окна.
@@ -151,44 +194,6 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
-        /// <summary>
-        /// Свойтсво отрабатывает при нажатии кнопки Экспорт, в Export Popup.
-        /// Запускает экспорт модпака.
-        /// </summary>
-        public RelayCommand ExportInstance
-        {
-            get => new RelayCommand(obj =>
-            {
-                ExportViewModel.Export();
-                IsExporting = false;
-            });
-        }
-
-        /// <summary>
-        /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
-        /// Отменяет экспорт, скрывает popup меню.
-        /// </summary>
-        public RelayCommand CancelExport
-        {
-            get => new RelayCommand(obj =>
-            {
-                IsExporting = false;
-            });
-        }
-
-        public RelayCommand ChangeStatusCommand
-        {
-            get => new RelayCommand(obj =>
-            {
-                if (obj == null)
-                    return;
-
-                ActivityStatus newStatus;
-
-                Enum.TryParse((string)obj, out newStatus);
-                Global.UserData.User.ChangeBaseStatus(newStatus);
-            });
-        }
         #endregion
 
 
@@ -202,11 +207,14 @@ namespace Lexplosion.Gui.ViewModels
             MainMenuVM = new MainMenuViewModel(this);
             NavigationStore.CurrentViewModel = new AuthViewModel(this, LibraryInstanceLoading);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+
+            ExportViewModel = new ExportViewModel(this);
         }
 
 
         #region methods
 
+        // обновляем свойство currentviewmodel
         private void OnCurrentViewModelChanged()
         {
             OnPropertyChanged(nameof(CurrentViewModel));

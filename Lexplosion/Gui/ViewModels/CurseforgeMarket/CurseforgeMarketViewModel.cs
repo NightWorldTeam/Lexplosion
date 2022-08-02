@@ -76,7 +76,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         {
             get => _closePage ?? (new RelayCommand(obj =>
             {
-                _mainViewModel.IsShowInfoBar = true;
+                _mainViewModel.UserProfile.IsShowInfoBar = true;
                 InstanceAddon.ClearAddonsListCache();
                 MainViewModel.NavigationStore.CurrentViewModel = MainViewModel.NavigationStore.PrevViewModel;
             }));
@@ -150,7 +150,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         {
             _instanceAddons = installedAddons;
             _mainViewModel = mainViewModel;
-            mainViewModel.IsShowInfoBar = false;
+            mainViewModel.UserProfile.IsShowInfoBar = false;
 
             _baseInstanceData = instanceClient.GetBaseData;
 

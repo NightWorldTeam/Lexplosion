@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Extension;
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceForm;
+using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using System;
@@ -12,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels
     {
         private InstanceClient _instanceClient; // Данные о Instance.
 
-        public InstanceClient Client 
+        public InstanceClient Client
         {
             get => _instanceClient;
         }
@@ -81,52 +82,59 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _lowerBtnCommand ?? (_lowerBtnCommand = new RelayCommand(obj =>
             {
-                Console.WriteLine(((LowerButtonFunc)obj).ToString());
-                switch ((LowerButtonFunc)obj)
-                {
-                    case LowerButtonFunc.AddToLibrary:
-                        IsDropdownMenuOpen = false;
-                        break;
-                    case LowerButtonFunc.DeleteFromLibrary:
-                        IsDropdownMenuOpen = false;
-                        Model.InstanceClient.Delete();
-                        _mainViewModel.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
-                        break;
-                    case LowerButtonFunc.OpenFolder:
-                        IsDropdownMenuOpen = false;
-                        Model.OpenInstanceFolder();
-                        break;
-                    case LowerButtonFunc.CancelDownload:
-                        IsDropdownMenuOpen = false;
-                        break;
-                    case LowerButtonFunc.Update:
-                        IsDropdownMenuOpen = false;
-                        Model.DownloadModel.DonwloadPrepare();
-                        break;
-                    case LowerButtonFunc.OpenWebsite:
-                        IsDropdownMenuOpen = false;
-                        try
-                        {
-                            System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
-                        }
-                        catch
-                        {
-                            // message box here.
-                        }
-                        break;
-                    case LowerButtonFunc.RemoveInstance:
-                        IsDropdownMenuOpen = false;
-                        _mainViewModel.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
-                        Model.InstanceClient.Delete();
-                        break;
-                    case LowerButtonFunc.Export:
-                        IsDropdownMenuOpen = false;
-                        _mainViewModel.IsExporting = true;
-                        _mainViewModel.ExportViewModel.InstanceName = _instanceClient.Name;
-                        _mainViewModel.ExportViewModel.IsFullExport = true;
-                        _mainViewModel.ExportViewModel.InstanceClient = _instanceClient;
-                        _mainViewModel.ExportViewModel.UnitsList = _instanceClient.GetPathContent();
+            Console.WriteLine(((LowerButtonFunc)obj).ToString());
+            switch ((LowerButtonFunc)obj)
+            {
+                case LowerButtonFunc.AddToLibrary:
+                    IsDropdownMenuOpen = false;
+                    break;
+                case LowerButtonFunc.DeleteFromLibrary:
+                    IsDropdownMenuOpen = false;
+                    Model.InstanceClient.Delete();
+                    _mainViewModel.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+                    break;
+                case LowerButtonFunc.OpenFolder:
+                    IsDropdownMenuOpen = false;
+                    Model.OpenInstanceFolder();
+                    break;
+                case LowerButtonFunc.CancelDownload:
+                    IsDropdownMenuOpen = false;
+                    break;
+                case LowerButtonFunc.Update:
+                    IsDropdownMenuOpen = false;
+                    Model.DownloadModel.DonwloadPrepare();
+                    break;
+                case LowerButtonFunc.OpenWebsite:
+                    IsDropdownMenuOpen = false;
+                    try
+                    {
+                        System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
+                    }
+                    catch
+                    {
+                        // message box here.
+                    }
+                    break;
+                case LowerButtonFunc.RemoveInstance:
+                    IsDropdownMenuOpen = false;
+                    _mainViewModel.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+                    Model.InstanceClient.Delete();
+                    break;
+                case LowerButtonFunc.Export:
+                    IsDropdownMenuOpen = false;
+                    _mainViewModel.ModalWindowVM.IsModalOpen = true;
 
+                        // возможно не надо вообще эксемпляр класса сохранять.
+                        _mainViewModel.ExportViewModel = new ExportViewModel(_mainViewModel)
+                        {
+                            InstanceName = _instanceClient.Name,
+                            IsFullExport = true,
+                            InstanceClient = _instanceClient,
+                            UnitsList = _instanceClient.GetPathContent()
+                        };
+
+                        _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(_mainViewModel.ExportViewModel);
+            
                         foreach (var s in _mainViewModel.ExportViewModel.UnitsList.Keys) 
                         {
                             Console.WriteLine(s);
@@ -139,10 +147,10 @@ namespace Lexplosion.Gui.ViewModels
         #endregion commands
 
         public InstanceFormViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
-        {
-            _mainViewModel = mainViewModel;
-            Model = new InstanceFormModel(instanceClient);
-            _instanceClient = instanceClient;
-        }
+{
+    _mainViewModel = mainViewModel;
+    Model = new InstanceFormModel(instanceClient);
+    _instanceClient = instanceClient;
+}
     }
 }

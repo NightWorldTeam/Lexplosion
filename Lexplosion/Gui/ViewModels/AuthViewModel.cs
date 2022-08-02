@@ -15,7 +15,7 @@ namespace Lexplosion.Gui.ViewModels
         private string _password = "";
         private bool _isSaveMe = false;
 
-        private readonly MainViewModel _model;
+        private readonly MainViewModel _mainViewModel;
         private Action _libraryInstancesLoading;
         private RelayCommand _signUpCommand;
 
@@ -60,8 +60,8 @@ namespace Lexplosion.Gui.ViewModels
                         switch (authCode) 
                         {
                             case AuthCode.Successfully:
-                                _model.Nickname = UserData.User.Login;
-                                _model.IsAuthorized = true;
+                                _mainViewModel.UserProfile.Nickname = UserData.User.Login;
+                                _mainViewModel.UserProfile.IsAuthorized = true;
                                 _libraryInstancesLoading();
                                 NavigationCommand.Execute(null);
                                 break;
@@ -83,7 +83,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public AuthViewModel(MainViewModel model, Action libraryInstancesLoading)
         {
-            _model = model;
+            _mainViewModel = model;
             _libraryInstancesLoading = libraryInstancesLoading;
 
             DataFilesManager.GetAccount(out _login, out _password);
