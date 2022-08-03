@@ -43,6 +43,12 @@
     </UserControl.Resources>
 
     <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+
         <TabControl
             BorderThickness="0"
             ItemContainerStyle="{StaticResource TEST}"
@@ -88,46 +94,41 @@
                             <StackPanel Orientation="Horizontal">
                                 <RadioButton
                                     Margin="10"
+                                    Command="{Binding SwitchModloaderType}"
+                                    CommandParameter="{x:Static objects:ModloaderType.None}"
                                     Content="Vanilla"
-                                    FontSize="16" />
+                                    FontSize="16"
+                                    GroupName="GameType" />
                                 <RadioButton
                                     Margin="10,0,0,0"
+                                    Command="{Binding SwitchModloaderType}"
+                                    CommandParameter="{x:Static objects:ModloaderType.Forge}"
                                     Content="Forge"
-                                    FontSize="16" />
+                                    FontSize="16"
+                                    GroupName="GameType" />
                                 <RadioButton
                                     Margin="10,0,0,0"
+                                    Command="{Binding SwitchModloaderType}"
+                                    CommandParameter="{x:Static objects:ModloaderType.Fabric}"
                                     Content="Fabric"
-                                    FontSize="16 " />
+                                    FontSize="16 "
+                                    GroupName="GameType" />
                             </StackPanel>
                         </StackPanel>
 
                         <StackPanel Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
                             <StackPanel Margin="0,15,0,0">
                                 <TextBlock HorizontalAlignment="Left" Text="Версия Modloader" />
-                                <ComboBox Margin="0,5,0,0" />
+                                <ComboBox
+                                    Margin="0,5,0,0"
+                                    ItemsSource="{Binding ModloaderVersions}"
+                                    SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
 
                             <StackPanel Margin="0,15,0,0">
                                 <CheckBox Content="Установить optifine" />
                                 <CheckBox Margin="0,2,0,0" Content="Установить iris + sodium" />
                             </StackPanel>
-                        </StackPanel>
-
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                            <Button
-                                Width="100"
-                                Height="30"
-                                Command="{Binding CloseModalWindow}"
-                                Content="Отмена"
-                                Style="{StaticResource DefaultCloseButton}" />
-
-                            <Button
-                                Width="100"
-                                Height="30"
-                                Margin="10"
-                                Command="{Binding Action}"
-                                Content="Создать"
-                                Style="{StaticResource DefaultBrandColorButton}" />
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
@@ -136,5 +137,25 @@
                 <ContentControl Content="{Binding ImportVM}" />
             </TabItem>
         </TabControl>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button
+                Width="80"
+                Height="30"
+                Margin="10,0,0,0"
+                Command="{Binding Action}"
+                Content="Создать"
+                FontSize="14"
+                Style="{StaticResource DefaultBrandColorButton}" />
+
+            <Button
+                Width="80"
+                Height="30"
+                Margin="10,0,0,0"
+                Command="{Binding CloseModalWindow}"
+                Content="Отмена"
+                FontSize="14"
+                Style="{StaticResource DefaultCloseButton}" />
+        </StackPanel>
     </Grid>
 </UserControl>
