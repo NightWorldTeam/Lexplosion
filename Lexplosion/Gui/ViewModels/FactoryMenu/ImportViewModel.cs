@@ -31,6 +31,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                         return;
                     }
 
+                    _mainViewModel.ModalWindowVM.IsModalOpen = false;
+
                     _mainViewModel.Model.LibraryInstances.Add(
                         new InstanceFormViewModel(_mainViewModel, instanceClient)
                         );

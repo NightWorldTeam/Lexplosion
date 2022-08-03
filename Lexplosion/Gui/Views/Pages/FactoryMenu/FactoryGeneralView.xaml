@@ -43,68 +43,65 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid>
+        <TabControl
+            BorderThickness="0"
+            ItemContainerStyle="{StaticResource TEST}"
+            Style="{StaticResource TabControlStyle}">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="50" />
-            </Grid.RowDefinitions>
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabPanel}">
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                </Style>
+            </TabControl.Resources>
 
+            <TabItem BorderBrush="Transparent" Header="Создание">
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel Margin="20" Orientation="Vertical">
+                        <!--<Button
+                                    Width="100"
+                                    Height="100"
+                                    Margin="0,0,0,20"
+                                    Style="{StaticResource LogoButton}" />-->
 
-            <TabControl BorderThickness="0" Style="{StaticResource TabControlStyle}">
-                <TabControl.Resources>
-                    <Style TargetType="{x:Type TabPanel}">
-                        <Setter Property="HorizontalAlignment" Value="Center" />
-                    </Style>
-                </TabControl.Resources>
+                        <StackPanel
+                            Width="313"
+                            Margin="0,0,0,15"
+                            HorizontalAlignment="Left"
+                            Orientation="Vertical">
+                            <TextBlock HorizontalAlignment="Left" Text="Название сборки" />
+                            <TextBox
+                                Margin="0,5,0,0"
+                                FontSize="16"
+                                FontWeight="Normal" />
+                        </StackPanel>
 
-                <TabItem BorderBrush="Transparent" Header="Создание">
-                    <ScrollViewer Grid.Row="1">
-                        <StackPanel Margin="20" Orientation="Vertical">
-                            <!--<Button
-                        Width="100"
-                        Height="100"
-                        Margin="0,0,0,20"
-                        Style="{StaticResource LogoButton}" />-->
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock HorizontalAlignment="Left" Text="Версия Minecraft" />
+                            <ComboBox
+                                Margin="0,5,0,0"
+                                ItemsSource="{Binding GameVersions}"
+                                SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
 
-                            <StackPanel
-                                Width="313"
-                                Margin="0,0,0,15"
-                                HorizontalAlignment="Left"
-                                Orientation="Vertical">
-                                <TextBlock HorizontalAlignment="Left" Text="Название сборки" />
-                                <TextBox
-                                    Margin="0,5,0,0"
-                                    FontSize="16"
-                                    FontWeight="Normal" />
+                        <StackPanel Margin="0,15,0,0" Orientation="Vertical">
+                            <TextBlock HorizontalAlignment="Left" Text="Game Type" />
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton
+                                    Margin="10"
+                                    Content="Vanilla"
+                                    FontSize="16" />
+                                <RadioButton
+                                    Margin="10,0,0,0"
+                                    Content="Forge"
+                                    FontSize="16" />
+                                <RadioButton
+                                    Margin="10,0,0,0"
+                                    Content="Fabric"
+                                    FontSize="16 " />
                             </StackPanel>
+                        </StackPanel>
 
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock HorizontalAlignment="Left" Text="Версия Minecraft" />
-                                <ComboBox
-                                    Margin="0,5,0,0"
-                                    ItemsSource="{Binding GameVersions}"
-                                    SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-
-                            <StackPanel Margin="0,15,0,0" Orientation="Vertical">
-                                <TextBlock HorizontalAlignment="Left" Text="Game Type" />
-                                <StackPanel Orientation="Horizontal">
-                                    <RadioButton
-                                        Margin="10"
-                                        Content="Vanilla"
-                                        FontSize="16" />
-                                    <RadioButton
-                                        Margin="10,0,0,0"
-                                        Content="Forge"
-                                        FontSize="16" />
-                                    <RadioButton
-                                        Margin="10,0,0,0"
-                                        Content="Fabric"
-                                        FontSize="16 " />
-                                </StackPanel>
-                            </StackPanel>
-
+                        <StackPanel Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
                             <StackPanel Margin="0,15,0,0">
                                 <TextBlock HorizontalAlignment="Left" Text="Версия Modloader" />
                                 <ComboBox Margin="0,5,0,0" />
@@ -115,37 +112,29 @@
                                 <CheckBox Margin="0,2,0,0" Content="Установить iris + sodium" />
                             </StackPanel>
                         </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
-                <TabItem Header="Импорт">
-                    
-                </TabItem>
-            </TabControl>
 
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button
+                                Width="100"
+                                Height="30"
+                                Command="{Binding CloseModalWindow}"
+                                Content="Отмена"
+                                Style="{StaticResource DefaultCloseButton}" />
 
-            <Border
-                Grid.Row="2"
-                BorderBrush="#131313"
-                BorderThickness="0,1,0,0">
-                <StackPanel>
-                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                        <Button
-                            Width="100"
-                            Height="30"
-                            Command="{Binding CloseModalWindow}"
-                            Content="Отмена"
-                            Style="{StaticResource DefaultCloseButton}" />
-
-                        <Button
-                            Width="100"
-                            Height="30"
-                            Margin="10"
-                            Command="{Binding Action}"
-                            Content="Создать"
-                            Style="{StaticResource DefaultBrandColorButton}" />
+                            <Button
+                                Width="100"
+                                Height="30"
+                                Margin="10"
+                                Command="{Binding Action}"
+                                Content="Создать"
+                                Style="{StaticResource DefaultBrandColorButton}" />
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
-            </Border>
-        </Grid>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Импорт">
+                <ContentControl Content="{Binding ImportVM}" />
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

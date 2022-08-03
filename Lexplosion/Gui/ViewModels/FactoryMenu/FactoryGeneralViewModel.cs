@@ -34,6 +34,17 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private MainViewModel _mainViewModel;
 
         #region prop
+
+        private ImportViewModel _importViewModel;
+        public ImportViewModel ImportVM 
+        {
+            get => _importViewModel; set 
+            {
+                _importViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsModloaderSelected
         {
             get => _isModloaderSelected; set
@@ -170,6 +181,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             GameVersions = new ObservableCollection<string>(MainViewModel.GameVersions.ToList());
             SelectedVersion = GameVersions[0];
             Model = new InstanceFactoryModel();
+
+            _importViewModel = new ImportViewModel(_mainViewModel);
         }
     }
 }

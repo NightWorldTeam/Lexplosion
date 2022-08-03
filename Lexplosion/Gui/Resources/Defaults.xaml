@@ -128,7 +128,7 @@
                         <Rectangle
                             x:Name="ThumbRect"
                             MaxWidth="13"
-                            Fill="#17171c"
+                            Fill="#343434"
                             RadiusX="4"
                             RadiusY="4" />
                     </Border>
