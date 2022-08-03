@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
 using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management
 {
-    class CurseforgeInstance : IPrototypeInstance
+    class CurseforgeInstallManager : IInstallManager
     {
         private VersionManifest Manifest;
         private LastUpdates Updates;
@@ -31,7 +23,7 @@ namespace Lexplosion.Logic.Management
 
         int updatesCount = 0;
 
-        public CurseforgeInstance(string instanceid, bool onlyBase_)
+        public CurseforgeInstallManager(string instanceid, bool onlyBase_)
         {
             InstanceId = instanceid;
             onlyBase = onlyBase_;

@@ -21,7 +21,6 @@ namespace Lexplosion.Tools
         {
             sem.WaitOne();
 
-
             int[] keys = new int[data.Count];
             data.Keys.CopyTo(keys, 0);
 

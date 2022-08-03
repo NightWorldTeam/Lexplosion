@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using Newtonsoft.Json;
-using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management
 {
-    class NightworldIntance : IPrototypeInstance
+    class NightworldInstallManager : IInstallManager
     {
         private class NwInstancePlatformData : InstancePlatformData
         {
@@ -34,7 +30,7 @@ namespace Lexplosion.Logic.Management
 
         private int actualVersion = -1;
 
-        public NightworldIntance(string instanceid, bool onlyBase_)
+        public NightworldInstallManager(string instanceid, bool onlyBase_)
         {
             Console.WriteLine("onlyBase_ = " + onlyBase_);
             InstanceId = instanceid;

@@ -7,7 +7,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management
 {
-    interface IPrototypeInstance
+    interface IInstallManager
     {
         InstanceInit Check(out string gameVersion);
         InitData Update(string javaPath, ProgressHandlerCallback progressHandler); // TODO: сделать так, чтобы при неудачном скачивании некоторых файлов он сохранял результат работы, чтобы не перекачивать всё снова

@@ -9,11 +9,13 @@ using System.Runtime.InteropServices;
 using System.IO.Compression;
 using Lexplosion.Properties;
 using Lexplosion.Global;
+using Lexplosion.Tools;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Tools;
+using Lexplosion.Gui.Views.Windows;
+using Lexplosion.Gui.ViewModels;
+
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
  * Последнее обновление в феврале 2021 года
@@ -53,7 +55,7 @@ namespace Lexplosion
         {
             // получем процессы с таким же именем (то есть пытаемся получить уже запущенную копию лаунчера)
             Process[] procs = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
-            Process curenProcess = Process.GetCurrentProcess();
+            Process curentProcess = Process.GetCurrentProcess();
 
             // процессов больше одного. Знчит лаунечр уже запущен
             if (procs.Length > 1)
@@ -61,14 +63,14 @@ namespace Lexplosion
                 // делаем окно уже запущенного лаунечра активным
                 foreach (Process proc in procs)
                 {
-                    if (proc.Id != curenProcess.Id)
+                    if (proc.Id != curentProcess.Id)
                     {
                         ShowWindow(proc.MainWindowHandle, 1);
                         SetForegroundWindow(proc.MainWindowHandle);
                     }
                 }
 
-                curenProcess.Kill(); //стопаем процесс
+                curentProcess.Kill(); //стопаем процесс
             }
 
             // Подписываемся на эвент для загрузки всех строенных dll'ников
@@ -84,7 +86,6 @@ namespace Lexplosion
                 LauncherUpdate();
             }
 
-            // TODO: При скачивании асетсов нужно будет сделать гифку, ибо это занимает время
             InstanceClient.DefineInstalledInstances();
 
             // Встраеваем стиили
@@ -136,29 +137,17 @@ namespace Lexplosion
 
             CommandReceiver.OpenModpackPage += delegate (string modpackId)
             {
-                Console.WriteLine("open " + modpackId);
+                InstanceClient instance = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
+                if (instance != null)
+                {
+                    Console.WriteLine("open " + modpackId);
+                    MainViewModel.MainMenuVM.LogoClickCommand.Execute(instance);
+                    ShowWindow(curentProcess.MainWindowHandle, 1);
+                    SetForegroundWindow(curentProcess.MainWindowHandle);
+                }
             };
 
             CommandReceiver.StartCommandServer();
-
-            //Console.WriteLine("TEST");
-            ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=432&index=0&sortField=1&sortOrder=desc&pageSize=10&gameVersion=1.12.2&modLoaderType=0&searchFilter=
-            ////https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&sortField=1&sortOrder=desc&pageSize=10&index=0
-            //WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/minecraft/modloader/forge-14.23.5.2860");
-            //req.Headers.Add("x-api-key", "$2a$10$d9HphjHPzYChRhMdu3gStu0DaJ5RGfgtogS1NIBG1c5sqhKSK6hBS");
-            //((HttpWebRequest)req).Accept = "application/json";
-
-            //using (WebResponse resp = req.GetResponse())
-            //{
-            //    using (Stream stream = resp.GetResponseStream())
-            //    {
-            //        using (StreamReader sr = new StreamReader(stream))
-            //        {
-            //            Console.WriteLine("hfgjhf");
-            //            Console.WriteLine(sr.ReadToEnd());
-            //        }
-            //    }
-            //}
 
             Thread.Sleep(800);
 

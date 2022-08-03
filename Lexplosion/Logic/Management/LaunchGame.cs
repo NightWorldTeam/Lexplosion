@@ -229,18 +229,18 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update(ProgressHandlerCallback progressHandler, bool onlyBase = false)
         {
-            IPrototypeInstance instance;
+            IInstallManager instance;
 
             switch (_type)
             {
                 case InstanceSource.Nightworld:
-                    instance = new NightworldIntance(_instanceId, onlyBase);
+                    instance = new NightworldInstallManager(_instanceId, onlyBase);
                     break;
                 case InstanceSource.Local:
-                    instance = new LocalInstance(_instanceId);
+                    instance = new LocalInstallManager(_instanceId);
                     break;
                 case InstanceSource.Curseforge:
-                    instance = new CurseforgeInstance(_instanceId, onlyBase);
+                    instance = new CurseforgeInstallManager(_instanceId, onlyBase);
                     break;
                 default:
                     instance = null;

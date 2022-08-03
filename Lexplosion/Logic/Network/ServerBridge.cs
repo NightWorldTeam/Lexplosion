@@ -73,6 +73,11 @@ namespace Lexplosion.Logic.Network
             catch
             {
                 value = false;
+
+                if (Connections.ContainsKey(point))
+                    Connections.TryRemove(point, out _);
+                if (ClientsPoints.ContainsKey(bridge))
+                    ClientsPoints.TryRemove(bridge, out _);
             }
             AcceptingBlock.Release();
 
@@ -167,7 +172,7 @@ namespace Lexplosion.Logic.Network
 
                 if (isDisconected.Count > 0)
                 {
-                    isDisconected.Clear();
+                    isDisconected = new List<IPEndPoint>();
                 }
 
             }

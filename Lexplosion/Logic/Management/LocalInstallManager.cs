@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management
 {
-    class LocalInstance : IPrototypeInstance
+    class LocalInstallManager : IInstallManager
     {
         private VersionManifest Manifest;
         private LastUpdates Updates;
@@ -16,7 +14,7 @@ namespace Lexplosion.Logic.Management
         private string InstanceId;
         private int stagesCount = 0;
 
-        public LocalInstance(string instanceid)
+        public LocalInstallManager(string instanceid)
         {
             InstanceId = instanceid;
             installer = new InstanceInstaller(instanceid);

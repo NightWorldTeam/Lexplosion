@@ -242,6 +242,10 @@
     <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Management\Instances\CurseforgeInstance.cs" />
+    <Compile Include="Logic\Management\Instances\LocalInstance.cs" />
+    <Compile Include="Logic\Management\Instances\NightworldInstance.cs" />
+    <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />
     <Compile Include="Tools\ImageTools.cs" />
     <Compile Include="Tools\Pointer.cs" />
@@ -258,15 +262,15 @@
     <Compile Include="Logic\FileSystem\InstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\NightWorldInstaller.cs" />
     <Compile Include="Tools\KeySemaphore.cs" />
-    <Compile Include="Logic\Management\CurseforgeInstance.cs" />
+    <Compile Include="Logic\Management\CurseforgeInstallManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
     <Compile Include="Logic\Management\Instances\InstanceAddon.cs" />
     <Compile Include="Logic\Management\Instances\InstanceClient.cs" />
     <Compile Include="Logic\Management\Instances\Objects.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
-    <Compile Include="Logic\Management\LocalInstance.cs" />
-    <Compile Include="Logic\Management\NightworldIntance.cs" />
-    <Compile Include="Logic\Management\IPrototypeInstance.cs" />
+    <Compile Include="Logic\Management\LocalInstallManager.cs" />
+    <Compile Include="Logic\Management\NightworldInstallManager.cs" />
+    <Compile Include="Logic\Management\IInstallManager.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
     <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />
