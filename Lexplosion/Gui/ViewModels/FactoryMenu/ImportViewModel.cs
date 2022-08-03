@@ -12,6 +12,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
     public class ImportViewModel : VMBase
     {
         private MainViewModel _mainViewModel;
+        private FactoryGeneralViewModel _factoryGeneralVM;
+
+        public FactoryGeneralViewModel FactoryGeneralVM { get => _factoryGeneralVM; }
 
         public RelayCommand ImportCommand 
         {
@@ -42,9 +45,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }); 
         }
 
-        public ImportViewModel(MainViewModel mainViewModel)
+        public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel)
         {
             _mainViewModel = mainViewModel;
+            _factoryGeneralVM = factoryGeneralViewModel;
         }
     }
 }

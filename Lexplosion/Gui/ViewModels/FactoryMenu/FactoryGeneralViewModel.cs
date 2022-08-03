@@ -18,6 +18,13 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
+    public class ImportedFiles 
+    {
+        private InstanceClient _instanceClient;
+
+
+    }
+
     public class FactoryGeneralViewModel : ModalVMBase
     {
         private RelayCommand _switchModloaderType;
@@ -182,7 +189,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             SelectedVersion = GameVersions[0];
             Model = new InstanceFactoryModel();
 
-            _importViewModel = new ImportViewModel(_mainViewModel);
+            _importViewModel = new ImportViewModel(_mainViewModel, this);
         }
     }
 }

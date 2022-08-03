@@ -6,5 +6,7 @@
         <ResourceDictionary Source="LoadingBoard/LoadingBoard.xaml" />
         <ResourceDictionary Source="ChangelogItem/ChangelogItem.xaml" />
         <ResourceDictionary Source="ModalControl/Modal.xaml" />
+        <ResourceDictionary Source="DragDropBoard/DragDropBoard.xaml" />
+        <ResourceDictionary Source="PlaceholderTextBox/PlaceholderTextBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

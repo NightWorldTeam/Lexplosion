@@ -2,6 +2,7 @@
     x:Class="Lexplosion.Gui.Views.Pages.FactoryMenu.FactoryGeneralView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion"
@@ -42,45 +43,51 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid>
+    <TabControl
+        BorderThickness="0"
+        ItemContainerStyle="{StaticResource TEST}"
+        Style="{StaticResource TabControlStyle}">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="50" />
-        </Grid.RowDefinitions>
+        <TabControl.Resources>
+            <Style TargetType="{x:Type TabPanel}">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+        </TabControl.Resources>
 
-        <TabControl
-            BorderThickness="0"
-            ItemContainerStyle="{StaticResource TEST}"
-            Style="{StaticResource TabControlStyle}">
+        <TabItem BorderBrush="Transparent" Header="Создание">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="330" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
 
-            <TabControl.Resources>
-                <Style TargetType="{x:Type TabPanel}">
-                    <Setter Property="HorizontalAlignment" Value="Center" />
-                </Style>
-            </TabControl.Resources>
-
-            <TabItem BorderBrush="Transparent" Header="Создание">
-                <ScrollViewer Grid.Row="1">
+                <ScrollViewer>
                     <StackPanel Margin="20" Orientation="Vertical">
-                        <!--<Button
-                                    Width="100"
-                                    Height="100"
-                                    Margin="0,0,0,20"
-                                    Style="{StaticResource LogoButton}" />-->
 
+                        <!--  Name  -->
                         <StackPanel
                             Width="313"
                             Margin="0,0,0,15"
                             HorizontalAlignment="Left"
                             Orientation="Vertical">
                             <TextBlock HorizontalAlignment="Left" Text="Название сборки" />
-                            <TextBox
+                            <controls:PlaceholderTextBox
+                                Height="40"
                                 Margin="0,5,0,0"
+                                Padding="5,0,0,0"
+                                VerticalContentAlignment="Center"
+                                Background="#1f1f1f"
+                                BorderBrush="#121212"
+                                BorderThickness="1"
                                 FontSize="16"
-                                FontWeight="Normal" />
+                                FontWeight="Normal"
+                                Foreground="#b9b7b7"
+                                Placeholder="Название сборки"
+                                PlaceholderOpacity="0.8"
+                                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
 
+                        <!--  Minecraft Version  -->
                         <StackPanel Orientation="Vertical">
                             <TextBlock HorizontalAlignment="Left" Text="Версия Minecraft" />
                             <ComboBox
@@ -89,6 +96,7 @@
                                 SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
 
+                        <!--  Game Type  -->
                         <StackPanel Margin="0,15,0,0" Orientation="Vertical">
                             <TextBlock HorizontalAlignment="Left" Text="Game Type" />
                             <StackPanel Orientation="Horizontal">
@@ -116,6 +124,7 @@
                             </StackPanel>
                         </StackPanel>
 
+                        <!--  Modloader Version and some  -->
                         <StackPanel Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
                             <StackPanel Margin="0,15,0,0">
                                 <TextBlock HorizontalAlignment="Left" Text="Версия Modloader" />
@@ -132,30 +141,30 @@
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
-            </TabItem>
-            <TabItem Header="Импорт">
-                <ContentControl Content="{Binding ImportVM}" />
-            </TabItem>
-        </TabControl>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button
-                Width="80"
-                Height="30"
-                Margin="10,0,0,0"
-                Command="{Binding Action}"
-                Content="Создать"
-                FontSize="14"
-                Style="{StaticResource DefaultBrandColorButton}" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button
+                        Width="80"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        Command="{Binding Action}"
+                        Content="Создать"
+                        FontSize="14"
+                        Style="{StaticResource DefaultBrandColorButton}" />
 
-            <Button
-                Width="80"
-                Height="30"
-                Margin="10,0,0,0"
-                Command="{Binding CloseModalWindow}"
-                Content="Отмена"
-                FontSize="14"
-                Style="{StaticResource DefaultCloseButton}" />
-        </StackPanel>
-    </Grid>
+                    <Button
+                        Width="80"
+                        Height="30"
+                        Margin="10,0,0,0"
+                        Command="{Binding CloseModalWindow}"
+                        Content="Отмена"
+                        FontSize="14"
+                        Style="{StaticResource DefaultCloseButton}" />
+                </StackPanel>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Импорт">
+            <ContentControl Content="{Binding ImportVM}" />
+        </TabItem>
+    </TabControl>
 </UserControl>

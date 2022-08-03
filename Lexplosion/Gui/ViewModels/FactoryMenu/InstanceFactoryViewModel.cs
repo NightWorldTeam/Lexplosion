@@ -33,7 +33,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
 
             _factoryGeneralVM = new FactoryGeneralViewModel(mainViewModel);
-            _importViewModel = new ImportViewModel(mainViewModel);
+            //_importViewModel = new ImportViewModel(mainViewModel);
 
             var FactoryTabs = new List<Tab>()
             {

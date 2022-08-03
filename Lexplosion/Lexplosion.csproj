@@ -105,6 +105,7 @@
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Controls\MessageModel.cs" />
     <Compile Include="Controls\ModalControl\Modal.cs" />
+    <Compile Include="Controls\PlaceholderTextBox\PlaceholderTextBox.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
     <Compile Include="Global.cs" />
@@ -315,6 +316,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DragDropBoard\DragDropBoard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DropdownMenu\DropdownMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -324,6 +329,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ModalControl\Modal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlaceholderTextBox\PlaceholderTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
