@@ -6,6 +6,7 @@ using System.Threading;
 using System.Net;
 using System.Collections.Concurrent;
 using System;
+using System.Linq;
 using Tommy;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
@@ -13,7 +14,6 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
-using System.Linq;
 using static Lexplosion.Logic.Network.CurseforgeApi;
 
 namespace Lexplosion.Logic.Management.Instances

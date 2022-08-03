@@ -11,5 +11,10 @@ namespace Lexplosion.Gui.Views.Pages.FactoryMenu
         {
             InitializeComponent();
         }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

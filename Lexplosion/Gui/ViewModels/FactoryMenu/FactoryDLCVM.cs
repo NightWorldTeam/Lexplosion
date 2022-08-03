@@ -80,7 +80,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _openMarket ?? (new RelayCommand(obj =>
             {
                 MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
-                MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(CurrentAddon.InstalledAddons, _mainViewModel, _instanceClient);
+                MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(CurrentAddon.InstalledAddons, _mainViewModel, _instanceClient, ((FactoryDLCModel)obj).Type);
             }));
         }
 
@@ -102,9 +102,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
             Lexplosion.Run.TaskRun(() =>
             {
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData)));
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData)));
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData)));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), AddonType.Mods));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), AddonType.Resourcepacks));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), AddonType.Maps));
 
                 CurrentAddon = _models[0];
             });

@@ -64,6 +64,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private readonly ObservableCollection<InstanceAddon> _instanceAddons;
 
+        private readonly AddonType _addonsType;
+
         private int _pageSize = 20;
 
         #region commands
@@ -146,17 +148,16 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion props
 
-        public CurseforgeMarketViewModel(ObservableCollection<InstanceAddon> installedAddons, MainViewModel mainViewModel, InstanceClient instanceClient)
+        public CurseforgeMarketViewModel(ObservableCollection<InstanceAddon> installedAddons, MainViewModel mainViewModel, InstanceClient instanceClient, AddonType addonsType)
         {
             _instanceAddons = installedAddons;
             _mainViewModel = mainViewModel;
+            _addonsType = addonsType;
             mainViewModel.UserProfile.IsShowInfoBar = false;
 
             _baseInstanceData = instanceClient.GetBaseData;
 
             InstanceAddons = new ObservableCollection<InstanceAddon>();
-
-            ;
 
             foreach (var addon in AddonCategory.GetCategories(AddonType.Mods))
             {
@@ -177,7 +178,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         {
             Lexplosion.Run.TaskRun(delegate ()
             {
-                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1, AddonType.Mods, -1, SearchBoxVM.SearchTextComfirmed);
+                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1, _addonsType, -1, SearchBoxVM.SearchTextComfirmed);
 
                 if (instances.Count == 0)
                 {

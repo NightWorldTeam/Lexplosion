@@ -22,9 +22,10 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             }
         }
 
-        public FactoryDLCModel(List<InstanceAddon> addons)
+        public FactoryDLCModel(List<InstanceAddon> addons, AddonType type)
         {
             InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
+            Type = type;
         }
 
         public void Uninstall(InstanceAddon addon) => InstalledAddons.Remove(addon);
