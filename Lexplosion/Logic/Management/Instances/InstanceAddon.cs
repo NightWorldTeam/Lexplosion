@@ -499,6 +499,11 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         existsCfMods.Add(installedAddonId);
                         actualAddonsList[installedAddonId] = installedAddon;
+                        existsAddons[installedAddon.ActualPath] = new ValuePair<InstanceAddon, int> 
+                        {
+                            Value1 = null,
+                            Value2 = installedAddonId
+                        };
                     }
                 }
                 else //всё остальное не тогаем. Просто перекидывеам в новый список
@@ -508,12 +513,11 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             // теперь получаем инфу об известных нам модов с курсфорджа
-            bool cfSuccessful = (existsCfMods.Count == 0); // был ли запрос к курсфорджу успешным. Если аддонов 0 ставим true, ведь запрос к курсфорджу нам делать не надо, а все моды нужно обработать как локлаьные
             if (existsCfMods.Count > 0)
             {
-                List<CurseforgeAddonInfo> cfData = CurseforgeApi.GetAddonsInfo(existsCfMods.ToArray(), out cfSuccessful);
+                List<CurseforgeAddonInfo> cfData = CurseforgeApi.GetAddonsInfo(existsCfMods.ToArray());
 
-                if (cfSuccessful)
+                if (cfData != null)
                 {
                     foreach (CurseforgeAddonInfo addon in cfData)
                     {
@@ -554,19 +558,7 @@ namespace Lexplosion.Logic.Management.Instances
                             addons.Add(obj);
                         }
                     }
-                }
-                else // курсфордж выебнулся или упал интрнет. Заполняем список чтобы потом, в следующем цикле всю инфу вытащить из джарников
-                {
-                    foreach (var addonId in existsCfMods)
-                    {
-                        InstalledAddonInfo elem = actualAddonsList[addonId];
-                        existsAddons[elem.ActualPath] = new ValuePair<InstanceAddon, int> 
-                        {
-                            Value1 = null,
-                            Value2 = addonId
-                        };
-                    }
-                }      
+                }  
             }
             
             string[] files;
@@ -599,7 +591,8 @@ namespace Lexplosion.Logic.Management.Instances
 
                     // аддон есть в папке, но нет в списке, или он есть и в папке и в списке, но скачан нее с курсфорджа, то нужно добавить, так же генерируем айдишник для него
                     // ну или просто запрос был не успешным
-                    if (!existsAddons.ContainsKey(xyi) || !cfSuccessful)
+                    bool notContains = !existsAddons.ContainsKey(xyi);
+                    if (notContains || existsAddons[xyi].Value1 == null)
                     {
                         string displayName = UnknownName, authors = "", version = "", description = "", modId = "";
 
@@ -686,7 +679,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                         // определяем айдишник
                         int addonId;
-                        if (cfSuccessful)
+                        if (notContains) // мод есть в папке, но нет в списке, значит установлен собственноручно
                         {
                             // собстна генерируем айдишник
                             addonId = generatedAddonId;
@@ -696,14 +689,14 @@ namespace Lexplosion.Logic.Management.Instances
                             }
                             generatedAddonId = addonId - 1;
                         }
-                        else
+                        else // мод есть в спсике, берем его айдишник
                         {
                             addonId = existsAddons[xyi].Value2;
                         }
 
                         actualAddonsList[addonId] = new InstalledAddonInfo
                         {
-                            FileID = cfSuccessful ? -1 : actualAddonsList[existsAddons[xyi].Value2].FileID,
+                            FileID = notContains ? -1 : actualAddonsList[existsAddons[xyi].Value2].FileID,
                             ProjectID = addonId,
                             Type = AddonType.Mods,
                             IsDisable = isDisable,

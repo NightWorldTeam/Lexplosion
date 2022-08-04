@@ -27,7 +27,7 @@ namespace Lexplosion.Logic
 
         private string _gameClientName = "";
 
-        public AuthCode Auth(string login, string password, bool saveUser)
+        public AuthCode Auth(string login, string password, bool saveUser, AccountType accountType)
         {
             Dictionary<string, string> response = ToServer.Authorization(login, password);
 
