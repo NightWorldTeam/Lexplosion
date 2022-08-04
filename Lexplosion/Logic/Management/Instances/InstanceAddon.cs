@@ -349,7 +349,7 @@ namespace Lexplosion.Logic.Management.Instances
                         if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("modId"))
                         {
                             List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(value["modId"].ToString());
-                            var file = GetLastFile(_modpackInfo.GameVersion, files);
+                            var file = GetLastFile(_modpackInfo.GameVersion, files, _modpackInfo);
                             if (file != null)
                             {
                                 Pointer<InstanceAddon> addonPointer = new Pointer<InstanceAddon>();
@@ -425,15 +425,26 @@ namespace Lexplosion.Logic.Management.Instances
             return true;
         }
 
-        private static CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo)
+        private static CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo, BaseInstanceData instanceData)
         {
             CurseforgeFileInfo file = null;
             if (addonInfo != null)
             {
+                string modloader = "";
+                if (instanceData.Modloader == ModloaderType.Fabric)
+                {
+                    modloader = "Fabric";
+                }
+                else if (instanceData.Modloader == ModloaderType.Forge)
+                {
+                    modloader = "Forge";
+                }
+
                 int maxId = 0;
                 foreach (var fileInfo in addonInfo)
                 {
-                    if (fileInfo.gameVersions != null && fileInfo.gameVersions.Contains(gameVersion) && maxId < fileInfo.id)
+                    
+                    if (fileInfo.gameVersions != null && fileInfo.gameVersions.Contains(gameVersion) && fileInfo.gameVersions.Contains(modloader) && maxId < fileInfo.id)
                     {
                         file = fileInfo;
                         maxId = fileInfo.id;
@@ -447,10 +458,10 @@ namespace Lexplosion.Logic.Management.Instances
 
         public void InstallLatestVersion(bool downloadDependencies = true)
         {
-            var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles);
+            var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles, _modpackInfo);
             if (file == null)
             {
-                file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString()));
+                file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString()), _modpackInfo);
                 if (file != null)
                 {
                     InstallAddon(file, downloadDependencies);
@@ -538,7 +549,7 @@ namespace Lexplosion.Logic.Management.Instances
                             // проверяем наличие обновлений для мода
                             if (modpackInfo.Type == InstanceSource.Local)
                             {
-                                CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles);
+                                CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles, modpackInfo);
                                 if (lastFile != null && lastFile.id > actualAddonsList[projectId].FileID)
                                 {
                                     obj.UpdateAvailable = true;

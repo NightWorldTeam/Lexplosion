@@ -119,7 +119,7 @@ namespace Lexplosion.Logic.Network
         }
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
-        {
+        { 
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files");
         }
 
