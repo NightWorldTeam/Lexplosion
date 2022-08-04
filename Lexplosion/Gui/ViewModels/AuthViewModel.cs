@@ -19,6 +19,8 @@ namespace Lexplosion.Gui.ViewModels
         private Action _libraryInstancesLoading;
         private RelayCommand _signUpCommand;
 
+        private AccountType _accountType;
+
         #region props
 
         public string Login 
@@ -48,13 +50,13 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public RelayCommand SingUpCommand
+        public RelayCommand SignUpCommand
         {
             get => _signUpCommand ?? (new RelayCommand(obj =>
             {
                 Lexplosion.Run.TaskRun(() => 
                 {
-                    AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe);
+                    AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe, _accountType);
                     App.Current.Dispatcher.Invoke(() => 
                     {
                         switch (authCode) 
@@ -75,6 +77,27 @@ namespace Lexplosion.Gui.ViewModels
                     });
                 });
             }));
+        }
+
+        public RelayCommand ChangeSignUpTypeCommand
+        {
+            get => new RelayCommand(obj =>
+            {
+                var type = (string)obj;
+
+                if (type == "mojang") 
+                {
+                    _accountType = AccountType.Mojang;
+                }
+                else if (type == "ely") 
+                {
+                    _accountType = AccountType.NoAuth;
+                }
+                else if (type == "nightworld") 
+                {
+                    _accountType = AccountType.NightWorld;
+                }
+            });
         }
 
         #endregion

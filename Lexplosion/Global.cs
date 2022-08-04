@@ -13,7 +13,7 @@ namespace Lexplosion.Global
         private static User _user;
         public static bool IsAuth { get; private set; } = false;
 
-        public static AuthCode Auth(string login, string password, bool saveUser)
+        public static AuthCode Auth(string login, string password, bool saveUser, AccountType type)
         {
             _user = new User();
             IsAuth = true;
@@ -21,7 +21,7 @@ namespace Lexplosion.Global
             LaunchGame.GameStopEvent += _user.GameStop;
             Lexplosion.Run.ExitEvent += _user.Exit;
 
-            return _user.Auth(login, password, saveUser);
+            return _user.Auth(login, password, saveUser, type);
         }
 
         public static User User
