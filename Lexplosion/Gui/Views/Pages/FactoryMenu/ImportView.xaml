@@ -24,7 +24,9 @@
         <controls:DragDropBoard
             Width="320"
             Height="240"
-            Background="Transparent">
+            AllowDrop="True"
+            Background="Transparent"
+            UploadedFiles="{Binding UploadedFiles}">
             <Border
                 Width="320"
                 Height="240"

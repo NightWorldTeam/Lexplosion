@@ -8,7 +8,7 @@ namespace Lexplosion.Controls
     {
         public string Header { get; set; }
         public string Message { get; set; }
-        public Enum State { get; set; }
+        public ToastMessageState State { get; set; }
 
         public RelayCommand CloseToastMessage
         {
@@ -18,7 +18,7 @@ namespace Lexplosion.Controls
             });
         }
 
-        public MessageModel(string header, string message, Enum state)
+        public MessageModel(string header, string message, ToastMessageState state)
         {
             Header = header;
             Message = message;

@@ -6,8 +6,9 @@ namespace Lexplosion.Controls
 {
     public class DragDropBoard : ContentControl
     {
-        public static readonly DependencyProperty UploadedFilesProperty
-            = DependencyProperty.Register("UploadedFiles", typeof(string[]), typeof(DragDropBoard));
+        //public static readonly DependencyPropertyKey UploadedFilesPropertyKey = DependencyProperty.RegisterReadOnly("UploadedFiles", typeof(string[]), typeof(DragDropBoard), new FrameworkPropertyMetadata(new string[] {}));
+
+        public static readonly DependencyProperty UploadedFilesProperty = DependencyProperty.Register("UploadedFiles", typeof(string[]), typeof(DragDropBoard), new FrameworkPropertyMetadata(new string[] { }));
 
         public string[] UploadedFiles 
         {

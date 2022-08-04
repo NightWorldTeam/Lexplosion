@@ -84,7 +84,7 @@
                                 Foreground="#b9b7b7"
                                 Placeholder="Название сборки"
                                 PlaceholderOpacity="0.8"
-                                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                                Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
 
                         <!--  Minecraft Version  -->

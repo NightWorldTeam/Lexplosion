@@ -21,8 +21,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
     public class ImportedFiles 
     {
         private InstanceClient _instanceClient;
-
-
     }
 
     public class FactoryGeneralViewModel : ModalVMBase
