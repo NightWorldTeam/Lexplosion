@@ -585,7 +585,8 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 string fileAddr_ = fileAddr.Replace('\\', '/');
                 string extension = Path.GetExtension(fileAddr_);
-                if (extension == ".jar" || extension == ".disable")
+                bool isJar = (extension == ".jar"), isDisable = (extension == ".disable");
+                if (isJar || isDisable)
                 {
                     string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
 
@@ -705,8 +706,8 @@ namespace Lexplosion.Logic.Management.Instances
                             FileID = cfSuccessful ? -1 : actualAddonsList[existsAddons[xyi].Value2].FileID,
                             ProjectID = addonId,
                             Type = AddonType.Mods,
-                            IsDisable = (extension == ".disable"),
-                            Path = (extension == ".jar") ? xyi : xyi.Remove(xyi.Length - 8) // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
+                            IsDisable = isDisable,
+                            Path = isJar ? xyi : xyi.Remove(xyi.Length - 8) // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
                         };
 
                         addons.Add(new InstanceAddon(addonId, modpackInfo)
@@ -715,12 +716,14 @@ namespace Lexplosion.Logic.Management.Instances
                             Description = description,
                             Name = displayName,
                             FileName = filename,
-                            Version = (!version.Contains("{") ? version : "")
+                            Version = (!version.Contains("{") ? version : ""),
+                            _isEnable = isJar
                         });
                     }
                     else
                     {
                         existsAddons[xyi].Value1.FileName = filename;
+                        existsAddons[xyi].Value1._isEnable = isJar; 
                     }
                 }
             }
@@ -747,7 +750,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             ThreadPool.QueueUserWorkItem(delegate (object state)
             {
-                //try
+                try
                 {
                     using (var webClient = new WebClient())
                     {
@@ -755,7 +758,7 @@ namespace Lexplosion.Logic.Management.Instances
                         Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 40, 40);
                     }
                 }
-                //catch { }
+                catch { }
             });
         }
 

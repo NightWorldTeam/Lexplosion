@@ -13,7 +13,17 @@ namespace Lexplosion.Logic
         public string AccessToken { get; private set; } = "null";
         public string SessionToken { get; private set; } = "";
         public AccountType AccountType { get; private set; }
-        public ActivityStatus Status { get; private set; }
+
+        private ActivityStatus _status;
+        public ActivityStatus Status 
+        {
+            get => _status; 
+            private set
+            {
+                _status = value;
+                OnPropertyChanged();
+            }
+        }
 
         private string _gameClientName = "";
 
