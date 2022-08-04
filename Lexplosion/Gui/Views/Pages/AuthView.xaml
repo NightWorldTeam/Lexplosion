@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:AuthViewModel}"
-    d:DesignHeight="422"
-    d:DesignWidth="800"
+    d:DesignHeight="528"
+    d:DesignWidth="944"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -84,24 +84,28 @@
         <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/authBG.png" />
     </UserControl.Background>
 
-    <Grid Margin="0,0,0,0" ShowGridLines="False">
+    <Grid ShowGridLines="False">
         <Grid Grid.Row="1" ShowGridLines="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="265*" />
                 <ColumnDefinition Width="627" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" ShowGridLines="False">
+
                 <Grid.Background>
                     <SolidColorBrush Opacity="0.64" Color="Black" />
                 </Grid.Background>
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="120" />
                     <RowDefinition Height="60" />
                     <RowDefinition Height="50" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="50" />
+                    <RowDefinition Height="120" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+
                 <TextBlock
                     Margin="9,66,8.8,10"
                     HorizontalAlignment="Center"
@@ -124,11 +128,13 @@
                     -->
                 </Grid>
                 <Grid Grid.Row="4" ShowGridLines="False">
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="86" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="86" />
                     </Grid.ColumnDefinitions>
+
                     <Grid Grid.Column="1">
                         <TextBlock
                             x:Name="PasswordBoxWaterMark"
@@ -137,6 +143,7 @@
                             VerticalAlignment="Center"
                             FontSize="15"
                             Foreground="#b9b7b7" />
+
                         <TextBox
                             x:Name="PasswordVisible"
                             Width="125"
@@ -159,6 +166,7 @@
                             LostFocus="Password_LostFocus"
                         -->
                     </Grid>
+
                     <ToggleButton
                         x:Name="ShowPassword"
                         Grid.Column="2"
@@ -170,7 +178,9 @@
                         Style="{StaticResource SPS}" />
                     <!--  Click="ShowPassword_Click"  -->
                 </Grid>
+
                 <Grid Grid.Row="5" ShowGridLines="False">
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60" />
                         <RowDefinition Height="70" />

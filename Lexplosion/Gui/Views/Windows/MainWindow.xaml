@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:controls="clr-namespace:Lexplosion.Controls"
+    xmlns:converters="clr-namespace:Lexplosion.Gui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:factorymenu="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
@@ -31,6 +32,8 @@
                 <x:Type TypeName="lexplosion:ActivityStatus" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+
+        <converters:AcitivityStatusToColorConverter x:Key="AcitivityStatusToColorConverter" />
     </Window.Resources>
 
     <Grid Margin="0,0,0,0" ShowGridLines="False">
@@ -146,20 +149,7 @@
                                     Height="12"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Fill="Green">
-                                    <Ellipse.Style>
-                                        <Style TargetType="{x:Type Ellipse}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Status, Source={x:Static global:UserData.User}}" Value="{x:Static lexplosion:ActivityStatus.Online}">
-                                                    <Setter Property="Fill" Value="Green" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Status, Source={x:Static global:UserData.User}}" Value="{x:Static lexplosion:ActivityStatus.Offline}">
-                                                    <Setter Property="Fill" Value="Gray" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Ellipse.Style>
-                                </Ellipse>
+                                    Fill="{Binding Status, Source={x:Static global:UserData.User}, Converter={StaticResource AcitivityStatusToColorConverter}}" />
                                 <Popup
                                     Width="140"
                                     Height="80"
@@ -216,9 +206,9 @@
                                                 Foreground="White" />
 
                                             <Button
-                                                Background="Yellow"
+                                                Background="Red"
                                                 Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
-                                                CommandParameter="Online"
+                                                CommandParameter="NotDisturb"
                                                 Content="Не беспокоить"
                                                 FontSize="14"
                                                 Foreground="White" />

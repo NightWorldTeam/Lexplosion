@@ -97,7 +97,7 @@ namespace Lexplosion.Logic
 
         public void ChangeBaseStatus(ActivityStatus status)
         {
-
+            Status = status;
         }
     }
 }
