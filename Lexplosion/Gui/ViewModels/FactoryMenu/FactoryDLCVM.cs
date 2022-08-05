@@ -36,6 +36,16 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private bool _isLoaded;
+        public bool IsLoaded 
+        {
+            get => _isLoaded; set 
+            {
+                _isLoaded = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region Command
 
         private RelayCommand _curseforgeCommand;
@@ -97,9 +107,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
+            IsLoaded = false;
             _mainViewModel = mainViewModel;
             _instanceClient = instanceClient;
-
+            
             Lexplosion.Run.TaskRun(() =>
             {
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), AddonType.Mods));
@@ -107,6 +118,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), AddonType.Maps));
 
                 CurrentAddon = _models[0];
+                IsLoaded = true;
             });
         }
 

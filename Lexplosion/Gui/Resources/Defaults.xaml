@@ -226,37 +226,31 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type ProgressBar}">
+    <!--<Style TargetType="{x:Type ProgressBar}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ProgressBar}">
                     <Grid>
-                        <Border
-                            x:Name="PART_Track"
-                            Background="#505050"
-                            BorderThickness="1"
-                            CornerRadius="2" />
+                        <Grid x:Name="PART_Track" Background="{TemplateBinding Background}">
+                            <Border
+                                x:Name="PART_Indicator"
+                                Margin="0,-1,0,1"
+                                HorizontalAlignment="Left"
+                                Background="{TemplateBinding Foreground}"
+                                BorderBrush="{TemplateBinding Foreground}"
+                                BorderThickness="1"
+                                CornerRadius="2" />
 
-                        <Border
-                            x:Name="PART_Indicator"
-                            Margin="0,-1,0,1"
-                            HorizontalAlignment="Left"
-                            Background="{TemplateBinding Foreground}"
-                            BorderBrush="Green"
-                            BorderThickness="1"
-                            CornerRadius="2" />
-
-                        <Grid x:Name="Animation" ClipToBounds="True">
                             <Rectangle
                                 x:Name="PART_GlowRect"
                                 Width="100"
-                                Margin="-100,0,0,0"
+                                Margin="0,0,0,0"
                                 HorizontalAlignment="Left"
-                                Fill="Yellow" />
+                                Fill="{TemplateBinding Foreground}" />
                         </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 </ResourceDictionary>

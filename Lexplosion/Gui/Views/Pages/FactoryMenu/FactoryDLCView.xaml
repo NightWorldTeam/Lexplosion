@@ -2,6 +2,7 @@
     x:Class="Lexplosion.Gui.Views.Pages.FactoryMenu.FactoryDLCView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:factorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu"
     xmlns:instances="clr-namespace:Lexplosion.Logic.Management.Instances"
@@ -276,6 +277,7 @@
 
         <Style x:Key="DLCListBoxItem" TargetType="{x:Type ListBoxItem}" />
     </UserControl.Resources>
+
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
@@ -318,5 +320,7 @@
                 </TabControl>
             </StackPanel>
         </ScrollViewer>
+
+        <controls:LoadingBoard IsLoadingFinished="{Binding IsLoaded}" />
     </Grid>
 </UserControl>
