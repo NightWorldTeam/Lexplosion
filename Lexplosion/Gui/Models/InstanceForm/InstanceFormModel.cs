@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Gui.ViewModels;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private List<Category> _categories = new List<Category>();
 
         #region props
+
         public InstanceClient InstanceClient { get; set; }
         public DownloadModel DownloadModel { get; set; }
         public LaunchModel LaunchModel { get; set; }
@@ -42,9 +44,20 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 OnPropertyChanged();
             }
         }
+
+        private bool _isCanRun;
+        public bool IsCanRun
+        {
+            get => _isCanRun; set
+            {
+                _isCanRun = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
-        public InstanceFormModel(InstanceClient instanceClient)
+        public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
             InstanceClient = instanceClient;
 
@@ -77,7 +90,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 Stage = 0,
                 StagesCount = 0
             };
-            LaunchModel = new LaunchModel(this);
+            LaunchModel = new LaunchModel(this, mainViewModel);
 
             if (InstanceClient.IsInstalled && InstanceClient.InLibrary)
             {

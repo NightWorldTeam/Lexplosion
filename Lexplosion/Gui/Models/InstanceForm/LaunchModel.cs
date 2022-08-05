@@ -5,15 +5,18 @@ namespace Lexplosion.Gui.Models.InstanceForm
     public class LaunchModel
     {
         private InstanceFormModel _formModel;
+        private MainViewModel _mainViewModel;
 
         public bool IsGameLaunched { get; set; }
 
-        public LaunchModel(InstanceFormModel instanceFormModel)
+        public LaunchModel(InstanceFormModel instanceFormModel, MainViewModel mainViewModel)
         {
             _formModel = instanceFormModel;
+            _mainViewModel = mainViewModel;
             instanceFormModel.InstanceClient.ComplitedLaunch += LaunchCompleted;
             instanceFormModel.InstanceClient.GameExited += GameExited;
         }
+
         #region methods
 
         public void LaunchInstance()
@@ -47,6 +50,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             _formModel.UpperButton.ChangeFuncPlay();
             MainViewModel.IsInstanceRunning = false;
+            foreach (var instance in _mainViewModel.Model.LibraryInstances) 
+            {
+                instance.Model.IsCanRun = true;
+            }
         }
 
         #endregion

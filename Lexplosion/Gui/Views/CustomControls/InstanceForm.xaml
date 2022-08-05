@@ -234,7 +234,8 @@
                         <Border
                             Width="60"
                             Height="60"
-                            CornerRadius="0,10,0,0">
+                            CornerRadius="0,10,0,0"
+                            IsEnabled="{Binding Model.IsCanRun}">
 
                             <Border.Background>
                                 <SolidColorBrush x:Name="UpperButtonBackground" />
