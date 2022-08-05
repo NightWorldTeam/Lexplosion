@@ -21,8 +21,6 @@ namespace Lexplosion.Logic.FileSystem
             public LocalVersionInfo version;
         }
 
-        private static KeySemaphore<string> _semaphore = new KeySemaphore<string>();
-
         public static void SaveAccount(string login, string password)
         {
             password = Convert.ToBase64String(AesСryp.Encode(password, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
@@ -312,28 +310,23 @@ namespace Lexplosion.Logic.FileSystem
             return data;
         }
 
-        public static InstalledAddons GetInstalledAddons(string instanceId)
+        public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
         {
             string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
-            _semaphore.WaitOne(path);
 
-            var data = DataFilesManager.GetFile<InstalledAddons>(path);
+            var data = DataFilesManager.GetFile<InstalledAddonsFormat>(path);
             if (data == null)
             {
-                _semaphore.Release(path);
-                return new InstalledAddons();
+                return new InstalledAddonsFormat();
             }
-                
-            _semaphore.Release(path);
+
             return data;
         }
 
-        public static void SaveInstalledAddons(string instanceId, InstalledAddons data)
+        public static void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
         {
             string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
-            _semaphore.WaitOne(path);
             DataFilesManager.SaveFile(path, JsonConvert.SerializeObject(data));
-            _semaphore.Release(path);
         }
     }
 }

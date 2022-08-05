@@ -6,7 +6,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
 using Newtonsoft.Json;
 
-namespace Lexplosion.Logic.Management
+namespace Lexplosion.Logic.Management.Installers
 {
     class CurseforgeInstallManager : IInstallManager
     {

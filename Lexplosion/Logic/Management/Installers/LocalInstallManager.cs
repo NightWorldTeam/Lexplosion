@@ -3,7 +3,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 
-namespace Lexplosion.Logic.Management
+namespace Lexplosion.Logic.Management.Installers
 {
     class LocalInstallManager : IInstallManager
     {

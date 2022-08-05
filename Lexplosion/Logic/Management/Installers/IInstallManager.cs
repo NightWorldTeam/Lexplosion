@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Lexplosion.Logic.Objects.CommonClientData;
 
-namespace Lexplosion.Logic.Management
+namespace Lexplosion.Logic.Management.Installers
 {
     interface IInstallManager
     {

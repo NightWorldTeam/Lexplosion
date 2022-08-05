@@ -11,6 +11,8 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using Lexplosion.Logic.Management;
+
 namespace Lexplosion.Logic.FileSystem
 {
     class CurseforgeInstaller : InstanceInstaller
@@ -46,7 +48,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public class InstanceContent
         {
-            public InstalledAddons InstalledAddons;
+            public InstalledAddonsFormat InstalledAddons;
             public List<string> Files { get; set; }
             public bool FullClient = false;
         }
@@ -66,39 +68,40 @@ namespace Lexplosion.Logic.FileSystem
         public InstanceContent GetInstanceContent()
         {
             var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json");
-            var installedAddons = DataFilesManager.GetInstalledAddons(instanceId);
-
-            if (content != null)
+            using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
-                var data = new InstanceContent
+                if (content != null)
                 {
-                    Files = content.Files,
-                    FullClient = content.FullClient,
-                    InstalledAddons = null
-                };
-
-                if (content.InstalledAddons != null)
-                {
-                    data.InstalledAddons = new InstalledAddons();
-
-                    foreach (int addonId in content.InstalledAddons)
+                    var data = new InstanceContent
                     {
-                        if (installedAddons.ContainsKey(addonId))
-                        {
-                            data.InstalledAddons[addonId] = installedAddons[addonId];
-                        }
-                        else
-                        {
-                            data.InstalledAddons[addonId] = null;
-                        }    
-                    }
-                }
+                        Files = content.Files,
+                        FullClient = content.FullClient,
+                        InstalledAddons = null
+                    };
 
-                return data;
-            }
-            else
-            {
-                return new InstanceContent();
+                    if (content.InstalledAddons != null)
+                    {
+                        data.InstalledAddons = new InstalledAddonsFormat();
+
+                        foreach (int addonId in content.InstalledAddons)
+                        {
+                            if (installedAddons.ContainsKey(addonId))
+                            {
+                                data.InstalledAddons[addonId] = installedAddons[addonId];
+                            }
+                            else
+                            {
+                                data.InstalledAddons[addonId] = null;
+                            }
+                        }
+                    }
+
+                    return data;
+                }
+                else
+                {
+                    return new InstanceContent();
+                }
             }
         }
 
@@ -113,18 +116,19 @@ namespace Lexplosion.Logic.FileSystem
                     InstalledAddons = new List<int>(content.InstalledAddons.Keys.ToArray())
                 }));
 
-            var installedAddons = DataFilesManager.GetInstalledAddons(instanceId);
-
-            foreach (var key in content.InstalledAddons.Keys)
+            using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
-                var elem = content.InstalledAddons[key];
-                if (elem != null)
+                foreach (var key in content.InstalledAddons.Keys)
                 {
-                    installedAddons[key] = elem;
+                    var elem = content.InstalledAddons[key];
+                    if (elem != null)
+                    {
+                        installedAddons[key] = elem;
+                    }
                 }
-            }
 
-            DataFilesManager.SaveInstalledAddons(instanceId, installedAddons);
+                installedAddons.Save();
+            }
         }
 
         /// <summary>
@@ -255,7 +259,7 @@ namespace Lexplosion.Logic.FileSystem
         /// </returns>
         public List<string> InstallInstance(InstanceManifest data, InstanceContent localFiles)
         {
-            InstalledAddons installedAddons = null;
+            InstalledAddonsFormat installedAddons = null;
             installedAddons = localFiles.InstalledAddons;
 
             var errors = new List<string>();
@@ -264,7 +268,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 InstanceContent compliteDownload = new InstanceContent
                 {
-                    InstalledAddons = new InstalledAddons(),
+                    InstalledAddons = new InstalledAddonsFormat(),
                     Files = localFiles.Files
                 };
 

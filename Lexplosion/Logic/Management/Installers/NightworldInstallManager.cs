@@ -6,7 +6,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Logic.Objects.CommonClientData;
 
-namespace Lexplosion.Logic.Management
+namespace Lexplosion.Logic.Management.Installers
 {
     class NightworldInstallManager : IInstallManager
     {

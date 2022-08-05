@@ -7,6 +7,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Management.Installers;
 
 namespace Lexplosion.Logic.Management
 {
