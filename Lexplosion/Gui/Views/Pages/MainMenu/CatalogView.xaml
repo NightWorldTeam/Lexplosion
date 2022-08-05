@@ -25,27 +25,32 @@
 
     <Grid x:Name="MainGrid" Focusable="False">
         <ScrollViewer x:Name="ContainerPage_ScrollViewer" VerticalScrollBarVisibility="Auto">
+
             <ScrollViewer.Background>
                 <!--  #1313131 0.8  -->
                 <!--  "Black" 0.64  -->
                 <SolidColorBrush Opacity="0.70" Color="#121212" />
             </ScrollViewer.Background>
+
             <Grid x:Name="ControlElementsGrid" ShowGridLines="False">
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
+
                 <customcontrols:SearchBox
                     Margin="0,15,0,0"
                     HorizontalAlignment="Center"
-                    DataContext="{Binding SearchBoxVM}"
-                    Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" />
+                    DataContext="{Binding SearchBoxVM}" />
+
                 <Grid
                     x:Name="InstanceGrid"
                     Grid.Row="1"
                     Margin="0,0,0,0"
                     ShowGridLines="False">
+
                     <TextBlock
                         x:Name="LoadingLabel"
                         Width="480"
@@ -59,15 +64,15 @@
                         Text="Идёт загрузка. Пожалуйста подождите..."
                         TextAlignment="Center"
                         Visibility="Hidden" />
+
                     <ItemsControl
                         Margin="15,0,0,0"
                         BorderBrush="Transparent"
                         ItemsSource="{Binding InstanceForms}" />
                 </Grid>
-                <customcontrols:Paginator
-                    Grid.Row="2"
-                    DataContext="{Binding PaginatorVM}"
-                    Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" />
+
+                <customcontrols:Paginator Grid.Row="2" DataContext="{Binding PaginatorVM}" />
+
             </Grid>
         </ScrollViewer>
 

@@ -42,7 +42,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         }
 
         public bool IsCategoriesExist { get; set; }
-        public bool IsDownloadsCountExists { get; set; }
 
         #endregion props
 
@@ -65,13 +64,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             Lexplosion.Run.TaskRun(() => { 
                 OverviewModel = new OverviewModel(instanceClient, submenuViewModel);
-
-                if (OverviewModel.InstanceData.TotalDownloads == null)
-                {
-                    IsDownloadsCountExists = false;
-                }
-                else IsDownloadsCountExists = true;
-
 
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
                 IsLoaded = false;

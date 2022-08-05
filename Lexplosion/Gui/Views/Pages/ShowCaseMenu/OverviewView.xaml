@@ -63,18 +63,14 @@
                     Image Margin="20,0,0,0" Source="pack://application:,,,/Assets/images/background/regBG.png"
                     Grid.Column="0" Width="450" Stretch="Fill"/
                 -->
-                <Grid Grid.Column="1" ShowGridLines="False">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="180" />
-                        <RowDefinition Height="60" />
-                    </Grid.RowDefinitions>
-
+                <StackPanel Grid.Column="1">
                     <StackPanel
                         Grid.Row="0"
                         Grid.Column="1"
                         Margin="10,0,10,0"
                         Orientation="Vertical">
+
+                        <!--  Instance Version  -->
                         <Border BorderThickness="0,0,0,0.5">
 
                             <Border.BorderBrush>
@@ -116,7 +112,9 @@
                                     Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" />
                             </Grid>
                         </Border>
-                        <Border BorderThickness="0,0,0,0.5">
+
+                        <!--  Last Instance Update  -->
+                        <Border BorderThickness="0,0,0,0.5" Visibility="{Binding OverviewModel.IsLocalInstance, Converter={StaticResource ConvertBoolToVisibility}}">
 
                             <Border.BorderBrush>
                                 <SolidColorBrush Opacity="0.6" Color="#f5f5f5" />
@@ -157,7 +155,8 @@
                             </Grid>
                         </Border>
 
-                        <Border BorderThickness="0,0,0,0.5">
+                        <!--  Instance Total Donwload  -->
+                        <Border BorderThickness="0,0,0,0.5" Visibility="{Binding OverviewModel.IsLocalInstance, Converter={StaticResource ConvertBoolToVisibility}}">
 
                             <Border.BorderBrush>
                                 <SolidColorBrush Opacity="0.6" Color="#f5f5f5" />
@@ -196,6 +195,7 @@
                             </Grid>
                         </Border>
 
+                        <!--  Instance Game Type  -->
                         <Border BorderThickness="0,0,0,0.5">
 
                             <Border.BorderBrush>
@@ -213,7 +213,7 @@
                                     Grid.Column="0"
                                     Foreground="#f5f5f5"
                                     Opacity="0.8"
-                                    Text="Core" />
+                                    Text="Game Type" />
                                 <TextBlock
                                     x:Name="Core"
                                     Grid.Column="1"
@@ -263,7 +263,7 @@
                         Background="#202020"
                         CornerRadius="7"
                         Visibility="{Binding IsLoaded, Converter={StaticResource ConvertBoolToVisibility}}" />
-                </Grid>
+                </StackPanel>
             </Grid>
 
             <TextBlock

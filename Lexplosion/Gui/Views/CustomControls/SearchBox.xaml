@@ -61,6 +61,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="243" />

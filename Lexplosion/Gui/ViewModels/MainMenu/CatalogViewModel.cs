@@ -17,10 +17,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true);
 
-        private bool _isLoaded = false;
-        public bool IsLoaded 
+        private bool _isLoaded;
+        public bool IsLoaded
         {
-            get => _isLoaded; set 
+            get => _isLoaded; set
             {
                 _isLoaded = value;
                 OnPropertyChanged();
@@ -42,9 +42,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private void InstancesPageLoading()
         {
-            SearchBoxVM.IsLoaded = false;
-            PaginatorVM.IsLoaded = false;
-
+            IsLoaded = false;
             Lexplosion.Run.TaskRun(delegate ()
             {
                 var instances = InstanceClient.GetOutsideInstances(
@@ -73,9 +71,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     });
 
                 }
-                SearchBoxVM.IsLoaded = true;
-                PaginatorVM.IsLoaded = true;
-
                 IsLoaded = true;
             });
         }

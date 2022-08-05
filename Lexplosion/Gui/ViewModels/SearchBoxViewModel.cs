@@ -16,18 +16,7 @@ namespace Lexplosion.Gui.ViewModels
         private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
         private int _selectedSourceIndex = 1;
 
-        private bool _isLoaded;
-
         public bool IsMultiSource { get; }
-
-        public bool IsLoaded
-        {
-            get => _isLoaded; set
-            {
-                _isLoaded = value;
-                OnPropertyChanged(nameof(IsLoaded));
-            }
-        }
 
         public InstanceSource SelectedInstanceSource
         {
