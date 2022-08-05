@@ -8,7 +8,6 @@ namespace Lexplosion.Gui.ViewModels
 
         private string _searchTextUncomfirmed = string.Empty;
         private string _searchTextComfirmed = string.Empty;
-        private string _currentSearchText = string.Empty;
 
         public delegate void SearchChangedCallback();
         public event SearchChangedCallback SearchChanged;
@@ -32,15 +31,17 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _searchCommand ?? (new RelayCommand(obj =>
             {
-                if (_currentSearchText != SearchTextUncomfirmed)
+                if (SearchTextComfirmed != SearchTextUncomfirmed)
                 {
                     if (SearchTextUncomfirmed.Length != 0)
                     {
                         SearchTextComfirmed = SearchTextUncomfirmed;
-                        _currentSearchText = SearchTextComfirmed;
                     }
-                    else
-                        _currentSearchText = "";
+                    else 
+                    {
+                        SearchTextComfirmed = "";
+                    }
+                        
                     SearchChanged.Invoke();
                 }
             }));
