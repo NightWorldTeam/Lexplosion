@@ -91,12 +91,16 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 _selectedVersion = value;
                 OnPropertyChanged(nameof(SelectedVersion));
-                Lexplosion.Run.TaskRun(() =>
-                {
-                    ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(SelectedVersion, Model.ModloaderType));
-                    if (ModloaderVersions.Count > 0)
-                        SelectedModloaderVersion = ModloaderVersions[0];
-                });
+
+                if (Model.ModloaderType != ModloaderType.None) 
+                { 
+                    Lexplosion.Run.TaskRun(() =>
+                    {
+                        ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(SelectedVersion, Model.ModloaderType));
+                        if (ModloaderVersions.Count > 0)
+                            SelectedModloaderVersion = ModloaderVersions[0];
+                    });
+                }
             }
         }
 
@@ -114,18 +118,11 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 {
                     Model.ModloaderType = (ModloaderType)obj;
 
-                    if (Model.ModloaderType != ModloaderType.None)
-                    {
-                        IsModloaderSelected = true;
-                    }
-                    else IsModloaderSelected = false;
+                    IsModloaderSelected = Model.ModloaderType != ModloaderType.None;
 
                     Lexplosion.Run.TaskRun(() =>
                     {
                         var versions = ToServer.GetModloadersList(SelectedVersion, Model.ModloaderType);
-
-                        if (Model.ModloaderType == ModloaderType.Forge)
-                            versions.Reverse();
 
                         ModloaderVersions = new ObservableCollection<string>(versions);
 
@@ -156,6 +153,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => new RelayCommand(obj =>
             {
                 _mainViewModel.ModalWindowVM.IsModalOpen = false;
+                _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(null);
             });
         }
 
@@ -184,8 +182,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             _mainViewModel = mainViewModel;
 
             GameVersions = new ObservableCollection<string>(MainViewModel.GameVersions.ToList());
-            SelectedVersion = GameVersions[0];
             Model = new InstanceFactoryModel();
+            Model.ModloaderType = ModloaderType.None;
+            SelectedVersion = GameVersions[0];
+            
 
             _importViewModel = new ImportViewModel(_mainViewModel, this);
         }

@@ -83,10 +83,12 @@
 
     <Grid ShowGridLines="False">
         <Grid Grid.Row="1" ShowGridLines="False">
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="265*" />
                 <ColumnDefinition Width="627" />
             </Grid.ColumnDefinitions>
+
             <Grid Grid.Column="0" ShowGridLines="False">
 
                 <Grid.Background>
@@ -124,6 +126,7 @@
                         LostFocus="Login_LostFocus"
                     -->
                 </Grid>
+
                 <Grid Grid.Row="4" ShowGridLines="False">
 
                     <Grid.ColumnDefinitions>
@@ -202,61 +205,39 @@
                 </Grid>
 
                 <Grid Grid.Row="6">
-                    <StackPanel
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-                        <Button
-                            Command="{Binding ChangeSignUpTypeCommand}"
-                            CommandParameter="mojang"
-                            Style="{StaticResource IconicButton}">
-                            <Image
-                                Width="24"
-                                Height="24"
-                                Source="pack://application:,,,/Assets/images/icons/mojang.png" />
-                            <Button.ToolTip>
-                                <ToolTip
-                                    Content="Авторизация через Mojang"
-                                    HorizontalOffset="-75"
-                                    Style="{StaticResource CustomTipTool}"
-                                    VerticalOffset="-30" />
-                            </Button.ToolTip>
-                        </Button>
-                        <Button
-                            Margin="10"
-                            Command="{Binding ChangeSignUpTypeCommand}"
-                            CommandParameter="ely"
-                            Style="{StaticResource IconicButton}"
-                            Visibility="Visible">
-                            <Image
-                                Width="24"
-                                Height="24"
-                                Source="pack://application:,,,/Assets/images/icons/ely.png" />
-                            <Button.ToolTip>
-                                <ToolTip
-                                    Content="Авторизация через Ely"
-                                    HorizontalOffset="-75"
-                                    Style="{StaticResource CustomTipTool}"
-                                    VerticalOffset="-30" />
-                            </Button.ToolTip>
-                        </Button>
-                        <Button
-                            Command="{Binding ChangeSignUpTypeCommand}"
-                            CommandParameter="nightworld"
-                            Style="{StaticResource IconicButton}">
-                            <Image
-                                Width="24"
-                                Height="24"
-                                Source="pack://application:,,,/Assets/images/icons/logo.ico" />
-                            <Button.ToolTip>
-                                <ToolTip
-                                    Content="Авторизация через NightWorld"
-                                    HorizontalOffset="-75"
-                                    Style="{StaticResource CustomTipTool}"
-                                    VerticalOffset="-30" />
-                            </Button.ToolTip>
-                        </Button>
-                    </StackPanel>
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Viewbox
+                                                Width="14"
+                                                Height="14"
+                                                Margin="0,2,0,0">
+                                                <Path
+                                                    VerticalAlignment="Center"
+                                                    Data="m24 30.75-12-12 2.15-2.15L24 26.5l9.85-9.85L36 18.8Z"
+                                                    Fill="White"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                Foreground="White"
+                                                Text="Аккаунт NightWorld" />
+                                        </StackPanel>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Grid.Resources>
+                    <ComboBox
+                        Width="150"
+                        Height="30"
+                        HorizontalAlignment="Center" />
                 </Grid>
             </Grid>
         </Grid>

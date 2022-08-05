@@ -106,7 +106,8 @@
                                     CommandParameter="{x:Static objects:ModloaderType.None}"
                                     Content="Vanilla"
                                     FontSize="16"
-                                    GroupName="GameType" />
+                                    GroupName="GameType"
+                                    IsChecked="True" />
                                 <RadioButton
                                     Margin="10,0,0,0"
                                     Command="{Binding SwitchModloaderType}"

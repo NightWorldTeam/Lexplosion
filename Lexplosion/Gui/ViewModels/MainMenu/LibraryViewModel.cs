@@ -11,11 +11,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public MainViewModel MainVM 
         {
             get => _mainViewModel;
-        } 
+        }
 
+        private RelayCommand _openInstanceFactoryCommand;
         public RelayCommand OpenInstanceFactoryCommand 
         {
-            get => new RelayCommand(obj => 
+            get => _openInstanceFactoryCommand ?? new RelayCommand(obj => 
             {
                 _mainViewModel.ModalWindowVM.IsModalOpen = true;
                 _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(new FactoryGeneralViewModel(_mainViewModel));
