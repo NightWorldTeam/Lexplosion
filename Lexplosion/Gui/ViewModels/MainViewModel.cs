@@ -124,7 +124,15 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Если запушена сборка true, иначе else.
         /// </summary>
-        public static bool IsInstanceRunning = false;
+        private bool _isInstanceRunning = false;
+        public bool IsInstanceRunning 
+        {
+            get => _isInstanceRunning; set 
+            {
+                _isInstanceRunning = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Данное свойство содержит в себе версии игры.

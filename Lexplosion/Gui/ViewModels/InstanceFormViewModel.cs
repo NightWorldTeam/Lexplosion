@@ -18,7 +18,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _instanceClient;
         }
 
-        private readonly MainViewModel _mainViewModel; // Ссылка на MainViewModel
+        public MainViewModel MainVM { get; } // Ссылка на MainViewModel
 
         #region props
 
@@ -57,8 +57,8 @@ namespace Lexplosion.Gui.ViewModels
                 {
                     case UpperButtonFunc.Download:
                         {
-                            if (!_mainViewModel.Model.IsLibraryContainsInstance(_instanceClient))
-                                _mainViewModel.Model.LibraryInstances.Add(this);
+                            if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
+                                MainVM.Model.LibraryInstances.Add(this);
                             Model.DownloadModel.DonwloadPrepare();
                             break;
                         }
@@ -70,15 +70,9 @@ namespace Lexplosion.Gui.ViewModels
 
                     case UpperButtonFunc.Play:
                         {
-                            if (Model.IsCanRun)
+                            if (!MainVM.IsInstanceRunning)
                             {
                                 Model.LaunchModel.LaunchInstance();
-
-                                foreach (var instance in _mainViewModel.Model.LibraryInstances)
-                                {
-                                    if (instance != this)
-                                        instance.Model.IsCanRun = false;
-                                }
                             }
                             break;
                         }
@@ -87,10 +81,7 @@ namespace Lexplosion.Gui.ViewModels
                         {
                             LaunchGame.GameStop();
                             Model.UpperButton.ChangeFuncPlay();
-                            foreach (var instance in _mainViewModel.Model.LibraryInstances)
-                            {
-                                instance.Model.IsCanRun = true;
-                            }
+                            MainVM.IsInstanceRunning = false;
                             break;
                         }
                 }
@@ -118,7 +109,7 @@ namespace Lexplosion.Gui.ViewModels
                         {
                             IsDropdownMenuOpen = false;
                             Model.InstanceClient.Delete();
-                            _mainViewModel.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+                            MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
                             break;
                         }
 
@@ -160,7 +151,7 @@ namespace Lexplosion.Gui.ViewModels
                     case LowerButtonFunc.RemoveInstance:
                         {
                             IsDropdownMenuOpen = false;
-                            _mainViewModel.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+                            MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
                             Model.InstanceClient.Delete();
                             break;
                         }
@@ -168,10 +159,10 @@ namespace Lexplosion.Gui.ViewModels
                     case LowerButtonFunc.Export:
                         {
                             IsDropdownMenuOpen = false;
-                            _mainViewModel.ModalWindowVM.IsModalOpen = true;
+                            MainVM.ModalWindowVM.IsModalOpen = true;
 
                             // возможно не надо вообще эксемпляр класса сохранять.
-                            _mainViewModel.ExportViewModel = new ExportViewModel(_mainViewModel)
+                            MainVM.ExportViewModel = new ExportViewModel(MainVM)
                             {
                                 InstanceName = _instanceClient.Name,
                                 IsFullExport = true,
@@ -179,9 +170,9 @@ namespace Lexplosion.Gui.ViewModels
                                 UnitsList = _instanceClient.GetPathContent()
                             };
 
-                            _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(_mainViewModel.ExportViewModel);
+                            MainVM.ModalWindowVM.ChangeCurrentModalContent(MainVM.ExportViewModel);
 
-                            foreach (var s in _mainViewModel.ExportViewModel.UnitsList.Keys)
+                            foreach (var s in MainVM.ExportViewModel.UnitsList.Keys)
                             {
                                 Console.WriteLine(s);
                             }
@@ -195,7 +186,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public InstanceFormViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
-            _mainViewModel = mainViewModel;
+            MainVM = mainViewModel;
             Model = new InstanceFormModel(mainViewModel, instanceClient);
             Model.IsCanRun = true;
             _instanceClient = instanceClient;

@@ -26,7 +26,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _formModel.DownloadModel.IsDownloadInProgress = true;
                 _formModel.DownloadModel.IsIndeterminate = true;
                 _formModel.InstanceClient.Run();
-                MainViewModel.IsInstanceRunning = true;
+                _mainViewModel.IsInstanceRunning = true;
                 _formModel.UpperButton.ChangeFuncClose();
             });
         }
@@ -49,11 +49,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public void GameExited(string id)
         {
             _formModel.UpperButton.ChangeFuncPlay();
-            MainViewModel.IsInstanceRunning = false;
-            foreach (var instance in _mainViewModel.Model.LibraryInstances) 
-            {
-                instance.Model.IsCanRun = true;
-            }
+            _mainViewModel.IsInstanceRunning = false;
         }
 
         #endregion
