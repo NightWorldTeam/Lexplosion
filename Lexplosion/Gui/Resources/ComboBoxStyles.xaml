@@ -142,7 +142,7 @@
                     HorizontalAlignment="Right"
                     Stretch="Fill">
                     <Path
-                        x:Name="Arror"
+                        x:Name="Arrow"
                         Data="m24 30.75-12-12 2.15-2.15L24 26.5l9.85-9.85L36 18.8Z"
                         Fill="White"
                         SnapsToDevicePixels="False" />
@@ -151,7 +151,7 @@
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter TargetName="Arror" Property="Path.Data" Value="M14.15 30.75 12 28.6l12-12 12 11.95-2.15 2.15L24 20.85Z" />
+                <Setter TargetName="Arrow" Property="Path.Data" Value="M14.15 30.75 12 28.6l12-12 12 11.95-2.15 2.15L24 20.85Z" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="Border" Property="Background" Value="#252525" />
@@ -165,48 +165,46 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
-                    <Border>
-                        <Grid>
-                            <ToggleButton
-                                Name="ToggleButton"
-                                Grid.Column="2"
-                                HorizontalContentAlignment="Left"
-                                ClickMode="Press"
-                                Content="{TemplateBinding SelectionBoxItem}"
-                                Foreground="WhiteSmoke"
-                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                IsTabStop="False"
-                                Template="{StaticResource LighterDefaultComboBoxToggleButton}" />
-                            <ContentPresenter VerticalAlignment="Center" RecognizesAccessKey="True" />
-                            <!--  None, Fade, Scroll, Slide  -->
-                            <Popup
-                                Name="Popup"
-                                AllowsTransparency="True"
-                                Focusable="False"
-                                IsOpen="{TemplateBinding IsDropDownOpen}"
-                                Placement="Bottom"
-                                PopupAnimation="Scroll">
-                                <Grid
-                                    Name="DropDown"
-                                    MinWidth="140"
-                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                                    SnapsToDevicePixels="True">
-                                    <Border
-                                        x:Name="DropDownBorder"
-                                        Background="#1f1f1f"
-                                        BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                                        BorderThickness="2"
-                                        CornerRadius="2" />
-                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
-                                        <StackPanel
-                                            IsItemsHost="True"
-                                            KeyboardNavigation.DirectionalNavigation="Contained"
-                                            TextBlock.FontSize="14" />
-                                    </ScrollViewer>
-                                </Grid>
-                            </Popup>
-                        </Grid>
-                    </Border>
+                    <Grid>
+                        <ToggleButton
+                            Name="ToggleButton"
+                            Grid.Column="2"
+                            HorizontalContentAlignment="Left"
+                            ClickMode="Press"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            Foreground="WhiteSmoke"
+                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            IsTabStop="False"
+                            Template="{StaticResource LighterDefaultComboBoxToggleButton}" />
+                        <ContentPresenter VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        <!--  None, Fade, Scroll, Slide  -->
+                        <Popup
+                            Name="Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            Placement="Bottom"
+                            PopupAnimation="Scroll">
+                            <Grid
+                                Name="DropDown"
+                                MinWidth="140"
+                                MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                SnapsToDevicePixels="True">
+                                <Border
+                                    x:Name="DropDownBorder"
+                                    Background="#1f1f1f"
+                                    BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                                    BorderThickness="2"
+                                    CornerRadius="2" />
+                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                    <StackPanel
+                                        IsItemsHost="True"
+                                        KeyboardNavigation.DirectionalNavigation="Contained"
+                                        TextBlock.FontSize="14" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

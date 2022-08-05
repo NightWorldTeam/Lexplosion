@@ -56,6 +56,19 @@ namespace Lexplosion.Gui.ViewModels
             {
                 Lexplosion.Run.TaskRun(() => 
                 {
+                    if (AccountTypeSelectedIndex == 0)
+                    {
+                        _accountType = AccountType.NightWorld;
+                    }
+                    else if (AccountTypeSelectedIndex == 1)
+                    {
+                        _accountType = AccountType.Mojang;
+                    }
+                    else if (AccountTypeSelectedIndex == 2) 
+                    {
+                        _accountType = AccountType.NoAuth;
+                    }
+
                     AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe, _accountType);
                     App.Current.Dispatcher.Invoke(() => 
                     {
@@ -79,25 +92,14 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
-        public RelayCommand ChangeSignUpTypeCommand
+        private int _accountTypeSelectedIndex;
+        public int AccountTypeSelectedIndex 
         {
-            get => new RelayCommand(obj =>
+            get => _accountTypeSelectedIndex; set 
             {
-                var type = (string)obj;
-
-                if (type == "mojang") 
-                {
-                    _accountType = AccountType.Mojang;
-                }
-                else if (type == "ely") 
-                {
-                    _accountType = AccountType.NoAuth;
-                }
-                else if (type == "nightworld") 
-                {
-                    _accountType = AccountType.NightWorld;
-                }
-            });
+                _accountTypeSelectedIndex = value;
+                OnPropertyChanged();
+            }
         }
 
         #endregion
