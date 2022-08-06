@@ -384,7 +384,10 @@ namespace Lexplosion.Logic.Management.Instances
 
                                     if (res.Value2 == DownloadAddonRes.Successful)
                                     {
-                                        IsInstalled = true;
+                                        if (addonPointer.Point != null)
+                                        {
+                                            addonPointer.Point.IsInstalled = true;
+                                        }
 
                                         // удаляем старый файл
                                         if (installedAddons[res.Value1.ProjectID] != null && installedAddons[res.Value1.ProjectID].ActualPath != res.Value1.ActualPath)
