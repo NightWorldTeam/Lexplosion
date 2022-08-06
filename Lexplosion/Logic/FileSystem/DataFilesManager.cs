@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Lexplosion.Global;
-using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 
 namespace Lexplosion.Logic.FileSystem

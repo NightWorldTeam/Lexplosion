@@ -342,15 +342,15 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             var result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
 
-                            if (result.Value2 != CurseforgeApi.DownloadAddonRes.Successful) //скачивание мода не удалось.
+                            if (result.Value2 != DownloadAddonRes.Successful) //скачивание мода не удалось.
                             {
                                 Console.WriteLine("ERROR " + result.Value2);
 
                                 // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
-                                if (result.Value2 == CurseforgeApi.DownloadAddonRes.ProjectIdError || result.Value2 == CurseforgeApi.DownloadAddonRes.DownloadError)
+                                if (result.Value2 == DownloadAddonRes.ProjectIdError || result.Value2 == DownloadAddonRes.DownloadError)
                                 {
                                     int j = 0;
-                                    while (j < 4 && result.Value2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                    while (j < 4 && result.Value2 != DownloadAddonRes.Successful)
                                     {
                                         Console.WriteLine("REPEAT DOWNLOAD");
                                         result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
@@ -358,7 +358,7 @@ namespace Lexplosion.Logic.FileSystem
                                     }
 
                                     // все попытки были неудачными. возвращаем ошибку
-                                    if (result.Value2 != CurseforgeApi.DownloadAddonRes.Successful)
+                                    if (result.Value2 != DownloadAddonRes.Successful)
                                     {
                                         Console.WriteLine("GFDGS пизда " + result.Value2);
                                         //errors.Add(file.projectID + " " + file.fileID);

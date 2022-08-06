@@ -193,5 +193,18 @@
         Alpha,
         Beta,
         Release
-    } 
+    }
+
+    public enum DownloadAddonRes
+    {
+        Successful,
+        ProjectIdError,
+        FileIdError,
+        DownloadError,
+        UncnownAddonType,
+        FileVersionError,
+        UrlError,
+        FileNameError,
+        UncnownError
+    }
 }

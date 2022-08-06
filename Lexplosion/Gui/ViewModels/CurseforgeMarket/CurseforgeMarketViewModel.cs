@@ -116,10 +116,38 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
                 Lexplosion.Run.TaskRun(delegate
                 {
-                    instanceAddon.InstallLatestVersion();
+                    DownloadAddonRes result = instanceAddon.InstallLatestVersion(out Dictionary<string, DownloadAddonRes> dependenciesResults);
                     App.Current.Dispatcher.Invoke(() => 
-                    { 
-                        _instanceAddons.Add(instanceAddon);
+                    {
+                        if (result == DownloadAddonRes.Successful)
+                        {
+                            _instanceAddons.Add(instanceAddon);
+                            MainViewModel.ShowToastMessage("Мод успешно установлен. Не за что.", "Название: " + instanceAddon.Name);
+                        }
+                        else
+                        {
+                            MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод", 
+                                "Название: " + instanceAddon.Name + ".\nОшибка " + result, Controls.ToastMessageState.Error);
+                        }
+
+                        if (dependenciesResults != null)
+                        {
+                            foreach (string key in dependenciesResults.Keys)
+                            {
+                                DownloadAddonRes res = dependenciesResults[key];
+                                if (res == DownloadAddonRes.Successful)
+                                {
+                                    _instanceAddons.Add(instanceAddon);
+                                    MainViewModel.ShowToastMessage("Зависимый мод успешно установлен", 
+                                        "Название: " + key + ".\nНеобходим для " + instanceAddon.Name);
+                                }
+                                else
+                                {
+                                    MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод",
+                                        "Название: " + instanceAddon.Name + ".\nОшибка " + result + ".\nНеобходим для " + instanceAddon.Name, Controls.ToastMessageState.Error);
+                                }
+                            }
+                        }
                     });
                 });
                 

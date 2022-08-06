@@ -14,7 +14,6 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
-using static Lexplosion.Logic.Network.CurseforgeApi;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -293,8 +292,9 @@ namespace Lexplosion.Logic.Management.Instances
             //catch { }
         }
 
-        private bool InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies)
+        private DownloadAddonRes InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies, out Dictionary<string, DownloadAddonRes> dependenciesResults)
         {
+            dependenciesResults = null;
             string instanceId = _modpackInfo.LocalId;
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
@@ -304,7 +304,6 @@ namespace Lexplosion.Logic.Management.Instances
                     Point = this
                 };
                 _installingSemaphore.Release(_modInfo.id);
-                IsInstalling = true;
 
                 var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
                 {
@@ -340,6 +339,7 @@ namespace Lexplosion.Logic.Management.Instances
                     if (addonInfo.dependencies.Count > 0 && downloadDependencies)
                     {
                         List<Dictionary<string, int>> dependencies = addonInfo.dependencies;
+                        dependenciesResults = new Dictionary<string, DownloadAddonRes>();
 
                         // проходимся по спику завиисимостей и скачиваем все зависимые аддоны
                         int i = 0, count = dependencies.Count;
@@ -348,7 +348,7 @@ namespace Lexplosion.Logic.Management.Instances
                             var value = dependencies[i];
                             if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("modId"))
                             {
-                                List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(value["modId"].ToString());
+                                List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(value["modId"].ToString(), _gameVersion, _modpackInfo.Modloader);
                                 var file = GetLastFile(_modpackInfo.GameVersion, files, _modpackInfo);
                                 if (file != null)
                                 {
@@ -387,7 +387,7 @@ namespace Lexplosion.Logic.Management.Instances
                                         IsInstalled = true;
 
                                         // удаляем старый файл
-                                        if (installedAddons[file.modId] != null && installedAddons[res.Value1.ProjectID].ActualPath != res.Value1.ActualPath)
+                                        if (installedAddons[res.Value1.ProjectID] != null && installedAddons[res.Value1.ProjectID].ActualPath != res.Value1.ActualPath)
                                         {
                                             try
                                             {
@@ -400,7 +400,7 @@ namespace Lexplosion.Logic.Management.Instances
                                             catch { }
                                         }
 
-                                        installedAddons[file.modId] = res.Value1;
+                                        installedAddons[res.Value1.ProjectID] = res.Value1;
 
                                         // в список зависимостей добавляем зависимости и этого аддона, если они есть
                                         if (file.dependencies.Count > 0)
@@ -412,6 +412,8 @@ namespace Lexplosion.Logic.Management.Instances
                                             }
                                         }
                                     }
+
+                                    dependenciesResults[file.displayName] = res.Value2;
                                 }
                             }
 
@@ -419,11 +421,15 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                     }
                 }
+                else
+                {
+                    return ressult.Value2;
+                }
 
                 installedAddons.Save();
             }
 
-            return true;
+            return DownloadAddonRes.Successful;
         }
 
         private static CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo, BaseInstanceData instanceData)
@@ -447,23 +453,30 @@ namespace Lexplosion.Logic.Management.Instances
             return file;
         }
 
-        public bool InstallLatestVersion(bool downloadDependencies = true)
+        public DownloadAddonRes InstallLatestVersion(out Dictionary<string, DownloadAddonRes> dependenciesResults, bool downloadDependencies = true)
         {
+            IsInstalling = true;
             var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles, _modpackInfo);
             if (file == null)
             {
-                file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString()), _modpackInfo);
+                file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString(), _gameVersion, _modpackInfo.Modloader), _modpackInfo);
                 if (file != null)
                 {
-                    return InstallAddon(file, downloadDependencies);
+                    return InstallAddon(file, downloadDependencies, out dependenciesResults);
                 }
+                else
+                {
+                    IsInstalling = false;
+                }
+
+                dependenciesResults = null;
             }
             else
             {
-                return InstallAddon(file, downloadDependencies);
+                return InstallAddon(file, downloadDependencies, out dependenciesResults);
             }
 
-            return false;
+            return DownloadAddonRes.FileVersionError;
         }
 
         /// <summary>
@@ -797,10 +810,13 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        public void Update()
+        public DownloadAddonRes Update()
         {
-            if (InstallLatestVersion(false))
+            DownloadAddonRes result = InstallLatestVersion(out _, false);
+            if (result == DownloadAddonRes.Successful)
                 UpdateAvailable = false;
+
+            return result;
         }
     }
 }

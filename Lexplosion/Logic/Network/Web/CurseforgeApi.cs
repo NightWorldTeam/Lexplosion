@@ -17,19 +17,7 @@ namespace Lexplosion.Logic.Network
     static class CurseforgeApi
     {
         private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
-        public enum DownloadAddonRes
-        {
-            Successful,
-            ProjectIdError,
-            FileIdError,
-            DownloadError,
-            UncnownAddonType,
-            FileVersionError,
-            UrlError,
-            FileNameError,
-            UncnownError
-        }
-
+        
         private class ProjectTypeInfo
         {
             public class LatestFile
@@ -118,8 +106,19 @@ namespace Lexplosion.Logic.Network
             return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 
+        public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, ModloaderType modloader)
+        {
+            // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
+            int modloaderInt = (int)modloader;
+            if (modloader == ModloaderType.Fabric)
+            {
+                modloaderInt = 4;
+            }
+            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + "&modLoaderType=" + modloaderInt);
+        }
+
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
-        { 
+        {
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files");
         }
 
