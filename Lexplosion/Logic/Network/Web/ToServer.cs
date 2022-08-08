@@ -136,14 +136,9 @@ namespace Lexplosion.Logic.Network
                     string modloaderUrl = "";
                     if (!string.IsNullOrEmpty(modloaderVersion))
                     {
-                        if (modloader == ModloaderType.Fabric)
+                        if (modloader != ModloaderType.None)
                         {
-                            modloaderUrl = "/fabric/";
-                            modloaderUrl += modloaderVersion;
-                        }
-                        else if (modloader == ModloaderType.Forge)
-                        {
-                            modloaderUrl = "/forge/";
+                            modloaderUrl = "/" + Enum.GetName(typeof(ModloaderType), modloader).ToLower() + "/";
                             modloaderUrl += modloaderVersion;
                         }
                     }

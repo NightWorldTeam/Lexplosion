@@ -159,6 +159,11 @@ namespace Lexplosion.Logic.Management.Installers
                             modloader = ModloaderType.Fabric;
                             modLoaderVersion = modLoaderVersion.Replace("fabric-", "");
                         }
+                        else if (modLoaderVersion.Contains("fabric-"))
+                        {
+                            modloader = ModloaderType.Quilt;
+                            modLoaderVersion = modLoaderVersion.Replace("quilt-", "");
+                        }
                     }
 
                     Console.WriteLine("modLoaderVersion " + modLoaderVersion);

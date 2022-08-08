@@ -47,13 +47,9 @@ namespace Lexplosion.Logic.Objects.CommonClientData
                     return CustomVersionName;
 
                 string endName = "";
-                if (modloaderType == ModloaderType.Fabric)
+                if (modloaderType != ModloaderType.None)
                 {
-                    endName = "-Fabric-" + modloaderVersion;
-                }
-                else if (modloaderType == ModloaderType.Forge)
-                {
-                    endName = "-Forge-" + modloaderVersion;
+                    endName = "-" + Enum.GetName(typeof(ModloaderType), modloaderType) + "-" + modloaderVersion;
                 }
 
                 return gameVersion + endName;

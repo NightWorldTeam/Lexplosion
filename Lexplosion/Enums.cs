@@ -76,7 +76,8 @@
     {
         None,
         Forge,
-        Fabric
+        Fabric = 4,
+        Quilt
     }
 
     /// <summary>

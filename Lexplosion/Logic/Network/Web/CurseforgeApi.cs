@@ -92,29 +92,14 @@ namespace Lexplosion.Logic.Network
                 categoryStr = "&categoryId=" + category;
             }
 
-            int modloaderValue;
-            if (modloader == ModloaderType.Fabric)
-            {
-                modloaderValue = 4;
-            }
-            else
-            {
-                modloaderValue = (int)modloader;
-            }
-
-            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + "&modLoaderType=" + modloaderValue + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + "&modLoaderType=" + (int)modloader + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, ModloaderType modloader)
         {
             // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
-            int modloaderInt = (int)modloader;
-            if (modloader == ModloaderType.Fabric)
-            {
-                modloaderInt = 4;
-            }
-            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + "&modLoaderType=" + modloaderInt);
+            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + "&modLoaderType=" + (int)modloader);
         }
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
@@ -199,6 +184,10 @@ namespace Lexplosion.Logic.Network
                                 else if (value.gameVersion.Contains("Fabric"))
                                 {
                                     data.ModloaderType = ModloaderType.Fabric;
+                                }
+                                else if (value.gameVersion.Contains("Quilt"))
+                                {
+                                    data.ModloaderType = ModloaderType.Quilt;
                                 }
                             }
 
