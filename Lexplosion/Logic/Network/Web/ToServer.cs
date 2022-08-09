@@ -69,13 +69,9 @@ namespace Lexplosion.Logic.Network
         public static List<string> GetModloadersList(string gameVersion, ModloaderType modloaderType)
         {
             string modloader;
-            if (modloaderType == ModloaderType.Fabric)
+            if (modloaderType != ModloaderType.None)
             {
-                modloader = "/fabric/";
-            }
-            else if (modloaderType == ModloaderType.Forge)
-            {
-                modloader = "/forge/";
+                modloader = "/"+ modloaderType.ToString().ToLower() + "/";
             }
             else
             {
@@ -138,7 +134,7 @@ namespace Lexplosion.Logic.Network
                     {
                         if (modloader != ModloaderType.None)
                         {
-                            modloaderUrl = "/" + Enum.GetName(typeof(ModloaderType), modloader).ToLower() + "/";
+                            modloaderUrl = "/" + modloader.ToString().ToLower() + "/";
                             modloaderUrl += modloaderVersion;
                         }
                     }

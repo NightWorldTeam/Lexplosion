@@ -49,7 +49,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
                 string endName = "";
                 if (modloaderType != ModloaderType.None)
                 {
-                    endName = "-" + Enum.GetName(typeof(ModloaderType), modloaderType) + "-" + modloaderVersion;
+                    endName = "-" + modloaderType.ToString() + "-" + modloaderVersion;
                 }
 
                 return gameVersion + endName;
