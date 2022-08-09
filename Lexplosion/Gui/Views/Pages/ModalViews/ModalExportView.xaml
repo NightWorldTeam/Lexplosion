@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="420"
-    d:DesignWidth="360"
+    d:DesignHeight="{Binding Height}"
+    d:DesignWidth="{Binding Width}"
     mc:Ignorable="d">
 
     <UserControl.Resources>

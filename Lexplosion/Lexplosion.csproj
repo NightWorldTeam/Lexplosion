@@ -124,7 +124,7 @@
     <Compile Include="Gui\ControlsExtension\TextBox.cs" />
     <Compile Include="Gui\ControlsExtension\TreeViewItem.cs" />
     <Compile Include="Gui\Converters\NotEqualZeroConverter.cs" />
-    <Compile Include="Gui\ModalWindow\IModalContent.cs" />
+    <Compile Include="Gui\ModalWindow\IModal.cs" />
     <Compile Include="Gui\IPaginable.cs" />
     <Compile Include="Gui\ISubmenu.cs" />
     <Compile Include="Gui\ModalWindow\ModalVMBase.cs" />
@@ -159,6 +159,7 @@
     <Compile Include="Gui\ViewModels\MainMenu\MainMenuViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\DialogViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ExportViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
@@ -213,6 +214,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml.cs">
       <DependentUpon>GeneralMultiplayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ModalViews\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ModalViews\ModalExportView.xaml.cs">
       <DependentUpon>ModalExportView.xaml</DependentUpon>
@@ -443,6 +447,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ModalViews\DialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

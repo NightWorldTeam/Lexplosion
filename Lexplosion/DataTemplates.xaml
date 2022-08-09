@@ -105,4 +105,8 @@
     <DataTemplate DataType="{x:Type modalvms:ExportViewModel}">
         <modalviews:ModalExportView />
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvms:DialogViewModel}">
+        <modalviews:DialogView />
+    </DataTemplate>
 </ResourceDictionary>

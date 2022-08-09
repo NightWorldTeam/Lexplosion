@@ -6,8 +6,6 @@
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:converters="clr-namespace:Lexplosion.Gui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
-    xmlns:factorymenu="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
     xmlns:global="clr-namespace:Lexplosion.Global"
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -269,7 +267,11 @@
 
 
         <!--  Modal Window  -->
-        <controls:Modal Grid.Row="1" IsOpen="{Binding ModalWindowVM.IsModalOpen, Source={StaticResource MainVM}}">
+        <controls:Modal
+            Grid.Row="1"
+            WindowWidth="{Binding ModalWindowVM.CurrentModalContent.Width, Source={StaticResource MainVM}}"
+            WindowHeight="{Binding ModalWindowVM.CurrentModalContent.Height, Source={StaticResource MainVM}}"
+            IsOpen="{Binding ModalWindowVM.IsModalOpen, Source={StaticResource MainVM}}">
             <ContentControl Content="{Binding ModalWindowVM.CurrentModalContent, Source={StaticResource MainVM}}" />
         </controls:Modal>
 

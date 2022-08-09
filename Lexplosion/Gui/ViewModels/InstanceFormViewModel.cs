@@ -11,6 +11,9 @@ namespace Lexplosion.Gui.ViewModels
 {
     public class InstanceFormViewModel : VMBase
     {
+        private const string _deleteInstanceTitle = "Вы действительно желаете удалить {0}? \n\nможно потом сделать выбор того что можно сохранить? например карты)))";
+        private const string _deleteInstanceFromLibraryTitle = "Вы действительно желаете удалить {0} из библиотеки? Ну тут вряд-ли что-то ещё надо, ибо сборка не установленна";
+
         private InstanceClient _instanceClient; // Данные о Instance.
 
         public InstanceClient Client
@@ -107,9 +110,14 @@ namespace Lexplosion.Gui.ViewModels
 
                     case LowerButtonFunc.DeleteFromLibrary:
                         {
-                            IsDropdownMenuOpen = false;
-                            Model.InstanceClient.Delete();
-                            MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+                            var dialog = new DialogViewModel(MainVM);
+                            dialog.ShowDialog(String.Format(_deleteInstanceTitle, Model.InstanceClient.Name),
+                                new Action(delegate ()
+                                {
+                                    Model.InstanceClient.Delete();
+                                    MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+                                })
+                            );
                             break;
                         }
 
@@ -150,9 +158,14 @@ namespace Lexplosion.Gui.ViewModels
 
                     case LowerButtonFunc.RemoveInstance:
                         {
-                            IsDropdownMenuOpen = false;
-                            MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
-                            Model.InstanceClient.Delete();
+                            var dialog = new DialogViewModel(MainVM);
+                            dialog.ShowDialog(String.Format(_deleteInstanceTitle, Model.InstanceClient.Name),
+                                new Action(delegate ()
+                                    {
+                                        MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+                                        Model.InstanceClient.Delete();
+                                    })
+                                );
                             break;
                         }
 

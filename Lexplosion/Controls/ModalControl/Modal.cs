@@ -20,11 +20,29 @@ namespace Lexplosion.Controls
 
         public static readonly DependencyProperty BackgroundOpacityProperty
             = DependencyProperty.Register(
-                "BackgroundOpacityProperty",
+                "BackgroundOpacity",
                 typeof(double),
                 typeof(Modal),
                 new FrameworkPropertyMetadata(0.7)
                 );
+
+        public static readonly DependencyProperty WindowWidthProperty
+            = DependencyProperty.Register(
+                "WindowWidth",
+                typeof(double),
+                typeof(Modal),
+                new FrameworkPropertyMetadata(0.7)
+                );
+
+        public static readonly DependencyProperty WindowHeightProperty
+            = DependencyProperty.Register(
+                "WindowHeight",
+                typeof(double),
+                typeof(Modal),
+                new FrameworkPropertyMetadata(0.7)
+                );
+
+
 
         public bool IsOpen
         {
@@ -36,6 +54,18 @@ namespace Lexplosion.Controls
         {
             get => (double)GetValue(BackgroundOpacityProperty);
             set => SetValue(BackgroundOpacityProperty, value);
+        }
+
+        public double WindowWidth 
+        {
+            get => (double)GetValue(WindowWidthProperty);
+            set => SetValue(WindowWidthProperty, value);
+        }
+
+        public double WindowHeight 
+        {
+            get => (double)GetValue(WindowHeightProperty);
+            set => SetValue(WindowWidthProperty, value);
         }
 
         static Modal()

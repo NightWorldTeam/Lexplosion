@@ -80,7 +80,7 @@ namespace Lexplosion.Gui.ViewModels
     {
         private readonly NavigationStore ModalWindowNavigationStore = new NavigationStore();
 
-        public VMBase CurrentModalContent => ModalWindowNavigationStore.CurrentViewModel;
+        public ModalVMBase CurrentModalContent => (ModalVMBase)ModalWindowNavigationStore.CurrentViewModel;
         
         /// <summary>
         /// Данное свойство содержить информации - открыт ли Экспорт [Popup].
