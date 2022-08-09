@@ -99,9 +99,8 @@
                         <!--  Game Type  -->
                         <StackPanel Margin="0,15,0,0" Orientation="Vertical">
                             <TextBlock HorizontalAlignment="Left" Text="Game Type" />
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
                                 <RadioButton
-                                    Margin="10"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.None}"
                                     Content="Vanilla"
@@ -115,11 +114,21 @@
                                     Content="Forge"
                                     FontSize="16"
                                     GroupName="GameType" />
+                            </StackPanel>
+
+                            <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
                                 <RadioButton
-                                    Margin="10,0,0,0"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Fabric}"
                                     Content="Fabric"
+                                    FontSize="16 "
+                                    GroupName="GameType" />
+
+                                <RadioButton
+                                    Margin="15,0,0,0"
+                                    Command="{Binding SwitchModloaderType}"
+                                    CommandParameter="{x:Static objects:ModloaderType.Quilt}"
+                                    Content="Quilt"
                                     FontSize="16 "
                                     GroupName="GameType" />
                             </StackPanel>
