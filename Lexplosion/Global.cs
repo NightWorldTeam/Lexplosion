@@ -17,9 +17,13 @@ namespace Lexplosion.Global
         {
             _user = new User();
             IsAuth = true;
-            LaunchGame.GameStartEvent += _user.GameStart;
-            LaunchGame.GameStopEvent += _user.GameStop;
-            Lexplosion.Run.ExitEvent += _user.Exit;
+
+            if (type == AccountType.NightWorld)
+            {
+                LaunchGame.GameStartEvent += _user.GameStart;
+                LaunchGame.GameStopEvent += _user.GameStop;
+                Lexplosion.Run.ExitEvent += _user.Exit;
+            }
 
             return _user.Auth(login, password, saveUser, type);
         }
