@@ -152,10 +152,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload(true);
+                            string files = "Не удалось скачать следующие файлы:\n";
                             foreach (var de in downloadErrors)
                             {
-                                MainViewModel.ShowToastMessage("Download Files Error", de, Controls.ToastMessageState.Error);
+                                files += de + "\n";
                             }
+                            files += "\nПовторное скачивание может решить проблему, но это не точно.\n";
+                            MainViewModel.ShowToastMessage("Не удалось скачать некоторые файлы", files, Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.NightworldIdError:

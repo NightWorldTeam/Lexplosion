@@ -107,7 +107,6 @@ namespace Lexplosion.Logic.FileSystem
 
         public void SaveInstanceContent(InstanceContent content)
         {
-
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json", 
                 JsonConvert.SerializeObject(new InstanceContentFile
                 {
@@ -330,16 +329,18 @@ namespace Lexplosion.Logic.FileSystem
                 if (filesCount != 0)
                 {
                     Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с json файлами
+                    ManualResetEvent repeatWait = new ManualResetEvent(true); // нужен чтобы блочить другие потоки при повторном скачивании, если возникла ошибка
 
                     TasksPerfomer perfomer = null;
                     if (filesCount > 0)
-                        perfomer = new TasksPerfomer(15, filesCount);
+                        perfomer = new TasksPerfomer(10, filesCount);
 
                     Console.WriteLine("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
                     foreach (InstanceManifest.FileData file in downloadList)
                     {
                         perfomer.ExecuteTask(delegate ()
                         {
+                            repeatWait.WaitOne();
                             var result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
 
                             if (result.Value2 != DownloadAddonRes.Successful) //скачивание мода не удалось.
@@ -349,25 +350,29 @@ namespace Lexplosion.Logic.FileSystem
                                 // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
                                 if (result.Value2 == DownloadAddonRes.ProjectIdError || result.Value2 == DownloadAddonRes.DownloadError)
                                 {
+                                    repeatWait.Reset();
+
                                     int j = 0;
-                                    while (j < 4 && result.Value2 != DownloadAddonRes.Successful)
+                                    while (j < 6 && result.Value2 != DownloadAddonRes.Successful)
                                     {
                                         Console.WriteLine("REPEAT DOWNLOAD");
                                         result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
                                         j++;
                                     }
 
+                                    repeatWait.Set();
+
                                     // все попытки были неудачными. возвращаем ошибку
                                     if (result.Value2 != DownloadAddonRes.Successful)
                                     {
                                         Console.WriteLine("GFDGS пизда " + result.Value2);
-                                        //errors.Add(file.projectID + " " + file.fileID);
+                                        errors.Add(file.projectID + " " + file.fileID);
                                         return;
                                     }
                                 }
                                 else
                                 {
-                                    //errors.Add(file.projectID + " " + file.fileID);
+                                    errors.Add(file.projectID + " " + file.fileID);
                                     return;
                                 }
                             }
