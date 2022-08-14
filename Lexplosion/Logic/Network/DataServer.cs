@@ -71,6 +71,7 @@ namespace Lexplosion.Logic.Network
                     byte[] buffer_ = new byte[bytesCount];
                     Array.Copy(buffer, 0, buffer_, 0, bytesCount); //обрезаем буффер до нужных размеров
 
+                    // TODO: тут трай надо
                     Server.Send(buffer_, clientPoint); //отправляем
 
                     //файл передан, закрываем соединение

@@ -80,6 +80,13 @@ namespace Lexplosion
             UserData.InitSetting();
             WithDirectory.Create(UserData.GeneralSettings.GamePath);
 
+            //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
+            AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
+            {
+                Exception exception = (Exception)args.ExceptionObject;
+                DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
+            };
+
             if (ToServer.CheckLauncherUpdates())
             {
                 // TODO: при отсуствии коннекта с сервером тут лаунчер повиснет на секунд 30
