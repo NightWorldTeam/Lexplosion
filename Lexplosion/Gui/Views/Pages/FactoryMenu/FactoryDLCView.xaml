@@ -321,6 +321,6 @@
             </StackPanel>
         </ScrollViewer>
 
-        <controls:LoadingBoard IsLoadingFinished="{Binding IsLoaded}" />
+        <controls:LoadingBoard Background="Black" IsLoadingFinished="{Binding IsLoaded}" />
     </Grid>
 </UserControl>

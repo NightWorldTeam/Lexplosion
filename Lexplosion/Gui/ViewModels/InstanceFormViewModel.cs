@@ -100,11 +100,11 @@ namespace Lexplosion.Gui.ViewModels
             get => _lowerBtnCommand ?? (_lowerBtnCommand = new RelayCommand(obj =>
             {
                 Console.WriteLine(((LowerButtonFunc)obj).ToString());
+                IsDropdownMenuOpen = false;
                 switch ((LowerButtonFunc)obj)
                 {
                     case LowerButtonFunc.AddToLibrary:
                         {
-                            IsDropdownMenuOpen = false;
                             break;
                         }
 
@@ -123,28 +123,23 @@ namespace Lexplosion.Gui.ViewModels
 
                     case LowerButtonFunc.OpenFolder:
                         {
-                            IsDropdownMenuOpen = false;
                             Model.OpenInstanceFolder();
                             break;
                         }
 
                     case LowerButtonFunc.CancelDownload:
-
                         {
-                            IsDropdownMenuOpen = false;
                             break;
                         }
 
                     case LowerButtonFunc.Update:
                         {
-                            IsDropdownMenuOpen = false;
                             Model.DownloadModel.DonwloadPrepare();
                             break;
                         }
 
                     case LowerButtonFunc.OpenWebsite:
                         {
-                            IsDropdownMenuOpen = false;
                             try
                             {
                                 System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
@@ -171,7 +166,6 @@ namespace Lexplosion.Gui.ViewModels
 
                     case LowerButtonFunc.Export:
                         {
-                            IsDropdownMenuOpen = false;
                             MainVM.ModalWindowVM.IsModalOpen = true;
 
                             // возможно не надо вообще эксемпляр класса сохранять.

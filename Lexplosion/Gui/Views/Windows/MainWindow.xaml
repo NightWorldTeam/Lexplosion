@@ -269,9 +269,9 @@
         <!--  Modal Window  -->
         <controls:Modal
             Grid.Row="1"
-            WindowWidth="{Binding ModalWindowVM.CurrentModalContent.Width, Source={StaticResource MainVM}}"
+            IsOpen="{Binding ModalWindowVM.IsModalOpen, Source={StaticResource MainVM}}"
             WindowHeight="{Binding ModalWindowVM.CurrentModalContent.Height, Source={StaticResource MainVM}}"
-            IsOpen="{Binding ModalWindowVM.IsModalOpen, Source={StaticResource MainVM}}">
+            WindowWidth="{Binding ModalWindowVM.CurrentModalContent.Width, Source={StaticResource MainVM}}">
             <ContentControl Content="{Binding ModalWindowVM.CurrentModalContent, Source={StaticResource MainVM}}" />
         </controls:Modal>
 
