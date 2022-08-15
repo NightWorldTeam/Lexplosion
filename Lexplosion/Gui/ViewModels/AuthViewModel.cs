@@ -111,11 +111,12 @@ namespace Lexplosion.Gui.ViewModels
             _mainViewModel = model;
             _libraryInstancesLoading = libraryInstancesLoading;
 
-            _accountType = DataFilesManager.GetAccount(out _login, out _password, null);
+            AccountType type = DataFilesManager.GetAccount(out _login, out _password, null);
             if (_login != null && _password != null)
             {
                 IsSaveMe = true;
                 Login = _login; Password = _password;
+                _accountType = type;
             }
                 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
-using System.Linq;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -81,9 +81,18 @@ namespace Lexplosion.Logic.FileSystem
                     selectedAccount = firstElem.Key;
                 }
 
-                login = profile.Login;
-                password = profile.Password;
-                password = AesСryp.Decode(Convert.FromBase64String(profile.Password), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.Password))
+                {
+                    login = profile.Login;
+                    password = AesСryp.Decode(Convert.FromBase64String(profile.Password), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                }
+                else
+                {
+                    login = null;
+                    password = null;
+                }
+
+
 
                 return selectedAccount;
 
