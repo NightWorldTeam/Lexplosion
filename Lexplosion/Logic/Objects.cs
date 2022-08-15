@@ -70,4 +70,26 @@ namespace Lexplosion.Logic.Objects
         public string Summary { get; set; }
         public string Changelog { get; set; }
     }
+
+    public class AuthResult 
+    {
+        public AuthCode Status;
+        public string Login;
+        public string UUID;
+        public string AccesToken;
+        public string SessionToken;
+    }
+
+    public class AcccountsFormat
+    {
+        public class Profile
+        {
+            public string Login;
+            public string Password;
+        }
+
+        public AccountType SelectedProfile;
+        public Dictionary<AccountType, Profile> Profiles;
+    }
+
 }

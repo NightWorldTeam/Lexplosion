@@ -3,6 +3,8 @@ using System.Threading;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic
 {
@@ -29,47 +31,60 @@ namespace Lexplosion.Logic
 
         public AuthCode Auth(string login, string password, bool saveUser, AccountType accountType)
         {
-            Dictionary<string, string> response = ToServer.Authorization(login, password);
+            accountType = AccountType.Mojang;
+            AuthResult response = null;
+
+            if (accountType == AccountType.NightWorld)
+            {
+                response = ToServer.Authorization(login, password);
+            }
+            else if (accountType == AccountType.Mojang)
+            {
+                response = MojangApi.Authorization(login, password);
+            }
 
             if (response != null)
             {
-                if (response["status"] == "OK")
+                if (response.Status == AuthCode.Successfully)
                 {
-                    Login = response["login"];
-                    UUID = response["UUID"];
-                    AccessToken = response["accesToken"];
-                    SessionToken = response["sessionToken"];
+                    Login = response.Login;
+                    UUID = response.UUID;
+                    AccessToken = response.AccesToken;
+                    SessionToken = response.SessionToken;
 
                     if (saveUser)
                     {
-                        DataFilesManager.SaveAccount(login, password);
+                        DataFilesManager.SaveAccount(login, password, accountType);
                     }
 
-                    AccountType = AccountType.NightWorld;
+                    AccountType = accountType;
                     Status = ActivityStatus.Online;
 
-                    // запускаем поток который постоянно будет уведомлять сервер о том что мы в сети
-                    Lexplosion.Run.TaskRun(delegate ()
+                    if (accountType == AccountType.NightWorld)
                     {
-                        while (true)
+                        // запускаем поток который постоянно будет уведомлять сервер о том что мы в сети
+                        Lexplosion.Run.TaskRun(delegate ()
                         {
-                            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
-                            Thread.Sleep(54000); // Ждём 9 минут
-                        }
-                    });
+                            while (true)
+                            {
+                                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
+                                Thread.Sleep(54000); // Ждём 9 минут
+                            }
+                        });
+                    }
 
                     return AuthCode.Successfully;
                 }
                 else
                 {
-                    return AuthCode.DataError;
+                    return response.Status;
                 }
             }
             else
             {
                 return AuthCode.NoConnect;
             }
-        }
+         }
 
         public void GameStart(string clientName_)
         {

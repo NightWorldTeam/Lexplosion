@@ -15,6 +15,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Gui.ViewModels;
+using Lexplosion.Logic.Network.Web;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.

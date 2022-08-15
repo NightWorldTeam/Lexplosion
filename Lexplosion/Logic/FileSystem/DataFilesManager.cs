@@ -6,54 +6,93 @@ using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Objects;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
+using System.Linq;
 
 namespace Lexplosion.Logic.FileSystem
 {
     static class DataFilesManager
     {
-        private class LocalVersionManifest //нужен для декодирования json
+        private class LocalVersionManifest // нужен для декодирования json
         {
             public LocalVersionInfo version;
         }
 
-        public static void SaveAccount(string login, string password)
+        public static void SaveAccount(string login, string password, AccountType accountType)
         {
             password = Convert.ToBase64String(AesСryp.Encode(password, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
-            SaveFile(LaunсherSettings.LauncherDataPath + "/account.json", JsonConvert.SerializeObject(new Dictionary<string, string>
+
+            var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
+            if (data != null && data.Profiles != null && data.Profiles.Count > 0)
             {
-                ["login"] = login,
-                ["password"] = password
-            }));
+                data.SelectedProfile = accountType;
+                data.Profiles[accountType] = new AcccountsFormat.Profile
+                {
+                    Login = login,
+                    Password = password
+                };
+            }
+            else
+            {
+                data = new AcccountsFormat
+                {
+                    SelectedProfile = accountType,
+                    Profiles = new Dictionary<AccountType, AcccountsFormat.Profile>
+                    {
+                        [accountType] = new AcccountsFormat.Profile
+                        {
+                            Login = login,
+                            Password = password
+                        }
+                    }
+                };
+            }
+
+            SaveFile(LaunсherSettings.LauncherDataPath + "/account.json", JsonConvert.SerializeObject(data));
         }
 
-        public static void GetAccount(out string login, out string password)
+        /// <summary>
+        /// Получает сохраненный аккаунт.
+        /// </summary>
+        /// <param name="login">Сюда будет помещен логин.</param>
+        /// <param name="password">Сюда будет помещен пароль.</param>
+        /// <param name="accountType">Сюда передавать тип аккаунта, который нужно получить. Передавать null, если нужно получить использованный в последний раз аккаунт.</param>
+        /// <returns>
+        /// Возвращает тип полученного аккаунта, он может отличаться от параметра accountType, ведь аккаунта с типом accountType может не быть. 
+        /// И если accountType будет null, то будет возвращен тип аккаунта, использованного в последний раз.
+        /// </returns>
+        public static AccountType GetAccount(out string login, out string password, AccountType? accountType)
         {
-            var data = GetFile<Dictionary<string, string>>(LaunсherSettings.LauncherDataPath + "/account.json");
-            if (data != null && data.ContainsKey("login"))
+            var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
+            if (data != null && data.Profiles != null && data.Profiles.Count > 0)
             {
-                login = data["login"];
-            }
-            else
-            {
-                login = null;
+                AccountType selectedAccount = accountType ?? data.SelectedProfile;
+
+                AcccountsFormat.Profile profile;
+                if (data.Profiles.ContainsKey(selectedAccount))
+                {
+                    profile = data.Profiles[selectedAccount];
+                }
+                else
+                {
+                    var firstElem = data.Profiles.First();
+                    profile = firstElem.Value;
+                    selectedAccount = firstElem.Key;
+                }
+
+                login = profile.Login;
+                password = profile.Password;
+                password = AesСryp.Decode(Convert.FromBase64String(profile.Password), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+
+                return selectedAccount;
+
             }
 
-            if (data != null && data.ContainsKey("password") && data["password"] != null)
-            {
-                try
-                {
-                    password = AesСryp.Decode(Convert.FromBase64String(data["password"]), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
-                }
-                catch
-                {
-                    password = null;
-                }
-            }
-            else
-            {
-                password = null;
-            }
+            login = null;
+            password = null;
+
+            return AccountType.NoAuth;
         }
 
         public static void SaveSettings(Settings data, string instanceId = "")

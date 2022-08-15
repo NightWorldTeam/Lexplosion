@@ -189,7 +189,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static Dictionary<string, string> Authorization(string login, string password, string email = "")
+        public static AuthResult Authorization(string login, string password)
         {
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
@@ -221,7 +221,7 @@ namespace Lexplosion.Logic.Network
                 data.Add(new List<string>() { "str2", str2 });
                 data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
 
-                Dictionary<string, string> response = new Dictionary<string, string>();
+                AuthResult response = new AuthResult();
                 string answer;
 
                 try
@@ -235,8 +235,7 @@ namespace Lexplosion.Logic.Network
                     }
                     else if (answer == "ERROR:1")
                     {
-
-                        response.Add("status", "ERROR:1");
+                        response.Status = AuthCode.DataError;
                         return response;
                     }
                     else
@@ -248,11 +247,11 @@ namespace Lexplosion.Logic.Network
                         {
                             if (userData.ContainsKey("login") && userData.ContainsKey("UUID") && userData.ContainsKey("accesToken"))
                             {
-                                response.Add("status", "OK");
-                                response.Add("login", userData["login"]);
-                                response.Add("UUID", userData["UUID"]);
-                                response.Add("accesToken", userData["accesToken"]);
-                                response.Add("sessionToken", userData["sessionToken"]);
+                                response.Status = AuthCode.Successfully;
+                                response.Login = userData["login"];
+                                response.UUID = userData["UUID"];
+                                response.AccesToken = userData["accesToken"];
+                                response.SessionToken = userData["sessionToken"];
 
                                 return response;
                             }

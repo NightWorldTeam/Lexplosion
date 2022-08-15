@@ -589,7 +589,7 @@ namespace Lexplosion.Logic.Management.Instances
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
 
-                launchGame.Run(data, ComplitedLaunch, GameExited, Name, true);
+                launchGame.Run(data, ComplitedLaunch, GameExited, Name, UserData.User.AccountType == AccountType.NightWorld);
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
                 // TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
             }

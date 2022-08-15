@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
-using Newtonsoft.Json;
 using Lexplosion.Logic.Management;
 
 namespace Lexplosion.Global
@@ -11,12 +8,10 @@ namespace Lexplosion.Global
     static class UserData
     {
         private static User _user;
-        public static bool IsAuth { get; private set; } = false;
 
         public static AuthCode Auth(string login, string password, bool saveUser, AccountType type)
         {
             _user = new User();
-            IsAuth = true;
 
             if (type == AccountType.NightWorld)
             {
