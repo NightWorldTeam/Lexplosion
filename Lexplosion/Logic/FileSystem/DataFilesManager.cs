@@ -92,10 +92,7 @@ namespace Lexplosion.Logic.FileSystem
                     password = null;
                 }
 
-
-
                 return selectedAccount;
-
             }
 
             login = null;

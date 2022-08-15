@@ -31,7 +31,6 @@ namespace Lexplosion.Logic
 
         public AuthCode Auth(string login, string password, bool saveUser, AccountType accountType)
         {
-            accountType = AccountType.Mojang;
             AuthResult response = null;
 
             if (accountType == AccountType.NightWorld)
