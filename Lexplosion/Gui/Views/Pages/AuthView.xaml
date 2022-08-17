@@ -299,19 +299,22 @@
                         </Style>
                     </Grid.Resources>
 
-                    <ComboBox Height="30" HorizontalAlignment="Center">
+                    <ComboBox
+                        Height="30"
+                        HorizontalAlignment="Center"
+                        SelectedIndex="{Binding AccountTypeSelectedIndex, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBoxItem>
+                            Игра без акканута
+                        </ComboBoxItem>
                         <ComboBoxItem IsSelected="True">
                             Аккаунт NightWorld
                         </ComboBoxItem>
                         <ComboBoxItem>
                             Аккаунт Mojang
                         </ComboBoxItem>
-                        <ComboBoxItem>
-                            Игра без акканута
-                        </ComboBoxItem>
-                        <ComboBoxItem>
+                        <!--<ComboBoxItem>
                             Аккаунт Ely
-                        </ComboBoxItem>
+                        </ComboBoxItem>-->
                     </ComboBox>
                 </Grid>
             </Grid>

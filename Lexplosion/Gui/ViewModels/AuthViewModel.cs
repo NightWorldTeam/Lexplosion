@@ -56,18 +56,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 Lexplosion.Run.TaskRun(() => 
                 {
-                    if (AccountTypeSelectedIndex == 0)
-                    {
-                        _accountType = AccountType.NightWorld;
-                    }
-                    else if (AccountTypeSelectedIndex == 1)
-                    {
-                        _accountType = AccountType.Mojang;
-                    }
-                    else if (AccountTypeSelectedIndex == 2) 
-                    {
-                        _accountType = AccountType.NoAuth;
-                    }
+                    _accountType = (AccountType)AccountTypeSelectedIndex;
 
                     AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe, _accountType);
                     App.Current.Dispatcher.Invoke(() => 
@@ -81,10 +70,10 @@ namespace Lexplosion.Gui.ViewModels
                                 NavigationCommand.Execute(null);
                                 break;
                             case AuthCode.DataError:
-                                Console.WriteLine("Неверный логин или пароль");
+                                MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", Controls.ToastMessageState.Error);
                                 break;
                             case AuthCode.NoConnect:
-                                Console.WriteLine("Нет соединения с сервером!");
+                                MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", Controls.ToastMessageState.Error);
                                 break;
                         }
                     });
@@ -99,6 +88,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
+                Console.WriteLine((AccountType)(_accountTypeSelectedIndex));
             }
         }
 
@@ -111,6 +101,9 @@ namespace Lexplosion.Gui.ViewModels
             _mainViewModel = model;
             _libraryInstancesLoading = libraryInstancesLoading;
 
+            // устанавливаем по дефолту аккаунт типа NightWorld.
+            AccountTypeSelectedIndex = 1;
+
             AccountType type = DataFilesManager.GetAccount(out _login, out _password, null);
             if (_login != null && _password != null)
             {
@@ -122,5 +115,9 @@ namespace Lexplosion.Gui.ViewModels
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
         }
+
+        #region methods
+
+        #endregion methods
     }
 }
