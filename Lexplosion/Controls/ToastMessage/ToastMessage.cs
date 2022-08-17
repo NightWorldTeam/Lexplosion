@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Lexplosion.Controls
 {
@@ -18,6 +19,10 @@ namespace Lexplosion.Controls
 
     public class ToastMessage : ContentControl
     {
+        private DispatcherTimer timer = new DispatcherTimer();
+
+        #region DependencyProperty Register
+
         public static readonly DependencyProperty HeaderProperty =
             DependencyProperty.Register("Header", typeof(string), typeof(ToastMessage), new PropertyMetadata());
 
@@ -33,6 +38,9 @@ namespace Lexplosion.Controls
         //public static readonly DependencyProperty VisibilityTimeProperty =
         //    DependencyProperty.Register("VisibilityTime", typeof(double), typeof(ToastMessage), new PropertyMetadata(-1));
 
+        #endregion DependencyProperty Register
+
+        #region getters / settes
         public string Header 
         {
             get => (string)GetValue(HeaderProperty);
@@ -57,15 +65,28 @@ namespace Lexplosion.Controls
             set => SetValue(CloseCommandProperty, value);
         }
 
-        //public double VisibilityTime 
-        //{
-        //    get => (double)GetValue(VisibilityTimeProperty);
-        //    set => SetValue(VisibilityTimeProperty, value);
-        //}
+        #endregion getters / setters
+
+        #region constructors
 
         static ToastMessage() 
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ToastMessage), new FrameworkPropertyMetadata(typeof(ToastMessage)));
+        }
+
+        public ToastMessage()
+        {
+            // here we call timer.
+
+            timer.Interval = new TimeSpan(0,0,5);
+            timer.Start();
+        }
+
+        #endregion constructors
+
+        private void TimerEventProcessor() 
+        {
+            
         }
     }
 }

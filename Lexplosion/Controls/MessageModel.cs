@@ -9,6 +9,7 @@ namespace Lexplosion.Controls
         public string Header { get; set; }
         public string Message { get; set; }
         public ToastMessageState State { get; set; }
+        public bool IsCollapsed { get; set; }
 
         public RelayCommand CloseToastMessage
         {
@@ -23,6 +24,7 @@ namespace Lexplosion.Controls
             Header = header;
             Message = message;
             State = state;
+            IsCollapsed = false;
         }
     }
 }

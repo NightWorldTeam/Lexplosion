@@ -26,5 +26,12 @@
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
+
+        <!--<Button
+            Width="200"
+            Height="30"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Content="Loler" />-->
     </Grid>
 </UserControl>

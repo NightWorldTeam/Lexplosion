@@ -12,14 +12,25 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
     public sealed class AddonCategory
     {
         public int Id { get; }
+        public AddonType Type { get; }
         public string Name { get; }
         public string ImageSource { get; }
+        public bool HasSubcategory { get; }
+        public List<AddonCategory> Subcategory { get; }
 
-        public AddonCategory(int id, string name)
+
+        public AddonCategory(int id, AddonType type, string name, string iconSource, List<AddonCategory> subcategory = null)
         {
             Id = id;
             Name = name;
-            ImageSource = String.Format("pack://Application:,,,/assets/images/icons/curseforge/{0}.png", Name.ToLower());
+            ImageSource = String.Format("pack://Application:,,,/assets/images/icons/curseforge/{0}/{1}.png", type.ToString().ToLower(), iconSource.ToLower());
+
+            if (subcategory == null)
+            {
+                subcategory = new List<AddonCategory>();
+                HasSubcategory = false;
+            }
+            else Subcategory = subcategory;
         }
 
         public static List<AddonCategory> GetCategories(AddonType type)
@@ -31,8 +42,15 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 foreach (var value in Enum.GetValues(typeof(ModCategory)))
                 {
-                    Console.WriteLine(value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"));
-                    result.Add(new AddonCategory(i, value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&")));
+                    var addonCategory = new AddonCategory(
+                        i,
+                        AddonType.Mods,
+                        value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"),
+                        value.ToString().Replace("__", string.Empty).Replace("_", string.Empty).Replace("CharAnd", string.Empty)
+                        );
+
+                    result.Add(addonCategory);
+                    Console.WriteLine(addonCategory.ToString());
                     i++;
                 }
                 
@@ -41,18 +59,41 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 foreach (var value in Enum.GetValues(typeof(ResourcePacksCategory)))
                 {
-                    Console.WriteLine(value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"));
+                    var addonCategory = new AddonCategory(
+                        i,
+                        AddonType.Resourcepacks,
+                        value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"),
+                        value.ToString().Replace("__", string.Empty).Replace("_", string.Empty).Replace("CharAnd", string.Empty)
+                        );
+
+                    result.Add(addonCategory);
+                    Console.WriteLine(addonCategory.ToString());
+                    i++;
                 }
             }
             else if (type == AddonType.Maps)
             {
                 foreach (var value in Enum.GetValues(typeof(WorldsCategory)))
                 {
-                    Console.WriteLine(value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"));
+                    var addonCategory = new AddonCategory(
+                        i,
+                        AddonType.Maps,
+                        value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"),
+                        value.ToString().Replace("__", string.Empty).Replace("_", string.Empty).Replace("CharAnd", string.Empty)
+                        );
+
+                    result.Add(addonCategory);
+                    Console.WriteLine(addonCategory.ToString());
+                    i++;
                 }
             }
 
             return result;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("AddonCategory:\n    Id: {0}\n   Name: {1}\n    ImageSource: {2}", this.Id, this.Name, this.ImageSource);
         }
     }
 
@@ -187,7 +228,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             InstanceAddons = new ObservableCollection<InstanceAddon>();
 
-            foreach (var addon in AddonCategory.GetCategories(AddonType.Mods))
+            foreach (var addon in AddonCategory.GetCategories(addonsType))
             {
                 ModCategories.Add(addon);
             }

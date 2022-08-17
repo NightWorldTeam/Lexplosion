@@ -127,7 +127,7 @@
         Cosmetics,
         Miscellaneous,
         Addons,
-        Armor__Tools_and_Weapon,
+        Armor__Tools_and_Weapons,
         Server_Utility,
         Food,
         Redstone,
@@ -137,6 +137,42 @@
         Education
     }
 
+    public enum SubCategoryWorldgen
+    {
+        Biomes,
+        Ores_and_Resources,
+        Structures,
+        Dimensions,
+        Mobs
+    }
+
+    public enum SubCategoryTechnology
+    {
+        Processing,
+        PlayerTransport,
+        Energy__Fluid__and_Item_Transport,
+        Farming,
+        Energy,
+        Genetics,
+        Automation
+    }
+
+    public enum SubCategoryAddons 
+    {
+        ThermalExpantion,
+        Tinker___Constract,
+        IndustrialCraft,
+        Thaumcraft,
+        BuildCraft,
+        Forestry,
+        BloodMagic,
+        AppliedEnergistics2,
+        CraftTweaker,
+        Galacticraft,
+        KubeJS
+    }
+
+
     public enum ResourcePacksCategory
     {
         All_Resource_Packs,
@@ -145,7 +181,7 @@
         x64,
         x128,
         x256,
-        x512_and_Higher,
+        x512Plus,
         Steampunk,
         PhotoRealistic,
         Modern,
@@ -167,7 +203,7 @@
         Parkour,
         Puzzle,
         Survival,
-        ModdedWorld,
+        ModdedWorld
     }
 
     public enum OnlineGameStatus
