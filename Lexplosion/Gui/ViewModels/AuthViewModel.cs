@@ -88,7 +88,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
-                Console.WriteLine((AccountType)(_accountTypeSelectedIndex));
+                LoadSavedAccount(_accountType);
             }
         }
 
@@ -104,19 +104,28 @@ namespace Lexplosion.Gui.ViewModels
             // устанавливаем по дефолту аккаунт типа NightWorld.
             AccountTypeSelectedIndex = 1;
 
-            AccountType type = DataFilesManager.GetAccount(out _login, out _password, null);
+            LoadSavedAccount(null);
+
+            NavigationCommand = new NavigateCommand<MainMenuViewModel>(
+                MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
+        }
+
+        #region methods
+
+        /// <summary>
+        /// Загружает данные сохранённого аккаунта.
+        /// </summary>
+        /// <param name="accountType">Тип аккаунта, если null, то возвращает последний использованный сохранённый аккаунт.</param>
+        public void LoadSavedAccount(AccountType? accountType) 
+        {
+            AccountType type = DataFilesManager.GetAccount(out _login, out _password, accountType);
             if (_login != null && _password != null)
             {
                 IsSaveMe = true;
                 Login = _login; Password = _password;
                 _accountType = type;
             }
-                
-            NavigationCommand = new NavigateCommand<MainMenuViewModel>(
-                MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
         }
-
-        #region methods
 
         #endregion methods
     }
