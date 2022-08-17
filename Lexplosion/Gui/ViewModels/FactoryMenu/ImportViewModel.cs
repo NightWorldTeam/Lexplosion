@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
+    public class ImportModel : VMBase 
+    {
+        
+    }
+
     public class ImportViewModel : VMBase
     {
         private MainViewModel _mainViewModel;

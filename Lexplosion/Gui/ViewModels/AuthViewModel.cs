@@ -11,10 +11,6 @@ namespace Lexplosion.Gui.ViewModels
 {
     public class AuthViewModel : VMBase
     {
-        private string _login = "";
-        private string _password = "";
-        private bool _isSaveMe = false;
-
         private readonly MainViewModel _mainViewModel;
         private Action _libraryInstancesLoading;
         private RelayCommand _signUpCommand;
@@ -23,6 +19,7 @@ namespace Lexplosion.Gui.ViewModels
 
         #region props
 
+        private string _login = String.Empty;
         public string Login 
         {
             get => _login; set 
@@ -32,6 +29,8 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+        //
+        private string _password = String.Empty;
         public string Password 
         {
             get => _password; set 
@@ -41,6 +40,10 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+        /// <summary>
+        /// Хранит ответ на вопрос, хочет ли пользователь сохранить аккаунт(данные).
+        /// </summary>
+        private bool _isSaveMe = false;
         public bool IsSaveMe 
         {
             get => _isSaveMe; set 
@@ -57,7 +60,7 @@ namespace Lexplosion.Gui.ViewModels
                 Lexplosion.Run.TaskRun(() => 
                 {
                     _accountType = (AccountType)AccountTypeSelectedIndex;
-
+                    Console.WriteLine(_accountType);
                     AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe, _accountType);
                     App.Current.Dispatcher.Invoke(() => 
                     {
@@ -88,7 +91,8 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
-                LoadSavedAccount(_accountType);
+                Console.WriteLine((AccountType)AccountTypeSelectedIndex);
+                LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
             }
         }
 

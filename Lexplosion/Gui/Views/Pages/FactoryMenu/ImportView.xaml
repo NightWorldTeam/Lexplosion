@@ -6,147 +6,136 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="420"
+    d:DesignHeight="400"
     d:DesignWidth="360"
     mc:Ignorable="d">
-    <StackPanel Margin="20">
 
-        <TextBlock
-            Margin="0,0,0,0"
-            FontSize="20"
-            Text="Upload your Instance" />
-        <TextBlock
-            Margin="0,5,0,20"
-            FontSize="14"
-            Opacity="0.8"
-            Text=".zip files allowed" />
+    <Grid Margin="20,20,0,0">
 
-        <controls:DragDropBoard
-            Width="320"
-            Height="240"
-            AllowDrop="True"
-            Background="Transparent"
-            UploadedFiles="{Binding UploadedFiles}">
-            <Border
-                Width="320"
-                Height="240"
-                AllowDrop="True"
-                BorderThickness="1,1,1,1"
-                CornerRadius="5">
-                <Border.BorderBrush>
-                    <DrawingBrush
-                        TileMode="Tile"
-                        Viewport="0,0,8,8"
-                        ViewportUnits="Absolute">
-                        <DrawingBrush.Drawing>
-                            <DrawingGroup>
-                                <GeometryDrawing Brush="#505050">
-                                    <GeometryDrawing.Geometry>
-                                        <GeometryGroup>
-                                            <RectangleGeometry Rect="0,0,50,50" />
-                                            <RectangleGeometry Rect="50,50,50,50" />
-                                        </GeometryGroup>
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                            </DrawingGroup>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
-                </Border.BorderBrush>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
 
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <StackPanel>
-                        <Viewbox
-                            Width="48"
-                            Height="48"
-                            Opacity="0.8">
-                            <Path Data="M7 40q-1.15 0-2.075-.925Q4 38.15 4 37V11q0-1.15.925-2.075Q5.85 8 7 8h14l3 3h17q1.15 0 2.075.925Q44 12.85 44 14v23q0 1.15-.925 2.075Q42.15 40 41 40Zm25-3h9V14h-9v4.6h4.6v4.6H32v4.6h4.6v4.6H32ZM7 37h20.4v-4.6H32v-4.6h-4.6v-4.6H32v-4.6h-4.6V14h-4.65l-3-3H7v26Zm0-23v-3 26-23Z" Fill="White" />
-                        </Viewbox>
+        <ScrollViewer>
+            <StackPanel MinHeight="320" ScrollViewer.VerticalScrollBarVisibility="Auto">
 
-                        <TextBlock
-                            Margin="10"
-                            FontSize="14"
-                            Opacity="0.8"
-                            Text="Drag your acrhived instance to start upload"
-                            TextWrapping="WrapWithOverflow" />
+                <TextBlock
+                    Margin="0,0,0,0"
+                    FontSize="20"
+                    Text="Upload your Instance" />
 
-                        <Button
-                            Width="100"
-                            Height="30"
-                            Margin="0,10,0,0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Command="{Binding ImportCommand}"
-                            Content="Browse files"
-                            Style="{StaticResource DefaultBrandColorButton}" />
-                    </StackPanel>
-                </Grid>
-            </Border>
-        </controls:DragDropBoard>
+                <TextBlock
+                    Margin="0,5,0,20"
+                    FontSize="14"
+                    Opacity="0.8"
+                    Text=".zip files allowed" />
 
-        <Button
-            Width="80"
-            Height="30"
-            Margin="0,0,0,0"
-            HorizontalAlignment="Right"
-            Command="{Binding FactoryGeneralVM.CloseModalWindow}"
-            Content="Cancel"
-            FontSize="16"
-            FontWeight="Normal"
-            Style="{StaticResource DefaultCloseButton}" />
+                <controls:DragDropBoard
+                    Width="320"
+                    AllowDrop="True"
+                    Background="Transparent"
+                    UploadedFiles="{Binding UploadedFiles}">
+                    <Border
+                        Width="320"
+                        Height="200"
+                        AllowDrop="True"
+                        BorderThickness="1,1,1,1"
+                        CornerRadius="5">
+                        <Border.BorderBrush>
+                            <DrawingBrush
+                                TileMode="Tile"
+                                Viewport="0,0,8,8"
+                                ViewportUnits="Absolute">
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <GeometryDrawing Brush="#505050">
+                                            <GeometryDrawing.Geometry>
+                                                <GeometryGroup>
+                                                    <RectangleGeometry Rect="0,0,50,50" />
+                                                    <RectangleGeometry Rect="50,50,50,50" />
+                                                </GeometryGroup>
+                                            </GeometryDrawing.Geometry>
+                                        </GeometryDrawing>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Border.BorderBrush>
 
-        <!--<Border
-            Margin="10"
-            BorderBrush="#505050"
-            BorderThickness="0,1,0,0">
-            <StackPanel>
-                <Border
-                    Padding="5"
-                    BorderBrush="#808080"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                    <StackPanel Orientation="Horizontal">
-                        <Viewbox Width="32" Height="32">
-                            <Path
-                                Data="M17.8 42H9q-1.2 0-2.1-.9Q6 40.2 6 39v-8.8q2.2-.25 3.775-1.725Q11.35 27 11.35 24.85t-1.575-3.625Q8.2 19.75 6 19.5v-8.8q0-1.2.9-2.1.9-.9 2.1-.9h8.85q.55-2 1.975-3.35T23.25 3q2 0 3.425 1.35Q28.1 5.7 28.65 7.7h8.65q1.2 0 2.1.9.9.9.9 2.1v8.65q2 .55 3.275 2.075 1.275 1.525 1.275 3.525t-1.275 3.35Q42.3 29.65 40.3 30.2V39q0 1.2-.9 2.1-.9.9-2.1.9h-8.8q-.25-2.4-1.775-3.875T23.15 36.65q-2.05 0-3.575 1.475Q18.05 39.6 17.8 42ZM9 39h6.5q1.25-3.05 3.5-4.2 2.25-1.15 4.15-1.15 1.9 0 4.15 1.15 2.25 1.15 3.5 4.2h6.5V27.25h2.25q1 0 1.65-.65.65-.65.65-1.65 0-1-.65-1.65-.65-.65-1.65-.65H37.3V10.7H25.55V8.3q0-1-.65-1.65Q24.25 6 23.25 6q-1 0-1.65.65-.65.65-.65 1.65v2.4H9v6.5q2.4.9 3.875 3t1.475 4.65q0 2.55-1.475 4.65Q11.4 31.6 9 32.5Zm16.45-16.5Z"
-                                Fill="{DynamicResource BrandSolidColorBrush}"
-                                Opacity="1"
-                                Stretch="Fill" />
-                        </Viewbox>
-                        <StackPanel Orientation="Vertical">
-                            <Grid HorizontalAlignment="Left">
-                                <StackPanel>
-                                    <TextBlock
-                                        FontSize="14"
-                                        FontWeight="Normal"
-                                        Text="Instance Name" />
-                                    <TextBlock
-                                        HorizontalAlignment="Left"
-                                        FontSize="12"
-                                        Opacity="0.8"
-                                        Text="Complited" />
-                                </StackPanel>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel>
+                                <Viewbox
+                                    Width="48"
+                                    Height="48"
+                                    Opacity="0.8">
+                                    <Path Data="M7 40q-1.15 0-2.075-.925Q4 38.15 4 37V11q0-1.15.925-2.075Q5.85 8 7 8h14l3 3h17q1.15 0 2.075.925Q44 12.85 44 14v23q0 1.15-.925 2.075Q42.15 40 41 40Zm25-3h9V14h-9v4.6h4.6v4.6H32v4.6h4.6v4.6H32ZM7 37h20.4v-4.6H32v-4.6h-4.6v-4.6H32v-4.6h-4.6V14h-4.65l-3-3H7v26Zm0-23v-3 26-23Z" Fill="White" />
+                                </Viewbox>
 
-                                <StackPanel />
-                            </Grid>
+                                <TextBlock
+                                    Margin="10"
+                                    FontSize="14"
+                                    Opacity="0.8"
+                                    Text="Drag your acrhived instance to start upload"
+                                    TextWrapping="WrapWithOverflow" />
 
-                            <ProgressBar
-                                Width="240"
-                                Height="3"
-                                Margin="5,5,0,0"
-                                Value="20" />
-                        </StackPanel>
+                                <Button
+                                    Width="100"
+                                    Height="30"
+                                    Margin="0,10,0,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding ImportCommand}"
+                                    Content="Browse files"
+                                    Style="{StaticResource DefaultBrandColorButton}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </controls:DragDropBoard>
 
-                        <StackPanel Margin="-30,-5,0,0" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="20%" FontSize="10"/>
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        Text="Вы ещё ничего не загрузили)"
+                        Visibility="Collapsed" />
 
-                            <Ellipse
-                                Width="12"
-                                Height="12"
-                                Fill="Green" />
-                        </StackPanel>
-                    </StackPanel>
+                    <Border
+                        Height="30"
+                        Width="250"
+                        Background="#505050"
+                        CornerRadius="5">
+                        <TextBox />
+                    </Border>
+                    <Border Margin="0,10,0,0"
+                        Height="30"
+                        Width="250"
+                        Background="#505050"
+                        CornerRadius="5" />
+                    <Border Margin="0,10,0,0"
+                        Height="30"
+                        Width="250"
+                        Background="#505050"
+                        CornerRadius="5" />
+                </StackPanel>
+
+                <Border>
+                    <TextBlock />
                 </Border>
             </StackPanel>
-        </Border>-->
-    </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" BorderThickness="0,1,0,0">
+
+            <Button
+                Width="80"
+                Height="30"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{Binding FactoryGeneralVM.CloseModalWindow}"
+                Content="Cancel"
+                FontSize="16"
+                FontWeight="Normal"
+                IsTabStop="False"
+                Style="{StaticResource DefaultCloseButton}" />
+        </Border>
+    </Grid>
 </UserControl>
