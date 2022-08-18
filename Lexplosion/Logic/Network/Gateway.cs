@@ -123,10 +123,10 @@ namespace Lexplosion.Logic.Network
 
                 InformingThread = new Thread(delegate ()
                 {
-                    List<List<string>> input = new List<List<string>>
+                    Dictionary<string, string> input = new Dictionary<string, string>
                     {
-                        new List<string>() { "UUID", UUID },
-                        new List<string>() { "sessionToken", sessionToken }
+                        ["UUID"] = UUID,
+                        ["sessionToken"] = sessionToken
                     };
 
                     try
@@ -195,10 +195,10 @@ namespace Lexplosion.Logic.Network
             {
                 if (Utils.ContainsUdpPort(pid, 4445))
                 {
-                    List<List<string>> input = new List<List<string>>
+                    Dictionary<string, string> input = new Dictionary<string, string>
                     {
-                        new List<string>() { "UUID", UUID },
-                        new List<string>() { "sessionToken", sessionToken }
+                        ["UUID"] = UUID,
+                        ["sessionToken"] = sessionToken
                     };
 
                     string data = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getGameServers", input);

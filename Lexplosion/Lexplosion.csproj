@@ -554,10 +554,6 @@
     <None Include="DLL\Compression.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\images\icons\ely.png" />
-    <Resource Include="Assets\images\icons\mojang.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\images\icons\non_image.png" />
   </ItemGroup>
   <ItemGroup>

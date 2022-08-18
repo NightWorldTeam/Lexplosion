@@ -112,10 +112,12 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
-                List<List<string>> data = new List<List<string>>() { };
-                data.Add(new List<string>() { "str", str });
-                data.Add(new List<string>() { "str2", str2 });
-                data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
+                Dictionary<string, string> data = new Dictionary<string, string> 
+                {
+                    ["str"] = str,
+                    ["str2"] = str2,
+                    ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
+                };
 
                 try
                 {
@@ -178,10 +180,12 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
-                List<List<string>> data = new List<List<string>>() { };
-                data.Add(new List<string>() { "str", str });
-                data.Add(new List<string>() { "str2", str2 });
-                data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
+                Dictionary<string, string> data = new Dictionary<string, string> 
+                { 
+                    ["str"] = str,
+                    ["str2"] = str2,
+                    ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
+                };
 
                 //try
                 {

@@ -122,10 +122,12 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
-                List<List<string>> data = new List<List<string>>() { };
-                data.Add(new List<string>() { "str", str });
-                data.Add(new List<string>() { "str2", str2 });
-                data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
+                Dictionary<string, string> data = new Dictionary<string, string>() 
+                { 
+                    ["str"] = str,
+                    ["str2"] = str2,
+                    ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
+                };
 
                 try
                 {
@@ -214,12 +216,14 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
-                List<List<string>> data = new List<List<string>>() { };
-                data.Add(new List<string>() { "login", login });
-                data.Add(new List<string>() { "password", Convert.ToBase64String(AesСryp.Encode(Convert.ToBase64String(Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(password)) + ":" + str)) + ":" + salt, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)))) });
-                data.Add(new List<string>() { "str", str });
-                data.Add(new List<string>() { "str2", str2 });
-                data.Add(new List<string>() { "code", Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord))) });
+                Dictionary<string, string> data = new Dictionary<string, string>() 
+                {
+                    ["login"] = login,
+                    ["password"] = Convert.ToBase64String(AesСryp.Encode(Convert.ToBase64String(Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(password)) + ":" + str)) + ":" + salt, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)))),
+                    ["str"] = str,
+                    ["str2"] = str2,
+                    ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
+                };
 
                 AuthResult response = new AuthResult();
                 string answer;
@@ -274,7 +278,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static string HttpPost(string url, List<List<string>> data = null) // TODO: List<string> заменить на массив
+        public static string HttpPost(string url, Dictionary<string, string> data = null) // TODO: List<string> заменить на массив
         {
             try
             {
@@ -285,9 +289,9 @@ namespace Lexplosion.Logic.Network
 
                 if (data != null)
                 {
-                    foreach (List<string> p in data)
+                    foreach (var value in data)
                     {
-                        dataS += WebUtility.UrlEncode(p[0]) + "=" + WebUtility.UrlEncode(p[1]) + "&";
+                        dataS += WebUtility.UrlEncode(value.Key) + "=" + WebUtility.UrlEncode(value.Value) + "&";
                     }
                 }
 
@@ -314,7 +318,6 @@ namespace Lexplosion.Logic.Network
                 }
 
                 return line;
-
             }
             catch
             {
