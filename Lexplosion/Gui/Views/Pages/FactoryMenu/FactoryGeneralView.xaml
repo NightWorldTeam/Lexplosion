@@ -174,7 +174,7 @@
             </Grid>
         </TabItem>
         <TabItem Header="Импорт">
-            <ContentControl Content="{Binding ImportVM}" />
+            <ContentControl Content="{Binding ImportVM}" Margin="0"/>
         </TabItem>
     </TabControl>
 </UserControl>

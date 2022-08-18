@@ -10,7 +10,7 @@
     d:DesignWidth="360"
     mc:Ignorable="d">
 
-    <Grid Margin="20,20,0,0">
+    <Grid Width="360">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -18,7 +18,10 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer>
-            <StackPanel MinHeight="320" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <StackPanel
+                MinHeight="320"
+                Margin="20"
+                ScrollViewer.VerticalScrollBarVisibility="Auto">
 
                 <TextBlock
                     Margin="0,0,0,0"
@@ -32,12 +35,13 @@
                     Text=".zip files allowed" />
 
                 <controls:DragDropBoard
-                    Width="320"
+                    Width="310"
+                    Height="200"
                     AllowDrop="True"
                     Background="Transparent"
                     UploadedFiles="{Binding UploadedFiles}">
                     <Border
-                        Width="320"
+                        Width="310"
                         Height="200"
                         AllowDrop="True"
                         BorderThickness="1,1,1,1"
@@ -99,27 +103,57 @@
                         Visibility="Collapsed" />
 
                     <Border
-                        Height="30"
-                        Width="250"
-                        Background="#505050"
+                        Width="280"
+                        Height="50"
+                        Background="#303030"
                         CornerRadius="5">
-                        <TextBox />
-                    </Border>
-                    <Border Margin="0,10,0,0"
-                        Height="30"
-                        Width="250"
-                        Background="#505050"
-                        CornerRadius="5" />
-                    <Border Margin="0,10,0,0"
-                        Height="30"
-                        Width="250"
-                        Background="#505050"
-                        CornerRadius="5" />
-                </StackPanel>
+                        <Grid>
 
-                <Border>
-                    <TextBlock />
-                </Border>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="210" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox Width="30" Height="30">
+                                <Path
+                                    Width="40"
+                                    Height="40                                       "
+                                    Data="M5 2.5H25C25.663 2.5 26.2989 2.76339 26.7678 3.23223C27.2366 3.70107 27.5 4.33696 27.5 5V25C27.5 25.663 27.2366 26.2989 26.7678 26.7678C26.2989 27.2366 25.663 27.5 25 27.5H5C4.33696 27.5 3.70107 27.2366 3.23223 26.7678C2.76339 26.2989 2.5 25.663 2.5 25V5C2.5 4.33696 2.76339 3.70107 3.23223 3.23223C3.70107 2.76339 4.33696 2.5 5 2.5M7.5 7.5V12.5H12.5V15H10V22.5H12.5V20H17.5V22.5H20V15H17.5V12.5H22.5V7.5H17.5V12.5H12.5V7.5H7.5Z"
+                                    Fill="#00820D"
+                                    Stretch="Fill" />
+                            </Viewbox>
+
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="0,5,0,0"
+                                Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Foreground="White" Text="Headway" />
+                                    <Button
+                                        Width="20"
+                                        Height="20"
+                                        Margin="112,0,0,0"
+                                        HorizontalAlignment="Right"
+                                        Style="{StaticResource IconicButton}">
+                                        <Grid Width="20" Height="20">
+                                            <Viewbox>
+                                                <Path Stroke="#FFF" StrokeThickness="1" Fill="#FFF" Stretch="Fill" Data="m16.5 33.6 7.5-7.5 7.5 7.5 2.1-2.1-7.5-7.5 7.5-7.5-2.1-2.1-7.5 7.5-7.5-7.5-2.1 2.1 7.5 7.5-7.5 7.5ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z" />
+                                            </Viewbox>
+                                        </Grid>
+                                    </Button>
+                                </StackPanel>
+
+                                <ProgressBar
+                                    Width="200"
+                                    Height="5"
+                                    Margin="0,8,0,10"
+                                    Foreground="#167FFC"
+                                    IsIndeterminate="True"
+                                    Value="30" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
 

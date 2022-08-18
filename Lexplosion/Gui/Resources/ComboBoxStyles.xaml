@@ -102,7 +102,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                    <Border Name="Border" SnapsToDevicePixels="true">
+                    <Border
+                        Name="Border"
+                        Background="Transparent"
+                        SnapsToDevicePixels="true">
                         <ContentPresenter Margin="3" HorizontalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -219,7 +222,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                    <Border Name="Border" SnapsToDevicePixels="true">
+                    <Border
+                        Name="Border"
+                        Background="Transparent"
+                        SnapsToDevicePixels="true">
                         <ContentPresenter Margin="3" HorizontalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>

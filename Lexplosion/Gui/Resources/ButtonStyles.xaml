@@ -157,13 +157,7 @@
                         Background="{DynamicResource BrandSolidColorBrush}"
                         BorderThickness="0"
                         CornerRadius="5"
-                        SnapsToDevicePixels="True">
-                        <Border.Effect>
-                            <DropShadowEffect
-                                BlurRadius="4"
-                                ShadowDepth="1"
-                                Color="#2d8cfc" />
-                        </Border.Effect>
+                        SnapsToDevicePixels="False">
                         <ContentPresenter
                             Margin="2"
                             HorizontalAlignment="Center"
@@ -264,8 +258,6 @@
         BasedOn="{StaticResource Pattern}"
         TargetType="{x:Type Button}">
         <Setter Property="Focusable" Value="False" />
-        <Setter Property="MinHeight" Value="24" />
-        <Setter Property="MinWidth" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">

@@ -175,10 +175,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload(true);
-                            foreach (var de in downloadErrors)
-                            {
-                                MainViewModel.ShowToastMessage("Curseforge Id Error", de, Controls.ToastMessageState.Error);
-                            }
+                            if (downloadErrors != null || downloadErrors.Count > 0)
+                                foreach (var de in downloadErrors)
+                                {
+                                    MainViewModel.ShowToastMessage("Curseforge Id Error", de, Controls.ToastMessageState.Error);
+                                }
                         }
                         break;
                     case InstanceInit.ServerError:

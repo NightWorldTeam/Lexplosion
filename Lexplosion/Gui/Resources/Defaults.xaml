@@ -226,31 +226,34 @@
         </Setter>
     </Style>
 
-    <!--<Style TargetType="{x:Type ProgressBar}">
+    <Style TargetType="{x:Type ProgressBar}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ProgressBar}">
                     <Grid>
-                        <Grid x:Name="PART_Track" Background="{TemplateBinding Background}">
-                            <Border
-                                x:Name="PART_Indicator"
-                                Margin="0,-1,0,1"
-                                HorizontalAlignment="Left"
-                                Background="{TemplateBinding Foreground}"
-                                BorderBrush="{TemplateBinding Foreground}"
-                                BorderThickness="1"
-                                CornerRadius="2" />
+                        <Border
+                            x:Name="PART_Track"
+                            Background="#505050"
+                            CornerRadius="2" />
 
+                        <Border
+                            x:Name="PART_Indicator"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            Background="{TemplateBinding Foreground}"
+                            CornerRadius="2" />
+
+                        <Grid x:Name="Animation" ClipToBounds="True">
                             <Rectangle
                                 x:Name="PART_GlowRect"
                                 Width="100"
-                                Margin="0,0,0,0"
+                                Margin="-100,0,0,0"
                                 HorizontalAlignment="Left"
-                                Fill="{TemplateBinding Foreground}" />
+                                Fill="Transparent" />
                         </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>-->
+    </Style>
 </ResourceDictionary>

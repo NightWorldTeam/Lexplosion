@@ -245,6 +245,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private void InstancesPageLoading()
         {
+            IsLoaded = false;
+
             Lexplosion.Run.TaskRun(delegate ()
             {
                 var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1, _addonsType, -1, SearchBoxVM.SearchTextComfirmed);
