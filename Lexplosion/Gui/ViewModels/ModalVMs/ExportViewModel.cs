@@ -162,7 +162,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             saveFileDialog1.Filter = "zip files (*.zip)|*.zip";
             saveFileDialog1.FilterIndex = 2;
             saveFileDialog1.RestoreDirectory = true;
-            saveFileDialog1.FileName = InstanceName + ".zip";
+            saveFileDialog1.FileName = InstanceClient.LocalId + ".zip";
 
             var result = saveFileDialog1.ShowDialog();
 
@@ -173,7 +173,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                     var result = InstanceClient.Export(UnitsList, saveFileDialog1.FileName, InstanceName);
                     if (result == ExportResult.Successful)
                     {
-                        MainViewModel.ShowToastMessage("Экспорт сборки", String.Format("Экспорт сборки {0} был успешно завершён. Открыть папку с файлом?", InstanceName), ToastMessageState.Notification);
+                        MainViewModel.ShowToastMessage("Экспорт клиента", String.Format("Экспорт сборки {0} был успешно завершён. Открыть папку с файлом?", InstanceName), ToastMessageState.Notification);
                     }
                     else
                     {

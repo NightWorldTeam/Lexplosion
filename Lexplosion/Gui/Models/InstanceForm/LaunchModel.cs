@@ -35,12 +35,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
             if (successful)
             {
                 MainViewModel.ShowToastMessage(
-                    "Launch Successfully Completed",
-                    "Название: " + id
+                    "Игра запущена! Ура!",
+                    "Название: " + _formModel.InstanceClient.Name
                 );
             }
             else 
             {
+                MainViewModel.ShowToastMessage(
+                    "Не удалось запустить игру.",
+                    "Название: " + _formModel.InstanceClient.Name,
+                    Controls.ToastMessageState.Error
+                );
             }
             _formModel.OverviewField = _formModel.InstanceClient.Summary;
         }

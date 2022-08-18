@@ -140,7 +140,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 return _createInstance ?? (new RelayCommand(obj =>
                 {
                     var instanceClient = InstanceClient.CreateClient(
-                        Model.Name ?? "CustomInstance", InstanceSource.Local, SelectedVersion, Model.ModloaderType, Model.LogoPath, SelectedModloaderVersion);
+                        Model.Name ?? "New Client", InstanceSource.Local, SelectedVersion, Model.ModloaderType, Model.LogoPath, SelectedModloaderVersion);
 
                     _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
                     _mainViewModel.ModalWindowVM.IsModalOpen = false;

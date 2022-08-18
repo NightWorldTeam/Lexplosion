@@ -50,6 +50,14 @@ namespace Lexplosion.Logic.Management.Instances
 
         #region info
 
+        public string LocalId
+        {
+            get
+            {
+                return _localId;
+            }
+        }
+
         private string _name;
         public string Name
         {
@@ -855,7 +863,6 @@ namespace Lexplosion.Logic.Management.Instances
         /// <returns>Результат экспорта.</returns>
         public ExportResult Export(Dictionary<string, PathLevel> exportList, string exportFile, string name)
         {
-            //exportFile += "/" + _localId + ".zip";
             string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
 
             void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList)
