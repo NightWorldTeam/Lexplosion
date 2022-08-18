@@ -26,7 +26,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _formModel.DownloadModel.IsDownloadInProgress = true;
                 _formModel.DownloadModel.IsIndeterminate = true;
                 _formModel.InstanceClient.Run();
-                _mainViewModel.IsInstanceRunning = true;
                 _formModel.UpperButton.ChangeFuncClose();
             });
         }

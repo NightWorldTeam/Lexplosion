@@ -77,8 +77,9 @@
         </ScrollViewer>
 
         <controls:LoadingBoard
-            Background="Black"
+            BackgroundColor="#18191b"
+            BackgroundOpacity="0.9"
             IsLoadingFinished="{Binding IsLoaded}"
-            Opacity="0.9" />
+            Placeholder="Идёт загрузка данных с curseforge.com..." />
     </Grid>
 </UserControl>

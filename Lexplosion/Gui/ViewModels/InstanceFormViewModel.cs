@@ -75,6 +75,7 @@ namespace Lexplosion.Gui.ViewModels
                         {
                             if (!MainVM.IsInstanceRunning)
                             {
+                                MainVM.IsInstanceRunning = true;
                                 Model.LaunchModel.LaunchInstance();
                             }
                             break;

@@ -60,6 +60,7 @@
                                     CommandParameter="{Binding CurrentAddon}"
                                     Style="{StaticResource IconicButton}">
                                     <Path Data="M 12 7 C 12.1989 7 12.3897 7.07902 12.5303 7.21967 C 12.671 7.36032 12.75 7.55109 12.75 7.75 V 11.25 H 16.25 C 16.4489 11.25 16.6397 11.329 16.7803 11.4697 C 16.921 11.6103 17 11.8011 17 12 C 17 12.1989 16.921 12.3897 16.7803 12.5303 C 16.6397 12.671 16.4489 12.75 16.25 12.75 H 12.75 V 16.25 C 12.75 16.4489 12.671 16.6397 12.5303 16.7803 C 12.3897 16.921 12.1989 17 12 17 C 11.8011 17 11.6103 16.921 11.4697 16.7803 C 11.329 16.6397 11.25 16.4489 11.25 16.25 V 12.75 H 7.75 C 7.55109 12.75 7.36032 12.671 7.21967 12.5303 C 7.07902 12.3897 7 12.1989 7 12 C 7 11.8011 7.07902 11.6103 7.21967 11.4697 C 7.36032 11.329 7.55109 11.25 7.75 11.25 H 11.25 V 7.75 C 11.25 7.55109 11.329 7.36032 11.4697 7.21967 C 11.6103 7.07902 11.8011 7 12 7 Z M 3 6.25 C 3 5.38805 3.34241 4.5614 3.9519 3.9519 C 4.5614 3.34241 5.38805 3 6.25 3 H 17.75 C 18.612 3 19.4386 3.34241 20.0481 3.9519 C 20.6576 4.5614 21 5.38805 21 6.25 V 17.75 C 21 18.612 20.6576 19.4386 20.0481 20.0481 C 19.4386 20.6576 18.612 21 17.75 21 H 6.25 C 5.38805 21 4.5614 20.6576 3.9519 20.0481 C 3.34241 19.4386 3 18.612 3 17.75 V 6.25 Z M 6.25 4.5 C 5.78587 4.5 5.34075 4.68437 5.01256 5.01256 C 4.68437 5.34075 4.5 5.78587 4.5 6.25 V 17.75 C 4.5 18.716 5.284 19.5 6.25 19.5 H 17.75 C 18.2141 19.5 18.6592 19.3156 18.9874 18.9874 C 19.3156 18.6592 19.5 18.2141 19.5 17.75 V 6.25 C 19.5 5.78587 19.3156 5.34075 18.9874 5.01256 C 18.6592 4.68437 18.2141 4.5 17.75 4.5 H 6.25 Z" Fill="White" />
+
                                     <Button.ToolTip>
                                         <ToolTip
                                             Content="Добавить модификацию"
@@ -67,6 +68,7 @@
                                             Style="{StaticResource CustomTipTool}"
                                             VerticalOffset="-20" />
                                     </Button.ToolTip>
+
                                 </Button>
 
                                 <!--  Open Forlder  -->
@@ -84,6 +86,7 @@
                                         Stretch="Fill">
                                         <Path Data="M7.05 40q-1.2 0-2.1-.925-.9-.925-.9-2.075V11q0-1.15.9-2.075Q5.85 8 7.05 8h14l3 3h17q1.15 0 2.075.925.925.925.925 2.075v23q0 1.15-.925 2.075Q42.2 40 41.05 40Zm0-29v26h34V14H22.8l-3-3H7.05Zm0 0v26Z" Fill="White" />
                                     </Viewbox>
+
                                     <Button.ToolTip>
                                         <ToolTip
                                             Content="Открыть папку"
@@ -91,6 +94,7 @@
                                             Style="{StaticResource CustomTipTool}"
                                             VerticalOffset="-20" />
                                     </Button.ToolTip>
+
                                 </Button>
                             </StackPanel>
                         </Grid>
@@ -108,7 +112,7 @@
                     <ColumnDefinition Width="256" />
                     <ColumnDefinition Width="130" />
                     <ColumnDefinition Width="120" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="115" />
                 </Grid.ColumnDefinitions>
 
                 <!--  Logo  -->
@@ -117,9 +121,11 @@
                     Width="40"
                     Height="40"
                     CornerRadius="5">
+
                     <Border.Background>
                         <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
                     </Border.Background>
+
                 </Border>
 
                 <!--  Name  -->
@@ -159,12 +165,15 @@
 
                 <StackPanel
                     Grid.Column="4"
+                    HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
+
                     <ToggleButton
                         Margin="5,0,0,0"
                         IsChecked="{Binding IsEnable}"
                         Style="{StaticResource EllipseToggleButton}">
+
                         <ToggleButton.ToolTip>
                             <ToolTip
                                 Content="Запускать модификацию"
@@ -172,13 +181,15 @@
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
                         </ToggleButton.ToolTip>
+
                     </ToggleButton>
+
                     <Button
                         Margin="5,0,0,0"
                         Command="{Binding DataContext.CurseforgeCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                        CommandParameter="{Binding Curseforge}"
+                        CommandParameter="{Binding WebsiteUrl}"
                         Style="{StaticResource IconicButton}"
-                        Visibility="{Binding IsCurseforgeSource, Converter={StaticResource ConvertBoolToVisibility}}">
+                        Visibility="{Binding IsUrlExist, Converter={StaticResource ConvertBoolToVisibility}}">
                         <Canvas>
                             <Path
                                 Canvas.Left="-12"
@@ -188,6 +199,7 @@
                                 Data="M 6.307 0.581055 L 6.698 2.25605 H 0 C 0 2.25605 0.112 2.75805 0.167 2.81405 C 0.335 3.09305 0.502 3.42805 0.726 3.65105 C 1.786 4.87905 3.628 5.38105 5.135 5.66005 C 6.195 5.88405 7.256 5.94005 8.316 5.99505 L 9.544 9.28806 H 10.214 L 10.605 10.3491 H 10.047 L 9.098 13.4191 H 18.419 L 17.47 10.3491 H 16.912 L 17.302 9.28806 H 17.972 C 17.972 9.28806 18.53 5.88405 20.26 4.32105 C 21.935 2.75805 24 2.53505 24 2.53505 V 0.581055 H 6.307 Z M 15.684 9.00905 C 15.237 9.28805 14.735 9.28805 14.4 9.51205 C 14.177 9.62305 14.065 9.95806 14.065 9.95806 C 13.842 9.45606 13.563 9.28806 13.228 9.17706 C 12.893 9.06506 12.279 9.12106 11.442 8.39506 C 10.884 7.89306 10.828 7.22305 10.884 6.88805 V 6.72105 C 10.884 6.66505 10.884 6.60906 10.94 6.55306 C 11.051 6.21906 11.33 5.88405 11.888 5.66005 C 11.888 5.66005 11.498 6.21906 11.888 6.77706 C 12.112 7.11206 12.558 7.27905 12.949 7.05605 C 13.116 6.94405 13.228 6.72106 13.284 6.55306 C 13.395 6.16306 13.395 5.77205 13.06 5.49305 C 12.558 5.04705 12.447 4.43305 12.781 4.04205 C 12.781 4.04205 12.893 4.54405 13.395 4.48805 C 13.73 4.48805 13.73 4.37706 13.619 4.26506 C 13.563 4.09806 12.837 3.03705 13.898 2.25605 C 13.898 2.25605 14.567 1.80905 15.349 1.86505 C 14.902 1.92105 14.4 2.20005 14.233 2.64705 V 2.70205 C 14.065 3.14905 14.177 3.65105 14.512 4.09805 C 14.735 4.43305 15.014 4.71205 15.126 5.15805 C 14.958 5.10205 14.847 5.15806 14.735 5.27006 C 14.6755 5.33749 14.634 5.41888 14.6144 5.50665 C 14.5949 5.59442 14.5978 5.68573 14.623 5.77206 C 14.679 5.88406 14.791 5.99505 14.902 5.99505 H 15.07 C 15.237 5.94005 15.349 5.71605 15.293 5.54905 C 15.405 5.66005 15.46 5.94006 15.405 6.10706 C 15.405 6.27406 15.293 6.44206 15.237 6.55306 C 15.181 6.66506 15.07 6.77705 15.014 6.88805 C 14.958 7.00005 14.902 7.11205 14.902 7.22305 C 14.902 7.33505 14.902 7.50206 14.958 7.61406 C 15.181 7.94906 15.628 7.61405 15.74 7.33505 C 15.907 7.00005 15.851 6.60906 15.628 6.27406 C 15.628 6.27406 16.019 6.49806 16.298 7.27906 C 16.521 7.94906 16.13 8.73005 15.684 9.00905 V 9.00905 Z"
                                 Fill="White" />
                         </Canvas>
+
                         <Button.ToolTip>
                             <ToolTip
                                 Content="Страница на Curseforge"
@@ -195,7 +207,9 @@
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
                         </Button.ToolTip>
+
                     </Button>
+
                     <Button
                         Margin="5,0,0,0"
                         Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
@@ -218,6 +232,7 @@
                                 Data="M 3.5625 3.59038 L 2.1875 2.21538 V 0.4375 H 0.8125 V 2.78462 L 2.59038 4.5625 L 3.5625 3.59038 Z"
                                 Fill="White" />
                         </Canvas>
+
                         <Button.ToolTip>
                             <ToolTip
                                 Content="Обновить"
@@ -225,12 +240,15 @@
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
                         </Button.ToolTip>
+
                     </Button>
+
                     <Button
                         Margin="5,0,0,0"
                         Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                         CommandParameter="{Binding}"
                         Style="{StaticResource IconicButton}">
+
                         <Canvas>
                             <Path
                                 Canvas.Left="-10"
@@ -247,6 +265,7 @@
                                 Data="M 1.25 0.25 C 1.44891 0.25 1.63968 0.329018 1.78033 0.46967 C 1.92098 0.610322 2 0.801088 2 1 V 10 C 2 10.1989 1.92098 10.3897 1.78033 10.5303 C 1.63968 10.671 1.44891 10.75 1.25 10.75 C 1.05109 10.75 0.860322 10.671 0.71967 10.5303 C 0.579018 10.3897 0.5 10.1989 0.5 10 V 1 C 0.5 0.801088 0.579018 0.610322 0.71967 0.46967 C 0.860322 0.329018 1.05109 0.25 1.25 0.25 V 0.25 Z M 5 0.25 C 5.19891 0.25 5.38968 0.329018 5.53033 0.46967 C 5.67098 0.610322 5.75 0.801088 5.75 1 V 10 C 5.75 10.1989 5.67098 10.3897 5.53033 10.5303 C 5.38968 10.671 5.19891 10.75 5 10.75 C 4.80109 10.75 4.61032 10.671 4.46967 10.5303 C 4.32902 10.3897 4.25 10.1989 4.25 10 V 1 C 4.25 0.801088 4.32902 0.610322 4.46967 0.46967 C 4.61032 0.329018 4.80109 0.25 5 0.25 V 0.25 Z M 9.5 1 C 9.5 0.801088 9.42098 0.610322 9.28033 0.46967 C 9.13968 0.329018 8.94891 0.25 8.75 0.25 C 8.55109 0.25 8.36032 0.329018 8.21967 0.46967 C 8.07902 0.610322 8 0.801088 8 1 V 10 C 8 10.1989 8.07902 10.3897 8.21967 10.5303 C 8.36032 10.671 8.55109 10.75 8.75 10.75 C 8.94891 10.75 9.13968 10.671 9.28033 10.5303 C 9.42098 10.3897 9.5 10.1989 9.5 10 V 1 Z"
                                 Fill="White" />
                         </Canvas>
+
                         <Button.ToolTip>
                             <ToolTip
                                 Content="Удалить"
@@ -254,6 +273,7 @@
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
                         </Button.ToolTip>
+
                     </Button>
                 </StackPanel>
             </Grid>
@@ -287,6 +307,7 @@
                     BorderBrush="Transparent"
                     SelectedIndex="{Binding SelectedAddonIndex, UpdateSourceTrigger=PropertyChanged}"
                     TabStripPlacement="Top">
+
                     <TabControl.Resources>
                         <Style TargetType="{x:Type TabPanel}">
                             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -321,6 +342,10 @@
             </StackPanel>
         </ScrollViewer>
 
-        <controls:LoadingBoard Background="Black" IsLoadingFinished="{Binding IsLoaded}" />
+        <controls:LoadingBoard
+            BackgroundColor="#18191b"
+            BackgroundOpacity="0.8"
+            IsLoadingFinished="{Binding IsLoaded}"
+            Placeholder="Идет загрузка дополнений сборки..." />
     </Grid>
 </UserControl>
