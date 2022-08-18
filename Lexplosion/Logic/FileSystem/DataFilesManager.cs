@@ -59,8 +59,8 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="password">Сюда будет помещен пароль.</param>
         /// <param name="accountType">Сюда передавать тип аккаунта, который нужно получить. Передавать null, если нужно получить использованный в последний раз аккаунт.</param>
         /// <returns>
-        /// Возвращает тип полученного аккаунта, он может отличаться от параметра accountType, ведь аккаунта с типом accountType может не быть. 
-        /// И если accountType будет null, то будет возвращен тип аккаунта, использованного в последний раз.
+        /// Возвращает тип полученного аккаунта, он может отличаться от параметра accountType, 
+        /// ведь если accountType будет null, то будет возвращен тип аккаунта, использованного в последний раз.
         /// </returns>
         public static AccountType GetAccount(out string login, out string password, AccountType? accountType)
         {
@@ -69,36 +69,29 @@ namespace Lexplosion.Logic.FileSystem
             {
                 AccountType selectedAccount = accountType ?? data.SelectedProfile;
 
-                AcccountsFormat.Profile profile;
                 if (data.Profiles.ContainsKey(selectedAccount))
                 {
-                    profile = data.Profiles[selectedAccount];
-                }
-                else
-                {
-                    var firstElem = data.Profiles.First();
-                    profile = firstElem.Value;
-                    selectedAccount = firstElem.Key;
-                }
+                    AcccountsFormat.Profile profile = data.Profiles[selectedAccount];
 
-                if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.Password))
-                {
-                    login = profile.Login;
-                    password = AesСryp.Decode(Convert.FromBase64String(profile.Password), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
-                }
-                else
-                {
-                    login = null;
-                    password = null;
-                }
+                    if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.Password))
+                    {
+                        login = profile.Login;
+                        password = AesСryp.Decode(Convert.FromBase64String(profile.Password), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                    }
+                    else
+                    {
+                        login = null;
+                        password = null;
+                    }
 
-                return selectedAccount;
+                    return selectedAccount;
+                }
             }
 
             login = null;
             password = null;
 
-            return AccountType.NoAuth;
+            return accountType ?? AccountType.NightWorld;
         }
 
         public static void SaveSettings(Settings data, string instanceId = "")
