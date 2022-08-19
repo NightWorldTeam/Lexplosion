@@ -166,40 +166,7 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                var data = GetApiData<CurseforgeInstanceInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
-
-                if (data.latestFiles != null && data.latestFiles.Count > 0)
-                {
-                    long maxId = data.latestFiles[0].id;
-                    foreach (var value in data.latestFiles)
-                    {
-                        if (value.id > maxId || data.ModloaderType == ModloaderType.None)
-                        {
-                            if (value.gameVersion != null)
-                            {
-                                if (value.gameVersion.Contains("Forge"))
-                                {
-                                    data.ModloaderType = ModloaderType.Forge;
-                                }
-                                else if (value.gameVersion.Contains("Fabric"))
-                                {
-                                    data.ModloaderType = ModloaderType.Fabric;
-                                }
-                                else if (value.gameVersion.Contains("Quilt"))
-                                {
-                                    data.ModloaderType = ModloaderType.Quilt;
-                                }
-                            }
-
-                            if (value.id > maxId)
-                            {
-                                maxId = value.id;
-                            }
-                        }
-                    }
-                }
-
-                return data;
+                return GetApiData<CurseforgeInstanceInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
             }
             catch
             {

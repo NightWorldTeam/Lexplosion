@@ -5,7 +5,6 @@ using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Instances
 {

@@ -23,7 +23,7 @@
 
     <Grid x:Name="MainGrid">
         <Grid.Background>
-            <SolidColorBrush Opacity="0.55" Color="#121212" />
+            <SolidColorBrush Opacity="0.70" Color="#121212" />
         </Grid.Background>
 
         <ListBox

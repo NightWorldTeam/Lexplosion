@@ -78,13 +78,55 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public class LatestFile
         {
             public long id;
-            public List<string> gameVersion;
+            public List<string> gameVersions;
         }
 
-        public List<LatestFile> latestFiles;
+        public List<LatestFile> latestFiles = null;
         public List<GameVersion> latestFilesIndexes;
         public List<Screenshot> screenshots;
-        public ModloaderType ModloaderType;
+
+        /// <summary>
+        /// Эта хуйня возвращает тип модлоадера. При каждом вызове тип вычисляется заново, поэтому лучше этот геттер несколько раз не вызывать.
+        /// </summary>
+        public ModloaderType ModloaderType
+        {
+            get
+            {
+                ModloaderType modloaderType = ModloaderType.None;
+                if (latestFiles != null && latestFiles.Count > 0)
+                {
+                    long maxId = latestFiles[0].id;
+                    foreach (var value in latestFiles)
+                    {
+                        if (value.id > maxId || modloaderType == ModloaderType.None)
+                        {
+                            if (value.gameVersions != null)
+                            {
+                                if (value.gameVersions.Contains("Forge"))
+                                {
+                                    modloaderType = ModloaderType.Forge;
+                                }
+                                else if (value.gameVersions.Contains("Fabric"))
+                                {
+                                    modloaderType = ModloaderType.Fabric;
+                                }
+                                else if (value.gameVersions.Contains("Quilt"))
+                                {
+                                    modloaderType = ModloaderType.Quilt;
+                                }
+                            }
+
+                            if (value.id > maxId)
+                            {
+                                maxId = value.id;
+                            }
+                        }
+                    }
+                }
+
+                return modloaderType;
+            }
+        }
     }
 
     /// <summary>
