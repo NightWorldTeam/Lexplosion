@@ -182,9 +182,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             Lexplosion.Run.TaskRun(() =>
             {
                 ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(gameVersion, modloader));
-                if (CurrentInstanceClient.GetBaseData.Modloader != ModloaderType.None && false)
+                if (CurrentInstanceClient.GetBaseData.Modloader != ModloaderType.None)
                 {
-                    ModloaderVersion = ModloaderVersions[ModloaderVersions.IndexOf(CurrentInstanceClient.GetBaseData.ModloaderVersion)];
+                    ModloaderVersion = CurrentInstanceClient.GetBaseData.ModloaderVersion;
                 }
                 else 
                 {

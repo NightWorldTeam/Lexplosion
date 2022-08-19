@@ -266,7 +266,7 @@ namespace Lexplosion.Logic.Management.Instances
                     Description = Description,
                     Name = _name,
                     Summary = _summary,
-                    ModloaderVersion = manifest?.version?.gameVersion ?? "",
+                    ModloaderVersion = manifest?.version?.modloaderVersion ?? "",
                     Modloader = manifest?.version.modloaderType ?? ModloaderType.None
                 };
             }
