@@ -53,6 +53,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         #endregion commands
 
+
         /// <summary>
         /// Список хранит в себе загруженные директории [string].
         /// </summary>

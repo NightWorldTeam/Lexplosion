@@ -90,7 +90,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 Stage = 0,
                 StagesCount = 0
             };
-            LaunchModel = new LaunchModel(this, mainViewModel);
+            LaunchModel = new LaunchModel(mainViewModel, this);
 
             if (InstanceClient.IsInstalled && InstanceClient.InLibrary)
             {

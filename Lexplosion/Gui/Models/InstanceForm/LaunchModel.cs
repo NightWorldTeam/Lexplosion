@@ -9,7 +9,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public bool IsGameLaunched { get; set; }
 
-        public LaunchModel(InstanceFormModel instanceFormModel, MainViewModel mainViewModel)
+        public LaunchModel(MainViewModel mainViewModel, InstanceFormModel instanceFormModel)
         {
             _formModel = instanceFormModel;
             _mainViewModel = mainViewModel;

@@ -109,6 +109,7 @@
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Gui\ButtonConstructor.cs" />
     <Compile Include="Gui\Converters\AcitivityStatusToColorConverter.cs" />
     <Compile Include="Gui\Converters\BytesToBitmapImageConventer.cs" />
     <Compile Include="Gui\Commands\CommandBase.cs" />

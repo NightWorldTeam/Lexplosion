@@ -7,7 +7,9 @@ namespace Lexplosion.Gui.ViewModels
 {
     public class TabMenuViewModel : SubmenuViewModel
     {
-        public bool IsModpackName { get; private set; } = true;
+        public List<ButtonConstructor> Buttons { get; }
+
+        public bool IsInstance { get; private set; } = true;
 
         private string _header;
 
@@ -22,10 +24,17 @@ namespace Lexplosion.Gui.ViewModels
 
         public InstanceClient InstanceClient { get; private set; }
 
-        public TabMenuViewModel(List<Tab> tabs, string header, InstanceClient instanceClient = null)
+        public TabMenuViewModel(List<Tab> tabs, string header, List<ButtonConstructor> buttons = null, InstanceClient instanceClient = null)
         {
             if (instanceClient == null)
-                IsModpackName = false;
+                IsInstance = false;
+
+            if (buttons == null)
+            {
+                Buttons = new List<ButtonConstructor>();
+            }
+
+            Buttons = buttons;
 
             InstanceClient = instanceClient;
 

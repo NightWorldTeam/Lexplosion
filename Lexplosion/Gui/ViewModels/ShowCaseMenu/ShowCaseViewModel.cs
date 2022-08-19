@@ -38,7 +38,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
-
         public ShowCaseViewModel(InstanceClient instanceClient)
         {
 

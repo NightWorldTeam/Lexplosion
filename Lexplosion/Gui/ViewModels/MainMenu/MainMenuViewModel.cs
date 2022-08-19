@@ -33,6 +33,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private readonly List<Tab> MultiplayerTabs = new List<Tab>()
         {
+            //new Tab 
+            //{
+            //    Header = "Cервера партнёров",
+            //    Content = null
+            //},
             new Tab
             {
                 Header = "Общее",
@@ -69,12 +74,15 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         {
             get => _logoClickCommand ?? (new RelayCommand(obj =>
             {
-                var instanceClient = (InstanceClient)obj;
+                var instanceFormViewModel = (InstanceFormViewModel)obj;
+                var instanceClient = instanceFormViewModel.Client;
+
                 Console.WriteLine(instanceClient.Name + " " + instanceClient.InLibrary);
+
                 if (instanceClient.InLibrary)
                 {
                     NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                        MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceClient, _mainViewModel));
+                        MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceClient, _mainViewModel, instanceFormViewModel));
                 }
                 else
                 {
@@ -118,7 +126,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 {
                     Header = "Настройки",
                     Content = _tabMenuViewModel1
-                }
+                },
             };
             SelectedTab = Tabs[0];
         }

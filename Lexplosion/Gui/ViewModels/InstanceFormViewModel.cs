@@ -60,9 +60,7 @@ namespace Lexplosion.Gui.ViewModels
                 {
                     case UpperButtonFunc.Download:
                         {
-                            if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
-                                MainVM.Model.LibraryInstances.Add(this);
-                            Model.DownloadModel.DonwloadPrepare();
+                            DownloadInstance();
                             break;
                         }
                     case UpperButtonFunc.ProgressBar:
@@ -73,19 +71,13 @@ namespace Lexplosion.Gui.ViewModels
 
                     case UpperButtonFunc.Play:
                         {
-                            if (!MainVM.IsInstanceRunning)
-                            {
-                                MainVM.IsInstanceRunning = true;
-                                Model.LaunchModel.LaunchInstance();
-                            }
+                            LaunchInstance();
                             break;
                         }
 
                     case UpperButtonFunc.Close:
                         {
-                            LaunchGame.GameStop();
-                            Model.UpperButton.ChangeFuncPlay();
-                            MainVM.IsInstanceRunning = false;
+                            CloseInstance();
                             break;
                         }
                 }
@@ -199,5 +191,38 @@ namespace Lexplosion.Gui.ViewModels
             Model.IsCanRun = true;
             _instanceClient = instanceClient;
         }
+
+        #region methods
+        
+        /// <summary>
+        /// Запускает сборку по данным формы.
+        /// </summary>
+        public void LaunchInstance() 
+        {
+            if (!MainVM.IsInstanceRunning)
+            {
+                MainVM.IsInstanceRunning = true;
+                Model.LaunchModel.LaunchInstance();
+            }
+        }
+
+        /// <summary>
+        /// Закрывает сборку по данным формы.
+        /// </summary>
+        public void CloseInstance() 
+        {
+            LaunchGame.GameStop();
+            Model.UpperButton.ChangeFuncPlay();
+            MainVM.IsInstanceRunning = false;
+        }
+
+        public void DownloadInstance() 
+        {
+            if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
+                MainVM.Model.LibraryInstances.Add(this);
+            Model.DownloadModel.DonwloadPrepare();
+        }
+
+        #endregion methods
     }
 }

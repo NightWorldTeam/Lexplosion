@@ -6,21 +6,30 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    IsTabStop="False"
     mc:Ignorable="d">
 
     <Grid Focusable="False" ShowGridLines="False">
+
         <Grid.Background>
             <SolidColorBrush Color="#191919" />
         </Grid.Background>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <Grid Grid.Row="0" Focusable="False">
+
             <Grid.Background>
                 <SolidColorBrush Color="#191919" />
             </Grid.Background>
+
         </Grid>
+
+        <!--  Header  -->
+
         <TextBlock
             Grid.Row="0"
             Grid.Column="1"
@@ -31,7 +40,10 @@
             FontWeight="SemiBold"
             Foreground="WhiteSmoke"
             Text="{Binding Header}"
-            Visibility="{Binding IsModpackName, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+            Visibility="{Binding IsInstance, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+
+        <!--  Instance Name  -->
+
         <TextBlock
             Grid.Row="0"
             Grid.Column="1"
@@ -42,11 +54,13 @@
             FontWeight="SemiBold"
             Foreground="WhiteSmoke"
             Text="{Binding InstanceClient.Name}"
-            Visibility="{Binding IsModpackName, Converter={StaticResource ConvertBoolToVisibility}}" />
+            Visibility="{Binding IsInstance, Converter={StaticResource ConvertBoolToVisibility}}" />
+
         <Border
             Grid.Row="1"
             BorderBrush="#282a2e"
             BorderThickness="0,0,0,1" />
+
         <TabControl
             Grid.Row="1"
             Background="#18191b"
@@ -55,15 +69,68 @@
             ItemsSource="{Binding Tabs}"
             SelectedValue="{Binding SelectedTab}"
             Style="{StaticResource TabControlStyle}">
+
             <TabControl.Resources>
                 <Style BasedOn="{StaticResource SwitcherTabItem}" TargetType="{x:Type TabItem}" />
             </TabControl.Resources>
+
             <TabControl.ContentTemplate>
                 <!--  this is the body of the TabItem template  -->
                 <DataTemplate>
                     <ContentControl Content="{Binding Content}" />
                 </DataTemplate>
+
             </TabControl.ContentTemplate>
+
         </TabControl>
+
+        <ItemsControl
+            Grid.Row="1"
+            Margin="0,0,5,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            ItemsSource="{Binding Buttons}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button
+                        Width="{Binding Width}"
+                        Height="{Binding Height}"
+                        Command="{Binding ActionCommand}"
+                        Content="{Binding Content}"
+                        Style="{StaticResource FolderBrowerButton}"
+                        Visibility="{Binding IsInstance, Converter={StaticResource ConvertBoolToVisibility}}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!--<Button
+            Grid.Row="1"
+            Width="80"
+            Height="30"
+            Margin="0,0,5,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Command="{Binding ActionCommand}"
+            Style="{StaticResource FolderBrowerButton}"
+            >
+            <StackPanel Orientation="Horizontal">
+                <Viewbox Width="18" Height="18">
+                    <Path
+                        Data="M16 37.85v-28l22 14Zm3-14Zm0 8.55 13.45-8.55L19 15.3Z"
+                        Fill="White"
+                        Stretch="Fill" />
+                </Viewbox>
+
+                <TextBlock
+                    Margin="5,0,0,0"
+                    HorizontalAlignment="Center"
+                    Text="Играть" />
+            </StackPanel>
+        </Button>-->
     </Grid>
 </UserControl>
