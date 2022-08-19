@@ -81,6 +81,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _selectedModloaderVersion; set
             {
                 _selectedModloaderVersion = value;
+                Console.WriteLine(_selectedModloaderVersion);
                 OnPropertyChanged(nameof(SelectedModloaderVersion));
             }
         }
@@ -132,7 +133,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 }));
             }
         }
-
+        /// <summary>
+        /// Создание самого модпака начинается здесь.
+        /// </summary>
         public override RelayCommand Action
         {
             get
