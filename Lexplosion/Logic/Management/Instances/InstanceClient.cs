@@ -143,7 +143,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _updateAvailable = value;
                 OnPropertyChanged();
-                StateChanged();
+                StateChanged?.Invoke();
             }
         }
         public bool IsInstalled { get; private set; } = false;
