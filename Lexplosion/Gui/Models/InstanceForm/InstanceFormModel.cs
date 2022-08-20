@@ -61,7 +61,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             InstanceClient = instanceClient;
 
-            instanceClient.StateChanged += UpdateLowerButton();
+            instanceClient.StateChanged += UpdateLowerButton;
 
             UpperButton = new UpperButton
                 (
