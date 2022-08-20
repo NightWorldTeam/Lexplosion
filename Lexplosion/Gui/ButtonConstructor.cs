@@ -89,7 +89,7 @@ namespace Lexplosion.Gui
             }
         }
 
-        private bool _isVisible;
+        private bool _isVisible = true;
         /// <summary>
         /// Задаёт видимость кнопки. Видимость зависит от converter.
         /// <para>Стандатные значения</para>
