@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:mainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Lexplosion.Gui.ViewModels"
@@ -26,6 +27,12 @@
     <Grid x:Name="MainGrid" Focusable="False">
         <ScrollViewer x:Name="ContainerPage_ScrollViewer" VerticalScrollBarVisibility="Auto">
 
+            <!--<ScrollViewer.Triggers>
+                <DataTrigger Binding="{Binding InstanceForms.Count}" Value="0">
+                    <Setter Property="extension:ScrollViewer.VerticalOffsetValue" Value="0.0" />
+                </DataTrigger>
+            </ScrollViewer.Triggers>-->
+
             <ScrollViewer.Background>
                 <!--  #1313131 0.8  -->
                 <!--  "Black" 0.64  -->
@@ -45,31 +52,12 @@
                     HorizontalAlignment="Center"
                     DataContext="{Binding SearchBoxVM}" />
 
-                <Grid
-                    x:Name="InstanceGrid"
+
+                <ItemsControl
                     Grid.Row="1"
-                    Margin="0,0,0,0"
-                    ShowGridLines="False">
-
-                    <TextBlock
-                        x:Name="LoadingLabel"
-                        Width="480"
-                        Height="35"
-                        Margin="0,30,0,0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        FontSize="22"
-                        FontStyle="Italic"
-                        Foreground="DarkGray"
-                        Text="Идёт загрузка. Пожалуйста подождите..."
-                        TextAlignment="Center"
-                        Visibility="Hidden" />
-
-                    <ItemsControl
-                        Margin="15,0,0,0"
-                        BorderBrush="Transparent"
-                        ItemsSource="{Binding InstanceForms}" />
-                </Grid>
+                    Margin="15,0,0,0"
+                    BorderBrush="Transparent"
+                    ItemsSource="{Binding InstanceForms}" />
 
                 <customcontrols:Paginator Grid.Row="2" DataContext="{Binding PaginatorVM}" />
 

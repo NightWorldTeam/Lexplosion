@@ -14,8 +14,8 @@ namespace Lexplosion.Gui
         /// <summary>
         /// Метод который выполниться при клике по кнопке.
         /// </summary>
-        private readonly Action _action;
-
+        public delegate void ClickAction(ButtonConstructor constructor);
+        private ClickAction _clickAction;
 
         #region props
 
@@ -120,7 +120,15 @@ namespace Lexplosion.Gui
             }
         }
 
-
+        private int _stage;
+        public int Stage 
+        {
+            get => _stage; set 
+            {
+                _stage = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion props
 
 
@@ -135,21 +143,19 @@ namespace Lexplosion.Gui
         {
             get => _actionCommand ?? new RelayCommand(obj =>
             {
-                _action();
+                _clickAction?.Invoke(this);
             });
         }
-
 
         #endregion commands
 
 
-        public ButtonConstructor(object content, Action action, Style style = null)
+        public ButtonConstructor(object content, ClickAction clickAction, Style style = null)
         {
             Content = content;
-            _action = action;
+            _clickAction = clickAction;
             Style = style;
         }
-
 
         #region methods
 

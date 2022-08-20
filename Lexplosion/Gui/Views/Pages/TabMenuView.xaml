@@ -90,11 +90,13 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             ItemsSource="{Binding Buttons}">
+            
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button
@@ -104,7 +106,7 @@
                         Command="{Binding ActionCommand}"
                         Content="{Binding Content}"
                         Style="{Binding Style}"
-                        Visibility="{Binding IsVisible, Converter={Binding Converter}}" />
+                        Visibility="{Binding IsVisible, Converter={StaticResource ConvertBoolToVisibility}}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

@@ -22,22 +22,27 @@
 
 
     <Grid x:Name="MainGrid">
+
         <Grid.Background>
             <SolidColorBrush Opacity="0.70" Color="#121212" />
         </Grid.Background>
 
+        <!--  ListBox - ScrollViewer.CanContentScroll="False" создаёт плавный скролл.  -->
+
         <ListBox
             x:Name="LibraryListBox"
-            Margin="0,0,0,30"
             ItemContainerStyle="{StaticResource LibraryListBoxItem}"
             ScrollViewer.CanContentScroll="False"
             Style="{StaticResource LibraryListBox}">
+
             <ListBox.Resources>
                 <CollectionViewSource x:Key="InstanceCollection" Source="{Binding MainVM.Model.LibraryInstances}" />
             </ListBox.Resources>
+
             <ListBox.ItemsSource>
                 <CompositeCollection>
                     <CollectionContainer Collection="{Binding Source={StaticResource InstanceCollection}}" />
+
                     <ListBoxItem
                         Margin="30,15,30,0"
                         HorizontalContentAlignment="Center"
@@ -45,10 +50,12 @@
                         <Button
                             Width="620"
                             Height="120"
+                            Margin="0,0,0,30"
                             Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             Content="Добавить сборку"
                             Style="{StaticResource LibraryAddBtn}" />
                     </ListBoxItem>
+
                 </CompositeCollection>
             </ListBox.ItemsSource>
         </ListBox>
