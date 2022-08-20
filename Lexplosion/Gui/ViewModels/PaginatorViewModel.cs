@@ -17,8 +17,8 @@ namespace Lexplosion.Gui.ViewModels
         public delegate void PageChangedCallback();
         public event PageChangedCallback PageChanged;
 
-        #region command
 
+        #region command
 
         private RelayCommand _nextPageCommand;
         public RelayCommand NextPageCommand
@@ -60,6 +60,7 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         #endregion
+
 
         #region props
 

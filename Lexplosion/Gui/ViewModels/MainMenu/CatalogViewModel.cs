@@ -30,9 +30,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public CatalogViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
+            GetInitializeInstance();
             SearchBoxVM.SearchChanged += GetInitializeInstance;
             PaginatorVM.PageChanged += GetInitializeInstance;
-            GetInitializeInstance();
         }
 
         public async void GetInitializeInstance()
@@ -57,14 +57,18 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
                         InstanceForms.Clear();
+
                         foreach (var instance in instances)
                         {
+                            Console.WriteLine("\nInstance [" + instance.Name + "] in library ? " + instance.InLibrary );
                             if (_mainViewModel.Model.IsLibraryContainsInstance(instance))
                             {
+                                Console.WriteLine("Get InstanceForm from Library [" + instance.Name + "]");
                                 InstanceForms.Add(_mainViewModel.Model.GetInstance(instance));
                             }
                             else
                             {
+                                Console.WriteLine("Create new InstanceForm [" + instance.Name + "]");
                                 InstanceForms.Add(new InstanceFormViewModel(_mainViewModel, instance));
                             }
                         }

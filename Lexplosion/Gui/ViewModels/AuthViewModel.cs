@@ -2,9 +2,7 @@
 using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Management;
 using System;
-using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels
@@ -12,14 +10,16 @@ namespace Lexplosion.Gui.ViewModels
     public class AuthViewModel : VMBase
     {
         private readonly MainViewModel _mainViewModel;
-        private Action _libraryInstancesLoading;
-        private RelayCommand _signUpCommand;
-
         private AccountType _accountType;
+
 
         #region props
 
+
         private string _login = String.Empty;
+        /// <summary>
+        /// Содержит логин пользователя.
+        /// </summary>
         public string Login 
         {
             get => _login; set 
@@ -29,8 +29,10 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        //
         private string _password = String.Empty;
+        /// <summary>
+        /// Cодержит пароль пользователя.
+        /// </summary>
         public string Password 
         {
             get => _password; set 
@@ -40,10 +42,10 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+        private bool _isSaveMe = false;
         /// <summary>
         /// Хранит ответ на вопрос, хочет ли пользователь сохранить аккаунт(данные).
         /// </summary>
-        private bool _isSaveMe = false;
         public bool IsSaveMe 
         {
             get => _isSaveMe; set 
@@ -53,38 +55,13 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public RelayCommand SignUpCommand
-        {
-            get => _signUpCommand ?? (new RelayCommand(obj =>
-            {
-                Lexplosion.Run.TaskRun(() => 
-                {
-                    _accountType = (AccountType)AccountTypeSelectedIndex;
-                    Console.WriteLine(_accountType);
-                    AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe, _accountType);
-                    App.Current.Dispatcher.Invoke(() => 
-                    {
-                        switch (authCode) 
-                        {
-                            case AuthCode.Successfully:
-                                _mainViewModel.UserProfile.Nickname = UserData.User.Login;
-                                _mainViewModel.UserProfile.IsAuthorized = true;
-                                _libraryInstancesLoading();
-                                NavigationCommand.Execute(null);
-                                break;
-                            case AuthCode.DataError:
-                                MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", Controls.ToastMessageState.Error);
-                                break;
-                            case AuthCode.NoConnect:
-                                MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", Controls.ToastMessageState.Error);
-                                break;
-                        }
-                    });
-                });
-            }));
-        }
-
         private int _accountTypeSelectedIndex;
+        /// <summary>
+        /// Хранит индекс выбранного типа авторизации.
+        /// [0] - NoAuth
+        /// [1] - NightWorld
+        /// [2] - Mojang
+        /// </summary>
         public int AccountTypeSelectedIndex 
         {
             get => _accountTypeSelectedIndex; set 
@@ -97,12 +74,34 @@ namespace Lexplosion.Gui.ViewModels
 
         #endregion
 
+
+        #region commands
+
+        /// <summary>
+        /// Команда навигации меняет viewmodel.
+        /// </summary>
         public ICommand NavigationCommand { get; }
 
-        public AuthViewModel(MainViewModel model, Action libraryInstancesLoading)
+        private RelayCommand _signUpCommand;
+        /// <summary>
+        /// Вызывается при клике по кнопке [Войти]
+        /// </summary>
+        public RelayCommand SignUpCommand
+        {
+            get => _signUpCommand ?? (new RelayCommand(obj =>
+            {
+                Authorization();
+            }));
+        }
+
+        #endregion commands
+
+
+        #region constructors
+
+        public AuthViewModel(MainViewModel model)
         {
             _mainViewModel = model;
-            _libraryInstancesLoading = libraryInstancesLoading;
 
             // получаем последний выбранный аккаунт
             LoadSavedAccount(null);
@@ -113,6 +112,9 @@ namespace Lexplosion.Gui.ViewModels
                 MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
         }
 
+        #endregion constructors
+
+
         #region methods
 
         /// <summary>
@@ -122,6 +124,7 @@ namespace Lexplosion.Gui.ViewModels
         public void LoadSavedAccount(AccountType? accountType) 
         {
             AccountType type = DataFilesManager.GetAccount(out _login, out _password, accountType);
+
             if (_login != null && _password != null)
             {
                 IsSaveMe = true;
@@ -133,6 +136,41 @@ namespace Lexplosion.Gui.ViewModels
             }
 
             _accountType = type;
+        }
+
+        /// <summary>
+        /// Запускает процесс авторизации.
+        /// </summary>
+        private void Authorization() 
+        {
+            Lexplosion.Run.TaskRun(() =>
+            {
+                // получаем выбранный тип акканута.
+                _accountType = (AccountType)AccountTypeSelectedIndex;
+                Console.WriteLine(_accountType);
+
+                // получаем ответ от проверки данных.
+                AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe, _accountType);
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    // обрабатываем полученный код.
+                    switch (authCode)
+                    {
+                        case AuthCode.Successfully:
+                            _mainViewModel.UserProfile.Nickname = UserData.User.Login;
+                            _mainViewModel.UserProfile.IsAuthorized = true;
+                            NavigationCommand.Execute(null);
+                            break;
+                        case AuthCode.DataError:
+                            MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", Controls.ToastMessageState.Error);
+                            break;
+                        case AuthCode.NoConnect:
+                            MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", Controls.ToastMessageState.Error);
+                            break;
+                    }
+                });
+            });
         }
 
         #endregion methods

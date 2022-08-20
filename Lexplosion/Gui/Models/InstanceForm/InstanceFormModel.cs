@@ -61,6 +61,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             InstanceClient = instanceClient;
 
+            instanceClient.StateChanged += UpdateLowerButton();
+
             UpperButton = new UpperButton
                 (
                     MultiButtonProperties.GeometryDownloadIcon,

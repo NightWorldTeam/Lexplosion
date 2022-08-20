@@ -10,6 +10,7 @@ namespace Lexplosion.Gui
         public VMBase Content { get; set; }
         public ICommand Command { get; set; } = new RelayCommand(obj => { });
 
+        #nullable enable
         public int CompareTo(Tab? tab)
         {
             if (tab is null) throw new ArgumentException("Некорректное значение параметра");

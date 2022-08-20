@@ -100,11 +100,11 @@
                     <Button
                         Width="{Binding Width}"
                         Height="{Binding Height}"
+                        Margin="{Binding Margin}"
                         Command="{Binding ActionCommand}"
                         Content="{Binding Content}"
-                        Margin="{Binding Margin}"
-                        Style="{StaticResource FolderBrowerButton}"
-                        Visibility="{Binding IsInstance, Converter={StaticResource ConvertBoolToVisibility}}" />
+                        Style="{Binding Style}"
+                        Visibility="{Binding IsVisible, Converter={Binding Converter}}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

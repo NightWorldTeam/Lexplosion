@@ -212,8 +212,11 @@ namespace Lexplosion.Gui.ViewModels
             //MainViewModel.ShowDialogMessage("Test", "Test123", () => { Console.WriteLine(123); }, () => { Console.WriteLine(321); }, "Yes", "No");
 
             Model = new MainModel();
+            LibraryInstanceLoading();
+
             MainMenuVM = new MainMenuViewModel(this);
-            NavigationStore.CurrentViewModel = new AuthViewModel(this, LibraryInstanceLoading);
+
+            NavigationStore.CurrentViewModel = new AuthViewModel(this);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
 
             ExportViewModel = new ExportViewModel(this);
@@ -233,10 +236,13 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         private void LibraryInstanceLoading()
         {
+            Console.WriteLine("\n-----Library Instance Loading-----");
             foreach (var instanceClient in InstanceClient.GetInstalledInstances())
             {
+                Console.WriteLine("Instance [" + instanceClient.Name + "] loaded.");
                 Model.LibraryInstances.Add(new InstanceFormViewModel(this, instanceClient));
             }
+            Console.WriteLine("\n");
         }
 
         /// <summary>

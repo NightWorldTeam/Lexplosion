@@ -14,23 +14,37 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
     {
         private int _tabControlSelectedValue;
         private List<Tab> _showCaseTabMenu;
-
-        #nullable enable
         private InstanceFormViewModel _instanceForm;
-
-        private List<ButtonConstructor> _buttons;
-
         public event ISubmenu.NavigationToMenuCallBack NavigationToMainMenu;
+
+        private List<ButtonConstructor> _buttons = new List<ButtonConstructor>();
+
 
         #region commands
 
         public ICommand NavigationMainMenuCommand
         {
-            get => new NavigateCommand<MainMenuViewModel>(
-                MainViewModel.NavigationStore, () => { NavigationToMainMenu?.Invoke(); return MainViewModel.MainMenuVM; });
+            get => new NavigateCommand<MainMenuViewModel>
+                (
+                    MainViewModel.NavigationStore, () => 
+                    { 
+                        NavigationToMainMenu?.Invoke();
+                        return MainViewModel.MainMenuVM; 
+                    }
+                );
+        }
+
+        private RelayCommand ClearMemory
+        {
+            get => new RelayCommand(obj =>
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            });
         }
 
         #endregion
+
 
         #region props
 
@@ -50,19 +64,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         #endregion
 
-        private RelayCommand ClearMemory 
-        {
-            get => new RelayCommand(obj => 
-            {
-                Console.WriteLine("test");
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            });
-        }
 
-        public InstanceMenuViewModel(InstanceClient instanceClient, MainViewModel mainViewModel = null, InstanceFormViewModel instanceForm = null)
+        public InstanceMenuViewModel(InstanceClient instanceClient, MainViewModel mainViewModel, InstanceFormViewModel instanceForm)
         {
-            _instanceForm = instanceForm;
+            if (instanceForm != null)
+                _instanceForm = instanceForm;
+
             InitButtons();
 
             _showCaseTabMenu = new List<Tab>()
@@ -132,16 +139,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public void InitButtons() 
         {
-            _buttons = new List<ButtonConstructor>();
-            if (_instanceForm != null) 
-            { 
                 _buttons.Add(new ButtonConstructor("Играть", _instanceForm.LaunchInstance) 
                 {
                     Width = 90,
                     Height = 25,
                     Margin = new System.Windows.Thickness(0,0,10,0)
                 });
-            }
         }
     }
 }

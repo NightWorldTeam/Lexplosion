@@ -11,6 +11,7 @@ namespace Lexplosion.Tools.Immutable
     {
         private readonly T[] _array;
 
+        #nullable enable
         public ImmutableArray(T[]? array)
         {
             _array = array;

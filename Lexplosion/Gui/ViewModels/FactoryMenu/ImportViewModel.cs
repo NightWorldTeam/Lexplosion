@@ -20,6 +20,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private FactoryGeneralViewModel _factoryGeneralVM;
 
         private string[] _uploadedFiles;
+        /// <summary>
+        /// Коллекция с испортируемыми файлами.
+        /// </summary>
         public string[] UploadedFiles
         {
             get => _uploadedFiles; set 
@@ -51,6 +54,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         public void Import(string path) 
         {
+            #nullable enable
             InstanceClient? instanceClient;
             ImportResult result = InstanceClient.Import(path, out instanceClient);
 

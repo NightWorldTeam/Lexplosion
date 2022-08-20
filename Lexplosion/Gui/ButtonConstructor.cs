@@ -4,46 +4,52 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Lexplosion.Gui
 {
-    public class ButtonConstructor : VMBase
+    public sealed class ButtonConstructor : VMBase
     {
         /// <summary>
         /// Метод который выполниться при клике по кнопке.
         /// </summary>
         private readonly Action _action;
 
+
+        #region props
+
+
+        private object _content;
         /// <summary>
         /// Текст кнопки. 
         /// </summary>
-        private object _content;
-        public object Content 
+        public object Content
         {
-            get => _content; set 
+            get => _content; set
             {
                 _content = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
+        private double _width;
         /// <summary>
         /// Ширина кнопки.
         /// </summary>
-        private double _width;
-        public double Width 
+        public double Width
         {
-            get => _width; set 
+            get => _width; set
             {
                 _width = value;
                 OnPropertyChanged();
             }
         }
 
+        private double _height;
         /// <summary>
         /// Высота кнопки.
         /// </summary>
-        private double _height;
         public double Height
         {
             get => _height; set
@@ -53,46 +59,89 @@ namespace Lexplosion.Gui
             }
         }
 
+        private Style _style;
         /// <summary>
         /// Стиль который будет использоваться в кнопке.
-        /// Style - System.Windows (WPF).
+        /// <para>Style - System.Windows (WPF).</para>
         /// </summary>
-        private Style _style;
-        public Style Style 
-        { 
+        public Style Style
+        {
             get => _style;
-            set 
+            set
             {
                 _style = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
-        /// <summary>
-        /// Задаёт margin для кнопки.
-        /// </summary>
         private Thickness _margin;
-        public Thickness Margin 
+        /// <summary>
+        /// Задаёт margin(отступы) для кнопки.
+        /// </summary>
+        public Thickness Margin
         {
-            get => _margin; set 
+            get => _margin; set
             {
                 _margin = value;
                 OnPropertyChanged();
             }
         }
 
+        private bool _isVisible;
+        /// <summary>
+        /// Задаёт видимость кнопки. Видимость зависит от converter.
+        /// <para>Стандатные значения</para>
+        /// <c>Visible - true</c>
+        /// <br><c>Hidden - false</c></br>
+        /// </summary>
+        public bool IsVisible
+        {
+            get => _isVisible; set
+            {
+                _isVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IValueConverter _converter = new BooleanToVisibilityConverter();
+        /// <summary>
+        /// Конвертер для visibility
+        /// <para>BooleanToVisibilityConverter - стандартное значение.</para>
+        /// </summary>
+        public IValueConverter Converter
+        {
+            get => _converter; set
+            {
+                if (IsValidConverter(value)) 
+                { 
+                    _converter = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
+        #endregion props
+
+
+        #region commands
+
+        private RelayCommand _actionCommand;
         /// <summary>
         /// Команда которая будет выполняться при клике на кнопку.
-        /// _action() - метод который будет выполняться при вызове команды.
+        /// <para><c>_action() - метод который будет выполняться при вызове команды.</c></para>
         /// </summary>
-        private RelayCommand _actionCommand;
         public RelayCommand ActionCommand
         {
-            get => _actionCommand ?? new RelayCommand(obj => 
+            get => _actionCommand ?? new RelayCommand(obj =>
             {
                 _action();
             });
         }
+
+
+        #endregion commands
+
 
         public ButtonConstructor(object content, Action action, Style style = null)
         {
@@ -100,5 +149,17 @@ namespace Lexplosion.Gui
             _action = action;
             Style = style;
         }
+
+
+        #region methods
+
+        private bool IsValidConverter(IValueConverter converter)
+        {
+            var value = converter.Convert(true, typeof(Visibility), null, null);
+            return (value is Visibility.Visible) || (value is Visibility.Collapsed);
+        }
+
+        #endregion methods
+
     }
 }
