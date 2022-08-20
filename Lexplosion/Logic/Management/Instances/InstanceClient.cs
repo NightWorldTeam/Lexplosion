@@ -143,6 +143,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _updateAvailable = value;
                 OnPropertyChanged();
+                StateChanged();
             }
         }
         public bool IsInstalled { get; private set; } = false;
@@ -153,6 +154,7 @@ namespace Lexplosion.Logic.Management.Instances
         public event ComplitedDownloadCallback ComplitedDownload;
         public event ComplitedLaunchCallback ComplitedLaunch;
         public event GameExitedCallback GameExited;
+        public event Action StateChanged;
 
         /// <summary>
         /// Базовый конструктор, от него должны наследоваться все остальные
