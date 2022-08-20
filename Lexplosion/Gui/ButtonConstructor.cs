@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,18 +10,10 @@ using System.Windows.Data;
 
 namespace Lexplosion.Gui
 {
-    public sealed class ButtonConstructor : VMBase
+    public sealed class ButtonParameters : VMBase
     {
-        /// <summary>
-        /// Метод который выполниться при клике по кнопке.
-        /// </summary>
-        /// 
-        private readonly Action _action;
-        public delegate void ClickAction(ButtonConstructor constructor);
-        private ClickAction _clickAction;
-
-        #region props
-
+        public delegate void ClickAction ();
+        public ClickAction ActionClick { get; set; }
 
         private object _content;
         /// <summary>
@@ -61,6 +54,19 @@ namespace Lexplosion.Gui
             }
         }
 
+        private Thickness _margin;
+        /// <summary>
+        /// Задаёт margin(отступы) для кнопки.
+        /// </summary>
+        public Thickness Margin
+        {
+            get => _margin; set
+            {
+                _margin = value;
+                OnPropertyChanged();
+            }
+        }
+
         private Style _style;
         /// <summary>
         /// Стиль который будет использоваться в кнопке.
@@ -72,19 +78,6 @@ namespace Lexplosion.Gui
             set
             {
                 _style = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Thickness _margin;
-        /// <summary>
-        /// Задаёт margin(отступы) для кнопки.
-        /// </summary>
-        public Thickness Margin
-        {
-            get => _margin; set
-            {
-                _margin = value;
                 OnPropertyChanged();
             }
         }
@@ -105,32 +98,96 @@ namespace Lexplosion.Gui
             }
         }
 
-        public IValueConverter _converter = new BooleanToVisibilityConverter();
-        /// <summary>
-        /// Конвертер для visibility
-        /// <para>BooleanToVisibilityConverter - стандартное значение.</para>
-        /// </summary>
-        public IValueConverter Converter
+        private bool IsValidConverter(IValueConverter converter)
         {
-            get => _converter; set
-            {
-                if (IsValidConverter(value)) 
-                { 
-                    _converter = value;
-                    OnPropertyChanged();
-                }
-            }
+            var value = converter.Convert(true, typeof(Visibility), null, null);
+            return (value is Visibility.Visible) || (value is Visibility.Collapsed);
         }
+    }
 
-        private int _stage;
-        public int Stage 
+    public sealed class StageController : VMBase
+    {
+        private int _stageCount;
+        /// <summary>
+        /// Количество стадии.
+        /// <br>Стандартное значение 1</br>
+        /// </summary>
+        public int StageCount
         {
-            get => _stage; set 
+            get => _stageCount; set
             {
-                _stage = value;
+                _stageCount = value;
                 OnPropertyChanged();
             }
         }
+
+        private int _currentStage = 0;
+        /// <summary>
+        /// Номер активной стации.
+        /// </summary>
+        public int CurrentStage 
+        {
+            get => _currentStage; set 
+            {
+                _currentStage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ButtonParameters[] _buttonParametersList;
+
+        private void StageUp(ButtonConstructor constructor) 
+        { 
+            CurrentStage++;
+            constructor.ButtonParameters = _buttonParametersList[CurrentStage];
+
+        }
+
+        private void StageDown(ButtonConstructor constructor)
+        {
+            CurrentStage--;
+            constructor.ButtonParameters = _buttonParametersList[CurrentStage];
+        }
+
+        public StageController(ButtonParameters[] buttonsParametersList)
+        {
+            StageCount = buttonsParametersList.Length;
+            _buttonParametersList = buttonsParametersList;
+        }
+
+        public void StageSwitch(ButtonConstructor constructor) 
+        {
+            if (_currentStage < _stageCount)
+                StageUp(constructor);
+            else StageDown(constructor);
+        }
+    }
+
+    public class ButtonConstructor : VMBase
+    {
+        /// <summary>
+        /// Метод который выполниться при клике по кнопке.
+        /// </summary>
+        /// 
+
+        #region props
+
+        private ButtonParameters _buttonParameters;
+        public ButtonParameters ButtonParameters 
+        {
+            get => _buttonParameters; set 
+            {
+                _buttonParameters = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Контроллер стадий.
+        /// </summary>
+        private StageController _stageController;
+
+
         #endregion props
 
 
@@ -145,31 +202,19 @@ namespace Lexplosion.Gui
         {
             get => _actionCommand ?? new RelayCommand(obj =>
             {
-                _action?.Invoke();
-                //_clickAction?.Invoke(this);
+                _buttonParameters.ActionClick?.Invoke();
+                _stageController.StageSwitch(this);
             });
         }
 
         #endregion commands
 
 
-        public ButtonConstructor(object content, Action action, Style style = null)
+        public ButtonConstructor(ButtonParameters[] buttonParametersList, int currentStage = 0)
         {
-            Content = content;
-            _action = action;
-            //_clickAction = clickAction;
-            Style = style;
+            _stageController = new StageController(buttonParametersList);
+            _buttonParameters = buttonParametersList[currentStage];
+            _stageController.CurrentStage = currentStage;
         }
-
-        #region methods
-
-        private bool IsValidConverter(IValueConverter converter)
-        {
-            var value = converter.Convert(true, typeof(Visibility), null, null);
-            return (value is Visibility.Visible) || (value is Visibility.Collapsed);
-        }
-
-        #endregion methods
-
     }
 }

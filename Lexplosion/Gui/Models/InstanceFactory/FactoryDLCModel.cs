@@ -18,6 +18,21 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             get => _instanceAddons; set
             {
                 _instanceAddons = value;
+
+                if (_instanceAddons.Count == 0)
+                    IsEmptyList = true;
+                else IsEmptyList = false;
+
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isEmptyList;
+        public bool IsEmptyList
+        {
+            get => _isEmptyList; set
+            {
+                _isEmptyList = value;
                 OnPropertyChanged();
             }
         }

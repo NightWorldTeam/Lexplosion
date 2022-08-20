@@ -139,12 +139,43 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public void InitButtons() 
         {
-                _buttons.Add(new ButtonConstructor("Играть", _instanceForm.LaunchInstance) 
+            var width = 80d;
+            var height = 25d;
+            var margin = new System.Windows.Thickness(0,0,0,0);
+
+            _buttons.Add(new ButtonConstructor(
+                new ButtonParameters[]
                 {
-                    Width = 90,
-                    Height = 25,
-                    Margin = new System.Windows.Thickness(0,0,10,0)
-                });
+                    new ButtonParameters() 
+                    {
+                        Width = width,
+                        Height = height,
+                        Margin = margin,
+                        IsVisible = true,
+                        Content = "Скачать",
+                        ActionClick = _instanceForm.DownloadInstance
+                    },
+                    new ButtonParameters() 
+                    {
+                        Width = width,
+                        Height = height,
+                        Margin = margin,
+                        IsVisible = true,
+                        Content = "Играть",
+                        ActionClick = _instanceForm.LaunchInstance
+                    },                   
+                    new ButtonParameters() 
+                    {
+                        Width = width,
+                        Height = height,
+                        Margin = margin,
+                        IsVisible = true,
+                        Content = "Играть",
+                        ActionClick = _instanceForm.CloseInstance
+                    },
+                }, 
+                _instanceForm.Client.IsInstalled ? 1 : 0
+                ));
         }
     }
 }

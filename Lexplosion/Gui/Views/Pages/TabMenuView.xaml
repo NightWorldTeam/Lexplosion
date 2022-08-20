@@ -90,22 +90,22 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             ItemsSource="{Binding Buttons}">
-            
+
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button
-                        Width="{Binding Width}"
-                        Height="{Binding Height}"
-                        Margin="{Binding Margin}"
+                        Width="{Binding ButtonParameters.Width}"
+                        Height="{Binding ButtonParameters.Height}"
+                        Margin="{Binding ButtonParameters.Margin}"
                         Command="{Binding ActionCommand}"
-                        Content="{Binding Content}"
-                        Style="{Binding Style}"
+                        Content="{Binding ButtonParameters.Content}"
+                        Style="{Binding ButtonParameters.Style}"
                         Visibility="{Binding IsVisible, Converter={StaticResource ConvertBoolToVisibility}}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

@@ -279,10 +279,10 @@
     </UserControl.Resources>
 
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-            <StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,10,0,0">
                 <TabControl
-                    Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
                     Background="Transparent"
                     BorderBrush="Transparent"
                     SelectedIndex="{Binding SelectedAddonIndex, UpdateSourceTrigger=PropertyChanged}"
@@ -291,32 +291,61 @@
                     <TabControl.Resources>
                         <Style TargetType="{x:Type TabPanel}">
                             <Setter Property="HorizontalAlignment" Value="Center" />
-                            <Setter Property="Margin" Value="0,0,0,10" />
                         </Style>
                     </TabControl.Resources>
                     <!--  Mods  -->
                     <TabItem Header="Mods" Style="{StaticResource TEST}">
+                        <StackPanel>
+                            <ListBox
+                                ItemsSource="{Binding CurrentAddon.InstalledAddons}"
+                                Tag="{Binding BindsDirectlyToSource=True}"
+                                Template="{StaticResource DLCHeaderControlTemplate}" />
 
-                        <ListBox
-                            ItemsSource="{Binding CurrentAddon.InstalledAddons}"
-                            Tag="{Binding BindsDirectlyToSource=True}"
-                            Template="{StaticResource DLCHeaderControlTemplate}" />
+                            <TextBlock
+                                Margin="100"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="Отсутвуют установленные модификации"
+                                Visibility="{Binding IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
+                        </StackPanel>
                     </TabItem>
 
                     <TabItem Header="Ресурспаки" Style="{StaticResource TEST}">
+                        <StackPanel>
+                            <ListBox
+                                ItemsSource="{Binding CurrentAddon.InstalledAddons}"
+                                Tag="{Binding BindsDirectlyToSource=True}"
+                                Template="{StaticResource DLCHeaderControlTemplate}" />
 
-                        <ListBox
-                            ItemsSource="{Binding CurrentAddon.InstalledAddons}"
-                            Tag="{Binding BindsDirectlyToSource=True}"
-                            Template="{StaticResource DLCHeaderControlTemplate}" />
+                            <TextBlock
+                                Margin="100"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                Opacity="0.8"
+                                Text="Отсутвуют установленные ресурспаки"
+                                Visibility="{Binding IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
+                        </StackPanel>
                     </TabItem>
 
                     <TabItem Header="Карты" Style="{StaticResource TEST}">
+                        <StackPanel>
+                            <ListBox
+                                ItemsSource="{Binding CurrentAddon.InstalledAddons}"
+                                Tag="{Binding BindsDirectlyToSource=True}"
+                                Template="{StaticResource DLCHeaderControlTemplate}" />
 
-                        <ListBox
-                            ItemsSource="{Binding CurrentAddon.InstalledAddons}"
-                            Tag="{Binding BindsDirectlyToSource=True}"
-                            Template="{StaticResource DLCHeaderControlTemplate}" />
+                            <StackPanel Margin="100">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="20"
+                                    Opacity="0.8"
+                                    Text="Отсутвуют установленные карты."
+                                    Visibility="{Binding IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                <!--  Добавить кнопки на curseforge.....  -->
+                            </StackPanel>
+                        </StackPanel>
                     </TabItem>
                 </TabControl>
             </StackPanel>
