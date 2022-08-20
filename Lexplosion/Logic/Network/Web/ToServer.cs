@@ -141,7 +141,7 @@ namespace Lexplosion.Logic.Network
                     Console.WriteLine("URL " + LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
                     string answer = HttpPost(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl, data);
 
-                    if (answer != null)
+                    if (answer != null && answer != "")
                     {
                         answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
