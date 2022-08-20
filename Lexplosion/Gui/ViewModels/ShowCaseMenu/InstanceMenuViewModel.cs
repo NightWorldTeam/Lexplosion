@@ -138,7 +138,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 _buttons.Add(new ButtonConstructor("Играть", _instanceForm.LaunchInstance) 
                 {
                     Width = 90,
-                    Height = 25
+                    Height = 25,
+                    Margin = new System.Windows.Thickness(0,0,10,0)
                 });
             }
         }

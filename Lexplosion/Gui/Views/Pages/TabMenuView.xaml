@@ -102,6 +102,7 @@
                         Height="{Binding Height}"
                         Command="{Binding ActionCommand}"
                         Content="{Binding Content}"
+                        Margin="{Binding Margin}"
                         Style="{StaticResource FolderBrowerButton}"
                         Visibility="{Binding IsInstance, Converter={StaticResource ConvertBoolToVisibility}}" />
                 </DataTemplate>

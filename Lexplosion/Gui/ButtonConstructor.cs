@@ -69,6 +69,19 @@ namespace Lexplosion.Gui
         }
 
         /// <summary>
+        /// Задаёт margin для кнопки.
+        /// </summary>
+        private Thickness _margin;
+        public Thickness Margin 
+        {
+            get => _margin; set 
+            {
+                _margin = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Команда которая будет выполняться при клике на кнопку.
         /// _action() - метод который будет выполняться при вызове команды.
         /// </summary>
