@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -77,16 +78,19 @@ namespace Lexplosion.Controls
         public ToastMessage()
         {
             // here we call timer.
+            // TODO: Сделать анимацию.
+            Lexplosion.Run.TaskRun(() => {
+                //timer.Interval = new TimeSpan(0,0,5);
+                //timer.Start();
 
-            timer.Interval = new TimeSpan(0,0,5);
-            timer.Start();
+                Thread.Sleep(5000);
+
+                App.Current.Dispatcher.Invoke(() => { 
+                    CloseCommand.Execute(null);
+                });
+            });
         }
 
         #endregion constructors
-
-        private void TimerEventProcessor() 
-        {
-            
-        }
     }
 }
