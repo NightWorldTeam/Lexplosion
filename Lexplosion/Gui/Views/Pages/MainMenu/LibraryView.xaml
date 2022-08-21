@@ -33,7 +33,8 @@
             x:Name="LibraryListBox"
             ItemContainerStyle="{StaticResource LibraryListBoxItem}"
             ScrollViewer.CanContentScroll="False"
-            Style="{StaticResource LibraryListBox}">
+            Style="{StaticResource LibraryListBox}"
+            ScrollViewer.ScrollChanged="LibraryListBox_ScrollChanged">
 
             <ListBox.Resources>
                 <CollectionViewSource x:Key="InstanceCollection" Source="{Binding MainVM.Model.LibraryInstances}" />

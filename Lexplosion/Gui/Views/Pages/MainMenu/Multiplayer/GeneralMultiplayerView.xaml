@@ -8,47 +8,143 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid ShowGridLines="False">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
-        <StackPanel>
-            <StackPanel Margin="28,20,0,0">
-                <TextBlock
-                    FontSize="16"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    Text="Статус" />
-                <TextBlock
-                    FontSize="16"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    Opacity="0.8"
-                    Text="Нет открытого мира" />
-            </StackPanel>
+        <Grid ShowGridLines="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="228" />
+            </Grid.ColumnDefinitions>
 
-            <StackPanel Margin="28,40,0,0">
-                <TextBlock
-                    FontSize="18"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    Text="Приоритетный метод подключения" />
-                <StackPanel Orientation="Horizontal">
-                    <RadioButton
-                        Margin="0,5,20,5"
-                        Content="Прямое"
-                        GroupName="ConnectType"
-                        IsChecked="True" />
-                    <RadioButton
-                        Margin="20,5,0,5"
-                        Content="Через ретранслятор"
-                        GroupName="ConnectType" />
+            <StackPanel>
+                <StackPanel Margin="28,20,0,0">
+                    <TextBlock Text="Статус" />
+                    <TextBlock Opacity="0.8" Text="Нет открытого мира" />
+                </StackPanel>
+
+                <StackPanel Margin="28,40,0,0">
+                    <TextBlock FontSize="18" Text="Приоритетный метод подключения" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton
+                            Margin="0,5,20,5"
+                            Content="Прямое"
+                            GroupName="ConnectType"
+                            IsChecked="True" />
+                        <RadioButton
+                            Margin="20,5,0,5"
+                            Content="Через ретранслятор"
+                            GroupName="ConnectType" />
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
-        </StackPanel>
+
+            <Border
+                Grid.Column="1"
+                Margin="0,10,0,10"
+                BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                BorderThickness="2,0,0,0">
+                <StackPanel>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontFamily="{DynamicResource Inner}"
+                        FontSize="18"
+                        Foreground="White"
+                        Text="Подключенные игроки" />
+
+
+                    <ItemsControl>
+                        <DataTemplate>
+                            <Grid Margin="10,20,0,0" ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border
+                                    Width="45"
+                                    Height="45"
+                                    Background="{DynamicResource BrandSolidColorBrush}"
+                                    CornerRadius="200" />
+
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        FontFamily="{DynamicResource Inner}"
+                                        FontSize="16"
+                                        FontWeight="Regular"
+                                        Text="_Hel2x_" />
+                                    <Button
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        Content="Выгнать"
+                                        FontFamily="{DynamicResource FuturaBookC}"
+                                        FontSize="16"
+                                        FontWeight="Regular"
+                                        Foreground="#E74D4D"
+                                        Style="{StaticResource DefaultCloseButton}" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl>
+
+
+
+
+                    <Grid
+                        Margin="10,20,0,0"
+                        Opacity="0.8"
+                        ShowGridLines="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            Width="45"
+                            Height="45"
+                            Background="{DynamicResource BrandSolidColorBrush}"
+                            CornerRadius="200">
+                            <!--<Border.Background>
+                                <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
+                            </Border.Background>-->
+                        </Border>
+
+                        <StackPanel Grid.Column="1">
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                FontFamily="Inner"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Text="Fleo" />
+
+                            <Button
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Left"
+                                Content="Вернуть"
+                                FontFamily="{DynamicResource FuturaBookC}"
+                                FontSize="16"
+                                FontWeight="Regular"
+                                Foreground="#49AB47"
+                                Style="{StaticResource DefaultCloseButton}" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
 
         <StackPanel
             Grid.Row="1"

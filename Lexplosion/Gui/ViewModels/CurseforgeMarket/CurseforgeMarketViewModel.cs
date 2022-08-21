@@ -109,6 +109,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private int _pageSize = 20;
 
+
         #region commands
 
         /// <summary>
@@ -197,6 +198,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion commands
 
+
         #region props 
 
         public ObservableCollection<AddonCategory> ModCategories { get; } = new ObservableCollection<AddonCategory>();
@@ -215,7 +217,31 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
+        private bool _isEmptyList;
+        /// <summary>
+        /// <para>Отвечает на вопрос количество найденого контента равно 0?</para>
+        /// </summary>
+        public bool IsEmptyList
+        {
+            get => _isEmptyList; set
+            {
+                _isEmptyList = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isPaginatorVisible = false;
+        public bool IsPaginatorVisible
+        {
+            get => _isPaginatorVisible; set
+            {
+                _isPaginatorVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion props
+
 
         public CurseforgeMarketViewModel(ObservableCollection<InstanceAddon> installedAddons, MainViewModel mainViewModel, InstanceClient instanceClient, AddonType addonsType)
         {
@@ -251,12 +277,25 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1, _addonsType, -1, SearchBoxVM.SearchTextComfirmed);
 
+                if (instances.Count == _pageSize)
+                {
+                    IsPaginatorVisible = true;
+                }
+                else IsPaginatorVisible = false;
+
                 if (instances.Count == 0)
                 {
-
+                    App.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        InstanceAddons.Clear();
+                        IsEmptyList = true;
+                    });
                 }
                 else
                 {
+                    if (IsEmptyList)
+                        IsEmptyList = false;
+
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
                         InstanceAddons.Clear();
@@ -265,7 +304,6 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                             InstanceAddons.Add(instance);
                         }
                     });
-
                 }
 
                 IsLoaded = true;

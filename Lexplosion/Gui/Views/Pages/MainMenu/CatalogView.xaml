@@ -24,14 +24,14 @@
         <ImageBrush ImageSource="pack://application:,,,/Assets/images/background/mainBG.png" />
     </UserControl.Background>
 
-    <Grid x:Name="MainGrid" Focusable="False">
-        <ScrollViewer x:Name="ContainerPage_ScrollViewer" VerticalScrollBarVisibility="Auto">
-
-            <!--<ScrollViewer.Triggers>
-                <DataTrigger Binding="{Binding InstanceForms.Count}" Value="0">
-                    <Setter Property="extension:ScrollViewer.VerticalOffsetValue" Value="0.0" />
-                </DataTrigger>
-            </ScrollViewer.Triggers>-->
+    <Grid x:Name="MainGrid">
+        <ScrollViewer
+            x:Name="ContainerPage_ScrollViewer"
+            extension:ScrollViewer.ChildItemsUpdated="{Binding IsLoaded}"
+            extension:ScrollViewer.OnScrollCommand="{Binding OnScrollCommand}"
+            IsTabStop="False"
+            ScrollChanged="ContainerPage_ScrollChanged"
+            VerticalScrollBarVisibility="Auto">
 
             <ScrollViewer.Background>
                 <!--  #1313131 0.8  -->
@@ -39,35 +39,44 @@
                 <SolidColorBrush Opacity="0.70" Color="#121212" />
             </ScrollViewer.Background>
 
-            <Grid x:Name="ControlElementsGrid" ShowGridLines="False">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="60" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="60" />
-                </Grid.RowDefinitions>
+            <StackPanel>
 
                 <customcontrols:SearchBox
-                    Margin="0,15,0,0"
+                    Margin="0,30,0,0"
                     HorizontalAlignment="Center"
-                    DataContext="{Binding SearchBoxVM}" />
+                    DataContext="{Binding SearchBoxVM}"
+                    IsTabStop="False" />
 
+                <TextBlock
+                    Margin="0,100,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="20"
+                    Foreground="White"
+                    Text="Мы ничего не нашли по вашему запросу."
+                    Visibility="{Binding IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
 
                 <ItemsControl
                     Grid.Row="1"
                     Margin="15,0,0,0"
                     BorderBrush="Transparent"
+                    IsTabStop="False"
                     ItemsSource="{Binding InstanceForms}" />
 
-                <customcontrols:Paginator Grid.Row="2" DataContext="{Binding PaginatorVM}" />
+                <customcontrols:Paginator
+                    Grid.Row="2"
+                    Margin="0,30,0,15"
+                    DataContext="{Binding PaginatorVM}"
+                    Visibility="{Binding DataContext.IsPaginatorVisible, Converter={StaticResource ConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
 
-            </Grid>
+            </StackPanel>
         </ScrollViewer>
 
         <controls:LoadingBoard
             BackgroundColor="#18191b"
             BackgroundOpacity="0.9"
             IsLoadingFinished="{Binding IsLoaded}"
+            IsTabStop="False"
             Placeholder="Идёт загрузка данных с curseforge.com..." />
     </Grid>
 </UserControl>

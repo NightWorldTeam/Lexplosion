@@ -7,7 +7,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DragDropBoard}">
                     <Border AllowDrop="True" Background="{TemplateBinding Background}">
-                        <ContentPresenter x:Name="PART_ContentHost" AllowDrop="True"/>
+                        <ContentPresenter x:Name="PART_ContentHost" AllowDrop="True" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

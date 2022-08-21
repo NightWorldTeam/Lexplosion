@@ -32,25 +32,27 @@
                             Background="Transparent"
                             CornerRadius="2">
 
-                            <Grid Margin="3" ShowGridLines="False">
+                            <Grid Margin="0,3,0,3" ShowGridLines="False">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Viewbox Width="20" Height="20">
+                                <Viewbox
+                                    Width="20"
+                                    Height="20"
+                                    Stretch="Fill">
                                     <Path
                                         HorizontalAlignment="Center"
                                         Data="{Binding Icon}"
-                                        Fill="White"
-                                        Stretch="UniformToFill" />
+                                        Fill="White" />
                                 </Viewbox>
 
                                 <TextBlock
                                     Grid.Column="1"
                                     Height="20"
-                                    Margin="5,0,0,0"
+                                    Margin="5,0,5,0"
                                     FontSize="14"
                                     Foreground="White"
                                     Text="{Binding Text}"

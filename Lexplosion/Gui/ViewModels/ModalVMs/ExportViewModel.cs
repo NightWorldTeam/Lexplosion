@@ -121,9 +121,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// <summary>
         /// Команда отрабатывает при раскрытии TreeViewItem.
         /// </summary>
+        private RelayCommand _treeViewItemExpanded;
         public RelayCommand TreeViewItemExpanded
         {
-            get => new RelayCommand(obj =>
+            get => _treeViewItemExpanded ?? new RelayCommand(obj =>
             {
                 if (obj == null)
                     return;

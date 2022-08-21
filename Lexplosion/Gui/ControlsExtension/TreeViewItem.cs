@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.Gui.Extension
 {
-    public class TreeViewItem
+    public static class TreeViewItem
     {
         public static DependencyProperty CommandProperty =
             DependencyProperty.RegisterAttached(
@@ -28,6 +28,11 @@ namespace Lexplosion.Gui.Extension
         public static void SetCommand(DependencyObject target, ICommand value) 
         {
             target.SetValue(CommandProperty, value);
+        }
+
+        public static ICommand GetCommand(DependencyObject d, ICommand value) 
+        {
+            return (ICommand)d.GetValue(CommandProperty);
         }
 
         public static void SetCommandParameter(DependencyObject target, object value) 

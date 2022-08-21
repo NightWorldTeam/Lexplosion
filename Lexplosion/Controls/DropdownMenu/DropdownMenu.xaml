@@ -43,7 +43,7 @@
                                 Background="#313131"
                                 BorderBrush="#424242"
                                 CornerRadius="5">
-                                <ContentControl Margin="0,5,0,5" Content="{TemplateBinding Content}" />
+                                <ContentControl Margin="2,7,2,7" Content="{TemplateBinding Content}" />
                             </Border>
                         </Popup>
                     </Grid>

@@ -9,15 +9,23 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
     public class CatalogViewModel : VMBase, IPaginable
     {
         private const int _pageSize = 10;
-
         private readonly MainViewModel _mainViewModel;
 
+
+        #region props
+        
+        
         public ObservableCollection<InstanceFormViewModel> InstanceForms { get; set; } = new ObservableCollection<InstanceFormViewModel>();
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true);
 
         private bool _isLoaded;
+        /// <summary>
+        /// <para>Отвечает на вопрос загрузилась ли страница.</para>
+        /// <br><c>Загрузилась - true</c></br>
+        /// <br><c>Загружается - false</c></br>
+        /// </summary>
         public bool IsLoaded
         {
             get => _isLoaded; set
@@ -26,6 +34,51 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 OnPropertyChanged();
             }
         }
+
+        private bool _isEmptyList;
+        /// <summary>
+        /// <para>Отвечает на вопрос количество найденого контента равно 0?</para>
+        /// </summary>
+        public bool IsEmptyList 
+        {
+            get => _isEmptyList; set 
+            {
+                _isEmptyList = value; 
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isPaginatorVisible = false;
+        public bool IsPaginatorVisible 
+        {
+            get => _isPaginatorVisible; set 
+            {
+                _isPaginatorVisible = value; 
+                OnPropertyChanged();
+            }
+        }
+        #endregion props
+
+
+        #region commads
+
+
+        private RelayCommand _onScrollCommand;
+        public RelayCommand OnScrollCommand 
+        {
+            get => _onScrollCommand ?? new RelayCommand(obj => 
+            {
+                // TODO: Возможно тяжелый код.
+                foreach (var instance in InstanceForms)
+                {
+                    instance.IsDropdownMenuOpen = false;
+                }
+            });
+        }
+
+
+        #endregion commands
+
 
         public CatalogViewModel(MainViewModel mainViewModel)
         {
@@ -46,16 +99,31 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             Lexplosion.Run.TaskRun(delegate ()
             {
                 var instances = InstanceClient.GetOutsideInstances(
-                SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex - 1, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed);
+                    SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex - 1, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed);
+
+                Console.WriteLine("Поиск по запросу: " + SearchBoxVM.SearchTextComfirmed + ". Найдено: " + instances.Count);
+
+                if (instances.Count == _pageSize)
+                {
+                    IsPaginatorVisible = true;
+                }
+                else IsPaginatorVisible = false;
 
                 if (instances.Count == 0)
                 {
-
+                    App.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        InstanceForms.Clear();
+                        IsEmptyList = true;
+                    });
                 }
                 else
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
+                        if (IsEmptyList)
+                            IsEmptyList = false;
+                        
                         InstanceForms.Clear();
 
                         foreach (var instance in instances)

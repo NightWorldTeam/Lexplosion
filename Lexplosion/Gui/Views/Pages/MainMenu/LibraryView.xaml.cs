@@ -11,5 +11,19 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
         {
             InitializeComponent();
         }
+
+        private void LibraryListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            var viewer = (ScrollViewer)sender;
+            try
+            {
+                var onScrollCommand = Lexplosion.Gui.Extension.ScrollViewer.GetOnScrollCommand(viewer);
+                onScrollCommand.Execute(null);
+            }
+            catch
+            {
+
+            }
+        }
     }
 }

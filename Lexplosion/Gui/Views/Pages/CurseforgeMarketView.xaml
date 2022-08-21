@@ -134,6 +134,16 @@
                         Command="{Binding ClosePageCommand}"
                         Style="{StaticResource CFMCloseButton}" />
 
+                    <TextBlock
+                        Grid.Row="1"
+                        Margin="0,100,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        FontSize="20"
+                        Foreground="White"
+                        Text="Мы ничего не нашли по вашему запросу."
+                        Visibility="{Binding IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
+
                     <!--  Curseforge content container  -->
                     <ItemsControl
                         Grid.Row="1"
@@ -367,7 +377,8 @@
                     <customcontrols:Paginator
                         Grid.Row="2"
                         HorizontalAlignment="Center"
-                        DataContext="{Binding PaginatorVM}" />
+                        DataContext="{Binding PaginatorVM}"
+                        Visibility="{Binding IsPaginatorVisible, Converter={StaticResource ConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
                 </Grid>
             </ScrollViewer>
         </Grid>

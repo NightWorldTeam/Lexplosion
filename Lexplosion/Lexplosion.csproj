@@ -105,6 +105,7 @@
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Controls\MessageModel.cs" />
     <Compile Include="Controls\ModalControl\Modal.cs" />
+    <Compile Include="Controls\Paginator\Paginator.cs" />
     <Compile Include="Controls\PlaceholderTextBox\PlaceholderTextBox.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
@@ -519,11 +520,13 @@
     <Resource Include="Assets\fonts\Casper.ttf" />
     <Resource Include="Assets\fonts\Arkhip.ttf" />
     <Resource Include="Assets\fonts\Futurabook.ttf" />
-    <Resource Include="Assets\fonts\Password.ttf" />
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
     <None Include="App.config" />
+    <Resource Include="Assets\fonts\Inter.ttf" />
+    <Resource Include="Assets\fonts\Montserrat-Italic.ttf" />
+    <Resource Include="Assets\fonts\Montserrat.ttf" />
     <None Include="DLL\LumiSoft.Net.zip" />
     <None Include="DLL\NewtonsoftJson.zip" />
     <None Include="DLL\Tommy.zip" />

@@ -7,16 +7,6 @@
             <Setter.Value>
                 <ControlTemplate>
                     <Grid x:Name="GridScrollBar" Width="7">
-                        <Grid.RowDefinitions>
-                            <RowDefinition MaxHeight="7" />
-                            <RowDefinition />
-                            <RowDefinition MaxHeight="7" />
-                        </Grid.RowDefinitions>
-                        <RepeatButton
-                            x:Name="PageUpButton"
-                            Grid.Row="0"
-                            Command="ScrollBar.LineUpCommand"
-                            Style="{DynamicResource RepeatButtonArrowStyle}" />
                         <Track
                             x:Name="PART_Track"
                             Grid.Row="1"
@@ -38,15 +28,6 @@
                                     Style="{DynamicResource RepeatButtonPageStyle}" />
                             </Track.IncreaseRepeatButton>
                         </Track>
-                        <RepeatButton
-                            x:Name="PageDownButton"
-                            Grid.Row="2"
-                            Command="ScrollBar.LineDownCommand"
-                            Style="{DynamicResource RepeatButtonArrowStyle}">
-                            <RepeatButton.LayoutTransform>
-                                <RotateTransform Angle="180" />
-                            </RepeatButton.LayoutTransform>
-                        </RepeatButton>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="ScrollBar.Orientation" Value="Horizontal">
@@ -56,46 +37,6 @@
                                 </Setter.Value>
                             </Setter>
                             <Setter TargetName="PART_Track" Property="Orientation" Value="Vertical" />
-                            <Setter TargetName="IncreaseRepeatButton" Property="Command" Value="ScrollBar.LineRightCommand" />
-                            <Setter TargetName="DecreaseRepeatButton" Property="Command" Value="ScrollBar.LineLeftCommand" />
-                            <Setter TargetName="PageDownButton" Property="Command" Value="ScrollBar.PageRightCommand" />
-                            <Setter TargetName="PageUpButton" Property="Command" Value="ScrollBar.PageLeftCommand" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--  Repeat button style  -->
-    <Style
-        x:Key="RepeatButtonArrowStyle"
-        BasedOn="{x:Null}"
-        TargetType="{x:Type RepeatButton}">
-        <Setter Property="Height" Value="10" />
-        <Setter Property="Focusable" Value="False" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Grid>
-                        <Border x:Name="RepeatButtonArrowBorder" Background="#1f202a" />
-                        <Polygon
-                            x:Name="RepeatButtonArrow"
-                            Fill="#1f202a"
-                            Points="2,9 11,9 6.5,4" />
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="RepeatButtonArrow" Property="Fill" Value="{StaticResource MouseOverBrush}" />
-                            <Setter TargetName="RepeatButtonArrowBorder" Property="Background" Value="{StaticResource DarkDarkBackgroundBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="RepeatButtonArrow" Property="Fill" Value="{StaticResource PressedBrush}" />
-                            <Setter TargetName="RepeatButtonArrowBorder" Property="Background" Value="#FFD2D2D2" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="RepeatButtonArrow" Property="Fill" Value="{StaticResource BorderBrush}" />
-                            <Setter TargetName="RepeatButtonArrow" Property="Opacity" Value="0.72" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -111,7 +52,7 @@
             <Setter.Value>
                 <ControlTemplate>
                     <!--  Scroll bar space  -->
-                    <Border Background="{StaticResource DarkDarkBackgroundBrush}" />
+                    <Border Background="Transparent" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -124,17 +65,20 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border Background="{StaticResource DarkDarkBackgroundBrush}">
+                    <Border
+                        x:Name="Border"
+                        MaxWidth="3"
+                        Background="#404040">
                         <Rectangle
                             x:Name="ThumbRect"
-                            MaxWidth="13"
-                            Fill="#343434"
+                            Fill="#404040"
                             RadiusX="4"
                             RadiusY="4" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="ThumbRect" Property="Fill" Value="{StaticResource MouseOverBrush}" />
+                            <Setter TargetName="ThumbRect" Property="Fill" Value="#838383" />
+                            <Setter TargetName="Border" Property="Background" Value="#838383" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="ThumbRect" Property="Opacity" Value="0.72" />

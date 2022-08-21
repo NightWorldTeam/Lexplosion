@@ -20,6 +20,7 @@ namespace Lexplosion.Gui.ViewModels
 
         #region command
 
+
         private RelayCommand _nextPageCommand;
         public RelayCommand NextPageCommand
         {
@@ -59,10 +60,12 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
+
         #endregion
 
 
         #region props
+
 
         private ushort _pageIndex = 1;
         public ushort PageIndex
@@ -122,6 +125,8 @@ namespace Lexplosion.Gui.ViewModels
                 OnPropertyChanged();
             }
         }
+
+
         #endregion props
     }
 }

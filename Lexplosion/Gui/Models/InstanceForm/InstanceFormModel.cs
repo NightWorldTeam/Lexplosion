@@ -135,13 +135,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
                 }
 
-                if (InstanceClient.InLibrary || DownloadModel.IsDownloadInProgress)
+                if (InstanceClient.InLibrary && !InstanceClient.IsInstalled)
                 {
                     LowerButtons.Add(
                             new LowerButton("Удалить из библиотеки", MultiButtonProperties.GeometryLibraryDelete, LowerButtonFunc.DeleteFromLibrary)
                         );
                 }
-                else
+                else if (!InstanceClient.InLibrary)
                 {
                     LowerButtons.Add(
                         new LowerButton("Добавить в библиотеку", MultiButtonProperties.GeometryLibraryAdd, LowerButtonFunc.AddToLibrary)

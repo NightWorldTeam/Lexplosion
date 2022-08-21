@@ -46,6 +46,7 @@ namespace Lexplosion.Gui.ViewModels
                 }
             }));
         }
+
         public string SearchTextUncomfirmed
         {
             get => _searchTextUncomfirmed; set
