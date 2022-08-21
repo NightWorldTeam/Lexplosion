@@ -8,5 +8,14 @@ namespace Lexplosion.Logic.Management
 {
     class Player
     {
+        public void Kick()
+        {
+
+        }
+
+        public void Unkick()
+        {
+
+        }
     }
 }
