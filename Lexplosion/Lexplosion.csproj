@@ -525,8 +525,6 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="App.config" />
-    <Resource Include="Assets\fonts\Inter.ttf" />
-    <Resource Include="Assets\fonts\Montserrat-Italic.ttf" />
     <Resource Include="Assets\fonts\Montserrat.ttf" />
     <None Include="DLL\LumiSoft.Net.zip" />
     <None Include="DLL\NewtonsoftJson.zip" />
