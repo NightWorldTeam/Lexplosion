@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management
 {
-    class Player
+    class Player : VMBase
     {
+        public string Name { get; } = "Player";
+        public byte[] Avatart { get; } = null;
+        public string ProfileUrl { get; } = null;
+
         public void Kick()
         {
 
