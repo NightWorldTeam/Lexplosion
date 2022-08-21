@@ -23,9 +23,9 @@ namespace Lexplosion.Logic.Network
         private string UUID;
         private string sessionToken;
 
-        public event Action<string> ConnectingUser;
-        public event Action<string> DisconnectedUser;
-        public event Action<OnlineGameStatus, string> StateChange;
+        public static event Action<string> ConnectingUser;
+        public static event Action<string> DisconnectedUser;
+        public static event Action<OnlineGameStatus, string> StateChanged;
 
         private bool _isInit = false;
 
@@ -153,7 +153,7 @@ namespace Lexplosion.Logic.Network
 
                 Server.ConnectingUser += ConnectingUser;
                 Server.DisconnectedUser += DisconnectedUser;
-                StateChange?.Invoke(OnlineGameStatus.OpenWorld, "");
+                StateChanged?.Invoke(OnlineGameStatus.OpenWorld, "");
 
                 while (true)
                 {
@@ -167,7 +167,7 @@ namespace Lexplosion.Logic.Network
                     Thread.Sleep(3000);
                 }
 
-                StateChange?.Invoke(OnlineGameStatus.None, "");
+                StateChanged?.Invoke(OnlineGameStatus.None, "");
                 waitingInforming.Set(); // высвобождаем поток InformingThread чтобы он не ждал лишнее время
                 Server.StopWork();
             }
