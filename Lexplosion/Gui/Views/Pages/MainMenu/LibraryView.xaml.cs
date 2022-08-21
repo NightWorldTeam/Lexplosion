@@ -12,7 +12,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
             InitializeComponent();
         }
 
-        private void LibraryListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        private void LibraryItemsControl_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             var viewer = (ScrollViewer)sender;
             try
