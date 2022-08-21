@@ -1,4 +1,6 @@
-﻿namespace Lexplosion
+﻿using System.ComponentModel;
+
+namespace Lexplosion
 {
     public enum ImportResult
     {
@@ -208,8 +210,11 @@
 
     public enum OnlineGameStatus
     {
+        [Description("Нет открытых миров")]
         None,
+        [Description("Открыт для подключения")]
         OpenWorld,
+        [Description("Подключен к серверу")]
         ConnectToUser
     }
 

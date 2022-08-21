@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management
 {
-    class Player : VMBase
+    public class Player : VMBase
     {
         public string Name { get; } = "Player";
         public byte[] Avatart { get; } = null;

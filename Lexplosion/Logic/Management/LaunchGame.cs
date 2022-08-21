@@ -42,8 +42,8 @@ namespace Lexplosion.Logic.Management
             _type = type;
         }
 
-        public static event Action<Player> ConnectingUser;
-        public static event Action<Player> DisconnectedUser;
+        public static event Action<Player> UserConnected;
+        public static event Action<Player> UserDisconnected;
         public static event Action<OnlineGameStatus, string> StateChanged;
 
         private string CreateCommand(InitData data)

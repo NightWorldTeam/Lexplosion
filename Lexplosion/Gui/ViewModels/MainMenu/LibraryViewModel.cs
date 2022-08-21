@@ -22,7 +22,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 // TODO: Возможно тяжелый код.
                 foreach (var instance in _mainViewModel.Model.LibraryInstances)
                 {
-                    instance.IsDropdownMenuOpen = false;
+                    if (instance.IsDropdownMenuOpen)
+                        instance.IsDropdownMenuOpen = false;
                 }
             });
         }

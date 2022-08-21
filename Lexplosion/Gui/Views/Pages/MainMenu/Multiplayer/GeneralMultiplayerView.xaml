@@ -33,7 +33,7 @@
             <StackPanel>
                 <StackPanel Margin="28,20,0,0">
                     <TextBlock Text="Статус" />
-                    <TextBlock Opacity="0.8" Text="Нет открытого мира" />
+                    <TextBlock Opacity="0.8" Text="{Binding Model.GameStatus}" />
                 </StackPanel>
 
                 <StackPanel Margin="28,40,0,0">
@@ -100,9 +100,6 @@
                             </Grid>
                         </DataTemplate>
                     </ItemsControl>
-
-
-
 
                     <Grid
                         Margin="10,20,0,0"
