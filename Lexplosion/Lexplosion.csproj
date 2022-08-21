@@ -256,6 +256,7 @@
     <Compile Include="Logic\Management\Instances\LocalInstance.cs" />
     <Compile Include="Logic\Management\Instances\NightworldInstance.cs" />
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
+    <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
     <Compile Include="Tools\ImageTools.cs" />

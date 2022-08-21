@@ -23,9 +23,9 @@ namespace Lexplosion.Logic.Network
         private string UUID;
         private string sessionToken;
 
-        public static event Action<string> ConnectingUser;
-        public static event Action<string> DisconnectedUser;
-        public static event Action<OnlineGameStatus, string> StateChanged;
+        public event Action<string> ConnectingUser;
+        public event Action<string> DisconnectedUser;
+        public event Action<OnlineGameStatus, string> StateChanged;
 
         private bool _isInit = false;
 
