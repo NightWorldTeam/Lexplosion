@@ -20,9 +20,8 @@ namespace Lexplosion.Controls
 
     public class ToastMessage : ContentControl
     {
-        private DispatcherTimer timer = new DispatcherTimer();
-
         #region DependencyProperty Register
+
 
         public static readonly DependencyProperty HeaderProperty =
             DependencyProperty.Register("Header", typeof(string), typeof(ToastMessage), new PropertyMetadata());
@@ -36,12 +35,16 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty CloseCommandProperty = 
             DependencyProperty.Register("CloseCommand", typeof(ICommand), typeof(ToastMessage), new PropertyMetadata());
 
-        //public static readonly DependencyProperty VisibilityTimeProperty =
-        //    DependencyProperty.Register("VisibilityTime", typeof(double), typeof(ToastMessage), new PropertyMetadata(-1));
+        public static readonly DependencyProperty VisibilityTimeProperty =
+            DependencyProperty.Register("VisibilityTime", typeof(int), typeof(ToastMessage), new PropertyMetadata(-1));
 
+        
         #endregion DependencyProperty Register
 
+
         #region getters / settes
+        
+        
         public string Header 
         {
             get => (string)GetValue(HeaderProperty);
@@ -66,7 +69,15 @@ namespace Lexplosion.Controls
             set => SetValue(CloseCommandProperty, value);
         }
 
+        public int VisibilityTime 
+        {
+            get => (int)GetValue(VisibilityTimeProperty);
+            set => SetValue(VisibilityTimeProperty, value);
+        }
+
+
         #endregion getters / setters
+
 
         #region constructors
 
@@ -79,16 +90,19 @@ namespace Lexplosion.Controls
         {
             // here we call timer.
             // TODO: Сделать анимацию.
-            Lexplosion.Run.TaskRun(() => {
-                //timer.Interval = new TimeSpan(0,0,5);
-                //timer.Start();
 
-                Thread.Sleep(5000);
+            if (VisibilityTime != -1) 
+            { 
+                Lexplosion.Run.TaskRun(() => 
+                {
+                    Thread.Sleep(VisibilityTime);
 
-                App.Current.Dispatcher.Invoke(() => { 
-                    CloseCommand.Execute(null);
+                    App.Current.Dispatcher.Invoke(() => 
+                    { 
+                        CloseCommand.Execute(null);
+                    });
                 });
-            });
+            }
         }
 
         #endregion constructors

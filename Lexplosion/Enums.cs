@@ -118,7 +118,7 @@ namespace Lexplosion
 
     public enum ModCategory
     {
-        AllMods,
+        AllMods = -1,
         WorldGen,
         Technology,
         Magic,

@@ -53,8 +53,7 @@
                     BorderThickness="1,0,1,1"
                     ItemsSource="{Binding ModCategories}"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    SelectedIndex="0"
-                    SelectedItem="">
+                    SelectedItem="{Binding SelectedAddonCategory}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Setter Property="Margin" Value="0,5,0,0" />
@@ -383,8 +382,9 @@
             </ScrollViewer>
         </Grid>
         <controls:LoadingBoard
-            BackgroundColor="Black"
+            BackgroundColor="#17141b"
             IsLoadingFinished="{Binding IsLoaded}"
+            BackgroundOpacity="0.7"
             Placeholder="Идет загрузка данных с curseforge.com..." />
     </Grid>
 </UserControl>

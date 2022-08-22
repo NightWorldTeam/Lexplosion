@@ -3,6 +3,7 @@ using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.FileSystem;
 using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels
@@ -71,6 +72,15 @@ namespace Lexplosion.Gui.ViewModels
                 LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
             }
         }
+
+        public void Seach() {
+            MessageBox.Show("Work");
+        }
+
+        public Action SearchAction 
+        {
+            get => Seach;
+        } 
 
         #endregion
 

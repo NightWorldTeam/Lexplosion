@@ -93,7 +93,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         public override string ToString()
         {
-            return String.Format("AddonCategory:\n    Id: {0}\n   Name: {1}\n    ImageSource: {2}", this.Id, this.Name, this.ImageSource);
+            return String.Format("AddonCategory:\n    Id: {0}\n    Name: {1}\n    ImageSource: {2}", this.Id, this.Name, this.ImageSource);
         }
     }
 
@@ -240,6 +240,17 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
+        private AddonCategory _selectedAddonCategory;
+        public AddonCategory SelectedAddonCategory
+        {
+            get => _selectedAddonCategory; set 
+            {
+                _selectedAddonCategory = value;
+                OnPropertyChanged();
+                GetInitializeInstance();
+            }
+        }
+
         #endregion props
 
 
@@ -252,12 +263,14 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             _baseInstanceData = instanceClient.GetBaseData;
 
-            InstanceAddons = new ObservableCollection<InstanceAddon>();
-
             foreach (var addon in AddonCategory.GetCategories(addonsType))
             {
                 ModCategories.Add(addon);
             }
+
+            SelectedAddonCategory = ModCategories[0];
+
+            InstanceAddons = new ObservableCollection<InstanceAddon>();
 
             SearchBoxVM.SearchChanged += GetInitializeInstance;
             PaginatorVM.PageChanged += GetInitializeInstance;
@@ -275,7 +288,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             Lexplosion.Run.TaskRun(delegate ()
             {
-                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1, _addonsType, -1, SearchBoxVM.SearchTextComfirmed);
+                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1, _addonsType, SelectedAddonCategory.Id, SearchBoxVM.SearchTextComfirmed);
 
                 if (instances.Count == _pageSize)
                 {

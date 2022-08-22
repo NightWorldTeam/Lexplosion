@@ -2,6 +2,7 @@
     x:Class="Lexplosion.Gui.Views.Pages.AuthView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -318,6 +319,20 @@
                     </ComboBox>
                 </Grid>
             </Grid>
+
+            <!--<StackPanel Grid.Column="1">
+                <controls:SearchBox
+                    Width="250"
+                    Height="40"
+                    CaretBrush="{DynamicResource BrandSolidColorBrush}"
+                    FontSize="16"
+                    Foreground="White"
+                    Placeholder="Поиск"
+                    PlaceholderColor="White"
+                    PlaceholderFontSize="20"
+                    PlaceholderOpacity="0.8"
+                    SearchAction="{Binding SearchAction}" />
+            </StackPanel>-->
         </Grid>
     </Grid>
 </UserControl>

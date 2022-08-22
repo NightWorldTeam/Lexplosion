@@ -57,6 +57,18 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 OnPropertyChanged();
             }
         }
+
+        private string _searchText = "";
+        public string SearchText
+        {
+            get => _searchText; set 
+            {
+                _searchText = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #endregion props
 
 
@@ -98,6 +110,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             IsLoaded = false;
             Lexplosion.Run.TaskRun(delegate ()
             {
+                //var instances = InstanceClient.GetOutsideInstances(
+                //  SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex - 1, ModpacksCategories.All, SearchText);
+
                 var instances = InstanceClient.GetOutsideInstances(
                     SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex - 1, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed);
 

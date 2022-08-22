@@ -107,6 +107,7 @@
     <Compile Include="Controls\ModalControl\Modal.cs" />
     <Compile Include="Controls\Paginator\Paginator.cs" />
     <Compile Include="Controls\PlaceholderTextBox\PlaceholderTextBox.cs" />
+    <Compile Include="Controls\SearchBox\SearchBox.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
     <Compile Include="Global.cs" />
@@ -344,6 +345,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PlaceholderTextBox\PlaceholderTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SearchBox\SearchBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
