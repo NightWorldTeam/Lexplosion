@@ -346,7 +346,7 @@ namespace Lexplosion.Logic.Management.Instances
                         while (i < count)
                         {
                             var value = dependencies[i];
-                            if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("modId"))
+                            if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("modId") && !installedAddons.ContainsKey(value["modId"]))
                             {
                                 List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(value["modId"].ToString(), _gameVersion, _modpackInfo.Modloader);
                                 var file = GetLastFile(_modpackInfo.GameVersion, files, _modpackInfo);
@@ -389,7 +389,7 @@ namespace Lexplosion.Logic.Management.Instances
                                             addonPointer.Point.IsInstalled = true;
                                         }
 
-                                        // удаляем старый файл
+                                        // удаляем старый файл на всякий случай
                                         if (installedAddons[res.Value1.ProjectID] != null && installedAddons[res.Value1.ProjectID].ActualPath != res.Value1.ActualPath)
                                         {
                                             try
