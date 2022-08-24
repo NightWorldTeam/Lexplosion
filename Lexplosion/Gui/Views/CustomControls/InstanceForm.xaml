@@ -39,14 +39,12 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Viewbox
-                                    Width="20"
-                                    Height="20"
-                                    Stretch="Fill">
+                                <Viewbox Height="20">
                                     <Path
                                         HorizontalAlignment="Center"
                                         Data="{Binding Icon}"
-                                        Fill="White" />
+                                        Fill="White"
+                                        Stretch="UniformToFill" />
                                 </Viewbox>
 
                                 <TextBlock
