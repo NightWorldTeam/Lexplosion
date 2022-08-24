@@ -32,6 +32,11 @@
         <customcontrols:InstanceForm  Margin="4,30,30,0"/>
     </DataTemplate>-->
 
+    <!--  OnlyForEmpty  -->
+    <DataTemplate DataType="{x:Type viewmodels:DevСurtainViewModel}">
+        <pages:DevCurtainView />
+    </DataTemplate>
+
     <!--  Market  -->
     <DataTemplate DataType="{x:Type vmcurseforgemarket:CurseforgeMarketViewModel}">
         <pages:CurseforgeMarketView />
@@ -58,6 +63,12 @@
     <!--  MainMenu Multiplayer DataTemplate  -->
     <DataTemplate DataType="{x:Type vmmultiplayer:GeneralMultiplayerViewModel}">
         <pagemultiplayer:GeneralMultiplayerView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmultiplayer:FriendsTabViewModel}">
+        <pagemultiplayer:FriendsTabView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmultiplayer:ChannelTabViewModel}">
+        <pagemultiplayer:ChannelsView />
     </DataTemplate>
 
     <!--  InstanceShowCase DataTemplate  -->

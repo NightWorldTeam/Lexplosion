@@ -161,10 +161,13 @@
     <Compile Include="Gui\ViewModels\MainMenu\GeneralSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\LibraryViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\MainMenuViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\ChannelTabViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\FriendsTabViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\DialogViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ExportViewModel.cs" />
+    <Compile Include="Gui\ViewModels\DevСurtainViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\ChangelogViewModel.cs" />
@@ -216,6 +219,12 @@
     <Compile Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\ChannelsView.xaml.cs">
+      <DependentUpon>ChannelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\FriendsTabView.xaml.cs">
+      <DependentUpon>FriendsTabView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml.cs">
       <DependentUpon>GeneralMultiplayerView.xaml</DependentUpon>
     </Compile>
@@ -224,6 +233,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\ModalViews\ModalExportView.xaml.cs">
       <DependentUpon>ModalExportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\DevCurtainView.xaml.cs">
+      <DependentUpon>DevCurtainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ShowCaseMenu\ChangelogView.xaml.cs">
       <DependentUpon>ChangelogView.xaml</DependentUpon>
@@ -456,6 +468,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\ChannelsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\FriendsTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -465,6 +485,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\ModalViews\ModalExportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\DevCurtainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -51,12 +51,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 new Tab()
                 {
                     Header = "Mods",
-                    Content = null
+                    Content = new DevСurtainViewModel()
                 },
-                                new Tab()
+                new Tab()
                 {
                     Header = "Changelog",
-                    Content = new ChangelogViewModel()
+                    Content = new DevСurtainViewModel() //new ChangelogViewModel()
                 }
             };
 

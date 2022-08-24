@@ -47,9 +47,19 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
 
         public MultiplayerModel()
         {
+            SetTestPlayers();
             LaunchGame.StateChanged += OnPlayerStateChanged;
             LaunchGame.UserConnected += OnPlayerConnected;
             LaunchGame.UserDisconnected += OnPlayerDisconnected;
+        }
+
+        private void SetTestPlayers() 
+        {
+            Players = new ObservableCollection<Player>();
+
+            var testPlayer = new Player();
+
+            Players.Add(testPlayer);
         }
     }
 

@@ -82,7 +82,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 new Tab()
                 {
                     Header = "Changelog",
-                    Content = null
+                    Content = new DevСurtainViewModel()
                 }
             };
 
@@ -109,7 +109,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 {
                     Id = 4,
                     Header = "Журнал изменений",
-                    Content = null
+                    Content = new DevСurtainViewModel()
                 });
             }
 

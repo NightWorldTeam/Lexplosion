@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Gui;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,18 +9,43 @@ namespace Lexplosion.Logic.Management
 {
     public class Player : VMBase
     {
-        public string Name { get; } = "Player";
-        public byte[] Avatart { get; } = null;
+        public string Nickname { get; } = "Player";
+        public byte[] Skin { get; } = null;
         public string ProfileUrl { get; } = null;
 
-        public void Kick()
-        {
-
+        private bool _isKicked;
+        public bool IsKicked 
+        { 
+            get => _isKicked; private set 
+            {
+                _isKicked = value;
+                OnPropertyChanged();
+            } 
         }
 
-        public void Unkick()
-        {
+        public Action AccessChangeAction { get; }
 
+        public Player()
+        {
+            AccessChangeAction = AccessChange;
+        }
+
+        private void AccessChange() 
+        {
+            if (IsKicked) 
+                Unkick();
+            else 
+                Kick();
+        }
+
+        private void Kick()
+        {
+            IsKicked = true;
+        }
+
+        private void Unkick()
+        {
+            IsKicked= false;
         }
     }
 }
