@@ -11,9 +11,10 @@
 
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="18" />
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontFamily" Value="{DynamicResource FuturaBookC}" />
         </Style>
     </UserControl.Resources>
 
@@ -79,7 +80,17 @@
                                         Width="45"
                                         Height="45"
                                         Background="#167FFC"
-                                        CornerRadius="200" />
+                                        CornerRadius="200">
+                                        <Border.Style>
+                                            <Style>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsKicked}" Value="True">
+                                                        <Setter Property="TextBlock.Opacity" Value="0.6" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
                                     <!--<Border.Background>
                                             <ImageBrush ImageSource="{Binding Avatart, Converter={StaticResource BytesToBitmapImageConverter}}" />
                                         </Border.Background>-->
@@ -91,10 +102,21 @@
                                             FontSize="18"
                                             FontWeight="Regular"
                                             Foreground="White"
-                                            Text="{Binding Nickname}" />
+                                            Text="{Binding Nickname}">
+                                            <TextBlock.Style>
+                                                <Style>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsKicked}" Value="True">
+                                                            <Setter Property="TextBlock.Opacity" Value="0.6" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
 
                                         <Button
-                                            Margin="10,3,0,0"
+                                            Margin="7,3,0,0"
                                             HorizontalAlignment="Left"
                                             Command="{Binding AccessChangeAction}"
                                             FontWeight="Regular">
@@ -108,14 +130,14 @@
                                                                 <Border
                                                                     x:Name="border"
                                                                     Padding="3"
-                                                                    Background="Black"
+                                                                    Background="Transparent"
                                                                     CornerRadius="5">
                                                                     <ContentPresenter />
                                                                 </Border>
 
                                                                 <ControlTemplate.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter TargetName="border" Property="Background" Value="#454545" />
+                                                                        <Setter TargetName="border" Property="Opacity" Value="0.8" />
                                                                     </Trigger>
                                                                 </ControlTemplate.Triggers>
                                                             </ControlTemplate>
