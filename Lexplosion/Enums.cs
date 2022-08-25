@@ -240,7 +240,7 @@ namespace Lexplosion
     public enum DownloadAddonRes
     {
         Successful,
-        ProjectIdError,
+        ProjectDataError,
         FileIdError,
         DownloadError,
         UncnownAddonType,

@@ -119,8 +119,7 @@ namespace Lexplosion.Logic.Network
 
         public static List<CurseforgeAddonInfo> GetAddonsInfo(int[] ids)
         {
-            Console.WriteLine("GetAddonsInfo");
-            string jsonContent = "{\"modIds\": ["+string.Join(",", ids) +"]}";
+            string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
             //try
             {
@@ -284,24 +283,39 @@ namespace Lexplosion.Logic.Network
             //}
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(int projectID, int fileID, string path)
+        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, int fileID, string path)
         {
-            Console.WriteLine("");
-            Console.WriteLine("PR ID " + projectID);
             //try
             {
-                ProjectTypeInfo data = GetApiData<ProjectTypeInfo>("https://api.curseforge.com/v1/mods/" + projectID + "/");
-                if (data.classId == 0 || data.latestFiles == null)
+                int projectID = addonInfo.id;
+                Console.WriteLine("");
+                Console.WriteLine("PR ID " + projectID);
+
+                if (addonInfo.latestFiles == null)
                 {
                     return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
-                        Value2 = DownloadAddonRes.ProjectIdError
+                        Value2 = DownloadAddonRes.ProjectDataError
                     };
                 }
 
                 // получем информацию о файле
-                CurseforgeFileInfo fileData = GetProjectFile(projectID.ToString(), fileID.ToString());
+                CurseforgeFileInfo fileData = null;
+                //ищем нужный файл
+                foreach (CurseforgeFileInfo data in addonInfo.latestFiles)
+                {
+                    if (data.id == fileID)
+                    {
+                        fileData = data;
+                        break;
+                    }
+                }
+                //не нашли, делаем дополнительный запрос и получаем его
+                if (fileData == null)
+                {
+                    fileData = GetProjectFile(projectID.ToString(), fileID.ToString());
+                }
 
                 Console.WriteLine("fileData " + fileData.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
 
@@ -343,7 +357,7 @@ namespace Lexplosion.Logic.Network
 
                 // определяем папку в которую будет установлен данный аддон
                 string folderName = "";
-                AddonType addonType = (AddonType)data.classId;
+                AddonType addonType = (AddonType)addonInfo.classId;
                 switch (addonType)
                 {
                     case AddonType.Mods:

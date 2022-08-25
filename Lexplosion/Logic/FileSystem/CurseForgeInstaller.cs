@@ -12,6 +12,7 @@ using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Objects.Curseforge;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -331,6 +332,24 @@ namespace Lexplosion.Logic.FileSystem
                     Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с json файлами
                     ManualResetEvent repeatWait = new ManualResetEvent(true); // нужен чтобы блочить другие потоки при повторном скачивании, если возникла ошибка
 
+                    // формируем список айдишников
+                    int[] ids = new int[filesCount];
+                    int j = 0;
+                    foreach (InstanceManifest.FileData file in downloadList)
+                    {
+                        ids[j] = file.projectID;
+                        j++;
+                    }
+
+                    // получем инфу о всех аддонах
+                    List<CurseforgeAddonInfo> addnos_ = CurseforgeApi.GetAddonsInfo(ids);
+                    //преобразовываем эту хуйню в нормальный спсиок
+                    Dictionary<int, CurseforgeAddonInfo> addons = new Dictionary<int, CurseforgeAddonInfo>();
+                    foreach (CurseforgeAddonInfo addon in addnos_)
+                    {
+                        addons[addon.id] = addon;
+                    }
+
                     TasksPerfomer perfomer = null;
                     if (filesCount > 0)
                         perfomer = new TasksPerfomer(10, filesCount);
@@ -341,14 +360,25 @@ namespace Lexplosion.Logic.FileSystem
                         perfomer.ExecuteTask(delegate ()
                         {
                             repeatWait.WaitOne();
-                            var result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
+
+                            CurseforgeAddonInfo addonInfo;
+                            if (addons.ContainsKey(file.projectID))
+                            {
+                                addonInfo = addons[file.projectID];
+                            }
+                            else
+                            {
+                                addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                            }
+
+                            var result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
 
                             if (result.Value2 != DownloadAddonRes.Successful) //скачивание мода не удалось.
                             {
                                 Console.WriteLine("ERROR " + result.Value2);
 
                                 // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
-                                if (result.Value2 == DownloadAddonRes.ProjectIdError || result.Value2 == DownloadAddonRes.DownloadError)
+                                if (result.Value2 == DownloadAddonRes.ProjectDataError || result.Value2 == DownloadAddonRes.DownloadError)
                                 {
                                     repeatWait.Reset();
 
@@ -356,7 +386,8 @@ namespace Lexplosion.Logic.FileSystem
                                     while (j < 6 && result.Value2 != DownloadAddonRes.Successful)
                                     {
                                         Console.WriteLine("REPEAT DOWNLOAD");
-                                        result = CurseforgeApi.DownloadAddon(file.projectID, file.fileID, "/instances/" + instanceId + "/");
+                                        addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                                        result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
                                         j++;
                                     }
 
