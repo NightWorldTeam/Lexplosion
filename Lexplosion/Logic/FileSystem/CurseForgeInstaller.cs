@@ -383,7 +383,7 @@ namespace Lexplosion.Logic.FileSystem
                                     repeatWait.Reset();
 
                                     int j = 0;
-                                    while (j < 6 && result.Value2 != DownloadAddonRes.Successful)
+                                    while (j < 4 && result.Value2 != DownloadAddonRes.Successful)
                                     {
                                         Console.WriteLine("REPEAT DOWNLOAD");
                                         addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
