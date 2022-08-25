@@ -72,17 +72,11 @@
     </DataTemplate>
 
     <!--  InstanceShowCase DataTemplate  -->
-    <DataTemplate DataType="{x:Type showcasemenu:ShowCaseViewModel}">
-        <showcasepage:ShowCaseView />
-    </DataTemplate>
     <DataTemplate DataType="{x:Type showcasemenu:OverviewViewModel}">
         <showcasepage:OverviewView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewmodels:GalleryViewModel}">
         <customcontrols:Gallery />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type showcasemenu:InstanceMenuViewModel}">
-        <showcasepage:InstanceMenuView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type showcasemenu:InstanceSettingsViewModel}">
         <showcasepage:InstanceSettingsView />
@@ -92,6 +86,9 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type showcasemenu:ChangelogViewModel}">
         <showcasepage:ChangelogView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:InstanceMenuViewModel}">
+        <showcasepage:InstanceMenuView />
     </DataTemplate>
 
     <!--  InstanceFactory DataTemplate  -->

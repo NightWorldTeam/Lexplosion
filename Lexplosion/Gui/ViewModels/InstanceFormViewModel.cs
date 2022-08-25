@@ -6,6 +6,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -197,10 +198,15 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Запускает сборку по данным формы.
         /// </summary>
-        public void LaunchInstance() 
+        public void LaunchInstance(ComplitedLaunchCallback complitedLaunchCallback = null, GameExitedCallback gameExitedCallback = null) 
         {
             if (!MainVM.IsInstanceRunning)
             {
+                if (complitedLaunchCallback != null && gameExitedCallback != null) 
+                { 
+                    Client.ComplitedLaunch += complitedLaunchCallback;
+                    Client.GameExited += gameExitedCallback;
+                }
                 MainVM.IsInstanceRunning = true;
                 Model.LaunchModel.LaunchInstance();
             }
@@ -216,10 +222,17 @@ namespace Lexplosion.Gui.ViewModels
             MainVM.IsInstanceRunning = false;
         }
 
-        public void DownloadInstance() 
+        public void DownloadInstance(ProgressHandlerCallback progressHandler = null, ComplitedDownloadCallback complitedDownload = null) 
         {
             if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
                 MainVM.Model.LibraryInstances.Add(this);
+
+            if (progressHandler != null)
+                Client.ProgressHandler += progressHandler;
+
+            if (complitedDownload != null)
+                complitedDownload += complitedDownload;
+            
             Model.DownloadModel.DonwloadPrepare();
         }
 

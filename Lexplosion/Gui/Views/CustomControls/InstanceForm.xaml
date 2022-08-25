@@ -399,7 +399,7 @@
             Background="#131313"
             BorderThickness="0"
             Foreground="#5773FF"
-            IsIndeterminate="{Binding Model.DownloadModel.IsIndeterminate}"
+            IsIndeterminate="{Binding Model.DownloadModel.HasProcents}"
             Maximum="100"
             Minimum="0"
             Visibility="{Binding Path=Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}"

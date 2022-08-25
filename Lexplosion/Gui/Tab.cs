@@ -9,6 +9,7 @@ namespace Lexplosion.Gui
         public string Header { get; set; }
         public VMBase Content { get; set; }
         public ICommand Command { get; set; } = new RelayCommand(obj => { });
+        public bool IsVisible { get; set; } = true;
 
         #nullable enable
         public int CompareTo(Tab? tab)

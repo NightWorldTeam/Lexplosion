@@ -24,7 +24,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             Lexplosion.Run.TaskRun(delegate
             {
                 _formModel.DownloadModel.IsDownloadInProgress = true;
-                _formModel.DownloadModel.IsIndeterminate = true;
+                _formModel.DownloadModel.HasProcents = true;
                 _formModel.InstanceClient.Run();
                 _formModel.UpperButton.ChangeFuncClose();
             });

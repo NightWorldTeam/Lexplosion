@@ -56,12 +56,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
-        public bool IsIndeterminate 
+        public bool HasProcents 
         {
             get => _isIndeterminate; set 
             {
                 _isIndeterminate = value;
-                OnPropertyChanged(nameof(IsIndeterminate));
+                OnPropertyChanged(nameof(HasProcents));
             }
         }
 
@@ -113,17 +113,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
             if (downloadStageType == DownloadStageTypes.Java)
             {
                 _instanceFormModel.OverviewField = "Идёт скачивание Java...";
-                IsIndeterminate = false;
+                HasProcents = false;
             }
             else if (downloadStageType == DownloadStageTypes.Prepare)
             {
                 _instanceFormModel.OverviewField = "Идёт подготовка к запуску...";
-                IsIndeterminate = true;
+                HasProcents = true;
             }
             else
             {
                 _instanceFormModel.OverviewField = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
-                IsIndeterminate = false;
+                HasProcents = false;
             }
         }
 

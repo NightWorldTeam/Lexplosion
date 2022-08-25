@@ -12,12 +12,16 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
     public class InstanceMenuViewModel : SubmenuViewModel, ISubmenu
     {
-        private int _tabControlSelectedValue;
-        private List<Tab> _showCaseTabMenu;
-        private InstanceFormViewModel _instanceForm;
         public event ISubmenu.NavigationToMenuCallBack NavigationToMainMenu;
+        private int _tabControlSelectedValue;
 
-        private List<ButtonConstructor> _buttons = new List<ButtonConstructor>();
+        private MainViewModel _mainViewModel;
+
+        private ObservableCollection<Tab> _showCaseTabMenu = new ObservableCollection<Tab>();
+        private ObservableCollection<Tab> _settingsTabs = new ObservableCollection<Tab>();
+
+        private InstanceFormViewModel _instanceForm;
+        private List<VMBase> _buttons = new List<VMBase>();
 
 
         #region commands
@@ -65,46 +69,135 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #endregion
 
 
-        public InstanceMenuViewModel(InstanceClient instanceClient, MainViewModel mainViewModel, InstanceFormViewModel instanceForm)
+        public InstanceMenuViewModel(InstanceFormViewModel instanceForm, MainViewModel mainViewModel) : base()
         {
             if (instanceForm != null)
                 _instanceForm = instanceForm;
 
-            InitButtons();
+            _mainViewModel = mainViewModel;
 
-            _showCaseTabMenu = new List<Tab>()
+            if (_instanceForm.Client.InLibrary)
+                UpdateSettingsTab();
+
+            UpdateShowCaseMenu();
+            UpdateTabMenu();
+
+
+            ObservableColletionSort(_settingsTabs);
+            SelectedTab = Tabs[0];
+        }
+
+        public void OnInstanceStateChanged() 
+        {
+
+        }
+
+        private void UpdateShowCaseMenu() 
+        {
+
+            if (!_instanceForm.Client.InLibrary)
             {
-                new Tab()
-                {
-                    Header = "Overview",
-                    Content = new OverviewViewModel(instanceClient, this)
-                },
-                new Tab()
-                {
-                    Header = "Changelog",
-                    Content = new DevСurtainViewModel()
-                }
-            };
-
-            var _settingsTabs = new List<Tab>()
+                _showCaseTabMenu.Add(
+                    new Tab()
+                    {
+                        Header = "Overview",
+                        Content = new OverviewViewModel(_instanceForm.Client, this)
+                    }
+                );
+                _showCaseTabMenu.Add(
+                    new Tab()
+                    {
+                        Header = "Changelog",
+                        Content = new DevСurtainViewModel()
+                    }
+                );
+            }
+            else 
             {
-                new Tab
-                {
-                    Id = 0,
-                    Header = "Параметры",
-                    Content = new InstanceSettingsViewModel(instanceClient)
-                },
-                new Tab
-                {
-                    Id = 3,
-                    Header = "Дополнения",
-                    Content = new FactoryDLCVM(mainViewModel, instanceClient)
-                },
-            };
+                _showCaseTabMenu.Add(
+                     new Tab()
+                     {
+                          Header = "Overview",
+                          Content = new OverviewViewModel(_instanceForm.Client, this)
+                     }
+                     );
+                _showCaseTabMenu.Add(
+                    new Tab()
+                    {
+                        Header = "Mods",
+                        Content = new DevСurtainViewModel()
+                    }
+                );
+                _showCaseTabMenu.Add(
+                    new Tab()
+                    {
+                        Header = "Changelog",
+                        Content = new DevСurtainViewModel()
+                    }
+                    );
+            }
+        }
 
-            if (instanceClient.Type == InstanceSource.Local) 
-            { 
-                _settingsTabs.Add(new Tab { Id = 1, Header = "О Сборке", Content = new InstanceProfileViewModel(instanceClient) });
+        private void UpdateTabMenu() 
+        {
+            if (_instanceForm.Client.IsInstalled || _instanceForm.Client.InLibrary) 
+            {
+                if (Tabs.Count == 3)
+                    return;
+
+                Tabs.Clear();
+
+                Tabs.Add(new Tab
+                {
+                    Header = "Обзор",
+                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm.Client, _instanceForm)
+                });
+
+                Tabs.Add(new Tab
+                {
+                    Header = "Конфигурация",
+                    Content = new TabMenuViewModel(_settingsTabs, "Настройки сборки"),
+                });
+
+                Tabs.Add(new Tab
+                {
+                    Header = "Назад",
+                    Content = null,
+                    Command = ClearMemory
+                });
+            }
+            else 
+            {
+                if (Tabs.Count == 2)
+                    return;
+
+                Tabs.Clear();
+
+                Tabs.Add(new Tab
+                {
+                    Header = "Обзор",
+                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm.Client)
+                });
+
+                Tabs.Add(new Tab
+                {
+                    Header = "Назад",
+                    Content = null,
+                    Command = ClearMemory
+                });
+            }
+        }
+
+        private void UpdateSettingsTab() 
+        {
+
+
+            if (_instanceForm.Client.Type == InstanceSource.Local)
+            {
+                if (_settingsTabs.Count == 4)
+                    return;
+
+                _settingsTabs.Add(new Tab { Id = 1, Header = "О Сборке", Content = new InstanceProfileViewModel(_instanceForm.Client) });
                 _settingsTabs.Add(new Tab
                 {
                     Id = 4,
@@ -113,69 +206,31 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 });
             }
 
-            _settingsTabs.Sort();
-
-            Tabs = new ObservableCollection<Tab>
-            {
-                new Tab
-                {
-                    Header = "Обзор",
-                    Content =  new TabMenuViewModel(_showCaseTabMenu, instanceClient.Name, _buttons, instanceClient)
-                },
-                new Tab
-                {
-                    Header = "Конфигурация",
-                    Content = new TabMenuViewModel(_settingsTabs, "Настройки сборки"),
-                },
-                new Tab
-                {
-                    Header = "Назад",
-                    Content = null,
-                    Command = ClearMemory
-                },
-            };
-            SelectedTab = Tabs[0];
+                _settingsTabs.Add(
+                    new Tab
+                    {
+                        Id = 0,
+                        Header = "Параметры",
+                        Content = new InstanceSettingsViewModel(_instanceForm.Client)
+                    }
+                );
+                _settingsTabs.Add(
+                    new Tab
+                    {
+                        Id = 3,
+                        Header = "Дополнения",
+                        Content = new FactoryDLCVM(_mainViewModel, _instanceForm.Client)
+                    }
+                );
         }
 
-        public void InitButtons() 
+        private void ObservableColletionSort<T>(ObservableCollection<T> colletion) 
         {
-            var width = 80d;
-            var height = 25d;
-            var margin = new System.Windows.Thickness(0,0,0,0);
+            List<T> list = new List<T>(colletion);
 
-            _buttons.Add(new ButtonConstructor(
-                new ButtonParameters[]
-                {
-                    new ButtonParameters() 
-                    {
-                        Width = width,
-                        Height = height,
-                        Margin = margin,
-                        IsVisible = true,
-                        Content = "Скачать",
-                        ActionClick = _instanceForm.DownloadInstance
-                    },
-                    new ButtonParameters() 
-                    {
-                        Width = width,
-                        Height = height,
-                        Margin = margin,
-                        IsVisible = true,
-                        Content = "Играть",
-                        ActionClick = _instanceForm.LaunchInstance
-                    },                   
-                    new ButtonParameters() 
-                    {
-                        Width = width,
-                        Height = height,
-                        Margin = margin,
-                        IsVisible = true,
-                        Content = "Играть",
-                        ActionClick = _instanceForm.CloseInstance
-                    },
-                }, 
-                _instanceForm.Client.IsInstalled ? 1 : 0
-                ));
+            list.Sort();
+
+            colletion =  new ObservableCollection<T>(list);
         }
     }
 }
