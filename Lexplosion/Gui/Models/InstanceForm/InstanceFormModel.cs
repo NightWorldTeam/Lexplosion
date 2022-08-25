@@ -110,7 +110,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public void UpdateLowerButton()
         {
             App.Current.Dispatcher.Invoke(() => { 
+
                 LowerButtons.Clear();
+
                 if (InstanceClient.UpdateAvailable)
                 {
                     LowerButtons.Add(
@@ -135,13 +137,14 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
                 }
 
-                if (InstanceClient.InLibrary && !InstanceClient.IsInstalled)
+                if (InstanceClient.InLibrary && !InstanceClient.IsInstalled && !DownloadModel.IsDownloadInProgress)
                 {
                     LowerButtons.Add(
                             new LowerButton("Удалить из библиотеки", MultiButtonProperties.GeometryLibraryDelete, LowerButtonFunc.DeleteFromLibrary)
                         );
                 }
-                else if (!InstanceClient.InLibrary)
+
+                else if (!InstanceClient.InLibrary && !DownloadModel.IsDownloadInProgress)
                 {
                     LowerButtons.Add(
                         new LowerButton("Добавить в библиотеку", MultiButtonProperties.GeometryLibraryAdd, LowerButtonFunc.AddToLibrary)
@@ -158,13 +161,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 if (InstanceClient.IsInstalled)
                 {
                     LowerButtons.Add(
-                        new LowerButton("Открыть папку", MultiButtonProperties.GeometryOpenFolder, LowerButtonFunc.OpenFolder)
-                    );
-                    LowerButtons.Add(
                         new LowerButton("Удалить сборку", MultiButtonProperties.RemoveInstance, LowerButtonFunc.RemoveInstance)
                     );
                     LowerButtons.Add(
                         new LowerButton("Экспорт", MultiButtonProperties.Export, LowerButtonFunc.Export)
+                    );
+                }
+
+                if (InstanceClient.IsInstalled || InstanceClient.InLibrary) 
+                {
+                    LowerButtons.Add(
+                        new LowerButton("Открыть папку", MultiButtonProperties.GeometryOpenFolder, LowerButtonFunc.OpenFolder)
                     );
                 }
             });

@@ -1,4 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.Controls"
+    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension">
 
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="FontSize" Value="20" />
@@ -170,6 +174,35 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Foreground" Value="#b9b7b7" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type PasswordBox}">
+                    <Border
+                        Name="Border"
+                        Padding="2"
+                        BorderThickness="0,0,0,2"
+                        CornerRadius="2">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
+                        </Border.BorderBrush>
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            <TextBlock
+                                Name="placeholder"
+                                Margin="4,2,0,0"
+                                HorizontalAlignment="Center"
+                                Foreground="Gray"
+                                Text="Password" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="extension:PasswordBox.IsEmptyPassword" Value="False">
+                            <Setter TargetName="placeholder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="ExpanderHeaderContent" TargetType="{x:Type TextBlock}">
@@ -185,5 +218,57 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Margin" Value="10,0,0,0" />
         <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style x:Key="AuthPlaceholerTextBox" TargetType="{x:Type controls:PlaceholderTextBox}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="MinWidth" Value="145" />
+        <Setter Property="MinHeight" Value="25" />
+        <Setter Property="AllowDrop" Value="true" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Foreground" Value="#b9b7b7" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:PlaceholderTextBox}">
+
+                    <ControlTemplate.Resources>
+                        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+                    </ControlTemplate.Resources>
+
+                    <Border
+                        Padding="2"
+                        BorderThickness="0,0,0,2"
+                        CornerRadius="2">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
+                        </Border.BorderBrush>
+                        <Grid>
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+
+                            <TextBlock
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                FontSize="{TemplateBinding PlaceholderFontSize}"
+                                FontWeight="{TemplateBinding PlaceholderFontWeight}"
+                                Foreground="{TemplateBinding PlaceholderColor}"
+                                IsHitTestVisible="False"
+                                Opacity="{TemplateBinding PlaceholderOpacity}"
+                                Text="{TemplateBinding Placeholder}"
+                                Visibility="{TemplateBinding IsEmpty,
+                                                             Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

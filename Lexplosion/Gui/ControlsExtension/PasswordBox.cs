@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Lexplosion.Controls;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Extension
@@ -14,6 +15,11 @@ namespace Lexplosion.Gui.Extension
         private static readonly DependencyProperty IsUpdatingProperty = DependencyProperty.RegisterAttached("IsUpdating", typeof(bool),
            typeof(PasswordBox));
 
+        //IsPasswordEmpty
+        public static readonly DependencyPropertyKey IsEmptyPasswordPropertyKey
+            = DependencyProperty.RegisterAttachedReadOnly("IsEmptyPassword", typeof(bool), typeof(PasswordBox), new PropertyMetadata(false));
+
+        public static readonly DependencyProperty IsEmptyPasswordProperty = IsEmptyPasswordPropertyKey.DependencyProperty;
 
         public static void SetAttach(DependencyObject dp, bool value)
         {
@@ -45,6 +51,16 @@ namespace Lexplosion.Gui.Extension
             dp.SetValue(IsUpdatingProperty, value);
         }
 
+        private static void SetIsEmptyPassword(System.Windows.Controls.PasswordBox dp) 
+        {
+            dp.SetValue(IsEmptyPasswordPropertyKey, dp.SecurePassword.Length == 0);
+        }
+
+        public static bool GetIsEmptyPassword(DependencyObject dp) 
+        {
+            return (bool)dp.GetValue(IsEmptyPasswordProperty);
+        }
+
         private static void OnPasswordPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             System.Windows.Controls.PasswordBox passwordBox = sender as System.Windows.Controls.PasswordBox;
@@ -55,6 +71,8 @@ namespace Lexplosion.Gui.Extension
                 passwordBox.Password = (string)e.NewValue;
             }
             passwordBox.PasswordChanged += PasswordChanged;
+
+            SetIsEmptyPassword(passwordBox);
         }
 
         private static void Attach(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -73,6 +91,7 @@ namespace Lexplosion.Gui.Extension
             {
                 passwordBox.PasswordChanged += PasswordChanged;
             }
+            SetIsEmptyPassword(passwordBox);
         }
 
         private static void PasswordChanged(object sender, RoutedEventArgs e)

@@ -111,13 +111,15 @@
                             Foreground="White"
                             Text="NightWorld" />
 
-                        <TextBox
+                        <controls:PlaceholderTextBox
                             Width="125"
                             Height="30"
                             Margin="0,60,0,0"
                             HorizontalAlignment="Center"
                             HorizontalContentAlignment="Center"
-                            Style="{StaticResource AuthTextBox}"
+                            Placeholder="Login"
+                            PlaceholderFontSize="16"
+                            Style="{StaticResource AuthPlaceholerTextBox}"
                             Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Grid Margin="0,50,0,0" ShowGridLines="False">

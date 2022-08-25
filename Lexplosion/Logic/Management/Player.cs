@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Lexplosion.Logic.Management
 {
@@ -23,11 +24,17 @@ namespace Lexplosion.Logic.Management
             } 
         }
 
-        public Action AccessChangeAction { get; }
+        public RelayCommand AccessChangeAction 
+        { 
+            get => new RelayCommand(obj => 
+            {
+                AccessChange();
+            });
+        }
 
         public Player()
         {
-            AccessChangeAction = AccessChange;
+
         }
 
         private void AccessChange() 
