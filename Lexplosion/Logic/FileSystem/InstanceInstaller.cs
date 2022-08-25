@@ -246,27 +246,28 @@ namespace Lexplosion.Logic.FileSystem
             return updatesCount;
         }
 
-        //функция для скачивания файлов клиента в zip формате, без проверки хеша
-        protected bool UnsafeDownloadZip(string url, string to, string file, string temp, WebClient wc)
-        {
-            //создаем папки в соответсвии с путем к файлу из списка
-            string[] foldersPath = (to + file).Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-            string path = DirectoryPath;
-            // TODO: какой-то ебанутый метод создания директорий
-            for (int i = 0; i < foldersPath.Length - 1; i++)
-            {
-                path += "/" + foldersPath[i];
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-            }
-
+        /// <summary>
+        /// Ффункция для скачивания файлов клиента в zip формате, без проверки хеша
+        /// </summary>
+        /// <param name="url">Ссыллка на файл, охуеть, да? Без .zip в конце.</param>
+        /// <param name="file">Имя файла</param>
+        /// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
+        /// <param name="temp">Временная директория (без имени файла), должена заканчиваться на слеш.</param>
+        /// <param name="percentHandler">Обработчик процентов</param>
+        /// <returns></returns>
+        protected bool UnsafeDownloadZip(string url, string to, string file, string temp, Action<int> percentHandler)
+        {                
             string zipFile = file + ".zip";
 
             //try
             {
+                if (!Directory.Exists(to))
+                {
+                    Directory.CreateDirectory(to);
+                }
+
                 DelFile(temp + zipFile);
-                wc.DownloadFile(url + ".zip", temp + zipFile);
+                DownloadFile(url + ".zip", zipFile, temp, percentHandler);
 
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
                 File.Delete(temp + zipFile);
@@ -286,27 +287,31 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        //функция для скачивания файлов клиента в zip формате, со сравнением хеша
-        protected bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, long size, WebClient wc)
+        /// <summary>
+        /// Функция для скачивания файлов клиента в zip формате, со сравнением хеша
+        /// </summary>
+        /// <param name="url">Ссыллка на файл, охуеть, да? Без .zip в конце.</param>
+        /// <param name="file">Имя файла</param>
+        /// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
+        /// <param name="temp">Временная директория (без имени файла), должена заканчиваться на слеш.</param>
+        /// <param name="sha1">Хэш</param>
+        /// <param name="size">Размер</param>
+        /// <param name="percentHandler">Обработчик процентов</param>
+        /// <returns></returns>
+        protected bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, long size, Action<int> percentHandler)
         {
             string zipFile = file + ".zip";
 
-            //создаем папки в соответсвии с путем к файлу из списка
-            string[] foldersPath = to.Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
-
-            string path = DirectoryPath;
-            for (int i = 0; i < foldersPath.Length - 1; i++)
-            {
-                path += "/" + foldersPath[i];
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-            }
-
             try
             {
-                wc.DownloadFile(url + ".zip", temp + file + ".zip");
+                if (!Directory.Exists(to))
+                {
+                    Directory.CreateDirectory(to);
+                }
 
-                DelFile(to + ".zip");
+                DownloadFile(url + ".zip", zipFile, temp, percentHandler);
+                DelFile(to + file);
+
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
                 File.Delete(temp + zipFile);
 
@@ -320,8 +325,8 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         if (Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 && fileBytes.Length == size)
                         {
-                            DelFile(to);
-                            File.Move(temp + file, to);
+                            DelFile(to + file);
+                            File.Move(temp + file, to + file);
 
                             return true;
                         }
@@ -342,25 +347,25 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        //функция для скачивания файлов в jar формате, без сравнения хэша
-        protected bool UnsafeDownloadJar(string url, string to, string file, WebClient wc, string temp)
+
+        /// <summary>
+        /// Aункция для скачивания файлов в jar формате, без сравнения хэша
+        /// </summary>
+        /// <param name="url">Url файла</param>
+        /// <param name="to">Директория куда скачать (без имени файла). Должно заканчиваться слешем.</param>
+        /// <param name="file">Имя файла</param>
+        /// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем.</param>
+        /// <returns>Охуенно или пиздец</returns>
+        protected bool UnsafeDownloadJar(string url, string to, string file, string temp)
         {
-            // TODO: сделать нормальное создание входящих директорий
-            //создаем папки в соответсвии с путем к файлу из списка
-            string[] foldersPath = (to + file).Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-            string path = DirectoryPath;
-            for (int i = 0; i < foldersPath.Length - 1; i++)
-            {
-                path += "/" + foldersPath[i];
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-            }
-
             //try
             {
-                // TODO: возможно не удалять старый файл, а скачивать только в случае, если старый файл отличается
-                wc.DownloadFile(url, temp + file);
+                if (!Directory.Exists(to))
+                {
+                    Directory.CreateDirectory(to);
+                }
+                
+                DownloadFile(url, file, temp);
                 DelFile(to + file);
                 File.Move(temp + file, to + file);
 
@@ -373,26 +378,28 @@ namespace Lexplosion.Logic.FileSystem
             }*/
         }
 
-        //функция для скачивания файлов в jar формате, со сравнением хэша
-        protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, WebClient wc)
+        /// <summary>
+        /// Aункция для скачивания файлов в jar формате, со сравнением хэша
+        /// </summary>
+        /// <param name="url">URL файла</param>
+        /// <param name="file">Имя файла</param>
+        /// <param name="to">Директория куда скачать (без имени файла). Должно заканчиваться слешем</param>
+        /// <param name="temp">Временная директория (без имени файла). Должно заканчиваться слешем</param>
+        /// <param name="sha1">Хэш файла</param>
+        /// <param name="size">Размер файла</param>
+        /// <param name="percentHandler">Обработчик процентов скачивнаия</param>
+        /// <returns></returns>
+        protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, Action<int> percentHandler)
         {
-            //создаем папки в соответсвии с путем к файлу из списка
-            string[] foldersPath = to.Replace(DirectoryPath, "").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries); // TODO: это всё можно одной функцией заменить
-
-            string path = DirectoryPath;
-            for (int i = 0; i < foldersPath.Length - 1; i++)
-            {
-                path += "/" + foldersPath[i];
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-            }
-
             try
             {
-                wc.DownloadFile(url, temp + file);
-                DelFile(to);
+                if (!Directory.Exists(to))
+                {
+                    Directory.CreateDirectory(to);
+                }
+
+                DownloadFile(url, file, temp, percentHandler);
+                DelFile(to + file);
 
                 using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
                 {
@@ -402,10 +409,10 @@ namespace Lexplosion.Logic.FileSystem
 
                     using (SHA1 sha = new SHA1Managed())
                     {
-                        if (fileBytes.Length == size) //Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 &&
+                        if (fileBytes.Length == size) // TODO: Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 &&
                         {
-                            DelFile(to);
-                            File.Move(temp + file, to);
+                            DelFile(to + file);
+                            File.Move(temp + file, to + file);
 
                             return true;
                         }
@@ -435,13 +442,13 @@ namespace Lexplosion.Logic.FileSystem
             string gameVersionName = manifest.version.CustomVersionName ?? manifest.version.gameVersion;
 
             string addr;
-            string[] folders;
             int updated = 0;
 
             List<string> errors = new List<string>();
-            WebClient wc = new WebClient();
-
+            
             string temp = CreateTempDir();
+
+            Action<int> voidMethod = delegate (int a) { };
 
             //скачивание файла версии
             if (minecraftJar)
@@ -456,14 +463,27 @@ namespace Lexplosion.Logic.FileSystem
                     addr = minecraftJar.url;
                 }
 
-                bool isDownload;
-                if (minecraftJar.notArchived)
+                Action<int> progressMethod;
+                if (libraries.Count == 0 && (assets.objects == null || assets.objects.Count == 0) && !assetsIndexes) // если скачать надо только minecraft jar
                 {
-                    isDownload = SaveDownloadJar(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/" + minecraftJar.name, temp, minecraftJar.sha1, minecraftJar.size, wc);
+                    progressMethod = delegate (int a)
+                    {
+                        BaseDownloadEvent?.Invoke(100, a);
+                    };
                 }
                 else
                 {
-                    isDownload = SaveDownloadZip(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/" + minecraftJar.name, temp, minecraftJar.sha1, minecraftJar.size, wc);
+                    progressMethod = voidMethod;
+                }
+
+                bool isDownload;
+                if (minecraftJar.notArchived)
+                {
+                    isDownload = SaveDownloadJar(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, progressMethod);
+                }
+                else
+                {
+                    isDownload = SaveDownloadZip(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, progressMethod);
                 }
 
                 if (isDownload)
@@ -477,14 +497,12 @@ namespace Lexplosion.Logic.FileSystem
 
                 updated++;
                 BaseDownloadEvent?.Invoke(updatesCount, updated);
-
             }
 
             //скачиваем libraries
             _librariesBlock.WaitOne(gameVersionName);
             string libName = manifest.version.GetLibName;
 
-            folders = null;
             List<string> executedMethods = new List<string>();
             string downloadedLibsAddr = DirectoryPath + "/versions/libraries/" + libName + "-downloaded.json"; // адрес файла в котором убдет храниться список downloadedLibs
             // TODO: список downloadedLibs мы получаем в методе проверки. брать от туда, а не подгружать опять
@@ -511,7 +529,7 @@ namespace Lexplosion.Logic.FileSystem
                         addr = libraries[lib].url;
                     }
 
-                    folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     string ff = lib.Replace(folders[folders.Length - 1], "");
 
                     if (addr.Length > 5 && addr.Substring(addr.Length - 4) != ".jar" && addr.Substring(addr.Length - 4) != ".zip")
@@ -524,11 +542,11 @@ namespace Lexplosion.Logic.FileSystem
                     string fileDir = DirectoryPath + "/libraries/" + ff;
                     if (libraries[lib].notArchived)
                     {
-                        isDownload = UnsafeDownloadJar(addr, fileDir, name, wc, tempDir);
+                        isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir);
                     }
                     else
                     {
-                        isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, wc);
+                        isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, voidMethod);
                     }
 
                     if (libraries[lib].isNative && isDownload)
@@ -778,15 +796,16 @@ namespace Lexplosion.Logic.FileSystem
 
                     try
                     {
-                        wc.DownloadFile(manifest.version.assetsIndexes, DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
+                        using (WebClient wc = new WebClient())
+                        {
+                            wc.DownloadFile(manifest.version.assetsIndexes, DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
+                        }
                     }
                     catch { }
                 }
             }
 
             _assetsBlock.Release(gameVersionName);
-
-            wc.Dispose();
 
             //сохраняем lastUpdates
             SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));

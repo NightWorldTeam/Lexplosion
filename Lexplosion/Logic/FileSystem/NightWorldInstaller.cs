@@ -189,7 +189,6 @@ namespace Lexplosion.Logic.FileSystem
             WebClient wc = new WebClient();
             string tempDir = CreateTempDir();
 
-            string[] folders;
             string addr;
             List<string> errors = new List<string>();
 
@@ -198,7 +197,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 foreach (string file in data[dir])
                 {
-                    folders = file.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] folders = file.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (filesList.data[dir].objects[file].url == null)
                     {
@@ -209,7 +208,12 @@ namespace Lexplosion.Logic.FileSystem
                         addr = filesList.data[dir].objects[file].url;
                     }
 
-                    if (!SaveDownloadZip(addr, folders[folders.Length - 1], DirectoryPath + "/instances/" + instanceId + "/" + dir + "/" + file, tempDir, filesList.data[dir].objects[file].sha1, filesList.data[dir].objects[file].size, wc))
+                    string filename = folders[folders.Length - 1];
+                    string path = DirectoryPath + "/instances/" + instanceId + "/" + dir + "/" + file.Replace(filename, "");
+                    string sha1 = filesList.data[dir].objects[file].sha1;
+                    long size = filesList.data[dir].objects[file].size;
+
+                    if (!SaveDownloadZip(addr, filename, path, tempDir, sha1, size, delegate (int a) { }))
                     {
                         errors.Add(dir + "/" + file);
                     }

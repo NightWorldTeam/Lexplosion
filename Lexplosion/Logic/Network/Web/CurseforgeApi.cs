@@ -307,7 +307,7 @@ namespace Lexplosion.Logic.Network
 
                 string fileUrl = fileData.downloadUrl;
                 string fileName = fileData.fileName;
-                // т.к разрабы курсфорджа дефектные рукодопы и конченные недоумки, которые не умеют писать код, то url иногда может быть null, поэтому придётся мутить костыли
+                // т.к разрабы курсфорджа дефектные рукожопы и конченные недоумки, которые не умеют писать код, то url иногда может быть null, поэтому придётся мутить костыли
                 if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
                 {
                     if (!String.IsNullOrWhiteSpace(fileData.fileName))
@@ -317,6 +317,7 @@ namespace Lexplosion.Logic.Network
                     }
                     else
                     {
+                        Console.WriteLine("URL ERROR - " + fileData.downloadUrl + " - " + fileData.fileName);
                         return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,

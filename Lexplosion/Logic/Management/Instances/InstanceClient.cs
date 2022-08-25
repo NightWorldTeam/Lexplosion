@@ -624,6 +624,7 @@ namespace Lexplosion.Logic.Management.Instances
                 _idsPairs[_externalId] = _localId;
                 SaveInstalledInstancesList();
                 SaveAssets();
+                InLibrary = true;
             }
         }
 
