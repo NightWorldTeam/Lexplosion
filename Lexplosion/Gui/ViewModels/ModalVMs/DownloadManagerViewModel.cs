@@ -44,6 +44,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
     {
         public ObservableCollection<InstanceFile> DownloadFiles { get; } = new ObservableCollection<InstanceFile>();
         public ObservableCollection<InstanceFile> InstalledFiles { get;  } = new ObservableCollection<InstanceFile>();
+        public ObservableCollection<InstanceFile> DownloadErrorFiles { get;  } = new ObservableCollection<InstanceFile>();
 
         private InstanceFormViewModel _viewModel;
 
@@ -91,10 +92,15 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                 }
                 else 
                 { 
-                    if (process == DownloadFileProgress.Successful || process == DownloadFileProgress.Error)
+                    if (process == DownloadFileProgress.Successful)
                     {
                         DownloadFiles.Remove(instanceFile);
                         InstalledFiles.Add(instanceFile);
+                    }
+                    else if (process == DownloadFileProgress.Error) 
+                    {
+                        DownloadFiles.Remove(instanceFile);
+                        DownloadErrorFiles.Add(instanceFile);
                     }
                     else
                     {

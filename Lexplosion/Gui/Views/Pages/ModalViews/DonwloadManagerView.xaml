@@ -84,7 +84,53 @@
                                 </ItemsControl>
                             </TabItem>
 
-                            <TabItem Header="Неудачно" />
+                            <TabItem Header="Неудачно">
+                                <ItemsControl ItemsSource="{Binding DownloadFiles}">
+
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel IsItemsHost="True" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type model:InstanceFile}">
+                                            <Border
+                                                Width="330"
+                                                Height="30"
+                                                Margin="0,10,0,0"
+                                                Padding="5"
+                                                Background="#252525"
+                                                BorderBrush="#505050"
+                                                BorderThickness="2"
+                                                CornerRadius="5">
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock
+                                                            FontSize="12"
+                                                            FontWeight="Medium"
+                                                            Foreground="White"
+                                                            Text="{Binding Name}" />
+                                                        <ProgressBar
+                                                            Width="200"
+                                                            Height="5"
+                                                            Margin="10,0,0,0"
+                                                            Maximum="100"
+                                                            Minimum="0"
+                                                            Value="{Binding Procents}" />
+                                                        <TextBlock
+                                                            Margin="10,0,0,0"
+                                                            FontSize="12"
+                                                            FontWeight="Medium"
+                                                            Foreground="Red"
+                                                            Text="Неудалось скачать ошибка: 3010201" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </TabItem>
 
                             <TabItem HorizontalAlignment="Center" Header="Завершено">
                                 <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding InstalledFiles}">
