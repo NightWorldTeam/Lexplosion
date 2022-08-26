@@ -114,6 +114,10 @@
         <modalviews:ModalExportView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type modalvms:DownloadManagerViewModel}">
+        <modalviews:DonwloadManagerView />
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type modalvms:DialogViewModel}">
         <modalviews:DialogView />
     </DataTemplate>

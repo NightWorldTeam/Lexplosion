@@ -33,7 +33,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         {
             get => _openInstanceFactoryCommand ?? new RelayCommand(obj => 
             {
-                _mainViewModel.ModalWindowVM.IsModalOpen = true;
+                _mainViewModel.ModalWindowVM.IsOpen = true;
                 _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(new FactoryGeneralViewModel(_mainViewModel));
             });
         }

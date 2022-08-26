@@ -23,7 +23,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             get => _actionCommand ?? new RelayCommand(obj => 
             {
                 _function();
-                _mainViewModel.ModalWindowVM.IsModalOpen = false;
+                _mainViewModel.ModalWindowVM.IsOpen = false;
             });
         }
 
@@ -32,7 +32,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         {
             get => _cancelButtonCommand ?? new RelayCommand(obj => 
             {
-                _mainViewModel.ModalWindowVM.IsModalOpen = false;
+                _mainViewModel.ModalWindowVM.IsOpen = false;
             });
         }
 
@@ -63,7 +63,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public void ShowDialog(string title, Action function) 
         {
             _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(this);
-            _mainViewModel.ModalWindowVM.IsModalOpen = true;
+            _mainViewModel.ModalWindowVM.IsOpen = true;
 
             _title = title;
             _function = function;

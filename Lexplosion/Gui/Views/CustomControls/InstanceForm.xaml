@@ -186,12 +186,11 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0">
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="135" />
-                        </Grid.ColumnDefinitions>
+                    <Grid
+                        Grid.Row="0"
+                        HorizontalAlignment="Stretch"
+                        Loaded="Grid_Loaded"
+                        ShowGridLines="False">
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30" />
@@ -199,7 +198,10 @@
 
                         <TextBlock
                             Grid.Column="0"
-                            Padding="0"
+                            MaxWidth="330"
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Left"
+                            FontFamily="{DynamicResource FuturaBookC}"
                             FontSize="22"
                             Foreground="#ffffff"
                             Text="{Binding Model.InstanceClient.Name}"
@@ -221,16 +223,16 @@
                         </TextBlock>
 
                         <TextBlock
+                            x:Name="Author"
                             Grid.Column="1"
                             Margin="0,0,2,0"
-                            Padding="0"
+                            HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            FlowDirection="RightToLeft"
-                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                            FlowDirection="LeftToRight"
+                            FontFamily="{DynamicResource CasperBold}"
                             FontSize="12"
                             Foreground="#a9b1ba"
-                            Text="{Binding Model.InstanceClient.Author, StringFormat='by {0}'}"
-                            TextTrimming="WordEllipsis" />
+                            Text="{Binding Model.InstanceClient.Author, StringFormat='by {0}'}" />
                     </Grid>
 
                     <Grid
@@ -356,25 +358,26 @@
                             </Border.ToolTip>
 
                             <Grid>
-                                <Viewbox Width="20" Height="20">
-                                    <Path
-                                        Data="{Binding Model.UpperButton.Icon}"
-                                        Fill="White"
-                                        Stretch="Fill"
-                                        Stroke="White"
-                                        Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
-                                </Viewbox>
+                                <Grid>
+                                    <Viewbox Width="20" Height="20">
+                                        <Path
+                                            Data="{Binding Model.UpperButton.Icon}"
+                                            Fill="White"
+                                            Stretch="Fill"
+                                            Stroke="White"
+                                            Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+                                    </Viewbox>
 
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontSize="18"
-                                    FontWeight="SemiBold"
-                                    Foreground="White"
-                                    Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
-                                    Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        FontWeight="SemiBold"
+                                        Foreground="White"
+                                        Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
+                                        Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                </Grid>
                             </Grid>
-
                         </Border>
                     </Grid>
                     <controls:DropdownMenu

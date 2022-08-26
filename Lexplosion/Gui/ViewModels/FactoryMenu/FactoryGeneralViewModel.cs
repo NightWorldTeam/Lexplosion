@@ -146,7 +146,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                         Model.Name ?? "New Client", InstanceSource.Local, SelectedVersion, Model.ModloaderType, Model.LogoPath, SelectedModloaderVersion);
 
                     _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
-                    _mainViewModel.ModalWindowVM.IsModalOpen = false;
+                    _mainViewModel.ModalWindowVM.IsOpen = false;
                 }));
             }
         }
@@ -155,7 +155,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => new RelayCommand(obj =>
             {
-                _mainViewModel.ModalWindowVM.IsModalOpen = false;
+                _mainViewModel.ModalWindowVM.IsOpen = false;
                 _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(null);
             });
         }

@@ -167,6 +167,7 @@
     <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\DialogViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\DownloadManagerViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ExportViewModel.cs" />
     <Compile Include="Gui\ViewModels\DevСurtainViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
@@ -230,6 +231,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\ModalViews\DialogView.xaml.cs">
       <DependentUpon>DialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ModalViews\DonwloadManagerView.xaml.cs">
+      <DependentUpon>DonwloadManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ModalViews\ModalExportView.xaml.cs">
       <DependentUpon>ModalExportView.xaml</DependentUpon>
@@ -482,6 +486,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\ModalViews\DialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ModalViews\DonwloadManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

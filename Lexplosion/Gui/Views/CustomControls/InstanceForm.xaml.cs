@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Lexplosion.Gui.Models.InstanceForm;
+using Lexplosion.Gui.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -42,6 +44,29 @@ namespace Lexplosion.Gui.Views.CustomControls
             InstanceLogo_Text.BeginAnimation(TextBlock.OpacityProperty, new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(AnimationTime)) { EasingFunction = _ease });
             //InstanceLogo_Background.Effect = null;
             //InstanceLogo_Text.Visibility = Visibility.Collapsed;
+        }
+
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+            var grid = (Grid)sender;
+
+            var authorTextBoxFinalWidth = (Author.ActualWidth + 16.65);
+
+            var columnDefin = new ColumnDefinition()
+            {
+                Width = new GridLength(440 - authorTextBoxFinalWidth)
+            };
+
+            Console.WriteLine(Author.ActualWidth);
+
+            var columnDefin1 = new ColumnDefinition()
+            {
+                MaxWidth = authorTextBoxFinalWidth,
+                Width = new GridLength(1, GridUnitType.Star)
+            };
+
+            grid.ColumnDefinitions.Add(columnDefin);
+            grid.ColumnDefinitions.Add(columnDefin1);
         }
     }
 }

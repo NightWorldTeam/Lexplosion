@@ -35,7 +35,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             get => new RelayCommand(obj =>
             {
                 Export();
-                _mainViewModel.ModalWindowVM.IsModalOpen = false;
+                _mainViewModel.ModalWindowVM.IsOpen = false;
             });
         }
 
@@ -47,7 +47,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         {
             get => new RelayCommand(obj =>
             {
-                _mainViewModel.ModalWindowVM.IsModalOpen = false;
+                _mainViewModel.ModalWindowVM.IsOpen = false;
             });
         }
 

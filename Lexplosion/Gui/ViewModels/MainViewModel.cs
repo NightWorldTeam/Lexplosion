@@ -5,6 +5,7 @@ using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
+using Lexplosion.Gui.Views.Pages.ModalViews;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools.Immutable;
@@ -85,12 +86,12 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Данное свойство содержить информации - открыт ли Экспорт [Popup].
         /// </summary>
-        private bool _isModalOpen = false;
-        public bool IsModalOpen
+        private bool _isOpen = false;
+        public bool IsOpen
         {
-            get => _isModalOpen; set
+            get => _isOpen; set
             {
-                _isModalOpen = value;
+                _isOpen = value;
                 OnPropertyChanged();
             }
         }
@@ -110,11 +111,22 @@ namespace Lexplosion.Gui.ViewModels
         {
             OnPropertyChanged(nameof(CurrentModalContent));
         }
+
+        public void OpenWindow(ModalVMBase modalVM) 
+        {
+            IsOpen = true;
+            ChangeCurrentModalContent(modalVM);
+        }
+
+        public void CloseWindow() 
+        {
+            IsOpen = false;
+            ChangeCurrentModalContent(null);
+        }
     }
 
     public class MainViewModel : VMBase
     {
-
         #region statics
 
         public static readonly NavigationStore NavigationStore = new NavigationStore();
@@ -139,9 +151,7 @@ namespace Lexplosion.Gui.ViewModels
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
         /// </summary>
         public static ImmutableArray<string> GameVersions { get; private set; }
-
         public static ObservableCollection<MessageModel> Messages { get; private set; } = new ObservableCollection<MessageModel>();
-
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
@@ -171,6 +181,7 @@ namespace Lexplosion.Gui.ViewModels
         public LoadingBoard LoadingBoard { get; } = new LoadingBoard();
         public UserProfile UserProfile { get; } = new UserProfile();
         public ModalWindowViewModel ModalWindowVM { get; } = new ModalWindowViewModel();
+        public DownloadManagerViewModel DownloadManager;
 
         #endregion
 
@@ -220,6 +231,9 @@ namespace Lexplosion.Gui.ViewModels
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
 
             ExportViewModel = new ExportViewModel(this);
+
+            DownloadManager = new DownloadManagerViewModel(this);
+            ModalWindowVM.OpenWindow(DownloadManager);
         }
 
 

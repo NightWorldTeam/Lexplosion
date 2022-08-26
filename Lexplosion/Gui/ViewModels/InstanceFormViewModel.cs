@@ -67,6 +67,10 @@ namespace Lexplosion.Gui.ViewModels
                     case UpperButtonFunc.ProgressBar:
                         {
                             // TODO: может сделать, что-то типо меню скачивания??
+                            // ну да просто добавим открытие downloadmanager
+                            Console.WriteLine("123mkldfmdfgmkldfgmkldgmkdgkmammdmgmkfamdgamgkdfmkfdadfmkmkamkfgmkgafmkamkgfd");
+                            OpenDownloadManager(this);
+                            MainVM.ModalWindowVM.OpenWindow(MainVM.DownloadManager);
                             break;
                         }
 
@@ -99,6 +103,7 @@ namespace Lexplosion.Gui.ViewModels
                 {
                     case LowerButtonFunc.AddToLibrary:
                         {
+                            Client.AddToLibrary();
                             break;
                         }
 
@@ -160,7 +165,7 @@ namespace Lexplosion.Gui.ViewModels
 
                     case LowerButtonFunc.Export:
                         {
-                            MainVM.ModalWindowVM.IsModalOpen = true;
+                            MainVM.ModalWindowVM.IsOpen = true;
 
                             // возможно не надо вообще эксемпляр класса сохранять.
                             MainVM.ExportViewModel = new ExportViewModel(MainVM)
@@ -236,6 +241,10 @@ namespace Lexplosion.Gui.ViewModels
             Model.DownloadModel.DonwloadPrepare();
         }
 
+        public void OpenDownloadManager(InstanceFormViewModel instanceFormViewModel) 
+        {
+            MainVM.DownloadManager.AddProcess(instanceFormViewModel);
+        }
         #endregion methods
     }
 }
