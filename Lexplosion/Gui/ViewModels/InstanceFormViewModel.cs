@@ -236,7 +236,7 @@ namespace Lexplosion.Gui.ViewModels
                 Client.ProgressHandler += progressHandler;
 
             if (complitedDownload != null)
-                complitedDownload += complitedDownload;
+                Client.ComplitedDownload += complitedDownload;
             
             Model.DownloadModel.DonwloadPrepare();
         }

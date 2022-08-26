@@ -50,13 +50,20 @@ namespace Lexplosion.Controls
 
 
         public static readonly DependencyProperty InstanceFormVMProperty
-            = DependencyProperty.Register("InstanceFormVM", typeof(InstanceFormViewModel), typeof(DownloadButton), new FrameworkPropertyMetadata());
+            = DependencyProperty.RegisterAttached("InstanceFormVM", typeof(InstanceFormViewModel), typeof(DownloadButton), new FrameworkPropertyMetadata());
 
-
-        public InstanceFormViewModel InstanceForm 
+        public InstanceFormViewModel InstanceFormVM 
         {
             get => (InstanceFormViewModel)GetValue(InstanceFormVMProperty);
-            set => SetValue(InstanceFormVMProperty, value);
+            set
+                {
+                SetValue(InstanceFormVMProperty, value);
+                                if (value.Client.IsInstalled)
+                {
+                    NextButtonAnimation(_downloadButton);
+                    NextButtonAnimation(_loader);
+                }
+            }
         }
 
         #endregion dependency properities
@@ -92,7 +99,8 @@ namespace Lexplosion.Controls
 
         private void OnCloseButtonClicked(object sender, MouseButtonEventArgs e)
         {
-            InstanceForm.CloseInstance();
+            InstanceFormVM.CloseInstance();
+
         }
 
         private void OnPlayButtonClicked(object sender, MouseButtonEventArgs e)
@@ -107,9 +115,12 @@ namespace Lexplosion.Controls
 
                 GameExitedCallback gameExitedCallback = delegate (string instanceId)
                 {
-                    PreviewButtonAnimation(_playButton);
+                    App.Current.Dispatcher.Invoke(() => 
+                    { 
+                        PreviewButtonAnimation(_playButton);
+                    });
                 };
-                InstanceForm.LaunchInstance();
+                InstanceFormVM.LaunchInstance(complitedLaunch, gameExitedCallback);
             }
             NextButtonAnimation(_playButton);
         }
@@ -125,16 +136,23 @@ namespace Lexplosion.Controls
             {
                 ProgressHandlerCallback progressHandlerMethod = delegate (DownloadStageTypes stageType, int stagesCount, int stage, int procents)
                 {
-                    _progressBar.Value = procents;
+                    App.Current.Dispatcher.Invoke(() => 
+                    {
+                        _progressBar.Value = procents;
+                    });
                 };
                 ComplitedDownloadCallback complitedDownloadMethod = delegate (InstanceInit result, List<string> downloadErrors, bool launchGame)
                 {
-                    NextButtonAnimation(_loader);
+                    Console.WriteLine("Finished");
+                    App.Current.Dispatcher.Invoke(() => 
+                    {
+                        NextButtonAnimation(_loader);
+                    });
                 };
 
-                InstanceForm.DownloadInstance(progressHandlerMethod, complitedDownloadMethod);
+                InstanceFormVM.DownloadInstance(progressHandlerMethod, complitedDownloadMethod);
             }
-            else InstanceForm.DownloadInstance();
+            else InstanceFormVM.DownloadInstance();
 
 
             NextButtonAnimation(button);
@@ -186,7 +204,7 @@ namespace Lexplosion.Controls
             DoubleAnimation animation = new DoubleAnimation
             {
                 From = 0.0,
-                To = this.ActualHeight,
+                To = 30,
                 Duration = TimeSpan.FromSeconds(0.3)
             };
 

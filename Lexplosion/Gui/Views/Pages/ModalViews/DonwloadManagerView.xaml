@@ -33,6 +33,7 @@
                                 <Style TargetType="{x:Type TabPanel}">
                                     <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
+                                
                             </TabControl.Resources>
 
                             <TabItem Header="В процессе">

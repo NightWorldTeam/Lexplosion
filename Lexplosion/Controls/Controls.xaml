@@ -9,5 +9,6 @@
         <ResourceDictionary Source="DragDropBoard/DragDropBoard.xaml" />
         <ResourceDictionary Source="PlaceholderTextBox/PlaceholderTextBox.xaml" />
         <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
+        <ResourceDictionary Source="DownloadButton/DownloadButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

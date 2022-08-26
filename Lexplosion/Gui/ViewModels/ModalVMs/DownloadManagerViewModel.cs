@@ -54,8 +54,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             DonwloadFiles.Add(new InstanceFile("TestFile22", 20));
             DonwloadFiles.Add(new InstanceFile("TestFile20", 21));
 
-
-
             InstalledFiles.Add(new InstanceFile("TestFile", 20));
             InstalledFiles.Add(new InstanceFile("TestFile1", 76));
             InstalledFiles.Add(new InstanceFile("TestFile2", 15));

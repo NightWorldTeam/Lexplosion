@@ -23,7 +23,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public InstanceFormViewModel InstanceForm 
+        public InstanceFormViewModel InstanceFormVM 
         {
             get;
         }
@@ -36,7 +36,7 @@ namespace Lexplosion.Gui.ViewModels
                 IsInstance = false;
 
             if (instanceFormViewModel != null)
-                InstanceForm = instanceFormViewModel;
+                InstanceFormVM = instanceFormViewModel;
 
             InstanceClient = instanceClient;
 
