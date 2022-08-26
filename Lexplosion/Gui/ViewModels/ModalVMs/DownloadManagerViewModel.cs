@@ -29,7 +29,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             Procents = procents;
         }
 
-        public static InstanceFile GetInstanceFile(IList<InstanceFile> files, string name) 
+        public static InstanceFile? GetInstanceFile(IList<InstanceFile> files, string name) 
         {
             foreach (var file in files) 
             {
@@ -42,8 +42,15 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
     public class InstanceDownloadProcess
     {
-        public ObservableCollection<InstanceFile> DonwloadFiles { get; } = new ObservableCollection<InstanceFile>();
+        public ObservableCollection<InstanceFile> DownloadFiles { get; } = new ObservableCollection<InstanceFile>();
         public ObservableCollection<InstanceFile> InstalledFiles { get;  } = new ObservableCollection<InstanceFile>();
+
+        private InstanceFormViewModel _viewModel;
+
+        public bool IsEquals(InstanceFormViewModel instance) 
+        {
+            return _viewModel == instance;
+        }
 
         public InstanceDownloadProcess(InstanceFormViewModel instanceFormViewModel)
         {
@@ -64,23 +71,47 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             //InstalledFiles.Add(new InstanceFile("TestFile2", 21));
 
             if (instanceFormViewModel != null) 
-            { 
+            {
+                Console.WriteLine("=====================================================================");
+                _viewModel = instanceFormViewModel;
                 instanceFormViewModel.Client.FileDownloadEvent += OnFileDownload;
             }
         }
 
         private void OnFileDownload(string name, int procents, DownloadFileProgress process)
         {
-            var instanceFile = InstanceFile.GetInstanceFile(DonwloadFiles, name);
-            if (procents == -1)
+            App.Current.Dispatcher.Invoke(() => 
+            { 
+                var instanceFile = InstanceFile.GetInstanceFile(DownloadFiles, name);
+                if (instanceFile == null) 
+                { 
+                    instanceFile = new InstanceFile(name, procents);
+                    DownloadFiles.Add(instanceFile);
+                    Console.WriteLine(name + "  " + procents);
+                }
+                else 
+                { 
+                    if (process == DownloadFileProgress.Successful || process == DownloadFileProgress.Error)
+                    {
+                        DownloadFiles.Remove(instanceFile);
+                        InstalledFiles.Add(instanceFile);
+                    }
+                    else
+                    {
+                        instanceFile.Procents = procents;
+                    }
+                }
+            });
+        }
+
+        public static bool Contains(IList<InstanceDownloadProcess> list, InstanceFormViewModel instance) 
+        {
+            foreach (var item in list) 
             {
-                DonwloadFiles.Remove(instanceFile);
-                InstalledFiles.Add(instanceFile);
+                if (item.IsEquals(instance))
+                    return true;
             }
-            else
-            {
-                instanceFile.Procents = procents;
-            }
+            return false;
         }
     }
 
@@ -100,12 +131,13 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public DownloadManagerViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
-            InstanceDownloadProcessList.Add(new InstanceDownloadProcess(null));
+            //InstanceDownloadProcessList.Add(new InstanceDownloadProcess(null));
         }
 
         public void AddProcess(InstanceFormViewModel instanceForm) 
         {
-            InstanceDownloadProcessList.Add(new InstanceDownloadProcess(instanceForm));
+            if (!InstanceDownloadProcess.Contains(InstanceDownloadProcessList, instanceForm))
+                InstanceDownloadProcessList.Add(new InstanceDownloadProcess(instanceForm));
         }
     }
 }

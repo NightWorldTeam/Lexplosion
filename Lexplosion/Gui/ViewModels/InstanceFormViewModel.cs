@@ -68,8 +68,7 @@ namespace Lexplosion.Gui.ViewModels
                         {
                             // TODO: может сделать, что-то типо меню скачивания??
                             // ну да просто добавим открытие downloadmanager
-                            Console.WriteLine("123mkldfmdfgmkldfgmkldgmkdgkmammdmgmkfamdgamgkdfmkfdadfmkmkamkfgmkgafmkamkgfd");
-                            OpenDownloadManager(this);
+
                             MainVM.ModalWindowVM.OpenWindow(MainVM.DownloadManager);
                             break;
                         }
@@ -237,14 +236,12 @@ namespace Lexplosion.Gui.ViewModels
 
             if (complitedDownload != null)
                 Client.ComplitedDownload += complitedDownload;
-            
+
+            MainVM.DownloadManager.AddProcess(this);
+
             Model.DownloadModel.DonwloadPrepare();
         }
 
-        public void OpenDownloadManager(InstanceFormViewModel instanceFormViewModel) 
-        {
-            MainVM.DownloadManager.AddProcess(instanceFormViewModel);
-        }
         #endregion methods
     }
 }

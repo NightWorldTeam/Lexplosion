@@ -33,11 +33,11 @@
                                 <Style TargetType="{x:Type TabPanel}">
                                     <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
-                                
+
                             </TabControl.Resources>
 
                             <TabItem Header="В процессе">
-                                <ItemsControl ItemsSource="{Binding DonwloadFiles}">
+                                <ItemsControl ItemsSource="{Binding DownloadFiles}">
 
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -62,7 +62,7 @@
                                                             FontSize="12"
                                                             FontWeight="Medium"
                                                             Foreground="White"
-                                                            Text="File name.jar" />
+                                                            Text="{Binding Name}" />
                                                         <ProgressBar
                                                             Width="200"
                                                             Height="5"
