@@ -121,7 +121,7 @@ namespace Lexplosion.Logic.Network
         {
             string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
-            //try
+            try
             {
                 WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods");
                 req.Method = "POST";
@@ -154,11 +154,10 @@ namespace Lexplosion.Logic.Network
 
                 return data.data;
             }
-            //catch
-            //{
-            //    successful = false;
-            //    return null;
-            //}
+            catch
+            {
+                return null;
+            }
         }
 
         public static CurseforgeInstanceInfo GetInstance(string id)
@@ -320,16 +319,11 @@ namespace Lexplosion.Logic.Network
                 Console.WriteLine("fileData " + fileData.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
 
                 string fileUrl = fileData.downloadUrl;
-                string fileName = fileData.fileName;
-                // т.к разрабы курсфорджа дефектные рукожопы и конченные недоумки, которые не умеют писать код, то url иногда может быть null, поэтому придётся мутить костыли
                 if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
                 {
-                    if (!String.IsNullOrWhiteSpace(fileData.fileName))
-                    {
-                        // ручками формируем url
-                        fileUrl = "https://edge.forgecdn.net/files/" + (fileData.id / 1000) + "/" + (fileData.id % 1000) + "/" + fileData.fileName;
-                    }
-                    else
+                    // пробуем второй раз
+                    fileData = GetProjectFile(projectID.ToString(), fileID.ToString());
+                    if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
                     {
                         Console.WriteLine("URL ERROR - " + fileData.downloadUrl + " - " + fileData.fileName);
                         return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
@@ -338,9 +332,11 @@ namespace Lexplosion.Logic.Network
                             Value2 = DownloadAddonRes.UrlError
                         };
                     }
-                }
+                }     
 
                 Console.WriteLine(fileUrl);
+
+                string fileName = fileData.fileName;
 
                 // проверяем имя файла на валидность
                 char[] invalidFileChars = Path.GetInvalidFileNameChars();

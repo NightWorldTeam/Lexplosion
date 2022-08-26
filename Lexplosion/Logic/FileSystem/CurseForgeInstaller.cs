@@ -194,11 +194,16 @@ namespace Lexplosion.Logic.FileSystem
                 MainFileDownloadEvent?.Invoke(0);
                 bool res = DownloadFile(downloadUrl, fileName, tempDir, delegate(int percent) 
                 {
+                    _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
                     MainFileDownloadEvent?.Invoke(percent);
                 });
 
                 if (!res)
+                {
+                    _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
                     return null;
+                }
+                _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Successful);
 
                 if (Directory.Exists(tempDir + "dataDownload"))
                 {
@@ -343,11 +348,19 @@ namespace Lexplosion.Logic.FileSystem
 
                     // получем инфу о всех аддонах
                     List<CurseforgeAddonInfo> addnos_ = CurseforgeApi.GetAddonsInfo(ids);
+                    if (addnos_ == null) // у этих долбаебов просто по  приколу может упасть соединение во время запроса. пробуем второй раз
+                    {
+                        Thread.Sleep(5000);
+                        addnos_ = CurseforgeApi.GetAddonsInfo(ids);
+                    }
                     //преобразовываем эту хуйню в нормальный спсиок
                     Dictionary<int, CurseforgeAddonInfo> addons = new Dictionary<int, CurseforgeAddonInfo>();
-                    foreach (CurseforgeAddonInfo addon in addnos_)
+                    if (addnos_ != null)
                     {
-                        addons[addon.id] = addon;
+                        foreach (CurseforgeAddonInfo addon in addnos_)
+                        {
+                            addons[addon.id] = addon;
+                        }
                     }
 
                     TasksPerfomer perfomer = null;

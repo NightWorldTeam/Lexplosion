@@ -149,10 +149,38 @@ namespace Lexplosion.Logic.Objects.Curseforge
     {
         public int id;
         public int modId;
-        public string downloadUrl;
         public string fileName;
         public string displayName;
         public List<Dictionary<string, int>> dependencies;
         public List<string> gameVersions;
+
+        // т.к разрабы курсфорджа дефектные рукожопы и конченные недоумки, которые не умеют писать код, то url иногда может быть null, поэтому придётся мутить костыли
+        private string _downloadUrl;
+        public string downloadUrl
+        {
+            set
+            {
+                _downloadUrl = value;
+            }
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(_downloadUrl))
+                {
+                    return _downloadUrl;
+                }
+                else
+                {
+                    if (!String.IsNullOrWhiteSpace(fileName))
+                    {
+                        // ручками формируем url
+                        return "https://edge.forgecdn.net/files/" + (id / 1000) + "/" + (id % 1000) + "/" + fileName;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
     }
 }
