@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lexplosion;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
@@ -68,7 +69,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        private void OnFileDownload(string name, int procents)
+        private void OnFileDownload(string name, int procents, DownloadFileProgress process)
         {
             var instanceFile = InstanceFile.GetInstanceFile(DonwloadFiles, name);
             if (procents == -1)
