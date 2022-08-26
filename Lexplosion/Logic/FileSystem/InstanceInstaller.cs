@@ -642,10 +642,20 @@ namespace Lexplosion.Logic.FileSystem
                                 {
                                     case "downloadFile":
                                         Console.WriteLine("download " + obtainingMethod[i][1]);
-                                        if (!DownloadFile(obtainingMethod[i][1], obtainingMethod[i][2], tempDir))
+
+                                        Action<int> prHandler = delegate (int pr)
                                         {
+                                            _fileDownloadHandler?.Invoke(obtainingMethod[i][2], pr, DownloadFileProgress.PercentagesChanged);
+                                        };
+                                        
+                                        if (obtainingMethod[i].Count > 1 && !DownloadFile(obtainingMethod[i][1], obtainingMethod[i][2], tempDir, prHandler))
+                                        {
+                                            _fileDownloadHandler?.Invoke(obtainingMethod[i][2], 100, DownloadFileProgress.Error);
                                             goto EndWhile; //возникла ошибка
                                         }
+
+                                        _fileDownloadHandler?.Invoke(obtainingMethod[i][2], 100, DownloadFileProgress.Successful);
+
                                         break;
                                     case "unzipFile":
                                         ZipFile.ExtractToDirectory(tempDir + obtainingMethod[i][1], tempDir + obtainingMethod[i][2]);
@@ -787,8 +797,14 @@ namespace Lexplosion.Logic.FileSystem
                                 bool flag = false;
                                 for (int i = 0; i < 3; i++) // 3 попытки делаем
                                 {
-                                    if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
+                                    Action<int> prHadler = delegate (int pr)
                                     {
+                                        _fileDownloadHandler?.Invoke(assetHash, pr, DownloadFileProgress.PercentagesChanged);
+                                    };
+
+                                    if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, prHadler))
+                                    {
+                                        _fileDownloadHandler?.Invoke(assetHash, 100, DownloadFileProgress.Successful);
                                         flag = true;
                                         break;
                                     }
@@ -796,9 +812,9 @@ namespace Lexplosion.Logic.FileSystem
 
                                 if (!flag)
                                 {
+                                    _fileDownloadHandler?.Invoke(assetHash, 100, DownloadFileProgress.Error);
                                     errors.Add("asstes: " + asset);
                                 }
-
 
                                 updated++;
                                 BaseDownloadEvent?.Invoke(updatesCount, updated);
