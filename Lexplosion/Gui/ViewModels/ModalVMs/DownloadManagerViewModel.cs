@@ -47,21 +47,21 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         public InstanceDownloadProcess(InstanceFormViewModel instanceFormViewModel)
         {
-            DonwloadFiles.Add(new InstanceFile("TestFile90", 20));
-            DonwloadFiles.Add(new InstanceFile("TestFile12", 76));
-            DonwloadFiles.Add(new InstanceFile("TestFile23", 15));
-            DonwloadFiles.Add(new InstanceFile("TestFile24", 93));
-            DonwloadFiles.Add(new InstanceFile("TestFile21", 50));
-            DonwloadFiles.Add(new InstanceFile("TestFile22", 20));
-            DonwloadFiles.Add(new InstanceFile("TestFile20", 21));
+            //DonwloadFiles.Add(new InstanceFile("TestFile90", 20));
+            //DonwloadFiles.Add(new InstanceFile("TestFile12", 76));
+            //DonwloadFiles.Add(new InstanceFile("TestFile23", 15));
+            //DonwloadFiles.Add(new InstanceFile("TestFile24", 93));
+            //DonwloadFiles.Add(new InstanceFile("TestFile21", 50));
+            //DonwloadFiles.Add(new InstanceFile("TestFile22", 20));
+            //DonwloadFiles.Add(new InstanceFile("TestFile20", 21));
 
-            InstalledFiles.Add(new InstanceFile("TestFile", 20));
-            InstalledFiles.Add(new InstanceFile("TestFile1", 76));
-            InstalledFiles.Add(new InstanceFile("TestFile2", 15));
-            InstalledFiles.Add(new InstanceFile("TestFile2", 93));
-            InstalledFiles.Add(new InstanceFile("TestFile2", 50));
-            InstalledFiles.Add(new InstanceFile("TestFile2", 20));
-            InstalledFiles.Add(new InstanceFile("TestFile2", 21));
+            //InstalledFiles.Add(new InstanceFile("TestFile", 20));
+            //InstalledFiles.Add(new InstanceFile("TestFile1", 76));
+            //InstalledFiles.Add(new InstanceFile("TestFile2", 15));
+            //InstalledFiles.Add(new InstanceFile("TestFile2", 93));
+            //InstalledFiles.Add(new InstanceFile("TestFile2", 50));
+            //InstalledFiles.Add(new InstanceFile("TestFile2", 20));
+            //InstalledFiles.Add(new InstanceFile("TestFile2", 21));
 
             if (instanceFormViewModel != null) 
             { 

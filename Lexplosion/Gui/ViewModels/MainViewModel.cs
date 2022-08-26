@@ -233,7 +233,7 @@ namespace Lexplosion.Gui.ViewModels
             ExportViewModel = new ExportViewModel(this);
 
             DownloadManager = new DownloadManagerViewModel(this);
-            ModalWindowVM.OpenWindow(DownloadManager);
+            //ModalWindowVM.OpenWindow(DownloadManager);
         }
 
 
