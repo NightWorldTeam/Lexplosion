@@ -232,7 +232,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public InitData Update(ProgressHandlerCallback progressHandler, bool onlyBase = false)
+        public InitData Update(ProgressHandlerCallback progressHandler, Action<string, int> fileDownloadHandler, bool onlyBase = false)
         {
             IInstallManager instance;
 
@@ -252,6 +252,7 @@ namespace Lexplosion.Logic.Management
                     break;
             }
 
+            instance.FileDownloadEvent += fileDownloadHandler;
             InstanceInit result = instance.Check(out string gameVersion);
 
             if (result != InstanceInit.Successful)
@@ -305,7 +306,7 @@ namespace Lexplosion.Logic.Management
         }
 
 
-        public InitData Initialization(ProgressHandlerCallback progressHandler)
+        public InitData Initialization(ProgressHandlerCallback progressHandler, Action<string, int> fileDownloadHandler)
         {
             //try
             {
@@ -322,7 +323,7 @@ namespace Lexplosion.Logic.Management
 
                 if (!UserData.Offline)
                 {
-                    return Update(progressHandler, (_settings.AutoUpdate == false));
+                    return Update(progressHandler, fileDownloadHandler, (_settings.AutoUpdate == false));
                 }
                 else
                 {

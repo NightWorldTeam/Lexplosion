@@ -155,6 +155,7 @@ namespace Lexplosion.Logic.Management.Instances
         public event ComplitedLaunchCallback ComplitedLaunch;
         public event GameExitedCallback GameExited;
         public event Action StateChanged;
+        public event Action<string, int> FileDownloadEvent;
 
         /// <summary>
         /// Базовый конструктор, от него должны наследоваться все остальные
@@ -569,7 +570,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
-            InitData data = launchGame.Update(ProgressHandler);
+            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent);
 
             if (data.InitResult == InstanceInit.Successful)
             {
@@ -591,7 +592,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
-            InitData data = launchGame.Initialization(ProgressHandler);
+            InitData data = launchGame.Initialization(ProgressHandler, FileDownloadEvent);
 
             if (data.InitResult == InstanceInit.Successful)
             {

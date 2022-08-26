@@ -11,9 +11,9 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Network;
+using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
-using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -40,6 +40,11 @@ namespace Lexplosion.Logic.FileSystem
         }
 
         public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
+
+        /// <summary>
+        /// Эвент скачивнаия файла. string - имя файла, int - проценты (если -1, значит файл скачан).
+        /// </summary>
+        public event Action<string, int> FileDownloadEvent;
         public event ProcentUpdate BaseDownloadEvent;
 
         private Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
@@ -355,8 +360,9 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="to">Директория куда скачать (без имени файла). Должно заканчиваться слешем.</param>
         /// <param name="file">Имя файла</param>
         /// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем.</param>
+        /// /// <param name="percentHandler">Обработчик процентов.</param>
         /// <returns>Охуенно или пиздец</returns>
-        protected bool UnsafeDownloadJar(string url, string to, string file, string temp)
+        protected bool UnsafeDownloadJar(string url, string to, string file, string temp, Action<int> percentHandler)
         {
             //try
             {
@@ -365,7 +371,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
                 
-                DownloadFile(url, file, temp);
+                DownloadFile(url, file, temp, percentHandler);
                 DelFile(to + file);
                 File.Move(temp + file, to + file);
 
@@ -443,12 +449,8 @@ namespace Lexplosion.Logic.FileSystem
 
             string addr;
             int updated = 0;
-
-            List<string> errors = new List<string>();
-            
+            List<string> errors = new List<string>();           
             string temp = CreateTempDir();
-
-            Action<int> voidMethod = delegate (int a) { };
 
             //скачивание файла версии
             if (minecraftJar)
@@ -469,11 +471,15 @@ namespace Lexplosion.Logic.FileSystem
                     progressMethod = delegate (int a)
                     {
                         BaseDownloadEvent?.Invoke(100, a);
+                        FileDownloadEvent?.Invoke(minecraftJar.name, a);
                     };
                 }
                 else
                 {
-                    progressMethod = voidMethod;
+                    progressMethod = delegate (int a)
+                    {
+                        FileDownloadEvent?.Invoke(minecraftJar.name, a);
+                    };
                 }
 
                 bool isDownload;
@@ -496,6 +502,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 updated++;
+                FileDownloadEvent?.Invoke(minecraftJar.name, -1);
                 BaseDownloadEvent?.Invoke(updatesCount, updated);
             }
 
@@ -540,14 +547,21 @@ namespace Lexplosion.Logic.FileSystem
                     bool isDownload;
                     string name = folders[folders.Length - 1];
                     string fileDir = DirectoryPath + "/libraries/" + ff;
+                    Action<int> progressHandler = delegate (int pr)
+                    {
+                        FileDownloadEvent?.Invoke(name, pr);
+                    };
+
                     if (libraries[lib].notArchived)
                     {
-                        isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir);
+                        isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, progressHandler);
                     }
                     else
                     {
-                        isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, voidMethod);
+                        isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, progressHandler);
                     }
+
+                    FileDownloadEvent?.Invoke(name, -1);
 
                     if (libraries[lib].isNative && isDownload)
                     {

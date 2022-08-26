@@ -30,6 +30,18 @@ namespace Lexplosion.Logic.Management.Installers
 
         private int actualVersion = -1;
 
+        public event Action<string, int> FileDownloadEvent
+        {
+            add
+            {
+                installer.FileDownloadEvent += value;
+            }
+            remove
+            {
+                installer.FileDownloadEvent -= value;
+            }
+        }
+
         public NightworldInstallManager(string instanceid, bool onlyBase_)
         {
             Console.WriteLine("onlyBase_ = " + onlyBase_);

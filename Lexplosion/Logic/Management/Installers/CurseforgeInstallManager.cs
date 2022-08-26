@@ -23,6 +23,18 @@ namespace Lexplosion.Logic.Management.Installers
 
         int updatesCount = 0;
 
+        public event Action<string, int> FileDownloadEvent
+        {
+            add
+            {
+                installer.FileDownloadEvent += value;
+            }
+            remove
+            {
+                installer.FileDownloadEvent -= value;
+            }
+        }
+
         public CurseforgeInstallManager(string instanceid, bool onlyBase_)
         {
             InstanceId = instanceid;

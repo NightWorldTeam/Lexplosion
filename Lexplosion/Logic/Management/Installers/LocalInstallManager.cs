@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -13,6 +14,18 @@ namespace Lexplosion.Logic.Management.Installers
 
         private string InstanceId;
         private int stagesCount = 0;
+
+        public event Action<string, int> FileDownloadEvent
+        {
+            add
+            {
+                installer.FileDownloadEvent += value;
+            }
+            remove
+            {
+                installer.FileDownloadEvent -= value;
+            }
+        }
 
         public LocalInstallManager(string instanceid)
         {
