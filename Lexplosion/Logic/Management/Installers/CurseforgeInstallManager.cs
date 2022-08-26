@@ -23,7 +23,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         int updatesCount = 0;
 
-        public event Action<string, int> FileDownloadEvent
+        public event Action<string, int, DownloadFileProgress> FileDownloadEvent
         {
             add
             {

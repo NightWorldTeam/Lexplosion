@@ -12,6 +12,6 @@ namespace Lexplosion.Logic.Management.Installers
         InstanceInit Check(out string gameVersion);
         InitData Update(string javaPath, ProgressHandlerCallback progressHandler); // TODO: сделать так, чтобы при неудачном скачивании некоторых файлов он сохранял результат работы, чтобы не перекачивать всё снова
 
-        event Action<string, int> FileDownloadEvent;
+        event Action<string, int, DownloadFileProgress> FileDownloadEvent;
     }
 }

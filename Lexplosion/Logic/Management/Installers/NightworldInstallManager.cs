@@ -30,7 +30,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         private int actualVersion = -1;
 
-        public event Action<string, int> FileDownloadEvent
+        public event Action<string, int, DownloadFileProgress> FileDownloadEvent
         {
             add
             {

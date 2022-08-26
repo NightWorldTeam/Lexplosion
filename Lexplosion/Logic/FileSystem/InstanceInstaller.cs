@@ -42,9 +42,9 @@ namespace Lexplosion.Logic.FileSystem
         public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
 
         /// <summary>
-        /// Эвент скачивнаия файла. string - имя файла, int - проценты (если -1, значит файл скачан).
+        /// Эвент скачивнаия файла. string - имя файла, int - проценты. DownloadFileProgress - стадия
         /// </summary>
-        public event Action<string, int> FileDownloadEvent;
+        public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
         public event ProcentUpdate BaseDownloadEvent;
 
         private Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
@@ -471,14 +471,14 @@ namespace Lexplosion.Logic.FileSystem
                     progressMethod = delegate (int a)
                     {
                         BaseDownloadEvent?.Invoke(100, a);
-                        FileDownloadEvent?.Invoke(minecraftJar.name, a);
+                        FileDownloadEvent?.Invoke(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
                     };
                 }
                 else
                 {
                     progressMethod = delegate (int a)
                     {
-                        FileDownloadEvent?.Invoke(minecraftJar.name, a);
+                        FileDownloadEvent?.Invoke(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
                     };
                 }
 
@@ -492,17 +492,20 @@ namespace Lexplosion.Logic.FileSystem
                     isDownload = SaveDownloadZip(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, progressMethod);
                 }
 
+                DownloadFileProgress downloadResult;
                 if (isDownload)
                 {
                     updates["version"] = minecraftJar.lastUpdate;
+                    downloadResult = DownloadFileProgress.Successful;
                 }
                 else
                 {
                     errors.Add("version/" + minecraftJar.name);
+                    downloadResult = DownloadFileProgress.Error;
                 }
 
                 updated++;
-                FileDownloadEvent?.Invoke(minecraftJar.name, -1);
+                FileDownloadEvent?.Invoke(minecraftJar.name, 100, downloadResult);
                 BaseDownloadEvent?.Invoke(updatesCount, updated);
             }
 
@@ -549,7 +552,7 @@ namespace Lexplosion.Logic.FileSystem
                     string fileDir = DirectoryPath + "/libraries/" + ff;
                     Action<int> progressHandler = delegate (int pr)
                     {
-                        FileDownloadEvent?.Invoke(name, pr);
+                        FileDownloadEvent?.Invoke(name, pr, DownloadFileProgress.PercentagesChanged);
                     };
 
                     if (libraries[lib].notArchived)
@@ -561,7 +564,7 @@ namespace Lexplosion.Logic.FileSystem
                         isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, progressHandler);
                     }
 
-                    FileDownloadEvent?.Invoke(name, -1);
+                    FileDownloadEvent?.Invoke(name, 100, isDownload ? DownloadFileProgress.Successful : DownloadFileProgress.Error);
 
                     if (libraries[lib].isNative && isDownload)
                     {

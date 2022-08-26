@@ -249,4 +249,23 @@ namespace Lexplosion
         FileNameError,
         UncnownError
     }
+
+    /// <summary>
+    /// Стадии скачивания файла.
+    /// </summary>
+    public enum DownloadFileProgress
+    {
+        /// <summary>
+        /// Обновление процентов.
+        /// </summary>
+        PercentagesChanged,
+        /// <summary>
+        /// Скачивнаие завершено удачно.
+        /// </summary>
+        Successful,
+        /// <summary>
+        /// Скачивнаие завершено с ошибкой.
+        /// </summary>
+        Error
+    }
 }

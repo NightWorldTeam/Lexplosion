@@ -15,7 +15,7 @@ namespace Lexplosion.Logic.Management.Installers
         private string InstanceId;
         private int stagesCount = 0;
 
-        public event Action<string, int> FileDownloadEvent
+        public event Action<string, int, DownloadFileProgress> FileDownloadEvent
         {
             add
             {

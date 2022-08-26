@@ -232,7 +232,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public InitData Update(ProgressHandlerCallback progressHandler, Action<string, int> fileDownloadHandler, bool onlyBase = false)
+        public InitData Update(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, bool onlyBase = false)
         {
             IInstallManager instance;
 
@@ -306,7 +306,7 @@ namespace Lexplosion.Logic.Management
         }
 
 
-        public InitData Initialization(ProgressHandlerCallback progressHandler, Action<string, int> fileDownloadHandler)
+        public InitData Initialization(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler)
         {
             //try
             {

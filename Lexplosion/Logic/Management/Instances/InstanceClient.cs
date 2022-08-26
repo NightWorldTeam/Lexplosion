@@ -155,7 +155,7 @@ namespace Lexplosion.Logic.Management.Instances
         public event ComplitedLaunchCallback ComplitedLaunch;
         public event GameExitedCallback GameExited;
         public event Action StateChanged;
-        public event Action<string, int> FileDownloadEvent;
+        public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
 
         /// <summary>
         /// Базовый конструктор, от него должны наследоваться все остальные
