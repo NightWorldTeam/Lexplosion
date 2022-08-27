@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Global;
@@ -45,6 +46,8 @@ namespace Lexplosion.Logic.Management
         public static event Action<Player> UserConnected;
         public static event Action<Player> UserDisconnected;
         public static event Action<OnlineGameStatus, string> StateChanged;
+
+        private ConcurrentDictionary<string, Player> _connectedPlayers = new ConcurrentDictionary<string, Player>();
 
         private string CreateCommand(InitData data)
         {
@@ -91,10 +94,19 @@ namespace Lexplosion.Logic.Management
 
                     gameGateway.ConnectingUser += delegate (string uuid)
                     {
-                        UserConnected?.Invoke(new Player(uuid, delegate 
+                        var player = new Player(uuid, delegate
                         {
                             this.gameGateway?.KickClient(uuid);
-                        }));
+                        });
+
+                        _connectedPlayers[uuid] = player;
+                        UserConnected?.Invoke(player);
+                    };
+
+                    gameGateway.DisconnectedUser += delegate (string uuid)
+                    {
+                        _connectedPlayers.TryRemove(uuid, out Player player);
+                        UserDisconnected?.Invoke(player);
                     };
                 }  
             }

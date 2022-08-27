@@ -14,7 +14,17 @@ namespace Lexplosion.Logic.Management
         /// Содержит ник пользователя.
         /// <para>Стаднартное значение: Player</para>
         /// </summary>
-        public string Nickname { get; private set; } = "Player";
+        public string Nickname 
+        {
+            get => _nickname;
+            private set
+            {
+                _nickname = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _nickname = "Player";
 
         private byte[] _skin = null;
         /// <summary>

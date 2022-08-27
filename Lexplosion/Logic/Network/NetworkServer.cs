@@ -235,7 +235,7 @@ namespace Lexplosion.Logic.Network
 
                                 try
                                 {
-                                    ConnectingUser(clientUUID);
+                                    ConnectingUser?.Invoke(clientUUID);
                                 }
                                 catch { }
                                 Console.WriteLine("КОННЕКТ2!!!");
@@ -313,7 +313,11 @@ namespace Lexplosion.Logic.Network
             PointUuidPair.TryRemove(point, out string clientUuid);
             UuidPointPair.TryRemove(clientUuid, out _);
 
-            DisconnectedUser?.Invoke(clientUuid);
+            try
+            {
+                DisconnectedUser?.Invoke(clientUuid);
+            }
+            catch { }
         }
 
         protected abstract bool BeforeConnect(IPEndPoint point); // это метод который запускается после установления соединения
