@@ -180,7 +180,7 @@
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsKicked}" Value="False">
                                                                 <Setter Property="TextElement.Foreground" Value="#E74D4D" />
-                                                                <Setter Property="Content" Value="Выгнать" />
+                                                                <Setter Property="Content" Value="Выпнуть" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding IsKicked}" Value="True">
                                                                 <Setter Property="TextElement.Foreground" Value="#49AB47" />
