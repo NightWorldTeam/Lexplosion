@@ -53,29 +53,30 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             return _viewModel == instance;
         }
 
-        public InstanceDownloadProcess(InstanceFormViewModel instanceFormViewModel)
+        public InstanceDownloadProcess(InstanceFormViewModel instanceFormViewModel, bool isBool = false)
         {
-            //DonwloadFiles.Add(new InstanceFile("TestFile90", 20));
-            //DonwloadFiles.Add(new InstanceFile("TestFile12", 76));
-            //DonwloadFiles.Add(new InstanceFile("TestFile23", 15));
-            //DonwloadFiles.Add(new InstanceFile("TestFile24", 93));
-            //DonwloadFiles.Add(new InstanceFile("TestFile21", 50));
-            //DonwloadFiles.Add(new InstanceFile("TestFile22", 20));
-            //DonwloadFiles.Add(new InstanceFile("TestFile20", 21));
-
-            //InstalledFiles.Add(new InstanceFile("TestFile", 20));
-            //InstalledFiles.Add(new InstanceFile("TestFile1", 76));
-            //InstalledFiles.Add(new InstanceFile("TestFile2", 15));
-            //InstalledFiles.Add(new InstanceFile("TestFile2", 93));
-            //InstalledFiles.Add(new InstanceFile("TestFile2", 50));
-            //InstalledFiles.Add(new InstanceFile("TestFile2", 20));
-            //InstalledFiles.Add(new InstanceFile("TestFile2", 21));
+            if (isBool) 
+            { 
+                for (var i = 0; i < 200; i++)
+                    DownloadFiles.Add(new InstanceFile("TestFile" + i, i));
+            
+                for (var i = 0; i < 200; i++)
+                    InstalledFiles.Add(new InstanceFile("TestFile" + i, 20));
+            }
 
             if (instanceFormViewModel != null) 
             {
-                Console.WriteLine("=====================================================================");
                 _viewModel = instanceFormViewModel;
                 instanceFormViewModel.Client.FileDownloadEvent += OnFileDownload;
+                instanceFormViewModel.Client.ComplitedDownload += OnDonwloadFinished;
+            }
+        }
+
+        private void OnDonwloadFinished(InstanceInit result, List<string> downloadErrors, bool launchGame)
+        {
+            if (result == InstanceInit.Successful) 
+            {
+                MainViewModel.ShowToastMessage("Сборка установлена", nameof(DownloadFiles) + " хранит в себе " + DownloadFiles.Count.ToString());
             }
         }
 
@@ -88,7 +89,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                 { 
                     instanceFile = new InstanceFile(name, procents);
                     DownloadFiles.Add(instanceFile);
-                    Console.WriteLine(name + "  " + procents);
                 }
                 else 
                 { 
@@ -134,10 +134,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             _mainViewModel.ModalWindowVM.CloseWindow();
         });
 
-        public DownloadManagerViewModel(MainViewModel mainViewModel)
+        public DownloadManagerViewModel(MainViewModel mainViewModel, bool IsTest = false)
         {
             _mainViewModel = mainViewModel;
-            //InstanceDownloadProcessList.Add(new InstanceDownloadProcess(null));
+            if (IsTest)
+                InstanceDownloadProcessList.Add(new InstanceDownloadProcess(null, IsTest));
         }
 
         public void AddProcess(InstanceFormViewModel instanceForm) 
