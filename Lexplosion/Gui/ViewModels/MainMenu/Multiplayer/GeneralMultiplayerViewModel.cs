@@ -1,4 +1,6 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Global;
+using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Management;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +19,16 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
             {
                 _gameStatus = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public bool DirectConnetion 
+        {
+            get => UserData.GeneralSettings.OnlineGameDirectConnection; set 
+            {
+                UserData.GeneralSettings.OnlineGameDirectConnection = value;
+                OnPropertyChanged();
+                DataFilesManager.SaveSettings(UserData.GeneralSettings);
             }
         }
 
