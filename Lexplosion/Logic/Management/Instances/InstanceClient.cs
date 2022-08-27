@@ -134,7 +134,17 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         public string Author { get; private set; }
-        public bool InLibrary { get; private set; } = false;
+
+        private bool _inLibrary = false;
+        public bool InLibrary
+        {
+            get => _inLibrary;
+            private set
+            {
+                _inLibrary = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool _updateAvailable = false;
         public bool UpdateAvailable
@@ -857,10 +867,11 @@ namespace Lexplosion.Logic.Management.Instances
         {
             WithDirectory.DeleteInstance(_localId);
             _installedInstances.Remove(_localId);
-            if(_externalId != null)
+            if (_externalId != null)
             {
                 _idsPairs.Remove(_externalId);
             }
+            InLibrary = false;
             SaveInstalledInstancesList();
         }
 
