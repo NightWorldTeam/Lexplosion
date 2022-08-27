@@ -10,6 +10,10 @@ namespace Lexplosion.Logic.Management
 {
     public class Player : VMBase
     {
+        public string UUID { get; }
+        private Action<Player> _unkickedAction = null; 
+
+        private string _nickname = "Player";
         /// <summary>
         /// Содержит ник пользователя.
         /// <para>Стаднартное значение: Player</para>
@@ -23,8 +27,6 @@ namespace Lexplosion.Logic.Management
                 OnPropertyChanged();
             }
         }
-
-        private string _nickname = "Player";
 
         private byte[] _skin = null;
         /// <summary>
@@ -69,6 +71,7 @@ namespace Lexplosion.Logic.Management
 
         public Player(string uuid, Action kickMethod)
         {
+            UUID = uuid;
             _kickMethod = kickMethod;
 
             ThreadPool.QueueUserWorkItem(delegate (object state)
@@ -116,7 +119,20 @@ namespace Lexplosion.Logic.Management
         /// </summary>
         private void Unkick()
         {
+            _unkickedAction?.Invoke(this);
             IsKicked = false;
+        }
+
+        /// <summary>
+        /// Присваивает значение делегату. Поменять значение можно только единажды.
+        /// </summary>
+        /// <param name="action"></param>
+        public void SetUnkickedAction(Action<Player> action) 
+        {
+            if (_unkickedAction != null)
+                return;
+
+            _unkickedAction = action;
         }
     }
 }

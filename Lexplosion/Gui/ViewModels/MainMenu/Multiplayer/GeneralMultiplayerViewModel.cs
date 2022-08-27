@@ -53,8 +53,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         {
             App.Current.Dispatcher.Invoke(() => 
             {
-                Players.Remove(player);
-                IsEmptyPlayers = Players.Count == 0;
+                if (!player.IsKicked)
+                    Players.Remove(player);
+                player.SetUnkickedAction(RemoveObjFromList);
+                IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
             });
             
         }
@@ -62,6 +64,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         private void OnPlayerStateChanged(OnlineGameStatus status, string strangeString) 
         {
             GameStatus = status;
+            if (GameStatus == OnlineGameStatus.None)
+                Players.Clear();
         }
 
         public MultiplayerModel()
@@ -77,6 +81,23 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         {
             Players = new ObservableCollection<Player>();
             OnPlayerConnected(new Player("123123", () => { }));
+        }
+
+        private bool IsExistPlayers(Player player) 
+        {
+            foreach (var pl in Players)
+            {
+                if (pl.UUID == player.UUID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void RemoveObjFromList(Player player) 
+        {
+            Players.Remove(player);
         }
     }
 

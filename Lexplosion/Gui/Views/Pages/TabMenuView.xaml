@@ -90,59 +90,7 @@
             Margin="0,0,70,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top">
-            <controls:DownloadButton InstanceFormVM="{Binding InstanceFormVM}" />
+            <controls:DownloadButton InstanceFormVM="{Binding InstanceFormVM}" Visibility="{Binding IsInstance, Converter={StaticResource ConvertBoolToVisibility}}" />
         </StackPanel>
-
-        <!--<ItemsControl
-            Grid.Row="1"
-            Margin="0,0,5,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            ItemsSource="{Binding Buttons}">
-
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button
-                        Width="{Binding ButtonParameters.Width}"
-                        Height="{Binding ButtonParameters.Height}"
-                        Margin="{Binding ButtonParameters.Margin}"
-                        Command="{Binding ActionCommand}"
-                        Content="{Binding ButtonParameters.Content}"
-                        Style="{Binding ButtonParameters.Style}"
-                        Visibility="{Binding IsVisible, Converter={StaticResource ConvertBoolToVisibility}}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>-->
-
-        <!--<Button
-            Grid.Row="1"
-            Width="80"
-            Height="30"
-            Margin="0,0,5,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Command="{Binding ActionCommand}"
-            Style="{StaticResource FolderBrowerButton}"
-            >
-            <StackPanel Orientation="Horizontal">
-                <Viewbox Width="18" Height="18">
-                    <Path
-                        Data="M16 37.85v-28l22 14Zm3-14Zm0 8.55 13.45-8.55L19 15.3Z"
-                        Fill="White"
-                        Stretch="Fill" />
-                </Viewbox>
-
-                <TextBlock
-                    Margin="5,0,0,0"
-                    HorizontalAlignment="Center"
-                    Text="Играть" />
-            </StackPanel>
-        </Button>-->
     </Grid>
 </UserControl>

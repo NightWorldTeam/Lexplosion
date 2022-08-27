@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="clr-namespace:Lexplosion"
     xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu.Multiplayer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
@@ -33,21 +34,23 @@
 
             <StackPanel>
                 <StackPanel Margin="28,20,0,0">
-                    <TextBlock Text="Статус" />
+                    <TextBlock FontSize="20" Text="Статус" />
                     <TextBlock Opacity="0.8" Text="{Binding Model.GameStatus}" />
                 </StackPanel>
 
                 <StackPanel Margin="28,40,0,0">
-                    <TextBlock FontSize="18" Text="Приоритетный метод подключения" />
+                    <TextBlock FontSize="20" Text="Приоритетный метод подключения" />
                     <StackPanel Orientation="Horizontal">
                         <RadioButton
                             Margin="0,5,20,5"
                             Content="Прямое"
+                            FontSize="18"
                             GroupName="ConnectType"
                             IsChecked="True" />
                         <RadioButton
                             Margin="20,5,0,5"
                             Content="Через ретранслятор"
+                            FontSize="18"
                             GroupName="ConnectType" />
                     </StackPanel>
                 </StackPanel>
@@ -68,6 +71,9 @@
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Model.IsEmptyPlayers}" Value="False">
                                 <Setter Property="Border.BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Model.GameStatus}" Value="{x:Static enum:OnlineGameStatus.None}">
+                                <Setter Property="Border.Visibility" Value="Collapsed" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
