@@ -79,8 +79,12 @@
                                     <Border
                                         Width="45"
                                         Height="45"
-                                        Background="#167FFC"
                                         CornerRadius="200">
+
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding Skin, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                                        </Border.Background>
+
                                         <Border.Style>
                                             <Style>
                                                 <Style.Triggers>
@@ -91,9 +95,6 @@
                                             </Style>
                                         </Border.Style>
                                     </Border>
-                                    <!--<Border.Background>
-                                            <ImageBrush ImageSource="{Binding Avatart, Converter={StaticResource BytesToBitmapImageConverter}}" />
-                                        </Border.Background>-->
 
                                     <StackPanel Grid.Column="1">
                                         <TextBlock

@@ -80,10 +80,12 @@
                                 BorderBrush="#121212"
                                 BorderThickness="1"
                                 FontSize="16"
-                                FontWeight="Normal"
-                                Foreground="#b9b7b7"
+                                FontWeight="Regular"
+                                Foreground="White"
                                 Placeholder="Название сборки"
+                                PlaceholderFontSize="16"
                                 PlaceholderOpacity="0.8"
+                                PlaceholderColor="White"
                                 Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
 
