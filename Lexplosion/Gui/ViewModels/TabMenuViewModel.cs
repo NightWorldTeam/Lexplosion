@@ -8,7 +8,15 @@ namespace Lexplosion.Gui.ViewModels
 {
     public class TabMenuViewModel : SubmenuViewModel
     {
-        public bool IsInstance { get; private set; } = true;
+        private bool _isInstance = false;
+        public bool IsInstance 
+        {   
+            get => _isInstance; private set 
+            {
+                _isInstance = value;
+                OnPropertyChanged();
+            }
+        };
 
         private string _header;
         /// <summary>
@@ -16,10 +24,10 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public string Header 
         {
-            get => _header; set 
+            get => _header; private set 
             {
                 _header = value;
-                OnPropertyChanged(nameof(Header));
+                OnPropertyChanged();
             }
         }
 
