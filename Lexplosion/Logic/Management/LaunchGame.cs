@@ -88,8 +88,7 @@ namespace Lexplosion.Logic.Management
             {
                 lock (loocker)
                 {
-                    bool directConnection = (_settings.OnlineGameDirectConnection == true);
-                    gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", directConnection);
+                    gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", _settings.OnlineGameDirectConnection);
                     removeImportantTaskMark = false;
                     Lexplosion.Run.AddImportantTask();
 
@@ -428,8 +427,7 @@ namespace Lexplosion.Logic.Management
                         }
                         catch { }
 
-                        bool directConnection = (classInstance._settings.OnlineGameDirectConnection == true);
-                        classInstance.gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", directConnection);
+                        classInstance.gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", classInstance._settings.OnlineGameDirectConnection);
                         classInstance.gameGateway.Initialization(classInstance.process.Id);
                     }
                 }

@@ -44,7 +44,7 @@ namespace Lexplosion.Logic
                 if (HiddenMode == null) HiddenMode = settings.HiddenMode;
                 if (AutoUpdate == null) AutoUpdate = settings.AutoUpdate;
                 if (GameArgs == null) GameArgs = settings.GameArgs;
-                if (OnlineGameDirectConnection == null) OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
+                OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
             }
             else
             {
@@ -59,7 +59,7 @@ namespace Lexplosion.Logic
                 if (settings.HiddenMode != null) HiddenMode = settings.HiddenMode;
                 if (settings.AutoUpdate != null) AutoUpdate = settings.AutoUpdate;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
-                if (settings.OnlineGameDirectConnection != null) OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
+                OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
             }
         }
 

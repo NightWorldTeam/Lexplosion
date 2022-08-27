@@ -580,6 +580,8 @@ namespace Lexplosion.Logic.Management.Instances
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
+            instanceSettings.Merge(UserData.GeneralSettings, true);
+
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent);
 
@@ -602,6 +604,8 @@ namespace Lexplosion.Logic.Management.Instances
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
+            instanceSettings.Merge(UserData.GeneralSettings, true);
+
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
             InitData data = launchGame.Initialization(ProgressHandler, FileDownloadEvent);
 

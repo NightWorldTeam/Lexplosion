@@ -161,7 +161,7 @@ namespace Lexplosion.Logic.Network
                 });
 
                 InformingThread.Start();
-                Server = new ServerBridge(UUID, sessionToken, port, false, ControlServer);
+                Server = new ServerBridge(UUID, sessionToken, port, _directConnection, ControlServer);
 
                 Server.ConnectingUser += ConnectingUser;
                 Server.DisconnectedUser += DisconnectedUser;
