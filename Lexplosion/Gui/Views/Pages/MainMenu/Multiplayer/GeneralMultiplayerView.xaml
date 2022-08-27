@@ -55,9 +55,24 @@
 
             <Border
                 Grid.Column="1"
-                Margin="0,30,0,10"
-                BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                BorderThickness="2,0,0,0">
+                Margin="0,30,10,0"
+                Padding="10"
+                BorderThickness="2,2,2,2"
+                CornerRadius="5">
+
+                <Border.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Model.IsEmptyPlayers}" Value="True">
+                                <Setter Property="Border.BorderBrush" Value="#404040" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Model.IsEmptyPlayers}" Value="False">
+                                <Setter Property="Border.BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
                 <StackPanel>
                     <TextBlock
                         HorizontalAlignment="Center"
@@ -66,45 +81,36 @@
                         Foreground="White"
                         Text="Подключенные игроки" />
 
+                    <TextBlock
+                        Margin="0,100,0,0"
+                        HorizontalAlignment="Center"
+                        FontSize="16"
+                        Opacity="0.8"
+                        Text="Отсутсвуют подключенные игроки."
+                        TextAlignment="Center"
+                        TextWrapping="WrapWithOverflow"
+                        Visibility="{Binding Model.IsEmptyPlayers, Converter={StaticResource ConvertBoolToVisibility}}" />
 
-                    <ItemsControl ItemsSource="{Binding Model.Players}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="20,20,0,0" ShowGridLines="False">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
+                    <ScrollViewer Visibility="{Binding Model.IsEmptyPlayers, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                        <ItemsControl ItemsSource="{Binding Model.Players}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="20,20,0,0" ShowGridLines="False">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <Border
-                                        Width="45"
-                                        Height="45"
-                                        CornerRadius="200">
+                                        <Border
+                                            Width="45"
+                                            Height="45"
+                                            CornerRadius="200">
 
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="{Binding Skin, Converter={StaticResource BytesToBitmapImageConverter}}" />
-                                        </Border.Background>
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding Skin, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                                            </Border.Background>
 
-                                        <Border.Style>
-                                            <Style>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsKicked}" Value="True">
-                                                        <Setter Property="TextBlock.Opacity" Value="0.6" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                    </Border>
-
-                                    <StackPanel Grid.Column="1">
-                                        <TextBlock
-                                            Margin="10,0,0,0"
-                                            FontFamily="{DynamicResource FuturaBookC}"
-                                            FontSize="18"
-                                            FontWeight="Regular"
-                                            Foreground="White"
-                                            Text="{Binding Nickname}">
-                                            <TextBlock.Style>
+                                            <Border.Style>
                                                 <Style>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsKicked}" Value="True">
@@ -112,98 +118,77 @@
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
+                                            </Border.Style>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                FontFamily="{DynamicResource FuturaBookC}"
+                                                FontSize="18"
+                                                FontWeight="Regular"
+                                                Foreground="White"
+                                                Text="{Binding Nickname}">
+                                                <TextBlock.Style>
+                                                    <Style>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsKicked}" Value="True">
+                                                                <Setter Property="TextBlock.Opacity" Value="0.6" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
 
 
-                                        <Button
-                                            Margin="7,3,0,0"
-                                            HorizontalAlignment="Left"
-                                            Command="{Binding AccessChangeAction}"
-                                            FontWeight="Regular">
-                                            <Button.Style>
-                                                <Style TargetType="{x:Type Button}">
-                                                    <Setter Property="FontSize" Value="16" />
-                                                    <Setter Property="FontFamily" Value="{DynamicResource FuturaBookC}" />
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="{x:Type Button}">
-                                                                <Border
-                                                                    x:Name="border"
-                                                                    Padding="3"
-                                                                    Background="Transparent"
-                                                                    CornerRadius="5">
-                                                                    <ContentPresenter />
-                                                                </Border>
+                                            <Button
+                                                Margin="7,3,0,0"
+                                                HorizontalAlignment="Left"
+                                                Command="{Binding AccessChangeAction}"
+                                                FontWeight="Regular">
+                                                <Button.Style>
+                                                    <Style TargetType="{x:Type Button}">
+                                                        <Setter Property="FontSize" Value="16" />
+                                                        <Setter Property="FontFamily" Value="{DynamicResource FuturaBookC}" />
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                                    <Border
+                                                                        x:Name="border"
+                                                                        Padding="3"
+                                                                        Background="Transparent"
+                                                                        CornerRadius="5">
+                                                                        <ContentPresenter />
+                                                                    </Border>
 
-                                                                <ControlTemplate.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter TargetName="border" Property="Opacity" Value="0.8" />
-                                                                    </Trigger>
-                                                                </ControlTemplate.Triggers>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter TargetName="border" Property="Opacity" Value="0.8" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
 
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsKicked}" Value="False">
-                                                            <Setter Property="TextElement.Foreground" Value="#E74D4D" />
-                                                            <Setter Property="Content" Value="Выгнать" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsKicked}" Value="True">
-                                                            <Setter Property="TextElement.Foreground" Value="#49AB47" />
-                                                            <Setter Property="Content" Value="Вернуть" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Button.Style>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                    <!--<Grid
-                        Margin="10,20,0,0"
-                        Opacity="0.8"
-                        ShowGridLines="False">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border
-                            Width="45"
-                            Height="45"
-                            Background="{DynamicResource BrandSolidColorBrush}"
-                            CornerRadius="200">
-                    -->
-                    <!--<Border.Background>
-                                <ImageBrush ImageSource="pack://Application:,,,/Assets/images/icons/non_image.png" />
-                            </Border.Background>-->
-
-                    <!--</Border>
-
-                        <StackPanel Grid.Column="1">
-                            <TextBlock
-                                Margin="10,0,0,0"
-                                FontFamily="Montserrat"
-                                FontSize="16"
-                                FontWeight="Medium"
-                                Text="Fleo" />
-
-                            <Button
-                                Margin="10,0,0,0"
-                                HorizontalAlignment="Left"
-                                Content="Вернуть"
-                                FontFamily="{DynamicResource FuturaBookC}"
-                                FontSize="16"
-                                FontWeight="Regular"
-                                Foreground="#49AB47"
-                                Style="{StaticResource DefaultCloseButton}" />
-                        </StackPanel>
-                    </Grid>-->
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsKicked}" Value="False">
+                                                                <Setter Property="TextElement.Foreground" Value="#E74D4D" />
+                                                                <Setter Property="Content" Value="Выгнать" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsKicked}" Value="True">
+                                                                <Setter Property="TextElement.Foreground" Value="#49AB47" />
+                                                                <Setter Property="Content" Value="Вернуть" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </StackPanel>
             </Border>
         </Grid>

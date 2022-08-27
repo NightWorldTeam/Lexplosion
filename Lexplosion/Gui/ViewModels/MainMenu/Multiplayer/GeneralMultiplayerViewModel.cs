@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         private OnlineGameStatus _gameStatus = OnlineGameStatus.None;
         public OnlineGameStatus GameStatus 
         {
-            get => _gameStatus; set 
+            get => _gameStatus; private set 
             {
                 _gameStatus = value;
                 OnPropertyChanged();
@@ -23,9 +23,19 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         private ObservableCollection<Player> _players;
         public ObservableCollection<Player> Players
         {
-            get => _players; set
+            get => _players; private set
             {
                 _players = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isEmptyPlayers = true;
+        public bool IsEmptyPlayers 
+        {
+            get => _isEmptyPlayers; private set 
+            {
+                _isEmptyPlayers = value;
                 OnPropertyChanged();
             }
         }
@@ -35,12 +45,18 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
             App.Current.Dispatcher.Invoke(delegate ()
             {
                 Players.Add(player);
+                IsEmptyPlayers = Players.Count == 0;
             });
         }
 
         public void OnPlayerDisconnected(Player player) 
         {
-            Players.Remove(player);
+            App.Current.Dispatcher.Invoke(() => 
+            {
+                Players.Remove(player);
+                IsEmptyPlayers = Players.Count == 0;
+            });
+            
         }
 
         private void OnPlayerStateChanged(OnlineGameStatus status, string strangeString) 
@@ -50,7 +66,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
 
         public MultiplayerModel()
         {
-            SetTestPlayers();
+            //SetTestPlayers();
             LaunchGame.StateChanged += OnPlayerStateChanged;
             LaunchGame.UserConnected += OnPlayerConnected;
             LaunchGame.UserDisconnected += OnPlayerDisconnected;
@@ -59,6 +75,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         private void SetTestPlayers() 
         {
             Players = new ObservableCollection<Player>();
+            OnPlayerConnected(new Player("123123", () => { }));
         }
     }
 
