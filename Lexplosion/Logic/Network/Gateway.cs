@@ -28,12 +28,24 @@ namespace Lexplosion.Logic.Network
         public event Action<OnlineGameStatus, string> StateChanged;
 
         private bool _isInit = false;
+        /// <summary>
+        /// Использовать ли прямо подключение
+        /// </summary>
+        private bool _directConnection = false;
 
-        public Gateway(string uuid, string sessionToken_, string controlServer)
+        /// <summary>
+        /// Отвечает за тевевую игру.
+        /// </summary>
+        /// <param name="uuid">Айдишник игрока.</param>
+        /// <param name="sessionToken_">Его токен</param>
+        /// <param name="controlServer">Айпи сервера сетевой игры</param>
+        /// <param name="directConnection">Использовать ли прямо подключение в приоритете</param>
+        public Gateway(string uuid, string sessionToken_, string controlServer, bool directConnection)
         {
             UUID = uuid;
             sessionToken = sessionToken_;
             ControlServer = controlServer;
+            _directConnection = directConnection;
         }
 
         public void Initialization(int pid)
