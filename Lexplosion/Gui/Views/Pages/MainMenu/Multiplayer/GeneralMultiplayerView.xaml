@@ -46,12 +46,13 @@
                             Content="Прямое"
                             FontSize="18"
                             GroupName="ConnectType"
-                            IsChecked="True" />
+                            IsChecked="{Binding Model.DirectConnetion}" />
                         <RadioButton
                             Margin="20,5,0,5"
                             Content="Через ретранслятор"
                             FontSize="18"
-                            GroupName="ConnectType" />
+                            GroupName="ConnectType"
+                            IsChecked="{Binding Model.DirectConnetion, Converter={StaticResource InverseBooleanConverter}}" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

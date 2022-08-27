@@ -16,7 +16,7 @@ namespace Lexplosion.Gui.ViewModels
                 _isInstance = value;
                 OnPropertyChanged();
             }
-        };
+        }
 
         private string _header;
         /// <summary>
