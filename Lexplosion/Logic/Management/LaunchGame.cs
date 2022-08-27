@@ -108,6 +108,8 @@ namespace Lexplosion.Logic.Management
                         _connectedPlayers.TryRemove(uuid, out Player player);
                         UserDisconnected?.Invoke(player);
                     };
+
+                    gameGateway.StateChanged += StateChanged;
                 }  
             }
             
