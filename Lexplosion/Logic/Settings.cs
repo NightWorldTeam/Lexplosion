@@ -27,7 +27,7 @@ namespace Lexplosion.Logic
         /// <summary>
         /// Использовать ли в приоритете в сетевой игре прямое подключение.
         /// </summary>
-        public bool OnlineGameDirectConnection;
+        public bool OnlineGameDirectConnection = false;
 
         public void Merge(Settings settings, bool priority = false)
         {

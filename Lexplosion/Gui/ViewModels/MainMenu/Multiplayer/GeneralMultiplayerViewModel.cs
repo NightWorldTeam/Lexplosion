@@ -22,7 +22,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
             }
         }
 
-        public bool DirectConnetion 
+        public bool DirectConnetion
         {
             get => UserData.GeneralSettings.OnlineGameDirectConnection; set 
             {
