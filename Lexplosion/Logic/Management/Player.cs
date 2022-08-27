@@ -61,36 +61,24 @@ namespace Lexplosion.Logic.Management
         {
             _kickMethod = kickMethod;
 
-            PlayerData data = NightWorldApi.GetPlayerData(uuid);
-            if (data != null)
+            ThreadPool.QueueUserWorkItem(delegate (object state)
             {
-                Nickname = data.Nickname;
-                ProfileUrl = data.ProfileUrl;
-
-                ThreadPool.QueueUserWorkItem(delegate (object state)
+                PlayerData data = NightWorldApi.GetPlayerData(uuid);
+                if (data != null)
                 {
-                    try
-                    {
-                        using (var httpClient = new HttpClient())
-                        {
-                            Skin = httpClient.GetByteArrayAsync(data.AvatarUrl).Result;
-                        }
-                    }
-                    catch { }
-                });
+                    Nickname = data.Nickname;
+                    ProfileUrl = data.ProfileUrl;
+                }
 
-                //ThreadPool.QueueUserWorkItem(delegate (object state)
-                //{
-                //    try
-                //    {
-                //        using (var webClient = new WebClient())
-                //        {
-                //            Skin = webClient.DownloadData(data.AvatarUrl);
-                //        }
-                //    }
-                //    catch { }
-                //});
-            }
+                try
+                {
+                    using (var httpClient = new HttpClient())
+                    {
+                        Skin = httpClient.GetByteArrayAsync(data.AvatarUrl).Result;
+                    }
+                }
+                catch { }
+            });
         }
 
         /// <summary>
