@@ -24,6 +24,10 @@ namespace Lexplosion.Logic
         public bool? HiddenMode = null;
         public bool? AutoUpdate = null;
         public string GameArgs = null;
+        /// <summary>
+        /// Использовать ли в приоритете в сетевой игре прямое подключение.
+        /// </summary>
+        public bool? OnlineGameDirectConnection = null;
 
         public void Merge(Settings settings, bool priority = false)
         {
@@ -40,6 +44,7 @@ namespace Lexplosion.Logic
                 if (HiddenMode == null) HiddenMode = settings.HiddenMode;
                 if (AutoUpdate == null) AutoUpdate = settings.AutoUpdate;
                 if (GameArgs == null) GameArgs = settings.GameArgs;
+                if (OnlineGameDirectConnection == null) OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
             }
             else
             {
@@ -54,6 +59,7 @@ namespace Lexplosion.Logic
                 if (settings.HiddenMode != null) HiddenMode = settings.HiddenMode;
                 if (settings.AutoUpdate != null) AutoUpdate = settings.AutoUpdate;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
+                if (settings.OnlineGameDirectConnection != null) OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
             }
         }
 
@@ -82,7 +88,8 @@ namespace Lexplosion.Logic
                 ShowConsole = false,
                 HiddenMode = false,
                 GameArgs = "",
-                AutoUpdate = false
+                AutoUpdate = false,
+                OnlineGameDirectConnection = false
             };
         }
     }

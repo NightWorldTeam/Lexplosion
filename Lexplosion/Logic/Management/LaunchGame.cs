@@ -32,11 +32,6 @@ namespace Lexplosion.Logic.Management
 
         private static object loocker = new object();
 
-        /// <summary>
-        /// Использовать ли в приоритете в сетевой игре прямое подключение.
-        /// </summary>
-        public static bool DirectConnection { get; set; } = false;
-
         public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type)
         {
             classInstance = this;
@@ -93,7 +88,8 @@ namespace Lexplosion.Logic.Management
             {
                 lock (loocker)
                 {
-                    gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", DirectConnection);
+                    bool directConnection = (_settings.OnlineGameDirectConnection == true);
+                    gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", directConnection);
                     removeImportantTaskMark = false;
                     Lexplosion.Run.AddImportantTask();
 
@@ -432,7 +428,8 @@ namespace Lexplosion.Logic.Management
                         }
                         catch { }
 
-                        classInstance.gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", DirectConnection);
+                        bool directConnection = (_settings.OnlineGameDirectConnection == true);
+                        classInstance.gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", directConnection);
                         classInstance.gameGateway.Initialization(classInstance.process.Id);
                     }
                 }
