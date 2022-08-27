@@ -114,23 +114,19 @@ namespace Lexplosion.Logic.Network.TURN
         public bool Close(IPEndPoint point)
         {
             Console.WriteLine("TURN CLOSE ");
-            if (IsWork)
+            lock (_waitDeletingLoocker)
             {
-                lock (_waitDeletingLoocker)
+                // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
+                if (IsWork && pointsSockets.ContainsKey(point))
                 {
-                    // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
-                    if (pointsSockets.ContainsKey(point))
+                    Console.WriteLine("TRUN CLOSE GSFSDGF");
+                    pointsSockets.TryRemove(point, out Socket sock);
+                    sockets.Remove(sock);
+                    if (sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
                     {
-                        Console.WriteLine("TRUN CLOSE GSFSDGF");
-                        pointsSockets.TryRemove(point, out Socket sock);
-                        sockets.Remove(sock);
-                        if (sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
-                        {
-                            WaitConnections.Reset();
-                        }
-                        sock.Close();
+                        WaitConnections.Reset();
                     }
-                    ClientClosing?.Invoke(point); //Вызываем событие закрытия
+                    sock.Close();
                 }
             }
             Console.WriteLine("TURN END CLOSE ");

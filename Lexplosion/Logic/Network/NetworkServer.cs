@@ -233,7 +233,11 @@ namespace Lexplosion.Logic.Network
                                 UuidPointPair[clientUUID] = point;
                                 PointUuidPair[point] = clientUUID;
 
-                                ConnectingUser?.Invoke(clientUUID);
+                                try
+                                {
+                                    ConnectingUser(clientUUID);
+                                }
+                                catch { }
                                 Console.WriteLine("КОННЕКТ2!!!");
                                 SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
                                 ReadingWait.Set();

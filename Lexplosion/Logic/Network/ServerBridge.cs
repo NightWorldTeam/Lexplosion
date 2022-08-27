@@ -20,6 +20,7 @@ namespace Lexplosion.Logic.Network
 
         private bool _isWork = true;
         private object _stopLosk = new object();
+        private object _abortLoocker = new object();
 
         public ServerBridge(string uuid, string sessionToken, int localGamePort, bool directConnection, string server) : base(uuid, sessionToken, serverType, directConnection, server)
         {
@@ -32,27 +33,30 @@ namespace Lexplosion.Logic.Network
 
         protected override void ClientAbort(IPEndPoint point)
         {
-            Console.WriteLine("clientAbort");
-            AcceptingBlock.WaitOne();
-            Console.WriteLine("clientAbort1");
-            SendingBlock.WaitOne();
-            Console.WriteLine("ABORT IN SENDING");
-
-            //удаляем клиента везде
-            if (Connections.ContainsKey(point)) // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
+            lock (_abortLoocker)
             {
-                Console.WriteLine("Sockets " + Sockets.Count);
-                Sockets.Remove(Connections[point]);
-                ClientsPoints.TryRemove(Connections[point], out _);
-                Connections.TryRemove(point, out Socket sock);
-                sock.Close(); //зыкрываем соединение
+                if (Connections.ContainsKey(point))// может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
+                {
+                    Console.WriteLine("clientAbort");
+                    AcceptingBlock.WaitOne();
+                    Console.WriteLine("clientAbort1");
+                    SendingBlock.WaitOne();
+                    Console.WriteLine("ABORT IN SENDING");
 
-                base.ClientAbort(point);
+                    //удаляем клиента везде
+                    Console.WriteLine("Sockets " + Sockets.Count);
+                    Sockets.Remove(Connections[point]);
+                    ClientsPoints.TryRemove(Connections[point], out _);
+                    Connections.TryRemove(point, out Socket sock);
+                    sock.Close(); //зыкрываем соединение
+
+                    base.ClientAbort(point);
+
+                    AcceptingBlock.Release();
+                    Console.WriteLine("ABORT NOT IN SENDING");
+                    SendingBlock.Release();
+                }       
             }
-
-            AcceptingBlock.Release();
-            Console.WriteLine("ABORT NOT IN SENDING");
-            SendingBlock.Release();
         }
 
         protected override bool BeforeConnect(IPEndPoint point)
@@ -167,7 +171,8 @@ namespace Lexplosion.Logic.Network
                 foreach (IPEndPoint point in isDisconected)
                 {
                     Console.WriteLine("DISCONECTED");
-                    Server.Close(point); // при отключении клиента еще будет вызван метод ClientAbort
+                    Server.Close(point);
+                    ClientAbort(point);
                 }
 
                 if (isDisconected.Count > 0)
@@ -202,12 +207,14 @@ namespace Lexplosion.Logic.Network
                             Console.WriteLine("SERVER CLOSE 1 " + e);
                             AcceptingBlock.Release();
                             Server.Close(point);
+                            ClientAbort(point);
                         } 
                     }
-                    else // Количество байт 0 - значит соединение было обрвано
+                    else // Количество байт 0 - значит соединение было оборвано
                     {
                         Console.WriteLine("SERVER CLOSE 2");
                         Server.Close(point);
+                        ClientAbort(point);
                     }
 
                 }
@@ -215,6 +222,7 @@ namespace Lexplosion.Logic.Network
                 {
                     Console.WriteLine("SERVER CLOSE 3 " + e);
                     Server.Close(point);
+                    ClientAbort(point);
                 }
             }
         }

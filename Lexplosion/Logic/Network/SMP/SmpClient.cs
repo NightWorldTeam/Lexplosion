@@ -517,6 +517,7 @@ namespace Lexplosion.Logic.Network.SMP
                     new Thread(delegate ()
                     {
                         Close();
+                        // TODO: ClientClosing вызывать
                     }).Start();
                 }
 
