@@ -857,7 +857,10 @@ namespace Lexplosion.Logic.Management.Instances
         {
             WithDirectory.DeleteInstance(_localId);
             _installedInstances.Remove(_localId);
-            _idsPairs.Remove(_externalId);
+            if(_externalId != null)
+            {
+                _idsPairs.Remove(_externalId);
+            }
             SaveInstalledInstancesList();
         }
 

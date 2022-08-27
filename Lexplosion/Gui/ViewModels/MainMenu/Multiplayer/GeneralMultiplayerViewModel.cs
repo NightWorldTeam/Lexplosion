@@ -32,7 +32,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
 
         public void OnPlayerConnected(Player player)
         {
-            Players.Add(player);
+            App.Current.Dispatcher.Invoke(delegate ()
+            {
+                Players.Add(player);
+            });
         }
 
         public void OnPlayerDisconnected(Player player) 
@@ -56,10 +59,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         private void SetTestPlayers() 
         {
             Players = new ObservableCollection<Player>();
-
-            var testPlayer = new Player();
-
-            Players.Add(testPlayer);
         }
     }
 

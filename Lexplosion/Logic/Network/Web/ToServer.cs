@@ -227,7 +227,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    answer = HttpPost(LaunсherSettings.URL.Base + "api/account/auth", data);
+                    answer = HttpPost(LaunсherSettings.URL.Account + "auth", data);
 
                     if (answer == null)
                     {

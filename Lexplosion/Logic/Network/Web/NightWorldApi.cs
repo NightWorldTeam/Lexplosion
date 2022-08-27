@@ -240,5 +240,27 @@ namespace Lexplosion.Logic.Network
                 }*/
             }
         }
+
+        public static PlayerData GetPlayerData(string uuid)
+        {
+            string data = ToServer.HttpPost(LaunсherSettings.URL.Account + "getPlayerData", new Dictionary<string, string>
+            { 
+                ["playerUUID"] = uuid
+            });
+
+            if (data != null)
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<PlayerData>(data);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            return null;
+        }
     }
 }

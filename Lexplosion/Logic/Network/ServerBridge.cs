@@ -182,7 +182,7 @@ namespace Lexplosion.Logic.Network
         {
             ReadingWait.WaitOne(); //ждём первого подключения
             ReadingWait.Set();
-
+            
             while (IsWork)
             {
                 IPEndPoint point = Server.Receive(out byte[] data);
@@ -192,19 +192,28 @@ namespace Lexplosion.Logic.Network
                     if (data.Length != 0)
                     {
                         AcceptingBlock.WaitOne();
-                        Connections[point].Send(data, data.Length, SocketFlags.None);
-                        AcceptingBlock.Release();
+                        try
+                        {
+                            Connections[point].Send(data, data.Length, SocketFlags.None);
+                            AcceptingBlock.Release();
+                        }
+                        catch (Exception e) // Обрываем соединение с этми клиентом нахуй
+                        {
+                            Console.WriteLine("SERVER CLOSE 1 " + e);
+                            AcceptingBlock.Release();
+                            Server.Close(point);
+                        } 
                     }
                     else // Количество байт 0 - значит соединение было обрвано
                     {
-                        Console.WriteLine("SERVER CLOSE 1");
+                        Console.WriteLine("SERVER CLOSE 2");
                         Server.Close(point);
                     }
 
                 }
                 catch (Exception e) // Обрываем соединение с этми клиентом нахуй
                 {
-                    Console.WriteLine("SERVER CLOSE 2 " + e);
+                    Console.WriteLine("SERVER CLOSE 3 " + e);
                     Server.Close(point);
                 }
             }

@@ -88,6 +88,14 @@ namespace Lexplosion.Logic.Management
                     gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176");
                     removeImportantTaskMark = false;
                     Lexplosion.Run.AddImportantTask();
+
+                    gameGateway.ConnectingUser += delegate (string uuid)
+                    {
+                        UserConnected?.Invoke(new Player(uuid, delegate 
+                        {
+                            this.gameGateway?.KickClient(uuid);
+                        }));
+                    };
                 }  
             }
             

@@ -231,6 +231,18 @@ namespace Lexplosion.Logic.Network
             }
         }
 
+        public void KickClient(string uuid)
+        {
+            try
+            {
+                if (Server != null)
+                {
+                    Server.KickClient(uuid);
+                }
+            }
+            catch { }
+        }
+
         public void StopWork()
         {
             try { ServerSimulatorThread.Abort(); } catch { }

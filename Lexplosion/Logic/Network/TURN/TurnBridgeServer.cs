@@ -10,13 +10,13 @@ namespace Lexplosion.Logic.Network.TURN
 {
     class TurnBridgeServer : IServerTransmitter
     {
-        protected ConcurrentDictionary<IPEndPoint, Socket> pointsSockets = new ConcurrentDictionary<IPEndPoint, Socket>();
-        protected List<Socket> sockets = new List<Socket>();
+        private ConcurrentDictionary<IPEndPoint, Socket> pointsSockets = new ConcurrentDictionary<IPEndPoint, Socket>();
+        private List<Socket> sockets = new List<Socket>();
 
-        protected Semaphore WaitDeletingConnection = new Semaphore(1, 1);
-        protected ManualResetEvent WaitConnections = new ManualResetEvent(false); // блокировка метода Receive, если нет клиентов
+        private object _waitDeletingLoocker = new object();
+        private ManualResetEvent WaitConnections = new ManualResetEvent(false); // блокировка метода Receive, если нет клиентов
 
-        protected bool IsWork = true;
+        private bool IsWork = true;
 
         public bool Connect(string selfUUID, string hostUUID, out IPEndPoint point)
         {
@@ -38,10 +38,12 @@ namespace Lexplosion.Logic.Network.TURN
             sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 8765)); // TODO: обернуть в трай
             sock.Send(data);
 
-            WaitDeletingConnection.WaitOne();
-            pointsSockets[(IPEndPoint)sock.LocalEndPoint] = sock;
-            sockets.Add(sock);
-            WaitDeletingConnection.Release();
+            lock (_waitDeletingLoocker)
+            {
+                pointsSockets[(IPEndPoint)sock.LocalEndPoint] = sock;
+                sockets.Add(sock);
+            }
+            
             WaitConnections.Set();
 
             point = (IPEndPoint)sock.LocalEndPoint;
@@ -57,9 +59,9 @@ namespace Lexplosion.Logic.Network.TURN
             {
                 WaitConnections.WaitOne(); // тут метод остановится, если нет ни одного клиента
 
-                WaitDeletingConnection.WaitOne();
-                List<Socket> sockets_ = new List<Socket>(sockets);
-                WaitDeletingConnection.Release();
+                List<Socket> sockets_;
+                lock (_waitDeletingLoocker)
+                    sockets_ = new List<Socket>(sockets);
 
                 Socket.Select(sockets_, null, null, -1);
                 Socket sock = sockets_[0];
@@ -100,32 +102,38 @@ namespace Lexplosion.Logic.Network.TURN
         public void StopWork()
         {
             IsWork = false;
-            WaitDeletingConnection.WaitOne();
-            foreach (var socket in sockets)
+            lock (_waitDeletingLoocker)
             {
-                socket.Close();
+                foreach (var socket in sockets)
+                {
+                    socket.Close();
+                }
             }
-            WaitDeletingConnection.Release();
         }
 
         public bool Close(IPEndPoint point)
         {
             Console.WriteLine("TURN CLOSE ");
-            WaitDeletingConnection.WaitOne();
-            // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
-            if (IsWork && pointsSockets.ContainsKey(point))
+            if (IsWork)
             {
-                Console.WriteLine("TRUN CLOSE GSFSDGF");
-                pointsSockets.TryRemove(point, out Socket sock);
-                sockets.Remove(sock);
-                if (sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
+                lock (_waitDeletingLoocker)
                 {
-                    WaitConnections.Reset();
+                    // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
+                    if (pointsSockets.ContainsKey(point))
+                    {
+                        Console.WriteLine("TRUN CLOSE GSFSDGF");
+                        pointsSockets.TryRemove(point, out Socket sock);
+                        sockets.Remove(sock);
+                        if (sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
+                        {
+                            WaitConnections.Reset();
+                        }
+                        sock.Close();
+                    }
+                    ClientClosing?.Invoke(point); //Вызываем событие закрытия
                 }
-                sock.Close();
             }
-            ClientClosing?.Invoke(point); //Вызываем событие закрытия
-            WaitDeletingConnection.Release();
+            Console.WriteLine("TURN END CLOSE ");
 
             return true;
         }

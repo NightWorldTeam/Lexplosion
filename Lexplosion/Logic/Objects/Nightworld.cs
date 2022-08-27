@@ -33,4 +33,11 @@ namespace Lexplosion.Logic.Objects.Nightworld
 
         public Version version;
     }
+
+    class PlayerData
+    {
+        public string Nickname;
+        public string AvatarUrl;
+        public string ProfileUrl;
+    }
 }

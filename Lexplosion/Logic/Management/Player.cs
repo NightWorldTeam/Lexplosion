@@ -1,18 +1,33 @@
-﻿using Lexplosion.Gui;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Lexplosion.Gui;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects.Nightworld;
 
 namespace Lexplosion.Logic.Management
 {
     public class Player : VMBase
     {
-        public string Nickname { get; } = "Player";
-        public byte[] Skin { get; } = null;
-        public string ProfileUrl { get; } = null;
+        public string Nickname { get; private set; } = "Player";
+
+        private byte[] _skin = null;
+        public byte[] Skin
+        {
+            get => _skin;
+            private set
+            {
+                _skin = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ProfileUrl { get; private set; } = null;
 
         private bool _isKicked;
         public bool IsKicked 
@@ -24,6 +39,7 @@ namespace Lexplosion.Logic.Management
             } 
         }
 
+        private Action _kickMethod;
         public RelayCommand AccessChangeAction 
         { 
             get => new RelayCommand(obj => 
@@ -32,9 +48,28 @@ namespace Lexplosion.Logic.Management
             });
         }
 
-        public Player()
+        public Player(string uuid, Action kickMethod)
         {
+            _kickMethod = kickMethod;
 
+            PlayerData data = NightWorldApi.GetPlayerData(uuid);
+            if (data != null)
+            {
+                Nickname = data.Nickname;
+                ProfileUrl = data.ProfileUrl;
+
+                ThreadPool.QueueUserWorkItem(delegate (object state)
+                {
+                    try
+                    {
+                        using (var webClient = new WebClient())
+                        {
+                            Skin = webClient.DownloadData(data.AvatarUrl);
+                        }
+                    }
+                    catch { }
+                });
+            }
         }
 
         private void AccessChange() 
@@ -48,11 +83,12 @@ namespace Lexplosion.Logic.Management
         private void Kick()
         {
             IsKicked = true;
+            _kickMethod();
         }
 
         private void Unkick()
         {
-            IsKicked= false;
+            IsKicked = false;
         }
     }
 }

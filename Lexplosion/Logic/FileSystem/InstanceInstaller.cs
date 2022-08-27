@@ -794,14 +794,14 @@ namespace Lexplosion.Logic.FileSystem
                             string assetPath = "/" + assetHash.Substring(0, 2);
                             if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                             {
+                                Action<int> prHadler = delegate (int pr)
+                                {
+                                    _fileDownloadHandler?.Invoke(assetHash, pr, DownloadFileProgress.PercentagesChanged);
+                                };
+
                                 bool flag = false;
                                 for (int i = 0; i < 3; i++) // 3 попытки делаем
                                 {
-                                    Action<int> prHadler = delegate (int pr)
-                                    {
-                                        _fileDownloadHandler?.Invoke(assetHash, pr, DownloadFileProgress.PercentagesChanged);
-                                    };
-
                                     if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, prHadler))
                                     {
                                         _fileDownloadHandler?.Invoke(assetHash, 100, DownloadFileProgress.Successful);
