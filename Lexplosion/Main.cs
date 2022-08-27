@@ -53,6 +53,11 @@ namespace Lexplosion
 
         private static void InitializedSystem()
         {
+            //System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, string>> headers = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, string>>();
+            //headers.Add(new System.Collections.Generic.KeyValuePair<string, string>("x-api-key", "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we"));
+            //string answer = ToServer.HttpGet("https://api.curseforge.com/v1/categories?gameId=432&classId=6", headers);
+            //Console.WriteLine(answer);
+
             // получем процессы с таким же именем (то есть пытаемся получить уже запущенную копию лаунчера)
             Process[] procs = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
             Process curentProcess = Process.GetCurrentProcess();
