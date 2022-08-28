@@ -13,6 +13,7 @@ using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects.Curseforge;
+using System.Collections.Concurrent;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -326,16 +327,12 @@ namespace Lexplosion.Logic.FileSystem
 
                 Console.WriteLine("qweqwe " + test);
 
-                int i = 0;
-                int addonsCount = downloadList.Count;
-                AddonsDownloadEvent?.Invoke(addonsCount, i);
-
                 int filesCount = downloadList.Count;
+                AddonsDownloadEvent?.Invoke(filesCount, 0);
 
                 if (filesCount != 0)
                 {
                     object fileBlock = new object(); // этот объект блокировщик нужен что бы синхронизировать работу с json файлами
-                    ManualResetEvent repeatWait = new ManualResetEvent(true); // нужен чтобы блочить другие потоки при повторном скачивании, если возникла ошибка
 
                     // формируем список айдишников
                     int[] ids = new int[filesCount];
@@ -367,12 +364,14 @@ namespace Lexplosion.Logic.FileSystem
                     if (filesCount > 0)
                         perfomer = new TasksPerfomer(10, filesCount);
 
+                    var noDownloaded = new ConcurrentBag<InstanceManifest.FileData>();
+                    int downloadedCount = 0;
+
                     Console.WriteLine("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
                     foreach (InstanceManifest.FileData file in downloadList)
                     {
                         perfomer.ExecuteTask(delegate ()
                         {
-                            repeatWait.WaitOne();
 
                             CurseforgeAddonInfo addonInfo;
                             if (addons.ContainsKey(file.projectID))
@@ -386,39 +385,15 @@ namespace Lexplosion.Logic.FileSystem
 
                             var result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
 
-                            if (result.Value2 != DownloadAddonRes.Successful) //скачивание мода не удалось.
+                            if (result.Value2 == DownloadAddonRes.Successful)
                             {
-                                Console.WriteLine("ERROR " + result.Value2);
-
-                                // если вылезли эти ошибки, то возможно это временная ошибка курсфорджа. Пробуем еще 4 раза
-                                if (result.Value2 == DownloadAddonRes.ProjectDataError || result.Value2 == DownloadAddonRes.DownloadError)
-                                {
-                                    repeatWait.Reset();
-
-                                    int j = 0;
-                                    while (j < 4 && result.Value2 != DownloadAddonRes.Successful)
-                                    {
-                                        Console.WriteLine("REPEAT DOWNLOAD");
-                                        addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
-                                        result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
-                                        j++;
-                                    }
-
-                                    repeatWait.Set();
-
-                                    // все попытки были неудачными. возвращаем ошибку
-                                    if (result.Value2 != DownloadAddonRes.Successful)
-                                    {
-                                        Console.WriteLine("GFDGS пизда " + result.Value2);
-                                        errors.Add(file.projectID + " " + file.fileID);
-                                        return;
-                                    }
-                                }
-                                else
-                                {
-                                    errors.Add(file.projectID + " " + file.fileID);
-                                    return;
-                                }
+                                downloadedCount++;
+                                AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
+                            }
+                            else //скачивание мода не удалось.
+                            {
+                                Console.WriteLine("ERROR " + result.Value2 + " " + result.Value1);
+                                noDownloaded.Add(file);
                             }
 
                             lock (fileBlock)
@@ -428,14 +403,42 @@ namespace Lexplosion.Logic.FileSystem
                                 SaveInstanceContent(compliteDownload);
                             }
 
-                            i++;
-                            AddonsDownloadEvent?.Invoke(addonsCount, i);
                         });
                     }
 
                     Console.WriteLine("ЖДЁМ КОНЦА ");
                     perfomer?.WaitEnd();
                     Console.WriteLine("КОНЕЦ ");
+
+                    Console.WriteLine("ДОКАЧИВАЕМ");
+                    foreach (InstanceManifest.FileData file in noDownloaded)
+                    {
+                        CurseforgeAddonInfo addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                        if (addonInfo.latestFiles == null && addons.ContainsKey(file.projectID))
+                        {
+                            addonInfo = addons[file.projectID];
+                        }
+
+                        int count = 0;
+                        ValuePair<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
+                        while (count < 4 && result.Value2 != DownloadAddonRes.Successful)
+                        {
+                            Thread.Sleep(1000);
+                            Console.WriteLine("REPEAT DOWNLOAD " + addonInfo.id);
+                            addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                            result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
+                            count++;
+                        }
+
+                        if (result.Value2 != DownloadAddonRes.Successful)
+                        {
+                            Console.WriteLine("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.projectID + " " + result.Value2);
+                            errors.Add(file.projectID + " " + file.fileID);
+                        }
+
+                        downloadedCount++;
+                        AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
+                    }
                 }
 
                 if (errors.Count == 0)
