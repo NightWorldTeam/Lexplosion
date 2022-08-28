@@ -58,6 +58,9 @@ namespace Lexplosion
             //string answer = ToServer.HttpGet("https://api.curseforge.com/v1/categories?gameId=432&classId=6", headers);
             //Console.WriteLine(answer);
 
+            // Подписываемся на эвент для загрузки всех строенных dll'ников
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+
             //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
             AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
             {
@@ -84,9 +87,6 @@ namespace Lexplosion
 
                 curentProcess.Kill(); //стопаем процесс
             }
-
-            // Подписываемся на эвент для загрузки всех строенных dll'ников
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             // Встраеваем стиили
             var stylePath = "pack://application:,,,/Gui/Resources/";
