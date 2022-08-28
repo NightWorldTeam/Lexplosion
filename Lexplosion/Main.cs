@@ -58,6 +58,13 @@ namespace Lexplosion
             //string answer = ToServer.HttpGet("https://api.curseforge.com/v1/categories?gameId=432&classId=6", headers);
             //Console.WriteLine(answer);
 
+            //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
+            AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
+            {
+                Exception exception = (Exception)args.ExceptionObject;
+                DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
+            };
+
             // получем процессы с таким же именем (то есть пытаемся получить уже запущенную копию лаунчера)
             Process[] procs = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
             Process curentProcess = Process.GetCurrentProcess();
@@ -80,25 +87,6 @@ namespace Lexplosion
 
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
-
-            // инициализация
-            UserData.InitSetting();
-            WithDirectory.Create(UserData.GeneralSettings.GamePath);
-
-            //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
-            AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
-            {
-                Exception exception = (Exception)args.ExceptionObject;
-                DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
-            };
-
-            if (ToServer.CheckLauncherUpdates())
-            {
-                // TODO: при отсуствии коннекта с сервером тут лаунчер повиснет на секунд 30
-                LauncherUpdate();
-            }
-
-            InstanceClient.DefineInstalledInstances();
 
             // Встраеваем стиили
             var stylePath = "pack://application:,,,/Gui/Resources/";
@@ -146,6 +134,18 @@ namespace Lexplosion
             {
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
+
+            // инициализация
+            UserData.InitSetting();
+            WithDirectory.Create(UserData.GeneralSettings.GamePath);
+
+            if (ToServer.CheckLauncherUpdates())
+            {
+                // TODO: при отсуствии коннекта с сервером тут лаунчер повиснет на секунд 30
+                LauncherUpdate();
+            }
+
+            InstanceClient.DefineInstalledInstances();
 
             CommandReceiver.OpenModpackPage += delegate (string modpackId)
             {
