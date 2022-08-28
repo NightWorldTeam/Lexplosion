@@ -845,7 +845,7 @@ namespace Lexplosion.Logic.FileSystem
                         Directory.CreateDirectory(DirectoryPath + "/assets/indexes");
 
                     string filename = manifest.version.assetsVersion + ".json";
-                    InstallFile(manifest.version.assetsIndexes, filename, DirectoryPath + "/assets/indexes/", delegate (int pr)
+                    InstallFile(manifest.version.assetsIndexes, filename, "/assets/indexes/", delegate (int pr)
                     {
                         _fileDownloadHandler?.Invoke(filename, pr, DownloadFileProgress.PercentagesChanged);
                     });
