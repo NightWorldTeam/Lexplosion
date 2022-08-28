@@ -443,6 +443,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 SaveInstanceContent(compliteDownload);
+                Console.WriteLine("END INSTALL INSTANCE");
 
                 return errors;
             }
