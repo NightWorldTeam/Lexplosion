@@ -185,7 +185,7 @@ namespace Lexplosion
 
             try
             {
-                int upgradeToolVersion = Int32.Parse(ToServer.HttpPost("windows/upgradeToolVersion.html"));
+                int upgradeToolVersion = Int32.Parse(ToServer.HttpPost(LaunсherSettings.URL.LauncherParts + "upgradeToolVersion.html"));
                 string gamePath = UserData.GeneralSettings.GamePath;
 
                 // скачивание и проверка версии UpgradeTool.exe
@@ -209,7 +209,7 @@ namespace Lexplosion
                 // запуск UpgradeTool.exe
                 Process proc = new Process();
                 proc.StartInfo.FileName = gamePath + "/UpgradeTool.exe";
-                proc.StartInfo.Arguments = Assembly.GetExecutingAssembly().Location + " " + LaunсherSettings.URL.LauncherParts + "NightWorld.exe" + " " + Process.GetCurrentProcess().ProcessName;
+                proc.StartInfo.Arguments = Assembly.GetExecutingAssembly().Location + " " + LaunсherSettings.URL.LauncherParts + "Lexplosion.exe" + " " + Process.GetCurrentProcess().ProcessName;
                 proc.StartInfo.CreateNoWindow = true;
                 proc.StartInfo.UseShellExecute = false;
                 proc.Start();

@@ -100,31 +100,34 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public void Download(DownloadStageTypes downloadStageType, int stagesCount, int stage, int procent)
         {
-            StagesCount = stagesCount;
-            Stage = stage;
-            DownloadProgress = procent;
-            DownloadStageType = downloadStageType;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                StagesCount = stagesCount;
+                Stage = stage;
+                DownloadProgress = procent;
+                DownloadStageType = downloadStageType;
 
-            if (downloadStageType != DownloadStageTypes.Prepare) 
-            {
-                _isPrepareOnly = false;
-            }
+                if (downloadStageType != DownloadStageTypes.Prepare)
+                {
+                    _isPrepareOnly = false;
+                }
 
-            if (downloadStageType == DownloadStageTypes.Java)
-            {
-                _instanceFormModel.OverviewField = "Идёт скачивание Java...";
-                HasProcents = false;
-            }
-            else if (downloadStageType == DownloadStageTypes.Prepare)
-            {
-                _instanceFormModel.OverviewField = "Идёт подготовка к запуску...";
-                HasProcents = true;
-            }
-            else
-            {
-                _instanceFormModel.OverviewField = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
-                HasProcents = false;
-            }
+                if (downloadStageType == DownloadStageTypes.Java)
+                {
+                    _instanceFormModel.OverviewField = "Идёт скачивание Java...";
+                    HasProcents = false;
+                }
+                else if (downloadStageType == DownloadStageTypes.Prepare)
+                {
+                    _instanceFormModel.OverviewField = "Идёт подготовка к запуску...";
+                    HasProcents = true;
+                }
+                else
+                {
+                    _instanceFormModel.OverviewField = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
+                    HasProcents = false;
+                }
+            });         
         }
 
         public void InstanceDownloadCompleted(InstanceInit result, List<string> downloadErrors, bool IsGameRun)

@@ -23,27 +23,33 @@ namespace Lexplosion.Tools
         public void ExecuteTask(ThreadStart task)
         {
             _sem.WaitOne();
-            Lexplosion.Run.TaskRun(delegate ()
+            try
             {
-                _sem.WaitOne();
+                Lexplosion.Run.TaskRun(delegate ()
+                {
+                    _sem.WaitOne();
 
-                try
-                {
-                    task();
-                }
-                finally
-                {
-                    _remainingTasksCount--;
-                    if (_remainingTasksCount == 0)
+                    try
                     {
-                        _endEvent.Set();
+                        task();
+                    }
+                    finally
+                    {
+                        _remainingTasksCount--;
+                        if (_remainingTasksCount < 1)
+                        {
+                            _endEvent.Set();
+                        }
+
+                        _sem.Release();
                     }
 
-                    _sem.Release();
-                }
-
-            });
-            _sem.Release();
+                });
+            }
+            finally
+            {
+                _sem.Release();
+            }        
         }
         
         public void WaitEnd() => _endEvent.WaitOne();

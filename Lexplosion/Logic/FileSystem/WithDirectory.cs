@@ -96,7 +96,7 @@ namespace Lexplosion.Logic.FileSystem
             Console.WriteLine("INSTALL " + url);
 
             string tempDir = null;
-            //try
+            try
             {
                 tempDir = CreateTempDir();
                 if (!Directory.Exists(DirectoryPath + "/" + path))
@@ -118,21 +118,21 @@ namespace Lexplosion.Logic.FileSystem
                     return false;
                 }
             }
-            //catch
-            //{
-            //    if (tempDir != null)
-            //    {
-            //        DelFile(tempDir + fileName);
-            //        DelFile(DirectoryPath + "/" + path + "/" + fileName);
-            //    }
+            catch
+            {
+                if (tempDir != null)
+                {
+                    DelFile(tempDir + fileName);
+                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
+                }
 
-            //    return false;
-            //}
+                return false;
+            }
         }
 
         public static bool DownloadFile(string url, string fileName, string tempDir)
         {
-            //try
+            try
             {
                 using (WebClient wc = new WebClient())
                 {
@@ -142,10 +142,10 @@ namespace Lexplosion.Logic.FileSystem
 
                 return true;
             }
-            //catch
-            //{
-            //    return false;
-            //}
+            catch
+            {
+                return false;
+            }
         }
 
         public static bool DownloadFile(string url, string fileName, string tempDir, Action<int> percentHandler)
@@ -164,17 +164,17 @@ namespace Lexplosion.Logic.FileSystem
                     result = (e.Error == null);
                 };
 
-                //try
+                try
                 {
                     Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);
                     task.Wait();
 
                     return result;
                 }
-                //catch
-                //{
-                //    return false;
-                //} 
+                catch
+                {
+                    return false;
+                }
             }
         }
 
@@ -422,7 +422,7 @@ namespace Lexplosion.Logic.FileSystem
             string tempDir = CreateTempDir();
             string fileName = javaName + ".zip";
 
-            //try
+            try
             {
                 if (!DownloadFile(LaunсherSettings.URL.JavaData + "download/" + fileName, fileName, tempDir, percentHandler))
                 {
@@ -444,10 +444,10 @@ namespace Lexplosion.Logic.FileSystem
 
                 ZipFile.ExtractToDirectory(tempDir + fileName, javaPath);
             }
-            //catch
-            //{
-            //    return false;
-            //}
+            catch
+            {
+                return false;
+            }
 
             try
             {

@@ -334,7 +334,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (filesCount != 0)
                 {
-                    Semaphore fileBlock = new Semaphore(1, 1); // этот семофор нужен что бы синхронизировать работу с json файлами
+                    object fileBlock = new object(); // этот объект блокировщик нужен что бы синхронизировать работу с json файлами
                     ManualResetEvent repeatWait = new ManualResetEvent(true); // нужен чтобы блочить другие потоки при повторном скачивании, если возникла ошибка
 
                     // формируем список айдишников
@@ -421,11 +421,12 @@ namespace Lexplosion.Logic.FileSystem
                                 }
                             }
 
-                            fileBlock.WaitOne();
-                            compliteDownload.InstalledAddons[file.projectID] = result.Value1;
-                            Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
-                            SaveInstanceContent(compliteDownload);
-                            fileBlock.Release();
+                            lock (fileBlock)
+                            {
+                                compliteDownload.InstalledAddons[file.projectID] = result.Value1;
+                                Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
+                                SaveInstanceContent(compliteDownload);
+                            }
 
                             i++;
                             AddonsDownloadEvent?.Invoke(addonsCount, i);

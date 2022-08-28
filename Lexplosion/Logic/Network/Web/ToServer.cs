@@ -30,12 +30,8 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                int version = Int32.Parse(HttpPost("windows/launcherVersion.html"));
-
-                if (version > LaunсherSettings.version)
-                    return true;
-
-                return false;
+                int version = Int32.Parse(HttpPost(LaunсherSettings.URL.LauncherParts + "launcherVersion.html"));
+                return version > LaunсherSettings.version;
 
             }
             catch { return false; }

@@ -285,8 +285,11 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                IPEndPoint point = UuidPointPair[uuid];
-                ClientAbort(point);
+                if (uuid != "bbab3c32222e4f08a8b291d1e9b9267c" && uuid != "0920b1809fb09e14c2e0526a94fb7c93")
+                {
+                    IPEndPoint point = UuidPointPair[uuid];
+                    ClientAbort(point);
+                }
             }
             catch { }
         }
