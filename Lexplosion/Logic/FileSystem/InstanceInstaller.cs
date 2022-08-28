@@ -780,10 +780,13 @@ namespace Lexplosion.Logic.FileSystem
             // скачиваем файлы objects
             if (assets.objects != null)
             {
-                TasksPerfomer perfomer = null;
-                if (assets.objects.Count > 0)
-                    perfomer = new TasksPerfomer(15, assets.objects.Count);
+                int assetsCount = assets.objects.Count;
 
+                TasksPerfomer perfomer = null;
+                if (assetsCount > 0)
+                    perfomer = new TasksPerfomer(15, assetsCount);
+
+                int i = 0;
                 foreach (string asset in assets.objects.Keys)
                 {
                     perfomer.ExecuteTask(delegate ()
@@ -794,17 +797,11 @@ namespace Lexplosion.Logic.FileSystem
                             string assetPath = "/" + assetHash.Substring(0, 2);
                             if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                             {
-                                Action<int> prHadler = delegate (int pr)
-                                {
-                                    _fileDownloadHandler?.Invoke(assetHash, pr, DownloadFileProgress.PercentagesChanged);
-                                };
-
                                 bool flag = false;
                                 for (int i = 0; i < 3; i++) // 3 попытки делаем
                                 {
-                                    if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, prHadler))
+                                    if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
                                     {
-                                        _fileDownloadHandler?.Invoke(assetHash, 100, DownloadFileProgress.Successful);
                                         flag = true;
                                         break;
                                     }
@@ -812,7 +809,7 @@ namespace Lexplosion.Logic.FileSystem
 
                                 if (!flag)
                                 {
-                                    _fileDownloadHandler?.Invoke(assetHash, 100, DownloadFileProgress.Error);
+                                    _fileDownloadHandler?.Invoke("asstes: " + asset, 100, DownloadFileProgress.Error);
                                     errors.Add("asstes: " + asset);
                                 }
 
@@ -822,12 +819,17 @@ namespace Lexplosion.Logic.FileSystem
                         }
                         else
                         {
+                            _fileDownloadHandler?.Invoke("asstes: " + asset, 100, DownloadFileProgress.Error);
                             errors.Add("asstes: " + asset);
                         }
+
+                        i++;
+                        _fileDownloadHandler?.Invoke("assets files", (int)(((decimal)i / (decimal)assetsCount) * 100), DownloadFileProgress.PercentagesChanged);
                     });
                 }
 
                 perfomer?.WaitEnd();
+                _fileDownloadHandler?.Invoke("assets files", 100, DownloadFileProgress.Successful);
             }
             else
             {
@@ -842,14 +844,14 @@ namespace Lexplosion.Logic.FileSystem
                     if (!Directory.Exists(DirectoryPath + "/assets/indexes"))
                         Directory.CreateDirectory(DirectoryPath + "/assets/indexes");
 
-                    try
+                    string filename = manifest.version.assetsVersion + ".json";
+                    InstallFile(manifest.version.assetsIndexes, filename, DirectoryPath + "/assets/indexes/", delegate (int pr)
                     {
-                        using (WebClient wc = new WebClient())
-                        {
-                            wc.DownloadFile(manifest.version.assetsIndexes, DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json"); // TODO: заюзать мою функцию для скачивания
-                        }
-                    }
-                    catch { }
+                        _fileDownloadHandler?.Invoke(filename, pr, DownloadFileProgress.PercentagesChanged);
+                    });
+
+                    _fileDownloadHandler?.Invoke(filename, 100, DownloadFileProgress.Successful);
+                    // TODO: я на ошибки тут не проверяю то ли потмоу что мне лень было, толи просто не хотел делать так, чтобы от одного этогоф айла клиент не запускался
                 }
             }
 

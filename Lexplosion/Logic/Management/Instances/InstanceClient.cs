@@ -10,7 +10,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion;
 
 namespace Lexplosion.Logic.Management.Instances
 {
