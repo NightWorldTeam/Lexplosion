@@ -58,15 +58,15 @@ namespace Lexplosion
             //string answer = ToServer.HttpGet("https://api.curseforge.com/v1/categories?gameId=432&classId=6", headers);
             //Console.WriteLine(answer);
 
-            // Подписываемся на эвент для загрузки всех строенных dll'ников
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
-
             //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
             AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
             {
                 Exception exception = (Exception)args.ExceptionObject;
                 DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
             };
+
+            // Подписываемся на эвент для загрузки всех строенных dll'ников
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             // получем процессы с таким же именем (то есть пытаемся получить уже запущенную копию лаунчера)
             Process[] procs = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
