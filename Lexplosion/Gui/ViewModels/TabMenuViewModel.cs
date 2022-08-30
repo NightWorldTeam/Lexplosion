@@ -8,7 +8,7 @@ namespace Lexplosion.Gui.ViewModels
 {
     public class TabMenuViewModel : SubmenuViewModel
     {
-        private bool _isInstance = false;
+        private bool _isInstance;
         public bool IsInstance 
         {   
             get => _isInstance; private set 
@@ -31,22 +31,19 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public InstanceFormViewModel InstanceFormVM 
-        {
-            get;
-        }
+        public InstanceFormViewModel InstanceFormVM { get; }
 
         public InstanceClient InstanceClient { get; private set; }
 
-        public TabMenuViewModel(IList<Tab> tabs, string header, InstanceClient instanceClient = null, InstanceFormViewModel instanceFormViewModel = null)
+        public TabMenuViewModel(IList<Tab> tabs, string header, InstanceFormViewModel instanceFormViewModel = null)
         {
-            if (instanceClient == null)
-                IsInstance = false;
-
-            if (instanceFormViewModel != null)
+            if (instanceFormViewModel != null) 
+            { 
                 InstanceFormVM = instanceFormViewModel;
-
-            InstanceClient = instanceClient;
+                InstanceClient = instanceFormViewModel.Client;
+                IsInstance = true;
+            }
+            else IsInstance = false;
 
             Header = header;
             Tabs = new ObservableCollection<Tab>(tabs);

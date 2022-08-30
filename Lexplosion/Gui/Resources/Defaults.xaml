@@ -68,7 +68,8 @@
                     <Border
                         x:Name="Border"
                         MaxWidth="3"
-                        Background="#404040">
+                        Background="#404040"
+                        CornerRadius="2">
                         <Rectangle
                             x:Name="ThumbRect"
                             Fill="#404040"

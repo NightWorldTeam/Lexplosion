@@ -27,6 +27,7 @@
     <сonverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     <сonverters:NotEqualZeroConverter x:Key="NotEqualZeroConverter" />
     <сonverters:EnumToStringConverter x:Key="EnumToStringConverter" />
+    <сonverters:StringToGeometryConverter x:Key="StringToGeometryConverter" />
 
     <!--<DataTemplate DataType="{x:Type viewmodels:InstanceFormViewModel}">
         <customcontrols:InstanceForm  Margin="4,30,30,0"/>

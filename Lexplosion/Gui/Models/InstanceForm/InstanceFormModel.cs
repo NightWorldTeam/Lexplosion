@@ -1,11 +1,10 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
-using System;
+using Lexplosion.Tools;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
@@ -25,7 +24,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         // сделать lock объект
         public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
 
-        private object _locker = false;
+        private object _locker = new();
 
         public string OverviewField
         {
@@ -65,7 +64,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             UpperButton = new UpperButton
                 (
-                    MultiButtonProperties.GeometryDownloadIcon,
+                    ResourceGetter.GetIcon("Download"),
                     UpperButtonFunc.Download,
                     new Tip()
                     {
@@ -94,17 +93,26 @@ namespace Lexplosion.Gui.Models.InstanceForm
             };
             LaunchModel = new LaunchModel(mainViewModel, this);
 
-            if (InstanceClient.IsInstalled && InstanceClient.InLibrary)
-            {
-                UpperButton.ChangeFuncPlay();
-            }
-            else UpperButton.ChangeFuncDownload(InstanceClient.IsInstalled);
-            UpdateLowerButton();
+            UpdateButtons();
         }
 
         public void OpenInstanceFolder()
         {
             Process.Start("explorer", InstanceClient.GetDirectoryPath());
+        }
+
+        public void UpdateButtons() 
+        {
+            UpdateLowerButton();
+
+            if (InstanceClient.IsInstalled) 
+            { 
+                UpperButton.ChangeFuncPlay();
+            }
+            else if (!InstanceClient.IsInstalled || InstanceClient.InLibrary) 
+            {
+                UpperButton.ChangeFuncDownload();
+            }
         }
 
         public void UpdateLowerButton()
@@ -116,7 +124,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 if (InstanceClient.UpdateAvailable)
                 {
                     LowerButtons.Add(
-                        new LowerButton("Обновить", MultiButtonProperties.UpdateInstance, LowerButtonFunc.Update)
+                        new LowerButton("Обновить", ResourceGetter.GetIcon("UpdateInstance"), LowerButtonFunc.Update)
                     );
                 }
 
@@ -125,13 +133,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     if (InstanceClient.Type == InstanceSource.Curseforge)
                     {
                         LowerButtons.Add(
-                                new LowerButton("Перейти на Curseforge", MultiButtonProperties.ToCurseforge, LowerButtonFunc.OpenWebsite)
+                                new LowerButton("Перейти на Curseforge", ResourceGetter.GetIcon("CurseforgeLogo"), LowerButtonFunc.OpenWebsite)
                             );
                     }
                     else if (InstanceClient.Type == InstanceSource.Nightworld)
                     {
                         LowerButtons.Add(
-                            new LowerButton("Перейти на NightWorld", MultiButtonProperties.ToCurseforge, LowerButtonFunc.OpenWebsite)
+                            new LowerButton("Перейти на NightWorld", ResourceGetter.GetIcon("CurseforgeLogo"), LowerButtonFunc.OpenWebsite)
                         );
                     }
 
@@ -161,17 +169,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 if (InstanceClient.IsInstalled)
                 {
                     LowerButtons.Add(
-                        new LowerButton("Удалить сборку", MultiButtonProperties.RemoveInstance, LowerButtonFunc.RemoveInstance)
+                        new LowerButton("Удалить сборку", ResourceGetter.GetIcon("RemoveInstance"), LowerButtonFunc.RemoveInstance)
                     );
                     LowerButtons.Add(
-                        new LowerButton("Экспорт", MultiButtonProperties.Export, LowerButtonFunc.Export)
+                        new LowerButton("Экспорт", ResourceGetter.GetIcon("Export"), LowerButtonFunc.Export)
                     );
                 }
 
                 if (InstanceClient.IsInstalled || InstanceClient.InLibrary) 
                 {
                     LowerButtons.Add(
-                        new LowerButton("Открыть папку", MultiButtonProperties.GeometryOpenFolder, LowerButtonFunc.OpenFolder)
+                        new LowerButton("Открыть папку", ResourceGetter.GetIcon("OpenFolder"), LowerButtonFunc.OpenFolder)
                     );
                 }
             });

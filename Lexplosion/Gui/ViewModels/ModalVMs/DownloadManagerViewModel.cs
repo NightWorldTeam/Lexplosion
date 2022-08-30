@@ -29,6 +29,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             Procents = procents;
         }
 
+        /// Выполняется от O(1) до O(n).
         public static InstanceFile? GetInstanceFile(IList<InstanceFile> files, string name) 
         {
             foreach (var file in files) 
@@ -45,6 +46,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public ObservableCollection<InstanceFile> DownloadFiles { get; } = new ObservableCollection<InstanceFile>();
         public ObservableCollection<InstanceFile> InstalledFiles { get;  } = new ObservableCollection<InstanceFile>();
         public ObservableCollection<InstanceFile> DownloadErrorFiles { get;  } = new ObservableCollection<InstanceFile>();
+
+        private object locker = new();
 
         private InstanceFormViewModel _viewModel;
 
@@ -76,38 +79,41 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         {
             if (result == InstanceInit.Successful) 
             {
-                MainViewModel.ShowToastMessage("Сборка установлена", nameof(DownloadFiles) + " хранит в себе " + DownloadFiles.Count.ToString());
+                App.Current.Dispatcher.Invoke(() => 
+                { 
+                    DownloadFiles.Clear();
+                });
             }
         }
 
         private void OnFileDownload(string name, int procents, DownloadFileProgress process)
         {
-            App.Current.Dispatcher.Invoke(() => 
-            { 
-                var instanceFile = InstanceFile.GetInstanceFile(DownloadFiles, name);
-                if (instanceFile == null) 
+                App.Current.Dispatcher.Invoke(() => 
                 { 
-                    instanceFile = new InstanceFile(name, procents);
-                    DownloadFiles.Add(instanceFile);
-                }
-                else 
-                { 
-                    if (process == DownloadFileProgress.Successful)
-                    {
-                        DownloadFiles.Remove(instanceFile);
-                        InstalledFiles.Add(instanceFile);
+                    var instanceFile = InstanceFile.GetInstanceFile(DownloadFiles, name);
+                    if (instanceFile == null) 
+                    { 
+                        instanceFile = new InstanceFile(name, procents);
+                        DownloadFiles.Add(instanceFile);
                     }
-                    else if (process == DownloadFileProgress.Error) 
-                    {
-                        DownloadFiles.Remove(instanceFile);
-                        DownloadErrorFiles.Add(instanceFile);
+                    else 
+                    { 
+                        if (process == DownloadFileProgress.Successful)
+                        {
+                            DownloadFiles.Remove(instanceFile);
+                            InstalledFiles.Add(instanceFile);
+                        }
+                        else if (process == DownloadFileProgress.Error) 
+                        {
+                            DownloadFiles.Remove(instanceFile);
+                            DownloadErrorFiles.Add(instanceFile);
+                        }
+                        else
+                        {
+                            instanceFile.Procents = procents;
+                        }
                     }
-                    else
-                    {
-                        instanceFile.Procents = procents;
-                    }
-                }
-            });
+                });
         }
 
         public static bool Contains(IList<InstanceDownloadProcess> list, InstanceFormViewModel instance) 

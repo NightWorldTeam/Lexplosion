@@ -113,6 +113,7 @@
     <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Gui\ButtonConstructor.cs" />
+    <Compile Include="Gui\ControlsExtension\PathExtension.cs" />
     <Compile Include="Gui\ControlsExtension\ScrollViewer.cs" />
     <Compile Include="Gui\Converters\AcitivityStatusToColorConverter.cs" />
     <Compile Include="Gui\Converters\BytesToBitmapImageConventer.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Gui\ControlsExtension\TextBox.cs" />
     <Compile Include="Gui\ControlsExtension\TreeViewItem.cs" />
     <Compile Include="Gui\Converters\NotEqualZeroConverter.cs" />
+    <Compile Include="Gui\Converters\StringToGeometryConverter.cs" />
     <Compile Include="Gui\ModalWindow\IModal.cs" />
     <Compile Include="Gui\IPaginable.cs" />
     <Compile Include="Gui\ISubmenu.cs" />
@@ -278,6 +280,7 @@
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Tools\Immutable\ImmutableArray.cs" />
     <Compile Include="Tools\Immutable\ImmutableList.cs" />
+    <Compile Include="Tools\ResourceGetter.cs" />
     <Compile Include="Tools\TasksPerfomer.cs" />
     <Compile Include="Tools\ValuePair.cs" />
     <Compile Include="VMBase.cs" />
@@ -400,6 +403,10 @@
     <Page Include="Gui\Resources\FrameStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\Iconics.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Resources\ListboxStyles.xaml">
       <SubType>Designer</SubType>

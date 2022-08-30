@@ -73,14 +73,18 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public void Seach() {
-            MessageBox.Show("Work");
-        }
-
-        public Action SearchAction 
+        private bool _isAuthing = false;
+        /// <summary>
+        /// Запустил ли пользователь метод авторизации.
+        /// </summary>
+        public bool IsAuthing 
         {
-            get => Seach;
-        } 
+            get => _isAuthing; set 
+            {
+                _isAuthing = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion
 
@@ -100,7 +104,8 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _signUpCommand ?? (new RelayCommand(obj =>
             {
-                Authorization();
+                if (!IsAuthing)
+                    Authorization();
             }));
         }
 
@@ -180,6 +185,8 @@ namespace Lexplosion.Gui.ViewModels
                             break;
                     }
                 });
+
+                IsAuthing = false;
             });
         }
 

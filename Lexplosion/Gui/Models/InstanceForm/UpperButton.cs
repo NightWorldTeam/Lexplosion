@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Lexplosion.Tools;
 using System.Windows.Media;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
-    public class UpperButton : VMBase
+    public sealed class UpperButton : VMBase
     {
         private Geometry _icon;
         private UpperButtonFunc _func;
@@ -52,15 +48,15 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public void ChangeFuncPlay()
             => ChangeFunc(
                     UpperButtonFunc.Play,
-                    MultiButtonProperties.GeometryPlayIcon,
+                    ResourceGetter.GetIcon("Play"),
                     "Играть", -60
             );
 
-        public void ChangeFuncDownload(bool isAddedToLibrary)
+        public void ChangeFuncDownload()
         {
             ChangeFunc(
                 UpperButtonFunc.Download,
-                MultiButtonProperties.GeometryDownloadIcon,
+                ResourceGetter.GetIcon("Download"),
                 "Скачать сборку", -110
                 );
         }

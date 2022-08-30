@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
+using System;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
@@ -36,7 +37,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
             {
                 MainViewModel.ShowToastMessage(
                     "Игра запущена! Ура!",
-                    "Название: " + _formModel.InstanceClient.Name
+                    "Название: " + _formModel.InstanceClient.Name,
+                    TimeSpan.FromSeconds(5)
                 );
             }
             else 

@@ -12,7 +12,7 @@ using System.Windows.Threading;
 namespace Lexplosion.Controls
 {
 
-    public enum ToastMessageState
+    public enum ToastMessageState : byte
     {
         Notification,
         Error
@@ -36,15 +36,36 @@ namespace Lexplosion.Controls
             DependencyProperty.Register("CloseCommand", typeof(ICommand), typeof(ToastMessage), new PropertyMetadata());
 
         public static readonly DependencyProperty VisibilityTimeProperty =
-            DependencyProperty.Register("VisibilityTime", typeof(int), typeof(ToastMessage), new PropertyMetadata(-1));
+            DependencyProperty.Register("VisibilityTime", typeof(TimeSpan?), typeof(ToastMessage), new PropertyMetadata(null, OnVisibilityTimeChanged));
 
-        
+        private static void OnVisibilityTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var obj = d as ToastMessage;
+            if (e.NewValue == null && e.OldValue == null) 
+                return;
+
+            if (e.NewValue != null) 
+            {
+                var newValue = (TimeSpan)e.NewValue;
+                Lexplosion.Run.TaskRun(() =>
+                {   
+                    Thread.Sleep((Int32)newValue.TotalMilliseconds);
+
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        obj.CloseCommand.Execute(null);
+                    });
+                });
+            }
+        }
+
+
         #endregion DependencyProperty Register
 
 
         #region getters / settes
-        
-        
+
+
         public string Header 
         {
             get => (string)GetValue(HeaderProperty);
@@ -69,9 +90,9 @@ namespace Lexplosion.Controls
             set => SetValue(CloseCommandProperty, value);
         }
 
-        public int VisibilityTime 
+        public TimeSpan? VisibilityTime 
         {
-            get => (int)GetValue(VisibilityTimeProperty);
+            get => (TimeSpan?)GetValue(VisibilityTimeProperty);
             set => SetValue(VisibilityTimeProperty, value);
         }
 
@@ -90,21 +111,9 @@ namespace Lexplosion.Controls
         {
             // here we call timer.
             // TODO: Сделать анимацию.
-
-            if (VisibilityTime != -1) 
-            { 
-                Lexplosion.Run.TaskRun(() => 
-                {
-                    Thread.Sleep(VisibilityTime);
-
-                    App.Current.Dispatcher.Invoke(() => 
-                    { 
-                        CloseCommand.Execute(null);
-                    });
-                });
-            }
         }
 
         #endregion constructors
+
     }
 }

@@ -299,7 +299,8 @@
                         CloseCommand="{Binding CloseToastMessage}"
                         Header="{Binding Header}"
                         Message="{Binding Message}"
-                        State="{Binding State}" />
+                        State="{Binding State}"
+                        VisibilityTime="{Binding Time}" />
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type controls:DialogMessageModel}">

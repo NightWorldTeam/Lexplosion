@@ -1,15 +1,9 @@
-﻿using Lexplosion.Gui;
-using Lexplosion.Gui.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Lexplosion.Controls
 {
     public class ToastMessageModel : MessageModel
     {
-        public ToastMessageModel(string header, string message, ToastMessageState state) : base(header, message, state) { }
+        public ToastMessageModel(string header, string message, ToastMessageState state, TimeSpan? time = null) : base(header, message, state, time) { }
     }
 }

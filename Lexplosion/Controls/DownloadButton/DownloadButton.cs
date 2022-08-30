@@ -1,17 +1,11 @@
 ﻿using Lexplosion.Gui.ViewModels;
-using Lexplosion.Gui.Views.CustomControls;
 using Lexplosion.Logic.Management;
-using LumiSoft.Net.Mime.vCard;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace Lexplosion.Controls
@@ -21,7 +15,7 @@ namespace Lexplosion.Controls
     [TemplatePart(Name = PART_PROGRESSBAR, Type = typeof(ProgressBar))]
     [TemplatePart(Name = PART_PLAY_BUTTON, Type = typeof(Border))]
     [TemplatePart(Name = PART_CLOSE_BUTTON, Type = typeof(Border))]
-    public class DownloadButton : Control
+    public sealed class DownloadButton : Control
     {
         /* data */
         private const string PART_DOWNLOAD_BUTTON = "PART_Download_Button";
@@ -50,29 +44,224 @@ namespace Lexplosion.Controls
 
 
         public static readonly DependencyProperty InstanceFormVMProperty
-            = DependencyProperty.RegisterAttached("InstanceFormVM", typeof(InstanceFormViewModel), typeof(DownloadButton), new FrameworkPropertyMetadata());
+            = DependencyProperty.Register(
+                "InstanceFormVM",
+                typeof(InstanceFormViewModel),
+                typeof(DownloadButton),
+                new FrameworkPropertyMetadata(null, OnInstanceFormChanged)
+                );
 
-        public InstanceFormViewModel InstanceFormVM 
+        /* background */
+
+        public static readonly DependencyProperty DownloadButtonBackgroundProperty
+            = DependencyProperty.Register("DownloadButtonBackground", typeof(Brush), typeof(DownloadButton), new FrameworkPropertyMetadata(Brushes.Black));
+
+        public static readonly DependencyProperty LoaderBackgroundProperty
+            = DependencyProperty.Register("LoaderBackground", typeof(Brush), typeof(DownloadButton), new FrameworkPropertyMetadata(new BrushConverter().ConvertFromString("#099176")));
+
+        public static readonly DependencyProperty PlayButtonBackgroundProperty
+            = DependencyProperty.Register("PlayButtonBackground", typeof(Brush), typeof(DownloadButton), new FrameworkPropertyMetadata(new BrushConverter().ConvertFromString("#5972d9")));
+
+        public static readonly DependencyProperty CloseButtonBackgroundProperty
+            = DependencyProperty.Register("CloseButtonBackground", typeof(Brush), typeof(DownloadButton), new FrameworkPropertyMetadata(Brushes.Black));
+
+        /* foreground */
+
+        public static readonly DependencyProperty DownloadButtonForegroundProperty
+            = DependencyProperty.Register("DownloadButtonForeground", typeof(Brush), typeof(DownloadButton), new FrameworkPropertyMetadata(Brushes.White));
+
+        public static readonly DependencyProperty LoaderForegroundProperty
+            = DependencyProperty.Register("LoaderForeground", typeof(Brush), typeof(DownloadButton), new FrameworkPropertyMetadata(Brushes.White));
+
+        public static readonly DependencyProperty PlayButtonForegroundProperty
+            = DependencyProperty.Register("PlayButtonForeground", typeof(Brush), typeof(DownloadButton), new FrameworkPropertyMetadata(Brushes.White));
+
+        public static readonly DependencyProperty CloseButtonForegroundProperty
+            = DependencyProperty.Register("CloseButtonForeground", typeof(Brush), typeof(DownloadButton), new FrameworkPropertyMetadata(Brushes.White));
+
+        /* font size */
+
+        public static readonly DependencyProperty DownloadButtonFontSizeProperty
+            = DependencyProperty.Register("DownloadButtonFontSize", typeof(double), typeof(DownloadButton), new UIPropertyMetadata(12d));
+
+        public static readonly DependencyProperty LoaderFontSizeProperty
+            = DependencyProperty.Register("LoaderFontSize", typeof(double), typeof(DownloadButton), new UIPropertyMetadata(12d));
+
+        public static readonly DependencyProperty PlayButtonFontSizeProperty
+            = DependencyProperty.Register("PlayButtonFontSize", typeof(double), typeof(DownloadButton), new UIPropertyMetadata(12d));
+
+        public static readonly DependencyProperty CloseButtonFontSizeProperty
+            = DependencyProperty.Register("CloseButtonFontSize", typeof(double), typeof(DownloadButton), new UIPropertyMetadata(12d));
+
+        /* font weight */
+
+        public static readonly DependencyProperty DownloadButtonFontWeightProperty
+            = DependencyProperty.Register("DownloadButtonFontWeight", typeof(FontWeight), typeof(DownloadButton), new UIPropertyMetadata(FontWeights.Bold));
+
+        public static readonly DependencyProperty LoaderFontWeightProperty
+            = DependencyProperty.Register("LoaderFontWeight", typeof(FontWeight), typeof(DownloadButton), new UIPropertyMetadata(FontWeights.Bold));
+
+        public static readonly DependencyProperty PlayButtonFontWeightProperty
+            = DependencyProperty.Register("PlayButtonFontWeight", typeof(FontWeight), typeof(DownloadButton), new UIPropertyMetadata(FontWeights.Bold));
+
+        public static readonly DependencyProperty CloseButtonFontWeightProperty
+            = DependencyProperty.Register("CloseButtonFontWeight", typeof(FontWeight), typeof(DownloadButton), new UIPropertyMetadata(FontWeights.Bold));
+
+        /* progressbar */
+
+        public static readonly DependencyProperty BackgroundProgressBarProperty
+            = DependencyProperty.Register("BackgroundProgressBar", typeof(Brush), typeof(DownloadButton), new UIPropertyMetadata(new BrushConverter().ConvertFromString("#099176")));
+
+        public static readonly DependencyProperty ForegroundProgressBarProperty
+            = DependencyProperty.Register("ForegroundProgressBar", typeof(Brush), typeof(DownloadButton), new UIPropertyMetadata(new BrushConverter().ConvertFromString("#24e0bb"))); 
+
+        public InstanceFormViewModel InstanceFormVM
         {
             get => (InstanceFormViewModel)GetValue(InstanceFormVMProperty);
-            set
-                {
-                SetValue(InstanceFormVMProperty, value);
-                                if (value.Client.IsInstalled)
-                {
-                    NextButtonAnimation(_downloadButton);
-                    NextButtonAnimation(_loader);
-                }
-            }
+            set => SetValue(InstanceFormVMProperty, value);
         }
 
+
+        #region background
+
+        public Brush DownloadButtonBackground 
+        {
+            get => (Brush)GetValue(DownloadButtonBackgroundProperty);
+            set => SetValue(DownloadButtonBackgroundProperty, value);
+        }
+
+        public Brush LoaderBackground
+        {
+            get => (Brush)GetValue(LoaderBackgroundProperty);
+            set => SetValue(LoaderBackgroundProperty, value);
+        }
+
+        public Brush PlayButtonBackground
+        {
+            get => (Brush)GetValue(PlayButtonBackgroundProperty);
+            set => SetValue(PlayButtonBackgroundProperty, value);
+        }
+
+        public Brush CloseButtonBackground
+        {
+            get => (Brush)GetValue(CloseButtonBackgroundProperty);
+            set => SetValue(CloseButtonBackgroundProperty, value);
+        }
+
+        #endregion background
+
+        #region foreground
+
+        public Brush DownloadButtonForeground 
+        {
+            get => (Brush)GetValue(DownloadButtonForegroundProperty);
+            set => SetValue(DownloadButtonForegroundProperty, value);
+        }
+
+        public Brush LoaderForeground 
+        {
+            get => (Brush)GetValue(LoaderForegroundProperty);
+            set => SetValue(LoaderForegroundProperty, value);
+        }
+
+        public Brush PlayButtonForeground
+        {
+            get => (Brush)GetValue(PlayButtonForegroundProperty);
+            set => SetValue(PlayButtonForegroundProperty, value);
+        }
+        public Brush CloseButtonForeground
+        {
+            get => (Brush)GetValue(CloseButtonForegroundProperty);
+            set => SetValue(CloseButtonForegroundProperty, value);
+        }
+
+        #endregion foreground
+
+        #region fontsize
+
+        public double DownloadButtonFontSize
+        {
+            get => (double)GetValue(DownloadButtonFontSizeProperty);
+            set => SetValue(DownloadButtonFontSizeProperty, value);
+        }
+
+        public double LoaderFontSize
+        {
+            get => (double)GetValue(LoaderFontSizeProperty);
+            set => SetValue(LoaderFontSizeProperty, value);
+        }
+
+        public double PlayButtonFontSize
+        {
+            get => (double)GetValue(PlayButtonFontSizeProperty);
+            set => SetValue(PlayButtonFontSizeProperty, value);
+        }
+        public double CloseButtonFontSize
+        {
+            get => (double)GetValue(CloseButtonFontSizeProperty);
+            set => SetValue(CloseButtonFontSizeProperty, value);
+        }
+
+        #endregion fontsize
+
+        #region fontweight
+
+        public FontWeight DonwloadButtonFontWeight
+        {
+            get => (FontWeight)GetValue(DownloadButtonFontWeightProperty);
+            set => SetValue(DownloadButtonFontWeightProperty, value);
+        }
+
+        public FontWeight LoaderFontWeight
+        {
+            get => (FontWeight)GetValue(LoaderFontWeightProperty);
+            set => SetValue(LoaderFontWeightProperty, value);
+        }
+
+        public FontWeight PlayButtonFontWeight
+        {
+            get => (FontWeight)GetValue(PlayButtonFontWeightProperty);
+            set => SetValue(PlayButtonFontWeightProperty, value);
+        }
+        public FontWeight CloseButtonFontWeight
+        {
+            get => (FontWeight)GetValue(CloseButtonFontWeightProperty);
+            set => SetValue(CloseButtonFontWeightProperty, value);
+        }
+
+        #endregion fontweight
+
+        #region progressbar
+
+        public Brush BackgroundProgressBar 
+        {
+            get => (Brush)GetValue(BackgroundProgressBarProperty);
+            set => SetValue(BackgroundProgressBarProperty, value); 
+        }
+
+        public Brush ForegroundProgressBar
+        {
+            get => (Brush)GetValue(ForegroundProgressBarProperty);
+            set => SetValue(ForegroundProgressBarProperty, value);
+        }
+
+        #endregion progressbar
+
         #endregion dependency properities
+
+
+
+        #region ctors
 
 
         static DownloadButton()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DownloadButton), new FrameworkPropertyMetadata(typeof(DownloadButton)));
         }
+
+
+        #endregion ctors
+
 
         public override void OnApplyTemplate()
         {
@@ -97,54 +286,59 @@ namespace Lexplosion.Controls
             base.OnApplyTemplate();
         }
 
+
+        #region EventHandlers
+
+
         private void OnCloseButtonClicked(object sender, MouseButtonEventArgs e)
         {
             InstanceFormVM.CloseInstance();
-
+            PreviewButtonAnimation(_playButton);
         }
 
         private void OnPlayButtonClicked(object sender, MouseButtonEventArgs e)
         {
-            if (!IsRunnedGame) 
+            if (!IsRunnedGame)
             {
                 ComplitedLaunchCallback complitedLaunch = delegate (string instanceId, bool successful)
                 {
                     // тут хз что
                     // можно написать при запуске, до полного запуска, что-то типо запускается.
+                    App.Current.Dispatcher.Invoke(() => 
+                    { 
+                        NextButtonAnimation(_playButton);
+                    });
                 };
 
                 GameExitedCallback gameExitedCallback = delegate (string instanceId)
                 {
-                    App.Current.Dispatcher.Invoke(() => 
-                    { 
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
                         PreviewButtonAnimation(_playButton);
                     });
                 };
                 InstanceFormVM.LaunchInstance(complitedLaunch, gameExitedCallback);
             }
-            NextButtonAnimation(_playButton);
         }
 
         private void OnDownloadButtonClicked(object sender, MouseButtonEventArgs e)
         {
             var button = (Border)sender;
             _progressBar = GetTemplateChild(PART_PROGRESSBAR) as ProgressBar;
-            //MessageBox.Show("Donwload Button Clicked");
             // тут запуск скачивания.
 
             if (!IsRunnedDownload)
             {
                 ProgressHandlerCallback progressHandlerMethod = delegate (DownloadStageTypes stageType, int stagesCount, int stage, int procents)
                 {
-                    App.Current.Dispatcher.Invoke(() => 
+                    App.Current.Dispatcher.Invoke(() =>
                     {
                         _progressBar.Value = procents;
                     });
                 };
                 ComplitedDownloadCallback complitedDownloadMethod = delegate (InstanceInit result, List<string> downloadErrors, bool launchGame)
                 {
-                    Console.WriteLine("Finished");
-                    App.Current.Dispatcher.Invoke(() => 
+                    App.Current.Dispatcher.Invoke(() =>
                     {
                         NextButtonAnimation(_loader);
                     });
@@ -154,36 +348,15 @@ namespace Lexplosion.Controls
             }
             else InstanceFormVM.DownloadInstance();
 
-
             NextButtonAnimation(button);
         }
 
-        /// Для тестов loader.
-        //private void OnLoadingStarted(object sender, EventArgs e)
-        //{
-        //    var thread = new Thread(() =>
-        //    {
-        //        if (_progressBar != null)
-        //        {
-        //            for (int i = 1; i < 101; i++)
-        //            {
-        //                this.Dispatcher.Invoke(() =>
-        //                {
-        //                    _progressBar.Value = i;
-        //                    if (i == 100)
-        //                    {
-        //                        _progressBar.Visibility = Visibility.Collapsed;
-        //                        NextButtonAnimation(_loader);
-        //                    }
-        //                });
 
-        //                Thread.Sleep(25);
-        //            }
-        //        }
-        //    });
-        //    thread.IsBackground = true;
-        //    thread.Start();
-        //}
+        #endregion EventHandlers
+
+
+        #region Private Methods
+
 
         private void NextButtonAnimation(FrameworkElement control, EventHandler animationComplitedEvent = null)
         {
@@ -199,12 +372,12 @@ namespace Lexplosion.Controls
             control.BeginAnimation(FrameworkElement.HeightProperty, animation);
         }
 
-        public void PreviewButtonAnimation(FrameworkElement control, EventHandler animationComplitedEvent = null)
+        private void PreviewButtonAnimation(FrameworkElement control, EventHandler animationComplitedEvent = null)
         {
             DoubleAnimation animation = new DoubleAnimation
             {
                 From = 0.0,
-                To = 30,
+                To = this.ActualHeight,
                 Duration = TimeSpan.FromSeconds(0.3)
             };
 
@@ -212,5 +385,45 @@ namespace Lexplosion.Controls
 
             control.BeginAnimation(FrameworkElement.HeightProperty, animation);
         }
+
+        private void HideButton(FrameworkElement control)
+        {
+            control.Height = 0.0;
+        }
+
+        private void ShowButton(FrameworkElement control)
+        {
+            control.Height = this.ActualHeight;
+        }
+
+
+        #endregion Private Methods
+
+
+        #region On DependencyProperties Changed
+
+
+        private static void OnInstanceFormChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue == null || e.OldValue == e.NewValue)
+                return;
+
+            var button = (DownloadButton)d;
+            var newValue = (InstanceFormViewModel)e.NewValue;
+
+            if (newValue.Client.IsInstalled)
+            {
+                button.HideButton(button._downloadButton);
+                button.HideButton(button._loader);
+            }
+            else
+            {
+                button.ShowButton(button._downloadButton);
+                button.ShowButton(button._loader);
+            }
+        }
+
+
+        #endregion On DependencyProperties Changed
     }
 }

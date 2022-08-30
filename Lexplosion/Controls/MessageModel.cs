@@ -6,10 +6,10 @@ namespace Lexplosion.Controls
 {
     public abstract class MessageModel
     {
-        public string Header { get; set; }
-        public string Message { get; set; }
-        public ToastMessageState State { get; set; }
-        public bool IsCollapsed { get; set; }
+        public string Header { get; }
+        public string Message { get; }
+        public ToastMessageState State { get; }
+        public TimeSpan? Time { get; } 
 
         public RelayCommand CloseToastMessage
         {
@@ -19,12 +19,12 @@ namespace Lexplosion.Controls
             });
         }
 
-        public MessageModel(string header, string message, ToastMessageState state)
+        public MessageModel(string header, string message, ToastMessageState state, TimeSpan? time = null)
         {
             Header = header;
             Message = message;
             State = state;
-            IsCollapsed = false;
+            Time = time == null ? TimeSpan.MaxValue : time;
         }
     }
 }

@@ -164,7 +164,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                         if (result == DownloadAddonRes.Successful)
                         {
                             _instanceAddons.Add(instanceAddon);
-                            MainViewModel.ShowToastMessage("Мод успешно установлен. Не за что.", "Название: " + instanceAddon.Name);
+                            MainViewModel.ShowToastMessage("Мод успешно установлен. Не за что.", "Название: " + instanceAddon.Name, TimeSpan.FromSeconds(5d));
                         }
                         else
                         {

@@ -387,27 +387,34 @@
                 </Grid>
 
                 <!--  CheckBoxes  -->
-
                 <StackPanel
                     Grid.Row="7"
                     Grid.Column="1"
-                    Margin="5,0,0,0"
-                    HorizontalAlignment="Left">
+                    Orientation="Horizontal">
+                    <StackPanel Margin="5,0,0,0" HorizontalAlignment="Left">
 
-                    <CheckBox
-                        Margin="0,0,0,5"
-                        Content="Обновлять сборки автоматически"
-                        IsChecked="{Binding GeneralSettings.IsAutoUpdate}" />
+                        <CheckBox
+                            Margin="0,0,0,5"
+                            Content="Обновлять сборки автоматически"
+                            IsChecked="{Binding GeneralSettings.IsAutoUpdate}" />
 
-                    <CheckBox
-                        Margin="0,0,0,5"
-                        Content="Скрывать лаунчер при запуске игры"
-                        IsChecked="{Binding GeneralSettings.IsHiddenMode}" />
+                        <CheckBox
+                            Margin="0,0,0,5"
+                            Content="Скрывать лаунчер при запуске игры"
+                            IsChecked="{Binding GeneralSettings.IsHiddenMode}" />
 
-                    <CheckBox
-                        Margin="0,0,0,5"
-                        Content="Показывать консоль"
-                        IsChecked="{Binding GeneralSettings.IsShowConsole}" />
+                        <CheckBox
+                            Margin="0,0,0,5"
+                            Content="Показывать консоль"
+                            IsChecked="{Binding GeneralSettings.IsShowConsole}" />
+                    </StackPanel>
+
+                    <Button
+                        Height="40"
+                        Margin="100,0,0,20"
+                        Style="{StaticResource FolderBrowerButton}" Width="100">
+                        <TextBlock Text="Сбросить настройки" TextAlignment="Center"  TextWrapping="WrapWithOverflow" />
+                    </Button>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

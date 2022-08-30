@@ -56,7 +56,7 @@ namespace Lexplosion.Logic.FileSystem
         public static bool InstallFile(string url, string fileName, string path)
         {
             string tempDir = null;
-            Console.WriteLine("INSTALL " + url);
+            //Console.WriteLine("INSTALL " + url);
 
             try
             {

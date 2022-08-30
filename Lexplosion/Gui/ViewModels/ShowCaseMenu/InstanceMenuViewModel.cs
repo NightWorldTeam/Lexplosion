@@ -71,8 +71,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public InstanceMenuViewModel(InstanceFormViewModel instanceForm, MainViewModel mainViewModel) : base()
         {
-            if (instanceForm != null)
-                _instanceForm = instanceForm;
+            _instanceForm = instanceForm;
 
             _mainViewModel = mainViewModel;
 
@@ -150,7 +149,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 Tabs.Add(new Tab
                 {
                     Header = "Обзор",
-                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm.Client, _instanceForm)
+                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm)
                 });
 
                 Tabs.Add(new Tab
@@ -176,7 +175,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 Tabs.Add(new Tab
                 {
                     Header = "Обзор",
-                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm.Client)
+                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm)
                 });
 
                 Tabs.Add(new Tab

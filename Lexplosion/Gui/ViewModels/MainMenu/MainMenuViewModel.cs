@@ -43,9 +43,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             get => _logoClickCommand ?? (new RelayCommand(obj =>
             {
                 var instanceFormViewModel = (InstanceFormViewModel)obj;
-                var instanceClient = instanceFormViewModel.Client;
 
-                Console.WriteLine(instanceClient.Name + " " + instanceClient.InLibrary);
+                Console.WriteLine(instanceFormViewModel.Client.Name + " " + instanceFormViewModel.Client.InLibrary);
 
                     NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
                         MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceFormViewModel, _mainViewModel));

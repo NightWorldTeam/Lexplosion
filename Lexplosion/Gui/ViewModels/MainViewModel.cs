@@ -155,7 +155,22 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
-            var model = new ToastMessageModel(header, message, state);
+            ShowToastMessage(header, message, state, null);
+        }
+
+        public static void ShowToastMessage(string header, string message) 
+        {
+            ShowToastMessage(header, message, ToastMessageState.Notification, null);
+        }
+
+        public static void ShowToastMessage(string header, string message, TimeSpan? time = null, ToastMessageState state = ToastMessageState.Notification) 
+        {
+            ShowToastMessage(header, message, state, time);
+        }
+
+        private static void ShowToastMessage(string header, string message, ToastMessageState state, TimeSpan? time)  
+        {
+            var model = new ToastMessageModel(header, message, state, time);
             App.Current.Dispatcher.Invoke(() => {
                 Messages.Add(model);
             });

@@ -12,8 +12,8 @@ namespace Lexplosion.Gui.ViewModels
 {
     public class InstanceFormViewModel : VMBase
     {
-        private const string _deleteInstanceTitle = "Вы действительно желаете удалить {0}? \n\nможно потом сделать выбор того что можно сохранить? например карты)))";
-        private const string _deleteInstanceFromLibraryTitle = "Вы действительно желаете удалить {0} из библиотеки? Ну тут вряд-ли что-то ещё надо, ибо сборка не установленна";
+        private const string _deleteInstanceTitle = "Вы действительно желаете удалить ";
+        private const string _deleteInstanceFromLibraryTitle = "Вы действительно желаете удалить {0} из библиотеки?";
 
         private InstanceClient _instanceClient; // Данные о Instance.
 
@@ -108,14 +108,7 @@ namespace Lexplosion.Gui.ViewModels
 
                     case LowerButtonFunc.DeleteFromLibrary:
                         {
-                            var dialog = new DialogViewModel(MainVM);
-                            dialog.ShowDialog(String.Format(_deleteInstanceTitle, Model.InstanceClient.Name),
-                                new Action(delegate ()
-                                {
-                                    Model.InstanceClient.Delete();
-                                    MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
-                                })
-                            );
+                            RemoveInstance(true);
                             break;
                         }
 
@@ -151,14 +144,7 @@ namespace Lexplosion.Gui.ViewModels
 
                     case LowerButtonFunc.RemoveInstance:
                         {
-                            var dialog = new DialogViewModel(MainVM);
-                            dialog.ShowDialog(String.Format(_deleteInstanceTitle, Model.InstanceClient.Name),
-                                new Action(delegate ()
-                                    {
-                                        MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
-                                        Model.InstanceClient.Delete();
-                                    })
-                                );
+                            RemoveInstance(false);
                             break;
                         }
 
@@ -240,6 +226,37 @@ namespace Lexplosion.Gui.ViewModels
             MainVM.DownloadManager.AddProcess(this);
 
             Model.DownloadModel.DonwloadPrepare();
+        }
+
+        /// <summary>
+        /// Удаляет сборку из библиотеки, но перед этим спрашивает пользователя действительно ли он хочет удалить.
+        /// </summary>
+        /// <param name="IsFromLibrary">Если сборка не установленная но в библиотеки. Влияет на выводимое сообщение</param>
+        public void RemoveInstance(bool IsFromLibrary) 
+        {
+            var dialog = new DialogViewModel(MainVM);
+            string message;
+
+            if (IsFromLibrary) 
+            {
+                message = "Вы действительно желаете удалить " + Model.InstanceClient.Name + " из библиотеки?";
+            }
+            else 
+            {
+                message = "Вы действительно желаете удалить " + Model.InstanceClient.Name;
+            }
+
+            dialog.ShowDialog(message, RemoveInstance);
+        }
+
+        /// <summary>
+        /// Удаляет сборку из библиотеки.
+        /// </summary>
+        public void RemoveInstance()
+        {
+            Model.InstanceClient.Delete();
+            MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+            Model.UpdateButtons();
         }
 
         #endregion methods
