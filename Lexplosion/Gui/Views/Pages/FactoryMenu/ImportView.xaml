@@ -152,7 +152,7 @@
                                 <ProgressBar
                                     Height="5"
                                     Margin="6,8,10,0"
-                                    Foreground="#167FFC"
+                                    Foreground="{DynamicResource BrandSolidColorBrush}"
                                     IsIndeterminate="True"
                                     Value="30" />
                             </StackPanel>

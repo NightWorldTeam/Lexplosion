@@ -2,7 +2,7 @@
 
 namespace Lexplosion.Gui.Stores
 {
-    public class NavigationStore
+    public sealed class NavigationStore
     {
         public event Action CurrentViewModelChanged;
         private VMBase _currentViewModel;

@@ -23,7 +23,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
     //    private InstanceClient _instanceClient;
     //}
 
-    public class FactoryGeneralViewModel : ModalVMBase
+    public sealed class FactoryGeneralViewModel : ModalVMBase
     {
         private RelayCommand _switchModloaderType;
         private RelayCommand _createInstance;

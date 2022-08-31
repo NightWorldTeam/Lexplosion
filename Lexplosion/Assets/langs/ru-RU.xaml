@@ -1,0 +1,35 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib">
+
+    <!--  main left panel  -->
+    <s:String x:Key="catalog">Каталог</s:String>
+    <s:String x:Key="library">Библиотека</s:String>
+    <s:String x:Key="multiplayer">Сетевая игра</s:String>
+    <s:String x:Key="settings">Настройки</s:String>
+
+    <!--  library  -->
+    <s:String x:Key="addInstance">Добавить сборку</s:String>
+
+    <!--  multiplayer  -->
+    <s:String x:Key="status">Статус</s:String>
+    <s:String x:Key="general">Основное</s:String>
+    <s:String x:Key="friends">Друзья</s:String>
+    <s:String x:Key="channels">Комнаты</s:String>
+
+    <!--  settings  -->
+    <s:String x:Key="account">Учётая запись</s:String>
+    <s:String x:Key="about">О лаунчере</s:String>
+
+    <s:String x:Key="width">Ширина</s:String>
+    <s:String x:Key="height">Высота</s:String>
+    <s:String x:Key="memory">ОЗУ</s:String>
+    <s:String x:Key="gamefolder">Папка с игрой</s:String>
+    <s:String x:Key="javapath">Путь к Java</s:String>
+    <s:String x:Key="review">Обзор</s:String>
+    <s:String x:Key="autoUpdateInstance">Обновлять сборки автоматически</s:String>
+    <s:String x:Key="hideLauncher">Скрывать лаунчер при запуске игры</s:String>
+    <s:String x:Key="showConsole">Показывать консоль</s:String>
+    <s:String x:Key="reboot">Сбросить</s:String>
+</ResourceDictionary>

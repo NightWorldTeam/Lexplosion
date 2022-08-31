@@ -1,133 +1,22 @@
 ﻿using Lexplosion.Controls;
-using Lexplosion.Gui.Extension;
-using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
-using Lexplosion.Gui.Views.Pages.ModalViews;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools.Immutable;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class UserProfile : VMBase 
-    {
-        /// <summary>
-        /// Данное свойство содержить информации - о том показан ли InfoBar.
-        /// </summary>
-        private static bool _isShowInfoBar;
-        public bool IsShowInfoBar
-        {
-            get => _isShowInfoBar; set
-            {
-                _isShowInfoBar = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Данное свойство содержить информации - о том авторизован ли пользователь.
-        /// </summary>
-        private bool _isAuthorized;
-        public bool IsAuthorized
-        {
-            get => _isAuthorized; set
-            {
-                _isAuthorized = value;
-                IsShowInfoBar = value;
-                OnPropertyChanged(nameof(IsAuthorized));
-            }
-        }
-
-        /// <summary>
-        /// Данное свойство содержить ник пользователя.
-        /// </summary>
-        private string _nickname;
-        public string Nickname
-        {
-            get => _nickname; set
-            {
-                _nickname = value;
-                OnPropertyChanged(nameof(Nickname));
-            }
-        }
-
-        public RelayCommand ChangeStatusCommand
-        {
-            get => new RelayCommand(obj =>
-            {
-                if (obj == null)
-                    return;
-
-                ActivityStatus newStatus;
-
-                Enum.TryParse((string)obj, out newStatus);
-                Global.UserData.User.ChangeBaseStatus(newStatus);
-            });
-        }
-    }
-
-    public class ModalWindowViewModel : VMBase
-    {
-        private readonly NavigationStore ModalWindowNavigationStore = new NavigationStore();
-
-        public ModalVMBase CurrentModalContent => (ModalVMBase)ModalWindowNavigationStore.CurrentViewModel;
-        
-        /// <summary>
-        /// Данное свойство содержить информации - открыт ли Экспорт [Popup].
-        /// </summary>
-        private bool _isOpen = false;
-        public bool IsOpen
-        {
-            get => _isOpen; set
-            {
-                _isOpen = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ModalWindowViewModel()
-        {
-            ModalWindowNavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
-        }
-
-
-        public void ChangeCurrentModalContent(ModalVMBase modalVM) 
-        {
-            ModalWindowNavigationStore.CurrentViewModel = modalVM;
-        }
-
-        private void OnCurrentViewModelChanged()
-        {
-            OnPropertyChanged(nameof(CurrentModalContent));
-        }
-
-        public void OpenWindow(ModalVMBase modalVM) 
-        {
-            IsOpen = true;
-            ChangeCurrentModalContent(modalVM);
-        }
-
-        public void CloseWindow() 
-        {
-            IsOpen = false;
-            ChangeCurrentModalContent(null);
-        }
-    }
-
-    public class MainViewModel : VMBase
+    public sealed class MainViewModel : VMBase
     {
         #region statics
+
 
         public static readonly NavigationStore NavigationStore = new NavigationStore();
 
@@ -152,6 +41,13 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public static ImmutableArray<string> GameVersions { get; private set; }
         public static ObservableCollection<MessageModel> Messages { get; private set; } = new ObservableCollection<MessageModel>();
+
+
+        #endregion statics
+
+
+        #region ShowToastMessage methods
+
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
@@ -186,9 +82,12 @@ namespace Lexplosion.Gui.ViewModels
             });
         }
 
-        #endregion statics
+
+        #endregion ShowToastMessage methods
+
 
         #region props
+
 
         public MainModel Model { get; }
         public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
@@ -196,6 +95,7 @@ namespace Lexplosion.Gui.ViewModels
         public LoadingBoard LoadingBoard { get; } = new LoadingBoard();
         public UserProfile UserProfile { get; } = new UserProfile();
         public ModalWindowViewModel ModalWindowVM { get; } = new ModalWindowViewModel();
+
         public DownloadManagerViewModel DownloadManager;
 
         #endregion

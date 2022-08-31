@@ -34,7 +34,7 @@
 
             <StackPanel>
                 <StackPanel Margin="28,20,0,0">
-                    <TextBlock FontSize="20" Text="Статус" />
+                    <TextBlock FontSize="20" Text="{DynamicResource status}" />
                     <TextBlock Opacity="0.8" Text="{Binding Model.GameStatus}" />
                 </StackPanel>
 

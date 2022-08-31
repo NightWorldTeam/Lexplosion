@@ -1,16 +1,12 @@
-﻿using Lexplosion.Gui.Extension;
-using Lexplosion.Gui.Models;
-using Lexplosion.Gui.Models.InstanceForm;
+﻿using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using System;
-using System.Linq;
-using System.Windows.Controls;
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class InstanceFormViewModel : VMBase
+    public sealed class InstanceFormViewModel : VMBase
     {
         private const string _deleteInstanceTitle = "Вы действительно желаете удалить ";
         private const string _deleteInstanceFromLibraryTitle = "Вы действительно желаете удалить {0} из библиотеки?";

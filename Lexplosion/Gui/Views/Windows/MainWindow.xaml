@@ -12,14 +12,11 @@
     Width="944"
     Height="528"
     AllowsTransparency="False"
+    Background="{DynamicResource PrimarySolidColorBrush}"
     Icon="pack://application:,,,/Assets/images/icons/logo.ico"
     ResizeMode="NoResize"
     WindowStyle="None"
     mc:Ignorable="d">
-
-    <Window.Background>
-        <SolidColorBrush Color="#18191b" />
-    </Window.Background>
 
     <Window.Resources>
         <ObjectDataProvider
@@ -35,17 +32,15 @@
     </Window.Resources>
 
     <Grid Margin="0,0,0,0" ShowGridLines="False">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="28" />
             <RowDefinition Height="499*" />
         </Grid.RowDefinitions>
 
         <!--  Header  -->
-        <Border BorderBrush="#212326" BorderThickness="0,0,0,1">
-            <Grid ShowGridLines="False">
-                <Grid.Background>
-                    <SolidColorBrush Color="#151719" />
-                </Grid.Background>
+        <Border BorderBrush="{DynamicResource HeaderSolidColorBrush}" BorderThickness="0,0,0,1">
+            <Grid Background="{DynamicResource HeaderSolidColorBrush}" ShowGridLines="False">
 
 
                 <Grid.ColumnDefinitions>
@@ -127,7 +122,7 @@
             Height="34"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
-            Background="#151719"
+            Background="{DynamicResource HeaderSolidColorBrush}"
             Visibility="{Binding UserProfile.IsShowInfoBar, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
             <Grid
                 Width="248"
@@ -147,7 +142,8 @@
                                     Height="12"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Fill="{Binding Status, Source={x:Static global:UserData.User}, Converter={StaticResource AcitivityStatusToColorConverter}}" />
+                                    Fill="{Binding Status, Source={x:Static global:UserData.User}, Converter={StaticResource AcitivityStatusToColorConverter}}"
+                                    Focusable="False" />
                                 <Popup
                                     Width="140"
                                     Height="80"
@@ -160,7 +156,7 @@
 
                                     <Border
                                         Padding="5"
-                                        Background="#222222"
+                                        Background="{DynamicResource SepSolidColorBrush}"
                                         CornerRadius="2">
                                         <StackPanel>
 

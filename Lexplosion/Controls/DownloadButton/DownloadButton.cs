@@ -341,7 +341,7 @@ namespace Lexplosion.Controls
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         NextButtonAnimation(_loader);
-                    });
+                    }); 
                 };
 
                 InstanceFormVM.DownloadInstance(progressHandlerMethod, complitedDownloadMethod);
@@ -386,7 +386,7 @@ namespace Lexplosion.Controls
             control.BeginAnimation(FrameworkElement.HeightProperty, animation);
         }
 
-        private void HideButton(FrameworkElement control)
+        private static void HideButton(FrameworkElement control)
         {
             control.Height = 0.0;
         }
@@ -413,8 +413,8 @@ namespace Lexplosion.Controls
 
             if (newValue.Client.IsInstalled)
             {
-                button.HideButton(button._downloadButton);
-                button.HideButton(button._loader);
+                HideButton(button._downloadButton);
+                HideButton(button._loader);
             }
             else
             {

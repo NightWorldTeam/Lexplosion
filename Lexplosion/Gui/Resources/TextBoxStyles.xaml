@@ -50,7 +50,7 @@
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border
                         x:Name="Border"
-                        Background="#1f1f1f"
+                        Background="{DynamicResource SepSolidColorBrush}"
                         BorderBrush="#121212"
                         BorderThickness="1"
                         CornerRadius="10">
@@ -103,11 +103,9 @@
                     <Border
                         Name="Border"
                         Padding="2"
+                        BorderBrush="{DynamicResource BrandSolidColorBrush}"
                         BorderThickness="0,0,0,2"
                         CornerRadius="2">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
-                        </Border.BorderBrush>
                         <Border.Background>
                             <SolidColorBrush Color="Transparent" />
                         </Border.Background>
@@ -180,11 +178,9 @@
                     <Border
                         Name="Border"
                         Padding="2"
+                        BorderBrush="{DynamicResource BrandSolidColorBrush}"
                         BorderThickness="0,0,0,2"
                         CornerRadius="2">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
-                        </Border.BorderBrush>
                         <Grid>
                             <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                             <TextBlock
@@ -242,11 +238,9 @@
 
                     <Border
                         Padding="2"
+                        BorderBrush="{DynamicResource BrandSolidColorBrush}"
                         BorderThickness="0,0,0,2"
                         CornerRadius="2">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
-                        </Border.BorderBrush>
                         <Grid>
                             <ScrollViewer
                                 x:Name="PART_ContentHost"

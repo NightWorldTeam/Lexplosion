@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
-    public class InstanceFactoryViewModel : SubmenuViewModel
+    public sealed class InstanceFactoryViewModel : SubmenuViewModel
     {
         public ICommand NavigationMainMenuCommand { get; }
 

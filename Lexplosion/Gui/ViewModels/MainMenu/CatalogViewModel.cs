@@ -1,12 +1,11 @@
-﻿using Lexplosion.Gui.Models;
-using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
 {
-    public class CatalogViewModel : VMBase, IPaginable
+    public sealed class CatalogViewModel : VMBase, IPaginable
     {
         private const int _pageSize = 10;
         private readonly MainViewModel _mainViewModel;

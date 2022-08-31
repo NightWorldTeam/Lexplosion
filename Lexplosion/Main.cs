@@ -90,6 +90,10 @@ namespace Lexplosion
 
             // Встраеваем стиили
             const string resources = "pack://application:,,,/Gui/Resources/";
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() 
+            {
+                Source = new Uri("pack://application:,,,/Assets/langs/" + "ru-RU.xaml")
+            });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(resources + "Fonts.xaml")

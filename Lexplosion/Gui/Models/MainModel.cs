@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Lexplosion.Gui.Models
 {
-    public class MainModel : VMBase
+    public sealed class MainModel : VMBase
     {
         public ObservableCollection<InstanceFormViewModel> LibraryInstances { get; } = new ObservableCollection<InstanceFormViewModel>();
 

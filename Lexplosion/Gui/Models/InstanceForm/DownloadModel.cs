@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
-    public class DownloadModel : VMBase
+    public sealed class DownloadModel : VMBase
     {
         private int _downloadProgress;
         private int _stage;
@@ -84,6 +84,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         #region methods
 
+        /// <summary>
+        /// Запускает скачивание
+        /// </summary>
         public void DonwloadPrepare()
         {
             _instanceFormModel.InstanceClient.AddToLibrary();
@@ -98,6 +101,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
             });
         }
 
+        /// <summary>
+        /// Обрабатывает информацию о скачивании
+        /// </summary>
+        /// <param name="downloadStageType">Тип стадии></param>
+        /// <param name="stagesCount">Количество стадиый</param>
+        /// <param name="stage">Номер текущей стадии</param>
+        /// <param name="procent">Процетны</param>
         public void Download(DownloadStageTypes downloadStageType, int stagesCount, int stage, int procent)
         {
             App.Current.Dispatcher.Invoke(() =>
@@ -124,7 +134,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 }
                 else
                 {
-                    _instanceFormModel.OverviewField = String.Format("Идёт скачивание... Этап {0}/{1}", stage, stagesCount);
+                    _instanceFormModel.OverviewField = "Идёт скачивание... Этап " + stage + '/' + stagesCount;
                     HasProcents = false;
                 }
             });         

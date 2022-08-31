@@ -3,7 +3,7 @@ using System;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
-    public class LaunchModel
+    public sealed class LaunchModel
     {
         private InstanceFormModel _formModel;
         private MainViewModel _mainViewModel;

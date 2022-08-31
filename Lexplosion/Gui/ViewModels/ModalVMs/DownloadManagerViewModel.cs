@@ -1,16 +1,10 @@
 ﻿using Lexplosion.Gui.ModalWindow;
-using Lexplosion.Logic.Management.Instances;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lexplosion;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public class InstanceFile : VMBase
+    public sealed class InstanceFile : VMBase
     {
         public string Name { get; }
         private int _procents;
@@ -41,7 +35,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         }
     }
 
-    public class InstanceDownloadProcess
+    public sealed class InstanceDownloadProcess
     {
         public ObservableCollection<InstanceFile> DownloadFiles { get; } = new ObservableCollection<InstanceFile>();
         public ObservableCollection<InstanceFile> InstalledFiles { get;  } = new ObservableCollection<InstanceFile>();
@@ -127,7 +121,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         }
     }
 
-    public class DownloadManagerViewModel : ModalVMBase
+    public sealed class DownloadManagerViewModel : ModalVMBase
     {
         private MainViewModel _mainViewModel;
         public ObservableCollection<InstanceDownloadProcess> InstanceDownloadProcessList { get; } = new ObservableCollection<InstanceDownloadProcess>();

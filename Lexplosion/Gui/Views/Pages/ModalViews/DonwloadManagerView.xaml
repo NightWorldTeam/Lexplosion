@@ -25,7 +25,7 @@
                             Background="Transparent"
                             BorderBrush="#131313"
                             BorderThickness="10"
-                            ItemContainerStyle="{StaticResource TEST}"
+                            ItemContainerStyle="{StaticResource ButtonItemStyle}"
                             TabStripPlacement="Left">
 
                             <TabControl.Resources>

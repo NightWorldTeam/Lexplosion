@@ -14,16 +14,14 @@
         <Setter Property="TextElement.Foreground" Value="LightGray" />
         <Setter Property="TextElement.FontSize" Value="16" />
         <Setter Property="TextElement.FontWeight" Value="Medium" />
-        <Setter Property="Background" Value="#191919" />
         <!--<Setter Property="Header" Value="60"  />-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
-                    <Grid MinWidth="125">
-                        <Grid.Background>
-                            <SolidColorBrush Color="#191919" />
-                        </Grid.Background>
-
+                    <Grid
+                        x:Name="Grid"
+                        MinWidth="125"
+                        Background="{DynamicResource PrimarySolidColorBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30" />
                             <RowDefinition Height="3" />
@@ -79,8 +77,17 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="White" />
+                            <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="{DynamicResource BrandSolidColorBrush}" />
                         </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsSelected" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="Grid" Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -92,17 +99,17 @@
     <Style x:Key="LeftMenuItem" TargetType="{x:Type TabItem}">
         <Setter Property="Width" Value="246" />
         <Setter Property="Height" Value="60" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="Background" Value="#18191b" />
         <Setter Property="TextElement.Foreground" Value="White" />
         <Setter Property="TextElement.FontSize" Value="22" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="SnapsToDevicePixels" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
-                    <Grid ShowGridLines="False">
-                        <Grid.Background>
-                            <SolidColorBrush Color="#191919" />
-                        </Grid.Background>
+                    <Grid
+                        x:Name="Grid"
+                        Background="{DynamicResource PrimarySolidColorBrush}"
+                        ShowGridLines="False">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
@@ -138,13 +145,23 @@
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                         </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsSelected" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="Grid" Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="TEST" TargetType="{x:Type TabItem}">
+    <Style x:Key="ButtonItemStyle" TargetType="{x:Type TabItem}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="IsTabStop" Value="False" />
@@ -172,6 +189,16 @@
                             <Setter Property="Foreground" Value="White" />
                             <Setter TargetName="border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
                         </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="False" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="border" Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

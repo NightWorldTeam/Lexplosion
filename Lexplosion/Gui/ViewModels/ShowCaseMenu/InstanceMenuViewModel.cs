@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
-    public class InstanceMenuViewModel : SubmenuViewModel, ISubmenu
+    public sealed class InstanceMenuViewModel : SubmenuViewModel, ISubmenu
     {
         public event ISubmenu.NavigationToMenuCallBack NavigationToMainMenu;
         private int _tabControlSelectedValue;

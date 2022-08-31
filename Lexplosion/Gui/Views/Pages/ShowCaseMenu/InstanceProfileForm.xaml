@@ -47,6 +47,16 @@
                                 <Setter TargetName="border" Property="Background" Value="Transparent" />
                                 <Setter TargetName="ContentSite" Property="TextElement.Foreground" Value="DarkGray" />
                             </Trigger>
+                            <MultiTrigger>
+
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="False" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter TargetName="border" Property="Background" Value="#252525" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -80,7 +90,7 @@
                     </TabControl.Resources>
 
                     <!--  Tabs  -->
-                    <TabItem Header="Основное">
+                    <TabItem Header="{DynamicResource general}">
                         <Border Margin="20,0,0,0" HorizontalAlignment="Center">
                             <StackPanel>
 
@@ -192,7 +202,7 @@
 
                     <TabItem Header="Аватар">
                         <Border Margin="20,0,0,0" Background="Transparent">
-                            <Grid ShowGridLines="True">
+                            <Grid ShowGridLines="False">
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="170" />
@@ -256,8 +266,8 @@
                                         <Button
                                             Width="160"
                                             Height="40"
-                                            Margin="0,50,0,0"
-                                            Background="#272727"
+                                            Margin="0,50,0,15"
+                                            Style="{StaticResource DarkButton}"
                                             Command="{Binding UploadLogoCommand}"
                                             Content="Загрузить своё аватар"
                                             FontSize="14"
@@ -315,7 +325,7 @@
                                 </StackPanel>
 
                                 <!--  Tags  -->
-                                <StackPanel Margin="30,0,30,30">
+                                <!--<StackPanel Margin="30,0,30,30">
                                     <TextBlock
                                         Margin="0,0,0,5"
                                         HorizontalAlignment="Left"
@@ -331,7 +341,9 @@
                                         SelectedValue="{Binding BaseInstanceData.Categories.Name}"
                                         SelectionMode="Multiple">
 
-                                        <!--  Items Style  -->
+                                -->
+                                <!--  Items Style  -->
+                                <!--
                                         <ListBox.ItemContainerStyle>
                                             <Style TargetType="{x:Type ListBoxItem}">
                                                 <Setter Property="Template">
@@ -356,14 +368,18 @@
                                             </Style>
                                         </ListBox.ItemContainerStyle>
 
-                                        <!--  Listbox Panel  -->
+                                -->
+                                <!--  Listbox Panel  -->
+                                <!--
                                         <ListBox.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <WrapPanel IsItemsHost="True" />
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
 
-                                        <!--  Listbox Item Template  -->
+                                -->
+                                <!--  Listbox Item Template  -->
+                                <!--
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock
@@ -376,15 +392,15 @@
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                </StackPanel>
+                                </StackPanel>-->
                             </StackPanel>
                         </Border>
                     </TabItem>
 
 
-                    <TabItem Header="Галерея">
+                    <!--<TabItem Header="Галерея">
                         <Border Background="Transparent" />
-                    </TabItem>
+                    </TabItem>-->
                 </TabControl>
             </Grid>
         </ScrollViewer>

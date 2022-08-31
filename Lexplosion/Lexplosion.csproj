@@ -130,6 +130,7 @@
     <Compile Include="Gui\ControlsExtension\TextBox.cs" />
     <Compile Include="Gui\ControlsExtension\TreeViewItem.cs" />
     <Compile Include="Gui\Converters\NotEqualZeroConverter.cs" />
+    <Compile Include="Gui\Converters\SolidColorBrushToColorConverter.cs" />
     <Compile Include="Gui\Converters\StringToGeometryConverter.cs" />
     <Compile Include="Gui\ModalWindow\IModal.cs" />
     <Compile Include="Gui\IPaginable.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Gui\Models\InstanceForm\ButtonModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\UpperButton.cs" />
     <Compile Include="Gui\Models\MainModel.cs" />
+    <Compile Include="Gui\Models\MultiplayerModel.cs" />
     <Compile Include="Gui\Models\ShowCaseMenu\InstanceSettingsModel.cs" />
     <Compile Include="Gui\Models\ShowCaseMenu\OverviewModel.cs" />
     <Compile Include="Gui\Converters\MultiBindingConverter.cs" />
@@ -172,6 +174,7 @@
     <Compile Include="Gui\ViewModels\ModalVMs\DownloadManagerViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ExportViewModel.cs" />
     <Compile Include="Gui\ViewModels\DevСurtainViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\ModalWindowViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\ChangelogViewModel.cs" />
@@ -180,6 +183,7 @@
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\OverviewViewModel.cs" />
     <Compile Include="Gui\ViewModels\TabMenuViewModel.cs" />
+    <Compile Include="Gui\ViewModels\UserProfile.cs" />
     <Compile Include="Gui\Views\CustomControls\Gallery.xaml.cs">
       <DependentUpon>Gallery.xaml</DependentUpon>
     </Compile>
@@ -276,6 +280,7 @@
     <Compile Include="Logic\Network\CommandReceiver.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
     <Compile Include="Tools\ImageTools.cs" />
+    <Compile Include="Tools\ObservableDelegate.cs" />
     <Compile Include="Tools\Pointer.cs" />
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Tools\Immutable\ImmutableArray.cs" />
@@ -331,6 +336,10 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\langs\ru-RU.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ChangelogItem\ChangelogItem.xaml">
       <SubType>Designer</SubType>

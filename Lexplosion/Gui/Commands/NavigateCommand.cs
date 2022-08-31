@@ -3,7 +3,7 @@ using System;
 
 namespace Lexplosion.Gui.Commands
 {
-    public class NavigateCommand<T> : CommandBase
+    public sealed class NavigateCommand<T> : CommandBase
             where T : VMBase
     {
         private readonly NavigationStore _navigationStore;

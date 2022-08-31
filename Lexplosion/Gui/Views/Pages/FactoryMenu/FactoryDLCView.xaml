@@ -295,7 +295,7 @@
                         </Style>
                     </TabControl.Resources>
                     <!--  Mods  -->
-                    <TabItem Header="Mods" Style="{StaticResource TEST}">
+                    <TabItem Header="Mods" Style="{StaticResource ButtonItemStyle}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"
@@ -313,7 +313,7 @@
                         </StackPanel>
                     </TabItem>
 
-                    <TabItem Header="Ресурспаки" Style="{StaticResource TEST}">
+                    <TabItem Header="Ресурспаки" Style="{StaticResource ButtonItemStyle}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"
@@ -331,7 +331,7 @@
                         </StackPanel>
                     </TabItem>
 
-                    <TabItem Header="Карты" Style="{StaticResource TEST}">
+                    <TabItem Header="Карты" Style="{StaticResource ButtonItemStyle}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"

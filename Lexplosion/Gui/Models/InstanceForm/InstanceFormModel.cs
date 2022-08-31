@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
-    public class InstanceFormModel : VMBase
+    public sealed class InstanceFormModel : VMBase
     {
         private string _overviewField;
         private List<Category> _categories = new List<Category>();

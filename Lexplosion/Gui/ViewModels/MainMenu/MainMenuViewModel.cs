@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +9,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
 {
-    public class MainMenuViewModel : SubmenuViewModel
+    public sealed class MainMenuViewModel : SubmenuViewModel
     {
         private readonly MainViewModel _mainViewModel;
 
@@ -77,17 +78,17 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 //},
                 new Tab
                 {
-                    Header = "Общее",
+                    Header = ResourceGetter.GetString("general"),
                     Content = _generalMultiplayerViewModel
                 },
                 new Tab
                 {
-                    Header = "Друзья",
+                    Header = ResourceGetter.GetString("friends"),
                     Content = _friendsTabViewModel
                 },
                 new Tab
                 {
-                    Header = "Комнаты",
+                    Header = ResourceGetter.GetString("channels"),
                     Content = _channelTabViewModel
                 }
             };
@@ -104,17 +105,17 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 new Tab
                 {
-                    Header = "Основное",
+                    Header = ResourceGetter.GetString("general"),
                     Content = new GeneralSettingsViewModel()
                 },
                 new Tab
                 {
-                    Header = "Учетная запись",
+                    Header = ResourceGetter.GetString("account"),
                     Content = new DevСurtainViewModel()
                 },
                 new Tab
                 {
-                    Header = "О лаунчере",
+                    Header = ResourceGetter.GetString("about"),
                     Content = new DevСurtainViewModel()
                 }
             };
@@ -128,22 +129,22 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 new Tab
                 {
-                    Header = "Каталог",
+                    Header = ResourceGetter.GetString("catalog"),
                     Content = _catalogVM
                 },
                 new Tab
                 {
-                    Header = "Библиотека",
+                    Header = ResourceGetter.GetString("library"),
                     Content = _libraryVM
                 },
                 new Tab
                 {
-                    Header = "Сетевая игра",
+                    Header = ResourceGetter.GetString("multiplayer"),
                     Content = _multiplayerTabMenu
                 },
                 new Tab
                 {
-                    Header = "Настройки",
+                    Header = ResourceGetter.GetString("settings"),
                     Content = _settingsTabMenu
                 },
             };

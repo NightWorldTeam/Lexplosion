@@ -4,17 +4,15 @@
     <Color x:Key="MyLovelyColor">#ff7601</Color>
     <SolidColorBrush x:Key="BrandSolidColorBrush" Color="{StaticResource ActivityColor}" />
 
-    <Color x:Key="PrimaryColor">#18191b</Color>
+    <Color x:Key="PrimaryColor">#191919</Color>
+    <Color x:Key="PrimaryColor1">#131313</Color>
 
-    <SolidColorBrush x:Key="BackgroundBrush" Color="#1f202a" />
-    <SolidColorBrush x:Key="DarkBackgroundBrush" Color="#1f202a" />
-    <SolidColorBrush x:Key="DarkDarkBackgroundBrush" Color="#1f202a" />
-    <SolidColorBrush x:Key="PressedBrush" Color="#1f202a" />
-    <SolidColorBrush x:Key="MouseOverBrush" Color="#383838" />
-    <SolidColorBrush x:Key="BorderBrush" Color="#1f202a" />
-    <SolidColorBrush x:Key="ShadowBorderBrush1" Color="#1f202a" />
-    <SolidColorBrush x:Key="ShadowBorderBrush2" Color="#1f202a" />
-    <SolidColorBrush x:Key="DarkDarkForegroundBrush" Color="#1f202a" />
-    <SolidColorBrush x:Key="DarkForegroundBrush" Color="#1f202a" />
-    <SolidColorBrush x:Key="ForegroundBrush" Color="#1f202a" />
+    <Color x:Key="HeaderColor">#151719</Color>
+    <Color x:Key="SepColor">#212326</Color>
+    <Color x:Key="TextBoxColor">#1f1f1f</Color>
+
+    <SolidColorBrush x:Key="PrimarySolidColorBrush" Color="{StaticResource PrimaryColor}" />
+    <SolidColorBrush x:Key="HeaderSolidColorBrush" Color="{StaticResource HeaderColor}" />
+    <SolidColorBrush x:Key="SepSolidColorBrush" Color="{StaticResource SepColor}" />
+    <SolidColorBrush x:Key="TextBoxSolidColorBrush" Color="{StaticResource TextBoxColor}" />
 </ResourceDictionary>

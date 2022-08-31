@@ -1,11 +1,4 @@
-﻿using Lexplosion.Gui.Models;
-using Lexplosion.Logic.Management.Instances;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
@@ -14,7 +7,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         
     }
 
-    public class ImportViewModel : VMBase
+    public sealed class ImportViewModel : VMBase
     {
         private MainViewModel _mainViewModel;
         private FactoryGeneralViewModel _factoryGeneralVM;

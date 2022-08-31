@@ -316,7 +316,7 @@
                                                 Storyboard.TargetName="UpperButtonBackground"
                                                 Storyboard.TargetProperty="Color"
                                                 From="Transparent"
-                                                To="{StaticResource ActivityColor}"
+                                                To="{DynamicResource ActivityColor}"
                                                 Duration="0:0:0.1" />
                                         </Storyboard>
                                     </BeginStoryboard>

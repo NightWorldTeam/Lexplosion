@@ -14,5 +14,10 @@ namespace Lexplosion.Tools
         {
             return (Color)Application.Current.Resources[key];
         }
+
+        public static string GetString(string key) 
+        {
+            return (string)Application.Current.Resources[key] ?? "Не удалось найти значение";
+        }
     }
 }

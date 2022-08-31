@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
-    public class FactoryDLCVM : VMBase
+    public sealed class FactoryDLCVM : VMBase
     {
         private readonly MainViewModel _mainViewModel;
         private readonly InstanceClient _instanceClient;

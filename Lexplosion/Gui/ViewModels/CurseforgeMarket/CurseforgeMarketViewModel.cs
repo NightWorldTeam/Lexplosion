@@ -18,12 +18,13 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         public bool HasSubcategory { get; }
         public List<AddonCategory> Subcategory { get; }
 
+        private readonly string iconsSource = "pack://Application:,,,/assets/images/icons/curseforge/";
 
         public AddonCategory(int id, AddonType type, string name, string iconSource, List<AddonCategory> subcategory = null)
         {
             Id = id;
             Name = name;
-            ImageSource = String.Format("pack://Application:,,,/assets/images/icons/curseforge/{0}/{1}.png", type.ToString().ToLower(), iconSource.ToLower());
+            ImageSource = iconSource + type.ToString().ToLower() + "/" + iconSource.ToLower() + ".png";
 
             if (subcategory == null)
             {
@@ -93,11 +94,15 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         public override string ToString()
         {
-            return String.Format("AddonCategory:\n    Id: {0}\n    Name: {1}\n    ImageSource: {2}", this.Id, this.Name, this.ImageSource);
+            return 
+                "AddonCategory:" +
+                "\n    Id: " + this.Id + 
+                "\n    Name: " + this.Name + 
+                "\n    ImageSource: " + this.ImageSource;
         }
     }
 
-    public class CurseforgeMarketViewModel : VMBase
+    public sealed class CurseforgeMarketViewModel : VMBase
     {
         private readonly MainViewModel _mainViewModel;
 

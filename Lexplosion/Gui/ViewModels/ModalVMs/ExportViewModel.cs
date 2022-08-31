@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public class ExportViewModel : ModalVMBase
+    public sealed class ExportViewModel : ModalVMBase
     {
         private MainViewModel _mainViewModel;
 
@@ -175,11 +175,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                     var result = InstanceClient.Export(UnitsList, saveFileDialog1.FileName, InstanceName);
                     if (result == ExportResult.Successful)
                     {
-                        MainViewModel.ShowToastMessage("Экспорт клиента", String.Format("Экспорт сборки {0} был успешно завершён. Открыть папку с файлом?", InstanceName), ToastMessageState.Notification);
+                        MainViewModel.ShowToastMessage("Экспорт клиента", "Экспорт сборки " + InstanceName + " был успешно завершён. Открыть папку с файлом?", ToastMessageState.Notification);
                     }
                     else
                     {
-                        MainViewModel.ShowToastMessage(result.ToString(), String.Format("Экспорт сборки {0} не успешно завершён. Открыть папку с файлом?", InstanceName), ToastMessageState.Error);
+                        MainViewModel.ShowToastMessage(result.ToString(), "Экспорт сборки " + InstanceName + " не успешно завершён. Открыть папку с файлом?", ToastMessageState.Error);
                     }
                 });
             }

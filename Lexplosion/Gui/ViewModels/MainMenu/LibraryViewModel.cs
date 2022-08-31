@@ -1,12 +1,8 @@
 ﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
-using Lexplosion.Gui.Views.CustomControls;
-using System;
-using System.Collections.ObjectModel;
-using System.Windows.Controls;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
 {
-    public class LibraryViewModel : VMBase
+    public sealed class LibraryViewModel : VMBase
     {
         private MainViewModel _mainViewModel;
         public MainViewModel MainVM 

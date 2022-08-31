@@ -10,24 +10,15 @@
     IsTabStop="False"
     mc:Ignorable="d">
 
-    <Grid Focusable="False" ShowGridLines="False">
-
-        <Grid.Background>
-            <SolidColorBrush Color="#191919" />
-        </Grid.Background>
+    <Grid
+        Background="{DynamicResource PrimarySolidColorBrush}"
+        Focusable="False"
+        ShowGridLines="False">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0" Focusable="False">
-
-            <Grid.Background>
-                <SolidColorBrush Color="#191919" />
-            </Grid.Background>
-
-        </Grid>
 
         <!--  Header  -->
 
@@ -57,16 +48,12 @@
             Text="{Binding InstanceClient.Name}"
             Visibility="{Binding IsInstance, Converter={StaticResource ConvertBoolToVisibility}}" />
 
-        <Border
-            Grid.Row="1"
-            BorderBrush="#282a2e"
-            BorderThickness="0,0,0,1" />
-
         <TabControl
             Grid.Row="1"
-            Background="#18191b"
+            Background="{DynamicResource PrimarySolidColorBrush}"
             BorderBrush="#212326"
             BorderThickness="0,1,0,0"
+            IsTabStop="False"
             ItemsSource="{Binding Tabs}"
             SelectedValue="{Binding SelectedTab}"
             Style="{StaticResource TabControlStyle}">
@@ -78,7 +65,7 @@
             <TabControl.ContentTemplate>
                 <!--  this is the body of the TabItem template  -->
                 <DataTemplate>
-                    <ContentControl Content="{Binding Content}" />
+                    <ContentControl Content="{Binding Content}" IsTabStop="False" />
                 </DataTemplate>
 
             </TabControl.ContentTemplate>

@@ -1,20 +1,16 @@
 ﻿using Lexplosion.Gui.ModalWindow;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public class DialogViewModel : ModalVMBase
+    public sealed class DialogViewModel : ModalVMBase
     {
         private MainViewModel _mainViewModel;
         private Action _function;
         private string _title;
 
-        private const double _width = 360;
-        private const double _height = 300;
+        private const double _width = 300;
+        private const double _height = 250;
 
         #region commands
 

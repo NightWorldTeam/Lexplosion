@@ -1,12 +1,10 @@
-﻿using Lexplosion.Gui.Views.CustomControls;
-using Lexplosion.Logic.Management.Instances;
-using System;
+﻿using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class TabMenuViewModel : SubmenuViewModel
+    public sealed class TabMenuViewModel : SubmenuViewModel
     {
         private bool _isInstance;
         public bool IsInstance 
