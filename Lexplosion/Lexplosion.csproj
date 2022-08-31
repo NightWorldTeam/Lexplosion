@@ -138,6 +138,7 @@
     <Compile Include="Gui\ModalWindow\ModalVMBase.cs" />
     <Compile Include="Gui\Models\GeneralSettingsModel.cs" />
     <Compile Include="Gui\Models\InstanceFactory\FactoryDLCModel.cs" />
+    <Compile Include="Gui\Models\InstanceFactory\InstanceFactoryModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\DownloadModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\InstanceFormModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\LaunchModel.cs" />
