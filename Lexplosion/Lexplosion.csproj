@@ -138,7 +138,6 @@
     <Compile Include="Gui\ModalWindow\ModalVMBase.cs" />
     <Compile Include="Gui\Models\GeneralSettingsModel.cs" />
     <Compile Include="Gui\Models\InstanceFactory\FactoryDLCModel.cs" />
-    <Compile Include="Gui\Models\InstanceFactory\InstanceFactoryModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\DownloadModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\InstanceFormModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\LaunchModel.cs" />
@@ -159,7 +158,6 @@
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryDLCVM.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\ImportViewModel.cs" />
-    <Compile Include="Gui\ViewModels\FactoryMenu\InstanceFactoryViewModel.cs" />
     <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\CatalogViewModel.cs" />
@@ -174,6 +172,8 @@
     <Compile Include="Gui\ViewModels\ModalVMs\DownloadManagerViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ExportViewModel.cs" />
     <Compile Include="Gui\ViewModels\DevСurtainViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceDownloadProcess.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceFile.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ModalWindowViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
@@ -210,9 +210,6 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\FactoryMenu\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Gui\Views\Pages\FactoryMenu\InstanceFactoryView.xaml.cs">
-      <DependentUpon>InstanceFactoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
@@ -466,10 +463,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\FactoryMenu\ImportView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Gui\Views\Pages\FactoryMenu\InstanceFactoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

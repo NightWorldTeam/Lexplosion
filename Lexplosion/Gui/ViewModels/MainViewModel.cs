@@ -135,8 +135,6 @@ namespace Lexplosion.Gui.ViewModels
         {
             PreLoadGameVersions();
 
-            //MainViewModel.ShowDialogMessage("Test", "Test123", () => { Console.WriteLine(123); }, () => { Console.WriteLine(321); }, "Yes", "No");
-
             Model = new MainModel();
             LibraryInstanceLoading();
 
@@ -147,11 +145,7 @@ namespace Lexplosion.Gui.ViewModels
 
             ExportViewModel = new ExportViewModel(this);
 
-            var isTest = false;
-            DownloadManager = new DownloadManagerViewModel(this, isTest);
-
-            if (isTest)
-                ModalWindowVM.OpenWindow(DownloadManager);
+            DownloadManager = new DownloadManagerViewModel(this);
         }
 
 

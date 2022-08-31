@@ -395,7 +395,7 @@
                     <Border>
                         <StackPanel Orientation="Horizontal">
                             <Ellipse
-                                x:Name="RadioButton"
+                                x:Name="ellipse"
                                 Width="20"
                                 Height="20"
                                 Margin="2,3,10,0"
@@ -409,10 +409,21 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="RadioButton" Property="Stroke" Value="{DynamicResource BrandSolidColorBrush}" />
-                            <Setter TargetName="RadioButton" Property="StrokeThickness" Value="6" />
-                            <Setter TargetName="RadioButton" Property="Fill" Value="#EDEDED" />
+                            <Setter TargetName="ellipse" Property="Stroke" Value="{DynamicResource BrandSolidColorBrush}" />
+                            <Setter TargetName="ellipse" Property="StrokeThickness" Value="6" />
+                            <Setter TargetName="ellipse" Property="Fill" Value="#EDEDED" />
                         </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="False" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

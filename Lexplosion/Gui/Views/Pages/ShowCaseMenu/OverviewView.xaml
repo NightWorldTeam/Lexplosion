@@ -88,7 +88,7 @@
                                     Grid.Column="0"
                                     Foreground="#f5f5f5"
                                     Opacity="0.8"
-                                    Text="Version" />
+                                    Text="{DynamicResource version}" />
                                 <TextBlock
                                     x:Name="Verison"
                                     Grid.Column="1"
@@ -131,7 +131,7 @@
                                     Grid.Column="0"
                                     Foreground="#f5f5f5"
                                     Opacity="0.8"
-                                    Text="Updated" />
+                                    Text="{DynamicResource updated}" />
                                 <TextBlock
                                     x:Name="LastUpdate"
                                     Grid.Column="1"
@@ -171,7 +171,7 @@
                                     Grid.Column="0"
                                     Foreground="#f5f5f5"
                                     Opacity="0.8"
-                                    Text="Total Downloads" />
+                                    Text="{DynamicResource totalDonwloads}" />
                                 <TextBlock
                                     x:Name="TotalDownloads"
                                     Grid.Column="1"
@@ -213,7 +213,7 @@
                                     Grid.Column="0"
                                     Foreground="#f5f5f5"
                                     Opacity="0.8"
-                                    Text="Game Type" />
+                                    Text="{DynamicResource gameType}" />
                                 <TextBlock
                                     x:Name="Core"
                                     Grid.Column="1"
@@ -240,13 +240,13 @@
 
                     <Grid
                         Grid.Row="1"
-                        Margin="60,10,59.6,21"
+                        Margin="60,20,59.6,21"
                         Background="Transparent">
                         <Button
                             Width="100"
                             Height="29"
                             Command="{Binding CurseforgePageCommand}"
-                            Content="Вебсайт"
+                            Content="{DynamicResource website}"
                             FontSize="14"
                             FontWeight="Medium"
                             Foreground="White"
@@ -313,7 +313,7 @@
                             Padding="5,0,0,0"
                             FontWeight="Medium"
                             Foreground="#ababab"
-                            Text="Категории" />
+                            Text="{DynamicResource categories}" />
                         <ItemsControl
                             Grid.Row="1"
                             Height="{Binding CategoryPanelBorderHeight}"
@@ -345,7 +345,7 @@
                         <TextBlock
                             FontSize="14"
                             FontWeight="Medium"
-                            Text="Описание" />
+                            Text="{DynamicResource description}" />
 
                         <Border
                             x:Name="LoadingDescriptionTitle"

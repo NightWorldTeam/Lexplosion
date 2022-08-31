@@ -3,7 +3,7 @@ using System;
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class PaginatorViewModel : VMBase
+    public sealed class PaginatorViewModel : VMBase
     {
         public ValuePair<int, int> PageLimit = new ValuePair<int, int> 
         { 

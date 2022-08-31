@@ -21,9 +21,7 @@
     <Style x:Key="SettingsComboBox" TargetType="{x:Type ComboBox}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
-        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Template">
             <Setter.Value>
@@ -33,7 +31,6 @@
                             Name="ToggleButton"
                             Grid.Column="2"
                             ClickMode="Press"
-                            Focusable="false"
                             IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                             IsTabStop="False"
                             Template="{StaticResource ComboBoxToggleButton}" />
@@ -86,6 +83,17 @@
                             <Setter Property="IsTabStop" Value="false" />
                             <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
                         </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="Popup.IsOpen" Value="False" />
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -179,6 +187,7 @@
                             IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                             IsTabStop="False"
                             Template="{StaticResource LighterDefaultComboBoxToggleButton}" />
+
                         <ContentPresenter VerticalAlignment="Center" RecognizesAccessKey="True" />
                         <!--  None, Fade, Scroll, Slide  -->
                         <Popup
@@ -193,21 +202,36 @@
                                 MinWidth="140"
                                 MaxHeight="{TemplateBinding MaxDropDownHeight}"
                                 SnapsToDevicePixels="True">
+
                                 <Border
                                     x:Name="DropDownBorder"
                                     Background="#1f1f1f"
                                     BorderBrush="{DynamicResource BrandSolidColorBrush}"
                                     BorderThickness="2"
                                     CornerRadius="2" />
+
                                 <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                     <StackPanel
                                         IsItemsHost="True"
                                         KeyboardNavigation.DirectionalNavigation="Contained"
                                         TextBlock.FontSize="14" />
                                 </ScrollViewer>
+
                             </Grid>
                         </Popup>
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="Popup.IsOpen" Value="False" />
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -287,6 +311,19 @@
                             </Popup>
                         </Grid>
                     </Border>
+
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="Popup.IsOpen" Value="False" />
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

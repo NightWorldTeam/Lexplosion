@@ -11,12 +11,14 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="18" />
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="FontFamily" Value="{DynamicResource FuturaBookC}" />
         </Style>
+
     </UserControl.Resources>
 
     <Grid ShowGridLines="False">
@@ -33,23 +35,24 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
+
                 <StackPanel Margin="28,20,0,0">
                     <TextBlock FontSize="20" Text="{DynamicResource status}" />
                     <TextBlock Opacity="0.8" Text="{Binding Model.GameStatus}" />
                 </StackPanel>
 
                 <StackPanel Margin="28,40,0,0">
-                    <TextBlock FontSize="20" Text="Приоритетный метод подключения" />
+                    <TextBlock FontSize="20" Text="{DynamicResource priorityConnetionMethod}" />
                     <StackPanel Orientation="Horizontal">
                         <RadioButton
                             Margin="0,5,20,5"
-                            Content="Прямое"
+                            Content="{DynamicResource directConnetion}"
                             FontSize="18"
                             GroupName="ConnectType"
                             IsChecked="{Binding Model.DirectConnetion}" />
                         <RadioButton
                             Margin="20,5,0,5"
-                            Content="Через ретранслятор"
+                            Content="{DynamicResource viaRepeater}"
                             FontSize="18"
                             GroupName="ConnectType"
                             IsChecked="{Binding Model.DirectConnetion, Converter={StaticResource InverseBooleanConverter}}" />
@@ -86,14 +89,14 @@
                         FontFamily="{DynamicResource FuturaBookC}"
                         FontSize="20"
                         Foreground="White"
-                        Text="Подключенные игроки" />
+                        Text="{DynamicResource connectedPlayers}" />
 
                     <TextBlock
                         Margin="0,100,0,0"
                         HorizontalAlignment="Center"
                         FontSize="16"
                         Opacity="0.8"
-                        Text="Отсутсвуют подключенные игроки."
+                        Text="{DynamicResource noConnectedPlayers}"
                         TextAlignment="Center"
                         TextWrapping="WrapWithOverflow"
                         Visibility="{Binding Model.IsEmptyPlayers, Converter={StaticResource ConvertBoolToVisibility}}" />
@@ -103,6 +106,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="20,20,0,0" ShowGridLines="False">
+
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="50" />
                                             <ColumnDefinition Width="*" />
@@ -180,11 +184,11 @@
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsKicked}" Value="False">
                                                                 <Setter Property="TextElement.Foreground" Value="#E74D4D" />
-                                                                <Setter Property="Content" Value="Выпнуть" />
+                                                                <Setter Property="Content" Value="{DynamicResource kick}" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding IsKicked}" Value="True">
                                                                 <Setter Property="TextElement.Foreground" Value="#49AB47" />
-                                                                <Setter Property="Content" Value="Вернуть" />
+                                                                <Setter Property="Content" Value="{DynamicResource unkick}" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -205,7 +209,10 @@
             Grid.Row="1"
             Margin="10,0,0,0"
             Orientation="Horizontal">
-            <Button Command="{Binding MultiplayerOff}" Style="{StaticResource IconicButton}">
+            <Button
+                Command="{Binding MultiplayerOff}"
+                Style="{StaticResource IconicButton}"
+                Visibility="Collapsed">
                 <Viewbox
                     Width="24"
                     Height="24"
@@ -215,7 +222,7 @@
                 </Viewbox>
                 <Button.ToolTip>
                     <ToolTip
-                        Content="Выключить сетевую игру"
+                        Content="{DynamicResource offOnlineGame}"
                         HorizontalOffset="-50"
                         Style="{StaticResource CustomTipTool}"
                         VerticalOffset="-30" />
@@ -233,7 +240,7 @@
                 </Viewbox>
                 <Button.ToolTip>
                     <ToolTip
-                        Content="Перезапустить сетевую игру"
+                        Content="{DynamicResource rebootOnlineGame}"
                         HorizontalOffset="-50"
                         Style="{StaticResource CustomTipTool}"
                         VerticalOffset="-30" />

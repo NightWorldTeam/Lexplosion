@@ -14,11 +14,24 @@
 
     <!--  multiplayer  -->
     <s:String x:Key="status">Статус</s:String>
+    <s:String x:Key="priorityConnetionMethod">Приоритетный метод подключения</s:String>
+    <s:String x:Key="directConnetion">Прямое</s:String>
+    <s:String x:Key="viaRepeater">Через ретранслятор</s:String>
+    <s:String x:Key="connectedPlayers">Подключенные игроки</s:String>
+    <s:String x:Key="noConnectedPlayers">Отсутсвуют подключенные игроки</s:String>
+    <s:String x:Key="kick">Выпнуть</s:String>
+    <s:String x:Key="unkick">Вернуть</s:String>
+    <s:String x:Key="rebootOnlineGame">Перезапустить сетевую игру</s:String>
+    <s:String x:Key="offOnlineGame">Выключить сетевую игру</s:String>
+
+
     <s:String x:Key="general">Основное</s:String>
     <s:String x:Key="friends">Друзья</s:String>
     <s:String x:Key="channels">Комнаты</s:String>
 
     <!--  settings  -->
+    <s:String x:Key="generalTipText">Общие настройки. Настройки для конкретного клиента можно изенить на его странице</s:String>
+
     <s:String x:Key="account">Учётая запись</s:String>
     <s:String x:Key="about">О лаунчере</s:String>
 
@@ -32,4 +45,70 @@
     <s:String x:Key="hideLauncher">Скрывать лаунчер при запуске игры</s:String>
     <s:String x:Key="showConsole">Показывать консоль</s:String>
     <s:String x:Key="reboot">Сбросить</s:String>
+
+    <!--  Factory General View  -->
+    <s:String x:Key="instanceName">Название сборки</s:String>
+    <s:String x:Key="minecraftVersion">Версия Minecraft</s:String>
+    <s:String x:Key="gameType">Тип игры</s:String>
+    <s:String x:Key="modloaderVersion">Версия Modloader</s:String>
+    <s:String x:Key="installOptifine">Установить optifine</s:String>
+    <s:String x:Key="installSodiumIris">Установить iris + sodium</s:String>
+    <s:String x:Key="create">Создать</s:String>
+    <s:String x:Key="cancel">Отмена</s:String>
+    <s:String x:Key="import">Импорт</s:String>
+    <s:String x:Key="creation">Создание</s:String>
+    <!--  Import  -->
+    <s:String x:Key="uploadYourInstance">Загрузите свою сборку</s:String>
+    <s:String x:Key="onlyZipAllowed">разрешенны только .zip</s:String>
+    <s:String x:Key="dragToStartUpload">Перетащите архив со сборкой, чтобы начать загрузку.</s:String>
+    <s:String x:Key="instanceImportFinished">Сборка успешно импортирована.</s:String>
+    <s:String x:Key="youNotUploadedAnythink">Вы ещё ничего не загрузили.</s:String>
+
+    <!--  Overview  -->
+    <s:String x:Key="notImage">Изображения отсутствуют</s:String>
+    <s:String x:Key="version">Версия</s:String>
+    <s:String x:Key="updated">Обновлено</s:String>
+    <s:String x:Key="totalDonwloads">Скачивания</s:String>
+    <s:String x:Key="website">Вебсайт</s:String>
+    <s:String x:Key="description">Описание</s:String>
+    <s:String x:Key="categories">Категории</s:String>
+    <s:String x:Key="changelog">Журнал изменений</s:String>
+    <s:String x:Key="mods">Моды</s:String>
+    <s:String x:Key="modification">Модификации</s:String>
+    <s:String x:Key="overview">Обзор</s:String>
+
+    <!--  instance configuration  -->
+    <s:String x:Key="configuration">Конфигурация</s:String>
+    <s:String x:Key="instanceSettings">Настройки сборки</s:String>
+    <!--  instance profile  -->
+    <s:String x:Key="avatar">Аватар</s:String>
+    <s:String x:Key="selectedInstanceLogo">Выберите изображение для вашего модпака.</s:String>
+    <s:String x:Key="uploadYourAvatar">Загрузить своё аватар</s:String>
+    <s:String x:Key="uploadYourAvatarTip">Вы можете загрузить свой аватар, но видеть его будете только вы.</s:String>
+    <s:String x:Key="shortDescription">Краткое Описание</s:String>
+    <s:String x:Key="aboutInstance">О сборке</s:String>
+    <s:String x:Key="fullDescription">Полное Описание</s:String>
+    <s:String x:Key="save">Сохранить</s:String>
+    <s:String x:Key="dlc">Дополнения</s:String>
+    <s:String x:Key="instanceTitle">Название</s:String>
+    <s:String x:Key="versionNoEdit">Версия (неизменяется)</s:String>
+    <s:String x:Key="gameTypeNoEdit">Тип игры (неизменяется)</s:String>
+    <s:String x:Key="generalUpperCase">ОСНОВНОЕ</s:String>
+
+    <!--  Factory DLC  -->
+    <s:String x:Key="author">Автор</s:String>
+    <s:String x:Key="addModification">Добавить модификацию</s:String>
+    <s:String x:Key="openfolder">Открыть папку</s:String>
+    <s:String x:Key="startModification">Запускать модификацию</s:String>
+    <s:String x:Key="curseforgePage">Страница на Curseforge</s:String>
+    <s:String x:Key="update">Обновить</s:String>
+    <s:String x:Key="delete">Удалить</s:String>
+    <s:String x:Key="noInstalledModification">Отсутвуют установленные модификации.</s:String>
+    <s:String x:Key="noInstalledResourcepacks">Отсутвуют установленные ресурспаки.</s:String>
+    <s:String x:Key="noInstalledMaps">Отсутвуют установленные карты.</s:String>
+    <s:String x:Key="loadingInstanceDLC">Идет загрузка дополнений сборки...</s:String>
+    <s:String x:Key="resourcepacks">Ресурспаки</s:String>
+    <s:String x:Key="worlds">Карты</s:String>
+
+    <s:String x:Key="back">Назад</s:String>
 </ResourceDictionary>

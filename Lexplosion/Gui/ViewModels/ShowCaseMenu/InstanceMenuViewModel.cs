@@ -3,6 +3,7 @@ using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Gui.Views.CustomControls;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -99,14 +100,14 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 _showCaseTabMenu.Add(
                     new Tab()
                     {
-                        Header = "Overview",
+                        Header = ResourceGetter.GetString("general"),
                         Content = new OverviewViewModel(_instanceForm.Client, this)
                     }
                 );
                 _showCaseTabMenu.Add(
                     new Tab()
                     {
-                        Header = "Changelog",
+                        Header = ResourceGetter.GetString("changelog"),
                         Content = new DevСurtainViewModel()
                     }
                 );
@@ -116,21 +117,21 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 _showCaseTabMenu.Add(
                      new Tab()
                      {
-                          Header = "Overview",
-                          Content = new OverviewViewModel(_instanceForm.Client, this)
+                         Header = ResourceGetter.GetString("general"),
+                         Content = new OverviewViewModel(_instanceForm.Client, this)
                      }
                      );
                 _showCaseTabMenu.Add(
                     new Tab()
                     {
-                        Header = "Mods",
+                        Header = ResourceGetter.GetString("mods"),
                         Content = new DevСurtainViewModel()
                     }
                 );
                 _showCaseTabMenu.Add(
                     new Tab()
                     {
-                        Header = "Changelog",
+                        Header = ResourceGetter.GetString("changelog"),
                         Content = new DevСurtainViewModel()
                     }
                     );
@@ -148,19 +149,19 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
                 Tabs.Add(new Tab
                 {
-                    Header = "Обзор",
+                    Header = ResourceGetter.GetString("overview"),
                     Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm)
                 });
 
                 Tabs.Add(new Tab
                 {
-                    Header = "Конфигурация",
-                    Content = new TabMenuViewModel(_settingsTabs, "Настройки сборки"),
+                    Header = ResourceGetter.GetString("configuration"),
+                    Content = new TabMenuViewModel(_settingsTabs, ResourceGetter.GetString("instanceSettings")),
                 });
 
                 Tabs.Add(new Tab
                 {
-                    Header = "Назад",
+                    Header = ResourceGetter.GetString("back"),
                     Content = null,
                     Command = ClearMemory
                 });
@@ -174,13 +175,13 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
                 Tabs.Add(new Tab
                 {
-                    Header = "Обзор",
+                    Header = ResourceGetter.GetString("overview"),
                     Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm)
                 });
 
                 Tabs.Add(new Tab
                 {
-                    Header = "Назад",
+                    Header = ResourceGetter.GetString("back"),
                     Content = null,
                     Command = ClearMemory
                 });
@@ -196,11 +197,11 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 if (_settingsTabs.Count == 4)
                     return;
 
-                _settingsTabs.Add(new Tab { Id = 1, Header = "О Сборке", Content = new InstanceProfileViewModel(_instanceForm.Client) });
+                _settingsTabs.Add(new Tab { Id = 1, Header = ResourceGetter.GetString("aboutInstance"), Content = new InstanceProfileViewModel(_instanceForm.Client) });
                 _settingsTabs.Add(new Tab
                 {
                     Id = 4,
-                    Header = "Журнал изменений",
+                    Header = ResourceGetter.GetString("changelog"),
                     Content = new DevСurtainViewModel()
                 });
             }
@@ -209,7 +210,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     new Tab
                     {
                         Id = 0,
-                        Header = "Параметры",
+                        Header = ResourceGetter.GetString("settings"),
                         Content = new InstanceSettingsViewModel(_instanceForm.Client)
                     }
                 );
@@ -217,7 +218,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     new Tab
                     {
                         Id = 3,
-                        Header = "Дополнения",
+                        Header = ResourceGetter.GetString("dlc"),
                         Content = new FactoryDLCVM(_mainViewModel, _instanceForm.Client)
                     }
                 );

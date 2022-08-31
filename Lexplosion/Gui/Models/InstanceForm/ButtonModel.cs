@@ -8,7 +8,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public int Offset { get; set; }
     }
 
-    public enum UpperButtonFunc
+    public enum UpperButtonFunc : byte
     {
         Download,
         Play,
@@ -16,7 +16,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         Close
     }
 
-    public enum LowerButtonFunc
+    public enum LowerButtonFunc : byte
     {
         AddToLibrary,
         DeleteFromLibrary,

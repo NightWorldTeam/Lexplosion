@@ -93,10 +93,6 @@
         <showcasepage:InstanceMenuView />
     </DataTemplate>
 
-    <!--  InstanceFactory DataTemplate  -->
-    <DataTemplate DataType="{x:Type vmfactorymenu:InstanceFactoryViewModel}">
-        <factorymenu:InstanceFactoryView />
-    </DataTemplate>
     <DataTemplate DataType="{x:Type viewmodels:TabMenuViewModel}">
         <pages:TabMenuView />
     </DataTemplate>

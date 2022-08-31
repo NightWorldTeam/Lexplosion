@@ -35,17 +35,17 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Style="{StaticResource ExpanderHeaderContent}" Text="Название" />
+                            <TextBlock Style="{StaticResource ExpanderHeaderContent}" Text="{DynamicResource instanceTitle}" />
 
                             <TextBlock
                                 Grid.Column="1"
                                 Style="{StaticResource ExpanderHeaderContent}"
-                                Text="Автор" />
+                                Text="{DynamicResource author}" />
 
                             <TextBlock
                                 Grid.Column="2"
                                 Style="{StaticResource ExpanderHeaderContent}"
-                                Text="Версия" />
+                                Text="{DynamicResource version}" />
 
                             <StackPanel
                                 Grid.Column="3"
@@ -64,7 +64,7 @@
 
                                     <Button.ToolTip>
                                         <ToolTip
-                                            Content="Добавить модификацию"
+                                            Content="{DynamicResource addModification}"
                                             HorizontalOffset="-120"
                                             Style="{StaticResource CustomTipTool}"
                                             VerticalOffset="-20" />
@@ -90,7 +90,7 @@
 
                                     <Button.ToolTip>
                                         <ToolTip
-                                            Content="Открыть папку"
+                                            Content="{DynamicResource openfolder}"
                                             HorizontalOffset="-50"
                                             Style="{StaticResource CustomTipTool}"
                                             VerticalOffset="-20" />
@@ -177,7 +177,7 @@
 
                         <ToggleButton.ToolTip>
                             <ToolTip
-                                Content="Запускать модификацию"
+                                Content="{DynamicResource startModification}"
                                 HorizontalOffset="-70"
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
@@ -200,7 +200,7 @@
 
                         <Button.ToolTip>
                             <ToolTip
-                                Content="Страница на Curseforge"
+                                Content="{DynamicResource curseforgePage}"
                                 HorizontalOffset="-70"
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
@@ -223,7 +223,7 @@
 
                         <Button.ToolTip>
                             <ToolTip
-                                Content="Обновить"
+                                Content="{DynamicResource update}"
                                 HorizontalOffset="-30"
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
@@ -249,7 +249,7 @@
 
                         <Button.ToolTip>
                             <ToolTip
-                                Content="Удалить"
+                                Content="{DynamicResource delete}"
                                 HorizontalOffset="-30"
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
@@ -295,7 +295,7 @@
                         </Style>
                     </TabControl.Resources>
                     <!--  Mods  -->
-                    <TabItem Header="Mods" Style="{StaticResource ButtonItemStyle}">
+                    <TabItem Header="{DynamicResource mods}" Style="{StaticResource ButtonItemStyle}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"
@@ -308,12 +308,12 @@
                                 VerticalAlignment="Center"
                                 FontSize="20"
                                 Opacity="0.8"
-                                Text="Отсутвуют установленные модификации"
+                                Text="{DynamicResource noInstalledModification}"
                                 Visibility="{Binding CurrentAddon.IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
                         </StackPanel>
                     </TabItem>
 
-                    <TabItem Header="Ресурспаки" Style="{StaticResource ButtonItemStyle}">
+                    <TabItem Header="{DynamicResource resourcepacks}" Style="{StaticResource ButtonItemStyle}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"
@@ -326,12 +326,12 @@
                                 VerticalAlignment="Center"
                                 FontSize="20"
                                 Opacity="0.8"
-                                Text="Отсутвуют установленные ресурспаки"
+                                Text="{DynamicResource noInstalledResourcepacks}"
                                 Visibility="{Binding CurrentAddon.IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
                         </StackPanel>
                     </TabItem>
 
-                    <TabItem Header="Карты" Style="{StaticResource ButtonItemStyle}">
+                    <TabItem Header="{DynamicResource worlds}" Style="{StaticResource ButtonItemStyle}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"
@@ -344,7 +344,7 @@
                                     VerticalAlignment="Center"
                                     FontSize="20"
                                     Opacity="0.8"
-                                    Text="Отсутвуют установленные карты."
+                                    Text="{DynamicResource noInstalledMaps}"
                                     Visibility="{Binding CurrentAddon.IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
                                 <!--  Добавить кнопки на curseforge.....  -->
                             </StackPanel>
@@ -358,6 +358,6 @@
             BackgroundColor="#18191b"
             BackgroundOpacity="0.8"
             IsLoadingFinished="{Binding IsLoaded}"
-            Placeholder="Идет загрузка дополнений сборки..." />
+            Placeholder="{DynamicResource loadingInstanceDLC}" />
     </Grid>
 </UserControl>

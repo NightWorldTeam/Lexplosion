@@ -26,12 +26,15 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border x:Name="border" BorderThickness="3">
+
                             <Border.Background>
                                 <SolidColorBrush Opacity="0.1" Color="#131313" />
                             </Border.Background>
+
                             <Border.BorderBrush>
                                 <SolidColorBrush Opacity="0.3" Color="Black" />
                             </Border.BorderBrush>
+
                             <Grid>
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Grid>
@@ -54,8 +57,9 @@
             </Style>
         </TabControl.Resources>
 
-        <TabItem BorderBrush="Transparent" Header="Создание">
+        <TabItem BorderBrush="Transparent" Header="{DynamicResource creation}">
             <Grid>
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="330" />
                     <RowDefinition Height="50" />
@@ -70,7 +74,7 @@
                             Margin="0,0,0,15"
                             HorizontalAlignment="Left"
                             Orientation="Vertical">
-                            <TextBlock HorizontalAlignment="Left" Text="Название сборки" />
+                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource instanceName}" />
                             <controls:PlaceholderTextBox
                                 Height="40"
                                 Margin="0,5,0,0"
@@ -82,16 +86,16 @@
                                 FontSize="16"
                                 FontWeight="Regular"
                                 Foreground="White"
-                                Placeholder="Название сборки"
+                                Placeholder="{DynamicResource instanceName}"
+                                PlaceholderColor="White"
                                 PlaceholderFontSize="16"
                                 PlaceholderOpacity="0.8"
-                                PlaceholderColor="White"
                                 Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
 
                         <!--  Minecraft Version  -->
                         <StackPanel Orientation="Vertical">
-                            <TextBlock HorizontalAlignment="Left" Text="Версия Minecraft" />
+                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource minecraftVersion}" />
                             <ComboBox
                                 Margin="0,5,0,0"
                                 ItemsSource="{Binding GameVersions}"
@@ -100,7 +104,7 @@
 
                         <!--  Game Type  -->
                         <StackPanel Margin="0,15,0,0" Orientation="Vertical">
-                            <TextBlock HorizontalAlignment="Left" Text="Game Type" />
+                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource gameType}" />
                             <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
                                 <RadioButton
                                     Command="{Binding SwitchModloaderType}"
@@ -139,7 +143,7 @@
                         <!--  Modloader Version and some  -->
                         <StackPanel Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
                             <StackPanel Margin="0,15,0,0">
-                                <TextBlock HorizontalAlignment="Left" Text="Версия Modloader" />
+                                <TextBlock HorizontalAlignment="Left" Text="{DynamicResource modloaderVersion}" />
                                 <ComboBox
                                     Margin="0,5,0,0"
                                     ItemsSource="{Binding ModloaderVersions}"
@@ -147,8 +151,8 @@
                             </StackPanel>
 
                             <StackPanel Margin="0,15,0,0">
-                                <CheckBox Content="Установить optifine" />
-                                <CheckBox Margin="0,2,0,0" Content="Установить iris + sodium" />
+                                <CheckBox Content="{DynamicResource installOptifine}" />
+                                <CheckBox Margin="0,2,0,0" Content="{DynamicResource installSodiumIris}" />
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
@@ -160,7 +164,7 @@
                         Height="30"
                         Margin="10,0,0,0"
                         Command="{Binding Action}"
-                        Content="Создать"
+                        Content="{DynamicResource create}"
                         FontSize="14"
                         Style="{StaticResource DefaultBrandColorButton}" />
 
@@ -169,14 +173,14 @@
                         Height="30"
                         Margin="10,0,0,0"
                         Command="{Binding CloseModalWindow}"
-                        Content="Отмена"
+                        Content="{DynamicResource cancel}"
                         FontSize="14"
                         Style="{StaticResource DefaultCloseButton}" />
                 </StackPanel>
             </Grid>
         </TabItem>
-        <TabItem Header="Импорт">
-            <ContentControl Content="{Binding ImportVM}" Margin="0"/>
+        <TabItem Header="{DynamicResource import}">
+            <ContentControl Margin="0" Content="{Binding ImportVM}" />
         </TabItem>
     </TabControl>
 </UserControl>

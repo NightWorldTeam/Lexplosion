@@ -79,7 +79,7 @@
                         FontSize="14"
                         FontWeight="Bold"
                         Foreground="#BBBBBB"
-                        Text="Общие настройки. Настройки для конкретного клиента можно изенить на его странице" />
+                        Text="{DynamicResource generalTipText}" />
                 </Grid>
                 <Grid
                     Grid.Row="2"
@@ -290,7 +290,7 @@
                             Width="70"
                             Height="38"
                             Command="{Binding OpenJavaFolderBrowser}"
-                            Content="Обзор"
+                            Content="{DynamicResource review}"
                             FontWeight="Medium"
                             Style="{StaticResource FolderBrowerButton}" />
 
@@ -299,7 +299,7 @@
                             Width="70"
                             Height="38"
                             Command="{Binding SetDefaultJavaPath}"
-                            Content="Сбросить"
+                            Content="{DynamicResource reboot}"
                             FontWeight="Medium"
                             Style="{StaticResource FolderBrowerButton}" />
                     </Grid>
@@ -352,17 +352,17 @@
 
                         <CheckBox
                             Margin="0,0,0,5"
-                            Content="Обновлять сборки автоматически"
+                            Content="{DynamicResource autoUpdateInstance}"
                             IsChecked="{Binding GeneralSettings.IsAutoUpdate}" />
 
                         <CheckBox
                             Margin="0,0,0,5"
-                            Content="Скрывать лаунчер при запуске игры"
+                            Content="{DynamicResource hideLauncher}"
                             IsChecked="{Binding GeneralSettings.IsHiddenMode}" />
 
                         <CheckBox
                             Margin="0,0,0,5"
-                            Content="Показывать консоль"
+                            Content="{DynamicResource showConsole}"
                             IsChecked="{Binding GeneralSettings.IsShowConsole}" />
                     </StackPanel>
 
@@ -372,7 +372,7 @@
                         Margin="100,0,0,20"
                         Style="{StaticResource FolderBrowerButton}">
                         <TextBlock
-                            Text="Сбросить настройки"
+                            Text="{DynamicResource reboot}"
                             TextAlignment="Center"
                             TextWrapping="WrapWithOverflow" />
                     </Button>

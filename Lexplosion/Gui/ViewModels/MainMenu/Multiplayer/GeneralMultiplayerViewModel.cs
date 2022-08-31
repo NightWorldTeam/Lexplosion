@@ -3,7 +3,7 @@ using Lexplosion.Logic.Management;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
 {
-    public class GeneralMultiplayerViewModel : VMBase
+    public sealed class GeneralMultiplayerViewModel : VMBase
     {
         public MultiplayerModel Model { get; }
 

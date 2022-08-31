@@ -13,6 +13,10 @@ namespace Lexplosion.Gui.ViewModels
 
         private InstanceClient _instanceClient; // Данные о Instance.
 
+
+        #region props
+
+
         public InstanceClient Client
         {
             get => _instanceClient;
@@ -20,7 +24,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public MainViewModel MainVM { get; } // Ссылка на MainViewModel
 
-        #region props
+
 
         /// <summary>
         /// Свойство модели InstanceForm
@@ -43,133 +47,47 @@ namespace Lexplosion.Gui.ViewModels
 
         #endregion props
 
-        #region commands
 
+        #region Commands
+
+
+        private RelayCommand _upperBtnCommand;
         /// <summary>
         /// Команда отвечает за функционал верхней кнопки в форме.
         /// </summary>
-        private RelayCommand _upperBtnCommand;
         public RelayCommand UpperBtnCommand
         {
             get => _upperBtnCommand ?? (_upperBtnCommand = new RelayCommand(obj =>
             {
-                switch ((UpperButtonFunc)obj)
+                try 
                 {
-                    case UpperButtonFunc.Download:
-                        {
-                            DownloadInstance();
-                            break;
-                        }
-                    case UpperButtonFunc.ProgressBar:
-                        {
-                            // TODO: может сделать, что-то типо меню скачивания??
-                            // ну да просто добавим открытие downloadmanager
-
-                            MainVM.ModalWindowVM.OpenWindow(MainVM.DownloadManager);
-                            break;
-                        }
-
-                    case UpperButtonFunc.Play:
-                        {
-                            LaunchInstance();
-                            break;
-                        }
-
-                    case UpperButtonFunc.Close:
-                        {
-                            CloseInstance();
-                            break;
-                        }
+                    UpdateUpperButtonFunc((UpperButtonFunc)obj);
                 }
+                catch { }
             }));
         }
 
+        private RelayCommand _lowerBtnCommand;
         /// <summary>
         /// Команда отвечает за функционал кнопок в DropdownMenu
         /// </summary>
-        private RelayCommand _lowerBtnCommand;
         public RelayCommand LowerBtnCommand
         {
             get => _lowerBtnCommand ?? (_lowerBtnCommand = new RelayCommand(obj =>
-            {
-                Console.WriteLine(((LowerButtonFunc)obj).ToString());
-                IsDropdownMenuOpen = false;
-                switch ((LowerButtonFunc)obj)
+            {   
+                try 
                 {
-                    case LowerButtonFunc.AddToLibrary:
-                        {
-                            Client.AddToLibrary();
-                            break;
-                        }
-
-                    case LowerButtonFunc.DeleteFromLibrary:
-                        {
-                            RemoveInstance(true);
-                            break;
-                        }
-
-                    case LowerButtonFunc.OpenFolder:
-                        {
-                            Model.OpenInstanceFolder();
-                            break;
-                        }
-
-                    case LowerButtonFunc.CancelDownload:
-                        {
-                            break;
-                        }
-
-                    case LowerButtonFunc.Update:
-                        {
-                            Model.DownloadModel.DonwloadPrepare();
-                            break;
-                        }
-
-                    case LowerButtonFunc.OpenWebsite:
-                        {
-                            try
-                            {
-                                System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
-                            }
-                            catch
-                            {
-                                // message box here.
-                            }
-                            break;
-                        }
-
-                    case LowerButtonFunc.RemoveInstance:
-                        {
-                            RemoveInstance(false);
-                            break;
-                        }
-
-                    case LowerButtonFunc.Export:
-                        {
-                            MainVM.ModalWindowVM.IsOpen = true;
-
-                            // возможно не надо вообще эксемпляр класса сохранять.
-                            MainVM.ExportViewModel = new ExportViewModel(MainVM)
-                            {
-                                InstanceName = _instanceClient.Name,
-                                IsFullExport = true,
-                                InstanceClient = _instanceClient,
-                                UnitsList = _instanceClient.GetPathContent()
-                            };
-
-                            MainVM.ModalWindowVM.ChangeCurrentModalContent(MainVM.ExportViewModel);
-
-                            foreach (var s in MainVM.ExportViewModel.UnitsList.Keys)
-                            {
-                                Console.WriteLine(s);
-                            }
-                            break;
-                        }
+                    UpdateLowerButtonFunc((LowerButtonFunc)obj);
                 }
+                catch { }
             }));
         }
 
-        #endregion commands
+
+        #endregion Commands
+
+
+        #region Constructors
 
         public InstanceFormViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
@@ -179,8 +97,13 @@ namespace Lexplosion.Gui.ViewModels
             _instanceClient = instanceClient;
         }
 
-        #region methods
-        
+
+        #endregion Contrusctors
+
+
+        #region Public & Protected Methods
+
+
         /// <summary>
         /// Запускает сборку по данным формы.
         /// </summary>
@@ -255,6 +178,122 @@ namespace Lexplosion.Gui.ViewModels
             Model.UpdateButtons();
         }
 
-        #endregion methods
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private void UpdateUpperButtonFunc(UpperButtonFunc buttonFunc) 
+        {
+            switch (buttonFunc)
+            {
+                case UpperButtonFunc.Download:
+                    {
+                        DownloadInstance();
+                        break;
+                    }
+                case UpperButtonFunc.ProgressBar:
+                    {
+                        // TODO: может сделать, что-то типо меню скачивания??
+                        // ну да просто добавим открытие downloadmanager
+
+                        MainVM.ModalWindowVM.OpenWindow(MainVM.DownloadManager);
+                        break;
+                    }
+
+                case UpperButtonFunc.Play:
+                    {
+                        LaunchInstance();
+                        break;
+                    }
+
+                case UpperButtonFunc.Close:
+                    {
+                        CloseInstance();
+                        break;
+                    }
+            }
+        }
+
+        private void UpdateLowerButtonFunc(LowerButtonFunc buttonFunc) 
+        {
+            IsDropdownMenuOpen = false;
+            switch (buttonFunc)
+            {
+                case LowerButtonFunc.AddToLibrary:
+                    {
+                        Client.AddToLibrary();
+                        break;
+                    }
+
+                case LowerButtonFunc.DeleteFromLibrary:
+                    {
+                        RemoveInstance(true);
+                        break;
+                    }
+
+                case LowerButtonFunc.OpenFolder:
+                    {
+                        Model.OpenInstanceFolder();
+                        break;
+                    }
+
+                case LowerButtonFunc.CancelDownload:
+                    {
+                        break;
+                    }
+
+                case LowerButtonFunc.Update:
+                    {
+                        Model.DownloadModel.DonwloadPrepare();
+                        break;
+                    }
+
+                case LowerButtonFunc.OpenWebsite:
+                    {
+                        try
+                        {
+                            System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
+                        }
+                        catch
+                        {
+                            // message box here.
+                        }
+                        break;
+                    }
+
+                case LowerButtonFunc.RemoveInstance:
+                    {
+                        RemoveInstance(false);
+                        break;
+                    }
+
+                case LowerButtonFunc.Export:
+                    {
+                        MainVM.ModalWindowVM.IsOpen = true;
+
+                        // возможно не надо вообще эксемпляр класса сохранять.
+                        MainVM.ExportViewModel = new ExportViewModel(MainVM)
+                        {
+                            InstanceName = _instanceClient.Name,
+                            IsFullExport = true,
+                            InstanceClient = _instanceClient,
+                            UnitsList = _instanceClient.GetPathContent()
+                        };
+
+                        MainVM.ModalWindowVM.ChangeCurrentModalContent(MainVM.ExportViewModel);
+
+                        foreach (var s in MainVM.ExportViewModel.UnitsList.Keys)
+                        {
+                            Console.WriteLine(s);
+                        }
+                        break;
+                    }
+            }
+        }
+
+
+        #endregion Private Methods
     }
 }

@@ -85,6 +85,7 @@
                     BorderThickness="0"
                     Style="{StaticResource TabControlStyle}"
                     TabStripPlacement="Left">
+
                     <TabControl.Resources>
                         <Style BasedOn="{StaticResource Menenei}" TargetType="{x:Type TabItem}" />
                     </TabControl.Resources>
@@ -104,7 +105,7 @@
                                         HorizontalAlignment="Left"
                                         FontSize="16"
                                         Style="{StaticResource Tex}"
-                                        Text="ОСНОВНОЕ" />
+                                        Text="{DynamicResource generalUpperCase}" />
                                 </Border>
 
                                 <!--  InstanceName  -->
@@ -119,7 +120,7 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="Название" />
+                                        Text="{DynamicResource instanceTitle}" />
                                     <TextBox
                                         Width="400"
                                         Height="40"
@@ -140,7 +141,7 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="Версия (неизменяется)" />
+                                        Text="{DynamicResource versionNoEdit}" />
                                     <ComboBox
                                         Width="400"
                                         Height="40"
@@ -163,7 +164,7 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="Game Type (неизменяется)" />
+                                        Text="{DynamicResource gameTypeNoEdit}" />
                                     <ComboBox
                                         Width="400"
                                         Height="40"
@@ -200,7 +201,7 @@
                     </TabItem>
 
 
-                    <TabItem Header="Аватар">
+                    <TabItem Header="{DynamicResource avatar}">
                         <Border Margin="20,0,0,0" Background="Transparent">
                             <Grid ShowGridLines="False">
 
@@ -222,13 +223,13 @@
                                             HorizontalAlignment="Left"
                                             FontSize="18"
                                             Style="{StaticResource Tex}"
-                                            Text="Аватар" />
+                                            Text="{DynamicResource avatar}" />
                                         <TextBlock
                                             HorizontalAlignment="Left"
                                             FontSize="14"
                                             Opacity="0.8"
                                             Style="{StaticResource Tex}"
-                                            Text="Выберите изображение для вашего модпака." />
+                                            Text="{DynamicResource selectedInstanceLogo}" />
 
                                         <StackPanel Orientation="Horizontal">
                                             <Border
@@ -267,16 +268,16 @@
                                             Width="160"
                                             Height="40"
                                             Margin="0,50,0,15"
-                                            Style="{StaticResource DarkButton}"
                                             Command="{Binding UploadLogoCommand}"
-                                            Content="Загрузить своё аватар"
+                                            Content="{DynamicResource uploadYourAvatar}"
                                             FontSize="14"
-                                            Foreground="#efefef" />
+                                            Foreground="#efefef"
+                                            Style="{StaticResource DarkButton}" />
                                         <TextBlock
                                             Margin="11,5,0,0"
                                             FontSize="14"
                                             Style="{StaticResource Tex}"
-                                            Text="Вы можете загрузить свой аватар, но видеть его будете только вы."
+                                            Text="{DynamicResource uploadYourAvatarTip}"
                                             TextAlignment="Left"
                                             TextWrapping="WrapWithOverflow" />
                                     </StackPanel>
@@ -289,7 +290,7 @@
                     <TabItem
                         Height="30"
                         VerticalAlignment="Top"
-                        Header="О Сборке">
+                        Header="{DynamicResource aboutInstance}">
                         <Border Margin="20,0,0,0" Background="Transparent">
                             <StackPanel>
 
@@ -301,7 +302,7 @@
                                         FontSize="15"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="Краткое Описание" />
+                                        Text="{DynamicResource shortDescription}" />
                                     <TextBox FontSize="14" Text="{Binding BaseInstanceData.Summary, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
 
@@ -313,7 +314,7 @@
                                         FontSize="16"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="Полное Описание" />
+                                        Text="{DynamicResource fullDescription}" />
                                     <TextBox
                                         Height="150"
                                         VerticalContentAlignment="Top"
@@ -412,7 +413,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             Command="{Binding SaveDataCommand}"
-            Content="Сохранить"
+            Content="{DynamicResource save}"
             Style="{StaticResource DefaultBrandColorButton}" />
     </Grid>
 </UserControl>

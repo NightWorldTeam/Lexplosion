@@ -2,7 +2,7 @@
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class SearchBoxViewModel : VMBase
+    public sealed class SearchBoxViewModel : VMBase
     {
         private RelayCommand _searchCommand;
 

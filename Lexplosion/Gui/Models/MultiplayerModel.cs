@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.Models
 {
-    public class MultiplayerModel : VMBase
+    public sealed class MultiplayerModel : VMBase
     {
         private OnlineGameStatus _gameStatus = OnlineGameStatus.None;
         public OnlineGameStatus GameStatus

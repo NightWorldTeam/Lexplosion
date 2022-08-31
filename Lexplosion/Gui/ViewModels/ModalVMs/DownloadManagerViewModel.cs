@@ -4,123 +4,6 @@ using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public sealed class InstanceFile : VMBase
-    {
-        public string Name { get; }
-        private int _procents;
-        public int Procents 
-        { 
-            get => _procents; set 
-            {
-                _procents = value;
-                OnPropertyChanged();
-            } 
-        }
-
-        public InstanceFile(string name, int procents)
-        {
-            Name = name;
-            Procents = procents;
-        }
-
-        /// Выполняется от O(1) до O(n).
-        public static InstanceFile? GetInstanceFile(IList<InstanceFile> files, string name) 
-        {
-            foreach (var file in files) 
-            {
-                if (file.Name == name)
-                    return file;
-            }
-            return null;
-        }
-    }
-
-    public sealed class InstanceDownloadProcess
-    {
-        public ObservableCollection<InstanceFile> DownloadFiles { get; } = new ObservableCollection<InstanceFile>();
-        public ObservableCollection<InstanceFile> InstalledFiles { get;  } = new ObservableCollection<InstanceFile>();
-        public ObservableCollection<InstanceFile> DownloadErrorFiles { get;  } = new ObservableCollection<InstanceFile>();
-
-        private object locker = new();
-
-        private InstanceFormViewModel _viewModel;
-
-        public bool IsEquals(InstanceFormViewModel instance) 
-        {
-            return _viewModel == instance;
-        }
-
-        public InstanceDownloadProcess(InstanceFormViewModel instanceFormViewModel, bool isBool = false)
-        {
-            if (isBool) 
-            { 
-                for (var i = 0; i < 200; i++)
-                    DownloadFiles.Add(new InstanceFile("TestFile" + i, i));
-            
-                for (var i = 0; i < 200; i++)
-                    InstalledFiles.Add(new InstanceFile("TestFile" + i, 20));
-            }
-
-            if (instanceFormViewModel != null) 
-            {
-                _viewModel = instanceFormViewModel;
-                instanceFormViewModel.Client.FileDownloadEvent += OnFileDownload;
-                instanceFormViewModel.Client.ComplitedDownload += OnDonwloadFinished;
-            }
-        }
-
-        private void OnDonwloadFinished(InstanceInit result, List<string> downloadErrors, bool launchGame)
-        {
-            if (result == InstanceInit.Successful) 
-            {
-                App.Current.Dispatcher.Invoke(() => 
-                { 
-                    DownloadFiles.Clear();
-                });
-            }
-        }
-
-        private void OnFileDownload(string name, int procents, DownloadFileProgress process)
-        {
-                App.Current.Dispatcher.Invoke(() => 
-                { 
-                    var instanceFile = InstanceFile.GetInstanceFile(DownloadFiles, name);
-                    if (instanceFile == null) 
-                    { 
-                        instanceFile = new InstanceFile(name, procents);
-                        DownloadFiles.Add(instanceFile);
-                    }
-                    else 
-                    { 
-                        if (process == DownloadFileProgress.Successful)
-                        {
-                            DownloadFiles.Remove(instanceFile);
-                            InstalledFiles.Add(instanceFile);
-                        }
-                        else if (process == DownloadFileProgress.Error) 
-                        {
-                            DownloadFiles.Remove(instanceFile);
-                            DownloadErrorFiles.Add(instanceFile);
-                        }
-                        else
-                        {
-                            instanceFile.Procents = procents;
-                        }
-                    }
-                });
-        }
-
-        public static bool Contains(IList<InstanceDownloadProcess> list, InstanceFormViewModel instance) 
-        {
-            foreach (var item in list) 
-            {
-                if (item.IsEquals(instance))
-                    return true;
-            }
-            return false;
-        }
-    }
-
     public sealed class DownloadManagerViewModel : ModalVMBase
     {
         private MainViewModel _mainViewModel;
@@ -137,8 +20,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public DownloadManagerViewModel(MainViewModel mainViewModel, bool IsTest = false)
         {
             _mainViewModel = mainViewModel;
-            if (IsTest)
-                InstanceDownloadProcessList.Add(new InstanceDownloadProcess(null, IsTest));
         }
 
         public void AddProcess(InstanceFormViewModel instanceForm) 
