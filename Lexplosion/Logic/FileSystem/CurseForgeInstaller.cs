@@ -4,16 +4,16 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Linq;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
+using System.Collections.Concurrent;
 using Newtonsoft.Json;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
-using static Lexplosion.Logic.FileSystem.WithDirectory;
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects.Curseforge;
-using System.Collections.Concurrent;
+using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects;
+using static Lexplosion.Logic.FileSystem.WithDirectory;
+using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -149,9 +149,9 @@ namespace Lexplosion.Logic.FileSystem
                     return true;
                 }
 
-                string filePath = DirectoryPath + "/instances/" + instanceId + "/" + addon.ActualPath;
+                string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
 
-                if (!File.Exists(filePath))
+                if (!addon.IsExists(instancePath))
                 {
                     return true;
                 }
@@ -297,7 +297,7 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
 
-                            if (installedAddons[file.projectID].FileID < file.fileID || !File.Exists(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[file.projectID].ActualPath))
+                            if (installedAddons[file.projectID].FileID < file.fileID || !installedAddons[file.projectID].IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
                             {
                                 test++;
                                 downloadList.Add(file);
@@ -410,7 +410,7 @@ namespace Lexplosion.Logic.FileSystem
                     perfomer?.WaitEnd();
                     Console.WriteLine("КОНЕЦ ");
 
-                    Console.WriteLine("ДОКАЧИВАЕМ");
+                    Console.WriteLine("ДОКАЧИВАЕМ " + noDownloaded.Count);
                     foreach (InstanceManifest.FileData file in noDownloaded)
                     {
                         CurseforgeAddonInfo addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());

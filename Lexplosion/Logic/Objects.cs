@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Windows.Media.Imaging;
 
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
@@ -42,6 +43,53 @@ namespace Lexplosion.Logic.Objects
                 if (IsDisable && Path != null)
                     return Path + ".disable";
                 return Path;
+            }
+        }
+
+        public bool IsExists(string instancePath)
+        {
+            if (Type == AddonType.Mods || Type == AddonType.Resourcepacks)
+            {
+                try
+                {
+                    return File.Exists(instancePath + ActualPath);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            else if (Type == AddonType.Maps)
+            {
+                try
+                {
+                    return Directory.Exists(instancePath + ActualPath);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        public void RemoveFromDir(string instancePath)
+        {
+            if (Type == AddonType.Mods || Type == AddonType.Resourcepacks)
+            {
+                try
+                {
+                    File.Delete(instancePath + ActualPath);
+                }
+                catch { }
+            }
+            else if (Type == AddonType.Maps)
+            {
+                try
+                {
+                    Directory.Delete(instancePath + ActualPath, true);
+                } catch{ }
             }
         }
     }

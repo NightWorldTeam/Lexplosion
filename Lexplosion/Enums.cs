@@ -247,6 +247,7 @@ namespace Lexplosion
         FileVersionError,
         UrlError,
         FileNameError,
+        UzipError,
         UncnownError
     }
 

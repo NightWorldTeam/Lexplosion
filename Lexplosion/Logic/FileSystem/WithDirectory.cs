@@ -36,7 +36,7 @@ namespace Lexplosion.Logic.FileSystem
 
         private static Random random = new Random();
 
-        public static string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова
+        public static string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова. Так же сделать try
         {
             string dirName = DirectoryPath + "/temp";
             string dirName_ = dirName;
@@ -51,6 +51,78 @@ namespace Lexplosion.Logic.FileSystem
             Directory.CreateDirectory(dirName_);
 
             return dirName_ + "/";
+        }
+
+        /// <summary>
+        /// Создает папку по указанному адресу.
+        /// </summary>
+        /// <param name="name">Адрес, по которому должна быть создана папка.</param>
+        /// <returns>Вовзращает имя созданной папки. может отличаться от параметра name, ведь такая папка может уже существовтаь и нужно будет добавить символы в имя.</returns>
+        public static string CreateFolder(string name)
+        {
+            try
+            {
+                string dirName = name, dirName_ = name;
+                int i = 0;
+                while (Directory.Exists(dirName))
+                {
+                    dirName = dirName_ + "_" + i;
+                    i++;
+                }
+
+                Directory.CreateDirectory(dirName);
+
+                return dirName;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
+        public static bool InstallZipContent(string url, string fileName, string path, Action<int> percentHandler)
+        {
+            path = DirectoryPath + "/" + path;
+            string tempDir = CreateTempDir();
+            if (!DownloadFile(url, fileName, tempDir, percentHandler))
+            {
+                return false;
+            }
+
+            try
+            {
+                string unzipPath = tempDir + "unzip/";
+                Directory.CreateDirectory(unzipPath);
+                ZipFile.ExtractToDirectory(tempDir + fileName, unzipPath);
+
+                DirectoryInfo[] directories = (new DirectoryInfo(unzipPath)).GetDirectories();
+                foreach (DirectoryInfo directoryInfo in directories)
+                {
+                    string dirName = directoryInfo.Name;
+                    string resultFolder = CreateFolder(path + "/" + dirName);
+
+                    foreach (string dirPath in Directory.GetDirectories(directoryInfo.FullName, "*", SearchOption.AllDirectories))
+                        Directory.CreateDirectory(dirPath.Replace(directoryInfo.FullName, resultFolder));
+
+                    foreach (string newPath in Directory.GetFiles(directoryInfo.FullName, "*.*", SearchOption.AllDirectories))
+                        File.Copy(newPath, newPath.Replace(directoryInfo.FullName, resultFolder), true);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                try
+                {
+                    Directory.Delete(tempDir, true);
+                }
+                catch { }
+            }
+
+            return true;
         }
 
         public static bool InstallFile(string url, string fileName, string path)

@@ -11,6 +11,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
+using System.IO.Compression;
 
 namespace Lexplosion.Logic.Network
 {
@@ -247,31 +248,45 @@ namespace Lexplosion.Logic.Network
                 }
 
                 // устанавливаем
-                if (WithDirectory.InstallFile(fileUrl, fileName, path + folderName, percentHandler))
+                if (addonType != AddonType.Maps)
                 {
-                    Console.WriteLine("SYS " + fileUrl);
-
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    if (!WithDirectory.InstallFile(fileUrl, fileName, path + folderName, percentHandler))
                     {
-                        Value1 = new InstalledAddonInfo
+                        return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                         {
-                            ProjectID = projectID,
-                            FileID = fileID,
-                            Path = folderName + "/" + fileName,
-                            Type = addonType
-                        },
-                        Value2 = DownloadAddonRes.Successful
-                    };
+                            Value1 = null,
+                            Value2 = DownloadAddonRes.DownloadError
+                        };
+                    }
+
+                    Console.WriteLine("SYS " + fileUrl);
                 }
                 else
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    if (!WithDirectory.InstallZipContent(fileUrl, fileName, path + folderName, percentHandler))
                     {
-                        Value1 = null,
-                        Value2 = DownloadAddonRes.DownloadError
-                    };
+
+                        return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                        {
+                            Value1 = null,
+                            Value2 = DownloadAddonRes.DownloadError
+                        };
+                    }
+
+                    Console.WriteLine("SYS " + fileUrl);
                 }
 
+                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                {
+                    Value1 = new InstalledAddonInfo
+                    {
+                        ProjectID = projectID,
+                        FileID = fileID,
+                        Path = (addonType != AddonType.Maps) ? (folderName + "/" + fileName) : (folderName + "/"),
+                        Type = addonType
+                    },
+                    Value2 = DownloadAddonRes.Successful
+                };
             }
             //catch
             //{
