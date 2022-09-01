@@ -91,10 +91,6 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 data.InstalledAddons[addonId] = installedAddons[addonId];
                             }
-                            else
-                            {
-                                data.InstalledAddons[addonId] = null;
-                            }
                         }
                     }
 
