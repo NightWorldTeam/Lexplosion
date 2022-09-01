@@ -47,15 +47,17 @@ namespace Lexplosion.Controls
             if (e.NewValue != null) 
             {
                 var newValue = (TimeSpan)e.NewValue;
-                Lexplosion.Run.TaskRun(() =>
-                {   
-                    Thread.Sleep((Int32)newValue.TotalMilliseconds);
-
-                    App.Current.Dispatcher.Invoke(() =>
+                if (newValue.TotalMilliseconds != TimeSpan.MaxValue.TotalMilliseconds) { 
+                    Lexplosion.Run.TaskRun(() =>
                     {
-                        obj.CloseCommand.Execute(null);
+                        Thread.Sleep((Int32)newValue.TotalMilliseconds);
+
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            obj.CloseCommand.Execute(null);
+                        });
                     });
-                });
+                }
             }
         }
 

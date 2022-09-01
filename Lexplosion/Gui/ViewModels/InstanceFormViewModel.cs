@@ -3,6 +3,7 @@ using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using System;
+using System.Collections.Generic;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -15,6 +16,7 @@ namespace Lexplosion.Gui.ViewModels
 
 
         #region props
+
 
 
         public InstanceClient Client
@@ -131,20 +133,22 @@ namespace Lexplosion.Gui.ViewModels
             MainVM.IsInstanceRunning = false;
         }
 
-        public void DownloadInstance(ProgressHandlerCallback progressHandler = null, ComplitedDownloadCallback complitedDownload = null) 
+        public void DownloadInstance(Action<DownloadStageTypes, int, int, int> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null) 
         {
-            if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
-                MainVM.Model.LibraryInstances.Add(this);
 
             if (progressHandler != null)
-                Client.ProgressHandler += progressHandler;
+                Model.DownloadModel.DownloadActions.Add(progressHandler);
 
             if (complitedDownload != null)
-                Client.ComplitedDownload += complitedDownload;
+                Model.DownloadModel.ComplitedDownloadActions.Add(complitedDownload);
 
-            MainVM.DownloadManager.AddProcess(this);
-
-            Model.DownloadModel.DonwloadPrepare();
+            if (!Model.DownloadModel.IsDownloadInProgress)
+            {
+                if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
+                    MainVM.Model.LibraryInstances.Add(this);
+                MainVM.DownloadManager.AddProcess(this);
+                Model.DownloadModel.DonwloadPrepare();
+            }
         }
 
         /// <summary>

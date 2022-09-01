@@ -188,7 +188,7 @@
                                 Margin="4,2,0,0"
                                 HorizontalAlignment="Center"
                                 Foreground="Gray"
-                                Text="Password" />
+                                Text="{DynamicResource password}" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>

@@ -3,7 +3,6 @@ using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.FileSystem;
 using System;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels
@@ -178,10 +177,10 @@ namespace Lexplosion.Gui.ViewModels
                             NavigationCommand.Execute(null);
                             break;
                         case AuthCode.DataError:
-                            MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", Controls.ToastMessageState.Error);
+                            MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                             break;
                         case AuthCode.NoConnect:
-                            MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", Controls.ToastMessageState.Error);
+                            MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                             break;
                     }
                 });

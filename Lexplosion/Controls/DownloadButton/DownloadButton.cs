@@ -113,7 +113,7 @@ namespace Lexplosion.Controls
             = DependencyProperty.Register("BackgroundProgressBar", typeof(Brush), typeof(DownloadButton), new UIPropertyMetadata(new BrushConverter().ConvertFromString("#099176")));
 
         public static readonly DependencyProperty ForegroundProgressBarProperty
-            = DependencyProperty.Register("ForegroundProgressBar", typeof(Brush), typeof(DownloadButton), new UIPropertyMetadata(new BrushConverter().ConvertFromString("#24e0bb"))); 
+            = DependencyProperty.Register("ForegroundProgressBar", typeof(Brush), typeof(DownloadButton), new UIPropertyMetadata(new BrushConverter().ConvertFromString("#24e0bb")));
 
         public InstanceFormViewModel InstanceFormVM
         {
@@ -124,7 +124,7 @@ namespace Lexplosion.Controls
 
         #region background
 
-        public Brush DownloadButtonBackground 
+        public Brush DownloadButtonBackground
         {
             get => (Brush)GetValue(DownloadButtonBackgroundProperty);
             set => SetValue(DownloadButtonBackgroundProperty, value);
@@ -152,13 +152,13 @@ namespace Lexplosion.Controls
 
         #region foreground
 
-        public Brush DownloadButtonForeground 
+        public Brush DownloadButtonForeground
         {
             get => (Brush)GetValue(DownloadButtonForegroundProperty);
             set => SetValue(DownloadButtonForegroundProperty, value);
         }
 
-        public Brush LoaderForeground 
+        public Brush LoaderForeground
         {
             get => (Brush)GetValue(LoaderForegroundProperty);
             set => SetValue(LoaderForegroundProperty, value);
@@ -233,10 +233,10 @@ namespace Lexplosion.Controls
 
         #region progressbar
 
-        public Brush BackgroundProgressBar 
+        public Brush BackgroundProgressBar
         {
             get => (Brush)GetValue(BackgroundProgressBarProperty);
-            set => SetValue(BackgroundProgressBarProperty, value); 
+            set => SetValue(BackgroundProgressBarProperty, value);
         }
 
         public Brush ForegroundProgressBar
@@ -274,6 +274,10 @@ namespace Lexplosion.Controls
             {
                 _downloadButton.MouseDown += OnDownloadButtonClicked;
             }
+            if (_loader != null) 
+            {
+                _progressBar = GetTemplateChild(PART_PROGRESSBAR) as ProgressBar;
+            }
             if (_playButton != null)
             {
                 _playButton.MouseDown += OnPlayButtonClicked;
@@ -304,8 +308,8 @@ namespace Lexplosion.Controls
                 {
                     // тут хз что
                     // можно написать при запуске, до полного запуска, что-то типо запускается.
-                    App.Current.Dispatcher.Invoke(() => 
-                    { 
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
                         NextButtonAnimation(_playButton);
                     });
                 };
@@ -324,29 +328,10 @@ namespace Lexplosion.Controls
         private void OnDownloadButtonClicked(object sender, MouseButtonEventArgs e)
         {
             var button = (Border)sender;
-            _progressBar = GetTemplateChild(PART_PROGRESSBAR) as ProgressBar;
             // тут запуск скачивания.
 
-            if (!IsRunnedDownload)
-            {
-                ProgressHandlerCallback progressHandlerMethod = delegate (DownloadStageTypes stageType, int stagesCount, int stage, int procents)
-                {
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        _progressBar.Value = procents;
-                    });
-                };
-                ComplitedDownloadCallback complitedDownloadMethod = delegate (InstanceInit result, List<string> downloadErrors, bool launchGame)
-                {
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        NextButtonAnimation(_loader);
-                    }); 
-                };
-
-                InstanceFormVM.DownloadInstance(progressHandlerMethod, complitedDownloadMethod);
-            }
-            else InstanceFormVM.DownloadInstance();
+            // ProgressHandler
+            Donwload();
 
             NextButtonAnimation(button);
         }
@@ -386,7 +371,7 @@ namespace Lexplosion.Controls
             control.BeginAnimation(FrameworkElement.HeightProperty, animation);
         }
 
-        private static void HideButton(FrameworkElement control)
+        private void HideButton(FrameworkElement control)
         {
             control.Height = 0.0;
         }
@@ -413,8 +398,13 @@ namespace Lexplosion.Controls
 
             if (newValue.Client.IsInstalled)
             {
-                HideButton(button._downloadButton);
-                HideButton(button._loader);
+                button.HideButton(button._downloadButton);
+                button.HideButton(button._loader);
+            }
+            else if (newValue.Model.DownloadModel.IsDownloadInProgress)
+            {
+                button.HideButton(button._downloadButton);
+                button.Donwload();
             }
             else
             {
@@ -423,7 +413,26 @@ namespace Lexplosion.Controls
             }
         }
 
+        private void Donwload() 
+        {
+            Action<DownloadStageTypes, int, int, int> progressHandlerMethod = delegate (DownloadStageTypes stageType, int stagesCount, int stage, int procents)
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    _progressBar.Value = procents;
+                });
+            };
 
+            Action<InstanceInit, List<string>, bool> complitedDownloadMethod = delegate (InstanceInit result, List<string> downloadErrors, bool launchGame)
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    NextButtonAnimation(_loader);
+                });
+            };
+
+            InstanceFormVM.DownloadInstance(progressHandlerMethod, complitedDownloadMethod);
+        }
         #endregion On DependencyProperties Changed
     }
 }

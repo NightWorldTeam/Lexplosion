@@ -117,7 +117,7 @@
                             Margin="0,60,0,0"
                             HorizontalAlignment="Center"
                             HorizontalContentAlignment="Center"
-                            Placeholder="Login"
+                            Placeholder="{DynamicResource login}"
                             PlaceholderFontSize="16"
                             Style="{StaticResource AuthPlaceholerTextBox}"
                             Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
@@ -131,14 +131,6 @@
                             </Grid.ColumnDefinitions>
 
                             <Grid Grid.Column="1">
-                                <TextBlock
-                                    x:Name="PasswordBoxWaterMark"
-                                    Height="30"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontSize="15"
-                                    Foreground="#b9b7b7" />
-
                                 <TextBox
                                     x:Name="PasswordVisible"
                                     Width="125"
@@ -179,14 +171,14 @@
                                 Height="Auto"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Content="Запомнить меня"
+                                Content="{DynamicResource saveMe}"
                                 IsChecked="{Binding IsSaveMe}" />
                             <Button
                                 Grid.Row="1"
                                 Width="166"
                                 Height="40"
                                 Command="{Binding SignUpCommand}"
-                                Content="Войти"
+                                Content="{DynamicResource singIn}"
                                 FontSize="20"
                                 Style="{StaticResource DefaultBrandColorButton}" />
                         </Grid>
@@ -307,13 +299,13 @@
                         HorizontalAlignment="Center"
                         SelectedIndex="{Binding AccountTypeSelectedIndex, UpdateSourceTrigger=PropertyChanged}">
                         <ComboBoxItem>
-                            Игра без акканута
+                            <TextBlock Text="{DynamicResource noAccount}" />
                         </ComboBoxItem>
                         <ComboBoxItem IsSelected="True">
-                            Аккаунт NightWorld
+                            <TextBlock Text="{DynamicResource accountNightWorld}" />
                         </ComboBoxItem>
                         <ComboBoxItem>
-                            Аккаунт Mojang
+                            <TextBlock Text="{DynamicResource accountMojang}" />
                         </ComboBoxItem>
                         <!--<ComboBoxItem>
                             Аккаунт Ely

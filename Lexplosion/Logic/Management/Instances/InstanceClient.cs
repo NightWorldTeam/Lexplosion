@@ -142,6 +142,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _inLibrary = value;
                 OnPropertyChanged();
+                StateChanged?.Invoke();
             }
         }
 

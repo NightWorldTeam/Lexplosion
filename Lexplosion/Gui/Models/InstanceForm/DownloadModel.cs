@@ -18,6 +18,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private bool _isIndeterminate;
         private bool _isDownloadInProgress;
 
+
         #region prop
         public bool IsDownloadInProgress 
         {
@@ -78,8 +79,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public DownloadModel(InstanceFormModel instanceFormModel)
         {
             _instanceFormModel = instanceFormModel;
-            instanceFormModel.InstanceClient.ProgressHandler += Download;
-            instanceFormModel.InstanceClient.ComplitedDownload += InstanceDownloadCompleted;
+
+            DownloadActions.Add(Download);
+            ComplitedDownloadActions.Add(InstanceDownloadCompleted);
+
+            instanceFormModel.InstanceClient.ProgressHandler += DonwloadProcess;
+            instanceFormModel.InstanceClient.ComplitedDownload += ComplitedDownloadAction;
         }
 
         #region methods
@@ -279,6 +284,30 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public void CancelInstanceDownload() 
         {
             
+        }
+
+
+        public List<Action<DownloadStageTypes, int, int, int>> DownloadActions = new List<Action<DownloadStageTypes, int, int, int>>();
+        public List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "U2U1203:Use foreach efficiently", Justification = "<Ожидание>")]
+        private void DonwloadProcess(DownloadStageTypes downloadStageType, int stagesCount, int stage, int procent) 
+        {
+            var actions = DownloadActions.ToArray();
+            foreach (var action in actions)
+            {
+                action(downloadStageType, stagesCount, stage, procent);
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "U2U1203:Use foreach efficiently", Justification = "<Ожидание>")]
+        private void ComplitedDownloadAction(InstanceInit result, List<string> downloadErrors, bool launchGame) 
+        {
+            var actions = ComplitedDownloadActions.ToArray();
+            foreach (var action in actions) 
+            {
+                action(result, downloadErrors, launchGame);
+            }
         }
 
         #endregion

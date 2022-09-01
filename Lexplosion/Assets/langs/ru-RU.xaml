@@ -111,4 +111,24 @@
     <s:String x:Key="worlds">Карты</s:String>
 
     <s:String x:Key="back">Назад</s:String>
+
+    <!--  Auth  -->
+    <s:String x:Key="login">Логин</s:String>
+    <s:String x:Key="password">Пароль</s:String>
+    <s:String x:Key="showPassword">Показать пароль</s:String>
+    <s:String x:Key="saveMe">Запомнить меня</s:String>
+    <s:String x:Key="singIn">Войти</s:String>
+
+    <s:String x:Key="accountNightWorld">Аккаунт NightWorld</s:String>
+    <s:String x:Key="accountMojang">Аккаунт Mojang</s:String>
+    <s:String x:Key="accountMicrosoft">Аккаунт Microsoft</s:String>
+    <s:String x:Key="noAccount">Игра без аккаунта</s:String>
+
+    <!--  catalog  -->
+    <s:String x:Key="curseforgeDataLoading">Идёт загрузка данных с curseforge.com...</s:String>
+    <s:String x:Key="nothingHere">Мы ничего не нашли по вашему запросу.</s:String>
+
+    <!--  instance form  -->
+    <s:String x:Key="more">Больше</s:String>
+    <s:String x:Key="downloadInstance">Скачать сборку</s:String>
 </ResourceDictionary>

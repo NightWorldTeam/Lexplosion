@@ -53,7 +53,7 @@
                     VerticalAlignment="Center"
                     FontSize="20"
                     Foreground="White"
-                    Text="Мы ничего не нашли по вашему запросу."
+                    Text="{DynamicResource nothingHere}"
                     Visibility="{Binding IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
 
                 <ItemsControl
@@ -77,6 +77,6 @@
             BackgroundOpacity="0.9"
             IsLoadingFinished="{Binding IsLoaded}"
             IsTabStop="False"
-            Placeholder="Идёт загрузка данных с curseforge.com..." />
+            Placeholder="{DynamicResource curseforgeDataLoading}" />
     </Grid>
 </UserControl>

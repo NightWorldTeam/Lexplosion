@@ -22,8 +22,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private ObservableCollection<Tab> _settingsTabs = new ObservableCollection<Tab>();
 
         private InstanceFormViewModel _instanceForm;
-        private List<VMBase> _buttons = new List<VMBase>();
-
 
         #region commands
 
@@ -75,21 +73,21 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             _instanceForm = instanceForm;
 
             _mainViewModel = mainViewModel;
+            OnInstanceStateChanged();
 
-            if (_instanceForm.Client.InLibrary)
-                UpdateSettingsTab();
-
-            UpdateShowCaseMenu();
-            UpdateTabMenu();
-
+            _instanceForm.Client.StateChanged += OnInstanceStateChanged;
 
             ObservableColletionSort(_settingsTabs);
             SelectedTab = Tabs[0];
         }
 
-        public void OnInstanceStateChanged() 
+        private void OnInstanceStateChanged() 
         {
+            if (_instanceForm.Client.InLibrary)
+                UpdateSettingsTab();
 
+            UpdateShowCaseMenu();
+            UpdateTabMenu();
         }
 
         private void UpdateShowCaseMenu() 
@@ -190,8 +188,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private void UpdateSettingsTab() 
         {
-
-
             if (_instanceForm.Client.Type == InstanceSource.Local)
             {
                 if (_settingsTabs.Count == 4)
@@ -224,7 +220,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 );
         }
 
-        private void ObservableColletionSort<T>(ObservableCollection<T> colletion) 
+        private static void ObservableColletionSort<T>(ObservableCollection<T> colletion) 
         {
             List<T> list = new List<T>(colletion);
 

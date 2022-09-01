@@ -9,7 +9,7 @@ namespace Lexplosion.Controls
         public string Header { get; }
         public string Message { get; }
         public ToastMessageState State { get; }
-        public TimeSpan? Time { get; } 
+        public TimeSpan? Time { get; }
 
         public RelayCommand CloseToastMessage
         {
@@ -24,7 +24,7 @@ namespace Lexplosion.Controls
             Header = header;
             Message = message;
             State = state;
-            Time = time == null ? TimeSpan.MaxValue : time;
+            Time = (time == null) ? TimeSpan.MaxValue : time;
         }
     }
 }
