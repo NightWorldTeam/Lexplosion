@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace Lexplosion.Controls
 {
@@ -15,7 +16,7 @@ namespace Lexplosion.Controls
                 "IsOpen",
                 typeof(bool),
                 typeof(Modal),
-                new PropertyMetadata(false)
+                new PropertyMetadata(false, OnIsOpenChanged)
                 );
 
         public static readonly DependencyProperty BackgroundOpacityProperty
@@ -71,6 +72,51 @@ namespace Lexplosion.Controls
         static Modal()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Modal), new FrameworkPropertyMetadata(typeof(Modal)));
+        }
+
+        private void ShowModalAnimation() 
+        {
+            this.Opacity = 0.0;
+            this.Visibility = Visibility.Visible;
+
+            DoubleAnimation doubleAnimation = new DoubleAnimation()
+            {
+                From = 0.0,
+                To = 1.0,
+                Duration = TimeSpan.FromSeconds(0.2)
+            };
+            this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+        }
+        
+        private void CloseModalAnimation() 
+        {
+            DoubleAnimation doubleAnimation = new DoubleAnimation()
+            {
+                From = 1.0,
+                To = 0.0,
+                Duration = TimeSpan.FromSeconds(0.2)
+            };
+
+            doubleAnimation.Completed += (object sender, EventArgs e) => 
+            {
+                this.Visibility = Visibility.Collapsed;
+            };
+
+            this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+        }
+
+        private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var dObj = (Modal)d;
+            
+                if ((bool)e.NewValue == true) 
+                {
+                    dObj.ShowModalAnimation();
+                }
+                else 
+                {
+                    dObj.CloseModalAnimation();
+                }
         }
     }
 }
