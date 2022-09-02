@@ -280,7 +280,7 @@
                             BorderThickness="1"
                             FontSize="20"
                             Foreground="#bbb"
-                            Placeholder="{DynamicResource general}"
+                            Placeholder="{DynamicResource defaultJavaPath}"
                             PlaceholderFontSize="20"
                             PlaceholderOpacity="0.7"
                             Text="{Binding GeneralSettings.JavaPath, UpdateSourceTrigger=PropertyChanged}" />
@@ -368,8 +368,10 @@
 
                     <Button
                         Width="100"
-                        Height="40"
-                        Margin="100,0,0,20"
+                        Height="30"
+                        Margin="280,0,0,35"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
                         Style="{StaticResource FolderBrowerButton}">
                         <TextBlock
                             Text="{DynamicResource reboot}"

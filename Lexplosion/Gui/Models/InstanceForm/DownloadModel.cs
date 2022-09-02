@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 
@@ -129,17 +130,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
                 if (downloadStageType == DownloadStageTypes.Java)
                 {
-                    _instanceFormModel.OverviewField = "Идёт скачивание Java...";
+                    _instanceFormModel.OverviewField = ResourceGetter.GetString("javaInstalling");
                     HasProcents = false;
                 }
                 else if (downloadStageType == DownloadStageTypes.Prepare)
                 {
-                    _instanceFormModel.OverviewField = "Идёт подготовка к запуску...";
+                    _instanceFormModel.OverviewField = ResourceGetter.GetString("runPrepare");
                     HasProcents = true;
                 }
                 else
                 {
-                    _instanceFormModel.OverviewField = "Идёт скачивание... Этап " + stage + '/' + stagesCount;
+                    _instanceFormModel.OverviewField = ResourceGetter.GetString("instanceLoading") + " " + stage + '/' + stagesCount;
                     HasProcents = false;
                 }
             });         

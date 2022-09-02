@@ -8,14 +8,5 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <TextBlock
-            Margin="0,50,0,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            FontSize="25"
-            Foreground="White"
-            Opacity="0.8"
-            Text="/* Данный раздел находиться а разработке. */" />
-    </Grid>
+    <Grid />
 </UserControl>

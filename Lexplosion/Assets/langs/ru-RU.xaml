@@ -23,6 +23,10 @@
     <s:String x:Key="unkick">Вернуть</s:String>
     <s:String x:Key="rebootOnlineGame">Перезапустить сетевую игру</s:String>
     <s:String x:Key="offOnlineGame">Выключить сетевую игру</s:String>
+    <!--  multiplayer status  -->
+    <s:String x:Key="statusNone">Нет открытых миров</s:String>
+    <s:String x:Key="statusOpenWorld">Открыт для подключения</s:String>
+    <s:String x:Key="statusConnectedToUser">Подключен к серверу</s:String>
 
 
     <s:String x:Key="general">Основное</s:String>
@@ -40,6 +44,7 @@
     <s:String x:Key="memory">ОЗУ</s:String>
     <s:String x:Key="gamefolder">Папка с игрой</s:String>
     <s:String x:Key="javapath">Путь к Java</s:String>
+    <s:String x:Key="defaultJavaPath">Стандартное</s:String>
     <s:String x:Key="review">Обзор</s:String>
     <s:String x:Key="autoUpdateInstance">Обновлять сборки автоматически</s:String>
     <s:String x:Key="hideLauncher">Скрывать лаунчер при запуске игры</s:String>
@@ -130,5 +135,31 @@
 
     <!--  instance form  -->
     <s:String x:Key="more">Больше</s:String>
+    <s:String x:Key="javaInstalling">Идёт скачивание Java...</s:String>
+    <s:String x:Key="runPrepare">Идёт подготовка к запуску...</s:String>
+    <s:String x:Key="instanceLoading">Идёт скачивание... Этап</s:String>
+
+    <s:String x:Key="runSuccessfulNotification">Идёт скачивание... Этап</s:String>
+    <s:String x:Key="runUnsuccessfulNotification">"Не удалось запустить игру.</s:String>
+    <s:String x:Key="loadingProgressTip">Скачивание завершено на</s:String>
+
+    <!--  Upper Button  -->
+
+    <s:String x:Key="closeInstance">Закрыть игру</s:String>
     <s:String x:Key="downloadInstance">Скачать сборку</s:String>
+    <s:String x:Key="playInstance">Играть</s:String>
+
+    <!--  Lower Button  -->
+    <s:String x:Key="removeInstance">Удалить сборку</s:String>
+    <s:String x:Key="export">Экспорт</s:String>
+    <s:String x:Key="cancelDownload">Отменить скачивание</s:String>
+    <s:String x:Key="addToLibrary">Добавить в библиотеку</s:String>
+    <s:String x:Key="removeFromLibrary">Удалить из библиотеки</s:String>
+    <s:String x:Key="visitCurseforge">Перейти на Curseforge</s:String>
+    <s:String x:Key="visitNightWorld">Перейти на NightWorld</s:String>
+    <s:String x:Key="openFolder">Открыть папку</s:String>
+
+
+    <s:String x:Key="devCurtainMessage">/* Данный раздел находиться в разработке. */</s:String>
+    <s:String x:Key="devCurtainsMessage1">/* Раздел {0} находиться в разработке. */</s:String>
 </ResourceDictionary>

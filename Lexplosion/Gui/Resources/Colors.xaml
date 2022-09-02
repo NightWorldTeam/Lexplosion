@@ -6,6 +6,7 @@
 
     <Color x:Key="PrimaryColor">#191919</Color>
     <Color x:Key="PrimaryColor1">#131313</Color>
+    <Color x:Key="LightPrimaryColor">#f8f8f8</Color>
 
     <Color x:Key="HeaderColor">#151719</Color>
     <Color x:Key="SepColor">#212326</Color>

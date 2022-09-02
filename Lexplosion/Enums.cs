@@ -210,12 +210,9 @@ namespace Lexplosion
 
     public enum OnlineGameStatus
     {
-        [Description("Нет открытых миров")]
         None,
-        [Description("Открыт для подключения")]
         OpenWorld,
-        [Description("Подключен к серверу")]
-        ConnectToUser
+        ConnectedToUser
     }
 
     public enum InstanceChangelog 

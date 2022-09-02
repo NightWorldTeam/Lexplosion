@@ -109,7 +109,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             { 
                 UpperButton.ChangeFuncPlay();
             }
-            else if (!InstanceClient.IsInstalled || InstanceClient.InLibrary) 
+            else if (!InstanceClient.IsInstalled || !InstanceClient.InLibrary) 
             {
                 UpperButton.ChangeFuncDownload();
             }
@@ -124,7 +124,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 if (InstanceClient.UpdateAvailable)
                 {
                     LowerButtons.Add(
-                        new LowerButton("Обновить", ResourceGetter.GetIcon("UpdateInstance"), LowerButtonFunc.Update)
+                        new LowerButton(ResourceGetter.GetString("update"), ResourceGetter.GetIcon("UpdateInstance"), LowerButtonFunc.Update)
                     );
                 }
 
@@ -133,13 +133,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     if (InstanceClient.Type == InstanceSource.Curseforge)
                     {
                         LowerButtons.Add(
-                                new LowerButton("Перейти на Curseforge", ResourceGetter.GetIcon("CurseforgeLogo"), LowerButtonFunc.OpenWebsite)
+                                new LowerButton(ResourceGetter.GetString("visitCurseforge"), ResourceGetter.GetIcon("CurseforgeLogo"), LowerButtonFunc.OpenWebsite)
                             );
                     }
                     else if (InstanceClient.Type == InstanceSource.Nightworld)
                     {
                         LowerButtons.Add(
-                            new LowerButton("Перейти на NightWorld", ResourceGetter.GetIcon("CurseforgeLogo"), LowerButtonFunc.OpenWebsite)
+                            new LowerButton(ResourceGetter.GetString("visitNightWorld"), ResourceGetter.GetIcon("CurseforgeLogo"), LowerButtonFunc.OpenWebsite)
                         );
                     }
 
@@ -148,38 +148,38 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 if (InstanceClient.InLibrary && !InstanceClient.IsInstalled && !DownloadModel.IsDownloadInProgress)
                 {
                     LowerButtons.Add(
-                            new LowerButton("Удалить из библиотеки", MultiButtonProperties.GeometryLibraryDelete, LowerButtonFunc.DeleteFromLibrary)
+                            new LowerButton(ResourceGetter.GetString("removeFromLibrary"), MultiButtonProperties.GeometryLibraryDelete, LowerButtonFunc.DeleteFromLibrary)
                         );
                 }
 
                 else if (!InstanceClient.InLibrary && !DownloadModel.IsDownloadInProgress)
                 {
                     LowerButtons.Add(
-                        new LowerButton("Добавить в библиотеку", MultiButtonProperties.GeometryLibraryAdd, LowerButtonFunc.AddToLibrary)
+                        new LowerButton(ResourceGetter.GetString("addToLibrary"), MultiButtonProperties.GeometryLibraryAdd, LowerButtonFunc.AddToLibrary)
                     );
                 }
 
                 if (DownloadModel.IsDownloadInProgress)
                 {
                     LowerButtons.Add(
-                        new LowerButton("Отменить скачивание", MultiButtonProperties.GeometryCancelIcon, LowerButtonFunc.CancelDownload)
+                        new LowerButton(ResourceGetter.GetString("cancelDownload"), MultiButtonProperties.GeometryCancelIcon, LowerButtonFunc.CancelDownload)
                     );
                 }
 
                 if (InstanceClient.IsInstalled)
                 {
                     LowerButtons.Add(
-                        new LowerButton("Удалить сборку", ResourceGetter.GetIcon("RemoveInstance"), LowerButtonFunc.RemoveInstance)
+                        new LowerButton(ResourceGetter.GetString("removeInsstance"), ResourceGetter.GetIcon("RemoveInstance"), LowerButtonFunc.RemoveInstance)
                     );
                     LowerButtons.Add(
-                        new LowerButton("Экспорт", ResourceGetter.GetIcon("Export"), LowerButtonFunc.Export)
+                        new LowerButton(ResourceGetter.GetString("export"), ResourceGetter.GetIcon("Export"), LowerButtonFunc.Export)
                     );
                 }
 
                 if (InstanceClient.IsInstalled || InstanceClient.InLibrary) 
                 {
                     LowerButtons.Add(
-                        new LowerButton("Открыть папку", ResourceGetter.GetIcon("OpenFolder"), LowerButtonFunc.OpenFolder)
+                        new LowerButton(ResourceGetter.GetString("openFolder"), ResourceGetter.GetIcon("OpenFolder"), LowerButtonFunc.OpenFolder)
                     );
                 }
             });

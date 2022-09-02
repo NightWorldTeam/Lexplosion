@@ -1,6 +1,8 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
+using Lexplosion.Tools;
+using System;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.Models
@@ -14,7 +16,13 @@ namespace Lexplosion.Gui.Models
             {
                 _gameStatus = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(StrGameStatus));
             }
+        }
+
+        public string StrGameStatus 
+        {
+            get => ResourceGetter.GetString("status" + _gameStatus.ToString());
         }
 
         //private string _gameStatusStr;

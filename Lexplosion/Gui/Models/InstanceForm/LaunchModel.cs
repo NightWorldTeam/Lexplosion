@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
+using Lexplosion.Tools;
 using System;
 
 namespace Lexplosion.Gui.Models.InstanceForm
@@ -36,16 +37,16 @@ namespace Lexplosion.Gui.Models.InstanceForm
             if (successful)
             {
                 MainViewModel.ShowToastMessage(
-                    "Игра запущена! Ура!",
-                    "Название: " + _formModel.InstanceClient.Name,
+                    ResourceGetter.GetString("runSuccessfulNotification"),
+                    ResourceGetter.GetString("instanceName") + " : " + _formModel.InstanceClient.Name,
                     TimeSpan.FromSeconds(5)
                 );
             }
             else 
             {
                 MainViewModel.ShowToastMessage(
-                    "Не удалось запустить игру.",
-                    "Название: " + _formModel.InstanceClient.Name,
+                    ResourceGetter.GetString("runUnsuccessfulNotification"),
+                    ResourceGetter.GetString("instanceName") + " : " + _formModel.InstanceClient.Name,
                     Controls.ToastMessageState.Error
                 );
             }

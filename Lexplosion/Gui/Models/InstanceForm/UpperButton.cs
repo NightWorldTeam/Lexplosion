@@ -45,35 +45,35 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #endregion props
 
         #region methods
-        public void ChangeFuncPlay()
-            => ChangeFunc(
+        public void ChangeFuncPlay() => ChangeFunc(
                     UpperButtonFunc.Play,
                     ResourceGetter.GetIcon("Play"),
-                    "Играть", -60
+                    ResourceGetter.GetString("playInstance"), -60
             );
 
-        public void ChangeFuncDownload()
-        {
-            ChangeFunc(
-                UpperButtonFunc.Download,
-                ResourceGetter.GetIcon("Download"),
-                "Скачать сборку", -110
+        public void ChangeFuncDownload() => ChangeFunc(
+                    UpperButtonFunc.Download,
+                    ResourceGetter.GetIcon("Download"),
+                    ResourceGetter.GetString("downloadInstance"), -110
                 );
-        }
 
-        public void ChangeFuncProgressBar()
-            => ChangeFunc(
+        public void ChangeFuncProgressBar() => ChangeFunc(
                     UpperButtonFunc.ProgressBar,
                     null,
-                    "Скачивание завершено на", -160
+                    ResourceGetter.GetString("loadingProgressTip"), -160
                 );
 
-        public void ChangeFuncClose()
-            => ChangeFunc(
+        public void ChangeFuncClose() => ChangeFunc(
                     UpperButtonFunc.Close,
                     MultiButtonProperties.GeometryCancelIcon,
-                    "Закрыть игру", -100
+                    ResourceGetter.GetString("closeInstance"), -100
                 );
+
+        public void ChangeFuncFinishDownload() => ChangeFunc(
+                UpperButtonFunc.Download,
+                ResourceGetter.GetIcon("Download"),
+                ResourceGetter.GetString("downloadInstance"), -110
+            ); 
 
         public void ChangeFunc(
             UpperButtonFunc func, Geometry icon, string tipText, int offset

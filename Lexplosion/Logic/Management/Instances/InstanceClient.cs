@@ -577,6 +577,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void UpdateInstance()
         {
+            Console.WriteLine(123);
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);

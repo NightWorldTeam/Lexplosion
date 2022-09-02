@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Lexplosion.Tools;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -12,8 +8,8 @@ namespace Lexplosion.Gui.ViewModels
     /// </summary>
     public class DevСurtainViewModel : VMBase
     {
-        private const string DefaultMessage = "/* Данный раздел находиться а разработке. */";
-        public const string DefaultMessageWithName = "/* Раздел {0} находиться а разработке. */";
+        private string _defaultMessage;
+        private string _defaultMessageWithName = ResourceGetter.GetString("devCurtainsMessage1");
 
         private string _message;
         public string Message 
@@ -30,7 +26,8 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public DevСurtainViewModel()
         {
-            Message = DefaultMessage;
+            _defaultMessage = ResourceGetter.GetString("devCurtainMessage");
+            Message = _defaultMessage;
         }
     }
 }

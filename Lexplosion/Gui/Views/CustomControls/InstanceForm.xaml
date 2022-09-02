@@ -74,18 +74,15 @@
         <Border
             Width="620"
             Height="120"
+            Background="{DynamicResource HeaderSolidColorBrush}"
             CornerRadius="10">
-
-            <Border.Background>
-                <SolidColorBrush Color="#151719" />
-            </Border.Background>
 
             <Border.Effect>
                 <DropShadowEffect
                     BlurRadius="20"
                     Opacity="0.1"
                     ShadowDepth="10"
-                    Color="#151719" />
+                    Color="{DynamicResource HeaderColor}" />
             </Border.Effect>
 
 
