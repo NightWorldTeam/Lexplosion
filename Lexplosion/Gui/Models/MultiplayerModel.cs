@@ -84,9 +84,12 @@ namespace Lexplosion.Gui.Models
 
         private void OnPlayerStateChanged(OnlineGameStatus status, string strangeString)
         {
-            GameStatus = status;
-            if (GameStatus == OnlineGameStatus.None)
-                Players.Clear();
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                GameStatus = status;
+                if (GameStatus == OnlineGameStatus.None)
+                    Players.Clear();
+            });
         }
 
         public MultiplayerModel()

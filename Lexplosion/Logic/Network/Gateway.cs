@@ -245,14 +245,12 @@ namespace Lexplosion.Logic.Network
 
         public void KickClient(string uuid)
         {
-            try
-            {
-                if (Server != null)
-                {
-                    Server.KickClient(uuid);
-                }
-            }
-            catch { }
+            Server?.KickClient(uuid);
+        }
+
+        public void UnkickClient(string uuid)
+        {
+            Server?.UnkickClient(uuid);
         }
 
         public void StopWork()

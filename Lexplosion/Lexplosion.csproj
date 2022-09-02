@@ -276,6 +276,7 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />
+    <Compile Include="Logic\Network\Values.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
     <Compile Include="Tools\ExtendedEventHandler.cs" />
     <Compile Include="Tools\ImageTools.cs" />

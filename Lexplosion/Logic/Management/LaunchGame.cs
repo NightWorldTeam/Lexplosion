@@ -94,10 +94,16 @@ namespace Lexplosion.Logic.Management
 
                     gameGateway.ConnectingUser += delegate (string uuid)
                     {
-                        var player = new Player(uuid, delegate
-                        {
-                            this.gameGateway?.KickClient(uuid);
-                        });
+                        var player = new Player(uuid,
+                            delegate
+                            {
+                                this.gameGateway?.KickClient(uuid);
+                            },
+                            delegate
+                            {
+                                this.gameGateway?.UnkickClient(uuid);
+                            }
+                        );
 
                         _connectedPlayers[uuid] = player;
                         UserConnected?.Invoke(player);

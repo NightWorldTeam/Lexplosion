@@ -1,9 +1,9 @@
-﻿using LumiSoft.Net.STUN.Client;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using LumiSoft.Net.STUN.Client;
 
 namespace Lexplosion.Logic.Network
 {
@@ -48,7 +48,7 @@ namespace Lexplosion.Logic.Network
                     int bytes = stream.Read(buf, 0, buf.Length);
                     Console.WriteLine("BUF-0 " + buf[0]);
 
-                    if (buf[0] == 98) // сервер согласился, а управляющий сервер запрашивает порт
+                    if (buf[0] == ControlSrverCodes.B) // сервер согласился, а управляющий сервер запрашивает порт
                     {
                         Console.WriteLine("BUF " + buf[1]);
                         byte[] portData;

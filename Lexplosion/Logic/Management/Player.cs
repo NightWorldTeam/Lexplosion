@@ -61,6 +61,8 @@ namespace Lexplosion.Logic.Management
         }
 
         private Action _kickMethod;
+        private Action _unkickMethod;
+
         public RelayCommand AccessChangeAction 
         { 
             get => new RelayCommand(obj => 
@@ -69,10 +71,11 @@ namespace Lexplosion.Logic.Management
             });
         }
 
-        public Player(string uuid, Action kickMethod)
+        public Player(string uuid, Action kickMethod, Action unkickMethod)
         {
             UUID = uuid;
             _kickMethod = kickMethod;
+            _unkickMethod = unkickMethod;
 
             ThreadPool.QueueUserWorkItem(delegate (object state)
             {

@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using LumiSoft.Net.STUN.Client;
 
 namespace Lexplosion.Logic.Network
@@ -44,6 +45,8 @@ namespace Lexplosion.Logic.Network
         protected ConcurrentDictionary<string, IPEndPoint> UuidPointPair;
         protected ConcurrentDictionary<IPEndPoint, string> PointUuidPair;
 
+        protected HashSet<string> KickedClients; //тут хранятся выкинутые клиенты
+
         public NetworkServer(string uuid, string sessionToken, string serverType, bool directConnection, string controlServer)
         {
             UUID = uuid;
@@ -57,6 +60,8 @@ namespace Lexplosion.Logic.Network
 
             SendingWait = new AutoResetEvent(false);
             ReadingWait = new AutoResetEvent(false);
+
+            KickedClients = new HashSet<string>();
 
             // тут хранится список клиентов. В одном соответсвие uuid и ip, в другом наоборот
             UuidPointPair = new ConcurrentDictionary<string, IPEndPoint>();
@@ -129,13 +134,24 @@ namespace Lexplosion.Logic.Network
                         controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
                         Console.WriteLine("ControlServerEndRecv");
 
-                        if (bytes > 1 && data[0] == 97) // data[0] == 97 значит поступил запрос на поделючение
+                        if (bytes > 1 && data[0] == ControlSrverCodes.A) // data[0] == 97 значит поступил запрос на поделючение
                         {
                             clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
-                            controlConnection.Send(new byte[1] { 97 }); //отправляем серверу соглашение
+
+                            // этот клиент был кикнут. послыем его нахуй
+                            lock (KickedClients)
+                            {
+                                if (KickedClients.Contains(clientUUID))
+                                {
+                                    controlConnection.Send(new byte[1] { ControlSrverCodes.E }); //отправляем серверу отказ
+                                    continue;
+                                }
+                            }
+                            
+                            controlConnection.Send(new byte[1] { ControlSrverCodes.A }); //отправляем серверу соглашение
 
                             bytes = controlConnection.Receive(data);
-                            if (bytes == 1 && data[0] == 98) //сервер запрашивает мой порт
+                            if (bytes == 1 && data[0] == ControlSrverCodes.B) //сервер запрашивает мой порт
                             {
                                 byte[] portData;
                                 if (DirectConnection)
@@ -270,7 +286,7 @@ namespace Lexplosion.Logic.Network
             MaintainingThread.Abort();
             try
             {
-                controlConnection.Send(new byte[1] { 122 }); // отправляем управляющиму серверу сообщение что мы отключаемся
+                controlConnection.Send(new byte[1] { ControlSrverCodes.Z }); // отправляем управляющиму серверу сообщение что мы отключаемся
             }
             catch { }
             controlConnection.Close(); //закрываем соединение с управляющим сервером
@@ -287,11 +303,26 @@ namespace Lexplosion.Logic.Network
             {
                 if (uuid != "bbab3c32222e4f08a8b291d1e9b9267c" && uuid != "0920b1809fb09e14c2e0526a94fb7c93")
                 {
+                    lock (KickedClients)
+                    {
+                        KickedClients.Add(uuid);
+                    }    
                     IPEndPoint point = UuidPointPair[uuid];
                     ClientAbort(point);
                 }
             }
             catch { }
+        }
+
+        public void UnkickClient(string uuid)
+        {
+            lock (KickedClients)
+            {
+                if (KickedClients.Contains(uuid))
+                {
+                    KickedClients.Remove(uuid);
+                }
+            }         
         }
 
         private void MaintainingConnection()
@@ -303,7 +334,7 @@ namespace Lexplosion.Logic.Network
                 while (IsWork)
                 {
                     ControlConnectionBlock.WaitOne();
-                    controlConnection.Send(new byte[1] { 121 });
+                    controlConnection.Send(new byte[1] { ControlSrverCodes.Y });
                     ControlConnectionBlock.Set();
                     Thread.Sleep(240000); // ждём 4 минуты
                 }
