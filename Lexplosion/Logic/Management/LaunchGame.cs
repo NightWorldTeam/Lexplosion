@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
@@ -21,6 +23,7 @@ namespace Lexplosion.Logic.Management
         private Settings _settings;
         private InstanceSource _type;
         private string _javaPath = "";
+        private bool _processIsWork;
 
         private static LaunchGame classInstance = null;
 
@@ -48,6 +51,26 @@ namespace Lexplosion.Logic.Management
         public static event Action<OnlineGameStatus, string> StateChanged;
 
         private ConcurrentDictionary<string, Player> _connectedPlayers = new ConcurrentDictionary<string, Player>();
+
+        private delegate bool EnumThreadDelegate(IntPtr hWnd, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumThreadWindows(int dwThreadId, EnumThreadDelegate lpfn,
+            IntPtr lParam);
+
+        private static bool GuiIsExists(int processId)
+        {
+            bool isExists = false;
+
+            foreach (ProcessThread thread in Process.GetProcessById(processId).Threads)
+                EnumThreadWindows(thread.Id, (hWnd, lParam) =>
+                {
+                    isExists = true;
+                    return false;
+                }, IntPtr.Zero);
+
+            return isExists;
+        }
 
         private string CreateCommand(InitData data)
         {
@@ -132,7 +155,6 @@ namespace Lexplosion.Logic.Management
 
             bool launcherVisible = true;
             bool gameVisible = false;
-            string consoleText = "";
 
             try
             {
@@ -142,30 +164,6 @@ namespace Lexplosion.Logic.Management
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.UseShellExecute = false;
                 process.EnableRaisingEvents = true;
-
-                void BeforeLaunch(object s, DataReceivedEventArgs e)
-                {
-                    if (e.Data != null)
-                    {
-                        consoleText += e.Data + "\n";
-
-                        if (e.Data.Contains(" LWJGL Version") || e.Data.Contains("Launching target 'fmlclient' with arguments") || e.Data.Contains("Narrator library for x64 successfully loaded"))
-                        {
-                            ComplitedLaunch(_instanceId, true);
-
-                            if (_settings.HiddenMode == true)
-                            {
-                                //MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
-                                launcherVisible = false;
-                            }
-
-                            process.OutputDataReceived -= BeforeLaunch;
-
-                            gameVisible = true;
-                            consoleText = "";
-                        }
-                    }
-                }
 
                 void WriteToConsole(object s, DataReceivedEventArgs e)
                 {
@@ -187,13 +185,13 @@ namespace Lexplosion.Logic.Management
                     }
                 }
 
-                process.OutputDataReceived += BeforeLaunch;
-
                 if (_settings.ShowConsole == true)
                     process.OutputDataReceived += WriteToConsole;
 
                 process.Exited += (sender, ea) =>
                 {
+                    _processIsWork = false;
+
                     try
                     {
                         process.Dispose();
@@ -227,11 +225,8 @@ namespace Lexplosion.Logic.Management
                         {
                             ComplitedLaunch(_instanceId, false);
 
-                            Console.WriteLine(consoleText);
                             Console.WriteLine(command);
                         });
-
-                        consoleText = "";
                     }
 
                     if (!launcherVisible)
@@ -242,8 +237,31 @@ namespace Lexplosion.Logic.Management
                     GameExited(_instanceId);
                 };
 
-                process.Start();
+                _processIsWork = process.Start();
                 process.BeginOutputReadLine();
+
+                // отслеживаем появление окна
+                Lexplosion.Run.TaskRun(delegate ()
+                {
+                    while (_processIsWork)
+                    {
+                        Thread.Sleep(1000);
+
+                        if (GuiIsExists(process.Id))
+                        {
+                            ComplitedLaunch(_instanceId, true);
+
+                            if (_settings.HiddenMode == true)
+                            {
+                                //MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
+                                launcherVisible = false;
+                            }
+
+                            gameVisible = true;
+                            break;
+                        }   
+                    }
+                });
 
                 lock (loocker)
                 {
@@ -254,6 +272,7 @@ namespace Lexplosion.Logic.Management
             }
             catch
             {
+                _processIsWork = false;
                 ComplitedLaunch(_instanceId, false);
 
                 return false;
@@ -390,6 +409,8 @@ namespace Lexplosion.Logic.Management
 
         private void Stop()
         {
+            _processIsWork = false;
+
             GameStopEvent?.Invoke();
 
             try
