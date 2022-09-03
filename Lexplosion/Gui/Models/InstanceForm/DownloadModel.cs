@@ -19,6 +19,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private bool _isIndeterminate;
         private bool _isDownloadInProgress;
 
+        private MainViewModel _mainViewModel;
+
 
         #region prop
         public bool IsDownloadInProgress 
@@ -77,7 +79,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         }
         #endregion
 
-        public DownloadModel(InstanceFormModel instanceFormModel)
+        public DownloadModel(MainViewModel mainViewModel, InstanceFormModel instanceFormModel)
         {
             _instanceFormModel = instanceFormModel;
 
@@ -86,6 +88,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             instanceFormModel.InstanceClient.ProgressHandler += DonwloadProcess;
             instanceFormModel.InstanceClient.ComplitedDownload += ComplitedDownloadAction;
+
+            _mainViewModel = mainViewModel;
         }
 
         #region methods
@@ -150,22 +154,21 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                Console.WriteLine("Strange Test");
                 switch (result)
                 {
                     case InstanceInit.Successful:
                         {
-                            IsDownloadInProgress = false;
-                            if (!_isPrepareOnly) { 
+                            if (!_isPrepareOnly) {
+                                IsDownloadInProgress = false;
                                 MainViewModel.ShowToastMessage(
                                     "Download Successfully Completed",
                                     "Название: " + _instanceFormModel.InstanceClient.Name + 
                                     "\nВерсия: " + _instanceFormModel.InstanceClient.GameVersion,
                                     TimeSpan.FromSeconds(5d)
                                     );
+                                _instanceFormModel.UpperButton.ChangeFuncPlay();
+                                _instanceFormModel.UpdateLowerButton();
                             }
-                            _instanceFormModel.UpperButton.ChangeFuncPlay();
-                            _instanceFormModel.UpdateLowerButton();
                         }
                         break;
                     case InstanceInit.DownloadFilesError:
@@ -278,7 +281,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         }
                         break;
                 }
-                _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
+
+                if (!_isPrepareOnly)
+                    _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
+                else
+                    _instanceFormModel.OverviewField = "Идёт запуск игры...";
             }); 
         }
 

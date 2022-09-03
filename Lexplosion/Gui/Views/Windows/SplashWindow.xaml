@@ -23,10 +23,10 @@
             VerticalAlignment="Top"
             BackgroundColor="#0b101c"
             BackgroundOpacity="0"
-            BorderColor="#1355ff"
-            Opacity="0.7"
+            BorderColor="{DynamicResource BrandSolidColorBrush}"
+            Opacity="0.8"
             Placeholder="Идет загрузка..."
-            RectangeColor="#1355ff" />
+            RectangeColor="{DynamicResource BrandSolidColorBrush}" />
 
         <StackPanel
             Margin="0,0,0,13"

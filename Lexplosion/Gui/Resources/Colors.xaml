@@ -1,7 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="ActivityColor">#167FFC</Color>
+    <Color x:Key="BrandColor">#167FFC</Color>
     <Color x:Key="MyLovelyColor">#ff7601</Color>
+    <Color x:Key="MyLovelyColo1r">#CD0074</Color>
+    <Color x:Key="MyLovelyColo2r">gREEN</Color>
+    <Color x:Key="MyLovelyColo3r">Yellow</Color>
+
+
+    <Color x:Key="ActivityColor">#167FFC</Color>
     <SolidColorBrush x:Key="BrandSolidColorBrush" Color="{StaticResource ActivityColor}" />
 
     <Color x:Key="PrimaryColor">#191919</Color>

@@ -68,7 +68,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     UpperButtonFunc.Download,
                     new Tip()
                     {
-                        Text = "Установить сборку",
+                        Text = ResourceGetter.GetString("installInstance"),
                         Offset = -160
                     }
                 );
@@ -85,7 +85,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
 
             OverviewField = instanceClient.Summary;
-            DownloadModel = new DownloadModel(this)
+            DownloadModel = new DownloadModel(mainViewModel, this)
             {
                 DownloadProgress = 0,
                 Stage = 0,
@@ -169,7 +169,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 if (InstanceClient.IsInstalled)
                 {
                     LowerButtons.Add(
-                        new LowerButton(ResourceGetter.GetString("removeInsstance"), ResourceGetter.GetIcon("RemoveInstance"), LowerButtonFunc.RemoveInstance)
+                        new LowerButton(ResourceGetter.GetString("removeInstance"), ResourceGetter.GetIcon("RemoveInstance"), LowerButtonFunc.RemoveInstance)
                     );
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("export"), ResourceGetter.GetIcon("Export"), LowerButtonFunc.Export)

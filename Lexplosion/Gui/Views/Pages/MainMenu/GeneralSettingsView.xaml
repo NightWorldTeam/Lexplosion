@@ -368,13 +368,13 @@
 
                     <Button
                         Width="100"
-                        Height="30"
+                        Height="35"
                         Margin="280,0,0,35"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
                         Style="{StaticResource FolderBrowerButton}">
                         <TextBlock
-                            Text="{DynamicResource reboot}"
+                            Text="{DynamicResource rebootSettings}"
                             TextAlignment="Center"
                             TextWrapping="WrapWithOverflow" />
                     </Button>

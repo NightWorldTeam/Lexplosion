@@ -28,7 +28,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _formModel.DownloadModel.IsDownloadInProgress = true;
                 _formModel.DownloadModel.HasProcents = true;
                 _formModel.InstanceClient.Run();
-                _formModel.UpperButton.ChangeFuncClose();
+                _mainViewModel.IsInstanceRunning = true;
             });
         }
 
@@ -41,6 +41,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     ResourceGetter.GetString("instanceName") + " : " + _formModel.InstanceClient.Name,
                     TimeSpan.FromSeconds(5)
                 );
+                _formModel.DownloadModel.IsDownloadInProgress = false;
+                _formModel.DownloadModel.HasProcents = false;
+                _formModel.UpperButton.ChangeFuncClose();
             }
             else 
             {

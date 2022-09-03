@@ -163,7 +163,7 @@
                                 FontSize="12"
                                 FontWeight="Bold"
                                 Foreground="White"
-                                Text="Доступно обновление" />
+                                Text="{DynamicResource updateAvailable}" />
                         </ToolTip>
                     </Border.ToolTip>
 
@@ -273,17 +273,6 @@
                             </ItemsControl.ItemsPanel>
 
                         </ItemsControl>
-
-                        <!--<TextBlock
-                            Grid.Row="1"
-                            Foreground="#f5f5f5"
-                            Opacity="0.8"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom"
-                            Margin="0,0,0,15"
-                            FontSize="14"
-                            Text="Скачивание файла: Testing.dll..."
-                            Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />-->
                     </Grid>
                 </Grid>
 
@@ -398,7 +387,7 @@
             Margin="120,115,60,0"
             Background="#131313"
             BorderThickness="0"
-            Foreground="#5773FF"
+            Foreground="{DynamicResource BrandSolidColorBrush}"
             IsIndeterminate="{Binding Model.DownloadModel.HasProcents}"
             Maximum="100"
             Minimum="0"

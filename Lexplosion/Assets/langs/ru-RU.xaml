@@ -139,8 +139,8 @@
     <s:String x:Key="runPrepare">Идёт подготовка к запуску...</s:String>
     <s:String x:Key="instanceLoading">Идёт скачивание... Этап</s:String>
 
-    <s:String x:Key="runSuccessfulNotification">Идёт скачивание... Этап</s:String>
-    <s:String x:Key="runUnsuccessfulNotification">"Не удалось запустить игру.</s:String>
+    <s:String x:Key="runSuccessfulNotification">Игра успешно запущена.</s:String>
+    <s:String x:Key="runUnsuccessfulNotification">&quot;Не удалось запустить игру.</s:String>
     <s:String x:Key="loadingProgressTip">Скачивание завершено на</s:String>
 
     <!--  Upper Button  -->
@@ -162,4 +162,6 @@
 
     <s:String x:Key="devCurtainMessage">/* Данный раздел находиться в разработке. */</s:String>
     <s:String x:Key="devCurtainsMessage1">/* Раздел {0} находиться в разработке. */</s:String>
+    <s:String x:Key="updateAvailable">Доступно обновление</s:String>
+    <s:String x:Key="rebootSettings">Сбросить настройки</s:String>
 </ResourceDictionary>
