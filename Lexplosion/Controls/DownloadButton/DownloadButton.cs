@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -13,7 +14,7 @@ namespace Lexplosion.Controls
     [TemplatePart(Name = PART_DOWNLOAD_BUTTON, Type = typeof(Border))]
     [TemplatePart(Name = PART_LOADER, Type = typeof(Border))]
     [TemplatePart(Name = PART_PROGRESSBAR, Type = typeof(ProgressBar))]
-    [TemplatePart(Name = PART_PROGRESSBAR_TEXT, Type = typeof(TextBlock))]
+    [TemplatePart(Name = PART_LOADER_TEXT, Type = typeof(TextBlock))]
     [TemplatePart(Name = PART_PLAY_BUTTON, Type = typeof(Border))]
     [TemplatePart(Name = PART_PLAY_BUTTON_TEXT, Type = typeof(TextBlock))]
     [TemplatePart(Name = PART_CLOSE_BUTTON, Type = typeof(Border))]
@@ -23,7 +24,7 @@ namespace Lexplosion.Controls
         private const string PART_DOWNLOAD_BUTTON = "PART_Download_Button";
         private const string PART_LOADER = "PART_Loader";
         private const string PART_PROGRESSBAR = "PART_ProgressBar";
-        private const string PART_PROGRESSBAR_TEXT = "PART_ProgressBar_Text";
+        private const string PART_LOADER_TEXT = "PART_Loader_Text";
         private const string PART_PLAY_BUTTON = "PART_Play_Button";
         private const string PART_PLAY_BUTTON_TEXT = "PART_Play_Button_Text";
         private const string PART_CLOSE_BUTTON = "PART_Close_Button";
@@ -33,6 +34,9 @@ namespace Lexplosion.Controls
         private ProgressBar _progressBar;
         private Border _playButton;
         private Border _closeButton;
+
+        private TextBlock _playButtonText;
+        private TextBlock _loaderText;
         /* data */
 
         // stage
@@ -303,14 +307,14 @@ namespace Lexplosion.Controls
 
         private void OnPlayButtonClicked(object sender, MouseButtonEventArgs e)
         {
-            if (!IsRunnedGame)
-            {
+            ChangePlayButtonText(ResourceGetter.GetString("prepareRun"));
                 ComplitedLaunchCallback complitedLaunch = delegate (string instanceId, bool successful)
                 {
                     // тут хз что
                     // можно написать при запуске, до полного запуска, что-то типо запускается.
                     App.Current.Dispatcher.Invoke(() =>
                     {
+                        ChangePlayButtonText(ResourceGetter.GetString("play"));
                         NextButtonAnimation(_playButton);
                     });
                 };
@@ -323,10 +327,7 @@ namespace Lexplosion.Controls
                     });
                 };
 
-                PART_Play_Button_Text.
-
                 InstanceFormVM.LaunchInstance(complitedLaunch, gameExitedCallback);
-            }
         }
 
         private void OnDownloadButtonClicked(object sender, MouseButtonEventArgs e)
@@ -453,6 +454,25 @@ namespace Lexplosion.Controls
             };
 
             InstanceFormVM.DownloadInstance(progressHandlerMethod, complitedDownloadMethod);
+        }
+
+
+        private void ChangePlayButtonText(string text) 
+        {
+            if (this._playButtonText == null) 
+            {
+                this._playButtonText = GetTemplateChild(PART_PLAY_BUTTON_TEXT) as TextBlock;
+            }
+            this._playButtonText.Text = text;
+        }
+
+        private void ChangeLoaderText(string text) 
+        {
+            if (this._loaderText == null) 
+            {
+                this._loaderText = GetTemplateChild(PART_LOADER_TEXT) as TextBlock;
+            }
+            this._loaderText.Text = text;
         }
 
 

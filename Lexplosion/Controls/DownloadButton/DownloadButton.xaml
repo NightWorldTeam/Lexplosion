@@ -62,7 +62,7 @@
                                 VerticalAlignment="Center"
                                 FontWeight="{TemplateBinding CloseButtonFontWeight}"
                                 Foreground="{TemplateBinding CloseButtonForeground}"
-                                Text="Закрыть" />
+                                Text="{DynamicResource close}" />
                         </Border>
 
                         <Border
@@ -80,7 +80,7 @@
                                 VerticalAlignment="Center"
                                 FontWeight="{TemplateBinding PlayButtonFontWeight}"
                                 Foreground="{TemplateBinding PlayButtonForeground}"
-                                Text="Play" />
+                                Text="{DynamicResource play}" />
                         </Border>
 
                         <Border
@@ -93,7 +93,7 @@
                             CornerRadius="7">
                             <Grid>
                                 <TextBlock
-                                    x:Name="PART_ProgressBar_Text"
+                                    x:Name="PART_Loader_Text"
                                     Margin="0,5,0,0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Top"
@@ -137,7 +137,7 @@
                                     VerticalAlignment="Center"
                                     FontWeight="{TemplateBinding DownloadButtonFontWeight}"
                                     Foreground="{TemplateBinding DownloadButtonForeground}"
-                                    Text="Download" />
+                                    Text="{DynamicResource install}" />
                             </StackPanel>
                         </Border>
                     </Grid>

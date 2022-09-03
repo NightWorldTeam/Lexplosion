@@ -73,7 +73,7 @@
     <s:String x:Key="notImage">Изображения отсутствуют</s:String>
     <s:String x:Key="version">Версия</s:String>
     <s:String x:Key="updated">Обновлено</s:String>
-    <s:String x:Key="totalDonwloads">Скачивания</s:String>
+    <s:String x:Key="totalDownloads">Скачивания</s:String>
     <s:String x:Key="website">Вебсайт</s:String>
     <s:String x:Key="description">Описание</s:String>
     <s:String x:Key="categories">Категории</s:String>
@@ -164,4 +164,9 @@
     <s:String x:Key="devCurtainsMessage1">/* Раздел {0} находиться в разработке. */</s:String>
     <s:String x:Key="updateAvailable">Доступно обновление</s:String>
     <s:String x:Key="rebootSettings">Сбросить настройки</s:String>
+
+    <s:String x:Key="play">Играть</s:String>
+    <s:String x:Key="prepareRun">Идет запуск...</s:String>
+    <s:String x:Key="close">Закрыть</s:String>
+    <s:String x:Key="install">Установить</s:String>
 </ResourceDictionary>
