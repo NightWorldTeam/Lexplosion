@@ -75,6 +75,7 @@
                             CornerRadius="7"
                             SnapsToDevicePixels="False">
                             <TextBlock
+                                x:Name="PART_Play_Button_Text"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontWeight="{TemplateBinding PlayButtonFontWeight}"
@@ -92,6 +93,7 @@
                             CornerRadius="7">
                             <Grid>
                                 <TextBlock
+                                    x:Name="PART_ProgressBar_Text"
                                     Margin="0,5,0,0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Top"

@@ -13,7 +13,9 @@ namespace Lexplosion.Controls
     [TemplatePart(Name = PART_DOWNLOAD_BUTTON, Type = typeof(Border))]
     [TemplatePart(Name = PART_LOADER, Type = typeof(Border))]
     [TemplatePart(Name = PART_PROGRESSBAR, Type = typeof(ProgressBar))]
+    [TemplatePart(Name = PART_PROGRESSBAR_TEXT, Type = typeof(TextBlock))]
     [TemplatePart(Name = PART_PLAY_BUTTON, Type = typeof(Border))]
+    [TemplatePart(Name = PART_PLAY_BUTTON_TEXT, Type = typeof(TextBlock))]
     [TemplatePart(Name = PART_CLOSE_BUTTON, Type = typeof(Border))]
     public sealed class DownloadButton : Control
     {
@@ -21,7 +23,9 @@ namespace Lexplosion.Controls
         private const string PART_DOWNLOAD_BUTTON = "PART_Download_Button";
         private const string PART_LOADER = "PART_Loader";
         private const string PART_PROGRESSBAR = "PART_ProgressBar";
+        private const string PART_PROGRESSBAR_TEXT = "PART_ProgressBar_Text";
         private const string PART_PLAY_BUTTON = "PART_Play_Button";
+        private const string PART_PLAY_BUTTON_TEXT = "PART_Play_Button_Text";
         private const string PART_CLOSE_BUTTON = "PART_Close_Button";
 
         private Border _downloadButton;
@@ -36,9 +40,6 @@ namespace Lexplosion.Controls
         // 2) loading + progressbar
         // 3) done (play button)
         // 4) close game 
-
-        private bool IsRunnedDownload = false;
-        private bool IsRunnedGame = false;
 
         #region dependency properities 
 
@@ -321,6 +322,9 @@ namespace Lexplosion.Controls
                         PreviewButtonAnimation(_playButton);
                     });
                 };
+
+                PART_Play_Button_Text.
+
                 InstanceFormVM.LaunchInstance(complitedLaunch, gameExitedCallback);
             }
         }
@@ -342,7 +346,11 @@ namespace Lexplosion.Controls
 
         #region Private Methods
 
-
+        /// <summary>
+        /// Анимация. Смена одной кнопки на другую.
+        /// </summary>
+        /// <param name="control">кнопка</param>
+        /// <param name="animationComplitedEvent">Эвент который выполниться после анимации.</param>
         private void NextButtonAnimation(FrameworkElement control, EventHandler animationComplitedEvent = null)
         {
             DoubleAnimation animation = new DoubleAnimation
@@ -357,6 +365,11 @@ namespace Lexplosion.Controls
             control.BeginAnimation(FrameworkElement.HeightProperty, animation);
         }
 
+        /// <summary>
+        /// Анимация. Смена на предыдущую кнопку.
+        /// </summary>
+        /// <param name="control">Кнопка</param>
+        /// <param name="animationComplitedEvent">Эвент выполняющийся после анимации.</param>
         private void PreviewButtonAnimation(FrameworkElement control, EventHandler animationComplitedEvent = null)
         {
             DoubleAnimation animation = new DoubleAnimation
@@ -371,11 +384,19 @@ namespace Lexplosion.Controls
             control.BeginAnimation(FrameworkElement.HeightProperty, animation);
         }
 
+        /// <summary>
+        /// Моментальное скрытие кнопки. Без анимации
+        /// </summary>
+        /// <param name="control">Кнопка</param>
         private void HideButton(FrameworkElement control)
         {
             control.Height = 0.0;
         }
 
+        /// <summary>
+        /// Моментальный показ кнопки. Без анимации.
+        /// </summary>
+        /// <param name="control">Кнопка</param>
         private void ShowButton(FrameworkElement control)
         {
             control.Height = this.ActualHeight;
@@ -433,6 +454,8 @@ namespace Lexplosion.Controls
 
             InstanceFormVM.DownloadInstance(progressHandlerMethod, complitedDownloadMethod);
         }
+
+
         #endregion On DependencyProperties Changed
     }
 }
