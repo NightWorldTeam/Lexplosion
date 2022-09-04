@@ -151,6 +151,7 @@
     <Compile Include="Gui\Models\ShowCaseMenu\OverviewModel.cs" />
     <Compile Include="Gui\Converters\MultiBindingConverter.cs" />
     <Compile Include="Gui\Converters\NegativeBooleanToVisibilityConverter.cs" />
+    <Compile Include="Gui\Player.cs" />
     <Compile Include="Gui\Stores\NavigationStore.cs" />
     <Compile Include="Gui\SubmenuViewModel.cs" />
     <Compile Include="Gui\Tab.cs" />

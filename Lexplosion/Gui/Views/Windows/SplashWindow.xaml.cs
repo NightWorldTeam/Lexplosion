@@ -22,12 +22,12 @@ namespace Lexplosion.Gui.Views.Windows
             DoubleAnimation _oa = new DoubleAnimation();
             _oa.From = Opacity;
             _oa.To = 0.0;
-            _oa.Duration = new Duration(TimeSpan.FromMilliseconds(170d));
+            _oa.Duration = new Duration(TimeSpan.FromMilliseconds(190d));
             BeginAnimation(OpacityProperty, _oa);
 
             Lexplosion.Run.TaskRun(delegate ()
             {
-                Thread.Sleep(170);
+                Thread.Sleep(190);
                 App.Current.Dispatcher.Invoke(delegate ()
                 {
                     Close();

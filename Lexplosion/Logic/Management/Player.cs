@@ -2,13 +2,12 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading;
-using Lexplosion.Gui;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 
 namespace Lexplosion.Logic.Management
 {
-    public class Player : VMBase
+    public partial class Player : VMBase
     {
         public string UUID { get; }
         private Action<Player> _unkickedAction = null; 
@@ -63,14 +62,6 @@ namespace Lexplosion.Logic.Management
         private Action _kickMethod;
         private Action _unkickMethod;
 
-        public RelayCommand AccessChangeAction 
-        { 
-            get => new RelayCommand(obj => 
-            {
-                AccessChange();
-            });
-        }
-
         public Player(string uuid, Action kickMethod, Action unkickMethod)
         {
             UUID = uuid;
@@ -122,6 +113,7 @@ namespace Lexplosion.Logic.Management
         /// </summary>
         private void Unkick()
         {
+            _unkickMethod();
             _unkickedAction?.Invoke(this);
             IsKicked = false;
         }

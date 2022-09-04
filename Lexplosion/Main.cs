@@ -89,59 +89,7 @@ namespace Lexplosion
             }
 
             // Встраеваем стиили
-            const string resources = "pack://application:,,,/Gui/Resources/";
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() 
-            {
-                Source = new Uri("pack://application:,,,/Assets/langs/" + "ru-RU.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "Fonts.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "Colors.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() 
-            {
-                Source = new Uri(resources + "Iconics.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "Defaults.xaml")
-            });
-            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "TextBoxStyles.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "TabControlStyles.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "ButtonStyles.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "ListboxStyles.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "StylesDictionary.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "ComboBoxStyles.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri("pack://application:,,,/Controls/Controls.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri("pack://application:,,,/DataTemplates.xaml")
-            });
+            StylesInit();
 
             // инициализация
             UserData.InitSetting();
@@ -272,6 +220,63 @@ namespace Lexplosion
             }
 
             return null;
+        }
+
+        private static void StylesInit()
+        {
+            const string resources = "pack://application:,,,/Gui/Resources/";
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Assets/langs/" + "ru-RU.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "Fonts.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "Colors.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "Iconics.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "Defaults.xaml")
+            });
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "TextBoxStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "TabControlStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "ButtonStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "ListboxStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "StylesDictionary.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri(resources + "ComboBoxStyles.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Controls/Controls.xaml")
+            });
+            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/DataTemplates.xaml")
+            });
         }
 
         private static int importantThreads = 0;
