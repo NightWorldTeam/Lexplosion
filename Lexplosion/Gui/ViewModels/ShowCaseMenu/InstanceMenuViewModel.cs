@@ -1,8 +1,6 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.MainMenu;
-using Lexplosion.Gui.Views.CustomControls;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -92,9 +90,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private void UpdateShowCaseMenu() 
         {
-
-            if (!_instanceForm.Client.InLibrary)
-            {
                 _showCaseTabMenu.Add(
                     new Tab()
                     {
@@ -109,31 +104,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                         Content = new DevСurtainViewModel()
                     }
                 );
-            }
-            else 
-            {
-                _showCaseTabMenu.Add(
-                     new Tab()
-                     {
-                         Header = ResourceGetter.GetString("general"),
-                         Content = new OverviewViewModel(_instanceForm.Client, this)
-                     }
-                     );
-                _showCaseTabMenu.Add(
-                    new Tab()
-                    {
-                        Header = ResourceGetter.GetString("mods"),
-                        Content = new DevСurtainViewModel()
-                    }
-                );
-                _showCaseTabMenu.Add(
-                    new Tab()
-                    {
-                        Header = ResourceGetter.GetString("changelog"),
-                        Content = new DevСurtainViewModel()
-                    }
-                    );
-            }
         }
 
         private void UpdateTabMenu() 
