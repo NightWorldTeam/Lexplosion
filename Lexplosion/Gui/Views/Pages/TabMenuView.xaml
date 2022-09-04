@@ -79,6 +79,7 @@
             VerticalAlignment="Top">
             <controls:DownloadButton
                 Width="100"
+                Height="30"
                 DownloadButtonBackground="#109121"
                 ForegroundProgressBar="#7de05a"
                 InstanceFormVM="{Binding InstanceFormVM}"

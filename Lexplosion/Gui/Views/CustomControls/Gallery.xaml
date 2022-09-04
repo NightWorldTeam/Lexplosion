@@ -12,9 +12,9 @@
         <Image
             Width="450"
             Height="240"
-            Source="{Binding OverviewModel.GalleryVM.SelectedImage}">
+            Source="{Binding Model.GalleryVM.SelectedImage}">
             <Image.Effect>
-                <BlurEffect Radius="{Binding OverviewModel.GalleryVM.BlurEffectRadius}" />
+                <BlurEffect Radius="{Binding Model.GalleryVM.BlurEffectRadius}" />
             </Image.Effect>
         </Image>
 
@@ -25,14 +25,14 @@
             FontWeight="Bold"
             Foreground="White"
             Text="Изображения отсутствуют"
-            Visibility="{Binding OverviewModel.GalleryVM.IsNoneImages, Converter={StaticResource ConvertBoolToVisibility}}" />
+            Visibility="{Binding Model.GalleryVM.IsNoneImages, Converter={StaticResource ConvertBoolToVisibility}}" />
 
         <Border
             x:Name="ButtonLeft"
             Width="25"
             Height="240"
             HorizontalAlignment="Left"
-            Visibility="{Binding OverviewModel.GalleryVM.IsLeftBorder, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+            Visibility="{Binding Model.GalleryVM.IsLeftBorder, Converter={StaticResource NegativeConvertBoolToVisibility}}">
 
             <Path
                 x:Name="LeftArrow"
@@ -51,7 +51,7 @@
             </Border.Background>
 
             <Border.InputBindings>
-                <MouseBinding Command="{Binding OverviewModel.GalleryVM.PrevImage}" Gesture="LeftClick" />
+                <MouseBinding Command="{Binding Model.GalleryVM.PrevImage}" Gesture="LeftClick" />
             </Border.InputBindings>
 
             <Border.Triggers>
@@ -107,7 +107,7 @@
             Width="25"
             Height="240"
             HorizontalAlignment="Right"
-            Visibility="{Binding OverviewModel.GalleryVM.IsRightBorder, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+            Visibility="{Binding Model.GalleryVM.IsRightBorder, Converter={StaticResource NegativeConvertBoolToVisibility}}">
 
             <Path
                 x:Name="RightArrow"
@@ -125,7 +125,7 @@
             </Border.Background>
 
             <Border.InputBindings>
-                <MouseBinding Command="{Binding OverviewModel.GalleryVM.NextImage}" Gesture="LeftClick" />
+                <MouseBinding Command="{Binding Model.GalleryVM.NextImage}" Gesture="LeftClick" />
             </Border.InputBindings>
 
             <Border.Triggers>

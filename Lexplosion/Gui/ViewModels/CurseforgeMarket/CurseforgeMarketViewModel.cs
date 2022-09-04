@@ -1,10 +1,7 @@
-﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
-using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
@@ -293,7 +290,13 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             Lexplosion.Run.TaskRun(delegate ()
             {
-                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1, _addonsType, SelectedAddonCategory.Id, SearchBoxVM.SearchTextComfirmed);
+                var instances = InstanceAddon.GetAddonsCatalog(
+                    _baseInstanceData, 
+                    _pageSize, 
+                    PaginatorVM.PageIndex - 1, 
+                    _addonsType, 
+                    SelectedAddonCategory.Id, 
+                    SearchBoxVM.SearchTextComfirmed);
 
                 if (instances.Count == _pageSize)
                 {
@@ -317,10 +320,12 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
                         InstanceAddons.Clear();
+                        Console.WriteLine("Начало загрузки модов");
                         foreach (var instance in instances)
                         {
                             InstanceAddons.Add(instance);
                         }
+                        Console.WriteLine("Конец");
                     });
                 }
 

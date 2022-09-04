@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,12 +12,23 @@ namespace Lexplosion.Controls
     {
         //public static readonly DependencyPropertyKey UploadedFilesPropertyKey = DependencyProperty.RegisterReadOnly("UploadedFiles", typeof(string[]), typeof(DragDropBoard), new FrameworkPropertyMetadata(new string[] {}));
 
-        public static readonly DependencyProperty UploadedFilesProperty = DependencyProperty.Register("UploadedFiles", typeof(string[]), typeof(DragDropBoard), new FrameworkPropertyMetadata(new string[] { }));
+        public static readonly DependencyProperty ImportActionProperty
+            = DependencyProperty.Register(
+                "ImportAction",
+                typeof(Action<string[]>), 
+                typeof(DragDropBoard),
+                new PropertyMetadata(null, OnUploadedFilesChanged));
 
-        public string[] UploadedFiles 
+        private static void OnUploadedFilesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => (string[])GetValue(UploadedFilesProperty);
-            set => SetValue(UploadedFilesProperty, value);
+            var dropDownMenu = d as DragDropBoard;
+            //dropDownMenu.UploadedFiles = (ObservableCollection<string>)e.NewValue;
+        }
+
+        public Action<string[]> ImportAction
+        {
+            get => (Action<string[]>)GetValue(ImportActionProperty);
+            set => SetValue(ImportActionProperty, value);
         }
 
         static DragDropBoard() 
@@ -24,13 +39,32 @@ namespace Lexplosion.Controls
 
         protected override void OnDrop(DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            Console.WriteLine("----------Method OnDrop Started----------");
+            if (this.ImportAction == null)
+                Console.WriteLine("Uploaded Files - null");
+            else 
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var allowedFiles = new List<string>();
 
-                UploadedFiles = files;
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                    foreach(var file in files) 
+                    {
+                        Console.WriteLine(file + " <-- Allowed file? --> " + file.Contains(".zip"));
+                        if (file.Contains(".zip")) 
+                        {
+                            allowedFiles.Add(file);
+                        }
+                    }
+                }
+
+                ImportAction.Invoke(allowedFiles.ToArray());
             }
             base.OnDrop(e);
+
+            Console.WriteLine("----------Method OnDrop finished----------");
         }
     }
 }

@@ -11,12 +11,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region props
 
         private OverviewModel _overviewModel;
-        public OverviewModel OverviewModel 
+        public OverviewModel Model 
         { 
             get => _overviewModel; set 
             {
                 _overviewModel = value;
-                OnPropertyChanged(nameof(OverviewModel));
+                OnPropertyChanged();
             } 
         }
 
@@ -51,7 +51,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             {
                 try
                 {
-                    System.Diagnostics.Process.Start(OverviewModel.InstanceData.WebsiteUrl);
+                    System.Diagnostics.Process.Start(Model.InstanceData.WebsiteUrl);
                 }
                 catch 
                 {
@@ -63,7 +63,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         public OverviewViewModel(InstanceClient instanceClient, ISubmenu submenuViewModel)
         {
             Lexplosion.Run.TaskRun(() => { 
-                OverviewModel = new OverviewModel(instanceClient, submenuViewModel);
+                Model = new OverviewModel(instanceClient, submenuViewModel);
 
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
                 IsLoaded = false;
@@ -72,7 +72,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public double CalcCategoryBorderHeight() 
         {
-            if (OverviewModel.InstanceData.Categories == null || OverviewModel.InstanceData.Categories.Count == 0)
+            if (Model.InstanceData.Categories == null || Model.InstanceData.Categories.Count == 0)
             {
                 IsCategoriesExist = false;
                 return 0.0;
@@ -85,6 +85,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             {
                 childWidth += Constants.TagSizes[item.name];
             }
+
             if (childWidth < 326.5)
                 return 40;
             else

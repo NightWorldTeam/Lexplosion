@@ -19,6 +19,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             return new InstanceData
             {
+                Source = InstanceSource.Local,
                 Categories = new List<Category>(),
                 Description = assetsData?.Description,
                 Summary = assetsData?.Summary,

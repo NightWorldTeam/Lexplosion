@@ -55,6 +55,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             return new InstanceData
             {
+                Source = InstanceSource.Curseforge,
                 Categories = data.categories,
                 Description = data.summary,
                 Summary = data.summary,

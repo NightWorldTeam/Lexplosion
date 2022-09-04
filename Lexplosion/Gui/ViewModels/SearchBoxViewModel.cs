@@ -22,8 +22,10 @@ namespace Lexplosion.Gui.ViewModels
             get => _selectedInstanceSource; set
             {
                 _selectedInstanceSource = value;
-                SearchChanged.Invoke();
-                OnPropertyChanged(nameof(SelectedInstanceSource));
+                Lexplosion.Run.TaskRun(() => { 
+                    SearchChanged.Invoke();
+                });
+                OnPropertyChanged();
             }
         }
 

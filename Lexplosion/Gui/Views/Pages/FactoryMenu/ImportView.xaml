@@ -38,7 +38,7 @@
                     Height="200"
                     AllowDrop="True"
                     Background="Transparent"
-                    UploadedFiles="{Binding UploadedFiles}">
+                    ImportAction="{Binding ImportAction}">
                     <Border
                         Width="310"
                         Height="200"

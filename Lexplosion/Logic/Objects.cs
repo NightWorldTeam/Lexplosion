@@ -107,6 +107,7 @@ namespace Lexplosion.Logic.Objects
 
     public class InstanceData
     {
+        public InstanceSource Source { get; set; }
         public string GameVersion { get; set; }
         public string LastUpdate { get; set; }
         public long TotalDownloads { get; set; }

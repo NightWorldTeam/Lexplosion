@@ -38,6 +38,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             return new InstanceData
             {
+                Source = InstanceSource.Nightworld,
                 Categories = data.Categories,
                 Description = data.Description,
                 Summary = data.Summary,
