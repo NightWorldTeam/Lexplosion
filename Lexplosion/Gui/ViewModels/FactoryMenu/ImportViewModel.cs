@@ -90,7 +90,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Public & Protected Methods
 
 
-        public void Import(string path)
+        public async void Import(string path)
         {
             #nullable enable
             InstanceClient? instanceClient;
@@ -99,28 +99,34 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFiles.Add(importFile);
-            
-            // Начинаем импорт файла.
-            ImportResult result = InstanceClient.Import(path, out instanceClient);
-            
-            // Импорт закончился.
-            importFile.IsImportFinished = result == ImportResult.Successful;
 
-            if (instanceClient == null || result != ImportResult.Successful)
-            {
+            Lexplosion.Run.TaskRun(() => 
+            { 
+                // Начинаем импорт файла.
+                ImportResult result = InstanceClient.Import(path, out instanceClient);
+
+                App.Current.Dispatcher.Invoke(() => { 
+                // Импорт закончился.
+                importFile.IsImportFinished = result == ImportResult.Successful;
+
+                if (instanceClient == null || result != ImportResult.Successful)
+                {
+                    // Выводим сообщение о результате испорта.
+                    MainViewModel.ShowToastMessage("Импорт завершился с ошибкой", result.ToString(), Controls.ToastMessageState.Error);
+                    return;
+                }
+
+
+                //Закрываем модальное окно.
+                FactoryGeneralViewModel.CloseModalWindow.Execute(null);
+
+                // Добавляем сборку в библиотеку.
+                _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
+
                 // Выводим сообщение о результате испорта.
-                MainViewModel.ShowToastMessage("Импорт завершился с ошибкой", result.ToString(), Controls.ToastMessageState.Error);
-                return;
-            }
-
-            //Закрываем модальное окно.
-            FactoryGeneralViewModel.CloseModalWindow.Execute(null);
-            
-            // Добавляем сборку в библиотеку.
-            _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
-            
-            // Выводим сообщение о результате испорта.
-            MainViewModel.ShowToastMessage("Результат импорта", "Импорт завершился успешно, хотите запустить сборку?", Controls.ToastMessageState.Notification);
+                MainViewModel.ShowToastMessage("Результат импорта", "Импорт завершился успешно, хотите запустить сборку?", Controls.ToastMessageState.Notification);
+                });
+            });
         }
 
 
@@ -160,15 +166,14 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         {
             using (System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog())
             {
-
                 ofd.Filter = "Archives files (.zip)|*.zip";
-                ofd.ShowDialog();
 
                 if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     // Если выбранный файл является *zip.
                     if (ofd.FileName.EndsWith(".zip"))
                     {
+
                         Import(ofd.FileName);
                     }
                 }
