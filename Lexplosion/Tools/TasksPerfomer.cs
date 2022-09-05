@@ -35,7 +35,7 @@ namespace Lexplosion.Tools
                     }
                     finally
                     {
-                        _remainingTasksCount--;
+                        _remainingTasksCount--; // TODO: сделать Interlocked 
                         if (_remainingTasksCount < 1)
                         {
                             _endEvent.Set();

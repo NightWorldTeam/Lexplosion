@@ -137,9 +137,9 @@ namespace Lexplosion.Logic.Network.SMP
         public bool Close(IPEndPoint point)
         {
             cloaseBlock.WaitOne();
-            if (clients.ContainsKey(point))
+            if (point != null && clients.ContainsKey(point))
             {
-                SmpClient client = clients[point];
+                clients.TryRemove(point, out SmpClient client);
                 client.Close();
             }
             cloaseBlock.Release();
