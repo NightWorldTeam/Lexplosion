@@ -4,6 +4,7 @@
     xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
     xmlns:factorymenu="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
     xmlns:modalviews="clr-namespace:Lexplosion.Gui.Views.Pages.ModalViews"
+    xmlns:modalvm="clr-namespace:Lexplosion.Gui.ViewModels.ModalVMs"
     xmlns:modalvms="clr-namespace:Lexplosion.Gui.ViewModels.ModalVMs"
     xmlns:pagemm="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu"
     xmlns:pagemultiplayer="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu.Multiplayer"
@@ -102,7 +103,7 @@
     <DataTemplate DataType="{x:Type vmfactorymenu:FactoryDLCVM}">
         <factorymenu:FactoryDLCView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vmfactorymenu:ImportViewModel}">
+    <DataTemplate DataType="{x:Type modalvm:ImportViewModel}">
         <factorymenu:ImportView />
     </DataTemplate>
 

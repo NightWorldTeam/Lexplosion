@@ -5,6 +5,7 @@ using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.ViewModels.MainMenu;
+using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;

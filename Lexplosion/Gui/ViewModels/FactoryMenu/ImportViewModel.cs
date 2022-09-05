@@ -1,29 +1,51 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
+using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
-namespace Lexplosion.Gui.ViewModels.FactoryMenu
+namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public class ImportFile
+    public sealed class ImportFile
     {
+        private readonly ImportViewModel _importVM;
         public string Name { get; }
         public string Path { get; }
-        public bool IsImported { get; }
+        public bool IsImportFinished { get; set; }
 
-        public ImportFile(string name, string path, bool isImported)
+        public ImportFile(ImportViewModel importVM, string path)
         {
-            Name = name;
+            _importVM = importVM;
+            Name = System.IO.Path.GetFileName(path);
             Path = path;
-            IsImported = isImported;
+            IsImportFinished = false;
+        }
+
+        public RelayCommand CancelUploadCommand
+        {
+            get => new RelayCommand(obj => 
+            {
+                CancelUpload();
+            });
+        }
+
+        private void CancelUpload() 
+        {
+            var index = _importVM.UploadedFiles.IndexOf(this);
+            _importVM.UploadedFiles.RemoveAt(index);
         }
     }
 
     public sealed class ImportViewModel : VMBase
     {
         private MainViewModel _mainViewModel;
-        private FactoryGeneralViewModel _factoryGeneralVM;
+        public FactoryGeneralViewModel FactoryGeneralViewModel { get; }
+
+
+        #region Properties
+
 
         private ObservableCollection<ImportFile> _uploadedFiles;
         /// <summary>
@@ -38,75 +60,82 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
-        public FactoryGeneralViewModel FactoryGeneralVM { get => _factoryGeneralVM; }
+        /// <summary>
+        /// Делегат который вызывает принимает в качестве агрумента массив строк.
+        /// Проходится по массиву и для каждого элемента начинает импорт.
+        /// </summary>
+        public Action<string[]> ImportAction { get;}
 
+
+        #endregion Properties
+
+
+        #region Commands
+
+        /// <summary>
+        /// Команда для ImportView -> [кнопка]Обзор.
+        /// </summary>
         public RelayCommand ImportCommand
         {
             get => new RelayCommand(obj =>
             {
-                // Process open file dialog box results
-
-                using (System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog())
-                {
-
-                    ofd.Filter = "Archives files (.zip)|*.zip";
-                    ofd.ShowDialog();
-
-                    //reopen OpenFileDialog if it is zip file. this part can be improved.
-                    if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        if (ofd.FileName.EndsWith(".zip"))
-                        {
-                            Import(ofd.FileName);
-                        }
-                    }
-                }
+                ShowOpenFileDialogForImport();
             });
         }
 
+
+        #endregion Commands
+
+
+        #region Public & Protected Methods
+
+
         public void Import(string path)
         {
-            //UploadedFiles
-
             #nullable enable
             InstanceClient? instanceClient;
 
-            ImportResult result = ImportResult.ServerFilesError;
-
-            var importFile = new ImportFile("name", path, false);
-
+            var importFile = new ImportFile(this, path);
+            
+            // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFiles.Add(importFile);
-
-            result = InstanceClient.Import(path, out instanceClient);
+            
+            // Начинаем импорт файла.
+            ImportResult result = InstanceClient.Import(path, out instanceClient);
+            
+            // Импорт закончился.
+            importFile.IsImportFinished = result == ImportResult.Successful;
 
             if (instanceClient == null || result != ImportResult.Successful)
             {
+                // Выводим сообщение о результате испорта.
                 MainViewModel.ShowToastMessage("Импорт завершился с ошибкой", result.ToString(), Controls.ToastMessageState.Error);
                 return;
             }
 
-            _mainViewModel.ModalWindowVM.IsOpen = false;
-
-            _mainViewModel.Model.LibraryInstances.Add(
-                new InstanceFormViewModel(_mainViewModel, instanceClient)
-                );
-
+            //Закрываем модальное окно.
+            FactoryGeneralViewModel.CloseModalWindow.Execute(null);
+            
+            // Добавляем сборку в библиотеку.
+            _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
+            
+            // Выводим сообщение о результате испорта.
             MainViewModel.ShowToastMessage("Результат импорта", "Импорт завершился успешно, хотите запустить сборку?", Controls.ToastMessageState.Notification);
         }
 
-        private Action<string[]> _importAction;
 
-        public Action<string[]> ImportAction
-        {
-            get => _importAction;
-        }
+        #endregion Public & Protected Methods
+
+
+        #region Construcotors
+
 
         public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel)
         {
             _mainViewModel = mainViewModel;
-            _factoryGeneralVM = factoryGeneralViewModel;
+            FactoryGeneralViewModel = factoryGeneralViewModel;
 
-             _importAction = (string[] files) =>
+            ImportAction = (string[] files) =>
              {
                  foreach (var file in files)
                  {
@@ -117,5 +146,36 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
             UploadedFiles = new ObservableCollection<ImportFile>();
         }
+
+
+        #endregion Construcotors
+
+
+        #region Private Methods
+
+        /// <summary>
+        /// Открывает диалогое окно позволяя выбрать .zip файл(ы) и начать его(их) импорт.
+        /// </summary>
+        private void ShowOpenFileDialogForImport() 
+        {
+            using (System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog())
+            {
+
+                ofd.Filter = "Archives files (.zip)|*.zip";
+                ofd.ShowDialog();
+
+                if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    // Если выбранный файл является *zip.
+                    if (ofd.FileName.EndsWith(".zip"))
+                    {
+                        Import(ofd.FileName);
+                    }
+                }
+            }
+        }
+
+
+        #endregion Private Methods
     }
 }

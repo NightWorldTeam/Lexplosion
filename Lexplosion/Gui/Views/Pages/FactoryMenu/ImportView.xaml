@@ -5,9 +5,101 @@
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:source="clr-namespace:Lexplosion.Gui.ViewModels.ModalVMs"
     d:DesignHeight="400"
     d:DesignWidth="360"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+
+        <DataTemplate DataType="{x:Type source:ImportFile}">
+            <Border
+                Width="280"
+                Height="50"
+                Background="#252525"
+                CornerRadius="5">
+                <Grid ShowGridLines="False">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="230" />
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Width="35" Height="35">
+                        <Path
+                            Data="M5 2.5H25C25.663 2.5 26.2989 2.76339 26.7678 3.23223C27.2366 3.70107 27.5 4.33696 27.5 5V25C27.5 25.663 27.2366 26.2989 26.7678 26.7678C26.2989 27.2366 25.663 27.5 25 27.5H5C4.33696 27.5 3.70107 27.2366 3.23223 26.7678C2.76339 26.2989 2.5 25.663 2.5 25V5C2.5 4.33696 2.76339 3.70107 3.23223 3.23223C3.70107 2.76339 4.33696 2.5 5 2.5M7.5 7.5V12.5H12.5V15H10V22.5H12.5V20H17.5V22.5H20V15H17.5V12.5H22.5V7.5H17.5V12.5H12.5V7.5H7.5Z"
+                            Fill="#00820D"
+                            Stretch="Fill" />
+                    </Viewbox>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="0,5,0,0"
+                        Orientation="Vertical">
+                        <Grid>
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                Foreground="White"
+                                Text="{Binding Name}" />
+
+                            <!--  IsImportFinished - False  -->
+                            <Button
+                                Margin="0,0,10,0"
+                                HorizontalAlignment="Right"
+                                Background="Transparent"
+                                Command="{Binding CancelUploadCommand}"
+                                Style="{StaticResource IconicButton}"
+                                Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                                <Grid>
+                                    <Viewbox Width="18" Height="18">
+                                        <Path
+                                            Data="m16.5 33.6 7.5-7.5 7.5 7.5 2.1-2.1-7.5-7.5 7.5-7.5-2.1-2.1-7.5 7.5-7.5-7.5-2.1 2.1 7.5 7.5-7.5 7.5ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
+                                            Fill="#FF7575"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+                                </Grid>
+                            </Button>
+
+                            <!--  IsImportFinished - True  -->
+                            <Grid
+                                Margin="0,0,10,0"
+                                HorizontalAlignment="Right"
+                                Visibility="{Binding IsImportFinished, Converter={StaticResource ConvertBoolToVisibility}}">
+                                <Viewbox Width="18" Height="18">
+                                    <Path
+                                        Data="M21.05 33.1 35.2 18.95l-2.3-2.25-11.85 11.85-6-6-2.25 2.25ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
+                                        Fill="#00C2FF"
+                                        SnapsToDevicePixels="False"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Grid>
+                        </Grid>
+
+                        <!--  IsImportFinished - False  -->
+                        <ProgressBar
+                            Height="5"
+                            Margin="6,8,10,0"
+                            Foreground="{DynamicResource BrandSolidColorBrush}"
+                            IsIndeterminate="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}"
+                            Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}"
+                            Value="30" />
+
+                        <!--  IsImportFinished - True  -->
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            FontSize="11"
+                            FontWeight="Medium"
+                            Foreground="White"
+                            Opacity="0.8"
+                            Text="{DynamicResource instanceImportFinished}"
+                            TextWrapping="WrapWithOverflow"
+                            Visibility="{Binding IsImportFinished, Converter={StaticResource ConvertBoolToVisibility}}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </UserControl.Resources>
 
     <Grid Width="360">
 
@@ -101,123 +193,8 @@
                         Text="{DynamicResource youNotUploadedAnythink}"
                         Visibility="Collapsed" />
 
-                    <Border
-                        Width="280"
-                        Height="50"
-                        Background="#252525"
-                        CornerRadius="5">
-                        <Grid ShowGridLines="False">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50" />
-                                <ColumnDefinition Width="230" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox Width="35" Height="35">
-                                <Path
-                                    Data="M5 2.5H25C25.663 2.5 26.2989 2.76339 26.7678 3.23223C27.2366 3.70107 27.5 4.33696 27.5 5V25C27.5 25.663 27.2366 26.2989 26.7678 26.7678C26.2989 27.2366 25.663 27.5 25 27.5H5C4.33696 27.5 3.70107 27.2366 3.23223 26.7678C2.76339 26.2989 2.5 25.663 2.5 25V5C2.5 4.33696 2.76339 3.70107 3.23223 3.23223C3.70107 2.76339 4.33696 2.5 5 2.5M7.5 7.5V12.5H12.5V15H10V22.5H12.5V20H17.5V22.5H20V15H17.5V12.5H22.5V7.5H17.5V12.5H12.5V7.5H7.5Z"
-                                    Fill="#00820D"
-                                    Stretch="Fill" />
-                            </Viewbox>
-
-                            <StackPanel
-                                Grid.Column="1"
-                                Margin="0,5,0,0"
-                                Orientation="Vertical">
-                                <Grid>
-
-                                    <TextBlock
-                                        HorizontalAlignment="Left"
-                                        Foreground="White"
-                                        Text="Headway" />
-
-                                    <Button
-                                        Margin="0,0,10,0"
-                                        HorizontalAlignment="Right"
-                                        Background="Transparent"
-                                        Style="{StaticResource IconicButton}">
-                                        <Grid>
-                                            <Viewbox Width="18" Height="18">
-                                                <Path
-                                                    Data="m16.5 33.6 7.5-7.5 7.5 7.5 2.1-2.1-7.5-7.5 7.5-7.5-2.1-2.1-7.5 7.5-7.5-7.5-2.1 2.1 7.5 7.5-7.5 7.5ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
-                                                    Fill="#FF7575"
-                                                    Stretch="Fill" />
-                                            </Viewbox>
-                                        </Grid>
-                                    </Button>
-
-                                </Grid>
-
-                                <ProgressBar
-                                    Height="5"
-                                    Margin="6,8,10,0"
-                                    Foreground="{DynamicResource BrandSolidColorBrush}"
-                                    IsIndeterminate="True"
-                                    Value="30" />
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <Border
-                        Width="280"
-                        Height="50"
-                        Margin="0,10,0,0"
-                        Background="#252525"
-                        CornerRadius="5">
-                        <Grid ShowGridLines="False">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50" />
-                                <ColumnDefinition Width="230" />
-                            </Grid.ColumnDefinitions>
-
-                            <Viewbox Width="35" Height="35">
-                                <Path
-                                    Data="M5 2.5H25C25.663 2.5 26.2989 2.76339 26.7678 3.23223C27.2366 3.70107 27.5 4.33696 27.5 5V25C27.5 25.663 27.2366 26.2989 26.7678 26.7678C26.2989 27.2366 25.663 27.5 25 27.5H5C4.33696 27.5 3.70107 27.2366 3.23223 26.7678C2.76339 26.2989 2.5 25.663 2.5 25V5C2.5 4.33696 2.76339 3.70107 3.23223 3.23223C3.70107 2.76339 4.33696 2.5 5 2.5M7.5 7.5V12.5H12.5V15H10V22.5H12.5V20H17.5V22.5H20V15H17.5V12.5H22.5V7.5H17.5V12.5H12.5V7.5H7.5Z"
-                                    Fill="#00820D"
-                                    Stretch="Fill" />
-                            </Viewbox>
-
-                            <StackPanel
-                                Grid.Column="1"
-                                Margin="0,5,0,0"
-                                Orientation="Vertical">
-                                <Grid>
-
-                                    <TextBlock
-                                        HorizontalAlignment="Left"
-                                        Foreground="White"
-                                        Text="Headway" />
-
-                                    <Button
-                                        Margin="0,0,10,0"
-                                        HorizontalAlignment="Right"
-                                        Background="Transparent"
-                                        Style="{StaticResource IconicButton}">
-                                        <Grid>
-                                            <Viewbox Width="18" Height="18">
-                                                <Path
-                                                    Data="M21.05 33.1 35.2 18.95l-2.3-2.25-11.85 11.85-6-6-2.25 2.25ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
-                                                    Fill="#00C2FF"
-                                                    SnapsToDevicePixels="False"
-                                                    Stretch="Fill" />
-                                            </Viewbox>
-                                        </Grid>
-                                    </Button>
-
-                                </Grid>
-
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontSize="11"
-                                    FontWeight="Medium"
-                                    Foreground="White"
-                                    Opacity="0.8"
-                                    Text="{DynamicResource instanceImportFinished}"
-                                    TextWrapping="WrapWithOverflow" />
-                            </StackPanel>
-                        </Grid>
-                    </Border>
+                    <!--  Instance File  -->
+                    <ItemsControl ItemsSource="{Binding UploadedFiles}" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
@@ -229,7 +206,7 @@
                 Height="30"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Command="{Binding FactoryGeneralVM.CloseModalWindow}"
+                Command="{Binding FactoryGeneralViewModel.CloseModalWindow}"
                 Content="{DynamicResource cancel}"
                 FontSize="16"
                 FontWeight="Normal"
