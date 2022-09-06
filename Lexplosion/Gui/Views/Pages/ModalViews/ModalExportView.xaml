@@ -126,7 +126,7 @@
                         <Style TargetType="{x:Type TreeViewItem}">
                             <Setter Property="Background" Value="Transparent" />
                             <Setter Property="Padding" Value="1,0,0,0" />
-                            <Setter Property="extension:TreeViewItem.Command" Value="{Binding TreeViewItemExpanded}" />
+                            <Setter Property="extension:TreeViewItem.Command" Value="{Binding DataContext.TreeViewItemExpanded, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
                             <Setter Property="extension:TreeViewItem.CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
                             <Setter Property="Foreground" Value="White" />
                             <Setter Property="Template">
@@ -172,6 +172,7 @@
                                                                                 <SolidColorBrush Color="{DynamicResource ActivityColor}" />
                                                                             </Path.Fill>
                                                                         </Path>
+
                                                                         <Path
                                                                             x:Name="Expanded"
                                                                             Margin="1,1,1,1"
@@ -266,7 +267,7 @@
                                     Margin="0,0,5,0"
                                     VerticalAlignment="Center"
                                     IsChecked="{Binding Value.IsSelected, Mode=TwoWay}" />
-                                <TextBlock Text="{Binding Key}" />
+                                <TextBlock Text="{Binding Value.Name}" />
                             </StackPanel>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>

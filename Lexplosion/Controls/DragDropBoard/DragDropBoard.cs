@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,20 +7,12 @@ namespace Lexplosion.Controls
 {
     public class DragDropBoard : ContentControl
     {
-        //public static readonly DependencyPropertyKey UploadedFilesPropertyKey = DependencyProperty.RegisterReadOnly("UploadedFiles", typeof(string[]), typeof(DragDropBoard), new FrameworkPropertyMetadata(new string[] {}));
-
         public static readonly DependencyProperty ImportActionProperty
             = DependencyProperty.Register(
                 "ImportAction",
                 typeof(Action<string[]>), 
                 typeof(DragDropBoard),
-                new PropertyMetadata(null, OnUploadedFilesChanged));
-
-        private static void OnUploadedFilesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var dropDownMenu = d as DragDropBoard;
-            //dropDownMenu.UploadedFiles = (ObservableCollection<string>)e.NewValue;
-        }
+                new PropertyMetadata(null));
 
         public Action<string[]> ImportAction
         {
@@ -41,7 +28,7 @@ namespace Lexplosion.Controls
 
         protected override void OnDrop(DragEventArgs e)
         {
-            Console.WriteLine("----------Method OnDrop Started----------");
+            //Console.WriteLine("----------Method OnDrop Started----------");
             if (this.ImportAction == null)
                 Console.WriteLine("Uploaded Files - null");
             else 
@@ -54,7 +41,7 @@ namespace Lexplosion.Controls
 
                     foreach(var file in files) 
                     {
-                        Console.WriteLine(file + " <-- Allowed file? --> " + file.Contains(".zip"));
+                        //Console.WriteLine(file + " <-- Allowed file? --> " + file.Contains(".zip"));
                         if (file.Contains(".zip")) 
                         {
                             allowedFiles.Add(file);
@@ -66,7 +53,7 @@ namespace Lexplosion.Controls
             }
             base.OnDrop(e);
 
-            Console.WriteLine("----------Method OnDrop finished----------");
+            //Console.WriteLine("----------Method OnDrop finished----------");
         }
     }
 }

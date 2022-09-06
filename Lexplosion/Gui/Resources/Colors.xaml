@@ -4,7 +4,8 @@
     <Color x:Key="MyLovelyColor">#ff7601</Color>
     <Color x:Key="MyLovelyColo1r">#CD0074</Color>
     <Color x:Key="MyLovelyColo2r">gREEN</Color>
-    <Color x:Key="MyLovelyColo3r">Yellow</Color>
+    <Color x:Key="MyLovelyColo3r">#a020f0</Color>
+    <Color x:Key="MyLovelyColo4">Yellow</Color>
 
 
     <Color x:Key="ActivityColor">#167FFC</Color>

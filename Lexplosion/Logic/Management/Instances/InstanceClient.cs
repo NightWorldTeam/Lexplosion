@@ -837,12 +837,8 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     foreach (DirectoryInfo item in dir.GetDirectories())
                     {
-                        pathContent["/" + item.Name] = new PathLevel
-                        {
-                            IsFile = false,
-                            FullPath = path + "/" + item.Name,
-                            IsSelected = (item.Name == "mods" || item.Name == "scripts" || item.Name == "resources" || item.Name == "resourcepacks" || item.Name == "config")
-                        };
+                        pathContent["/" + item.Name] =
+                            new PathLevel(item.Name, false, path + "/" + item.Name, (item.Name == "mods" || item.Name == "scripts" || item.Name == "resources" || item.Name == "resourcepacks" || item.Name == "config"));
                     }
                 }
                 catch { }
@@ -851,11 +847,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     foreach (var item in dir.GetFiles())
                     {
-                        pathContent["/" + item.Name] = new PathLevel
-                        {
-                            IsFile = true,
-                            FullPath = path + "/" + item.Name
-                        };
+                        pathContent["/" + item.Name] = new PathLevel(item.Name, true, path + "/" + item.Name);
                     }
                 }
                 catch { }

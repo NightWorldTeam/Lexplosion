@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Controls;
 using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Logic.Management.Instances;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,53 +12,29 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
     public sealed class ExportViewModel : ModalVMBase
     {
-        private MainViewModel _mainViewModel;
-
-        public MainViewModel MainVM
-        {
-            get => _mainViewModel;
-        }
-
-        public ExportViewModel(MainViewModel mainViewModel)
-        {
-            _mainViewModel = mainViewModel;
-        }
-
-
-        #region commands
-
-        /// <summary>
-        /// Свойтсво отрабатывает при нажатии кнопки Экспорт, в Export Popup.
-        /// Запускает экспорт модпака.
-        /// </summary>
-        public override RelayCommand Action
-        {
-            get => new RelayCommand(obj =>
-            {
-                Export();
-                _mainViewModel.ModalWindowVM.IsOpen = false;
-            });
-        }
-
-        /// <summary>
-        /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
-        /// Отменяет экспорт, скрывает popup меню.
-        /// </summary>
-        public override RelayCommand CloseModalWindow
-        {
-            get => new RelayCommand(obj =>
-            {
-                _mainViewModel.ModalWindowVM.IsOpen = false;
-            });
-        }
-
-        #endregion commands
-
-
         /// <summary>
         /// Список хранит в себе загруженные директории [string].
         /// </summary>
         private List<string> LoadedDirectories = new List<string>();
+
+
+        #region Constructors
+
+
+        public ExportViewModel(MainViewModel mainViewModel)
+        {
+            MainVM = mainViewModel;
+        }
+
+
+        #endregion Constructors
+
+
+        #region Properties
+
+
+        public MainViewModel MainVM { get; }
+
 
         private string _instanceName;
         public string InstanceName
@@ -85,23 +62,14 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// <summary>
         /// Свойство содержит информацию - экспортируются ли все файлы сборки.
         /// </summary>
-        private bool _isFullExport = true;
+        private bool _isFullExport = false;
         public bool IsFullExport
         {
             get => _isFullExport; set
             {
                 _isFullExport = value;
                 OnPropertyChanged();
-
-                Console.WriteLine("Full Export: ", value);
-
-                if (UnitsList != null)
-                {
-                    foreach (var val in UnitsList.Values)
-                    {
-                        val.IsSelected = value;
-                    }
-                }
+                ReselectedAllUnits(value);
             }
         }
 
@@ -115,7 +83,40 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             {
                 _unitsList = value;
                 OnPropertyChanged();
+                ContentPreload(value);
             }
+        }
+
+
+        #endregion Properties
+
+
+        #region Commands
+
+
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки Экспорт, в Export Popup.
+        /// Запускает экспорт модпака.
+        /// </summary>
+        public override RelayCommand Action
+        {
+            get => new RelayCommand(obj =>
+            {
+                Export();
+                MainVM.ModalWindowVM.IsOpen = false;
+            });
+        }
+
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
+        /// Отменяет экспорт, скрывает popup меню.
+        /// </summary>
+        public override RelayCommand CloseModalWindow
+        {
+            get => new RelayCommand(obj =>
+            {
+                MainVM.ModalWindowVM.IsOpen = false;
+            });
         }
 
         /// <summary>
@@ -132,8 +133,44 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                 // key - directory, value - pathlevel class
                 var keyvaluepair = (KeyValuePair<string, PathLevel>)obj;
                 LoadDirContent(keyvaluepair.Value.FullPath, keyvaluepair.Value);
+                ContentPreload(keyvaluepair.Value.UnitsList);
             });
         }
+
+
+        #endregion Commands
+
+
+        #region Private Methods
+
+        /// <summary>
+        /// Загрузка данных для UnitsList, на один шаг вперёд.
+        /// </summary>
+        /// <param name="subUnits">Словарь UnitsList</param>
+        private async void ContentPreload(Dictionary<string, PathLevel> subUnits) 
+        {
+            foreach (var subUnit in subUnits) 
+            {
+                await Task.Run(() => LoadDirContent(subUnit.Value.FullPath, subUnit.Value));
+            }
+        }
+
+
+        /// <summary>
+        /// Перевыделяет все элементы в UnitsList.
+        /// </summary>
+        /// <param name="value">значение выделения</param>
+        private void ReselectedAllUnits(bool value) 
+        {
+            if (UnitsList != null)
+            {
+                foreach (var val in UnitsList.Values)
+                {
+                    val.IsSelected = value;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Загружает контент для директории. Если директория уже загружена, то производиться выход из метода.
@@ -184,5 +221,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                 });
             }
         }
+
+
+        #endregion Private Methods
     }
 }

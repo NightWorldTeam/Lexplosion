@@ -90,7 +90,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Public & Protected Methods
 
 
-        public async void Import(string path)
+        public void Import(string path)
         {
             #nullable enable
             InstanceClient? instanceClient;

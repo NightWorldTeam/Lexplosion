@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Lexplosion.Gui.Extension;
 using Lexplosion.Logic.Objects;
+using Newtonsoft.Json.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -18,8 +19,18 @@ namespace Lexplosion.Logic.Management.Instances
     /// <summary>
     /// Нужен для экспорта сборки. Содержит описание элемента директории модпака (папки или файла)
     /// </summary>
-    public class PathLevel : VMBase
+    public sealed class PathLevel : VMBase
     {
+        /// <summary>
+        /// Собстна если этот элемент - файл, то значение true, если папка, то false.
+        /// </summary>
+        public readonly bool IsFile;
+
+        /// <summary>
+        /// Название объекта в иерархии.
+        /// </summary>
+        public string Name { get; }
+
         /// <summary>
         /// Содержит полный путь до юнита, начиная от папки модпака.
         /// </summary>
@@ -35,28 +46,9 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _isSelected = value;
                 OnPropertyChanged();
-
-                if (UnitsList != null)
-                    foreach (var val in UnitsList.Values) 
-                    {
-                        val.IsSelected = value;
-                    }
+                ReselectUnits();
             }
         }
-
-        /// <summary>
-        /// Используется только если этот элемент является папкой (IsFile равно false).  
-        /// Указывает на то, есть ли в папке файлы.
-        /// </summary>
-        public bool HasItems
-        {
-            get => IsFile;
-        }
-
-        /// <summary>
-        /// Собстна если этот эоемент файл - то значение true, если папка, то false.
-        /// </summary>
-        public bool IsFile;
 
         private Dictionary<string, PathLevel> _unitsList;
         /// <summary>
@@ -71,6 +63,36 @@ namespace Lexplosion.Logic.Management.Instances
                 OnPropertyChanged();
             }
         }
+
+        #region Contructors
+
+
+        public PathLevel(string name, bool isFile, string fullPath, bool isSelected = false)
+        {
+            Name = name;
+            IsFile = isFile;
+            FullPath = fullPath;
+            IsSelected = isSelected;
+        }
+
+
+        #endregion Contructors
+
+
+        #region Private Methods
+
+
+        private void ReselectUnits() 
+        {
+            if (UnitsList != null)
+            foreach (var val in UnitsList.Values)
+            {
+                val.IsSelected = this.IsSelected;
+            }
+        }
+
+
+        #endregion Private Methods
     }
 
     /// <summary>
