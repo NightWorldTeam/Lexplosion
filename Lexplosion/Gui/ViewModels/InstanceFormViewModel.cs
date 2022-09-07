@@ -147,7 +147,7 @@ namespace Lexplosion.Gui.ViewModels
                 if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
                     MainVM.Model.LibraryInstances.Add(this);
                 MainVM.DownloadManager.AddProcess(this);
-                Model.DownloadModel.DonwloadPrepare();
+                Model.DownloadModel.DownloadPrepare();
             }
         }
 
@@ -250,7 +250,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.Update:
                     {
-                        Model.DownloadModel.DonwloadPrepare();
+                        Model.DownloadModel.DownloadPrepare();
                         break;
                     }
 

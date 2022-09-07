@@ -3,7 +3,7 @@
 namespace Lexplosion.Gui.Views.Pages.ModalViews
 {
     /// <summary>
-    /// Логика взаимодействия для DonwloadManager.xaml
+    /// Логика взаимодействия для DownloadManager.xaml
     /// </summary>
     public partial class DownloadManagerView : UserControl
     {

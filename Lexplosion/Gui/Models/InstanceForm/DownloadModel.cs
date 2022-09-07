@@ -86,7 +86,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             DownloadActions.Add(Download);
             ComplitedDownloadActions.Add(InstanceDownloadCompleted);
 
-            instanceFormModel.InstanceClient.ProgressHandler += DonwloadProcess;
+            instanceFormModel.InstanceClient.ProgressHandler += DownloadProcess;
             instanceFormModel.InstanceClient.ComplitedDownload += ComplitedDownloadAction;
 
             _mainViewModel = mainViewModel;
@@ -97,7 +97,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         /// <summary>
         /// Запускает скачивание
         /// </summary>
-        public void DonwloadPrepare()
+        public void DownloadPrepare()
         {
             _instanceFormModel.InstanceClient.AddToLibrary();
             _instanceFormModel.UpperButton.ChangeFuncProgressBar();
@@ -299,7 +299,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "U2U1203:Use foreach efficiently", Justification = "<Ожидание>")]
-        private void DonwloadProcess(DownloadStageTypes downloadStageType, int stagesCount, int stage, int procent) 
+        private void DownloadProcess(DownloadStageTypes downloadStageType, int stagesCount, int stage, int procent) 
         {
             var actions = DownloadActions.ToArray();
             foreach (var action in actions)

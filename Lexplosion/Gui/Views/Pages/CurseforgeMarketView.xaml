@@ -207,7 +207,7 @@
                                                     Text="{Binding Author, StringFormat='by {0}'}" />
                                             </Grid>
 
-                                            <!--  Donwload Count, Last Update Time, Created Time  -->
+                                            <!--  Download Count, Last Update Time, Created Time  -->
                                             <Grid Grid.Row="1" ShowGridLines="False">
 
                                                 <Grid.ColumnDefinitions>

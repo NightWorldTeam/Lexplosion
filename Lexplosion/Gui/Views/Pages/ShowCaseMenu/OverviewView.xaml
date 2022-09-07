@@ -7,7 +7,7 @@
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects"
-    d:DesignHeight="1000"
+    d:DesignHeight="500"
     d:DesignWidth="200"
     mc:Ignorable="d">
 

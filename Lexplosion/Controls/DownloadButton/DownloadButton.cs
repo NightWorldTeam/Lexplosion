@@ -211,7 +211,7 @@ namespace Lexplosion.Controls
 
         #region fontweight
 
-        public FontWeight DonwloadButtonFontWeight
+        public FontWeight DownloadButtonFontWeight
         {
             get => (FontWeight)GetValue(DownloadButtonFontWeightProperty);
             set => SetValue(DownloadButtonFontWeightProperty, value);
@@ -336,7 +336,7 @@ namespace Lexplosion.Controls
             // тут запуск скачивания.
 
             // ProgressHandler
-            Donwload();
+            Download();
 
             NextButtonAnimation(button);
         }
@@ -426,7 +426,7 @@ namespace Lexplosion.Controls
             else if (newValue.Model.DownloadModel.IsDownloadInProgress)
             {
                 button.HideButton(button._downloadButton);
-                button.Donwload();
+                button.Download();
             }
             else
             {
@@ -435,7 +435,7 @@ namespace Lexplosion.Controls
             }
         }
 
-        private void Donwload() 
+        private void Download() 
         {
             Action<DownloadStageTypes, int, int, int> progressHandlerMethod = delegate (DownloadStageTypes stageType, int stagesCount, int stage, int procents)
             {
