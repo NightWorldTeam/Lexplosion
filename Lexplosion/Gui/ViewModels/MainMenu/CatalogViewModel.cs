@@ -77,14 +77,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private RelayCommand _onScrollCommand;
         public RelayCommand OnScrollCommand 
         {
-            get => _onScrollCommand ?? new RelayCommand(obj => 
+            get => _onScrollCommand ?? (_onScrollCommand = new RelayCommand(obj => 
             {
                 // TODO: Возможно тяжелый код.
                 foreach (var instance in InstanceForms)
                 {
                     instance.IsDropdownMenuOpen = false;
                 }
-            });
+            }));
         }
 
 

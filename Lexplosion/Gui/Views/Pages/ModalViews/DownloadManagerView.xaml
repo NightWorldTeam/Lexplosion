@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Lexplosion.Gui.Views.Pages.ModalViews.DonwloadManagerView"
+    x:Class="Lexplosion.Gui.Views.Pages.ModalViews.DownloadManagerView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -180,7 +180,7 @@
             Margin="10"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Command="{Binding CloseModalWindow}"
+            Command="{Binding CloseModalWindowCommand}"
             Style="{StaticResource IconicButton}">
             <Viewbox Width="25" Height="25">
                 <Path

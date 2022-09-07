@@ -100,10 +100,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private RelayCommand _openAddonsFolder;
         public RelayCommand OpenAddonsFolder 
         {
-            get => _openAddonsFolder ?? new RelayCommand(obj => 
+            get => _openAddonsFolder ?? (_openAddonsFolder = new RelayCommand(obj => 
             {
                 System.Diagnostics.Process.Start("explorer", GetAddonsFolder());
-            });
+            }));
         }
 
         #endregion

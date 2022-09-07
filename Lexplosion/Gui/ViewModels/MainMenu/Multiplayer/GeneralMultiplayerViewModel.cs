@@ -10,18 +10,18 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         private RelayCommand _multiplayerOff;
         public RelayCommand MultiplayerOff 
         {
-            get => _multiplayerOff ?? new RelayCommand(obj => 
+            get => _multiplayerOff ?? (_multiplayerOff = new RelayCommand(obj => 
             {
                 LaunchGame.RebootOnlineGame();
-            });
+            }));
         }
 
         private RelayCommand _multiplayerRefresh;
         public RelayCommand MultiplayerRefresh
         {
-            get => _multiplayerRefresh ?? new RelayCommand(obj =>
+            get => _multiplayerRefresh ?? (_multiplayerRefresh = new RelayCommand(obj =>
             {
-            });
+            }));
         }
 
         public GeneralMultiplayerViewModel()

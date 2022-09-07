@@ -1,11 +1,9 @@
 ﻿using Lexplosion.Controls;
 using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Logic.Management.Instances;
-using Newtonsoft.Json.Linq;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
@@ -73,10 +71,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
+        private Dictionary<string, PathLevel> _unitsList;
         /// <summary>
         /// Коллекция [Словарь] который обновляется при добавлении в него значений.
         /// </summary>
-        private Dictionary<string, PathLevel> _unitsList;
         public Dictionary<string, PathLevel> UnitsList
         {
             get => _unitsList; set
@@ -87,6 +85,19 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
+        private bool _isExportFinished = false;
+        /// <summary>
+        /// Отвечает навопрос закончился ли экспорт сборка.
+        /// </summary>
+        public bool IsExportFinished 
+        {
+            get => _isExportFinished; set 
+            {
+                _isExportFinished = value; 
+                OnPropertyChanged();
+            }
+        }
+
 
         #endregion Properties
 
@@ -94,38 +105,54 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Commands
 
 
+        private RelayCommand _actionCommand;
         /// <summary>
         /// Свойтсво отрабатывает при нажатии кнопки Экспорт, в Export Popup.
         /// Запускает экспорт модпака.
         /// </summary>
-        public override RelayCommand Action
+        public override RelayCommand ActionCommand
         {
-            get => new RelayCommand(obj =>
+            get => _actionCommand ?? (_actionCommand = new RelayCommand(obj =>
             {
                 Export();
                 MainVM.ModalWindowVM.IsOpen = false;
-            });
+            }));
         }
 
+        private RelayCommand _closeModalWindowCommand;
         /// <summary>
         /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
         /// Отменяет экспорт, скрывает popup меню.
         /// </summary>
-        public override RelayCommand CloseModalWindow
+        public override RelayCommand CloseModalWindowCommand
         {
-            get => new RelayCommand(obj =>
+            get => _closeModalWindowCommand ?? (_closeModalWindowCommand = new RelayCommand(obj =>
             {
                 MainVM.ModalWindowVM.IsOpen = false;
-            });
+            }));
         }
 
+        private RelayCommand _hideModalWindowCommand;
+        /// <summary>
+        /// Скрывает модальное окно с контентом.
+        /// </summary>
+        public override RelayCommand HideModalWindowCommand
+        {
+            get => _hideModalWindowCommand ?? (_hideModalWindowCommand = new RelayCommand(obj => 
+            {
+                //TODO: закрываем окно
+                MainVM.ModalWindowVM.IsOpen = false;
+                // ещё надо станавливать анимацию до появления окна.
+            }));
+        }
+
+        private RelayCommand _treeViewItemExpanded;
         /// <summary>
         /// Команда отрабатывает при раскрытии TreeViewItem.
         /// </summary>
-        private RelayCommand _treeViewItemExpanded;
         public RelayCommand TreeViewItemExpanded
         {
-            get => _treeViewItemExpanded ?? new RelayCommand(obj =>
+            get => _treeViewItemExpanded ?? (_treeViewItemExpanded = new RelayCommand(obj =>
             {
                 if (obj == null)
                     return;
@@ -134,7 +161,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                 var keyvaluepair = (KeyValuePair<string, PathLevel>)obj;
                 LoadDirContent(keyvaluepair.Value.FullPath, keyvaluepair.Value);
                 ContentPreload(keyvaluepair.Value.UnitsList);
-            });
+            }));
         }
 
 
@@ -193,32 +220,39 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// Собственно, открытие диалогового окна.
         /// Вызов экспорта.
         /// </summary>
-        private void Export()
+        private async void Export()
         {
-            var saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog()) 
+            { 
+                saveFileDialog.InitialDirectory = @"C:\Users\GamerStorm_Hel2x_\night-world\export";
+                saveFileDialog.Filter = "zip files (*.zip)|*.zip";
+                saveFileDialog.FilterIndex = 2;
+                saveFileDialog.RestoreDirectory = true;
+                saveFileDialog.FileName = InstanceClient.LocalId + ".zip";
 
-            saveFileDialog1.InitialDirectory = @"C:\Users\GamerStorm_Hel2x_\night-world\export";
-            saveFileDialog1.Filter = "zip files (*.zip)|*.zip";
-            saveFileDialog1.FilterIndex = 2;
-            saveFileDialog1.RestoreDirectory = true;
-            saveFileDialog1.FileName = InstanceClient.LocalId + ".zip";
-
-            var result = saveFileDialog1.ShowDialog();
-
-            if (result == System.Windows.Forms.DialogResult.OK)
-            {
-                Lexplosion.Run.TaskRun(() =>
+                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    var result = InstanceClient.Export(UnitsList, saveFileDialog1.FileName, InstanceName);
+                    MainViewModel.ExportedInstance.Add(this);
+
+                    var result = await Task.Run(() => InstanceClient.Export(UnitsList, saveFileDialog.FileName, InstanceName));
+
+                    MainViewModel.ExportedInstance.Remove(this);
+
                     if (result == ExportResult.Successful)
                     {
-                        MainViewModel.ShowToastMessage("Экспорт клиента", "Экспорт сборки " + InstanceName + " был успешно завершён. Открыть папку с файлом?", ToastMessageState.Notification);
+                        MainViewModel.ShowToastMessage(
+                            ResourceGetter.GetString("instanceExport"),
+                            String.Format(ResourceGetter.GetString("instanceExportSuccessfulOpenFolder"), InstanceName),
+                            ToastMessageState.Notification);
                     }
-                    else
-                    {
-                        MainViewModel.ShowToastMessage(result.ToString(), "Экспорт сборки " + InstanceName + " не успешно завершён. Открыть папку с файлом?", ToastMessageState.Error);
+                    else 
+                    { 
+                        MainViewModel.ShowToastMessage(
+                            result.ToString(),
+                            String.Format(ResourceGetter.GetString("instanceExportUnsuccessful"), InstanceName),
+                            ToastMessageState.Error);
                     }
-                });
+                }
             }
         }
 

@@ -22,14 +22,14 @@
             Orientation="Horizontal">
             <Button
                 Width="80"
-                Command="{Binding Action}"
+                Command="{Binding ActionCommand}"
                 Content="Да"
                 FontSize="16"
                 Style="{StaticResource DefaultBrandColorButton}" />
             <Button
                 Width="80"
                 Margin="10,0,0,0"
-                Command="{Binding CloseModalWindow}"
+                Command="{Binding CloseModalWindowCommand}"
                 Content="Нет"
                 FontSize="16"
                 Style="{StaticResource DefaultCloseButton}" />

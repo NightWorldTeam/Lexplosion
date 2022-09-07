@@ -163,7 +163,7 @@
                         Width="80"
                         Height="30"
                         Margin="10,0,0,0"
-                        Command="{Binding Action}"
+                        Command="{Binding ActionCommand}"
                         Content="{DynamicResource create}"
                         FontSize="14"
                         Style="{StaticResource DefaultBrandColorButton}" />
@@ -172,7 +172,7 @@
                         Width="80"
                         Height="30"
                         Margin="10,0,0,0"
-                        Command="{Binding CloseModalWindow}"
+                        Command="{Binding CloseModalWindowCommand}"
                         Content="{DynamicResource cancel}"
                         FontSize="14"
                         Style="{StaticResource DefaultCloseButton}" />

@@ -1,10 +1,9 @@
 ﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
@@ -23,15 +22,16 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             IsImportFinished = false;
         }
 
+        private RelayCommand _cancelUploadCommand;
         public RelayCommand CancelUploadCommand
         {
-            get => new RelayCommand(obj => 
+            get => _cancelUploadCommand ?? (_cancelUploadCommand = new RelayCommand(obj =>
             {
                 CancelUpload();
-            });
+            }));
         }
 
-        private void CancelUpload() 
+        private void CancelUpload()
         {
             var index = _importVM.UploadedFiles.IndexOf(this);
             _importVM.UploadedFiles.RemoveAt(index);
@@ -40,7 +40,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
     public sealed class ImportViewModel : VMBase
     {
-        private MainViewModel _mainViewModel;
+        private readonly MainViewModel _mainViewModel;
         public FactoryGeneralViewModel FactoryGeneralViewModel { get; }
 
 
@@ -64,7 +64,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// Делегат который вызывает принимает в качестве агрумента массив строк.
         /// Проходится по массиву и для каждого элемента начинает импорт.
         /// </summary>
-        public Action<string[]> ImportAction { get;}
+        public Action<string[]> ImportAction { get; }
 
 
         #endregion Properties
@@ -72,15 +72,17 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         #region Commands
 
+
+        private RelayCommand _importCommand;
         /// <summary>
         /// Команда для ImportView -> [кнопка]Обзор.
         /// </summary>
         public RelayCommand ImportCommand
         {
-            get => new RelayCommand(obj =>
+            get => _importCommand ?? (_importCommand ?? new RelayCommand(obj =>
             {
                 ShowOpenFileDialogForImport();
-            });
+            }));
         }
 
 
@@ -90,43 +92,44 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Public & Protected Methods
 
 
-        public void Import(string path)
+        public async void Import(string path)
         {
             #nullable enable
-            InstanceClient? instanceClient;
+            InstanceClient? instanceClient = null;
 
             var importFile = new ImportFile(this, path);
-            
+
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFiles.Add(importFile);
 
-            Lexplosion.Run.TaskRun(() => 
-            { 
-                // Начинаем импорт файла.
-                ImportResult result = InstanceClient.Import(path, out instanceClient);
+            // Начинаем импорт файла.
+            var result = await Task.Run(() => InstanceClient.Import(path, out instanceClient));
 
-                App.Current.Dispatcher.Invoke(() => { 
-                // Импорт закончился.
-                importFile.IsImportFinished = result == ImportResult.Successful;
+            // Импорт закончился.
+            importFile.IsImportFinished = result == ImportResult.Successful;
 
-                if (instanceClient == null || result != ImportResult.Successful)
-                {
-                    // Выводим сообщение о результате испорта.
-                    MainViewModel.ShowToastMessage("Импорт завершился с ошибкой", result.ToString(), Controls.ToastMessageState.Error);
-                    return;
-                }
-
-
-                //Закрываем модальное окно.
-                FactoryGeneralViewModel.CloseModalWindow.Execute(null);
-
-                // Добавляем сборку в библиотеку.
-                _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
-
+            if (instanceClient == null || result != ImportResult.Successful)
+            {
                 // Выводим сообщение о результате испорта.
-                MainViewModel.ShowToastMessage("Результат импорта", "Импорт завершился успешно, хотите запустить сборку?", Controls.ToastMessageState.Notification);
-                });
-            });
+                MainViewModel.ShowToastMessage(
+                    ResourceGetter.GetString("importResultError"), 
+                    result.ToString(), 
+                    Controls.ToastMessageState.Error);
+                return;
+            }
+
+
+            //Закрываем модальное окно.
+            FactoryGeneralViewModel.CloseModalWindowCommand.Execute(null);
+
+            // Добавляем сборку в библиотеку.
+            _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
+
+            // Выводим сообщение о результате испорта.
+            MainViewModel.ShowToastMessage(
+                ResourceGetter.GetString("importResult"), 
+                ResourceGetter.GetString("importResultSuccessfulWannaPlay"), 
+                Controls.ToastMessageState.Notification);
         }
 
 
@@ -142,13 +145,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             FactoryGeneralViewModel = factoryGeneralViewModel;
 
             ImportAction = (string[] files) =>
-             {
-                 foreach (var file in files)
-                 {
-                     Console.WriteLine(file);
-                     Import(file);
-                 }
-             };
+            {
+                foreach (var file in files) 
+                    Import(file);
+            };
 
             UploadedFiles = new ObservableCollection<ImportFile>();
         }
@@ -162,7 +162,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// <summary>
         /// Открывает диалогое окно позволяя выбрать .zip файл(ы) и начать его(их) импорт.
         /// </summary>
-        private void ShowOpenFileDialogForImport() 
+        private void ShowOpenFileDialogForImport()
         {
             using (System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog())
             {
@@ -173,7 +173,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                     // Если выбранный файл является *zip.
                     if (ofd.FileName.EndsWith(".zip"))
                     {
-
                         Import(ofd.FileName);
                     }
                 }

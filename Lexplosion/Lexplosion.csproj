@@ -237,8 +237,8 @@
     <Compile Include="Gui\Views\Pages\ModalViews\DialogView.xaml.cs">
       <DependentUpon>DialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Views\Pages\ModalViews\DonwloadManagerView.xaml.cs">
-      <DependentUpon>DonwloadManagerView.xaml</DependentUpon>
+    <Compile Include="Gui\Views\Pages\ModalViews\DownloadManagerView.xaml.cs">
+      <DependentUpon>DownloadManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ModalViews\ModalExportView.xaml.cs">
       <DependentUpon>ModalExportView.xaml</DependentUpon>
@@ -502,7 +502,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Views\Pages\ModalViews\DonwloadManagerView.xaml">
+    <Page Include="Gui\Views\Pages\ModalViews\DownloadManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

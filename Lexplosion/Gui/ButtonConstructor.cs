@@ -200,11 +200,11 @@ namespace Lexplosion.Gui
         /// </summary>
         public RelayCommand ActionCommand
         {
-            get => _actionCommand ?? new RelayCommand(obj =>
+            get => _actionCommand ?? (_actionCommand = new RelayCommand(obj =>
             {
                 _buttonParameters.ActionClick?.Invoke();
                 _stageController.StageSwitch(this);
-            });
+            }));
         }
 
         #endregion commands

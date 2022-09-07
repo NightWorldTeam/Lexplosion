@@ -15,17 +15,18 @@ namespace Lexplosion.Gui.ViewModels
 {
     public sealed class MainViewModel : VMBase
     {
-        #region statics
+        #region Static Properties and Fields
 
 
         public static readonly NavigationStore NavigationStore = new NavigationStore();
 
         public static MainMenuViewModel MainMenuVM { get; private set; }
 
+
+        private bool _isInstanceRunning = false;
         /// <summary>
         /// Если запушена сборка true, иначе else.
         /// </summary>
-        private bool _isInstanceRunning = false;
         public bool IsInstanceRunning 
         {
             get => _isInstanceRunning; set 
@@ -40,14 +41,19 @@ namespace Lexplosion.Gui.ViewModels
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
         /// </summary>
         public static ImmutableArray<string> GameVersions { get; private set; }
-        public static ObservableCollection<MessageModel> Messages { get; private set; } = new ObservableCollection<MessageModel>();
+
+        /// <summary>
+        /// Выведенные сообщения.
+        /// </summary>
+        public static ObservableCollection<MessageModel> Messages { get; } = new ObservableCollection<MessageModel>();
+
+        public static List<ExportViewModel> ExportedInstance { get; } = new List<ExportViewModel>();
+
+        #endregion Static Properties and Fields
 
 
-        #endregion statics
-
-
-        #region ShowToastMessage methods
-
+        #region ShowToastMessage Methods
+        // вынести в отдельный класс
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
@@ -86,7 +92,7 @@ namespace Lexplosion.Gui.ViewModels
         #endregion ShowToastMessage methods
 
 
-        #region props
+        #region Properties
 
 
         public MainModel Model { get; }
@@ -98,12 +104,12 @@ namespace Lexplosion.Gui.ViewModels
 
         public DownloadManagerViewModel DownloadManager;
 
-        #endregion
+
+        #endregion Properties
 
 
-        #region commands
+        #region Commands
 
-        // MainWindow base
 
         /// <summary>
         /// Свойтсво отрабатывает при нажатии кнопки x, в Header окна.
@@ -128,7 +134,7 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
-        #endregion
+        #endregion Command
 
 
         public MainViewModel()

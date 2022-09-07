@@ -1,21 +1,10 @@
-﻿using Lexplosion.Global;
-using Lexplosion.Gui.Commands;
-using Lexplosion.Gui.ModalWindow;
-using Lexplosion.Gui.Models;
+﻿using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Gui.Models.InstanceFactory;
-using Lexplosion.Gui.Models.InstanceForm;
-using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
-using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
@@ -26,20 +15,18 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
     public sealed class FactoryGeneralViewModel : ModalVMBase
     {
-        private RelayCommand _switchModloaderType;
-        private RelayCommand _createInstance;
-
-        private ObservableCollection<string> _gameVersions;
-        private string _selectedVersion;
-
+        private readonly MainViewModel _mainViewModel;
         private ObservableCollection<string> _modloaderVersion;
+        private string _selectedVersion;
         private string _selectedModloaderVersion;
-
         private bool _isModloaderSelected = false;
 
-        private MainViewModel _mainViewModel;
 
-        #region prop
+        #region Properties
+
+
+        public InstanceFactoryModel Model { get; }
+
 
         private ImportViewModel _importViewModel;
         public ImportViewModel ImportVM 
@@ -59,6 +46,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 OnPropertyChanged(nameof(IsModloaderSelected));
             }
         }
+
+        private ObservableCollection<string> _gameVersions;
         public ObservableCollection<string> GameVersions
         {
             get => _gameVersions; set
@@ -106,12 +95,11 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
-        public InstanceFactoryModel Model { get; }
 
-        #endregion props
+        #endregion Properties
 
-        #region commands
-
+        #region Commands
+        private RelayCommand _switchModloaderType;
         public RelayCommand SwitchModloaderType
         {
             get
@@ -134,25 +122,24 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 }));
             }
         }
+
+        private RelayCommand _createInstance;
         /// <summary>
         /// Создание самого модпака начинается здесь.
         /// </summary>
-        public override RelayCommand Action
+        public override RelayCommand ActionCommand
         {
-            get
+            get => _createInstance ?? (new RelayCommand(obj =>
             {
-                return _createInstance ?? (new RelayCommand(obj =>
-                {
                     var instanceClient = InstanceClient.CreateClient(
                         Model.Name ?? "New Client", InstanceSource.Local, SelectedVersion, Model.ModloaderType, Model.LogoPath, SelectedModloaderVersion);
 
                     _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
                     _mainViewModel.ModalWindowVM.IsOpen = false;
-                }));
-            }
+            }));
         }
 
-        public override RelayCommand CloseModalWindow
+        public override RelayCommand CloseModalWindowCommand
         {
             get => new RelayCommand(obj =>
             {
@@ -179,7 +166,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             });
         }
 
-        #endregion commands
+        #endregion Commands
 
         public FactoryGeneralViewModel(MainViewModel mainViewModel)
         {
@@ -193,5 +180,13 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
             _importViewModel = new ImportViewModel(_mainViewModel, this);
         }
+
+        #region Private Methods
+
+
+
+
+
+        #endregion Private Methods
     }
 }

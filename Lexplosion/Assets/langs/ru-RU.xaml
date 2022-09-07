@@ -169,4 +169,15 @@
     <s:String x:Key="prepareRun">Идет запуск...</s:String>
     <s:String x:Key="close">Закрыть</s:String>
     <s:String x:Key="install">Установить</s:String>
+
+    <s:String x:Key="importResult">Результат импорта</s:String>
+    <s:String x:Key="importResultError">Импорт завершился с ошибкой</s:String>
+    <s:String x:Key="importResultSuccessfulWannaPlay">Импорт завершился успешно, хотите запустить сборку?</s:String>
+
+    <s:String x:Key="exportInProgress">Идет экспорт</s:String>
+    <s:String x:Key="instanceExport">Экспорт сборки</s:String>
+    <s:String x:Key="instanceExportSuccessfulOpenFolder">Экспорт сборки {0} был успешно завершён. Открыть папку с файлом?</s:String>
+    <s:String x:Key="instanceExportUnsuccessful">Экспорт сборки {0} был завершён с ошибкой?</s:String>
+
+    <s:String x:Key="minimizeWindow">Свернуть окно</s:String>
 </ResourceDictionary>

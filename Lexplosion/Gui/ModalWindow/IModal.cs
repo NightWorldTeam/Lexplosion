@@ -21,11 +21,11 @@ namespace Lexplosion.Gui
         /// <summary>
         /// Команда на закрытие модального окна.
         /// </summary>
-        public RelayCommand CloseModalWindow { get; }
+        public RelayCommand CloseModalWindowCommand { get; }
 
         /// <summary>
         /// Действие которые должно выполниться, например экспорт, создание сборки и n
         /// </summary>
-        public RelayCommand Action { get; }
+        public RelayCommand ActionCommand { get; }
     }
 }
