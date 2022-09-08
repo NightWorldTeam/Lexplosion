@@ -29,15 +29,9 @@ namespace Lexplosion
         private static App app = new App();
         public delegate void StopTask();
 
+        public static Process CurrentProcess { get; private set; }
+
         public static event Action ExitEvent;
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool ShowWindow(IntPtr hWnd, int showWindowCommand);
 
         [STAThread]
         static void Main()
@@ -69,7 +63,7 @@ namespace Lexplosion
 
             // получем процессы с таким же именем (то есть пытаемся получить уже запущенную копию лаунчера)
             Process[] procs = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
-            Process currentProcess = Process.GetCurrentProcess();
+            CurrentProcess = Process.GetCurrentProcess();
 
             // процессов больше одного. Знчит лаунечр уже запущен
             if (procs.Length > 1)
@@ -77,14 +71,14 @@ namespace Lexplosion
                 // делаем окно уже запущенного лаунечра активным
                 foreach (Process proc in procs)
                 {
-                    if (proc.Id != currentProcess.Id)
+                    if (proc.Id != CurrentProcess.Id)
                     {
-                        ShowWindow(proc.MainWindowHandle, 1);
-                        SetForegroundWindow(proc.MainWindowHandle);
+                        NativeMethods.ShowWindow(proc.MainWindowHandle, 1);
+                        NativeMethods.SetForegroundWindow(proc.MainWindowHandle);
                     }
                 }
 
-                currentProcess.Kill(); //стопаем процесс
+                CurrentProcess.Kill(); //стопаем процесс
             }
 
             // Встраеваем стили
@@ -101,6 +95,8 @@ namespace Lexplosion
             }
 
             InstanceClient.DefineInstalledInstances();
+
+            CommandReceiver.StartCommandServer();
 
             Thread.Sleep(800);
 

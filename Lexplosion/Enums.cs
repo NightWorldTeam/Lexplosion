@@ -106,7 +106,6 @@ namespace Lexplosion
         Online,
         InGame,
         NotDisturb,
-        OnlyOnline
     }
 
     public enum AccountType

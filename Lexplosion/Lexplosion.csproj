@@ -281,6 +281,7 @@
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
     <Compile Include="Tools\ExtendedEventHandler.cs" />
     <Compile Include="Tools\ImageTools.cs" />
+    <Compile Include="Tools\NativeMethods.cs" />
     <Compile Include="Tools\ObservableDelegate.cs" />
     <Compile Include="Tools\Pointer.cs" />
     <Compile Include="Logic\Management\User.cs" />

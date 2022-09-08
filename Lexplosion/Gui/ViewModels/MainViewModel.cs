@@ -5,6 +5,7 @@ using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using Lexplosion.Tools;
 using Lexplosion.Tools.Immutable;
 using System;
 using System.Collections.Generic;
@@ -223,12 +224,10 @@ namespace Lexplosion.Gui.ViewModels
                     }
 
                     MainViewModel.MainMenuVM.LogoClickCommand.Execute(viewModel);
-                    //Run.ShowWindow(curentProcess.MainWindowHandle, 1);
-                    //Run.SetForegroundWindow(curentProcess.MainWindowHandle);
+                    NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
+                    NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
                 }
             };
-
-            CommandReceiver.StartCommandServer();
         }
 
         #endregion

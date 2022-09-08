@@ -11,6 +11,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Installers;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management
 {
@@ -52,18 +53,12 @@ namespace Lexplosion.Logic.Management
 
         private ConcurrentDictionary<string, Player> _connectedPlayers = new ConcurrentDictionary<string, Player>();
 
-        private delegate bool EnumThreadDelegate(IntPtr hWnd, IntPtr lParam);
-
-        [DllImport("user32.dll")]
-        private static extern bool EnumThreadWindows(int dwThreadId, EnumThreadDelegate lpfn,
-            IntPtr lParam);
-
         private static bool GuiIsExists(int processId)
         {
             bool isExists = false;
 
             foreach (ProcessThread thread in Process.GetProcessById(processId).Threads)
-                EnumThreadWindows(thread.Id, (hWnd, lParam) =>
+                NativeMethods.EnumThreadWindows(thread.Id, (hWnd, lParam) =>
                 {
                     isExists = true;
                     return false;
