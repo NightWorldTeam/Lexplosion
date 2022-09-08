@@ -7,7 +7,12 @@ namespace Lexplosion.Logic.Network
 {
     static class CommandReceiver
     {
-        public static event Action<string> OpenModpackPage;
+        private static Action<string> _openModpackPage;
+        public static event Action<string> OpenModpackPage
+        {
+            add => _openModpackPage += value;
+            remove => _openModpackPage -= value;
+        }
 
         public static void StartCommandServer()
         {
@@ -43,7 +48,7 @@ namespace Lexplosion.Logic.Network
                                     string url = request.Url.LocalPath;
                                     if (url.Contains("/openModpackPage"))
                                     {
-                                        OpenModpackPage(url.Replace("/openModpackPage/", ""));
+                                        _openModpackPage?.Invoke(url.Replace("/openModpackPage/", ""));
                                     }
 
                                     byte[] buffer = Encoding.UTF8.GetBytes("OK");

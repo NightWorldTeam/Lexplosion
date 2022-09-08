@@ -165,7 +165,7 @@ namespace Lexplosion.Logic.Network
                                     try
                                     {
                                         result = STUN_Client.Query("stun.l.google.com", 19305, sock.Client); //получем наш внешний адрес
-                                        Console.WriteLine(result.NetType.ToString());
+                                        Console.WriteLine("NatType " + result.NetType.ToString());
                                     }
                                     catch { }
                                     sock.Close();
@@ -178,10 +178,20 @@ namespace Lexplosion.Logic.Network
                                     }
 
                                     //парсим порт
-                                    string externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
-                                    externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
-                                    portData = Encoding.UTF8.GetBytes(externalPort.ToString());
-
+                                    string externalPort;
+                                    if (result.PublicEndPoint != null)
+                                    {
+                                        externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
+                                        externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
+                                        portData = Encoding.UTF8.GetBytes(externalPort.ToString());
+                                    }
+                                    else
+                                    {
+                                        // TODO: отключиться от сервера
+                                        AcceptingBlock.Release();
+                                        continue;
+                                    }
+                                    
                                     Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
                                 }
                                 else
