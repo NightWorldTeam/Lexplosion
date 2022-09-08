@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Gui.Models;
+using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -10,11 +11,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private const int _pageSize = 10;
         private readonly MainViewModel _mainViewModel;
 
+        public ObservableCollection<InstanceFormViewModel> InstanceList { get => _mainViewModel.Model.CurrentInstanceCatalog; } 
 
         #region props
-        
-        
-        public ObservableCollection<InstanceFormViewModel> InstanceForms { get; set; } = new ObservableCollection<InstanceFormViewModel>();
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true);
@@ -80,7 +79,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             get => _onScrollCommand ?? (_onScrollCommand = new RelayCommand(obj => 
             {
                 // TODO: Возможно тяжелый код.
-                foreach (var instance in InstanceForms)
+                foreach (var instance in _mainViewModel.Model.CurrentInstanceCatalog)
                 {
                     instance.IsDropdownMenuOpen = false;
                 }
@@ -106,16 +105,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private void InstancesPageLoading()
         {
+            // Сделать метод асинхронным.
             IsLoaded = false;
             Lexplosion.Run.TaskRun(delegate ()
             {
-                //var instances = InstanceClient.GetOutsideInstances(
-                //  SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex - 1, ModpacksCategories.All, SearchText);
-
                 var instances = InstanceClient.GetOutsideInstances(
                     SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex - 1, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed);
-
-                Console.WriteLine("Поиск по запросу: " + SearchBoxVM.SearchTextComfirmed + ". Найдено: " + instances.Count);
 
                 if (instances.Count == _pageSize)
                 {
@@ -125,9 +120,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
                 if (instances.Count == 0)
                 {
+                    InstanceList.Clear();
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        InstanceForms.Clear();
+                        InstanceList.Clear();
                         IsEmptyList = true;
                     });
                 }
@@ -137,21 +133,19 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     {
                         if (IsEmptyList)
                             IsEmptyList = false;
-                        
-                        InstanceForms.Clear();
+
+                        InstanceList.Clear();
 
                         foreach (var instance in instances)
                         {
-                            Console.WriteLine("\nInstance [" + instance.Name + "] in library ? " + instance.InLibrary );
                             if (_mainViewModel.Model.IsLibraryContainsInstance(instance))
                             {
-                                Console.WriteLine("Get InstanceForm from Library [" + instance.Name + "]");
-                                InstanceForms.Add(_mainViewModel.Model.GetInstance(instance));
+                                InstanceList.Add(_mainViewModel.Model.GetInstance(instance));
                             }
                             else
                             {
-                                Console.WriteLine("Create new InstanceForm [" + instance.Name + "]");
-                                InstanceForms.Add(new InstanceFormViewModel(_mainViewModel, instance));
+                                var instanceForm = new InstanceFormViewModel(_mainViewModel, instance);
+                                InstanceList.Add(instanceForm);
                             }
                         }
                     });

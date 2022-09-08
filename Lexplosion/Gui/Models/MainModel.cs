@@ -1,16 +1,13 @@
-﻿using Lexplosion.Gui.Extension;
-using Lexplosion.Gui.ViewModels;
+﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management.Instances;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Lexplosion.Gui.Models
 {
     public sealed class MainModel : VMBase
     {
         public ObservableCollection<InstanceFormViewModel> LibraryInstances { get; } = new ObservableCollection<InstanceFormViewModel>();
+        public ObservableCollection<InstanceFormViewModel> CurrentInstanceCatalog { get; } = new ObservableCollection<InstanceFormViewModel>();
 
         /// <summary>
         /// Проверяет наличие сборки в библиотеке.
@@ -63,6 +60,31 @@ namespace Lexplosion.Gui.Models
                     return viewmodel;
             }
             return null;
+        }
+
+        public bool IsCatalogInstanceContains(InstanceClient instanceClient) 
+        {
+            foreach (var instance in LibraryInstances) 
+            {
+                if (instance.Client == instanceClient)
+                    return true;
+            }
+            return false;
+        }
+
+        public InstanceFormViewModel GetCatalogInstance(InstanceClient instanceClient) 
+        {
+            foreach (var instance in CurrentInstanceCatalog) 
+            {
+                if (instance.Client == instanceClient)
+                    return instance;
+            }
+            return null;
+        }
+
+        public void ClearCatalogInstanceList() 
+        {
+            CurrentInstanceCatalog.Clear();
         }
     }
 }

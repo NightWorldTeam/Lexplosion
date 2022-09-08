@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -41,14 +42,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public RelayCommand LogoClickCommand
         {
-            get => _logoClickCommand ?? (new RelayCommand(obj =>
+            get => _logoClickCommand ?? (_logoClickCommand = new RelayCommand(obj =>
             {
                 var instanceFormViewModel = (InstanceFormViewModel)obj;
 
-                Console.WriteLine(instanceFormViewModel.Client.Name + " " + instanceFormViewModel.Client.InLibrary);
-
-                    NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                        MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceFormViewModel, _mainViewModel));
+                NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
+                    MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceFormViewModel, _mainViewModel));
                 NavigationShowCaseCommand?.Execute(null);
             }));
         }

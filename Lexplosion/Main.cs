@@ -14,7 +14,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Gui.Views.Windows;
-using Lexplosion.Gui.ViewModels;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -34,11 +33,11 @@ namespace Lexplosion
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
+        internal static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool ShowWindow(IntPtr hWnd, int showWindowCommand);
+        internal static extern bool ShowWindow(IntPtr hWnd, int showWindowCommand);
 
         [STAThread]
         static void Main()
@@ -70,7 +69,7 @@ namespace Lexplosion
 
             // получем процессы с таким же именем (то есть пытаемся получить уже запущенную копию лаунчера)
             Process[] procs = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
-            Process curentProcess = Process.GetCurrentProcess();
+            Process currentProcess = Process.GetCurrentProcess();
 
             // процессов больше одного. Знчит лаунечр уже запущен
             if (procs.Length > 1)
@@ -78,17 +77,17 @@ namespace Lexplosion
                 // делаем окно уже запущенного лаунечра активным
                 foreach (Process proc in procs)
                 {
-                    if (proc.Id != curentProcess.Id)
+                    if (proc.Id != currentProcess.Id)
                     {
                         ShowWindow(proc.MainWindowHandle, 1);
                         SetForegroundWindow(proc.MainWindowHandle);
                     }
                 }
 
-                curentProcess.Kill(); //стопаем процесс
+                currentProcess.Kill(); //стопаем процесс
             }
 
-            // Встраеваем стиили
+            // Встраеваем стили
             StylesInit();
 
             // инициализация
@@ -102,20 +101,6 @@ namespace Lexplosion
             }
 
             InstanceClient.DefineInstalledInstances();
-
-            CommandReceiver.OpenModpackPage += delegate (string modpackId)
-            {
-                InstanceClient instance = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
-                if (instance != null)
-                {
-                    Console.WriteLine("open " + modpackId);
-                    MainViewModel.MainMenuVM.LogoClickCommand.Execute(instance);
-                    ShowWindow(curentProcess.MainWindowHandle, 1);
-                    SetForegroundWindow(curentProcess.MainWindowHandle);
-                }
-            };
-
-            CommandReceiver.StartCommandServer();
 
             Thread.Sleep(800);
 
@@ -222,6 +207,9 @@ namespace Lexplosion
             return null;
         }
 
+        /// <summary>
+        /// Иницализация стилей приложения.
+        /// </summary>
         private static void StylesInit()
         {
             const string resources = "pack://application:,,,/Gui/Resources/";

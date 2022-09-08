@@ -142,6 +142,10 @@ namespace Lexplosion.Gui.ViewModels
             PreLoadGameVersions();
 
             Model = new MainModel();
+
+            // оставь комментарий
+            SubscribeToOpenModpackEvent();
+
             LibraryInstanceLoading();
 
             MainMenuVM = new MainMenuViewModel(this);
@@ -194,6 +198,25 @@ namespace Lexplosion.Gui.ViewModels
                 versions.Clear();
             });
 
+        }
+
+        private void SubscribeToOpenModpackEvent() 
+        {
+            CommandReceiver.OpenModpackPage += delegate (string modpackId)
+            {
+                InstanceClient instance = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
+                if (instance != null)
+                {
+                    if (Model.IsCatalogInstanceContains(instance))
+                    {
+                        MainViewModel.MainMenuVM.LogoClickCommand.Execute(Model.GetCatalogInstance(instance));
+                        //Run.ShowWindow(curentProcess.MainWindowHandle, 1);
+                        //Run.SetForegroundWindow(curentProcess.MainWindowHandle);
+                    }
+                }
+            };
+
+            CommandReceiver.StartCommandServer();
         }
 
         #endregion

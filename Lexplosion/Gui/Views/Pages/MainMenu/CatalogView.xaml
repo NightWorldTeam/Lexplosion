@@ -61,7 +61,7 @@
                     Margin="15,0,0,0"
                     BorderBrush="Transparent"
                     IsTabStop="False"
-                    ItemsSource="{Binding InstanceForms}" />
+                    ItemsSource="{Binding InstanceList}" />
 
                 <customcontrols:Paginator
                     Grid.Row="2"
