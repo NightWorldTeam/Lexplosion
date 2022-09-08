@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private RelayCommand _onScrollCommand;
         public RelayCommand OnScrollCommand
         {
-            get => _onScrollCommand ?? new RelayCommand(obj =>
+            get => _onScrollCommand ?? (_onScrollCommand = new RelayCommand(obj =>
             {
                 // TODO: Возможно тяжелый код.
                 foreach (var instance in _mainViewModel.Model.LibraryInstances)
@@ -21,7 +21,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     if (instance.IsDropdownMenuOpen)
                         instance.IsDropdownMenuOpen = false;
                 }
-            });
+            }));
         }
 
         private RelayCommand _openInstanceFactoryCommand;

@@ -27,9 +27,9 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Если запушена сборка true, иначе else.
         /// </summary>
-        public bool IsInstanceRunning 
+        public bool IsInstanceRunning
         {
-            get => _isInstanceRunning; set 
+            get => _isInstanceRunning; set
             {
                 _isInstanceRunning = value;
                 OnPropertyChanged();
@@ -60,17 +60,17 @@ namespace Lexplosion.Gui.ViewModels
             ShowToastMessage(header, message, state, null);
         }
 
-        public static void ShowToastMessage(string header, string message) 
+        public static void ShowToastMessage(string header, string message)
         {
             ShowToastMessage(header, message, ToastMessageState.Notification, null);
         }
 
-        public static void ShowToastMessage(string header, string message, TimeSpan? time = null, ToastMessageState state = ToastMessageState.Notification) 
+        public static void ShowToastMessage(string header, string message, TimeSpan? time = null, ToastMessageState state = ToastMessageState.Notification)
         {
             ShowToastMessage(header, message, state, time);
         }
 
-        private static void ShowToastMessage(string header, string message, ToastMessageState state, TimeSpan? time)  
+        private static void ShowToastMessage(string header, string message, ToastMessageState state, TimeSpan? time)
         {
             var model = new ToastMessageModel(header, message, state, time);
             App.Current.Dispatcher.Invoke(() => {
@@ -143,15 +143,15 @@ namespace Lexplosion.Gui.ViewModels
 
             Model = new MainModel();
 
-            // оставь комментарий
-            SubscribeToOpenModpackEvent();
-
             LibraryInstanceLoading();
 
             MainMenuVM = new MainMenuViewModel(this);
 
             NavigationStore.CurrentViewModel = new AuthViewModel(this);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
+
+            // оставь комментарий
+            SubscribeToOpenModpackEvent();
 
             ExportViewModel = new ExportViewModel(this);
 
@@ -200,19 +200,31 @@ namespace Lexplosion.Gui.ViewModels
 
         }
 
-        private void SubscribeToOpenModpackEvent() 
+        private void SubscribeToOpenModpackEvent()
         {
             CommandReceiver.OpenModpackPage += delegate (string modpackId)
             {
-                InstanceClient instance = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
-                if (instance != null)
+                InstanceClient instanceClient = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
+                if (instanceClient != null)
                 {
-                    if (Model.IsCatalogInstanceContains(instance))
+                    InstanceFormViewModel viewModel;
+
+                    if (Model.IsLibraryContainsInstance(instanceClient))
                     {
-                        MainViewModel.MainMenuVM.LogoClickCommand.Execute(Model.GetCatalogInstance(instance));
-                        //Run.ShowWindow(curentProcess.MainWindowHandle, 1);
-                        //Run.SetForegroundWindow(curentProcess.MainWindowHandle);
+                        viewModel = Model.GetInstance(instanceClient);
                     }
+                    else if (Model.IsCatalogInstanceContains(instanceClient))
+                    {
+                        viewModel = Model.GetCatalogInstance(instanceClient);
+                    }
+                    else
+                    {
+                        viewModel = new InstanceFormViewModel(this, instanceClient);
+                    }
+
+                    MainViewModel.MainMenuVM.LogoClickCommand.Execute(viewModel);
+                    //Run.ShowWindow(curentProcess.MainWindowHandle, 1);
+                    //Run.SetForegroundWindow(curentProcess.MainWindowHandle);
                 }
             };
 
