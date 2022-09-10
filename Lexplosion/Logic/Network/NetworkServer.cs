@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Network
 
         private readonly IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9654);
 
-        private readonly Socket controlConnection;
+        private Socket controlConnection;
 
         public event Action<string> ConnectingUser;
         public event Action<string> DisconnectedUser;
@@ -107,6 +107,9 @@ namespace Lexplosion.Logic.Network
 
         protected void Accepting(string serverType) // TODO: нужно избегать повторного подключения
         {
+            bool needRepeat = false;
+            StartPoint:
+
             //подключаемся к управляющему серверу
             controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
 
@@ -170,26 +173,25 @@ namespace Lexplosion.Logic.Network
                                     catch { }
                                     sock.Close();
 
+                                    // какая-то хуйня. Преходим на соединение через ретранслятор
                                     if (result == null)
                                     {
-                                        Console.WriteLine("result == null");
-                                        AcceptingBlock.Release();
-                                        continue;
+                                        needRepeat = true;
+                                        break;
                                     }
 
                                     //парсим порт
                                     string externalPort;
                                     if (result.PublicEndPoint != null)
                                     {
-                                        externalPort = result.PublicEndPoint.ToString(); // TODO: был нулл поинтер
+                                        externalPort = result.PublicEndPoint.ToString();
                                         externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
                                         portData = Encoding.UTF8.GetBytes(externalPort.ToString());
                                     }
-                                    else
+                                    else // опять какая-то хуйня. Преходим на соединение через ретранслятор
                                     {
-                                        // TODO: отключиться от сервера
-                                        AcceptingBlock.Release();
-                                        continue;
+                                        needRepeat = true;
+                                        break;
                                     }
                                     
                                     Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
@@ -285,6 +287,22 @@ namespace Lexplosion.Logic.Network
                 {
                     Console.WriteLine(ex);
                 }
+            }
+
+            if (needRepeat)
+            {
+                AcceptingBlock.Release();
+
+                ControlConnectionBlock.WaitOne();
+                controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
+                controlConnection.Close();
+                controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                Console.WriteLine("Repeat connection to control server");
+                DirectConnection = false;
+                needRepeat = false;
+
+                goto StartPoint;
             }
         }
 
