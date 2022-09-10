@@ -161,7 +161,6 @@ namespace Lexplosion.Gui.ViewModels
             {
                 // получаем выбранный тип акканута.
                 _accountType = (AccountType)AccountTypeSelectedIndex;
-                Console.WriteLine(_accountType);
 
                 // получаем ответ от проверки данных.
                 AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe, _accountType);

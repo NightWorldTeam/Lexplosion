@@ -318,5 +318,97 @@
                 </Style>
             </ScrollViewer.Resources>
         </ScrollViewer>
+
+        <Grid
+            Grid.Row="1"
+            Width="250"
+            Height="280"
+            Margin="-90,-80,0,0" Visibility="Collapsed">
+            <Border
+                Background="{DynamicResource PrimarySolidColorBrush}"
+                CornerRadius="5"
+                SnapsToDevicePixels="True">
+                <StackPanel>
+
+                    <!--  Header  -->
+                    <StackPanel Margin="13">
+                        <TextBlock
+                            FontSize="18"
+                            FontWeight="Medium"
+                            Opacity="0.8"
+                            Text="Filter by category" Foreground="White"/>
+
+                        <TextBlock
+                            Margin="0,3,0,0"
+                            FontFamily="{DynamicResource FuturaBookC}"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Opacity="0.7"
+                            Foreground="White"
+                            Text="128 chips discovered" />
+                    </StackPanel>
+
+                    <!--  category buffer  -->
+                    <WrapPanel Margin="13,0,13,0">
+
+                        <!--  category item  -->
+                        <Border
+                            Padding="10,3,10,3"
+                            BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            SnapsToDevicePixels="False">
+
+                            <Border.Background>
+                                <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
+                            </Border.Background>
+
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+
+                                <!--  Catagory text  -->
+                                <TextBlock
+                                    Margin="0,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="{DynamicResource FuturaBookC}"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="{DynamicResource BrandSolidColorBrush}"
+                                    Text="Tech" />
+                            </StackPanel>
+                        </Border>
+                        <Border
+                            Margin="5,0,0,0"
+                            Padding="10,3,10,3"
+                            BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            SnapsToDevicePixels="False">
+
+                            <Border.Background>
+                                <SolidColorBrush Opacity="0" Color="{DynamicResource ActivityColor}" />
+                            </Border.Background>
+
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+
+                                <!--  Catagory text  -->
+                                <TextBlock
+                                    Margin="0,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="{DynamicResource FuturaBookC}"
+                                    FontSize="16"
+                                    Foreground="{DynamicResource BrandSolidColorBrush}"
+                                    Text="Magic" />
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

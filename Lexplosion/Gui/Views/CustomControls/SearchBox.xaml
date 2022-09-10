@@ -2,12 +2,14 @@
     x:Class="Lexplosion.Gui.Views.CustomControls.SearchBox"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="40"
-    d:DesignWidth="400"
+    d:DesignWidth="450"
     mc:Ignorable="d">
     <UserControl.Resources>
+
         <Style x:Key="SearchButtonStyle" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
@@ -60,47 +62,117 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style TargetType="{x:Type controls:DropdownMenu}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type controls:DropdownMenu}">
+                        <Grid>
+                            <CheckBox x:Name="PART_Toggle" IsChecked="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                <CheckBox.Template>
+                                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                                        <Border
+                                            x:Name="Border"
+                                            Padding="5"
+                                            Background="{DynamicResource BrandSolidColorBrush}"
+                                            CornerRadius="5">
+                                            <TextBlock VerticalAlignment="Center" Text="Category" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </CheckBox.Template>
+                            </CheckBox>
+
+                            <Popup
+                                x:Name="PART_Popup"
+                                AllowsTransparency="True"
+                                IsOpen="{TemplateBinding IsOpen}"
+                                Placement="Bottom"
+                                PlacementTarget="{Binding ElementName=PART_Toggle}"
+                                PopupAnimation="Fade"
+                                StaysOpen="False"
+                                VerticalOffset="10">
+                                <Border
+                                    Background="{DynamicResource HeaderSolidColorBrush}"
+                                    BorderBrush="#424242"
+                                    CornerRadius="5">
+                                    <ContentControl Margin="2,7,2,7" Content="{TemplateBinding Content}" />
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </UserControl.Resources>
-    
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="243" />
-            <ColumnDefinition Width="43" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+
+    <StackPanel Orientation="Horizontal">
+
+        <controls:DropdownMenu Margin="5">
+            <StackPanel Margin="10">
+                <StackPanel Orientation="Horizontal">
+
+                    <StackPanel>
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="White"
+                            Opacity="0.8"
+                            Text="Game Version" />
+                        <ComboBox />
+                    </StackPanel>
+
+                    <StackPanel Margin="5,0,0,0">
+                        <TextBlock
+                            FontSize="14"
+                            Foreground="White"
+                            Opacity="0.8"
+                            Text="Sort by" />
+                        <ComboBox Background="{DynamicResource SepSolidColorBrush}">
+                            <ComboBoxItem>
+                                <TextBlock Text="Popularity" />
+                            </ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <controls:Filters Margin="0,5,0,0" />
+            </StackPanel>
+        </controls:DropdownMenu>
 
         <TextBox
-            Grid.Column="0"
             Width="243"
+            Margin="10,0,0,0"
             HorizontalAlignment="Left"
+            Background="{DynamicResource SepSolidColorBrush}"
             Style="{StaticResource SearchTextBox}"
             Text="{Binding SearchTextUncomfirmed, UpdateSourceTrigger=PropertyChanged}">
             <TextBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
             </TextBox.InputBindings>
         </TextBox>
+
         <Button
-            Grid.Column="1"
             Width="43"
             Height="40"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Background="#151719"
+            Background="{DynamicResource HeaderSolidColorBrush}"
             Command="{Binding SearchCommand}"
             Style="{StaticResource SearchButtonStyle}" />
 
         <ComboBox
             x:Name="SourceBox"
-            Grid.Column="3"
-            Width="100"
-            Height="30"
-            Margin="0,5,0,0"
+            Grid.Column="4"
+            Margin="10,3,0,0"
             VerticalAlignment="Top"
             SelectedIndex="{Binding SelectedSourceIndex}"
             Visibility="{Binding IsMultiSource, Converter={StaticResource ConvertBoolToVisibility}}">
             <ComboBoxItem>NightWorld</ComboBoxItem>
             <ComboBoxItem>CurseForge</ComboBoxItem>
         </ComboBox>
-    </Grid>
+    </StackPanel>
 </UserControl>
