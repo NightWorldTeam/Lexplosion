@@ -175,6 +175,8 @@ namespace Lexplosion.Gui.ViewModels
                             _mainViewModel.UserProfile.Nickname = UserData.User.Login;
                             _mainViewModel.UserProfile.IsAuthorized = true;
                             NavigationCommand.Execute(null);
+                            // оставь комментарий
+                            _mainViewModel.SubscribeToOpenModpackEvent();
                             break;
                         case AuthCode.DataError:
                             MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);

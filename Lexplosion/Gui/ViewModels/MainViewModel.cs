@@ -151,9 +151,6 @@ namespace Lexplosion.Gui.ViewModels
             NavigationStore.CurrentViewModel = new AuthViewModel(this);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
 
-            // оставь комментарий
-            SubscribeToOpenModpackEvent();
-
             ExportViewModel = new ExportViewModel(this);
 
             DownloadManager = new DownloadManagerViewModel(this);
@@ -201,7 +198,7 @@ namespace Lexplosion.Gui.ViewModels
 
         }
 
-        private void SubscribeToOpenModpackEvent()
+        public void SubscribeToOpenModpackEvent()
         {
             CommandReceiver.OpenModpackPage += delegate (string modpackId)
             {
