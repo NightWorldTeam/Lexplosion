@@ -12,7 +12,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         {
             get => _multiplayerOff ?? (_multiplayerOff = new RelayCommand(obj => 
             {
-                LaunchGame.RebootOnlineGame();
             }));
         }
 
@@ -21,6 +20,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         {
             get => _multiplayerRefresh ?? (_multiplayerRefresh = new RelayCommand(obj =>
             {
+                LaunchGame.RebootOnlineGame();
             }));
         }
 
