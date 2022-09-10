@@ -184,8 +184,10 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static AuthResult Authorization(string login, string password)
+        public static AuthResult Authorization(string login, string password, out int baseStatus)
         {
+            baseStatus = 0;
+
             string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
             string str2 = "";
@@ -249,6 +251,8 @@ namespace Lexplosion.Logic.Network
                                 response.UUID = userData["UUID"];
                                 response.AccesToken = userData["accesToken"];
                                 response.SessionToken = userData["sessionToken"];
+
+                                Int32.TryParse(userData["baseStatus"], out baseStatus);
 
                                 return response;
                             }

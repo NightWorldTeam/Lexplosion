@@ -35,11 +35,22 @@ namespace Lexplosion.Logic
 
             if (accountType == AccountType.NightWorld)
             {
-                response = ToServer.Authorization(login, password);
+                response = ToServer.Authorization(login, password, out int baseStatus);
+
+                Status = ActivityStatus.Online;
+                if (baseStatus == 1)
+                {
+                    Status = ActivityStatus.Offline;
+                }
+                else if (baseStatus == 2)
+                {
+                    Status = ActivityStatus.NotDisturb;
+                }
             }
             else if (accountType == AccountType.Mojang)
             {
                 response = MojangApi.Authorization(login, password);
+                Status = ActivityStatus.Online;
             }
 
             if (response != null)
@@ -57,7 +68,6 @@ namespace Lexplosion.Logic
                     }
 
                     AccountType = accountType;
-                    Status = ActivityStatus.Online;
 
                     if (accountType == AccountType.NightWorld)
                     {
@@ -111,6 +121,17 @@ namespace Lexplosion.Logic
 
         public void ChangeBaseStatus(ActivityStatus status)
         {
+            int statusInt = 0;
+            if (status == ActivityStatus.Offline)
+            {
+                statusInt = 1;
+            }
+            else if (status == ActivityStatus.NotDisturb)
+            {
+                statusInt = 2;
+            }
+
+            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setBaseStatus?activityStatus=" + statusInt + "&UUID=" + UUID + "&sessionToken=" + SessionToken);
             Status = status;
         }
     }
