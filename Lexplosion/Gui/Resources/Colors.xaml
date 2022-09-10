@@ -8,7 +8,7 @@
     <Color x:Key="MyLovelyColo4">Yellow</Color>
 
 
-    <Color x:Key="ActivityColor">#CD0074</Color>
+    <Color x:Key="ActivityColor">#167FFC</Color>
     <SolidColorBrush x:Key="BrandSolidColorBrush" Color="{StaticResource ActivityColor}" />
 
     <Color x:Key="PrimaryColor">#191919</Color>

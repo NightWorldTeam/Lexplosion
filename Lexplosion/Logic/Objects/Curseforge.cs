@@ -65,6 +65,16 @@ namespace Lexplosion.Logic.Objects.Curseforge
         }
     }
 
+    public class CurseforgeCategory
+    {
+        public int id;
+        public int gameId;
+        public string name;
+        public string iconUrl;
+        public int classId;
+        public int parentCategoryId;
+    }
+
     /// <summary>
     /// Описывает модпак с курсфорджа. Используются при декодировании Json
     /// </summary>

@@ -93,6 +93,17 @@ namespace Lexplosion
         Maps = 17
     }
 
+    /// <summary>
+    /// Тип проекта с курсфорджа.
+    /// </summary>
+    public enum CfProjectType
+    {
+        Mods = 6,
+        Resourcepacks = 12,
+        Maps = 17,
+        Modpacks = 4471
+    }
+
     public enum DownloadStageTypes
     {
         Prepare,

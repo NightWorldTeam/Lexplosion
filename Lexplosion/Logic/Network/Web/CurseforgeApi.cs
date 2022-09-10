@@ -180,6 +180,11 @@ namespace Lexplosion.Logic.Network
             return "";
         }
 
+        public static List<CurseforgeCategory> GetCategories(CfProjectType type)
+        {
+            return GetApiData<List<CurseforgeCategory>>("https://api.curseforge.com/v1/categories?gameId=432&classId=" + (int)type);
+        }
+
         public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, Action<int> percentHandler)
         {
             //Console.WriteLine("");
