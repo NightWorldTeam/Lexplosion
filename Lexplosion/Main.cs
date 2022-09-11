@@ -14,6 +14,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Gui.Views.Windows;
+using Lexplosion.Logic.Network.Web;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -97,6 +98,11 @@ namespace Lexplosion
             InstanceClient.DefineInstalledInstances();
 
             CommandReceiver.StartCommandServer();
+
+            CommandReceiver.MicrosoftAuthPassed += delegate (string data)
+            {
+                MojangApi.AuthFromMicrosoft(data);
+            };
 
             Thread.Sleep(800);
 

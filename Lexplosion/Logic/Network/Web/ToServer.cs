@@ -324,7 +324,7 @@ namespace Lexplosion.Logic.Network
 
         public static string HttpGet(string url, List<KeyValuePair<string, string>> headers = null)
         {
-            try 
+            //try 
             {
                 string answer;
 
@@ -350,11 +350,11 @@ namespace Lexplosion.Logic.Network
 
                 return answer;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(url + " " + e);
-                return null;
-            }
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(url + " " + e);
+            //    return null;
+            //}
         }
     }
 }

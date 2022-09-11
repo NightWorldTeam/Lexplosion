@@ -11,12 +11,23 @@ namespace Lexplosion.Logic.Network
 {
     static class CommandReceiver
     {
+        #region Events
+
         private static Action<string> _openModpackPage;
         public static event Action<string> OpenModpackPage
         {
             add => _openModpackPage += value;
             remove => _openModpackPage -= value;
         }
+
+        private static Action<string> _microsoftAuthPassed;
+        public static event Action<string> MicrosoftAuthPassed
+        {
+            add => _microsoftAuthPassed += value;
+            remove => _microsoftAuthPassed -= value;
+        }
+
+        #endregion
 
         public static void StartCommandServer()
         {
@@ -45,9 +56,9 @@ namespace Lexplosion.Logic.Network
             private void OnAccept(IAsyncResult result)
             {
                 Socket client = null;
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[1024*1024];
 
-                try
+                //try
                 {
                     string headerResponse = "";
                     if (serverSocket != null && serverSocket.IsBound)
@@ -89,17 +100,22 @@ namespace Lexplosion.Logic.Network
                                     client.Send(EncodeFrame(Encoding.UTF8.GetBytes("NO_AUTH")));
                                 }
                             }
+                            else if (text.Contains("$microsoftAuth:"))
+                            {
+                                string data = text.Replace("$microsoftAuth:", "");
+                                _microsoftAuthPassed.Invoke(data);
+                            }
                         }
                     }
                 }
-                catch { }
-                finally
-                {
-                    if (serverSocket != null && serverSocket.IsBound)
-                    {
-                        serverSocket.BeginAccept(null, 0, OnAccept, null);
-                    }
-                }
+                //catch { }
+                //finally
+                //{
+                //    if (serverSocket != null && serverSocket.IsBound)
+                //    {
+                //        serverSocket.BeginAccept(null, 0, OnAccept, null);
+                //    }
+                //}
 
                 if (client != null)
                 {
@@ -120,7 +136,7 @@ namespace Lexplosion.Logic.Network
 
             private byte[] DecodeFrame(byte[] frame)
             {
-                try
+                //try
                 {
                     bool fin = (frame[0] & 0b10000000) != 0,
                     mask = (frame[1] & 0b10000000) != 0;
@@ -155,10 +171,10 @@ namespace Lexplosion.Logic.Network
                         return null;
                     }
                 }
-                catch
-                {
-                    return null;
-                }
+                //catch
+                //{
+                //    return null;
+                //}
             }
 
             private string AcceptKey(ref string key)
