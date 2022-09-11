@@ -14,6 +14,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         public event ISubmenu.NavigationToMenuCallBack NavigationToMainMenu;
         private int _tabControlSelectedValue;
 
+        private int _selectedSettingsTabIndex;
+
         private MainViewModel _mainViewModel;
 
         private ObservableCollection<Tab> _showCaseTabMenu = new ObservableCollection<Tab>();
@@ -21,7 +23,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private InstanceFormViewModel _instanceForm;
 
-        #region commands
+        #region Commands
 
         public ICommand NavigationMainMenuCommand
         {
@@ -44,10 +46,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             });
         }
 
-        #endregion
+        #endregion Commands
 
 
-        #region props
+        #region Properties
 
         public int TabControlSelectedIndex
         {
@@ -63,12 +65,13 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
-        #endregion
+        #endregion Properties
 
 
-        public InstanceMenuViewModel(InstanceFormViewModel instanceForm, MainViewModel mainViewModel) : base()
+        public InstanceMenuViewModel(InstanceFormViewModel instanceForm, MainViewModel mainViewModel, int selectedTab = 0, int selectedSettingsTabIndex = 0) : base()
         {
             _instanceForm = instanceForm;
+            _selectedSettingsTabIndex = selectedSettingsTabIndex;
 
             _mainViewModel = mainViewModel;
             OnInstanceStateChanged();
@@ -76,7 +79,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             _instanceForm.Client.StateChanged += OnInstanceStateChanged;
 
             ObservableColletionSort(_settingsTabs);
-            SelectedTab = Tabs[0];
+            SelectedTab = Tabs[selectedTab];
         }
 
         private void OnInstanceStateChanged() 
@@ -115,16 +118,17 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
                 Tabs.Clear();
 
+                
                 Tabs.Add(new Tab
                 {
                     Header = ResourceGetter.GetString("overview"),
-                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm)
+                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, 0, _instanceForm)
                 });
 
                 Tabs.Add(new Tab
                 {
                     Header = ResourceGetter.GetString("configuration"),
-                    Content = new TabMenuViewModel(_settingsTabs, ResourceGetter.GetString("instanceSettings")),
+                    Content = new TabMenuViewModel(_settingsTabs, ResourceGetter.GetString("instanceSettings"), _selectedSettingsTabIndex),
                 });
 
                 Tabs.Add(new Tab
@@ -144,7 +148,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 Tabs.Add(new Tab
                 {
                     Header = ResourceGetter.GetString("overview"),
-                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, _instanceForm)
+                    Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, 0, _instanceForm)
                 });
 
                 Tabs.Add(new Tab

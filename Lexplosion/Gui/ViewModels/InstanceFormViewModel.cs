@@ -273,7 +273,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.OpenDLCPage:
                     {
-                        MainVM.MainMenuVM.OpenModpackPage(this);
+                        MainVM.MainMenuVM.OpenModpackPage(this, true);
                         break;
                     }
 
@@ -292,10 +292,10 @@ namespace Lexplosion.Gui.ViewModels
 
                         MainVM.ModalWindowVM.ChangeCurrentModalContent(MainVM.ExportViewModel);
 
-                        foreach (var s in MainVM.ExportViewModel.UnitsList.Keys)
-                        {
-                            Console.WriteLine(s);
-                        }
+                        //foreach (var s in MainVM.ExportViewModel.UnitsList.Keys)
+                        //{
+                        //    Console.WriteLine(s);
+                        //}
                         break;
                     }
             }
