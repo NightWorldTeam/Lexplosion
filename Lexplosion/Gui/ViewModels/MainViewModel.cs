@@ -21,7 +21,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public static readonly NavigationStore NavigationStore = new NavigationStore();
 
-        public static MainMenuViewModel MainMenuVM { get; private set; }
+        public MainMenuViewModel MainMenuVM { get; private set; }
 
 
         private bool _isInstanceRunning = false;
@@ -138,6 +138,9 @@ namespace Lexplosion.Gui.ViewModels
         #endregion Command
 
 
+        #region Constructors
+
+
         public MainViewModel()
         {
             PreLoadGameVersions();
@@ -157,7 +160,47 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        #region methods
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
+        public void SubscribeToOpenModpackEvent()
+        {
+            CommandReceiver.OpenModpackPage += delegate (string modpackId)
+            {
+                InstanceClient instanceClient = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
+                if (instanceClient != null)
+                {
+                    InstanceFormViewModel viewModel;
+
+                    if (Model.IsLibraryContainsInstance(instanceClient))
+                    {
+                        viewModel = Model.GetInstance(instanceClient);
+                    }
+                    else if (Model.IsCatalogInstanceContains(instanceClient))
+                    {
+                        viewModel = Model.GetCatalogInstance(instanceClient);
+                    }
+                    else
+                    {
+                        viewModel = new InstanceFormViewModel(this, instanceClient);
+                    }
+
+                    MainMenuVM.OpenModpackPage(viewModel);
+                    NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
+                    NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
+                }
+            };
+        }
+
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
 
         // обновляем свойство currentviewmodel
         private void OnCurrentViewModelChanged()
@@ -198,35 +241,7 @@ namespace Lexplosion.Gui.ViewModels
 
         }
 
-        public void SubscribeToOpenModpackEvent()
-        {
-            CommandReceiver.OpenModpackPage += delegate (string modpackId)
-            {
-                InstanceClient instanceClient = InstanceClient.GetInstance(InstanceSource.Nightworld, modpackId);
-                if (instanceClient != null)
-                {
-                    InstanceFormViewModel viewModel;
 
-                    if (Model.IsLibraryContainsInstance(instanceClient))
-                    {
-                        viewModel = Model.GetInstance(instanceClient);
-                    }
-                    else if (Model.IsCatalogInstanceContains(instanceClient))
-                    {
-                        viewModel = Model.GetCatalogInstance(instanceClient);
-                    }
-                    else
-                    {
-                        viewModel = new InstanceFormViewModel(this, instanceClient);
-                    }
-
-                    MainViewModel.MainMenuVM.LogoClickCommand.Execute(viewModel);
-                    NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
-                    NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
-                }
-            };
-        }
-
-        #endregion
+        #endregion Private Methods
     }
 }

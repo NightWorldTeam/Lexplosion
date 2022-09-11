@@ -25,7 +25,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
         Update,
         OpenWebsite,
         RemoveInstance,
-        Export
+        Export,
+        OpenDLCPage
     }
 
     public sealed class MultiButtonProperties

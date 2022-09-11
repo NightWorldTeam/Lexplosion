@@ -85,6 +85,55 @@
         </Setter>
     </Style>
 
+    <Style x:Key="SettingsPlaceholderTextBox" TargetType="{x:Type controls:PlaceholderTextBox}">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Foreground" Value="#b9b7b7" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:PlaceholderTextBox}">
+                    <ControlTemplate.Resources>
+                        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+                    </ControlTemplate.Resources>
+
+                    <Border
+                        x:Name="Border"
+                        Background="{DynamicResource SepSolidColorBrush}"
+                        BorderBrush="#121212"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                        <Grid>
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Margin="5,0,0,0"
+                                Padding="2"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                HorizontalScrollBarVisibility="Disabled"
+                                VerticalScrollBarVisibility="Disabled" />
+
+                            <TextBlock
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                FontSize="{TemplateBinding PlaceholderFontSize}"
+                                FontWeight="{TemplateBinding PlaceholderFontWeight}"
+                                Foreground="{TemplateBinding PlaceholderColor}"
+                                IsHitTestVisible="False"
+                                Opacity="{TemplateBinding PlaceholderOpacity}"
+                                Text="{TemplateBinding Placeholder}"
+                                Visibility="{TemplateBinding IsEmpty,
+                                                             Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="AuthTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />

@@ -180,4 +180,6 @@
     <s:String x:Key="instanceExportUnsuccessful">Экспорт сборки {0} был завершён с ошибкой?</s:String>
 
     <s:String x:Key="minimizeWindow">Свернуть окно</s:String>
+
+    <s:String x:Key="instanceDLC">Дополнения</s:String>
 </ResourceDictionary>

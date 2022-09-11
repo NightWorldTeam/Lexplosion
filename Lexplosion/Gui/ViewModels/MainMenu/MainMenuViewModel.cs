@@ -32,7 +32,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private readonly TabMenuViewModel _settingsTabMenu;
         /* mainmenu fields */
 
-        #region commands
+        #region Commands
 
         public ICommand NavigationFactoryCommand { get; }
         public ICommand NavigationInstanceCommand { get; private set; }
@@ -44,17 +44,15 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         {
             get => _logoClickCommand ?? (_logoClickCommand = new RelayCommand(obj =>
             {
-                var instanceFormViewModel = (InstanceFormViewModel)obj;
-
-                NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                    MainViewModel.NavigationStore, () => new InstanceMenuViewModel(instanceFormViewModel, _mainViewModel));
-                NavigationShowCaseCommand?.Execute(null);
+                OpenModpackPage((InstanceFormViewModel)obj);
             }));
         }
 
 
-        #endregion commands
+        #endregion Commands
 
+
+        #region Constructors
 
         public MainMenuViewModel(MainViewModel mainViewModel)
         {
@@ -149,5 +147,21 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             };
             SelectedTab = Tabs[0];
         }
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
+        public void OpenModpackPage(InstanceFormViewModel viewModel) 
+        {
+            NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
+                MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel));
+            NavigationShowCaseCommand?.Execute(null);
+        }
+
+
+        #endregion Public & Protected Methods
     }
 }
