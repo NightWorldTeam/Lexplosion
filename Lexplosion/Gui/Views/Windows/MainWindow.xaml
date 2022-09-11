@@ -145,6 +145,7 @@
                                     Fill="{Binding Status, Source={x:Static global:UserData.User}, Converter={StaticResource AcitivityStatusToColorConverter}}"
                                     Focusable="False" />
                                 <Popup
+                                    x:Name="StatusPopup"
                                     Width="140"
                                     Height="80"
                                     AllowsTransparency="True"
@@ -170,13 +171,18 @@
                                                                     Padding="2"
                                                                     CornerRadius="2">
                                                                     <StackPanel Orientation="Horizontal">
-                                                                        <Ellipse
-                                                                            Width="10"
-                                                                            Height="10"
-                                                                            HorizontalAlignment="Center"
-                                                                            VerticalAlignment="Center"
-                                                                            Fill="{TemplateBinding Background}" />
-
+                                                                        <Grid>
+                                                                            <Ellipse
+                                                                                Width="11"
+                                                                                Height="11"
+                                                                                Fill="#131313" />
+                                                                            <Ellipse
+                                                                                Width="10"
+                                                                                Height="10"
+                                                                                HorizontalAlignment="Center"
+                                                                                VerticalAlignment="Center"
+                                                                                Fill="{TemplateBinding Background}" />
+                                                                        </Grid>
                                                                         <ContentPresenter Margin="5,0,0,0" />
                                                                     </StackPanel>
                                                                 </Border>
@@ -192,7 +198,8 @@
                                             </StackPanel.Resources>
 
                                             <Button
-                                                Background="Green"
+                                                Background="#0097c5"
+                                                Click="ChangeStatusButtonClick"
                                                 Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Online"
                                                 Content="В сети"
@@ -201,6 +208,7 @@
 
                                             <Button
                                                 Background="Red"
+                                                Click="ChangeStatusButtonClick"
                                                 Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="NotDisturb"
                                                 Content="Не беспокоить"
@@ -209,6 +217,7 @@
 
                                             <Button
                                                 Background="Gray"
+                                                Click="ChangeStatusButtonClick"
                                                 Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Offline"
                                                 Content="Невидимый"
@@ -323,7 +332,8 @@
             Grid.Row="1"
             Width="250"
             Height="280"
-            Margin="-90,-80,0,0" Visibility="Collapsed">
+            Margin="-90,-80,0,0"
+            Visibility="Collapsed">
             <Border
                 Background="{DynamicResource PrimarySolidColorBrush}"
                 CornerRadius="5"
@@ -335,16 +345,17 @@
                         <TextBlock
                             FontSize="18"
                             FontWeight="Medium"
+                            Foreground="White"
                             Opacity="0.8"
-                            Text="Filter by category" Foreground="White"/>
+                            Text="Filter by category" />
 
                         <TextBlock
                             Margin="0,3,0,0"
                             FontFamily="{DynamicResource FuturaBookC}"
                             FontSize="14"
                             FontWeight="Medium"
-                            Opacity="0.7"
                             Foreground="White"
+                            Opacity="0.7"
                             Text="128 chips discovered" />
                     </StackPanel>
 

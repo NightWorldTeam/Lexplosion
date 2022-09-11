@@ -98,6 +98,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         #endregion Properties
 
+
         #region Commands
         private RelayCommand _switchModloaderType;
         public RelayCommand SwitchModloaderType
@@ -139,13 +140,14 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }));
         }
 
+        private RelayCommand _closeModalWindowCommand;
         public override RelayCommand CloseModalWindowCommand
         {
-            get => new RelayCommand(obj =>
+            get => _closeModalWindowCommand ?? (_closeModalWindowCommand = new RelayCommand(obj =>
             {
                 _mainViewModel.ModalWindowVM.IsOpen = false;
                 _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(null);
-            });
+            }));
         }
 
         public RelayCommand LogoImportCommand
@@ -167,6 +169,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
 
         #endregion Commands
+
+
 
         public FactoryGeneralViewModel(MainViewModel mainViewModel)
         {

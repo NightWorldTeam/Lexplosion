@@ -206,7 +206,7 @@
                 Height="30"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Command="{Binding FactoryGeneralViewModel.CloseModalWindow}"
+                Command="{Binding FactoryGeneralViewModel.CloseModalWindowCommand}"
                 Content="{DynamicResource cancel}"
                 FontSize="16"
                 FontWeight="Normal"
