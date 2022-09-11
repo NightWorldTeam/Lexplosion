@@ -30,7 +30,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                     MainViewModel.NavigationStore, () => 
                     { 
                         NavigationToMainMenu?.Invoke();
-                        return MainViewModel.MainMenuVM; 
+                        return _mainViewModel.MainMenuVM; 
                     }
                 );
         }

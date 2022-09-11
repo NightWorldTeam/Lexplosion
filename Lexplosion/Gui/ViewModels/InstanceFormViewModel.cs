@@ -15,8 +15,7 @@ namespace Lexplosion.Gui.ViewModels
         private InstanceClient _instanceClient; // Данные о Instance.
 
 
-        #region props
-
+        #region Properties
 
 
         public InstanceClient Client
@@ -25,7 +24,6 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         public MainViewModel MainVM { get; } // Ссылка на MainViewModel
-
 
 
         /// <summary>
@@ -47,7 +45,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        #endregion props
+        #endregion Properties
 
 
         #region Commands
@@ -270,6 +268,12 @@ namespace Lexplosion.Gui.ViewModels
                 case LowerButtonFunc.RemoveInstance:
                     {
                         RemoveInstance(false);
+                        break;
+                    }
+
+                case LowerButtonFunc.OpenDLCPage:
+                    {
+                        MainVM.MainMenuVM.OpenModpackPage(this);
                         break;
                     }
 

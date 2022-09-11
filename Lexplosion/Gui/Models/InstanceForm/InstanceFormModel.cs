@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private string _overviewField;
         private List<Category> _categories = new List<Category>();
 
-        #region props
+        #region Properties
 
         public InstanceClient InstanceClient { get; set; }
         public DownloadModel DownloadModel { get; set; }
@@ -180,6 +180,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 {
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("openFolder"), ResourceGetter.GetIcon("OpenFolder"), LowerButtonFunc.OpenFolder)
+                    );
+                    LowerButtons.Add(
+                        new LowerButton(ResourceGetter.GetString("instanceDLC"), ResourceGetter.GetIcon("OpenFolder"), LowerButtonFunc.OpenDLCPage)
                     );
                 }
             });

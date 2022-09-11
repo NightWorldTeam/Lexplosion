@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels
         private AccountType _accountType;
 
 
-        #region props
+        #region Properties
 
 
         private string _login = String.Empty;
@@ -85,10 +85,11 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        #endregion
+        #endregion Properties
 
 
-        #region commands
+        #region Commands
+
 
         /// <summary>
         /// Команда навигации меняет viewmodel.
@@ -108,14 +109,16 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
-        #endregion commands
+
+        #endregion Commands
 
 
-        #region constructors
+        #region Constructors
 
-        public AuthViewModel(MainViewModel model)
+
+        public AuthViewModel(MainViewModel viewModel)
         {
-            _mainViewModel = model;
+            _mainViewModel = viewModel;
 
             // получаем последний выбранный аккаунт
             LoadSavedAccount(null);
@@ -123,8 +126,9 @@ namespace Lexplosion.Gui.ViewModels
             _accountTypeSelectedIndex = (int)_accountType;
 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
-                MainViewModel.NavigationStore, () => MainViewModel.MainMenuVM);
+                MainViewModel.NavigationStore, () => viewModel.MainMenuVM);
         }
+
 
         #endregion constructors
 
