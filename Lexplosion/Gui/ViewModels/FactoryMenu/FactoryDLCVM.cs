@@ -1,10 +1,6 @@
 ﻿using Lexplosion.Gui.Models.InstanceFactory;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
@@ -116,9 +112,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             
             Lexplosion.Run.TaskRun(() =>
             {
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), AddonType.Mods));
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), AddonType.Resourcepacks));
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), AddonType.Maps));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), CfProjectType.Resourcepacks));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), CfProjectType.Maps));
 
                 CurrentAddon = _models[0];
                 IsLoaded = true;

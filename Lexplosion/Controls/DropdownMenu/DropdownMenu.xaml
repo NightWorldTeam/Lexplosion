@@ -32,6 +32,10 @@
 
                         <Popup
                             x:Name="PART_Popup"
+                            MinWidth="{TemplateBinding MaxWidth}"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            Width="{TemplateBinding PopupMaxWidth}"
+                            MaxHeight="{TemplateBinding PopupMaxHeight}"
                             AllowsTransparency="True"
                             IsOpen="{TemplateBinding IsOpen}"
                             Placement="Left"

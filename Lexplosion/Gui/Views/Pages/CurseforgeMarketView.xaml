@@ -90,13 +90,13 @@
                                 <Image
                                     Width="30"
                                     Height="30"
-                                    Source="{Binding ImageSource}" />
+                                    Source="{Binding iconUrl, Converter={StaticResource UrlToImageConveter}}" />
                                 <TextBlock
                                     Width="230"
                                     Margin="10,0,10,0"
                                     VerticalAlignment="Center"
                                     Foreground="#e8dff7"
-                                    Text="{Binding Name}" />
+                                    Text="{Binding name}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

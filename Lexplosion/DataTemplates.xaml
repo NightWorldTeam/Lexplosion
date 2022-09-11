@@ -30,6 +30,7 @@
     <сonverters:EnumToStringConverter x:Key="EnumToStringConverter" />
     <сonverters:StringToGeometryConverter x:Key="StringToGeometryConverter" />
     <сonverters:SolidColorBrushToColorConverter x:Key="SolidColorBrushToColorConverter" />
+    <сonverters:UrlToImageConveter x:Key="UrlToImageConveter" />
 
     <!--<DataTemplate DataType="{x:Type viewmodels:InstanceFormViewModel}">
         <customcontrols:InstanceForm  Margin="4,30,30,0"/>

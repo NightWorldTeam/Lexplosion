@@ -133,6 +133,7 @@
     <Compile Include="Gui\Converters\NotEqualZeroConverter.cs" />
     <Compile Include="Gui\Converters\SolidColorBrushToColorConverter.cs" />
     <Compile Include="Gui\Converters\StringToGeometryConverter.cs" />
+    <Compile Include="Gui\Converters\UrlToImageConveter.cs" />
     <Compile Include="Gui\ModalWindow\IModal.cs" />
     <Compile Include="Gui\IPaginable.cs" />
     <Compile Include="Gui\ISubmenu.cs" />
