@@ -28,71 +28,18 @@
                             </StackPanel>
 
                             <!--  category buffer  -->
-                            <WrapPanel Margin="13,0,13,0">
 
-                                <!--  category item selected  -->
-
-                                <Border
-                                    Padding="10,3,10,3"
-                                    BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                                    BorderThickness="2"
-                                    CornerRadius="10"
-                                    SnapsToDevicePixels="False">
-
-                                    <Border.Background>
-                                        <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
-                                    </Border.Background>
-
-                                    <StackPanel
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal">
-
-
-                                        <!--  Catagory text  -->
-
-                                        <TextBlock
-                                            Margin="0,0,0,0"
-                                            VerticalAlignment="Center"
-                                            FontFamily="{DynamicResource FuturaBookC}"
-                                            FontSize="16"
-                                            FontWeight="Bold"
-                                            Foreground="{DynamicResource BrandSolidColorBrush}"
-                                            Text="Tech" />
-                                    </StackPanel>
-                                </Border>
-
-                                <Border
-                                    Margin="5,0,0,0"
-                                    Padding="10,3,10,3"
-                                    BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="10"
-                                    SnapsToDevicePixels="False">
-
-                                    <Border.Background>
-                                        <SolidColorBrush Opacity="0" Color="{DynamicResource ActivityColor}" />
-                                    </Border.Background>
-
-                                    <StackPanel
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal">
-
-
-                                        <!--  Catagory text  -->
-
-                                        <TextBlock
-                                            Margin="0,0,0,0"
-                                            VerticalAlignment="Center"
-                                            FontFamily="{DynamicResource FuturaBookC}"
-                                            FontSize="16"
-                                            Foreground="{DynamicResource BrandSolidColorBrush}"
-                                            Text="Magic" />
-                                    </StackPanel>
-                                </Border>
-
-                            </WrapPanel>
+                            <ListBox
+                                ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+                                ItemTemplate="{TemplateBinding ItemTemplate}"
+                                ItemsSource="{TemplateBinding ItemsSource}"
+                                SelectedValue="{TemplateBinding SelectedValue}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
                         </StackPanel>
                     </Border>
                 </ControlTemplate>

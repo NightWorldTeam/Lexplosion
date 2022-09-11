@@ -69,8 +69,8 @@ namespace Lexplosion.Logic.Objects.Curseforge
     {
         public int id;
         public int gameId;
-        public string name;
-        public string iconUrl;
+        public string name { get; set; }
+        public string iconUrl { get; set; }
         public int classId;
         public int parentCategoryId;
     }

@@ -10,7 +10,6 @@ namespace Lexplosion.Gui.Views.CustomControls
         public SearchBox()
         {
             InitializeComponent();
-            var ti = new TabControl();
         }
     }
 }

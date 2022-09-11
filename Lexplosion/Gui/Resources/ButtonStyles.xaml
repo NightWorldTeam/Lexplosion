@@ -392,21 +392,20 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
-                    <Border>
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse
-                                x:Name="ellipse"
-                                Width="20"
-                                Height="20"
-                                Margin="2,3,10,0"
-                                HorizontalAlignment="Left"
-                                Fill="#505050"
-                                SnapsToDevicePixels="False"
-                                Stroke="#131313"
-                                StrokeThickness="1" />
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Border>
+                    <StackPanel Background="Transparent" Orientation="Horizontal">
+                        <Ellipse
+                            x:Name="ellipse"
+                            Width="20"
+                            Height="20"
+                            Margin="2,3,10,0"
+                            HorizontalAlignment="Left"
+                            Fill="#505050"
+                            SnapsToDevicePixels="False"
+                            Stroke="#131313"
+                            StrokeThickness="1" />
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="ellipse" Property="Stroke" Value="{DynamicResource BrandSolidColorBrush}" />

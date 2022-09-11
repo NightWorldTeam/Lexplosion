@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects.Curseforge;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -22,7 +26,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _selectedInstanceSource; set
             {
                 _selectedInstanceSource = value;
-                Lexplosion.Run.TaskRun(() => { 
+                Lexplosion.Run.TaskRun(() => {
                     SearchChanged.Invoke();
                 });
                 OnPropertyChanged();
@@ -39,11 +43,11 @@ namespace Lexplosion.Gui.ViewModels
                     {
                         SearchTextComfirmed = SearchTextUncomfirmed;
                     }
-                    else 
+                    else
                     {
                         SearchTextComfirmed = "";
                     }
-                        
+
                     SearchChanged.Invoke();
                 }
             }));
@@ -78,9 +82,35 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+        private CurseforgeCategory _selectedCurseforgeCategory;
+        public CurseforgeCategory SelectedCurseforgeCategory
+        {
+            get => _selectedCurseforgeCategory; set 
+            {
+                _selectedCurseforgeCategory = value;
+                OnPropertyChanged();
+                Console.WriteLine(value.name);
+                SearchChanged?.Invoke();
+            }
+        }
+
         public SearchBoxViewModel(bool isMultiSource = false)
         {
             IsMultiSource = isMultiSource;
+            Categories = new ObservableCollection<CurseforgeCategory>(
+                CurseforgeApi.GetCategories(CfProjectType.Modpacks)
+                );
+
+            Categories.Add(new CurseforgeCategory() 
+            {
+                name = "All"
+            });
+
+            Categories.Move(Categories.Count - 1, 0);
+
+            SelectedCurseforgeCategory = Categories[0];
         }
+
+        public ObservableCollection<CurseforgeCategory> Categories { get; }
     }
 }

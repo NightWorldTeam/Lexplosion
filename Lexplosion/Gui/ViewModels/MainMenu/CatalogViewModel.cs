@@ -1,5 +1,7 @@
-﻿using Lexplosion.Gui.Models;
+﻿using Lexplosion.Controls;
+using Lexplosion.Gui.Models;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Objects.Curseforge;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -93,9 +95,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public CatalogViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
-            GetInitializeInstance();
             SearchBoxVM.SearchChanged += GetInitializeInstance;
             PaginatorVM.PageChanged += GetInitializeInstance;
+            GetInitializeInstance();
         }
 
         public async void GetInitializeInstance()
@@ -110,7 +112,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             Lexplosion.Run.TaskRun(delegate ()
             {
                 var instances = InstanceClient.GetOutsideInstances(
-                    SearchBoxVM.SelectedInstanceSource, _pageSize, PaginatorVM.PageIndex - 1, ModpacksCategories.All, SearchBoxVM.SearchTextComfirmed);
+                    SearchBoxVM.SelectedInstanceSource,
+                    _pageSize,
+                    PaginatorVM.PageIndex - 1,
+                    (ModpacksCategories)Enum.Parse(typeof(ModpacksCategories), SearchBoxVM.SelectedCurseforgeCategory.name, true),
+                    SearchBoxVM.SearchTextComfirmed
+                    );
 
                 if (instances.Count == _pageSize)
                 {

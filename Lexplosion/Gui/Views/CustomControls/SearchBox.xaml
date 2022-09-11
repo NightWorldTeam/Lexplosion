@@ -2,6 +2,7 @@
     x:Class="Lexplosion.Gui.Views.CustomControls.SearchBox"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cf="clr-namespace:Lexplosion.Logic.Objects.Curseforge"
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -109,6 +110,46 @@
             </Setter>
         </Style>
 
+        <DataTemplate x:Key="CurseforgeCategory" DataType="{x:Type cf:CurseforgeCategory}">
+            <Border
+                x:Name="Border"
+                Margin="3,2,0,0"
+                Padding="10,3,10,3"
+                BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="10"
+                SnapsToDevicePixels="False">
+
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+
+                    <!--  Catagory text  -->
+
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{DynamicResource FuturaBookC}"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource BrandSolidColorBrush}"
+                        Text="{Binding name}" />
+                </StackPanel>
+            </Border>
+
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                    <Setter TargetName="Border" Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter TargetName="Border" Property="BorderThickness" Value="2" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+
+        </DataTemplate>
+
     </UserControl.Resources>
 
     <StackPanel Orientation="Horizontal">
@@ -118,30 +159,52 @@
                 <StackPanel Orientation="Horizontal">
 
                     <StackPanel>
+
                         <TextBlock
                             FontSize="14"
                             Foreground="White"
                             Opacity="0.8"
                             Text="Game Version" />
-                        <ComboBox />
+
+                        <ComboBox SelectedIndex="0">
+                            <ComboBoxItem>
+                                <TextBlock Text="1.19.2" />
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <TextBlock Text="1.19" />
+                            </ComboBoxItem>
+                        </ComboBox>
+
                     </StackPanel>
 
                     <StackPanel Margin="5,0,0,0">
+
                         <TextBlock
                             FontSize="14"
                             Foreground="White"
                             Opacity="0.8"
                             Text="Sort by" />
-                        <ComboBox Background="{DynamicResource SepSolidColorBrush}">
+
+                        <ComboBox Background="{DynamicResource SepSolidColorBrush}" SelectedIndex="0">
                             <ComboBoxItem>
                                 <TextBlock Text="Popularity" />
                             </ComboBoxItem>
+                            <ComboBoxItem>
+                                <TextBlock Text="Lastest" />
+                            </ComboBoxItem>
                         </ComboBox>
+
                     </StackPanel>
 
                 </StackPanel>
 
-                <controls:Filters Margin="0,5,0,0" />
+                <controls:Filters
+                    MaxWidth="250"
+                    Margin="0,5,0,0"
+                    ItemTemplate="{StaticResource CurseforgeCategory}"
+                    ItemsSource="{Binding Categories}"
+                    SelectedValue="{Binding SelectedCurseforgeCategory}" />
+
             </StackPanel>
         </controls:DropdownMenu>
 

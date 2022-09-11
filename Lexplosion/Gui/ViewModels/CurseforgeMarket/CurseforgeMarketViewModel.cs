@@ -1,4 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects.Curseforge;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,99 +8,6 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 {
-    public sealed class AddonCategory
-    {
-        public int Id { get; }
-        public AddonType Type { get; }
-        public string Name { get; }
-        public string ImageSource { get; }
-        public bool HasSubcategory { get; }
-        public List<AddonCategory> Subcategory { get; }
-
-        private readonly string iconsSource = "pack://Application:,,,/assets/images/icons/curseforge/";
-
-        public AddonCategory(int id, AddonType type, string name, string iconSource, List<AddonCategory> subcategory = null)
-        {
-            Id = id;
-            Name = name;
-            ImageSource = iconSource + type.ToString().ToLower() + "/" + iconSource.ToLower() + ".png";
-
-            if (subcategory == null)
-            {
-                subcategory = new List<AddonCategory>();
-                HasSubcategory = false;
-            }
-            else Subcategory = subcategory;
-        }
-
-        public static List<AddonCategory> GetCategories(AddonType type)
-        {
-            var result = new List<AddonCategory>();
-            var i = -1;
-
-            if (type == AddonType.Mods)
-            {
-                foreach (var value in Enum.GetValues(typeof(ModCategory)))
-                {
-                    var addonCategory = new AddonCategory(
-                        i,
-                        AddonType.Mods,
-                        value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"),
-                        value.ToString().Replace("__", string.Empty).Replace("_", string.Empty).Replace("CharAnd", string.Empty)
-                        );
-
-                    result.Add(addonCategory);
-                    Console.WriteLine(addonCategory.ToString());
-                    i++;
-                }
-                
-            }
-            else if (type == AddonType.Resourcepacks)
-            {
-                foreach (var value in Enum.GetValues(typeof(ResourcePacksCategory)))
-                {
-                    var addonCategory = new AddonCategory(
-                        i,
-                        AddonType.Resourcepacks,
-                        value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"),
-                        value.ToString().Replace("__", string.Empty).Replace("_", string.Empty).Replace("CharAnd", string.Empty)
-                        );
-
-                    result.Add(addonCategory);
-                    Console.WriteLine(addonCategory.ToString());
-                    i++;
-                }
-            }
-            else if (type == AddonType.Maps)
-            {
-                foreach (var value in Enum.GetValues(typeof(WorldsCategory)))
-                {
-                    var addonCategory = new AddonCategory(
-                        i,
-                        AddonType.Maps,
-                        value.ToString().Replace("__", ", ").Replace('_', ' ').Replace("CharAnd", "&"),
-                        value.ToString().Replace("__", string.Empty).Replace("_", string.Empty).Replace("CharAnd", string.Empty)
-                        );
-
-                    result.Add(addonCategory);
-                    Console.WriteLine(addonCategory.ToString());
-                    i++;
-                }
-            }
-
-            return result;
-        }
-
-        public override string ToString()
-        {
-            return 
-                "AddonCategory:" +
-                "\n    Id: " + this.Id + 
-                "\n    Name: " + this.Name + 
-                "\n    ImageSource: " + this.ImageSource;
-        }
-    }
-
     public sealed class CurseforgeMarketViewModel : VMBase
     {
         private readonly MainViewModel _mainViewModel;
@@ -107,12 +16,12 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private readonly ObservableCollection<InstanceAddon> _instanceAddons;
 
-        private readonly AddonType _addonsType;
+        private readonly CfProjectType _addonsType;
 
         private int _pageSize = 20;
 
 
-        #region commands
+        #region Commands
 
         /// <summary>
         /// Закрывает CurseforgeMarket
@@ -198,12 +107,12 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             });
         }
 
-        #endregion commands
+        #endregion Commands
 
 
-        #region props 
+        #region Properties 
 
-        public ObservableCollection<AddonCategory> ModCategories { get; } = new ObservableCollection<AddonCategory>();
+        public ObservableCollection<CurseforgeCategory> ModCategories { get; } = new ObservableCollection<CurseforgeCategory>();
         public ObservableCollection<InstanceAddon> InstanceAddons { get; }
 
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel();
@@ -242,8 +151,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
-        private AddonCategory _selectedAddonCategory;
-        public AddonCategory SelectedAddonCategory
+        private CurseforgeCategory _selectedAddonCategory;
+        public CurseforgeCategory SelectedAddonCategory
         {
             get => _selectedAddonCategory; set 
             {
@@ -253,10 +162,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
-        #endregion props
+        #endregion Properties
 
 
-        public CurseforgeMarketViewModel(ObservableCollection<InstanceAddon> installedAddons, MainViewModel mainViewModel, InstanceClient instanceClient, AddonType addonsType)
+        public CurseforgeMarketViewModel(ObservableCollection<InstanceAddon> installedAddons, MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType)
         {
             _instanceAddons = installedAddons;
             _mainViewModel = mainViewModel;
@@ -265,10 +174,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             _baseInstanceData = instanceClient.GetBaseData;
 
-            foreach (var addon in AddonCategory.GetCategories(addonsType))
-            {
-                ModCategories.Add(addon);
-            }
+            ModCategories = new ObservableCollection<CurseforgeCategory>(CurseforgeApi.GetCategories(_addonsType));
 
             SelectedAddonCategory = ModCategories[0];
 
@@ -288,14 +194,16 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         {
             IsLoaded = false;
 
+            var addonType = (AddonType)Enum.Parse(typeof(AddonType), _addonsType.ToString());
+
             Lexplosion.Run.TaskRun(delegate ()
             {
                 var instances = InstanceAddon.GetAddonsCatalog(
                     _baseInstanceData, 
                     _pageSize, 
-                    PaginatorVM.PageIndex - 1, 
-                    _addonsType, 
-                    SelectedAddonCategory.Id, 
+                    PaginatorVM.PageIndex - 1,
+                    addonType, 
+                    SelectedAddonCategory.id, 
                     SearchBoxVM.SearchTextComfirmed);
 
                 if (instances.Count == _pageSize)

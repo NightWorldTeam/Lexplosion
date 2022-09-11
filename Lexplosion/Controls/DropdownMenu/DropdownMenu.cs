@@ -25,6 +25,34 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty IsInfoBoxProperty
             = DependencyProperty.Register("IsInfoBox", typeof(bool), typeof(DropdownMenu), new PropertyMetadata(false));
 
+        public static readonly DependencyProperty PopupMaxWidthProperty =
+            DependencyProperty.Register("PopupMaxWidth", typeof(double), typeof(DropdownMenu), 
+                new FrameworkPropertyMetadata(Double.PositiveInfinity,
+                    FrameworkPropertyMetadataOptions.AffectsMeasure,
+                    new PropertyChangedCallback(OnTransformDirty)),
+                    new ValidateValueCallback(IsMaxWidthHeightValid));
+
+        public static readonly DependencyProperty PopupMinWidthProperty =
+            DependencyProperty.Register("PopupMinWidth", typeof(double), typeof(DropdownMenu),
+                new FrameworkPropertyMetadata(Double.PositiveInfinity,
+                    FrameworkPropertyMetadataOptions.AffectsMeasure,
+                    new PropertyChangedCallback(OnTransformDirty)),
+                    new ValidateValueCallback(IsMaxWidthHeightValid));
+
+        public static readonly DependencyProperty PopupMaxHeightProperty =
+            DependencyProperty.Register("PopupMaxHeight", typeof(double), typeof(DropdownMenu),
+                    new FrameworkPropertyMetadata(Double.PositiveInfinity,
+                    FrameworkPropertyMetadataOptions.AffectsMeasure,
+                    new PropertyChangedCallback(OnTransformDirty)),
+                    new ValidateValueCallback(IsMaxWidthHeightValid));
+
+        public static readonly DependencyProperty PopupMinHeightProperty =
+            DependencyProperty.Register("PopupMinHeight", typeof(double), typeof(DropdownMenu),
+                    new FrameworkPropertyMetadata(Double.PositiveInfinity,
+                    FrameworkPropertyMetadataOptions.AffectsMeasure,
+                    new PropertyChangedCallback(OnTransformDirty)),
+                    new ValidateValueCallback(IsMaxWidthHeightValid));
+
         public bool IsOpen
         {
             get => (bool)GetValue(IsOpenProperty);
@@ -35,6 +63,30 @@ namespace Lexplosion.Controls
         {
             get => (bool)GetValue(IsInfoBoxProperty);
             set => SetValue(IsInfoBoxProperty, value);
+        }
+
+        public double PopupMaxWidth 
+        {
+            get => (double)GetValue(PopupMaxWidthProperty);
+            set => SetValue(PopupMaxWidthProperty, value);
+        }
+        
+        public double PopupMinWidth 
+        {
+            get => (double)GetValue(PopupMinWidthProperty);
+            set => SetValue(PopupMinWidthProperty, value);
+        }
+
+        public double PopupMaxHeight 
+        {
+            get => (double)GetValue(PopupMaxHeightProperty);
+            set => SetValue(PopupMaxHeightProperty, value);
+        }
+
+        public double PopupMinHeight
+        {
+            get => (double)GetValue(PopupMinHeightProperty);
+            set => SetValue(PopupMinHeightProperty, value);
         }
 
         static DropdownMenu() 
@@ -79,6 +131,19 @@ namespace Lexplosion.Controls
             if (_toggle != null)
                 if (!_toggle.IsMouseOver)
                     IsOpen = false;
+        }
+
+        private static bool IsMaxWidthHeightValid(object value)
+        {
+            double v = (double)value;
+            return (!double.IsNaN(v) && v >= 0.0d);
+        }
+
+        private static void OnTransformDirty(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // Callback for MinWidth, MaxWidth, Width, MinHeight, MaxHeight, Height, and RenderTransformOffset
+            //FrameworkElement fe = (FrameworkElement)d;
+            //fe.AreTransformsClean = false;
         }
     }
 }

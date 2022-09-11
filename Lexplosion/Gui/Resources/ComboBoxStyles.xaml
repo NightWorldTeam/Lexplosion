@@ -139,7 +139,7 @@
             BorderBrush="#121212"
             BorderThickness="{TemplateBinding BorderThickness}"
             CornerRadius="6">
-            <Grid>
+            <DockPanel>
                 <ContentPresenter
                     Margin="10,0,0,0"
                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -158,7 +158,7 @@
                         Fill="White"
                         SnapsToDevicePixels="False" />
                 </Viewbox>
-            </Grid>
+            </DockPanel>
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsChecked" Value="True">

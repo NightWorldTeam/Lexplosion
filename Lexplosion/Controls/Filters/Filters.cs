@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace Lexplosion.Controls
 {
-    public class Filters : Selector
+    public class Filters : ListBox
     {
 
         public static readonly DependencyProperty TitleProperty =
@@ -40,6 +40,8 @@ namespace Lexplosion.Controls
             get => (SolidColorBrush)GetValue(ItemColorBrushProperty);
             set => SetValue(ItemColorBrushProperty, value);
         }
+
+
 
         #region Constructors
 

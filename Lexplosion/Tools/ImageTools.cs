@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Tools
@@ -48,7 +52,7 @@ namespace Lexplosion.Tools
             }
         }
 
-        public static BitmapImage ToImageWithResize(byte[] imageBytes, int width, int height) 
+        public static BitmapImage ToImageWithResize(byte[] imageBytes, int width, int height)
         {
             if (imageBytes is null || imageBytes.Length == 0)
                 return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
@@ -105,9 +109,24 @@ namespace Lexplosion.Tools
             else return new BitmapImage(new Uri("pack://application:,,,/assets/images/icons/non_image.png"));
         }
 
-        public static byte[] GetImageBytes(string path) 
+        public static byte[] GetImageBytes(string path)
         {
             return File.ReadAllBytes(path);
+        }
+
+        public static byte[] GetImageBytesByUrl(string url)
+        {
+            byte[] imageBytes = null;
+            using (var httpClient = new HttpClient())
+            {
+                imageBytes = httpClient.GetByteArrayAsync(url).Result;
+            }
+            return imageBytes;
+        }
+
+        public static BitmapImage GetImageByUrl(string url) 
+        {
+            return ToImage(GetImageBytesByUrl(url));
         }
     }
 }

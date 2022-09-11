@@ -1,16 +1,12 @@
 ﻿using Lexplosion.Logic.Management.Instances;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.Models.InstanceFactory
 {
     public class FactoryDLCModel : VMBase
     {
-        public readonly AddonType Type;
+        public readonly CfProjectType Type;
 
         private ObservableCollection<InstanceAddon> _instanceAddons;
         public ObservableCollection<InstanceAddon> InstalledAddons 
@@ -37,7 +33,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             }
         }
 
-        public FactoryDLCModel(List<InstanceAddon> addons, AddonType type)
+        public FactoryDLCModel(List<InstanceAddon> addons, CfProjectType type)
         {
             InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
             Type = type;

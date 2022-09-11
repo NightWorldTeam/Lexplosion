@@ -32,6 +32,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private readonly TabMenuViewModel _settingsTabMenu;
         /* mainmenu fields */
 
+
         #region Commands
 
         public ICommand NavigationFactoryCommand { get; }
@@ -158,6 +159,21 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         {
             NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
                 MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel));
+            NavigationShowCaseCommand?.Execute(null);
+        }
+
+        public void OpenModpackPage(InstanceFormViewModel viewModel, bool isToDLC = false) 
+        {
+            var index = 0;
+            var subIndex = 0;
+            if (isToDLC) 
+            { 
+                index = 1;
+                subIndex = viewModel.Client.Type == InstanceSource.Local ? 3 : 1;
+            }
+
+            NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
+                MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel, index, subIndex));
             NavigationShowCaseCommand?.Execute(null);
         }
 
