@@ -11,18 +11,19 @@ using System.Windows.Shapes;
 
 namespace Lexplosion.Controls
 {
-    //[TemplatePart(Name = PART_BACKGROUND_LAYER, Type = typeof(Grid))]
+    [TemplatePart(Name = PART_BACKGROUND_LAYER, Type = typeof(Grid))]
     //[TemplatePart(Name = PART_CONTENT_BORDER, Type = typeof(Border))]
     //[TemplatePart(Name = PART_RECTANGLE, Type = typeof(Rectangle))]
     //[TemplatePart(Name = PART_PLACEHOLDER, Type = typeof(TextBlock))]
     public class LoadingBoard : ContentControl
     {
-        //private const string PART_BACKGROUND_LAYER = "PART_Backround_Layer";
+        private const string PART_BACKGROUND_LAYER = "PART_Backround_Layer";
         //private const string PART_CONTENT_BORDER = "PART_Content_Border";
         //private const string PART_RECTANGLE = "PART_Rectangle";
         //private const string PART_PLACEHOLDER = "PART_Placeholder";
 
         #region Properties and Events
+
 
         public static readonly DependencyProperty IsLoadingFinishedProperty 
             = DependencyProperty.Register("IsLoadingFinished", typeof(bool), typeof(LoadingBoard), new PropertyMetadata(false));
@@ -37,10 +38,10 @@ namespace Lexplosion.Controls
             = DependencyProperty.Register("BorderColor", typeof(Brush), typeof(LoadingBoard), new PropertyMetadata(Brushes.White));
 
         public static readonly DependencyProperty BackgroundColorProperty
-            = DependencyProperty.Register("BackgroundColor", typeof(Color), typeof(LoadingBoard), new PropertyMetadata(Colors.Transparent));
+            = DependencyProperty.Register("BackgroundColor", typeof(Color), typeof(LoadingBoard), new FrameworkPropertyMetadata(Colors.Transparent));
 
         public static readonly DependencyProperty BackgroundOpacityProperty
-            = DependencyProperty.Register("BackgroundOpacity", typeof(double), typeof(LoadingBoard), new PropertyMetadata(1.0));
+            = DependencyProperty.Register("BackgroundOpacity", typeof(double), typeof(LoadingBoard), new FrameworkPropertyMetadata(1.0));
 
         public bool IsLoadingFinished
         {
@@ -76,13 +77,34 @@ namespace Lexplosion.Controls
         {
             get => (double)GetValue(BackgroundOpacityProperty);
             set => SetValue(BackgroundOpacityProperty, value);
-        } 
+        }
 
         #endregion
+
+
+        #region Constructors
+
 
         static LoadingBoard()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(LoadingBoard), new FrameworkPropertyMetadata(typeof(LoadingBoard)));
         }
+
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+
+        }
+
+
+        #endregion Public & Protected Methods
     }
 }

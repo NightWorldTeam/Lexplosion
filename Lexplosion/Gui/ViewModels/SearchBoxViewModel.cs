@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Curseforge;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,31 +9,14 @@ namespace Lexplosion.Gui.ViewModels
 {
     public sealed class SearchBoxViewModel : VMBase
     {
+
+        #region Commands
+
+
         private RelayCommand _searchCommand;
-
-        private string _searchTextUncomfirmed = string.Empty;
-        private string _searchTextComfirmed = string.Empty;
-
-        public delegate void SearchChangedCallback();
-        public event SearchChangedCallback SearchChanged;
-
-        private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
-        private int _selectedSourceIndex = 1;
-
-        public bool IsMultiSource { get; }
-
-        public InstanceSource SelectedInstanceSource
-        {
-            get => _selectedInstanceSource; set
-            {
-                _selectedInstanceSource = value;
-                Lexplosion.Run.TaskRun(() => {
-                    SearchChanged.Invoke();
-                });
-                OnPropertyChanged();
-            }
-        }
-
+        /// <summary>
+        /// Команда запускающая поиск по тексту и д.р параметрам.
+        /// </summary>
         public RelayCommand SearchCommand
         {
             get => _searchCommand ?? (new RelayCommand(obj =>
@@ -53,32 +37,77 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
+
+        #endregion Commands
+
+
+        #region Properties
+
+
+        public delegate void SearchChangedCallback();
+        public event SearchChangedCallback SearchChanged;
+
+        public ObservableCollection<CurseforgeCategory> Categories { get; }
+
+        public bool IsMultiSource { get; }
+        public bool HasCategories { get; }
+
+
+        private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
+        /// <summary>
+        /// Ресурс откуда получаем данные.
+        /// Curseforge, NightWorld
+        /// </summary>
+        public InstanceSource SelectedInstanceSource
+        {
+            get => _selectedInstanceSource; set
+            {
+                _selectedInstanceSource = value;
+                OnPropertyChanged();
+                StartSearch();
+            }
+        }
+
+        private string _searchTextUncomfirmed = string.Empty;
+        /// <summary>
+        /// Содержит текст, который пользователь ввел, но не запустил поиск.
+        /// </summary>
         public string SearchTextUncomfirmed
         {
             get => _searchTextUncomfirmed; set
             {
                 _searchTextUncomfirmed = value;
-                OnPropertyChanged(nameof(SearchTextUncomfirmed));
+                OnPropertyChanged();
             }
         }
 
+
+        private string _searchTextComfirmed = string.Empty;
+        /// <summary>
+        /// Содержит текст, по которому в данный момент выдаются данные.
+        /// </summary>
         public string SearchTextComfirmed
         {
             get => _searchTextComfirmed; set
             {
                 _searchTextComfirmed = value;
-                OnPropertyChanged(nameof(SearchTextComfirmed));
+                OnPropertyChanged();
             }
         }
 
-        public int SelectedSourceIndex
+        private byte _selectedSourceIndex = 1;
+        /// <summary>
+        /// Индекс выбраного источника.
+        /// 0 - NightWorld
+        /// 1 - Curseforge
+        /// </summary>
+        public byte SelectedSourceIndex
         {
             get => _selectedSourceIndex; set
             {
                 _selectedSourceIndex = value;
-                if (value == 0) SelectedInstanceSource = InstanceSource.Nightworld;
-                if (value == 1) SelectedInstanceSource = InstanceSource.Curseforge;
-                OnPropertyChanged(nameof(SelectedSourceIndex));
+                SetSelectedInstanceSourceByIndex(value);
+                OnPropertyChanged();
             }
         }
 
@@ -94,23 +123,67 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        public SearchBoxViewModel(bool isMultiSource = false)
+
+        #endregion Properties
+
+
+        #region Constructors
+
+
+        public SearchBoxViewModel(bool isMultiSource = false, bool hasCategories = false)
         {
             IsMultiSource = isMultiSource;
-            Categories = new ObservableCollection<CurseforgeCategory>(
-                CurseforgeApi.GetCategories(CfProjectType.Modpacks)
-                );
-
-            Categories.Add(new CurseforgeCategory() 
-            {
-                name = "All"
-            });
-
-            Categories.Move(Categories.Count - 1, 0);
-
-            SelectedCurseforgeCategory = Categories[0];
+            HasCategories = hasCategories;
+            Categories = PrepareCategories();
         }
 
-        public ObservableCollection<CurseforgeCategory> Categories { get; }
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
+
+
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private ObservableCollection<CurseforgeCategory> PrepareCategories() 
+        {
+            var categories = new ObservableCollection<CurseforgeCategory>(
+                CurseforgeApi.GetCategories(CfProjectType.Modpacks)
+            );
+
+            categories.Add(new CurseforgeCategory() { name = "All" });
+
+            categories.Move(categories.Count - 1, 0);
+
+            SelectedCurseforgeCategory = categories[0];
+
+            return categories;
+        }
+
+        private void StartSearch() 
+        {
+            Lexplosion.Run.TaskRun(() => {
+                SearchChanged.Invoke();
+            });
+        }
+
+
+        private void SetSelectedInstanceSourceByIndex(byte value) 
+        {
+            if (value == 0)
+                SelectedInstanceSource = InstanceSource.Nightworld;
+            else if (value == 1)
+                SelectedInstanceSource = InstanceSource.Curseforge;
+        }
+
+        #endregion Private Methods
     }
 }

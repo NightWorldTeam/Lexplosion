@@ -10,6 +10,5 @@
         <ResourceDictionary Source="PlaceholderTextBox/PlaceholderTextBox.xaml" />
         <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
         <ResourceDictionary Source="DownloadButton/DownloadButton.xaml" />
-        <ResourceDictionary Source="Filters/Filters.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

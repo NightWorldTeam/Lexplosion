@@ -18,7 +18,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         #region props
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
-        public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true);
+        public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true, true);
 
         private bool _isLoaded;
         /// <summary>
@@ -111,11 +111,17 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             IsLoaded = false;
             Lexplosion.Run.TaskRun(delegate ()
             {
+                var enumByString 
+                    = (ModpacksCategories)Enum.Parse(
+                        typeof(ModpacksCategories), 
+                        SearchBoxVM.SelectedCurseforgeCategory.name.Replace(' ', Char.MinValue), 
+                        true);
+
                 var instances = InstanceClient.GetOutsideInstances(
                     SearchBoxVM.SelectedInstanceSource,
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
-                    (ModpacksCategories)Enum.Parse(typeof(ModpacksCategories), SearchBoxVM.SelectedCurseforgeCategory.name, true),
+                    enumByString,
                     SearchBoxVM.SearchTextComfirmed
                     );
 
