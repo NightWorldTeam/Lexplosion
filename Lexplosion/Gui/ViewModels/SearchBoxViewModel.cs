@@ -1,8 +1,6 @@
 ﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Curseforge;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels
@@ -21,19 +19,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _searchCommand ?? (new RelayCommand(obj =>
             {
-                if (SearchTextComfirmed != SearchTextUncomfirmed)
-                {
-                    if (SearchTextUncomfirmed.Length != 0)
-                    {
-                        SearchTextComfirmed = SearchTextUncomfirmed;
-                    }
-                    else
-                    {
-                        SearchTextComfirmed = "";
-                    }
-
-                    SearchChanged.Invoke();
-                }
+                StartSearch();
             }));
         }
 
@@ -124,6 +110,17 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
+        //private CfSortBy _selectedCfSortBy;
+        //public CfSortBy SelectedCfSortBy 
+        //{
+        //    get => _selectedCfSortBy; set 
+        //    {
+        //        _selectedCfSortBy = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+
+
         #endregion Properties
 
 
@@ -170,9 +167,19 @@ namespace Lexplosion.Gui.ViewModels
 
         private void StartSearch() 
         {
-            Lexplosion.Run.TaskRun(() => {
+            if (SearchTextComfirmed != SearchTextUncomfirmed)
+            {
+                if (SearchTextUncomfirmed.Length != 0)
+                {
+                    SearchTextComfirmed = SearchTextUncomfirmed;
+                }
+                else
+                {
+                    SearchTextComfirmed = "";
+                }
+
                 SearchChanged.Invoke();
-            });
+            }
         }
 
 

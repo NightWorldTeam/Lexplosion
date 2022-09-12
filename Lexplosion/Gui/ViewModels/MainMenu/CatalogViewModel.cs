@@ -1,7 +1,4 @@
-﻿using Lexplosion.Controls;
-using Lexplosion.Gui.Models;
-using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Objects.Curseforge;
+﻿using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -12,7 +9,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
     {
         private const int _pageSize = 10;
         private readonly MainViewModel _mainViewModel;
-
 
 
         #region Properties
@@ -139,17 +135,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     SearchBoxVM.SearchTextComfirmed
                     );
 
-                if (instances.Count == _pageSize)
-                {
-                    IsPaginatorVisible = true;
-                }
+                if (instances.Count == _pageSize) IsPaginatorVisible = true;
                 else IsPaginatorVisible = false;
 
                 if (instances.Count == 0)
                 {
-                    InstanceList.Clear();
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
+                        InstanceList.Clear();
                         InstanceList.Clear();
                         IsEmptyList = true;
                     });
@@ -158,8 +151,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        if (IsEmptyList)
-                            IsEmptyList = false;
+                        if (IsEmptyList) IsEmptyList = false;
 
                         InstanceList.Clear();
 

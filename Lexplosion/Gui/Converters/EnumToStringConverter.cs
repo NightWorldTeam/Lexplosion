@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Lexplosion.Properties;
+using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace Lexplosion.Gui.Converters
@@ -12,12 +9,25 @@ namespace Lexplosion.Gui.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value.ToString();
+            if (value == null)
+                return null;
+
+            return Resources.ResourceManager.GetString(value.ToString());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            var str = (string)value;
+
+            foreach (object enumValue in Enum.GetValues(targetType))
+            {
+                if (str == Resources.ResourceManager.GetString(enumValue.ToString()))
+                {
+                    return enumValue;
+                }
+            }
+
+            throw new ArgumentException(null, "value");
         }
     }
 }

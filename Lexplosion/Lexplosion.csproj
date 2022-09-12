@@ -121,7 +121,6 @@
     <Compile Include="Gui\Commands\NavigateCommand.cs" />
     <Compile Include="Gui\Commands\RelayCommand.cs" />
     <Compile Include="Gui\Constants.cs" />
-    <Compile Include="Gui\Converters\ConvertObjectToBoolean.cs" />
     <Compile Include="Gui\Converters\EnumToStringConverter.cs" />
     <Compile Include="Gui\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Gui\ControlsExtension\AsyncObservableCollection.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="Gui\ControlsExtension\TreeViewItem.cs" />
     <Compile Include="Gui\Converters\NotEqualZeroConverter.cs" />
     <Compile Include="Gui\Converters\SolidColorBrushToColorConverter.cs" />
-    <Compile Include="Gui\Converters\StringToGeometryConverter.cs" />
     <Compile Include="Gui\Converters\UrlToImageConveter.cs" />
     <Compile Include="Gui\ModalWindow\IModal.cs" />
     <Compile Include="Gui\IPaginable.cs" />
@@ -280,6 +278,7 @@
     <Compile Include="Logic\Network\CommandReceiver.cs" />
     <Compile Include="Logic\Network\Values.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
+    <Compile Include="Tools\EnumerateExtension.cs" />
     <Compile Include="Tools\ExtendedEventHandler.cs" />
     <Compile Include="Tools\ImageTools.cs" />
     <Compile Include="Tools\NativeMethods.cs" />
