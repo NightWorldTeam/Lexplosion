@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Lexplosion.Controls;
+using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Views.CustomControls
 {
@@ -10,6 +11,11 @@ namespace Lexplosion.Gui.Views.CustomControls
         public SearchBox()
         {
             InitializeComponent();
+        }
+
+        private void FiltersItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FiltersDropdownMenu.IsOpen = false;
         }
     }
 }

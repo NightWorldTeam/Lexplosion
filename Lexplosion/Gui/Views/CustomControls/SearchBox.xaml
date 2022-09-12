@@ -175,7 +175,10 @@
     <StackPanel Orientation="Horizontal">
 
         <!--  Category Menu  -->
-        <controls:DropdownMenu Margin="5,0,5,0" Visibility="{Binding HasCategories, Converter={StaticResource ConvertBoolToVisibility}}">
+        <controls:DropdownMenu
+            x:Name="FiltersDropdownMenu"
+            Margin="5,0,5,0"
+            Visibility="{Binding HasCategories, Converter={StaticResource ConvertBoolToVisibility}}">
             <StackPanel Margin="10">
 
                 <!--  Version & Sort By  -->
@@ -260,6 +263,7 @@
                     ItemTemplate="{StaticResource CurseforgeCategory}"
                     ItemsSource="{Binding Categories}"
                     SelectedItem="{Binding SelectedCurseforgeCategory}"
+                    SelectionChanged="FiltersItem_SelectionChanged"
                     Style="{StaticResource CategoriesListBox}" />
             </StackPanel>
         </controls:DropdownMenu>
