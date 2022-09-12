@@ -52,6 +52,12 @@ namespace Lexplosion.Logic
                 response = MojangApi.Authorization(login, password);
                 Status = ActivityStatus.Online;
             }
+            else if (accountType == AccountType.Microsoft)
+            {
+                login = "null";
+                response = MojangApi.AuthFromToken(password);
+                Status = ActivityStatus.Online;
+            }
 
             if (response != null)
             {
@@ -93,7 +99,7 @@ namespace Lexplosion.Logic
             {
                 return AuthCode.NoConnect;
             }
-         }
+        }
 
         public void GameStart(string clientName_)
         {

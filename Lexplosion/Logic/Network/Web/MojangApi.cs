@@ -108,53 +108,66 @@ namespace Lexplosion.Logic.Network.Web
             public string name;
         }
 
-        public static AuthResult AuthFromMicrosoft(string data)
+        /// <summary>
+        /// Возвращает токен для майнрафта.
+        /// </summary>
+        /// <param name="microsoftData">json массив microsoft данных (uhs и xsts_token)</param>
+        /// <returns>Возвращает токен, который можно использовать для получения аккаунта.</returns>
+        public static string GetToken(string microsoftData)
+        {
+            var mcfData = JsonConvert.DeserializeObject<MicrosoftData>(microsoftData);
+
+            WebRequest req = WebRequest.Create("https://api.minecraftservices.com/authentication/login_with_xbox");
+            req.Method = "POST";
+            req.ContentType = "application/json";
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(
+                "{" +
+                    "\"identityToken\" : \"XBL3.0 x=" + mcfData.uhs + ";" + mcfData.xsts_token + "\"," +
+                    "\"ensureLegacyEnabled\" : true" +
+                "}"
+               );
+
+            req.ContentLength = byteArray.Length;
+
+            using (Stream dataStream = req.GetRequestStream())
+            {
+                dataStream.Write(byteArray, 0, byteArray.Length);
+            }
+
+            string answer;
+            using (WebResponse resp = req.GetResponse())
+            {
+                using (Stream stream = resp.GetResponseStream())
+                {
+                    using (StreamReader sr = new StreamReader(stream))
+                    {
+                        answer = sr.ReadToEnd();
+                    }
+                }
+            }
+
+            Console.WriteLine("1 " + answer);
+
+            return JsonConvert.DeserializeObject<MicrosoftAuthRes>(answer).access_token;
+        }
+
+        /// <summary>
+        /// Авторизация токеном.
+        /// </summary>
+        /// <param name="token">Сам токен. Получить можно в GetToken.</param>
+        /// <returns>Результат.</returns>
+        public static AuthResult AuthFromToken(string token)
         {
             //try
             {
-                var mcfData = JsonConvert.DeserializeObject<MicrosoftData>(data);
-
-                WebRequest req = WebRequest.Create("https://api.minecraftservices.com/authentication/login_with_xbox");
-                req.Method = "POST";
-                req.ContentType = "application/json";
-
-                byte[] byteArray = Encoding.UTF8.GetBytes(
-                    "{" +
-                        "\"identityToken\" : \"XBL3.0 x="+ mcfData.uhs + ";"+ mcfData.xsts_token + "\"," +
-                        "\"ensureLegacyEnabled\" : true" +
-                    "}"
-                   );
-
-                req.ContentLength = byteArray.Length;
-
-                using (Stream dataStream = req.GetRequestStream())
-                {
-                    dataStream.Write(byteArray, 0, byteArray.Length);
-                }
-
-                string answer;
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
-                }
-
-                Console.WriteLine("1 " + answer);
-
-                string token = JsonConvert.DeserializeObject<MicrosoftAuthRes>(answer).access_token;
-
                 var a = token.Split('.')[1] + "=";
                 var b = Convert.FromBase64String(a);
                 var c = Encoding.UTF8.GetString(b);
                 Console.WriteLine(c);
 
                 string accessToken = JsonConvert.DeserializeObject<AccsessTokenData>(c).yggt;
-                answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new List<KeyValuePair<string, string>>()
+                string answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>
                     (
