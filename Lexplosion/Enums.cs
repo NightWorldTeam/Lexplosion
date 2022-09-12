@@ -38,26 +38,6 @@ namespace Lexplosion
         None
     }
 
-    public enum ModpacksCategories
-    {
-        All,
-        Tech = 4472,
-        Magic = 4473,
-        SciFi = 4474,
-        AdventureAndRPG = 4475,
-        Exploration = 4476,
-        MiniGame = 4477,
-        Quests = 4478,
-        Hardcore = 4479,
-        MapBased = 4480,
-        SmallLight = 4481,
-        ExtraLarge = 4482,
-        CombatPvP = 4483,
-        Multiplayer = 4484,
-        FTB = 4487,
-        Skyblock = 4736,
-    }
-
     public enum InstanceInit
     {
         Successful,
@@ -123,7 +103,8 @@ namespace Lexplosion
     {
         NoAuth,
         NightWorld,
-        Mojang
+        Mojang,
+        Microsoft
     }
 
     public enum ModCategory
@@ -275,5 +256,14 @@ namespace Lexplosion
         /// Скачивнаие завершено с ошибкой.
         /// </summary>
         Error
+    }
+
+    public enum CfSortBy
+    {
+        DateCreated,
+        LastUpdated,
+        Name,
+        Popularity,
+        TotalDownloads
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Curseforge;
+using LumiSoft.Net.Mime.vCard;
 using System;
 using System.Collections.ObjectModel;
 
@@ -33,7 +34,7 @@ namespace Lexplosion.Gui.ViewModels
         public delegate void SearchChangedCallback();
         public event SearchChangedCallback SearchChanged;
 
-        public ObservableCollection<CurseforgeCategory> Categories { get; }
+        public ObservableCollection<CurseforgeCategory> Categories { get; private set; }
 
         public bool IsMultiSource { get; }
         public bool HasCategories { get; }
@@ -97,14 +98,13 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        private CurseforgeCategory _selectedCurseforgeCategory;
+        private CurseforgeCategory _selectedCurseforgeCategory = new CurseforgeCategory() { name = "All", id = -1 };
         public CurseforgeCategory SelectedCurseforgeCategory
         {
             get => _selectedCurseforgeCategory; set 
             {
                 _selectedCurseforgeCategory = value;
                 OnPropertyChanged();
-                Console.WriteLine(value.name);
                 SearchChanged?.Invoke();
             }
         }
@@ -131,7 +131,9 @@ namespace Lexplosion.Gui.ViewModels
         {
             IsMultiSource = isMultiSource;
             HasCategories = hasCategories;
-            Categories = PrepareCategories();
+            Lexplosion.Run.TaskRun(() => { 
+                Categories = PrepareCategories();
+            });
         }
 
 
@@ -150,13 +152,13 @@ namespace Lexplosion.Gui.ViewModels
         #region Private Methods
 
 
-        private ObservableCollection<CurseforgeCategory> PrepareCategories() 
+        private ObservableCollection<CurseforgeCategory> PrepareCategories()
         {
             var categories = new ObservableCollection<CurseforgeCategory>(
                 CurseforgeApi.GetCategories(CfProjectType.Modpacks)
             );
 
-            categories.Add(new CurseforgeCategory() { name = "All" });
+            categories.Add(SelectedCurseforgeCategory);
 
             categories.Move(categories.Count - 1, 0);
 

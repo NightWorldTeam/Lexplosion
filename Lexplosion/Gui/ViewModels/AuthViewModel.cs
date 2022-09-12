@@ -2,8 +2,11 @@
 using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.Network;
 using System;
 using System.Windows.Input;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -11,7 +14,7 @@ namespace Lexplosion.Gui.ViewModels
     {
         private readonly MainViewModel _mainViewModel;
         private AccountType _accountType;
-
+        private bool isSavedAccountOAuth2 = false;
 
         #region Properties
 
@@ -20,9 +23,9 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Содержит логин пользователя.
         /// </summary>
-        public string Login 
+        public string Login
         {
-            get => _login; set 
+            get => _login; set
             {
                 _login = value;
                 OnPropertyChanged(nameof(Login));
@@ -33,9 +36,9 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Cодержит пароль пользователя.
         /// </summary>
-        public string Password 
+        public string Password
         {
-            get => _password; set 
+            get => _password; set
             {
                 _password = value;
                 OnPropertyChanged(nameof(Password));
@@ -46,9 +49,9 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Хранит ответ на вопрос, хочет ли пользователь сохранить аккаунт(данные).
         /// </summary>
-        public bool IsSaveMe 
+        public bool IsSaveMe
         {
-            get => _isSaveMe; set 
+            get => _isSaveMe; set
             {
                 _isSaveMe = value;
                 OnPropertyChanged(nameof(IsSaveMe));
@@ -62,23 +65,27 @@ namespace Lexplosion.Gui.ViewModels
         /// [1] - NightWorld
         /// [2] - Mojang
         /// </summary>
-        public int AccountTypeSelectedIndex 
+        public int AccountTypeSelectedIndex
         {
-            get => _accountTypeSelectedIndex; set 
+            get => _accountTypeSelectedIndex; set
             {
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
+
+                if (_accountTypeSelectedIndex == 3 && isSavedAccountOAuth2)
+                    System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
                 LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
             }
         }
+
 
         private bool _isAuthing = false;
         /// <summary>
         /// Запустил ли пользователь метод авторизации.
         /// </summary>
-        public bool IsAuthing 
+        public bool IsAuthing
         {
-            get => _isAuthing; set 
+            get => _isAuthing; set
             {
                 _isAuthing = value;
                 OnPropertyChanged();
@@ -127,29 +134,37 @@ namespace Lexplosion.Gui.ViewModels
 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => viewModel.MainMenuVM);
+
+            CommandReceiver.MicrosoftAuthPassed += PreformAuthMicrosoft;
         }
 
 
-        #endregion constructors
+        #endregion Constructors
 
 
-        #region methods
+        #region Methods
 
         /// <summary>
         /// Загружает данные сохранённого аккаунта.
         /// </summary>
         /// <param name="accountType">Тип аккаунта, если null, то возвращает последний использованный сохранённый аккаунт.</param>
-        public void LoadSavedAccount(AccountType? accountType) 
+        public void LoadSavedAccount(AccountType? accountType)
         {
             AccountType type = DataFilesManager.GetAccount(out _login, out _password, accountType);
 
             if (_login != null && _password != null)
             {
+                if (type == AccountType.Microsoft) 
+                    isSavedAccountOAuth2 = true;
+
                 IsSaveMe = true;
                 Login = _login; Password = _password;
             }
             else
             {
+                if (type == AccountType.Microsoft)
+                    isSavedAccountOAuth2 = false;
+
                 Login = ""; Password = "";
             }
 
@@ -159,7 +174,7 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Запускает процесс авторизации.
         /// </summary>
-        private void Authorization() 
+        private void Authorization()
         {
             Lexplosion.Run.TaskRun(() =>
             {
@@ -171,29 +186,45 @@ namespace Lexplosion.Gui.ViewModels
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    // обрабатываем полученный код.
-                    switch (authCode)
-                    {
-                        case AuthCode.Successfully:
-                            _mainViewModel.UserProfile.Nickname = UserData.User.Login;
-                            _mainViewModel.UserProfile.IsAuthorized = true;
-                            NavigationCommand.Execute(null);
-                            // оставь комментарий
-                            _mainViewModel.SubscribeToOpenModpackEvent();
-                            break;
-                        case AuthCode.DataError:
-                            MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
-                            break;
-                        case AuthCode.NoConnect:
-                            MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
-                            break;
-                    }
+                    PerformAuthCode(authCode);
                 });
 
                 IsAuthing = false;
             });
         }
 
-        #endregion methods
+
+        private void PreformAuthMicrosoft(string microsoftData) 
+        {
+            Console.WriteLine("123123123123123123dafjgiouhsdf9igu023-=490-23489590384905");
+            var token = MojangApi.GetToken(microsoftData);
+            AuthCode authCode = UserData.MicrosoftAuth(token, true);
+        }
+
+        private void PerformAuthCode(AuthCode authCode) 
+        {
+            // обрабатываем полученный код.
+            switch (authCode)
+            {
+                case AuthCode.Successfully:
+                    _mainViewModel.UserProfile.Nickname = UserData.User.Login;
+                    _mainViewModel.UserProfile.IsAuthorized = true;
+                    NavigationCommand.Execute(null);
+                    _mainViewModel.SubscribeToOpenModpackEvent();
+                    break;
+                case AuthCode.DataError:
+                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    break;
+                case AuthCode.NoConnect:
+                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    break;
+                default:
+                    MainViewModel.ShowToastMessage("Ошибка что-то не так", authCode.ToString(), TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    break;
+            }
+        }
+
+
+        #endregion Methods
     }
 }

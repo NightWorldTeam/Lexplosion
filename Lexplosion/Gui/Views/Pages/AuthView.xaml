@@ -112,28 +112,29 @@
                             Text="NightWorld" />
 
                         <controls:PlaceholderTextBox
-                            Width="125"
+                            x:Name="LoginBox"
+                            Width="145"
                             Height="30"
                             Margin="0,60,0,0"
                             HorizontalAlignment="Center"
                             HorizontalContentAlignment="Center"
+                            IsEnabled="True"
                             Placeholder="{DynamicResource login}"
                             PlaceholderFontSize="16"
                             Style="{StaticResource AuthPlaceholerTextBox}"
-                            Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
+                            TextChanged="LoginBox_TextChanged" />
 
-                        <Grid Margin="0,50,0,0" ShowGridLines="False">
+                        <StackPanel
+                            Margin="40,50,0,0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            Visibility="Visible">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="86" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="86" />
-                            </Grid.ColumnDefinitions>
-
-                            <Grid Grid.Column="1">
+                            <!--  password box  -->
+                            <Grid Width="145">
                                 <TextBox
                                     x:Name="PasswordVisible"
-                                    Width="125"
                                     Height="30"
                                     HorizontalContentAlignment="Center"
                                     Style="{StaticResource AuthTextBox}"
@@ -156,32 +157,25 @@
                                 IsChecked="True"
                                 Style="{StaticResource SPS}" />
                             <!--  Click="ShowPassword_Click"  -->
-                        </Grid>
+                        </StackPanel>
 
-                        <Grid ShowGridLines="False">
+                        <CheckBox
+                            Height="Auto"
+                            Margin="0,23,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="{DynamicResource saveMe}"
+                            IsChecked="{Binding IsSaveMe}" />
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="60" />
-                                <RowDefinition Height="70" />
-                                <RowDefinition Height="50" />
-                            </Grid.RowDefinitions>
+                        <Button
+                            Width="166"
+                            Height="40"
+                            Margin="0,39,0,0"
+                            Command="{Binding SignUpCommand}"
+                            Content="{DynamicResource singIn}"
+                            FontSize="20"
+                            Style="{StaticResource DefaultBrandColorButton}" />
 
-                            <CheckBox
-                                Grid.Row="0"
-                                Height="Auto"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Content="{DynamicResource saveMe}"
-                                IsChecked="{Binding IsSaveMe}" />
-                            <Button
-                                Grid.Row="1"
-                                Width="166"
-                                Height="40"
-                                Command="{Binding SignUpCommand}"
-                                Content="{DynamicResource singIn}"
-                                FontSize="20"
-                                Style="{StaticResource DefaultBrandColorButton}" />
-                        </Grid>
                     </StackPanel>
                 </Grid>
 
@@ -306,6 +300,9 @@
                         </ComboBoxItem>
                         <ComboBoxItem>
                             <TextBlock Text="{DynamicResource accountMojang}" />
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock Text="{DynamicResource accountMicrosoft}" />
                         </ComboBoxItem>
                         <!--<ComboBoxItem>
                             Аккаунт Ely

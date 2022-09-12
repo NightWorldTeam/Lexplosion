@@ -23,6 +23,12 @@ namespace Lexplosion.Global
             return _user.Auth(login, password, saveUser, type);
         }
 
+        public static AuthCode MicrosoftAuth(string token, bool saveUser) 
+        {
+            _user = new User();
+            return _user.Auth("", token, saveUser, AccountType.Microsoft);
+        }
+
         public static User User
         {
             get => _user;

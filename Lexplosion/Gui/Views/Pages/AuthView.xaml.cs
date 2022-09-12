@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Views.Pages
 {
@@ -10,6 +11,13 @@ namespace Lexplosion.Gui.Views.Pages
         public AuthView()
         {
             InitializeComponent();
+        }
+
+        private void LoginBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var TEST = (TextBox)sender;
+            Console.WriteLine("Act: " + TEST.Width);
+            Console.WriteLine("Act1: " + TEST.ActualWidth);
         }
     }
 }

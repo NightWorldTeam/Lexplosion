@@ -99,11 +99,6 @@ namespace Lexplosion
 
             CommandReceiver.StartCommandServer();
 
-            CommandReceiver.MicrosoftAuthPassed += delegate (string data)
-            {
-                MojangApi.AuthFromMicrosoft(data);
-            };
-
             Thread.Sleep(800);
 
             app.Dispatcher.Invoke(() =>
