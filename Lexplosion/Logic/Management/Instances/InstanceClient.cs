@@ -464,7 +464,6 @@ namespace Lexplosion.Logic.Management.Instances
 
                 instances.Add(instanceClient);
             }
-
             Console.WriteLine("UploadInstances End " + pageIndex);
 
             return instances;
