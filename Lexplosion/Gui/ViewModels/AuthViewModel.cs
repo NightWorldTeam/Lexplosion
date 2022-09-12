@@ -196,9 +196,9 @@ namespace Lexplosion.Gui.ViewModels
 
         private void PreformAuthMicrosoft(string microsoftData) 
         {
-            Console.WriteLine("123123123123123123dafjgiouhsdf9igu023-=490-23489590384905");
-            var token = MojangApi.GetToken(microsoftData);
-            AuthCode authCode = UserData.MicrosoftAuth(token, true);
+                var token = MojangApi.GetToken(microsoftData);
+            var authCode = UserData.MicrosoftAuth(token, true);
+            PerformAuthCode(authCode);
         }
 
         private void PerformAuthCode(AuthCode authCode) 
