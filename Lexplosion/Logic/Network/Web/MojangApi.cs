@@ -170,7 +170,8 @@ namespace Lexplosion.Logic.Network.Web
                     var a = token.Split('.')[1] + ednPart;
                     var b = Convert.FromBase64String(a);
                     var c = Encoding.UTF8.GetString(b);
-                    accessToken = JsonConvert.DeserializeObject<AccsessTokenData>(c).yggt;
+                    var obj = JsonConvert.DeserializeObject<AccsessTokenData>(c);
+                    accessToken = obj.yggt;
 
                     break;
                 }
@@ -181,6 +182,8 @@ namespace Lexplosion.Logic.Network.Web
 
                 i++;
             }
+
+            Console.WriteLine("TOKEN " + i + " " + accessToken);
 
             return accessToken;
             
@@ -195,7 +198,7 @@ namespace Lexplosion.Logic.Network.Web
         {
             //try
             {
-                string accessToken = DecodeToken(token);
+                string accessToken = token;
                 string answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>
