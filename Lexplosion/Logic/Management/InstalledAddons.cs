@@ -76,6 +76,16 @@ namespace Lexplosion.Logic.Management
             return _data.ContainsKey(addonId);
         }
 
+        public void TryRemove(int key)
+        {
+            _semaphore.WaitOne(_instanceId);
+            if (_data.ContainsKey(key))
+            {
+                _data.Remove(key);
+            }            
+            _semaphore.Release(_instanceId);
+        }
+
         public void DisableAddon(int addonId, bool isDisable, Action<InstalledAddonInfo> onFunction, Action<InstalledAddonInfo> offFunction)
         {
             _semaphore.WaitOne(_instanceId);

@@ -280,16 +280,14 @@ namespace Lexplosion.Logic.Management.Instances
 
         private void DeleteAddon()
         {
-            //try
-            //{
-            //    string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/" + installedAddon.ActualPath;
-
-            //    if (File.Exists(path))
-            //    {
-            //        File.Delete(path);
-            //    }
-            //}
-            //catch { }
+            string instanceId = _modpackInfo.LocalId;
+            using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+            {
+                InstalledAddonInfo addon = installedAddons[_modInfo.id];
+                installedAddons.TryRemove(_modInfo.id);
+                addon.RemoveFromDir(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/");
+                installedAddons.Save();
+            }
         }
 
         private DownloadAddonRes InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies, out Dictionary<string, DownloadAddonRes> dependenciesResults)
