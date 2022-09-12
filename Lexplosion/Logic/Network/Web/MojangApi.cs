@@ -70,7 +70,7 @@ namespace Lexplosion.Logic.Network.Web
                 if (data != null && !string.IsNullOrEmpty(data.accessToken) && data.selectedProfile != null
                     && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
                 {
-                    string accessToken = JsonConvert.DeserializeObject<AccsessTokenData>(Encoding.UTF8.GetString(Convert.FromBase64String(data.accessToken.Split('.')[1] + "=="))).yggt;
+                    string accessToken = DecodeToken(data.accessToken);
 
                     return new AuthResult 
                     { 
@@ -153,6 +153,38 @@ namespace Lexplosion.Logic.Network.Web
         }
 
         /// <summary>
+        /// олучаем из моджанговского токена аксесс токен для майкрафта.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns>Акссес токен</returns>
+        private static string DecodeToken(string token)
+        {
+            string accessToken = null;
+            int i = 0;
+            string ednPart = "";
+            // по сути ебанный костыль. Я не собираюсь юзать либо для декодирования jwt, она весит больше товарного состава блять и тащит за собой пару миллиардов других dll'ников
+            while (i < 3)
+            {
+                try
+                {
+                    var a = token.Split('.')[1] + ednPart;
+                    var b = Convert.FromBase64String(a);
+                    var c = Encoding.UTF8.GetString(b);
+                    accessToken = JsonConvert.DeserializeObject<AccsessTokenData>(c).yggt;
+                }
+                catch
+                {
+                    ednPart += "=";
+                }
+
+                i++;
+            }
+
+            return accessToken;
+            
+        }
+
+        /// <summary>
         /// Авторизация токеном.
         /// </summary>
         /// <param name="token">Сам токен. Получить можно в GetToken.</param>
@@ -161,12 +193,7 @@ namespace Lexplosion.Logic.Network.Web
         {
             //try
             {
-                var a = token.Split('.')[1] + "=";
-                var b = Convert.FromBase64String(a);
-                var c = Encoding.UTF8.GetString(b);
-                Console.WriteLine(c);
-
-                string accessToken = JsonConvert.DeserializeObject<AccsessTokenData>(c).yggt;
+                string accessToken = DecodeToken(token);
                 string answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>

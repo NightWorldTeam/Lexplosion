@@ -27,7 +27,8 @@ namespace Lexplosion
     {
         Successfully,
         DataError,
-        NoConnect
+        NoConnect,
+        TokenError
     }
 
     public enum InstanceSource
