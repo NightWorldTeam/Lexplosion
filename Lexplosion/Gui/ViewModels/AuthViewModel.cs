@@ -7,6 +7,7 @@ using System;
 using System.Windows.Input;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.Web;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -14,7 +15,7 @@ namespace Lexplosion.Gui.ViewModels
     {
         private readonly MainViewModel _mainViewModel;
         private AccountType _accountType;
-        private bool isSavedAccountOAuth2 = false;
+        private bool _isSavedAccountOAuth2 = false;
 
         #region Properties
 
@@ -72,7 +73,7 @@ namespace Lexplosion.Gui.ViewModels
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
 
-                if (_accountTypeSelectedIndex == 3 && isSavedAccountOAuth2)
+                if (_accountTypeSelectedIndex == 3 && !_isSavedAccountOAuth2)
                     System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
                 LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
             }
@@ -130,7 +131,7 @@ namespace Lexplosion.Gui.ViewModels
             // получаем последний выбранный аккаунт
             LoadSavedAccount(null);
             // устанавливаем тип этого аккаунта
-            _accountTypeSelectedIndex = (int)_accountType;
+            AccountTypeSelectedIndex = (int)_accountType;
 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => viewModel.MainMenuVM);
@@ -155,7 +156,7 @@ namespace Lexplosion.Gui.ViewModels
             if (_login != null && _password != null)
             {
                 if (type == AccountType.Microsoft) 
-                    isSavedAccountOAuth2 = true;
+                    _isSavedAccountOAuth2 = true;
 
                 IsSaveMe = true;
                 Login = _login; Password = _password;
@@ -163,7 +164,7 @@ namespace Lexplosion.Gui.ViewModels
             else
             {
                 if (type == AccountType.Microsoft)
-                    isSavedAccountOAuth2 = false;
+                    _isSavedAccountOAuth2 = false;
 
                 Login = ""; Password = "";
             }
@@ -196,9 +197,11 @@ namespace Lexplosion.Gui.ViewModels
 
         private void PreformAuthMicrosoft(string microsoftData) 
         {
-                var token = MojangApi.GetToken(microsoftData);
+            var token = MojangApi.GetToken(microsoftData);
             var authCode = UserData.MicrosoftAuth(token, true);
             PerformAuthCode(authCode);
+            NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
+            NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
         }
 
         private void PerformAuthCode(AuthCode authCode) 

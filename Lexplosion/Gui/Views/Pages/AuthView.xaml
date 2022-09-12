@@ -123,8 +123,7 @@
                                 Placeholder="{DynamicResource login}"
                                 PlaceholderFontSize="16"
                                 Style="{StaticResource AuthPlaceholerTextBox}"
-                                Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
-                                TextChanged="LoginBox_TextChanged" />
+                                Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
 
                             <!--  Password area  -->
                             <StackPanel
