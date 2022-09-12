@@ -182,4 +182,10 @@
     <s:String x:Key="minimizeWindow">Свернуть окно</s:String>
 
     <s:String x:Key="instanceDLC">Дополнения</s:String>
+
+    <s:String x:Key="filterByCategory">Фильтровать по категории.</s:String>
+    <s:String x:Key="canSelectOnlyOne">Можно выбрать только одну категорию.</s:String>
+    <s:String x:Key="gameVersion">Версия игры</s:String>
+    <s:String x:Key="sortBy">Сортировать по</s:String>
+    <s:String x:Key="filters">Фильтры</s:String>
 </ResourceDictionary>

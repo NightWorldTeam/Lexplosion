@@ -103,7 +103,6 @@
     <Compile Include="Controls\DownloadButton\DownloadButton.cs" />
     <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
     <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
-    <Compile Include="Controls\Filters\Filters.cs" />
     <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
     <Compile Include="Controls\MessageModel.cs" />
     <Compile Include="Controls\ModalControl\Modal.cs" />
@@ -368,10 +367,6 @@
     <Page Include="Controls\DropdownMenu\DropdownMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Filters\Filters.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\LoadingBoard\LoadingBoard.xaml">
       <SubType>Designer</SubType>

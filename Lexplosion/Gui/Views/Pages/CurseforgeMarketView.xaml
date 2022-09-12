@@ -110,7 +110,6 @@
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="Auto">
                 <Grid>
-
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60" />
                         <RowDefinition Height="*" />
@@ -384,10 +383,11 @@
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         DataContext="{Binding PaginatorVM}"
-                        Visibility="{Binding IsPaginatorVisible, Converter={StaticResource ConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                        Visibility="{Binding DataContext.IsPaginatorVisible, Converter={StaticResource ConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
                 </Grid>
             </ScrollViewer>
         </Grid>
+
         <controls:LoadingBoard
             BackgroundColor="#17141b"
             BackgroundOpacity="0.7"

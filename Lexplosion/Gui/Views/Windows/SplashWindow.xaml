@@ -14,15 +14,12 @@
     WindowStyle="None"
     mc:Ignorable="d">
 
-    <Window.Resources />
-
     <Grid Background="#0B101C">
         <controls:LoadingBoard
             Margin="0,80,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            BackgroundColor="#0b101c"
-            BackgroundOpacity="0"
+            BackgroundColor="Transparent"
             BorderColor="{DynamicResource BrandSolidColorBrush}"
             Opacity="0.8"
             Placeholder="Идет загрузка..."
