@@ -330,5 +330,20 @@
                 </Grid>
             </Grid>
         </Grid>
+
+        <controls:LoadingBoard
+            BackgroundColor="Black"
+            BackgroundOpacity="0.7"
+            IsLoadingFinished="{Binding IsAuthFinished}"
+            Placeholder="{Binding LoadingBoardPlaceholder}" />
+
+        <Button
+            Width="100"
+            Height="30"
+            Margin="0,200,0,0"
+            Command="{Binding CancelMicrosoftAuthCommand}"
+            Content="Отмена"
+            Style="{StaticResource DefaultBrandColorButton}"
+            Visibility="{Binding IsAuthFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
     </Grid>
 </UserControl>

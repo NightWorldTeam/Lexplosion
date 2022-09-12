@@ -16,7 +16,7 @@
                     <Grid Grid.Row="1">
 
                         <Grid.Background>
-                            <SolidColorBrush Opacity="{TemplateBinding BackgroundOpacity}" Color="{TemplateBinding BackgroundColor}" />
+                            <SolidColorBrush Opacity="{Binding BackgroundOpacity, RelativeSource={RelativeSource TemplatedParent}}" Color="{Binding BackgroundColor, RelativeSource={RelativeSource TemplatedParent}}" />
                         </Grid.Background>
 
                         <StackPanel

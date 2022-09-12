@@ -1,5 +1,4 @@
-﻿using Lexplosion.Controls;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Views.CustomControls
 {

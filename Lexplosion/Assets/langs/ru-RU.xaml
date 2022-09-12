@@ -188,4 +188,6 @@
     <s:String x:Key="gameVersion">Версия игры</s:String>
     <s:String x:Key="sortBy">Сортировать по</s:String>
     <s:String x:Key="filters">Фильтры</s:String>
+
+    <s:String x:Key="microsoftAuthInProgress">Ожидание окончания авторизации через Microsoft</s:String>
 </ResourceDictionary>

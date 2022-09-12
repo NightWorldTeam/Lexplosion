@@ -110,15 +110,15 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        //private CfSortBy _selectedCfSortBy;
-        //public CfSortBy SelectedCfSortBy 
-        //{
-        //    get => _selectedCfSortBy; set 
-        //    {
-        //        _selectedCfSortBy = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
+        private CfSortBy _selectedCfSortBy;
+        public CfSortBy SelectedCfSortBy
+        {
+            get => _selectedCfSortBy; set
+            {
+                _selectedCfSortBy = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         #endregion Properties

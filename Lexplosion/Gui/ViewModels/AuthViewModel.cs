@@ -5,7 +5,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using System;
 using System.Windows.Input;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
 
@@ -17,8 +16,10 @@ namespace Lexplosion.Gui.ViewModels
         private AccountType _accountType;
         private bool _isSavedAccountOAuth2 = false;
 
+
         #region Properties
 
+        #region Main Auth
 
         private string _login = String.Empty;
         /// <summary>
@@ -73,12 +74,17 @@ namespace Lexplosion.Gui.ViewModels
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
 
-                if (_accountTypeSelectedIndex == 3 && !_isSavedAccountOAuth2)
-                    System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
+                if (_accountTypeSelectedIndex == 3 && !_isSavedAccountOAuth2) 
+                {
+                    IsAuthFinished = false;
+                    LoadingBoardPlaceholder = ResourceGetter.GetString("microsoftAuthInProgress");
+                    FollowToMicrosoft();
+                }
                 LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
             }
         }
 
+        #endregion Main Auth
 
         private bool _isAuthing = false;
         /// <summary>
@@ -89,6 +95,26 @@ namespace Lexplosion.Gui.ViewModels
             get => _isAuthing; set
             {
                 _isAuthing = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isAuthFinished = true;
+        public bool IsAuthFinished 
+        {
+            get => _isAuthFinished; set 
+            {
+                _isAuthFinished = value; 
+                OnPropertyChanged();
+            }
+        }
+
+        private string _loadingBoardPlaceholder;
+        public string LoadingBoardPlaceholder 
+        {
+            get => _loadingBoardPlaceholder; set 
+            {
+                _loadingBoardPlaceholder = value;
                 OnPropertyChanged();
             }
         }
@@ -117,6 +143,14 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
+        private RelayCommand _cancelMicrosoftAuthCommand;
+        public RelayCommand CancelMicrosoftAuthCommand 
+        {
+            get => _cancelMicrosoftAuthCommand ?? (_cancelMicrosoftAuthCommand = new RelayCommand(obj => 
+            {
+                CancelMicrosoftAuth();
+            }));
+        }
 
         #endregion Commands
 
@@ -197,6 +231,10 @@ namespace Lexplosion.Gui.ViewModels
 
         private void PreformAuthMicrosoft(string microsoftData) 
         {
+            // на случае нештатной ситуации.
+            if (_accountType != AccountType.Microsoft)
+                return;
+
             var token = MojangApi.GetToken(microsoftData);
             var authCode = UserData.MicrosoftAuth(token, true);
             PerformAuthCode(authCode);
@@ -210,16 +248,28 @@ namespace Lexplosion.Gui.ViewModels
             switch (authCode)
             {
                 case AuthCode.Successfully:
-                    _mainViewModel.UserProfile.Nickname = UserData.User.Login;
-                    _mainViewModel.UserProfile.IsAuthorized = true;
-                    NavigationCommand.Execute(null);
-                    _mainViewModel.SubscribeToOpenModpackEvent();
-                    break;
+                    {
+                        CommandReceiver.MicrosoftAuthPassed -= PreformAuthMicrosoft;
+
+                        _mainViewModel.UserProfile.Nickname = UserData.User.Login;
+                        _mainViewModel.UserProfile.IsAuthorized = true;
+
+                        NavigationCommand.Execute(null);
+                        
+                        _mainViewModel.SubscribeToOpenModpackEvent();
+                        
+                        IsAuthFinished = true;
+                        break;
+                    }
                 case AuthCode.DataError:
                     MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     break;
                 case AuthCode.NoConnect:
                     MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    break;
+                case AuthCode.TokenError:
+                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    FollowToMicrosoft();
                     break;
                 default:
                     MainViewModel.ShowToastMessage("Ошибка что-то не так", authCode.ToString(), TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
@@ -228,6 +278,16 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
+        private void FollowToMicrosoft() 
+        {
+            System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
+        }
+
+        private void CancelMicrosoftAuth() 
+        {
+            AccountTypeSelectedIndex = 1;
+            IsAuthFinished = true;
+        }
         #endregion Methods
     }
 }
