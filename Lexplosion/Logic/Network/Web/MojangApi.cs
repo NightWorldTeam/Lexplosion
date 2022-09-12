@@ -171,6 +171,8 @@ namespace Lexplosion.Logic.Network.Web
                     var b = Convert.FromBase64String(a);
                     var c = Encoding.UTF8.GetString(b);
                     accessToken = JsonConvert.DeserializeObject<AccsessTokenData>(c).yggt;
+
+                    break;
                 }
                 catch
                 {

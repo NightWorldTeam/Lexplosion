@@ -203,7 +203,7 @@ namespace Lexplosion.Logic.Management
                     }
                     catch { }
 
-                    GameStopEvent();
+                    GameStopEvent?.Invoke();
 
                     lock (removeImportantTaskLocker)
                     {
