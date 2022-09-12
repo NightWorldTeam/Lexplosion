@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Network.Web
 
         public static AuthResult AuthFromMicrosoft(string data)
         {
-            try
+            //try
             {
                 var mcfData = JsonConvert.DeserializeObject<MicrosoftData>(data);
 
@@ -144,9 +144,16 @@ namespace Lexplosion.Logic.Network.Web
                     }
                 }
 
+                Console.WriteLine("1 " + answer);
+
                 string token = JsonConvert.DeserializeObject<MicrosoftAuthRes>(answer).access_token;
 
-                string accessToken = JsonConvert.DeserializeObject<AccsessTokenData>(Encoding.UTF8.GetString(Convert.FromBase64String(token.Split('.')[1] + "=="))).yggt;
+                var a = token.Split('.')[1] + "=";
+                var b = Convert.FromBase64String(a);
+                var c = Encoding.UTF8.GetString(b);
+                Console.WriteLine(c);
+
+                string accessToken = JsonConvert.DeserializeObject<AccsessTokenData>(c).yggt;
                 answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>
@@ -155,6 +162,8 @@ namespace Lexplosion.Logic.Network.Web
                         "Bearer " + token
                     )
                 });
+
+                Console.WriteLine("2 " + answer);
 
                 var profile = JsonConvert.DeserializeObject<MojangProfile>(answer);
 
@@ -167,7 +176,7 @@ namespace Lexplosion.Logic.Network.Web
                     SessionToken = null
                 };
             }
-            catch { }
+            //catch { }
 
 
             return new AuthResult

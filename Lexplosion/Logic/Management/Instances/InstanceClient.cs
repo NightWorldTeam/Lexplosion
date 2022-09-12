@@ -415,7 +415,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список модпаков для каталога.
         /// </summary>
         /// <returns>Список внешних модпаков.</returns>
-        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter = "")
+        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter = "")
         {
             Console.WriteLine("UploadInstances " + pageIndex);
 

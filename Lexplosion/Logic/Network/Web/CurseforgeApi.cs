@@ -60,7 +60,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, ModpacksCategories categoriy, string searchFilter = "", string gameVersion = "")
+        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, int categoriy, string searchFilter = "", string gameVersion = "")
         {
             if (gameVersion != "")
             {
@@ -68,7 +68,7 @@ namespace Lexplosion.Logic.Network
             }
 
             string url;
-            if (categoriy == ModpacksCategories.All)
+            if (categoriy == -1)
             {
                 url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&sortField=1&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             }

@@ -69,7 +69,7 @@ namespace Lexplosion.Logic.Management.Instances
             };
         }
 
-        public static List<Info> GetCatalog(int pageSize, int pageIndex, ModpacksCategories categoriy, string searchFilter)
+        public static List<Info> GetCatalog(int pageSize, int pageIndex, int categoriy, string searchFilter)
         {
             List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, categoriy, searchFilter);
             var result = new List<Info>();
