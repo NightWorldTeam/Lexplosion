@@ -54,8 +54,8 @@ namespace Lexplosion.Logic
             }
             else if (accountType == AccountType.Microsoft)
             {
-                login = "null";
                 response = MojangApi.AuthFromToken(password);
+                login = response?.Login;
                 Status = ActivityStatus.Online;
             }
 

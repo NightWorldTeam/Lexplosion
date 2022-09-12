@@ -183,10 +183,7 @@ namespace Lexplosion.Logic.Network.Web
                 i++;
             }
 
-            Console.WriteLine("TOKEN " + i + " " + accessToken);
-
-            return accessToken;
-            
+            return accessToken; 
         }
 
         /// <summary>
@@ -207,8 +204,6 @@ namespace Lexplosion.Logic.Network.Web
                         "Bearer " + token
                     )
                 });
-
-                Console.WriteLine("2 " + answer);
 
                 var profile = JsonConvert.DeserializeObject<MojangProfile>(answer);
 
