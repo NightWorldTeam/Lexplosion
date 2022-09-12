@@ -92,7 +92,7 @@
 
     <Style x:Key="TagStyle" TargetType="Button">
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="TextBlock.SnapsToDevicePixels" Value="False" />
+        <Setter Property="TextBlock.SnapsToDevicePixels" Value="True" />
         <Setter Property="Height" Value="25" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontSize" Value="12" />

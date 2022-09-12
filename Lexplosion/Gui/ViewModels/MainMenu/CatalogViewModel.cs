@@ -13,12 +13,16 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private const int _pageSize = 10;
         private readonly MainViewModel _mainViewModel;
 
-        public ObservableCollection<InstanceFormViewModel> InstanceList { get => _mainViewModel.Model.CurrentInstanceCatalog; } 
 
-        #region props
+
+        #region Properties
+
+
+        public ObservableCollection<InstanceFormViewModel> InstanceList { get => _mainViewModel.Model.CurrentInstanceCatalog; }
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
         public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true, true);
+
 
         private bool _isLoaded;
         /// <summary>
@@ -69,10 +73,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         }
 
 
-        #endregion props
+        #endregion Properties
 
 
-        #region commads
+        #region Commands
 
 
         private RelayCommand _onScrollCommand;
@@ -89,7 +93,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         }
 
 
-        #endregion commands
+        #endregion Commands
+
+
+        #region Constructors
 
 
         public CatalogViewModel(MainViewModel mainViewModel)
@@ -100,10 +107,23 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             GetInitializeInstance();
         }
 
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
         public async void GetInitializeInstance()
         {
             await Task.Run(() => InstancesPageLoading());
         }
+
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
 
         private void InstancesPageLoading()
         {
@@ -111,17 +131,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             IsLoaded = false;
             Lexplosion.Run.TaskRun(delegate ()
             {
-                var enumByString 
-                    = (ModpacksCategories)Enum.Parse(
-                        typeof(ModpacksCategories), 
-                        SearchBoxVM.SelectedCurseforgeCategory.name.Replace(' ', Char.MinValue), 
-                        true);
-
                 var instances = InstanceClient.GetOutsideInstances(
                     SearchBoxVM.SelectedInstanceSource,
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
-                    enumByString,
+                    SearchBoxVM.SelectedCurseforgeCategory.id,
                     SearchBoxVM.SearchTextComfirmed
                     );
 
@@ -167,5 +181,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 IsLoaded = true;
             });
         }
+
+        #endregion Private Methods
     }
 }

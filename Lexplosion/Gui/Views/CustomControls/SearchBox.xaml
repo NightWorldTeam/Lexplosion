@@ -5,6 +5,7 @@
     xmlns:cf="clr-namespace:Lexplosion.Logic.Objects.Curseforge"
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="40"
     d:DesignWidth="450"
@@ -75,10 +76,19 @@
                                     <ControlTemplate TargetType="{x:Type CheckBox}">
                                         <Border
                                             x:Name="Border"
-                                            Padding="10,5,10,5"
+                                            Padding="5"
                                             Background="{DynamicResource SepSolidColorBrush}"
                                             CornerRadius="5">
-                                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource filters}" />
+                                            <Viewbox Width="21">
+                                                <Path
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    extension:PathExtension.StringData="{StaticResource Filter}"
+                                                    Data="M22 40q-.85 0-1.425-.575Q20 38.85 20 38V26L8.05 10.75q-.7-.85-.2-1.8Q8.35 8 9.4 8h29.2q1.05 0 1.55.95t-.2 1.8L28 26v12q0 .85-.575 1.425Q26.85 40 26 40Zm2-13.8L36 11H12Zm0 0Z"
+                                                    Fill="White"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+
                                         </Border>
 
                                         <ControlTemplate.Triggers>
