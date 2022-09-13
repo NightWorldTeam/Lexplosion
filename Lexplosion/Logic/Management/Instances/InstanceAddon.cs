@@ -697,7 +697,6 @@ namespace Lexplosion.Logic.Management.Instances
                                 }
                             }
                             catch { }
-
                             // определяем айдишник
                             int addonId;
                             if (notContains) // мод есть в папке, но нет в списке, значит установлен собственноручно
@@ -714,6 +713,8 @@ namespace Lexplosion.Logic.Management.Instances
                             {
                                 addonId = existsAddons[xyi].Value2;
                             }
+
+                            Console.WriteLine("ADD ADDON");
 
                             actualAddonsList[addonId] = new InstalledAddonInfo
                             {
@@ -742,7 +743,8 @@ namespace Lexplosion.Logic.Management.Instances
                     }
                 }
 
-                installedAddons.Save();
+
+                installedAddons.Save(actualAddonsList);
             }
                 
             return addons;
@@ -912,7 +914,7 @@ namespace Lexplosion.Logic.Management.Instances
                     }
                 }
 
-                installedAddons.Save();
+                installedAddons.Save(actualAddonsList);
             }
 
             return addons;
@@ -1003,7 +1005,7 @@ namespace Lexplosion.Logic.Management.Instances
                     }
                 }
 
-                installedAddons.Save();
+                installedAddons.Save(actualAddonsList);
             }
 
             return addons;
@@ -1037,27 +1039,27 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 addons.DisableAddon(projectID, !_isEnable, delegate (InstalledAddonInfo data)
                 {
-                    try
+                    //try
                     {
                         string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
                         if (data.IsExists(dir))
                         {
-                            File.Move(dir + data.ActualPath, dir + data.Path);
+                            File.Move(dir + data.Path + ".disable", dir + data.Path);
                         }
                     }
-                    catch { }
+                    //catch { }
                 }, 
                 delegate (InstalledAddonInfo data)
                 {
-                    try
+                    //try
                     {
                         string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
                         if (data.IsExists(dir))
                         {
-                            File.Move(dir + data.Path, dir + data.ActualPath);
+                            File.Move(dir + data.Path, dir + data.Path + ".disable");
                         }
                     }
-                    catch { }
+                    //catch { }
                 });
 
                 addons.Save();

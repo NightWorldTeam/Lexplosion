@@ -313,7 +313,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="url">Ссыллка на файл, охуеть, да? Без .zip в конце.</param>
         /// <param name="file">Имя файла</param>
         /// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
-        /// <param name="temp">Временная директория (без имени файла), должена заканчиваться на слеш.</param>
+        /// <param name="temp">Временная директория (без имени файла), должна заканчиваться на слеш.</param>
         /// <param name="sha1">Хэш</param>
         /// <param name="size">Размер</param>
         /// <param name="percentHandler">Обработчик процентов</param>
@@ -322,7 +322,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             string zipFile = file + ".zip";
 
-            try
+            //try
             {
                 if (!Directory.Exists(to))
                 {
@@ -358,13 +358,13 @@ namespace Lexplosion.Logic.FileSystem
                     }
                 }
             }
-            catch
-            {
-                DelFile(temp + file);
-                DelFile(temp + zipFile);
+            //catch
+            //{
+            //    DelFile(temp + file);
+            //    DelFile(temp + zipFile);
 
-                return false;
-            }
+            //    return false;
+            //}
         }
 
 

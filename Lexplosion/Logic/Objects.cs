@@ -50,14 +50,14 @@ namespace Lexplosion.Logic.Objects
         {
             if (Type == AddonType.Mods || Type == AddonType.Resourcepacks)
             {
-                try
+                //try
                 {
                     return File.Exists(instancePath + ActualPath);
                 }
-                catch
-                {
-                    return false;
-                }
+                //catch
+                //{
+                //    return false;
+                //}
             }
             else if (Type == AddonType.Maps)
             {

@@ -18,6 +18,7 @@ namespace Lexplosion.Logic.Management.Installers
         private NightWorldManifest nightworldManifest = null;
         private VersionManifest manifest = null;
         private LastUpdates Updates;
+        private Dictionary<string, int> _instanceContent;
         private NightWorldInstaller installer;
 
         private string InstanceId;
@@ -168,6 +169,7 @@ namespace Lexplosion.Logic.Management.Installers
             if (manifest != null)
             {
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
+                _instanceContent = installer.GetInstanceContent();
 
                 requiresUpdates = (requiresUpdates || Updates.Count == 0);
 
@@ -182,10 +184,10 @@ namespace Lexplosion.Logic.Management.Installers
                     stagesCount++;
                 }
 
-                if (requiresUpdates || installer.InvalidStruct(Updates))
+                if (requiresUpdates || installer.InvalidStruct(Updates, _instanceContent))
                 {
                     int variableFilesUpdatesCount = 0;
-                    variableFilesUpdatesCount = installer.CheckInstance(nightworldManifest, ref Updates); // проверяем дополнительные файлы клиента (моды и прочее)
+                    variableFilesUpdatesCount = installer.CheckInstance(nightworldManifest, ref Updates, _instanceContent); // проверяем дополнительные файлы клиента (моды и прочее)
                     if (variableFilesUpdatesCount == -1)
                     {
                         return InstanceInit.GuardError;
@@ -255,7 +257,7 @@ namespace Lexplosion.Logic.Management.Installers
                     progressHandler(DownloadStageTypes.Client, stagesCount, stage, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
                 };
 
-                errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates);
+                errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates, _instanceContent);
             }
 
             DataFilesManager.SaveManifest(InstanceId, manifest);

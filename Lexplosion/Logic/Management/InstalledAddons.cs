@@ -94,8 +94,8 @@ namespace Lexplosion.Logic.Management
                 var data = _data[addonId];
                 if (isDisable)
                 {
-                    data.IsDisable = true;
                     offFunction(data);
+                    data.IsDisable = true;
                 }
                 else
                 {
@@ -109,6 +109,14 @@ namespace Lexplosion.Logic.Management
         public void Save()
         {
             _semaphore.WaitOne(_instanceId);
+            DataFilesManager.SaveInstalledAddons(_instanceId, _data);
+            _semaphore.Release(_instanceId);
+        }
+
+        public void Save(InstalledAddonsFormat addonsList)
+        {
+            _semaphore.WaitOne(_instanceId);
+            _data = addonsList;
             DataFilesManager.SaveInstalledAddons(_instanceId, _data);
             _semaphore.Release(_instanceId);
         }
