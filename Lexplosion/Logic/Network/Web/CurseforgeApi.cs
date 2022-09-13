@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
@@ -185,6 +186,50 @@ namespace Lexplosion.Logic.Network
             return GetApiData<List<CurseforgeCategory>>("https://api.curseforge.com/v1/categories?gameId=432&classId=" + (int)type);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static ValuePair<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, int projectID, int fileID, Action<int> percentHandler)
+        {
+            if (addonType != AddonType.Maps)
+            {
+                if (!WithDirectory.InstallFile(fileUrl, fileName, path + folderName, percentHandler))
+                {
+                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    {
+                        Value1 = null,
+                        Value2 = DownloadAddonRes.DownloadError
+                    };
+                }
+
+                Console.WriteLine("SYS " + fileUrl);
+            }
+            else
+            {
+                if (!WithDirectory.InstallZipContent(fileUrl, fileName, path + folderName, percentHandler))
+                {
+
+                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    {
+                        Value1 = null,
+                        Value2 = DownloadAddonRes.DownloadError
+                    };
+                }
+
+                Console.WriteLine("SYS " + fileUrl);
+            }
+
+            return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+            {
+                Value1 = new InstalledAddonInfo
+                {
+                    ProjectID = projectID,
+                    FileID = fileID,
+                    Path = (addonType != AddonType.Maps) ? (folderName + "/" + fileName) : (folderName + "/"),
+                    Type = addonType
+                },
+                Value2 = DownloadAddonRes.Successful
+            };
+        }
+
         public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, Action<int> percentHandler)
         {
             //Console.WriteLine("");
@@ -198,22 +243,14 @@ namespace Lexplosion.Logic.Network
 
                 string fileUrl = addonInfo.downloadUrl;
                 string fileName = addonInfo.fileName;
-                // т.к разрабы курсфорджа дефектные рукодопы и конченные недоумки, которые не умеют писать код, то url иногда может быть null, поэтому придётся мутить костыли
+
                 if (String.IsNullOrWhiteSpace(addonInfo.downloadUrl))
                 {
-                    if (!String.IsNullOrWhiteSpace(addonInfo.fileName))
+                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                     {
-                        // ручками формируем url
-                        fileUrl = "https://edge.forgecdn.net/files/" + (addonInfo.id / 1000) + "/" + (addonInfo.id % 1000) + "/" + addonInfo.fileName;
-                    }
-                    else
-                    {
-                        return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
-                        {
-                            Value1 = null,
-                            Value2 = DownloadAddonRes.UrlError
-                        };
-                    }
+                        Value1 = null,
+                        Value2 = DownloadAddonRes.UrlError
+                    };
                 }
 
                 Console.WriteLine(fileUrl);
@@ -253,45 +290,7 @@ namespace Lexplosion.Logic.Network
                 }
 
                 // устанавливаем
-                if (addonType != AddonType.Maps)
-                {
-                    if (!WithDirectory.InstallFile(fileUrl, fileName, path + folderName, percentHandler))
-                    {
-                        return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
-                        {
-                            Value1 = null,
-                            Value2 = DownloadAddonRes.DownloadError
-                        };
-                    }
-
-                    Console.WriteLine("SYS " + fileUrl);
-                }
-                else
-                {
-                    if (!WithDirectory.InstallZipContent(fileUrl, fileName, path + folderName, percentHandler))
-                    {
-
-                        return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
-                        {
-                            Value1 = null,
-                            Value2 = DownloadAddonRes.DownloadError
-                        };
-                    }
-
-                    Console.WriteLine("SYS " + fileUrl);
-                }
-
-                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
-                {
-                    Value1 = new InstalledAddonInfo
-                    {
-                        ProjectID = projectID,
-                        FileID = fileID,
-                        Path = (addonType != AddonType.Maps) ? (folderName + "/" + fileName) : (folderName + "/"),
-                        Type = addonType
-                    },
-                    Value2 = DownloadAddonRes.Successful
-                };
+                return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, percentHandler);
             }
             //catch
             //{
@@ -302,7 +301,7 @@ namespace Lexplosion.Logic.Network
             //}
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, int fileID, string path)
+        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, int fileID, string path, Action<int> percentHandler)
         {
             //try
             {
@@ -339,7 +338,7 @@ namespace Lexplosion.Logic.Network
                 Console.WriteLine("fileData " + fileData.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
 
                 string fileUrl = fileData.downloadUrl;
-                if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
+                if (String.IsNullOrWhiteSpace(fileUrl))
                 {
                     // пробуем второй раз
                     fileData = GetProjectFile(projectID.ToString(), fileID.ToString());
@@ -394,29 +393,7 @@ namespace Lexplosion.Logic.Network
                 }
 
                 // устанавливаем
-                if (WithDirectory.InstallFile(fileUrl, fileName, path + folderName))
-                {
-                    Console.WriteLine("SYS " + fileUrl);
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
-                    {
-                        Value1 = new InstalledAddonInfo
-                        {
-                            ProjectID = projectID,
-                            FileID = fileID,
-                            Path = folderName + "/" + fileName,
-                            Type = addonType
-                        },
-                        Value2 = DownloadAddonRes.Successful
-                    };
-                }
-                else
-                {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
-                    {
-                        Value1 = null,
-                        Value2 = DownloadAddonRes.DownloadError
-                    };
-                }
+                return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, percentHandler);
             }
             //catch
             //{

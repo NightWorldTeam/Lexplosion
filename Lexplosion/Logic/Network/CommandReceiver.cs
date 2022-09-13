@@ -58,7 +58,7 @@ namespace Lexplosion.Logic.Network
                 Socket client = null;
                 byte[] buffer = new byte[1024*1024];
 
-                //try
+                try
                 {
                     string headerResponse = "";
                     if (serverSocket != null && serverSocket.IsBound)
@@ -108,14 +108,14 @@ namespace Lexplosion.Logic.Network
                         }
                     }
                 }
-                //catch { }
-                //finally
-                //{
-                //    if (serverSocket != null && serverSocket.IsBound)
-                //    {
-                //        serverSocket.BeginAccept(null, 0, OnAccept, null);
-                //    }
-                //}
+                catch { }
+                finally
+                {
+                    if (serverSocket != null && serverSocket.IsBound)
+                    {
+                        serverSocket.BeginAccept(null, 0, OnAccept, null);
+                    }
+                }
 
                 if (client != null)
                 {

@@ -368,7 +368,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         perfomer.ExecuteTask(delegate ()
                         {
-
+                            Console.WriteLine("ADD MOD TO PERFOMER");
                             CurseforgeAddonInfo addonInfo;
                             if (addons.ContainsKey(file.projectID))
                             {
@@ -379,7 +379,12 @@ namespace Lexplosion.Logic.FileSystem
                                 addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
                             }
 
-                            var result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
+                            var result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", delegate (int percent)
+                            {
+                                _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
+                            });
+
+                            _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
 
                             if (result.Value2 == DownloadAddonRes.Successful)
                             {
@@ -399,6 +404,7 @@ namespace Lexplosion.Logic.FileSystem
                                 SaveInstanceContent(compliteDownload);
                             }
 
+                            Console.WriteLine("EXIT PERFOMER");
                         });
                     }
 
@@ -416,20 +422,42 @@ namespace Lexplosion.Logic.FileSystem
                         }
 
                         int count = 0;
-                        ValuePair<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
+                        ValuePair<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", delegate (int percent)
+                        {
+                            _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
+                        });
+
                         while (count < 4 && result.Value2 != DownloadAddonRes.Successful)
                         {
                             Thread.Sleep(1000);
                             Console.WriteLine("REPEAT DOWNLOAD " + addonInfo.id);
                             addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
-                            result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/");
+
+                            result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", delegate (int percent)
+                            {
+                                _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
+                            });
+
                             count++;
                         }
 
                         if (result.Value2 != DownloadAddonRes.Successful)
                         {
                             Console.WriteLine("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.projectID + " " + result.Value2);
-                            errors.Add(file.projectID + " " + file.fileID);
+                            if (addonInfo != null)
+                            {
+                                errors.Add(addonInfo.name + ", File id: " + file.fileID);
+                            }
+                            else
+                            {
+                                errors.Add("Project Id: " + file.projectID + ", File id: " + file.fileID);
+                            }
+
+                            _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Error);
+                        }
+                        else
+                        {
+                            _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
                         }
 
                         downloadedCount++;
