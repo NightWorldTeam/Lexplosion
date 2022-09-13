@@ -239,7 +239,7 @@ namespace Lexplosion.Logic.FileSystem
                 try
                 {
                     Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);
-                    task.Wait();
+                    task.Wait();        
 
                     return result;
                 }
@@ -250,7 +250,10 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        //функция для удаления файла при его существовании 
+        /// <summary>
+        /// Удаляет файл, если он существует.
+        /// </summary>
+        /// <param name="file">Имя файла.</param>
         public static void DelFile(string file)
         {
             try
@@ -258,20 +261,6 @@ namespace Lexplosion.Logic.FileSystem
                 if (File.Exists(file))
                 {
                     File.Delete(file);
-                }
-            }
-            catch { }
-        }
-
-        public static void DropLastUpdates(string instanceId)
-        {
-            try
-            {
-
-                using (FileStream fstream = new FileStream(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", FileMode.Create, FileAccess.Write))
-                {
-                    fstream.Write(new byte[0], 0, 0);
-                    fstream.Close();
                 }
             }
             catch { }
