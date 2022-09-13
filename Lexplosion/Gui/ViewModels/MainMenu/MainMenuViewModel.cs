@@ -1,9 +1,7 @@
 ﻿using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -35,12 +33,15 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         #region Commands
 
+
         public ICommand NavigationFactoryCommand { get; }
         public ICommand NavigationInstanceCommand { get; private set; }
         public ICommand NavigationShowCaseCommand { get; private set; }
 
         private RelayCommand _logoClickCommand;
-
+        /// <summary>
+        /// Открывает страницу модпака при клина на Logo в InstanceForm
+        /// </summary>
         public RelayCommand LogoClickCommand
         {
             get => _logoClickCommand ?? (_logoClickCommand = new RelayCommand(obj =>
@@ -55,6 +56,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         #region Constructors
 
+
         public MainMenuViewModel(MainViewModel mainViewModel)
         {
 
@@ -64,10 +66,85 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             _libraryVM = new LibraryViewModel(mainViewModel);
 
 
-            #region multiplayer init
+            #region Initialize Multiplayer
 
 
-            _multiplayerTabs = new List<Tab>()
+            _multiplayerTabs = InitializeMultiplayerTabs();
+            _multiplayerTabMenu = new TabMenuViewModel(_multiplayerTabs, ResourceGetter.GetString("multiplayer"));
+
+
+            #endregion Initialize Multiplayer
+
+
+            #region Initialize Settings 
+
+
+            GeneralSettingsTabs = InitializeSettingsTabs();
+            _settingsTabMenu = new TabMenuViewModel(GeneralSettingsTabs, ResourceGetter.GetString("settings"));
+
+
+            #endregion Initialize Settings
+
+
+            #region Initialize MainMenu
+
+
+            Tabs = InitializeMainMenuTabs();
+            SelectedTab = Tabs[0];
+
+
+            #endregion Initialize MainMenu
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
+        /// <summary>
+        /// Открывает главную страницу модпака.
+        /// </summary>
+        /// <param name="viewModel">InstanceViewModel нужной сборки.</param>
+        public void OpenModpackPage(InstanceFormViewModel viewModel) 
+        {
+            NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
+                MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel));
+            NavigationShowCaseCommand?.Execute(null);
+        }
+        
+        /// <summary>
+        /// Открывает страницу модпака сборки (дополнения).
+        /// </summary>
+        /// <param name="viewModel">InstanceViewModel нужной сборки.</param>
+        /// <param name="isToDLC">Перейти на страницу с дополнениями?</param>
+        public void OpenModpackPage(InstanceFormViewModel viewModel, bool isToDLC = false) 
+        {
+            var index = 0;
+            var subIndex = 0;
+
+            if (isToDLC) 
+            { 
+                index = 1;
+                subIndex = viewModel.Client.Type == InstanceSource.Local ? 3 : 1;
+            }
+
+            NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
+                MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel, index, subIndex));
+            NavigationShowCaseCommand?.Execute(null);
+        }
+
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private List<Tab> InitializeMultiplayerTabs() 
+        {
+            return new List<Tab>()
             {
                 //new Tab 
                 //{
@@ -90,16 +167,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     Content = _channelTabViewModel
                 }
             };
+        }
 
-            _multiplayerTabMenu = new TabMenuViewModel(_multiplayerTabs, "Сетевая игра");
-
-
-            #endregion multiplayer init
-
-
-            #region settings init
-
-            GeneralSettingsTabs = new List<Tab>()
+        private List<Tab> InitializeSettingsTabs() 
+        {
+            return new List<Tab>()
             {
                 new Tab
                 {
@@ -117,13 +189,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     Content = new DevСurtainViewModel()
                 }
             };
-            _settingsTabMenu = new TabMenuViewModel(GeneralSettingsTabs, "Настройки");
+        }
 
-
-            #endregion multiplayer init
-
-
-            Tabs = new ObservableCollection<Tab>
+        private ObservableCollection<Tab> InitializeMainMenuTabs() 
+        {
+            return new ObservableCollection<Tab>
             {
                 new Tab
                 {
@@ -146,38 +216,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     Content = _settingsTabMenu
                 },
             };
-            SelectedTab = Tabs[0];
-        }
-
-        #endregion Constructors
-
-
-        #region Public & Protected Methods
-
-
-        public void OpenModpackPage(InstanceFormViewModel viewModel) 
-        {
-            NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel));
-            NavigationShowCaseCommand?.Execute(null);
-        }
-
-        public void OpenModpackPage(InstanceFormViewModel viewModel, bool isToDLC = false) 
-        {
-            var index = 0;
-            var subIndex = 0;
-            if (isToDLC) 
-            { 
-                index = 1;
-                subIndex = viewModel.Client.Type == InstanceSource.Local ? 3 : 1;
-            }
-
-            NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel, index, subIndex));
-            NavigationShowCaseCommand?.Execute(null);
         }
 
 
-        #endregion Public & Protected Methods
+        #endregion Private Methods
     }
 }

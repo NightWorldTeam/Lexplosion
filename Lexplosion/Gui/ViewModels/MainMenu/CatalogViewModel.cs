@@ -98,9 +98,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public CatalogViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
-            SearchBoxVM.SearchChanged += GetInitializeInstance;
-            PaginatorVM.PageChanged += GetInitializeInstance;
-            GetInitializeInstance();
+            SearchBoxVM.SearchChanged += InstancesPageLoading;
+            PaginatorVM.PageChanged += InstancesPageLoading;
+            InstancesPageLoading();
         }
 
 
@@ -110,10 +110,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         #region Public & Protected Methods
 
 
-        public async void GetInitializeInstance()
-        {
-            await Task.Run(() => InstancesPageLoading());
-        }
+
 
 
         #endregion Public & Protected Methods
@@ -123,9 +120,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private void InstancesPageLoading()
         {
-            // Сделать метод асинхронным.
             IsLoaded = false;
-            Lexplosion.Run.TaskRun(delegate ()
+            Lexplosion.Run.TaskRun(() =>
             {
                 var instances = InstanceClient.GetOutsideInstances(
                     SearchBoxVM.SelectedInstanceSource,
@@ -140,7 +136,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
                 if (instances.Count == 0)
                 {
-                    App.Current.Dispatcher.Invoke((Action)delegate
+                    App.Current.Dispatcher.Invoke(() =>
                     {
                         InstanceList.Clear();
                         InstanceList.Clear();
@@ -149,7 +145,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 }
                 else
                 {
-                    App.Current.Dispatcher.Invoke((Action)delegate
+                    App.Current.Dispatcher.Invoke(() =>
                     {
                         if (IsEmptyList) IsEmptyList = false;
 

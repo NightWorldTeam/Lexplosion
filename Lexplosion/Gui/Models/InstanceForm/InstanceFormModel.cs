@@ -24,8 +24,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
         // сделать lock объект
         public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
 
-        private object _locker = new();
-
         public string OverviewField
         {
             get => _overviewField; set

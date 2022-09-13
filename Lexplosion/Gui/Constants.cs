@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +35,5 @@ namespace Lexplosion.Gui
             { "Skyblock", 64.4766666666667},
             { "Vanilla+", 49.71}
         };
-
-        //public static readonly
     }
 }

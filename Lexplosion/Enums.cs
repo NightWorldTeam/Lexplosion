@@ -1,4 +1,10 @@
-﻿using System.ComponentModel;
+﻿using Lexplosion.Properties;
+using Lexplosion.Tools;
+using LumiSoft.Net.Mime.vCard;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Security.AccessControl;
+using System.Windows;
 
 namespace Lexplosion
 {

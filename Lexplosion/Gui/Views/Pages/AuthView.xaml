@@ -113,7 +113,7 @@
                     <Grid>
 
                         <!--  Auth fields [All except Microsoft OAuth2]  -->
-                        <StackPanel Margin="0,60,0,0" Visibility="Visible">
+                        <StackPanel Margin="0,60,0,0" Visibility="{Binding IsMicrosoftAccountManager, Converter={StaticResource NegativeConvertBoolToVisibility}}">
                             <controls:PlaceholderTextBox
                                 Width="145"
                                 Height="30"
@@ -181,19 +181,74 @@
                         </StackPanel>
 
                         <!--  For Microsoft Auth  -->
-                        <StackPanel Margin="0,60,0,0" Visibility="Collapsed">
-                            <Button
-                                Width="100"
-                                Padding="5,3,5,3"
-                                Content="Войти"
-                                FontSize="18"
-                                Style="{StaticResource DefaultBrandColorButton}" />
-                            <Button
-                                Margin="0,10,0,0"
-                                Padding="5,3,5,3"
-                                Content="Сменить акккаунт Microsoft"
-                                FontSize="18"
-                                Style="{StaticResource DefaultBrandColorButton}" />
+                        <StackPanel Margin="0,60,0,0" Visibility="{Binding IsMicrosoftAccountManager, Converter={StaticResource ConvertBoolToVisibility}}">
+                            <Border>
+                                <StackPanel>
+
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        Foreground="White"
+                                        Text="Выберите аккаунт для входа" />
+
+                                    <Button
+                                        Width="150"
+                                        Margin="0,30,0,0"
+                                        Command="{Binding SignUpCommand}"
+                                        Style="{StaticResource DefaultBrandColorButton}">
+                                        <DockPanel>
+                                            <StackPanel>
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    DockPanel.Dock="Left"
+                                                    FontSize="16"
+                                                    Text="{Binding Login}" />
+                                            </StackPanel>
+
+                                            <controls:DropdownMenu
+                                                Width="30"
+                                                Height="30"
+                                                VerticalAlignment="Center"
+                                                BorderBrush="Black"
+                                                DockPanel.Dock="Right" />
+                                        </DockPanel>
+                                    </Button>
+
+                                    <!--  Nickname  -->
+
+                                    <Button
+                                        Margin="0,30,0,0"
+                                        Padding="3,5,5,3"
+                                        Command="{Binding SingUpMicrosoftCommand}"
+                                        Style="{StaticResource DefaultBrandColorButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Grid>
+                                                <Ellipse
+                                                    Width="25"
+                                                    Height="25"
+                                                    Fill="#eceef2" />
+
+                                                <Viewbox Height="15">
+                                                    <Path
+                                                        Data="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"
+                                                        Fill="Gray"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                            </Grid>
+
+                                            <TextBlock
+                                                Margin="5,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                FontWeight="Regular"
+                                                Text="Сменить аккаунт"
+                                                TextAlignment="Center" />
+                                        </StackPanel>
+                                    </Button>
+
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
                     </Grid>
                 </StackPanel>
