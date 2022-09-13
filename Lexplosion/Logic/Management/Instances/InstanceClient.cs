@@ -157,8 +157,21 @@ namespace Lexplosion.Logic.Management.Instances
                 StateChanged?.Invoke();
             }
         }
+
+        private string _profileVersion = null;
+        public string ProfileVersion
+        {
+            get => _profileVersion;
+            private set
+            {
+                _profileVersion = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsInstalled { get; private set; } = false;
         public string WebsiteUrl { get; private set; } = null;
+
         #endregion
 
         public event ProgressHandlerCallback ProgressHandler;
@@ -326,15 +339,17 @@ namespace Lexplosion.Logic.Management.Instances
                     if (manifestIsCorrect && !Regex.IsMatch(localId.Replace("_", ""), @"[^a-zA-Z0-9]"))
                     {
                         string externalID = null;
+                        string instanceVersion = null;
                         byte[] logo = null;
 
-                        //получаем вншний айдшник, если этот модпак не локлаьный
+                        //получаем вншний айдшник и версию, если этот модпак не локлаьный
                         if (list[localId].Type != InstanceSource.Local)
                         {
                             InstancePlatformData data = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instancePlatformData.json");
                             if (data != null)
                             {
                                 externalID = data.id;
+                                instanceVersion = data.instanceVersion.ToString();
                                 _idsPairs[externalID] = localId;
                             }
                         }
@@ -366,7 +381,8 @@ namespace Lexplosion.Logic.Management.Instances
                                 Description = assetsData.Description ?? NoDescription,
                                 Categories = assetsData.Categories ?? new List<Category>(),
                                 GameVersion = instanceManifest.version?.gameVersion,
-                                Logo = logo
+                                Logo = logo,
+                                _profileVersion = instanceVersion
                             };
                         }
                         else
@@ -379,7 +395,8 @@ namespace Lexplosion.Logic.Management.Instances
                                 Description = NoDescription,
                                 Categories = new List<Category>(),
                                 GameVersion = instanceManifest.version?.gameVersion,
-                                Logo = logo
+                                Logo = logo,
+                                _profileVersion = instanceVersion
                             };
                         }
 
@@ -579,7 +596,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
         /// </summary>
-        public void UpdateInstance(string fileId = null)
+        public void UpdateInstance(string instanceVersion = null)
         {
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
@@ -587,12 +604,17 @@ namespace Lexplosion.Logic.Management.Instances
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
-            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, fileId);
+            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, instanceVersion);
 
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
                 UpdateAvailable = false;
+                if (instanceVersion != null)
+                {
+                    ProfileVersion = instanceVersion;
+                }
+
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
 

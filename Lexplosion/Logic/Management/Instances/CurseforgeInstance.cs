@@ -78,13 +78,29 @@ namespace Lexplosion.Logic.Management.Instances
                 var versions = new List<InstanceVersion>();
                 foreach (var file in files)
                 {
+                    ReleaseType status;
+                    if (file.releaseType == 1)
+                    {
+                        status = ReleaseType.Release;
+                    }
+                    else if (file.releaseType == 2)
+                    {
+                        status = ReleaseType.Beta;
+                    }
+                    else
+                    {
+                        status = ReleaseType.Alpha;
+                    }
+
                     versions.Add(new InstanceVersion
                     {
                         FileName = file.fileName,
                         Id = file.id.ToString(),
-                        Status = ReleaseType.Release,
+                        Status = status,
                         Date = file.fileDate
                     });
+
+                    Console.WriteLine(file.fileName + " " + file.id);
                 }
 
                 return versions;
