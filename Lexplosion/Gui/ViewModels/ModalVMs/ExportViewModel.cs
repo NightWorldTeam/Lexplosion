@@ -159,8 +159,9 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
                 // key - directory, value - pathlevel class
                 var keyvaluepair = (KeyValuePair<string, PathLevel>)obj;
-                LoadDirContent(keyvaluepair.Value.FullPath, keyvaluepair.Value);
-                ContentPreload(keyvaluepair.Value.UnitsList);
+                //                          PathLevel.FullPath | PathLevel
+                var sub = LoadDirContent(keyvaluepair.Value.FullPath, keyvaluepair.Value);
+                ContentPreload(sub);
             }));
         }
 
@@ -174,12 +175,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// Загрузка данных для UnitsList, на один шаг вперёд.
         /// </summary>
         /// <param name="subUnits">Словарь UnitsList</param>
-        private async void ContentPreload(Dictionary<string, PathLevel> subUnits) 
+        private void ContentPreload(Dictionary<string, PathLevel> subUnits) 
         {
-            foreach (var subUnit in subUnits) 
-            {
-                await Task.Run(() => LoadDirContent(subUnit.Value.FullPath, subUnit.Value));
-            }
+            foreach (var i in subUnits)
+                LoadDirContent(i.Value.FullPath, i.Value);
         }
 
 
@@ -203,10 +202,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// Загружает контент для директории. Если директория уже загружена, то производиться выход из метода.
         /// </summary>
         /// <param name="dir"></param>
-        private void LoadDirContent(string dir, PathLevel pathLevel)
+        private Dictionary<string, PathLevel> LoadDirContent(string dir, PathLevel pathLevel)
         {
             if (LoadedDirectories.Contains(dir) || dir == null || pathLevel.IsFile)
-                return;
+                return pathLevel.UnitsList;
 
             pathLevel.UnitsList = _instanceClient.GetPathContent(dir, pathLevel);
 
@@ -214,6 +213,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                 pathLevel.IsSelected = true;
 
             LoadedDirectories.Add(dir);
+            return pathLevel.UnitsList;
         }
 
         /// <summary>

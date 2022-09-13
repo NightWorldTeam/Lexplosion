@@ -9,6 +9,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private UpperButtonFunc _func;
         private Tip _tip;
 
+
+        #region Construtors
+
+
         public UpperButton(Geometry icon, UpperButtonFunc func, Tip tip)
         {
             Icon = icon;
@@ -16,7 +20,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
             Tip = tip;
         }
 
-        #region props
+
+        #endregion Construtors
+
+        #region Properties
+
+
         public Geometry Icon
         {
             get => _icon; set
@@ -42,9 +51,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
-        #endregion props
 
-        #region methods
+        #endregion Properties
+
+
+        #region Public & Protected Methods
+
+
         public void ChangeFuncPlay() => ChangeFunc(
                     UpperButtonFunc.Play,
                     ResourceGetter.GetIcon("Play"),
@@ -88,5 +101,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             };
         }
     }
-    #endregion methods
+
+
+    #endregion Public & Protected Methods
 }

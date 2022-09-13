@@ -19,6 +19,18 @@ namespace Lexplosion.Gui.ViewModels
 
         #region Properties
 
+
+        private bool _isMicrosoftAccountManager = false;
+        public bool IsMicrosoftAccountManager 
+        {
+            get => _isMicrosoftAccountManager; set 
+            {
+                _isMicrosoftAccountManager = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         #region Main Auth
 
         private string _login = String.Empty;
@@ -30,7 +42,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _login; set
             {
                 _login = value;
-                OnPropertyChanged(nameof(Login));
+                OnPropertyChanged();
             }
         }
 
@@ -43,7 +55,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _password; set
             {
                 _password = value;
-                OnPropertyChanged(nameof(Password));
+                OnPropertyChanged();
             }
         }
 
@@ -56,7 +68,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _isSaveMe; set
             {
                 _isSaveMe = value;
-                OnPropertyChanged(nameof(IsSaveMe));
+                OnPropertyChanged();
             }
         }
 
@@ -76,9 +88,11 @@ namespace Lexplosion.Gui.ViewModels
 
                 if (_accountTypeSelectedIndex == 3 && !_isSavedAccountOAuth2) 
                 {
-                    IsAuthFinished = false;
-                    LoadingBoardPlaceholder = ResourceGetter.GetString("microsoftAuthInProgress");
                     FollowToMicrosoft();
+                }
+                else 
+                {
+                    IsMicrosoftAccountManager = true;
                 }
                 LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
             }
@@ -143,6 +157,18 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
+        private RelayCommand _singUpMicrosoftCommand;
+        /// <summary>
+        /// Редиректит на сайт авторизации майков.
+        /// </summary>
+        public RelayCommand SingUpMicrosoftCommand
+        {
+            get => _singUpMicrosoftCommand ?? (_singUpMicrosoftCommand = new RelayCommand(obj => 
+            {
+                FollowToMicrosoft();
+            }));
+        }
+
         private RelayCommand _cancelMicrosoftAuthCommand;
         public RelayCommand CancelMicrosoftAuthCommand 
         {
@@ -189,16 +215,22 @@ namespace Lexplosion.Gui.ViewModels
 
             if (_login != null && _password != null)
             {
-                if (type == AccountType.Microsoft) 
+                if (type == AccountType.Microsoft) { 
                     _isSavedAccountOAuth2 = true;
+                    IsMicrosoftAccountManager = true;
+                }
+                else IsMicrosoftAccountManager = false;
 
                 IsSaveMe = true;
                 Login = _login; Password = _password;
             }
             else
             {
-                if (type == AccountType.Microsoft)
+                if (type == AccountType.Microsoft) { 
                     _isSavedAccountOAuth2 = false;
+                    IsMicrosoftAccountManager = false;
+                }
+                else IsMicrosoftAccountManager = false;
 
                 Login = ""; Password = "";
             }
@@ -280,6 +312,8 @@ namespace Lexplosion.Gui.ViewModels
 
         private void FollowToMicrosoft() 
         {
+            IsAuthFinished = false;
+            LoadingBoardPlaceholder = ResourceGetter.GetString("microsoftAuthInProgress");
             System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
         }
 

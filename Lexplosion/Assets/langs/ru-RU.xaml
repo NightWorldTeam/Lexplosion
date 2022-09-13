@@ -190,4 +190,10 @@
     <s:String x:Key="filters">Фильтры</s:String>
 
     <s:String x:Key="microsoftAuthInProgress">Ожидание окончания авторизации через Microsoft</s:String>
+
+    <s:String x:Key="dateCreated">дате создания</s:String>
+    <s:String x:Key="lastUpdated">обновлению</s:String>
+    <s:String x:Key="name">названию</s:String>
+    <s:String x:Key="popularity">популярности</s:String>
+    <s:String x:Key="totalDownloadsFl">скачивания</s:String>
 </ResourceDictionary>

@@ -9,9 +9,6 @@ namespace Lexplosion.Gui.ViewModels
 {
     public sealed class InstanceFormViewModel : VMBase
     {
-        private const string _deleteInstanceTitle = "Вы действительно желаете удалить ";
-        private const string _deleteInstanceFromLibraryTitle = "Вы действительно желаете удалить {0} из библиотеки?";
-
         private InstanceClient _instanceClient; // Данные о Instance.
 
 
@@ -44,6 +41,7 @@ namespace Lexplosion.Gui.ViewModels
                 OnPropertyChanged();
             }
         }
+
 
         #endregion Properties
 

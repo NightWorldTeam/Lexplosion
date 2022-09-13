@@ -18,7 +18,7 @@ namespace Lexplosion.Gui.ViewModels
         public event PageChangedCallback PageChanged;
 
 
-        #region command
+        #region Command
 
 
         private RelayCommand _nextPageCommand;
@@ -61,10 +61,10 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        #endregion
+        #endregion Commands
 
 
-        #region props
+        #region Properties
 
 
         private ushort _pageIndex = 1;
@@ -127,6 +127,6 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        #endregion props
+        #endregion Properties
     }
 }

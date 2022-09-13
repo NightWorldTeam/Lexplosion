@@ -1,8 +1,11 @@
 ﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Tools;
 using LumiSoft.Net.Mime.vCard;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Documents;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -35,6 +38,15 @@ namespace Lexplosion.Gui.ViewModels
         public event SearchChangedCallback SearchChanged;
 
         public ObservableCollection<CurseforgeCategory> Categories { get; private set; }
+
+        public static List<string> CfSortToString { get; } = new List<string>()
+        {
+            ResourceGetter.GetString("dateCreated"),
+            ResourceGetter.GetString("lastUpdated"),
+            ResourceGetter.GetString("name"),
+            ResourceGetter.GetString("popularity"),
+            ResourceGetter.GetString("totalDownloadsFl"),
+        };
 
         public bool IsMultiSource { get; }
         public bool HasCategories { get; }
@@ -110,16 +122,29 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        private CfSortBy _selectedCfSortBy;
-        public CfSortBy SelectedCfSortBy
+        public CfSortBy SelectedCfSortBy = CfSortBy.Popularity;
+        
+        private string _selectedCfSortByString = CfSortToString[(int)CfSortBy.Popularity];
+        public string SelectedCfSortByString
         {
-            get => _selectedCfSortBy; set
+            get => _selectedCfSortByString; set
             {
-                _selectedCfSortBy = value;
+                _selectedCfSortByString = value;
                 OnPropertyChanged();
+                SelectedCfSortBy = (CfSortBy)CfSortToString.IndexOf(value);
             }
         }
 
+
+        private string _selectedVersion;
+        public string SelectedVersion 
+        {
+            get => _selectedVersion; set 
+            {
+                _selectedVersion = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion Properties
 
@@ -179,9 +204,9 @@ namespace Lexplosion.Gui.ViewModels
                 {
                     SearchTextComfirmed = "";
                 }
-
-                SearchChanged.Invoke();
             }
+
+            SearchChanged.Invoke();
         }
 
 

@@ -6,7 +6,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 {
     public class FactoryDLCModel : VMBase
     {
-        public readonly CfProjectType Type;
+        public CfProjectType Type { get; }
 
         private ObservableCollection<InstanceAddon> _instanceAddons;
         public ObservableCollection<InstanceAddon> InstalledAddons 
