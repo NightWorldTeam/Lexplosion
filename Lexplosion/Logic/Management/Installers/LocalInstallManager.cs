@@ -33,7 +33,7 @@ namespace Lexplosion.Logic.Management.Installers
             installer = new InstanceInstaller(instanceid);
         }
 
-        public InstanceInit Check(out string gameVersion)
+        public InstanceInit Check(out string gameVersion, string instanceVersion)
         {
             gameVersion = "";
 

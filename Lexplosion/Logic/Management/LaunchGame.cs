@@ -274,7 +274,7 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public InitData Update(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, bool onlyBase = false)
+        public InitData Update(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, string version = null, bool onlyBase = false)
         {
             IInstallManager instance;
 
@@ -295,7 +295,7 @@ namespace Lexplosion.Logic.Management
             }
 
             instance.FileDownloadEvent += fileDownloadHandler;
-            InstanceInit result = instance.Check(out string gameVersion);
+            InstanceInit result = instance.Check(out string gameVersion, version);
 
             if (result != InstanceInit.Successful)
             {
@@ -365,7 +365,7 @@ namespace Lexplosion.Logic.Management
 
                 if (!UserData.Offline)
                 {
-                    return Update(progressHandler, fileDownloadHandler, (_settings.AutoUpdate == false));
+                    return Update(progressHandler, fileDownloadHandler, null, (_settings.AutoUpdate == false));
                 }
                 else
                 {

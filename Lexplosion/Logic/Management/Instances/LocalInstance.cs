@@ -30,5 +30,10 @@ namespace Lexplosion.Logic.Management.Instances
                 Images = WithDirectory.LoadMcScreenshots(localId)
             };
         }
+
+        public override List<InstanceVersion> GetVersions(string externalId)
+        {
+            return null;
+        }
     }
 }

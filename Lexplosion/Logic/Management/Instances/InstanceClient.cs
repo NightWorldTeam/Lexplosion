@@ -536,6 +536,11 @@ namespace Lexplosion.Logic.Management.Instances
             return fullInfo;
         }
 
+        public List<InstanceVersion> GetVersions()
+        {
+            return _dataManager.GetVersions(_externalId) ?? new List<InstanceVersion>();
+        }
+
         /// <summary>
         /// Изменяет параметры установленного модпака
         /// </summary>
@@ -574,16 +579,15 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
         /// </summary>
-        public void UpdateInstance()
+        public void UpdateInstance(string fileId = null)
         {
-            Console.WriteLine(123);
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
-            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent);
+            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, fileId);
 
             if (data.InitResult == InstanceInit.Successful)
             {

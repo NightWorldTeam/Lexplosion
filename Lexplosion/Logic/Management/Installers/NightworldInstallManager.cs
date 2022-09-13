@@ -51,7 +51,7 @@ namespace Lexplosion.Logic.Management.Installers
             installer = new NightWorldInstaller(instanceid);
         }
 
-        public InstanceInit Check(out string gameVersion)
+        public InstanceInit Check(out string gameVersion, string instanceVersion)
         {
             gameVersion = "";
             InfoData = DataFilesManager.GetFile<NwInstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");

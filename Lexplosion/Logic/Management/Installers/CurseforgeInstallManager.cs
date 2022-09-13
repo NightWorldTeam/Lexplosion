@@ -42,7 +42,7 @@ namespace Lexplosion.Logic.Management.Installers
             installer = new CurseforgeInstaller(instanceid);
         }
 
-        public InstanceInit Check(out string gameVersion)
+        public InstanceInit Check(out string gameVersion, string instanceVersion)
         {
             gameVersion = "";
 
@@ -83,10 +83,19 @@ namespace Lexplosion.Logic.Management.Installers
                 }
             }
 
-            List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(InfoData.id); //получем информацию об этом модпаке
-
-            if (!onlyBase)
+            if (instanceVersion != null)
             {
+                CurseforgeFileInfo ver = CurseforgeApi.GetProjectFile(InfoData.id, instanceVersion);
+                if (ver != null)
+                {
+                    InfoData.instanceVersion = ver.id;
+                    Info = ver;
+                }
+            }
+            else if (!onlyBase)
+            {
+                List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(InfoData.id); //получем информацию об этом модпаке
+
                 //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
                 foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
                 {

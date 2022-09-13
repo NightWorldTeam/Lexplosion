@@ -141,4 +141,10 @@ namespace Lexplosion.Logic.Objects
         public Dictionary<AccountType, Profile> Profiles;
     }
 
+    public class InstanceVersion
+    {
+        public string FileName;
+        public string Id;
+    }
+
 }

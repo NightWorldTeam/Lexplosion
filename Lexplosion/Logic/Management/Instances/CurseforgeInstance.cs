@@ -69,6 +69,30 @@ namespace Lexplosion.Logic.Management.Instances
             };
         }
 
+        public override List<InstanceVersion> GetVersions(string externalId)
+        {
+            List<CurseforgeFileInfo> files = CurseforgeApi.GetProjectFiles(externalId);
+
+            if (files != null)
+            {
+                var versions = new List<InstanceVersion>();
+                foreach (var file in files)
+                {
+                    versions.Add(new InstanceVersion
+                    {
+                        FileName = file.fileName,
+                        Id = file.id.ToString()
+                    });
+                }
+
+                return versions;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static List<Info> GetCatalog(int pageSize, int pageIndex, int categoriy, string searchFilter)
         {
             List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, categoriy, searchFilter);

@@ -24,6 +24,8 @@ namespace Lexplosion.Logic.Management.Instances
 
         public abstract InstanceData GetFullInfo(string localId, string externalId);
 
+        public abstract List<InstanceVersion> GetVersions(string externalId);
+
         public static List<Info> GetCatalog(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter)
         {
             switch (type)

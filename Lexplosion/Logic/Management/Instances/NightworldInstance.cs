@@ -86,6 +86,11 @@ namespace Lexplosion.Logic.Management.Instances
             return result;
         }
 
+        public override List<InstanceVersion> GetVersions(string externalId)
+        {
+            return null;
+        }
+
         public static Info GetInstance(string instanceId)
         {
             Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
