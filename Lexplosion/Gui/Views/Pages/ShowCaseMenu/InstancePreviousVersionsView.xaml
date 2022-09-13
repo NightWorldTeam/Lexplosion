@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
+    xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects"
@@ -26,15 +27,54 @@
                     <Border
                         Width="50"
                         Height="50"
-                        Background="#03CA04"
                         CornerRadius="5">
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="18"
-                            FontWeight="Medium"
-                            Foreground="White"
-                            Text="R" />
+
+                        <TextBlock x:Name="ReleaseTypeSymbol" />
+
+                        <Border.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="FontSize" Value="18" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="FontWeight" Value="Medium" />
+
+                                <Style.Triggers>
+
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ReleaseType.Release}">
+                                        <Setter Property="TextBlock.Text" Value="R" />
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ReleaseType.Beta}">
+                                        <Setter Property="TextBlock.Text" Value="B" />
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ReleaseType.Alpha}">
+                                        <Setter Property="TextBlock.Text" Value="A" />
+                                    </DataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+
+                            <Style TargetType="{x:Type Border}">
+                                <Style.Triggers>
+
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ReleaseType.Release}">
+                                        <Setter Property="Border.Background" Value="#03CA04" />
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ReleaseType.Beta}">
+                                        <Setter Property="Border.Background" Value="#0e9bd8" />
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ReleaseType.Alpha}">
+                                        <Setter Property="Border.Background" Value="#d3cbe7" />
+                                    </DataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Resources>
+
                     </Border>
 
                     <TextBlock
@@ -46,7 +86,10 @@
                         Text="{Binding FileName}"
                         TextWrapping="WrapWithOverflow" />
 
-                    <Button HorizontalAlignment="Right" Style="{StaticResource IconicButton}">
+                    <Button
+                        HorizontalAlignment="Right"
+                        Command="{Binding DataContext.InstallInstanceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        Style="{StaticResource IconicButton}">
                         <Border
                             Padding="10,7,7,10"
                             Background="{DynamicResource BrandSolidColorBrush}"

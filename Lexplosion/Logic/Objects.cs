@@ -143,10 +143,10 @@ namespace Lexplosion.Logic.Objects
 
     public class InstanceVersion
     {
-        public string FileName;
+        public string FileName { get; set; }
         public string Id;
-        public string Date;
-        public ReleaseType Status;
+        public string Date { get; set; }
+        public ReleaseType Status { get; set; }
     }
 
 }

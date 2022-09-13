@@ -45,7 +45,8 @@ namespace Lexplosion.Gui.ViewModels
 
             Header = header;
             Tabs = new ObservableCollection<Tab>(tabs);
-            SelectedTab = Tabs[selectedTabIndex];
+            if (tabs.Count > 0)
+                SelectedTab = Tabs[selectedTabIndex];
         }
     }
 }

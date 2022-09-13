@@ -28,6 +28,15 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         }
 
 
+        private RelayCommand _installInstanceCommand;
+        public RelayCommand InstallInstanceCommand 
+        {
+            get => _installInstanceCommand ?? (_installInstanceCommand = new RelayCommand(obj => 
+            {
+                _viewModel.DownloadInstance();
+            }));
+        }
+
         #endregion Properties
 
 
