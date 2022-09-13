@@ -163,6 +163,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public string displayName;
         public List<Dictionary<string, int>> dependencies;
         public List<string> gameVersions;
+        public string fileDate;
 
         // т.к разрабы курсфорджа дефектные рукожопы и конченные недоумки, которые не умеют писать код, то url иногда может быть null, поэтому придётся мутить костыли
         private string _downloadUrl;

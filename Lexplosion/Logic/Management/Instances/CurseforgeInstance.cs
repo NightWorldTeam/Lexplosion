@@ -81,7 +81,9 @@ namespace Lexplosion.Logic.Management.Instances
                     versions.Add(new InstanceVersion
                     {
                         FileName = file.fileName,
-                        Id = file.id.ToString()
+                        Id = file.id.ToString(),
+                        Status = ReleaseType.Release,
+                        Date = file.fileDate
                     });
                 }
 

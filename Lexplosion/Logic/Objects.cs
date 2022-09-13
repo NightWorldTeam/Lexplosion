@@ -145,6 +145,8 @@ namespace Lexplosion.Logic.Objects
     {
         public string FileName;
         public string Id;
+        public string Date;
+        public ReleaseType Status;
     }
 
 }

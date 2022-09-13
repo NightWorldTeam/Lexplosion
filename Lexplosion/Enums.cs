@@ -267,4 +267,11 @@ namespace Lexplosion
         Popularity,
         TotalDownloads
     }
+
+    public enum ReleaseType
+    {
+        Alpha,
+        Beta,
+        Release
+    }
 }
