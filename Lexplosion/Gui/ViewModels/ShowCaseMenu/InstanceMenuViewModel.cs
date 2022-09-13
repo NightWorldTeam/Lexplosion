@@ -23,6 +23,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private InstanceFormViewModel _instanceForm;
 
+
         #region Commands
 
         public ICommand NavigationMainMenuCommand
@@ -91,22 +92,28 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             UpdateTabMenu();
         }
 
-        private void UpdateShowCaseMenu() 
+        private void UpdateShowCaseMenu()
         {
-                _showCaseTabMenu.Add(
-                    new Tab()
-                    {
-                        Header = ResourceGetter.GetString("general"),
-                        Content = new OverviewViewModel(_instanceForm.Client, this)
-                    }
-                );
-                _showCaseTabMenu.Add(
-                    new Tab()
-                    {
-                        Header = ResourceGetter.GetString("changelog"),
-                        Content = new DevСurtainViewModel()
-                    }
-                );
+            _showCaseTabMenu.Add(
+                new Tab()
+                {
+                    Header = ResourceGetter.GetString("general"),
+                    Content = new OverviewViewModel(_instanceForm.Client, this)
+                }
+            );
+            _showCaseTabMenu.Add(
+                new Tab()
+                {
+                    Header = ResourceGetter.GetString("changelog"),
+                    Content = new DevСurtainViewModel()
+                }
+            );
+            _showCaseTabMenu.Add(
+                new Tab() 
+                {
+                    Header = ResourceGetter.GetString("version"),
+                    Content = new InstancePreviousVersionsViewModel(_instanceForm)
+                });
         }
 
         private void UpdateTabMenu() 

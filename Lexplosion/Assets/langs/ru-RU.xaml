@@ -148,6 +148,7 @@
     <s:String x:Key="closeInstance">Закрыть игру</s:String>
     <s:String x:Key="downloadInstance">Скачать сборку</s:String>
     <s:String x:Key="playInstance">Играть</s:String>
+    <s:String x:Key="download">Скачать</s:String>
 
     <!--  Lower Button  -->
     <s:String x:Key="removeInstance">Удалить сборку</s:String>
@@ -196,4 +197,5 @@
     <s:String x:Key="name">названию</s:String>
     <s:String x:Key="popularity">популярности</s:String>
     <s:String x:Key="totalDownloadsFl">скачивания</s:String>
+    
 </ResourceDictionary>

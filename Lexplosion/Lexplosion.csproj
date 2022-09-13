@@ -180,6 +180,7 @@
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\ChangelogViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\InstancePreviousVersionsViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceProfileViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceMenuViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceSettingsViewModel.cs" />
@@ -248,6 +249,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\ShowCaseMenu\ChangelogView.xaml.cs">
       <DependentUpon>ChangelogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstancePreviousVersionsView.xaml.cs">
+      <DependentUpon>InstancePreviousVersionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstanceProfileForm.xaml.cs">
       <DependentUpon>InstanceProfileForm.xaml</DependentUpon>
@@ -517,6 +521,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\ShowCaseMenu\ChangelogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\InstancePreviousVersionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
