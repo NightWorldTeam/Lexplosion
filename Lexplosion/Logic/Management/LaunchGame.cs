@@ -311,10 +311,21 @@ namespace Lexplosion.Logic.Management
                 {
                     if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                     {
-                        progressHandler?.Invoke(DownloadStageTypes.Java, 0, 0, 0);
+                        progressHandler?.Invoke(DownloadStageTypes.Java, new ProgressHandlerArguments()
+                        {
+                            StagesCount = 0,
+                            Stage = 0,
+                            Procents = 0
+                        });
+
                         bool downloadResult = javaCheck.Update(delegate (int percent)
                         {
-                            progressHandler?.Invoke(DownloadStageTypes.Java, 0, 0, percent);
+                            progressHandler?.Invoke(DownloadStageTypes.Java, new ProgressHandlerArguments()
+                            {
+                                StagesCount = 0,
+                                Stage = 0,
+                                Procents = percent
+                            });
                         });
 
                         if (!downloadResult)

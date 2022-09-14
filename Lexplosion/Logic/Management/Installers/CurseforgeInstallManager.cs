@@ -135,7 +135,12 @@ namespace Lexplosion.Logic.Management.Installers
 
                 installer.MainFileDownloadEvent += delegate (int percent)
                 {
-                    progressHandler(DownloadStageTypes.Client, 3, 1, percent);
+                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    {
+                        StagesCount = 3,
+                        Stage = 1,
+                        Procents = percent
+                    });
                 };
 
                 // скачиваем архив модпака и из него получаем манифест
@@ -149,7 +154,12 @@ namespace Lexplosion.Logic.Management.Installers
                     };
                 }
 
-                progressHandler(DownloadStageTypes.Client, 3, 2, 0);
+                progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                {
+                    StagesCount = 3,
+                    Stage = 2,
+                    Procents = 0
+                });
 
                 // Скачиваем основные файлы майкнрафта
 
@@ -219,22 +229,42 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                     {
-                        progressHandler(DownloadStageTypes.Client, 3, 2, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = 3,
+                            Stage = 2,
+                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                        });
                     };
                 }
 
                 installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
-                progressHandler(DownloadStageTypes.Client, 3, 2, 100);
+                progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                {
+                    StagesCount = 3,
+                    Stage = 2,
+                    Procents = 100
+                });
 
                 installer.AddonsDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     if (nowDataCount != 0)
                     {
-                        progressHandler(DownloadStageTypes.Client, 3, 3, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = 3,
+                            Stage = 2,
+                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                        });
                     }
                     else
                     {
-                        progressHandler(DownloadStageTypes.Client, 3, 3, 0);
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = 3,
+                            Stage = 2,
+                            Procents = 0
+                        });
                     }
                 };
 
@@ -258,7 +288,12 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                         {
-                            progressHandler(DownloadStageTypes.Client, 1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                            progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                            {
+                                StagesCount = 1,
+                                Stage = 1,
+                                Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                            });
                         };
                     }
 

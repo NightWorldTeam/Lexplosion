@@ -226,13 +226,23 @@ namespace Lexplosion.Logic.Management.Installers
             {
                 installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
-                    progressHandler(DownloadStageTypes.Client, stagesCount, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    {
+                        StagesCount = stagesCount,
+                        Stage = 1,
+                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                    });
                 };
             }
 
             if (baseFaliseUpdatesCount > 0)
             {
-                progressHandler(DownloadStageTypes.Client, stagesCount, 1, 0);
+                progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                {
+                    StagesCount = stagesCount,
+                    Stage = 1,
+                    Procents = 0
+                });
             }
 
             List<string> errors_ = installer.UpdateBaseFiles(manifest, ref Updates, javaPath);
@@ -244,17 +254,32 @@ namespace Lexplosion.Logic.Management.Installers
                 if (baseFaliseUpdatesCount > 0)
                 {
                     stage = 2;
-                    progressHandler(DownloadStageTypes.Client, stagesCount, stage, 0);
+                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    {
+                        StagesCount = stagesCount,
+                        Stage = stage,
+                        Procents = 0
+                    });
                 }
                 else
                 {
                     stage = 1;
-                    progressHandler(DownloadStageTypes.Client, stagesCount, stage, 0);
+                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    {
+                        StagesCount = stagesCount,
+                        Stage = stage,
+                        Procents = 0
+                    });
                 }
 
                 installer.FilesDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
-                    progressHandler(DownloadStageTypes.Client, stagesCount, stage, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    {
+                        StagesCount = stagesCount,
+                        Stage = stage,
+                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                    });
                 };
 
                 errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates, _instanceContent);

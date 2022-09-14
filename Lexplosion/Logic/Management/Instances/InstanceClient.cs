@@ -598,7 +598,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void UpdateInstance(string instanceVersion = null)
         {
-            ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
+            ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(UserData.GeneralSettings, true);
@@ -627,7 +627,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void Run()
         {
-            ProgressHandler?.Invoke(DownloadStageTypes.Prepare, 1, 0, 0);
+            ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(UserData.GeneralSettings, true);
@@ -872,7 +872,8 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     foreach (var item in dir.GetFiles())
                     {
-                        pathContent["/" + item.Name] = new PathLevel(item.Name, true, path + "/" + item.Name);
+                        if (path == "/" && item.Name != "installedAddons.json" && item.Name != "lastUpdates.json" && item.Name != "manifest.json" && item.Name != "instanceContent.json" && item.Name != "instancePlatformData.json")
+                            pathContent["/" + item.Name] = new PathLevel(item.Name, true, path + "/" + item.Name);
                     }
                 }
                 catch { }

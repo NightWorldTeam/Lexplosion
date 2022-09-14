@@ -77,11 +77,21 @@ namespace Lexplosion.Logic.Management.Installers
         {
             if (stagesCount == 1)
             {
-                progressHandler(DownloadStageTypes.Client, 1, 1, 0);
+                progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                {
+                    StagesCount = 1,
+                    Stage = 1,
+                    Procents = 0
+                });
 
                 installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
-                    progressHandler(DownloadStageTypes.Client, 1, 1, (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100));
+                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    {
+                        StagesCount = 1,
+                        Stage = 1,
+                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                    });
                 };
             }
 
