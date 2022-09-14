@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -69,7 +70,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
                 Lexplosion.Run.TaskRun(delegate
                 {
-                    DownloadAddonRes result = instanceAddon.InstallLatestVersion(out Dictionary<string, DownloadAddonRes> dependenciesResults);
+                    DownloadAddonRes result = instanceAddon.InstallLatestVersion(out Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>> dependenciesResults);
                     App.Current.Dispatcher.Invoke(() => 
                     {
                         if (result == DownloadAddonRes.Successful)
@@ -87,17 +88,17 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                         {
                             foreach (string key in dependenciesResults.Keys)
                             {
-                                DownloadAddonRes res = dependenciesResults[key];
-                                if (res == DownloadAddonRes.Successful)
+                                ValuePair<InstanceAddon, DownloadAddonRes> data = dependenciesResults[key];
+                                if (data.Value2 == DownloadAddonRes.Successful)
                                 {
-                                    _instanceAddons.Add(instanceAddon);
+                                    if (data.Value1 != null) _instanceAddons.Add(data.Value1);
                                     MainViewModel.ShowToastMessage("Зависимый мод успешно установлен", 
                                         "Название: " + key + ".\nНеобходим для " + instanceAddon.Name);
                                 }
                                 else
                                 {
                                     MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод",
-                                        "Название: " + instanceAddon.Name + ".\nОшибка " + result + ".\nНеобходим для " + instanceAddon.Name, Controls.ToastMessageState.Error);
+                                        "Название: " + key + ".\nОшибка " + result + ".\nНеобходим для " + instanceAddon.Name, Controls.ToastMessageState.Error);
                                 }
                             }
                         }

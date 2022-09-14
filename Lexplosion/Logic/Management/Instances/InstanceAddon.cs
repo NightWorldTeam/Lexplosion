@@ -136,14 +136,22 @@ namespace Lexplosion.Logic.Management.Instances
         private readonly int _projectId;
         private readonly string _gameVersion;
 
+        /// <summary>
+        /// Создает экземпляр аддона с курсфорджа.
+        /// </summary>
         private InstanceAddon(CurseforgeAddonInfo modInfo, BaseInstanceData modpackInfo)
         {
             _modInfo = modInfo;
             _projectId = modInfo.id;
             _modpackInfo = modpackInfo;
             _gameVersion = modpackInfo.GameVersion;
+
+            DownloadLogo(modInfo.logo?.url);
         }
 
+        /// <summary>
+        /// Создает экземпляр аддона не с курсфорджа.
+        /// </summary>    
         private InstanceAddon(int projectId, BaseInstanceData modpackInfo)
         {
             _modInfo = null;
@@ -243,6 +251,7 @@ namespace Lexplosion.Logic.Management.Instances
                         else
                         {
                             instanceAddon = _installingAddons[addon.id].Point;
+                            instanceAddon.DownloadLogo(addon.logo?.url);
                         }
                     }
                     else
@@ -260,8 +269,6 @@ namespace Lexplosion.Logic.Management.Instances
                         };
                     }
                     _installingSemaphore.Release(addonId);
-
-                    instanceAddon.DownloadLogo(addon.logo.url);
 
                     addons.Add(instanceAddon);
                     _chacheSemaphore.WaitOne();
@@ -290,7 +297,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private DownloadAddonRes InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies, out Dictionary<string, DownloadAddonRes> dependenciesResults)
+        private DownloadAddonRes InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies, out Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>> dependenciesResults)
         {
             dependenciesResults = null;
             string instanceId = _modpackInfo.LocalId;
@@ -338,7 +345,7 @@ namespace Lexplosion.Logic.Management.Instances
                     if (addonInfo.dependencies.Count > 0 && downloadDependencies)
                     {
                         List<Dictionary<string, int>> dependencies = addonInfo.dependencies;
-                        dependenciesResults = new Dictionary<string, DownloadAddonRes>();
+                        dependenciesResults = new Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>>();
 
                         // проходимся по спику завиисимостей и скачиваем все зависимые аддоны
                         int i = 0, count = dependencies.Count;
@@ -414,9 +421,30 @@ namespace Lexplosion.Logic.Management.Instances
                                                 i++;
                                             }
                                         }
+
+                                        _installingSemaphore.WaitOne(file.modId);
+                                        if (addonPointer.Point == null)
+                                        {
+                                            var addon = CurseforgeApi.GetAddonInfo(file.modId.ToString());
+                                            addonPointer.Point = new InstanceAddon(addon, _modpackInfo)
+                                            {
+                                                Description = addon.summary,
+                                                Name = addon.name,
+                                                Author = addon.GetAuthorName,
+                                                WebsiteUrl = addon.links.websiteUrl,
+                                                DownloadCount = (int)addon.downloadCount,
+                                                LastUpdated = DateTime.Parse(addon.dateModified).ToString("dd MMM yyyy")
+                                            };
+                                            addonPointer.Point.DownloadLogo(addon.logo.url);
+                                        }
+                                        _installingSemaphore.Release(file.modId);
                                     }
 
-                                    dependenciesResults[file.displayName] = res.Value2;
+                                    dependenciesResults[file.displayName] = new ValuePair<InstanceAddon, DownloadAddonRes>()
+                                    {
+                                        Value1 = addonPointer.Point,
+                                        Value2 = res.Value2
+                                    };
                                 }
                             }
 
@@ -456,7 +484,7 @@ namespace Lexplosion.Logic.Management.Instances
             return file;
         }
 
-        public DownloadAddonRes InstallLatestVersion(out Dictionary<string, DownloadAddonRes> dependenciesResults, bool downloadDependencies = true)
+        public DownloadAddonRes InstallLatestVersion(out Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>> dependenciesResults, bool downloadDependencies = true)
         {
             IsInstalling = true;
             var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles, _modpackInfo);
@@ -572,10 +600,6 @@ namespace Lexplosion.Logic.Management.Instances
                                     Value2 = projectId
                                 };
 
-                                if (addon.logo != null)
-                                {
-                                    obj.DownloadLogo(addon.logo.url);
-                                }
                                 addons.Add(obj);
                             }
                         }
@@ -825,10 +849,6 @@ namespace Lexplosion.Logic.Management.Instances
                                     Value2 = projectId
                                 };
 
-                                if (addon.logo != null)
-                                {
-                                    obj.DownloadLogo(addon.logo.url);
-                                }
                                 addons.Add(obj);
                             }
                         }
@@ -995,10 +1015,6 @@ namespace Lexplosion.Logic.Management.Instances
                                     Value2 = projectId
                                 };
 
-                                if (addon.logo != null)
-                                {
-                                    obj.DownloadLogo(addon.logo.url);
-                                }
                                 addons.Add(obj);
                             }
                         }
@@ -1016,18 +1032,21 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         private void DownloadLogo(string url)
         {
-            ThreadPool.QueueUserWorkItem(delegate (object state)
+            if (url != null)
             {
-                try
+                ThreadPool.QueueUserWorkItem(delegate (object state)
                 {
-                    using (var webClient = new WebClient())
+                    try
                     {
+                        using (var webClient = new WebClient())
+                        {
 
-                        Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 40, 40);
+                            Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 40, 40);
+                        }
                     }
-                }
-                catch { }
-            });
+                    catch { }
+                });
+            }
         }
 
         private void Disable()
