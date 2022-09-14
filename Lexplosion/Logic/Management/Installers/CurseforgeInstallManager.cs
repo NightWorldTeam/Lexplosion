@@ -139,7 +139,9 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         StagesCount = 3,
                         Stage = 1,
-                        Procents = percent
+                        Procents = percent,
+                        TotalFilesCount = 1,
+                        FilesCount = 1
                     });
                 };
 
@@ -233,7 +235,9 @@ namespace Lexplosion.Logic.Management.Installers
                         {
                             StagesCount = 3,
                             Stage = 2,
-                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
+                            TotalFilesCount = totalDataCount,
+                            FilesCount = nowDataCount
                         });
                     };
                 }
@@ -254,7 +258,9 @@ namespace Lexplosion.Logic.Management.Installers
                         {
                             StagesCount = 3,
                             Stage = 2,
-                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
+                            TotalFilesCount = totalDataCount,
+                            FilesCount = nowDataCount
                         });
                     }
                     else
@@ -292,7 +298,9 @@ namespace Lexplosion.Logic.Management.Installers
                             {
                                 StagesCount = 1,
                                 Stage = 1,
-                                Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                                Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
+                                TotalFilesCount = totalDataCount,
+                                FilesCount = nowDataCount
                             });
                         };
                     }

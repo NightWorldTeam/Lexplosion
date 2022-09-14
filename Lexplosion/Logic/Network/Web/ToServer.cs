@@ -154,7 +154,8 @@ namespace Lexplosion.Logic.Network
                                         notArchived = filesData.libraries[lib].notArchived,
                                         url = filesData.libraries[lib].url,
                                         obtainingMethod = filesData.libraries[lib].obtainingMethod,
-                                        isNative = filesData.libraries[lib].isNative
+                                        isNative = filesData.libraries[lib].isNative,
+                                        activationConditions = filesData.libraries[lib].activationConditions
                                     };
                                 }
                             }

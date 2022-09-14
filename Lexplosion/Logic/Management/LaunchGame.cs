@@ -77,9 +77,18 @@ namespace Lexplosion.Logic.Management
 
             command = " -Djava.library.path=\"" + _settings.GamePath + "/natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.gameVersion) + "\" -cp ";
 
+            string accountType = UserData.User.AccountType.ToString();
             foreach (string lib in data.Libraries.Keys)
             {
-                command += "\"" + _settings.GamePath + "/libraries/" + lib + "\";";
+                if (lib.Contains("auth"))
+                {
+
+                }
+                var activation = data.Libraries[lib].activationConditions;
+                if (activation?.accountTypes == null || activation.accountTypes.Contains(accountType))
+                {
+                    command += "\"" + _settings.GamePath + "/libraries/" + lib + "\";";
+                }   
             }
 
             command += "\"" + versionPath + "\"";

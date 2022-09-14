@@ -230,7 +230,9 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         StagesCount = stagesCount,
                         Stage = 1,
-                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
+                        TotalFilesCount = totalDataCount,
+                        FilesCount = nowDataCount
                     });
                 };
             }
@@ -278,7 +280,9 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         StagesCount = stagesCount,
                         Stage = stage,
-                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100)
+                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
+                        TotalFilesCount = totalDataCount,
+                        FilesCount = nowDataCount
                     });
                 };
 

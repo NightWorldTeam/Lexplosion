@@ -16,10 +16,16 @@ namespace Lexplosion.Logic.Objects.CommonClientData
     /// </summary>
     public class LibInfo
     {
+        public class ActivationConditions
+        {
+            public List<string> accountTypes = null;
+        }
+
         public bool notArchived;
         public string url;
         public List<List<string>> obtainingMethod;
         public bool isNative;
+        public ActivationConditions activationConditions;
     }
 
     public class VersionManifest
