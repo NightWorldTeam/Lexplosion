@@ -129,7 +129,12 @@ namespace Lexplosion.Gui.ViewModels
             MainVM.IsInstanceRunning = false;
         }
 
-        public void DownloadInstance(Action<DownloadStageTypes, int, int, int> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null) 
+        public void UpdateInstance() 
+        {
+            Model.InstanceClient.UpdateInstance();
+        }
+
+        public void DownloadInstance(Action<DownloadStageTypes, int, int, int> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null) 
         {
 
             if (progressHandler != null)
@@ -143,7 +148,7 @@ namespace Lexplosion.Gui.ViewModels
                 if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
                     MainVM.Model.LibraryInstances.Add(this);
                 MainVM.DownloadManager.AddProcess(this);
-                Model.DownloadModel.DownloadPrepare();
+                Model.DownloadModel.DownloadPrepare(version);
             }
         }
 

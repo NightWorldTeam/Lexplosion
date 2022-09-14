@@ -36,7 +36,7 @@
             <ScrollViewer.Background>
                 <!--  #1313131 0.8  -->
                 <!--  "Black" 0.64  -->
-                <SolidColorBrush Opacity="0.70" Color="#121212" />
+                <SolidColorBrush Opacity="0.70" Color="{DynamicResource PrimaryColor}" />
             </ScrollViewer.Background>
 
             <StackPanel>

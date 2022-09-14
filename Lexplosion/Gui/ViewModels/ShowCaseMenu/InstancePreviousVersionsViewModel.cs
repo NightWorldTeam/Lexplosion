@@ -33,7 +33,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => _installInstanceCommand ?? (_installInstanceCommand = new RelayCommand(obj => 
             {
-                _viewModel.DownloadInstance();
+                var instanceVersion = (InstanceVersion)obj;
+                _viewModel.DownloadInstance(version: instanceVersion.Id);
             }));
         }
 

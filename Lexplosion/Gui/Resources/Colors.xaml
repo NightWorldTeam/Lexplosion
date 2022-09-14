@@ -18,9 +18,11 @@
     <Color x:Key="HeaderColor">#151719</Color>
     <Color x:Key="SepColor">#212326</Color>
     <Color x:Key="TextBoxColor">#1f1f1f</Color>
+    <Color x:Key="TagColor">#242527</Color>
 
     <SolidColorBrush x:Key="PrimarySolidColorBrush" Color="{StaticResource PrimaryColor}" />
     <SolidColorBrush x:Key="HeaderSolidColorBrush" Color="{StaticResource HeaderColor}" />
     <SolidColorBrush x:Key="SepSolidColorBrush" Color="{StaticResource SepColor}" />
     <SolidColorBrush x:Key="TextBoxSolidColorBrush" Color="{StaticResource TextBoxColor}" />
+    <SolidColorBrush x:Key="TagSolidColorBrush" Color="{StaticResource TagColor}" />
 </ResourceDictionary>

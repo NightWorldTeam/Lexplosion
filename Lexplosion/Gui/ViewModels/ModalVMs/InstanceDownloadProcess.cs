@@ -24,11 +24,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             {
                 _viewModel = instanceFormViewModel;
                 instanceFormViewModel.Client.FileDownloadEvent += OnFileDownload;
-                instanceFormViewModel.Client.ComplitedDownload += OnDonwloadFinished;
+                instanceFormViewModel.Client.ComplitedDownload += OnDownloadFinished;
             }
         }
 
-        private void OnDonwloadFinished(InstanceInit result, List<string> downloadErrors, bool launchGame)
+        private void OnDownloadFinished(InstanceInit result, List<string> downloadErrors, bool launchGame)
         {
             if (result == InstanceInit.Successful)
             {

@@ -242,9 +242,11 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
+                            Width="440"
                             HorizontalAlignment="Left"
                             FontSize="16"
                             Foreground="#d5d5d5"
@@ -252,11 +254,13 @@
                             TextTrimming="WordEllipsis" />
 
                         <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            HorizontalAlignment="Left"
-                            FontSize="18"
-                            Foreground="#f5f5f5"
+                            Grid.Row="1"
+                            Margin="0,25,0,0"
+                            HorizontalAlignment="Right"
+                            FlowDirection="RightToLeft"
+                            FontSize="14"
+                            Foreground="#d5d5d5"
+                            Text="Скачено 2 / 3 файлов"
                             TextTrimming="WordEllipsis"
                             Visibility="Collapsed" />
 

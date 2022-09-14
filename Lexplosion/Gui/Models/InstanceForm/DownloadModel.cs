@@ -97,7 +97,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         /// <summary>
         /// Запускает скачивание
         /// </summary>
-        public void DownloadPrepare()
+        public void DownloadPrepare(string version = null)
         {
             _instanceFormModel.InstanceClient.AddToLibrary();
             _instanceFormModel.UpperButton.ChangeFuncProgressBar();
@@ -107,7 +107,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             Lexplosion.Run.TaskRun(delegate
             {
-                _instanceFormModel.InstanceClient.UpdateInstance();
+                _instanceFormModel.InstanceClient.UpdateInstance(version);
             });
         }
 
