@@ -21,35 +21,55 @@ namespace Lexplosion.Logic.Management.Instances
             var data = NightWorldApi.GetInstanceInfo(externalId);
             var images = new List<byte[]>();
 
-            if (data.Images != null)
+            if(data != null)
             {
-                using (var webClient = new WebClient())
+                if (data.Images != null)
                 {
-                    foreach (var item in data.Images)
+                    using (var webClient = new WebClient())
                     {
-                        try
+                        foreach (var item in data.Images)
                         {
-                            images.Add(webClient.DownloadData(item));
+                            try
+                            {
+                                images.Add(webClient.DownloadData(item));
+                            }
+                            catch { }
                         }
-                        catch { }
                     }
                 }
-            }
 
-            return new InstanceData
+                return new InstanceData
+                {
+                    Source = InstanceSource.Nightworld,
+                    Categories = data.Categories,
+                    Description = data.Description,
+                    Summary = data.Summary,
+                    TotalDownloads = data.DownloadCounts,
+                    GameVersion = data.GameVersion,
+                    LastUpdate = (new DateTime(1970, 1, 1).AddSeconds(data.LastUpdate)).ToString("dd MMM yyyy"),
+                    Modloader = data.Modloader,
+                    Images = images,
+                    WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + externalId,
+                    Changelog = ""
+                };
+            }
+            else
             {
-                Source = InstanceSource.Nightworld,
-                Categories = data.Categories,
-                Description = data.Description,
-                Summary = data.Summary,
-                TotalDownloads = data.DownloadCounts,
-                GameVersion = data.GameVersion,
-                LastUpdate = (new DateTime(1970, 1, 1).AddSeconds(data.LastUpdate)).ToString("dd MMM yyyy"),
-                Modloader = data.Modloader,
-                Images = images,
-                WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + externalId,
-                Changelog = ""
-            };
+                return new InstanceData
+                {
+                    Source = InstanceSource.Nightworld,
+                    Categories = new List<Category>(),
+                    Description = null,
+                    Summary = null,
+                    TotalDownloads = 0,
+                    GameVersion = null,
+                    LastUpdate = "",
+                    Modloader = ModloaderType.None,
+                    Images = null,
+                    WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + externalId,
+                    Changelog = ""
+                };
+            }
         }
 
         public static List<Info> GetCatalog(int pageSize, int pageIndex, int categoriy, string searchFilter)

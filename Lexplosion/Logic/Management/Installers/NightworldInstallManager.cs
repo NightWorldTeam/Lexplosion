@@ -113,15 +113,14 @@ namespace Lexplosion.Logic.Management.Installers
                         manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
                     }
 
-                    nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
-                    if (nightworldManifest == null)
-                    {
-                        return InstanceInit.ServerError;
-                    }
-
                     if (manifest == null)
                     {
-                        var mcVersion = nightworldManifest.version;
+                        nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
+                        if (nightworldManifest == null)
+                        {
+                            return InstanceInit.ServerError;
+                        }
+
                         if (nightworldManifest.CustomVersion)
                         {
                             InfoData.CustomVersion = true;
@@ -130,6 +129,7 @@ namespace Lexplosion.Logic.Management.Installers
                         }
                         else
                         {
+                            var mcVersion = nightworldManifest.version;
                             manifest = ToServer.GetVersionManifest(mcVersion.gameVersion, mcVersion.modloaderType, mcVersion.modloaderVersion);
                         }
 
@@ -186,6 +186,15 @@ namespace Lexplosion.Logic.Management.Installers
 
                 if (requiresUpdates || installer.InvalidStruct(Updates, _instanceContent))
                 {
+                    if (nightworldManifest == null)
+                    {
+                        nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
+                        if (nightworldManifest == null)
+                        {
+                            return InstanceInit.ServerError;
+                        }
+                    }
+
                     int variableFilesUpdatesCount = 0;
                     variableFilesUpdatesCount = installer.CheckInstance(nightworldManifest, ref Updates, _instanceContent); // проверяем дополнительные файлы клиента (моды и прочее)
                     if (variableFilesUpdatesCount == -1)
