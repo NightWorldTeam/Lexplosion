@@ -134,7 +134,7 @@ namespace Lexplosion.Gui.ViewModels
             Model.InstanceClient.UpdateInstance();
         }
 
-        public void DownloadInstance(Action<DownloadStageTypes, int, int, int> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null) 
+        public void DownloadInstance(Action<DownloadStageTypes, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null) 
         {
 
             if (progressHandler != null)
@@ -163,6 +163,7 @@ namespace Lexplosion.Gui.ViewModels
 
             if (IsFromLibrary) 
             {
+                // TODO: LOCALIZATE
                 message = "Вы действительно желаете удалить " + Model.InstanceClient.Name + " из библиотеки?";
             }
             else 

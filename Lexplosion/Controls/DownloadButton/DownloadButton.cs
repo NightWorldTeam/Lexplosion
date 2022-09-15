@@ -437,11 +437,11 @@ namespace Lexplosion.Controls
 
         private void Download() 
         {
-            Action<DownloadStageTypes, int, int, int> progressHandlerMethod = delegate (DownloadStageTypes stageType, int stagesCount, int stage, int procents)
+            Action<DownloadStageTypes, ProgressHandlerArguments> progressHandlerMethod = delegate (DownloadStageTypes stageType, ProgressHandlerArguments progressHandlerArguments)
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    _progressBar.Value = procents;
+                    _progressBar.Value = progressHandlerArguments.Procents;
                 });
             };
 

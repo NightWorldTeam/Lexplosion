@@ -260,9 +260,9 @@
                             FlowDirection="RightToLeft"
                             FontSize="14"
                             Foreground="#d5d5d5"
-                            Text="Скачено 2 / 3 файлов"
+                            Text="{Binding Model.DownloadModel.DownloadFilesNof}"
                             TextTrimming="WordEllipsis"
-                            Visibility="Collapsed" />
+                            Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />
 
                         <ItemsControl
                             Grid.Row="1"

@@ -43,7 +43,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _isModloaderSelected; set
             {
                 _isModloaderSelected = value;
-                OnPropertyChanged(nameof(IsModloaderSelected));
+                OnPropertyChanged();
             }
         }
 
@@ -53,7 +53,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _gameVersions; set
             {
                 _gameVersions = value;
-                OnPropertyChanged(nameof(GameVersions));
+                OnPropertyChanged();
             }
         }
 
@@ -62,7 +62,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _modloaderVersion; set
             {
                 _modloaderVersion = value;
-                OnPropertyChanged(nameof(ModloaderVersions));
+                OnPropertyChanged();
             }
         }
 
@@ -71,8 +71,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _selectedModloaderVersion; set
             {
                 _selectedModloaderVersion = value;
-                Console.WriteLine(_selectedModloaderVersion);
-                OnPropertyChanged(nameof(SelectedModloaderVersion));
+                OnPropertyChanged();
             }
         }
 
@@ -81,7 +80,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _selectedVersion; set
             {
                 _selectedVersion = value;
-                OnPropertyChanged(nameof(SelectedVersion));
+                OnPropertyChanged();
 
                 if (Model.ModloaderType != ModloaderType.None) 
                 { 
@@ -100,6 +99,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
 
         #region Commands
+
+
         private RelayCommand _switchModloaderType;
         public RelayCommand SwitchModloaderType
         {

@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
+using Lexplosion.Logic.Management;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -7,22 +8,20 @@ namespace Lexplosion.Gui.Models.InstanceForm
 {
     public sealed class DownloadModel : VMBase
     {
-        private int _downloadProgress;
-        private int _stage;
-        private int _stagesCount;
-        private DownloadStageTypes _downloadStageType;
+        private readonly MainViewModel _mainViewModel;
+        private readonly InstanceFormModel _instanceFormModel;
+
+        public readonly List<Action<DownloadStageTypes, ProgressHandlerArguments>> DownloadActions = new List<Action<DownloadStageTypes, ProgressHandlerArguments>>();
+        public readonly List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
+
 
         private bool _isPrepareOnly = true;
 
-        private InstanceFormModel _instanceFormModel;
 
-        private bool _isIndeterminate;
+        #region Properties
+
+
         private bool _isDownloadInProgress;
-
-        private MainViewModel _mainViewModel;
-
-
-        #region prop
         public bool IsDownloadInProgress 
         {
             get => _isDownloadInProgress;
@@ -33,51 +32,96 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
+        private int _downloadProgress;
         public int DownloadProgress
         {
             get => _downloadProgress; set
             {
                 _downloadProgress = value;
-                OnPropertyChanged(nameof(DownloadProgress));
+                OnPropertyChanged();
             }
         }
 
+        private int _stage;
         public int Stage
         {
             get => _stage; set
             {
                 _stage = value;
-                OnPropertyChanged(nameof(Stage));
+                OnPropertyChanged();
             }
         }
 
+        private int _stagesCount;
         public int StagesCount
         {
             get => _stagesCount; set
             {
                 _stagesCount = value;
-                OnPropertyChanged(nameof(StagesCount));
+                OnPropertyChanged();
             }
         }
 
+        private bool _isIndeterminate;
         public bool HasProcents 
         {
             get => _isIndeterminate; set 
             {
                 _isIndeterminate = value;
-                OnPropertyChanged(nameof(HasProcents));
+                OnPropertyChanged();
             }
         }
 
+        private DownloadStageTypes _downloadStageType;
         public DownloadStageTypes DownloadStageType
         {
             get => _downloadStageType; set
             {
                 _downloadStageType = value;
-                OnPropertyChanged(nameof(DownloadStageType));
+                OnPropertyChanged();
             }
         }
-        #endregion
+
+        private int _totalDownloadingFilesCount;
+        /// <summary>
+        /// Всего файлов для скачивания.
+        /// </summary>
+        public int TotalDownloadingFilesCount 
+        {
+            get => _totalDownloadingFilesCount; set 
+            {
+                _totalDownloadingFilesCount = value; 
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(DownloadFilesNof));
+            }
+        }
+
+        private int _downloadingFilesCount;
+        /// <summary>
+        /// Всего файлов скачено.
+        /// </summary>
+        public int DownloadingFilesCount
+        {
+            get => _downloadingFilesCount; set
+            {
+                _downloadingFilesCount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(DownloadFilesNof));
+
+            }
+        }
+
+        public string DownloadFilesNof 
+        {
+            get => String.Format(ResourceGetter.GetString("downloadFilesCountNof"), DownloadingFilesCount, TotalDownloadingFilesCount);
+        }
+
+
+        #endregion Properties
+
+
+        #region Constructors
+
 
         public DownloadModel(MainViewModel mainViewModel, InstanceFormModel instanceFormModel)
         {
@@ -92,7 +136,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _mainViewModel = mainViewModel;
         }
 
-        #region methods
+
+        #endregion Construtors
+
+
+        #region Public & Protected Methods
+        
 
         /// <summary>
         /// Запускает скачивание
@@ -118,14 +167,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
         /// <param name="stagesCount">Количество стадиый</param>
         /// <param name="stage">Номер текущей стадии</param>
         /// <param name="procent">Процетны</param>
-        public void Download(DownloadStageTypes downloadStageType, int stagesCount, int stage, int procent)
+        public void Download(DownloadStageTypes downloadStageType, ProgressHandlerArguments progressHandlerArguments)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                StagesCount = stagesCount;
-                Stage = stage;
-                DownloadProgress = procent;
+                StagesCount = progressHandlerArguments.StagesCount;
+                Stage = progressHandlerArguments.Stage;
+                DownloadProgress = progressHandlerArguments.Procents;
                 DownloadStageType = downloadStageType;
+                TotalDownloadingFilesCount = progressHandlerArguments.TotalFilesCount;
+                DownloadingFilesCount = progressHandlerArguments.FilesCount;
+
 
                 if (downloadStageType != DownloadStageTypes.Prepare)
                 {
@@ -144,7 +196,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 }
                 else
                 {
-                    _instanceFormModel.OverviewField = ResourceGetter.GetString("instanceLoading") + " " + stage + '/' + stagesCount;
+                    _instanceFormModel.OverviewField = ResourceGetter.GetString("instanceLoading") + " " + Stage + '/' + StagesCount;
                     HasProcents = false;
                 }
             });         
@@ -294,21 +346,21 @@ namespace Lexplosion.Gui.Models.InstanceForm
             
         }
 
+        #endregion Public & Protected Methods
 
-        public List<Action<DownloadStageTypes, int, int, int>> DownloadActions = new List<Action<DownloadStageTypes, int, int, int>>();
-        public List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "U2U1203:Use foreach efficiently", Justification = "<Ожидание>")]
-        private void DownloadProcess(DownloadStageTypes downloadStageType, int stagesCount, int stage, int procent) 
+        #region Private Methods
+        
+
+        private void DownloadProcess(DownloadStageTypes downloadStageType, ProgressHandlerArguments progressArgs)
         {
             var actions = DownloadActions.ToArray();
             foreach (var action in actions)
             {
-                action(downloadStageType, stagesCount, stage, procent);
+                action(downloadStageType, progressArgs);
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "U2U1203:Use foreach efficiently", Justification = "<Ожидание>")]
         private void ComplitedDownloadAction(InstanceInit result, List<string> downloadErrors, bool launchGame) 
         {
             var actions = ComplitedDownloadActions.ToArray();
@@ -318,6 +370,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
-        #endregion
+
+        #endregion Private Methods
     }
 }

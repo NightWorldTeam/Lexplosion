@@ -2,13 +2,15 @@
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Tools;
-using System;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.Models
 {
     public sealed class MultiplayerModel : VMBase
     {
+        #region Properties
+
+
         private OnlineGameStatus _gameStatus = OnlineGameStatus.None;
         public OnlineGameStatus GameStatus
         {
@@ -61,6 +63,28 @@ namespace Lexplosion.Gui.Models
             }
         }
 
+
+        #endregion Properities
+
+
+        #region Construtors
+
+
+        public MultiplayerModel()
+        {
+            Players = new ObservableCollection<Player>();
+            LaunchGame.StateChanged += OnPlayerStateChanged;
+            LaunchGame.UserConnected += OnPlayerConnected;
+            LaunchGame.UserDisconnected += OnPlayerDisconnected;
+        }
+
+
+        #endregion Construtors
+
+
+        #region Public & Protected Methods
+
+
         public void OnPlayerConnected(Player player)
         {
             App.Current.Dispatcher.Invoke(delegate ()
@@ -82,23 +106,12 @@ namespace Lexplosion.Gui.Models
 
         }
 
-        private void OnPlayerStateChanged(OnlineGameStatus status, string strangeString)
-        {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                GameStatus = status;
-                if (GameStatus == OnlineGameStatus.None)
-                    Players.Clear();
-            });
-        }
 
-        public MultiplayerModel()
-        {
-            Players = new ObservableCollection<Player>();
-            LaunchGame.StateChanged += OnPlayerStateChanged;
-            LaunchGame.UserConnected += OnPlayerConnected;
-            LaunchGame.UserDisconnected += OnPlayerDisconnected;
-        }
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
 
         private bool IsExistPlayers(Player player)
         {
@@ -116,5 +129,18 @@ namespace Lexplosion.Gui.Models
         {
             Players.Remove(player);
         }
+
+        private void OnPlayerStateChanged(OnlineGameStatus status, string strangeString)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                GameStatus = status;
+                if (GameStatus == OnlineGameStatus.None)
+                    Players.Clear();
+            });
+        }
+
+
+        #endregion Private Methods
     }
 }

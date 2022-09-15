@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management
 {
@@ -16,7 +12,7 @@ namespace Lexplosion.Logic.Management
         public int StagesCount;
         public int Stage;
         public int Procents;
-        public int TotalFilesCount;
-        public int FilesCount;
+        public int TotalFilesCount { get; set; }
+        public int FilesCount { get; set; }
     }
 }

@@ -12,16 +12,15 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
     public sealed class InstanceMenuViewModel : SubmenuViewModel, ISubmenu
     {
         public event ISubmenu.NavigationToMenuCallBack NavigationToMainMenu;
-        private int _tabControlSelectedValue;
 
         private int _selectedSettingsTabIndex;
 
-        private MainViewModel _mainViewModel;
+        private readonly MainViewModel _mainViewModel;
 
-        private ObservableCollection<Tab> _showCaseTabMenu = new ObservableCollection<Tab>();
-        private ObservableCollection<Tab> _settingsTabs = new ObservableCollection<Tab>();
+        private readonly ObservableCollection<Tab> _showCaseTabMenu = new ObservableCollection<Tab>();
+        private readonly ObservableCollection<Tab> _settingsTabs = new ObservableCollection<Tab>();
 
-        private InstanceFormViewModel _instanceForm;
+        private readonly InstanceFormViewModel _instanceForm;
 
 
         #region Commands
@@ -52,13 +51,15 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         #region Properties
 
+
+        private int _tabControlSelectedValue;
         public int TabControlSelectedIndex
         {
             get => _tabControlSelectedValue;
             set
             {
                 _tabControlSelectedValue = value;
-                OnPropertyChanged(nameof(TabControlSelectedIndex));
+                OnPropertyChanged();
                 if (value == Tabs.Count - 1)
                 {
                     NavigationMainMenuCommand.Execute(null);
@@ -66,7 +67,11 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
+
         #endregion Properties
+
+
+        #region Constructors
 
 
         public InstanceMenuViewModel(InstanceFormViewModel instanceForm, MainViewModel mainViewModel, int selectedTab = 0, int selectedSettingsTabIndex = 0) : base()
@@ -82,6 +87,13 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             ObservableColletionSort(_settingsTabs);
             SelectedTab = Tabs[selectedTab];
         }
+
+
+        #endregion Constructors
+
+
+        #region Private Methods
+
 
         private void OnInstanceStateChanged() 
         {
@@ -209,5 +221,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
             colletion =  new ObservableCollection<T>(list);
         }
+
+
+        #endregion Private Methods
     }
 }

@@ -1,35 +1,13 @@
 ﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
-using LumiSoft.Net.Mime.vCard;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Documents;
 
 namespace Lexplosion.Gui.ViewModels
 {
     public sealed class SearchBoxViewModel : VMBase
     {
-
-        #region Commands
-
-
-        private RelayCommand _searchCommand;
-        /// <summary>
-        /// Команда запускающая поиск по тексту и д.р параметрам.
-        /// </summary>
-        public RelayCommand SearchCommand
-        {
-            get => _searchCommand ?? (new RelayCommand(obj =>
-            {
-                StartSearch();
-            }));
-        }
-
-
-        #endregion Commands
-
 
         #region Properties
 
@@ -146,7 +124,27 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+
         #endregion Properties
+
+
+        #region Commands
+
+
+        private RelayCommand _searchCommand;
+        /// <summary>
+        /// Команда запускающая поиск по тексту и д.р параметрам.
+        /// </summary>
+        public RelayCommand SearchCommand
+        {
+            get => _searchCommand ?? (new RelayCommand(obj =>
+            {
+                StartSearch();
+            }));
+        }
+
+
+        #endregion Commands
 
 
         #region Constructors

@@ -15,9 +15,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         #region Properties
 
-        public InstanceClient InstanceClient { get; set; }
-        public DownloadModel DownloadModel { get; set; }
-        public LaunchModel LaunchModel { get; set; }
+
+        public InstanceClient InstanceClient { get; }
+        public DownloadModel DownloadModel { get; }
+        public LaunchModel LaunchModel { get; }
 
         // buttons
         public UpperButton UpperButton { get; set; }
@@ -52,7 +53,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
+
         #endregion
+
+        #region Constructors
+
 
         public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
@@ -60,27 +65,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             instanceClient.StateChanged += UpdateLowerButton;
 
-            UpperButton = new UpperButton
-                (
-                    ResourceGetter.GetIcon("Download"),
-                    UpperButtonFunc.Download,
-                    new Tip()
-                    {
-                        Text = ResourceGetter.GetString("installInstance"),
-                        Offset = -160
-                    }
-                );
+            UpperButtonSetup();
 
-            // set categories to list
-            // add game version like category
-            Categories.Add(new Category { name = instanceClient.GameVersion });
-            if (InstanceClient.Categories != null && InstanceClient.Categories.Count > 0) 
-            { 
-                foreach (var category in InstanceClient.Categories)
-                {
-                    Categories.Add(category);
-                }
-            }
+            LoadingCategories();
 
             OverviewField = instanceClient.Summary;
             DownloadModel = new DownloadModel(mainViewModel, this)
@@ -93,6 +80,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             UpdateButtons();
         }
+
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
 
         public void OpenInstanceFolder()
         {
@@ -185,5 +178,43 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 }
             });
         }
+
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private void LoadingCategories() 
+        {
+            // set categories to list
+            // add game version like category
+            Categories.Add(new Category { name = InstanceClient.GameVersion });
+            if (InstanceClient.Categories != null && InstanceClient.Categories.Count > 0)
+            {
+                foreach (var category in InstanceClient.Categories)
+                {
+                    Categories.Add(category);
+                }
+            }
+        }
+
+
+        private void UpperButtonSetup()
+        {
+            UpperButton = new UpperButton
+            (
+                ResourceGetter.GetIcon("Download"),
+                UpperButtonFunc.Download,
+                new Tip()
+                {
+                    Text = ResourceGetter.GetString("installInstance"),
+                    Offset = -160
+                }
+            );
+        }
+
+        #endregion Private Methods
     }
 }

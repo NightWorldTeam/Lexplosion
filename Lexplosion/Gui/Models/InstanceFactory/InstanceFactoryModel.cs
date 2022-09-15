@@ -6,7 +6,8 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 {
     public class InstanceFactoryModel : VMBase
     {
-        #region prop
+        #region Properities
+
 
         public List<string> UnavailableNames { get; } = new List<string>();
         public Dictionary<string, List<string>> ForgeVersions { get; }
@@ -18,7 +19,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             get => _isAvaliableName; set
             {
                 _isAvaliableName = value;
-                OnPropertyChanged(nameof(IsAvaliableName));
+                OnPropertyChanged();
             }
         }
 
@@ -29,7 +30,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             {
                 IsAvaliableName = !UnavailableNames.Contains(value);
                 _name = value;
-                OnPropertyChanged(nameof(Name));
+                OnPropertyChanged();
             }
         }
 
@@ -39,7 +40,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             get => _selectedVersion; set
             {
                 _selectedVersion = value;
-                OnPropertyChanged(nameof(SelectedVersion));
+                OnPropertyChanged();
             }
         }
 
@@ -49,11 +50,11 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             get => _modloaderType; set
             {
                 _modloaderType = value;
-                OnPropertyChanged(nameof(ModloaderType));
+                OnPropertyChanged();
             }
         }
 
-        private string _logoPath = "";
+        private string _logoPath = default;
         public string LogoPath
         {
             get => _logoPath; set
@@ -63,6 +64,6 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             }
         }
 
-        #endregion
+        #endregion Properities
     }
 }

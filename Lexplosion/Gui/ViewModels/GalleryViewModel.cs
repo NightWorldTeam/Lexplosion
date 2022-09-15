@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Tools;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
@@ -8,16 +7,9 @@ namespace Lexplosion.Gui.ViewModels
 {
     public class GalleryViewModel : VMBase
     {
-        private BitmapImage _bitmapImage;
+        #region Commands
 
-        private byte _selectedImagesIndex = 0;
-        private bool _isNoneImages = false;
-        private double _blurEffectRadius = 0;
 
-        private bool _isLeftBorder;
-        private bool _isRightBorder;
-
-        #region command
         public RelayCommand PrevImage
         {
             get => new RelayCommand(obj =>
@@ -42,18 +34,27 @@ namespace Lexplosion.Gui.ViewModels
             });
         }
 
-        #endregion
 
-        #region props
+        #endregion Commands
+
+
+        #region Properties
+
+
+        public ObservableCollection<BitmapImage> Images { get; } = new ObservableCollection<BitmapImage>();
+
+        private double _blurEffectRadius;
         public double BlurEffectRadius 
         {
             get => _blurEffectRadius; set
             {
                 _blurEffectRadius = value;
-                OnPropertyChanged(nameof(BlurEffectRadius));
+                OnPropertyChanged();
             }
         }
 
+
+        private byte _selectedImagesIndex;
         public byte SelectedImagesIndex
         {
             get => _selectedImagesIndex; set
@@ -62,25 +63,27 @@ namespace Lexplosion.Gui.ViewModels
                 if (value > 0) IsLeftBorder = false;
                 if (value < Images.Count - 1) IsRightBorder = false;
                 SelectedImage = Images[value];
-                OnPropertyChanged(nameof(SelectedImagesIndex));
+                OnPropertyChanged();
             }
         }
 
+        private BitmapImage _bitmapImage;
         public BitmapImage SelectedImage
         {
             get => _bitmapImage; set
             {
                 _bitmapImage = value;
-                OnPropertyChanged(nameof(SelectedImage));
+                OnPropertyChanged();
             }
         }
 
+        private bool _isNoneImages = false;
         public bool IsNoneImages 
         {
             get => _isNoneImages; set
             {
                 _isNoneImages = value;
-                OnPropertyChanged(nameof(IsNoneImages));
+                OnPropertyChanged();
                 SelectedImage = new BitmapImage(
                     new System.Uri("pack://application:,,,/assets/images/background/authBG.png")
                 );
@@ -88,26 +91,33 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+        private bool _isLeftBorder;
         public bool IsLeftBorder 
         {
             get => _isLeftBorder; set
             {
                 _isLeftBorder = value;
-                OnPropertyChanged(nameof(IsLeftBorder));
+                OnPropertyChanged();
             }
         }
 
+        private bool _isRightBorder;
         public bool IsRightBorder 
         {
             get => _isRightBorder; set
             {
                 _isRightBorder = value;
-                OnPropertyChanged(nameof(IsRightBorder));
+                OnPropertyChanged();
             }
         }
-        #endregion 
 
-        public ObservableCollection<BitmapImage> Images { get; } = new ObservableCollection<BitmapImage>();
+
+        #endregion Properities
+
+
+        #region Constructors
+
+
         public GalleryViewModel(List<byte[]> images, ISubmenu submenuViewModel)
         {
             submenuViewModel.NavigationToMainMenu += ClearGallery;
@@ -128,6 +138,12 @@ namespace Lexplosion.Gui.ViewModels
             });
         }
 
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+        
         public void ClearGallery() 
         {
             for (var i = 0; i < Images.Count; i++) 
@@ -135,5 +151,8 @@ namespace Lexplosion.Gui.ViewModels
                 Images[i] = null;
             }
         }
+
+
+        #endregion Public & Protected Methods
     }
 }

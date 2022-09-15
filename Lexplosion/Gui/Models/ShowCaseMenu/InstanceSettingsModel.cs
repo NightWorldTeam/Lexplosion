@@ -14,7 +14,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             get => _instanceSettings; set
             {
                 _instanceSettings = value;
-                OnPropertyChanged(nameof(_instanceSettings));
+                OnPropertyChanged();
             }
         }
 
@@ -23,7 +23,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             get => (uint)(InstanceSettings.WindowHeight); set
             {
                 InstanceSettings.WindowHeight = value;
-                OnPropertyChanged("WindowHeight");
+                OnPropertyChanged();
                 _instanceClient.SaveSettings(InstanceSettings);
             }
         }
@@ -33,7 +33,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             get => (uint)(InstanceSettings.WindowWidth); set
             {
                 InstanceSettings.WindowWidth = value;
-                OnPropertyChanged("WindowWidth");
+                OnPropertyChanged();
                 _instanceClient.SaveSettings(InstanceSettings);
             }
         }
@@ -54,7 +54,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             get => (uint)InstanceSettings.Xmx; set
             {
                 InstanceSettings.Xmx = value;
-                OnPropertyChanged("Xmx");
+                OnPropertyChanged();
                 _instanceClient.SaveSettings(InstanceSettings);
             }
         }
@@ -64,7 +64,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             get => (uint)InstanceSettings.Xms; set
             {
                 InstanceSettings.Xms = value;
-                OnPropertyChanged("Xms");
+                OnPropertyChanged();
                 _instanceClient.SaveSettings(InstanceSettings);
             }
         }
@@ -74,7 +74,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             get => InstanceSettings.GameArgs; set
             {
                 InstanceSettings.GameArgs = value;
-                OnPropertyChanged("GameArgs");
+                OnPropertyChanged();
                 _instanceClient.SaveSettings(InstanceSettings);
             }
         }
@@ -84,7 +84,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             get => InstanceSettings.AutoUpdate; set
             {
                 InstanceSettings.AutoUpdate = value;
-                OnPropertyChanged("IsAutoUpdate");
+                OnPropertyChanged();
                 _instanceClient.SaveSettings(InstanceSettings);
             }
         }

@@ -197,5 +197,8 @@
     <s:String x:Key="name">названию</s:String>
     <s:String x:Key="popularity">популярности</s:String>
     <s:String x:Key="totalDownloadsFl">скачивания</s:String>
-    
+
+
+    <s:String x:Key="downloadFilesCountNof">Скаченно {0}/{1} файлов</s:String>
+
 </ResourceDictionary>
