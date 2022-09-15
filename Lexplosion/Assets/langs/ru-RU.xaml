@@ -200,5 +200,6 @@
 
 
     <s:String x:Key="downloadFilesCountNof">Скаченно {0}/{1} файлов</s:String>
+    <s:String x:Key="gameRunning">Идёт запуск игры...</s:String>
 
 </ResourceDictionary>

@@ -10,21 +10,19 @@ namespace Lexplosion.Gui.Models.InstanceForm
 {
     public sealed class InstanceFormModel : VMBase
     {
-        private string _overviewField;
-        private List<Category> _categories = new List<Category>();
-
         #region Properties
 
 
+        public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
+        public List<Category> Categories { get; } = new List<Category>();
         public InstanceClient InstanceClient { get; }
         public DownloadModel DownloadModel { get; }
         public LaunchModel LaunchModel { get; }
-
         // buttons
         public UpperButton UpperButton { get; set; }
-        // сделать lock объект
-        public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
 
+
+        private string _overviewField;
         public string OverviewField
         {
             get => _overviewField; set
@@ -34,27 +32,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
-        public List<Category> Categories
-        {
-            get => _categories; set
-            {
-                _categories = value;
-                OnPropertyChanged();
-            }
-        }
 
-        private bool _isCanRun;
-        public bool IsCanRun
-        {
-            get => _isCanRun; set
-            {
-                _isCanRun = value;
-                OnPropertyChanged();
-            }
-        }
+        #endregion Properties
 
-
-        #endregion
 
         #region Constructors
 
@@ -86,6 +66,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
 
         #region Public & Protected Methods
+
 
         public void OpenInstanceFolder()
         {
@@ -130,7 +111,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     else if (InstanceClient.Type == InstanceSource.Nightworld)
                     {
                         LowerButtons.Add(
-                            new LowerButton(ResourceGetter.GetString("visitNightWorld"), ResourceGetter.GetIcon("CurseforgeLogo"), LowerButtonFunc.OpenWebsite)
+                            new LowerButton(ResourceGetter.GetString("visitNightWorld"), ResourceGetter.GetIcon("NightworldLogo"), LowerButtonFunc.OpenWebsite)
                         );
                     }
 
@@ -173,7 +154,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         new LowerButton(ResourceGetter.GetString("openFolder"), ResourceGetter.GetIcon("OpenFolder"), LowerButtonFunc.OpenFolder)
                     );
                     LowerButtons.Add(
-                        new LowerButton(ResourceGetter.GetString("instanceDLC"), ResourceGetter.GetIcon("OpenFolder"), LowerButtonFunc.OpenDLCPage)
+                        new LowerButton(ResourceGetter.GetString("instanceDLC"), ResourceGetter.GetIcon("Extension"), LowerButtonFunc.OpenDLCPage)
                     );
                 }
             });

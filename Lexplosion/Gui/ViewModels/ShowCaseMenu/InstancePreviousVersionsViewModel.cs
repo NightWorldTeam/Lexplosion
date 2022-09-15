@@ -11,8 +11,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
     public class InstancePreviousVersionsViewModel : VMBase
     {
-        private InstanceFormViewModel _viewModel;
-
+        private readonly InstanceFormViewModel _viewModel;
 
         #region Properties
 
@@ -27,18 +26,38 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
-
-        private RelayCommand _installInstanceCommand;
-        public RelayCommand InstallInstanceCommand 
+        private bool _isLoadingFinished;
+        public bool IsLoadingFinished
         {
-            get => _installInstanceCommand ?? (_installInstanceCommand = new RelayCommand(obj => 
+            get => _isLoadingFinished; set 
             {
-                var instanceVersion = (InstanceVersion)obj;
-                _viewModel.DownloadInstance(version: instanceVersion.Id);
-            }));
+                _isLoadingFinished = value;
+                OnPropertyChanged();
+            }
         }
 
         #endregion Properties
+
+
+        #region Commands
+
+
+        private RelayCommand _installInstanceCommand;
+        public RelayCommand InstallInstanceCommand
+        {
+            get => _installInstanceCommand ?? (_installInstanceCommand = new RelayCommand(obj =>
+            {
+                var instanceVersion = (InstanceVersion)obj;
+                _viewModel.DownloadInstance(version: instanceVersion.Id);
+                foreach (var pv in PreviousVersions) 
+                {
+                    pv.CanInstall = false;
+                }
+            }));
+        }
+
+
+        #endregion
 
 
         #region Constructors
@@ -48,6 +67,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             _viewModel = viewModel;
             LoadPreviousVersions();
+            _viewModel.Model.DownloadModel.ComplitedDownloadActions.Add(ComplitedInstalled);
         }
 
 
@@ -69,10 +89,34 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 App.Current.Dispatcher.Invoke(() => 
                 {
                     PreviousVersions = new ObservableCollection<InstanceVersion>(versions);
+                    DisableButton();
+                    IsLoadingFinished = true;
                 });
             });
         }
 
+        private void DisableButton(bool isDisable = false) 
+        {
+            foreach (var pv in PreviousVersions)
+            {
+                if (pv.Id == _viewModel.Client.ProfileVersion)
+                {
+                    pv.CanInstall = false;
+                    if (isDisable)
+                        break;
+                }
+                else 
+                {
+                    pv.CanInstall = true;
+                }
+            }
+        }
+
+
+        private void ComplitedInstalled(InstanceInit result, List<string> downloadErrors, bool launchGame)
+        {
+            DisableButton(true);
+        }
 
         #endregion Private Methods
     }

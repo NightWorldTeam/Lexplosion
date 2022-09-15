@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
+using Lexplosion.Gui.ViewModels.ShowCaseMenu;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 
@@ -31,9 +32,10 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
 
         public GalleryViewModel GalleryVM { get; }
 
-        public OverviewModel(InstanceClient instanceClient, ISubmenu submenuViewModel)
+        public OverviewModel(InstanceClient instanceClient, ISubmenu submenuViewModel, OverviewViewModel overviewViewModel)
         {
             InstanceData = instanceClient.GetFullInfo();
+            overviewViewModel.IsLoadedFailed = InstanceData == null ? true : false;
             IsLocalInstance = InstanceData.TotalDownloads != 0;
             GalleryVM = new GalleryViewModel(InstanceData.Images, submenuViewModel);
         }

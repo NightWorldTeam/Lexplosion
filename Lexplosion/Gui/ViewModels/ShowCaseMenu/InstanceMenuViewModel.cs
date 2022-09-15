@@ -25,6 +25,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         #region Commands
 
+
         public ICommand NavigationMainMenuCommand
         {
             get => new NavigateCommand<MainMenuViewModel>
@@ -45,6 +46,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 GC.WaitForPendingFinalizers();
             });
         }
+
 
         #endregion Commands
 
@@ -84,7 +86,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
             _instanceForm.Client.StateChanged += OnInstanceStateChanged;
 
-            ObservableColletionSort(_settingsTabs);
+            ObservableCollectionExtensions.ObservableColletionSort(_settingsTabs);
             SelectedTab = Tabs[selectedTab];
         }
 
@@ -211,15 +213,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                         Content = new FactoryDLCVM(_mainViewModel, _instanceForm.Client)
                     }
                 );
-        }
-
-        private static void ObservableColletionSort<T>(ObservableCollection<T> colletion) 
-        {
-            List<T> list = new List<T>(colletion);
-
-            list.Sort();
-
-            colletion =  new ObservableCollection<T>(list);
         }
 
 

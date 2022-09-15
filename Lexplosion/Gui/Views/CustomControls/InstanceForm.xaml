@@ -262,7 +262,7 @@
                             Foreground="#d5d5d5"
                             Text="{Binding Model.DownloadModel.DownloadFilesNof}"
                             TextTrimming="WordEllipsis"
-                            Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />
+                            Visibility="{Binding Model.DownloadModel.IsPrepareOnly, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
 
                         <ItemsControl
                             Grid.Row="1"

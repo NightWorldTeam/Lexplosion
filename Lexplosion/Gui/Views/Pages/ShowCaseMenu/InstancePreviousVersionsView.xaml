@@ -68,7 +68,7 @@
                                     </DataTrigger>
 
                                     <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ReleaseType.Alpha}">
-                                        <Setter Property="Border.Background" Value="#d3cbe7" />
+                                        <Setter Property="Border.Background" Value="DimGray" />
                                     </DataTrigger>
 
                                 </Style.Triggers>
@@ -87,30 +87,52 @@
                         TextWrapping="WrapWithOverflow" />
 
                     <Button
+                        x:Name="InstallButton"
+                        Height="40"
                         HorizontalAlignment="Right"
                         Command="{Binding DataContext.InstallInstanceCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                         CommandParameter="{Binding}"
-                        Style="{StaticResource IconicButton}">
-                        <Border
-                            Padding="10,7,7,10"
-                            Background="{DynamicResource BrandSolidColorBrush}"
-                            BorderThickness="1"
-                            CornerRadius="10">
-                            <StackPanel Orientation="Horizontal">
-                                <Viewbox
-                                    Width="16"
-                                    Height="16"
-                                    Stretch="Fill">
-                                    <Path extension:PathExtension.StringData="{StaticResource Download}" Fill="White" />
-                                </Viewbox>
+                        IsEnabled="{Binding CanInstall}">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border
+                                                x:Name="Border"
+                                                Padding="10,0,10,0"
+                                                Background="{DynamicResource BrandSolidColorBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="10">
 
-                                <TextBlock
-                                    Margin="5,0,5,0"
-                                    FontSize="14"
-                                    Foreground="White"
-                                    Text="{DynamicResource download}" />
-                            </StackPanel>
-                        </Border>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Viewbox
+                                                        Width="16"
+                                                        Height="16"
+                                                        VerticalAlignment="Center"
+                                                        Stretch="Fill">
+                                                        <Path extension:PathExtension.StringData="{StaticResource Download}" Fill="White" />
+                                                    </Viewbox>
+
+                                                    <TextBlock
+                                                        Margin="5,0,0,2"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="14"
+                                                        Foreground="White"
+                                                        Text="{DynamicResource download}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="Border" Property="Border.Background" Value="Gray" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Resources>
                     </Button>
                 </DockPanel>
             </Border>
@@ -124,6 +146,6 @@
             <ItemsControl Margin="25,25,25,0" ItemsSource="{Binding PreviousVersions}" />
         </ScrollViewer>
 
-        <controls:LoadingBoard IsLoadingFinished="True" />
+        <controls:LoadingBoard IsLoadingFinished="{Binding IsLoadingFinished}" />
     </Grid>
 </UserControl>

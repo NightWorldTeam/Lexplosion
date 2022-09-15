@@ -9,24 +9,12 @@ namespace Lexplosion.Gui.ViewModels
 {
     public sealed class InstanceFormViewModel : VMBase
     {
-        private InstanceClient _instanceClient; // Данные о Instance.
-
-
         #region Properties
 
 
-        public InstanceClient Client
-        {
-            get => _instanceClient;
-        }
-
         public MainViewModel MainVM { get; } // Ссылка на MainViewModel
-
-
-        /// <summary>
-        /// Свойство модели InstanceForm
-        /// </summary>
-        public InstanceFormModel Model { get; }
+        public InstanceClient Client { get; } // Ссылка на InstanceClient
+        public InstanceFormModel Model { get; } // Ссылка на InstanceFormModel
 
         /// <summary>
         /// Свойтсво отвечает за видимость DropdownMenu.
@@ -59,7 +47,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 try 
                 {
-                    UpdateUpperButtonFunc((UpperButtonFunc)obj);
+                    ExecuteUpperButtonFunc((UpperButtonFunc)obj);
                 }
                 catch { }
             }));
@@ -75,7 +63,7 @@ namespace Lexplosion.Gui.ViewModels
             {   
                 try 
                 {
-                    UpdateLowerButtonFunc((LowerButtonFunc)obj);
+                    ExecuteLowerButtonFunc((LowerButtonFunc)obj);
                 }
                 catch { }
             }));
@@ -87,12 +75,12 @@ namespace Lexplosion.Gui.ViewModels
 
         #region Constructors
 
+
         public InstanceFormViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
             MainVM = mainViewModel;
             Model = new InstanceFormModel(mainViewModel, instanceClient);
-            Model.IsCanRun = true;
-            _instanceClient = instanceClient;
+            Client = instanceClient;
         }
 
 
@@ -134,7 +122,7 @@ namespace Lexplosion.Gui.ViewModels
             Model.InstanceClient.UpdateInstance();
         }
 
-        public void DownloadInstance(Action<DownloadStageTypes, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null) 
+        internal void DownloadInstance(Action<DownloadStageTypes, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null) 
         {
 
             if (progressHandler != null)
@@ -145,7 +133,7 @@ namespace Lexplosion.Gui.ViewModels
 
             if (!Model.DownloadModel.IsDownloadInProgress)
             {
-                if (!MainVM.Model.IsLibraryContainsInstance(_instanceClient))
+                if (!MainVM.Model.IsLibraryContainsInstance(Client))
                     MainVM.Model.LibraryInstances.Add(this);
                 MainVM.DownloadManager.AddProcess(this);
                 Model.DownloadModel.DownloadPrepare(version);
@@ -156,7 +144,7 @@ namespace Lexplosion.Gui.ViewModels
         /// Удаляет сборку из библиотеки, но перед этим спрашивает пользователя действительно ли он хочет удалить.
         /// </summary>
         /// <param name="IsFromLibrary">Если сборка не установленная но в библиотеки. Влияет на выводимое сообщение</param>
-        public void RemoveInstance(bool IsFromLibrary) 
+        internal void RemoveInstance(bool IsFromLibrary) 
         {
             var dialog = new DialogViewModel(MainVM);
             string message;
@@ -177,11 +165,40 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Удаляет сборку из библиотеки.
         /// </summary>
-        public void RemoveInstance()
+        internal void RemoveInstance()
         {
             Model.InstanceClient.Delete();
             MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
             Model.UpdateButtons();
+        }
+
+
+        internal void OpenWebsite() 
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(Client.WebsiteUrl);
+            }
+            catch
+            {
+                // message box here.
+            }
+        }
+
+        internal void StartExportAndOpenModal() 
+        {
+            MainVM.ModalWindowVM.IsOpen = true;
+
+            // возможно не надо вообще эксемпляр класса сохранять.
+            MainVM.ExportViewModel = new ExportViewModel(MainVM)
+            {
+                InstanceName = Client.Name,
+                IsFullExport = true,
+                InstanceClient = Client,
+                UnitsList = Client.GetPathContent()
+            };
+
+            MainVM.ModalWindowVM.ChangeCurrentModalContent(MainVM.ExportViewModel);
         }
 
         #endregion Public & Protected Methods
@@ -190,7 +207,7 @@ namespace Lexplosion.Gui.ViewModels
         #region Private Methods
 
 
-        private void UpdateUpperButtonFunc(UpperButtonFunc buttonFunc) 
+        private void ExecuteUpperButtonFunc(UpperButtonFunc buttonFunc) 
         {
             switch (buttonFunc)
             {
@@ -222,7 +239,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        private void UpdateLowerButtonFunc(LowerButtonFunc buttonFunc) 
+        private void ExecuteLowerButtonFunc(LowerButtonFunc buttonFunc) 
         {
             IsDropdownMenuOpen = false;
             switch (buttonFunc)
@@ -247,6 +264,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.CancelDownload:
                     {
+                        //Client.CancelDownload();
                         break;
                     }
 
@@ -258,14 +276,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.OpenWebsite:
                     {
-                        try
-                        {
-                            System.Diagnostics.Process.Start(_instanceClient.WebsiteUrl);
-                        }
-                        catch
-                        {
-                            // message box here.
-                        }
+                        OpenWebsite();
                         break;
                     }
 
@@ -283,23 +294,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.Export:
                     {
-                        MainVM.ModalWindowVM.IsOpen = true;
-
-                        // возможно не надо вообще эксемпляр класса сохранять.
-                        MainVM.ExportViewModel = new ExportViewModel(MainVM)
-                        {
-                            InstanceName = _instanceClient.Name,
-                            IsFullExport = true,
-                            InstanceClient = _instanceClient,
-                            UnitsList = _instanceClient.GetPathContent()
-                        };
-
-                        MainVM.ModalWindowVM.ChangeCurrentModalContent(MainVM.ExportViewModel);
-
-                        //foreach (var s in MainVM.ExportViewModel.UnitsList.Keys)
-                        //{
-                        //    Console.WriteLine(s);
-                        //}
+                        StartExportAndOpenModal();
                         break;
                     }
             }

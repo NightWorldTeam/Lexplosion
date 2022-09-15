@@ -108,14 +108,17 @@
                         x:Name="Grid"
                         Background="{DynamicResource PrimarySolidColorBrush}"
                         ShowGridLines="False">
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
+
                         <Border
                             x:Name="Border"
                             Grid.Column="0"
                             BorderThickness="10,0,0,0" />
+
                         <ContentPresenter
                             x:Name="ContentSite"
                             Grid.Column="1"

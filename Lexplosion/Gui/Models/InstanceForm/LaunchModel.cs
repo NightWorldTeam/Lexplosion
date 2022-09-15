@@ -6,33 +6,56 @@ namespace Lexplosion.Gui.Models.InstanceForm
 {
     public sealed class LaunchModel
     {
-        private InstanceFormModel _formModel;
-        private MainViewModel _mainViewModel;
+        private readonly InstanceFormModel _formModel;
+        private readonly MainViewModel _mainViewModel;
 
-        public bool IsGameLaunched { get; set; }
+
+        #region Properties
+
+
+        public bool IsGameLaunched { get => _mainViewModel.IsInstanceRunning; }
+
+
+        #endregion Properties
+
+
+        #region Constructors
+
 
         public LaunchModel(MainViewModel mainViewModel, InstanceFormModel instanceFormModel)
         {
-            _formModel = instanceFormModel;
             _mainViewModel = mainViewModel;
+            _formModel = instanceFormModel;   
             instanceFormModel.InstanceClient.ComplitedLaunch += LaunchCompleted;
             instanceFormModel.InstanceClient.GameExited += GameExited;
         }
 
-        #region methods
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
 
         public void LaunchInstance()
         {
-            Lexplosion.Run.TaskRun(delegate
+            Lexplosion.Run.TaskRun(() =>
             {
                 _formModel.DownloadModel.IsDownloadInProgress = true;
-                _formModel.DownloadModel.HasProcents = true;
+                _formModel.DownloadModel.HasProcents = false;
                 _formModel.InstanceClient.Run();
                 _mainViewModel.IsInstanceRunning = true;
             });
         }
 
-        public void LaunchCompleted(string id, bool successful)
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private void LaunchCompleted(string id, bool successful)
         {
             if (successful)
             {
@@ -41,11 +64,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     ResourceGetter.GetString("instanceName") + " : " + _formModel.InstanceClient.Name,
                     TimeSpan.FromSeconds(5)
                 );
+
                 _formModel.DownloadModel.IsDownloadInProgress = false;
-                _formModel.DownloadModel.HasProcents = false;
                 _formModel.UpperButton.ChangeFuncClose();
             }
-            else 
+            else
             {
                 MainViewModel.ShowToastMessage(
                     ResourceGetter.GetString("runUnsuccessfulNotification"),
@@ -56,12 +79,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _formModel.OverviewField = _formModel.InstanceClient.Summary;
         }
 
-        public void GameExited(string id)
+        private void GameExited(string id)
         {
             _formModel.UpperButton.ChangeFuncPlay();
             _mainViewModel.IsInstanceRunning = false;
         }
 
-        #endregion
+
+        #endregion Private Methods
     }
 }

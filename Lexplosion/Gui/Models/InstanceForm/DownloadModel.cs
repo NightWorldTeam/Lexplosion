@@ -8,17 +8,24 @@ namespace Lexplosion.Gui.Models.InstanceForm
 {
     public sealed class DownloadModel : VMBase
     {
-        private readonly MainViewModel _mainViewModel;
         private readonly InstanceFormModel _instanceFormModel;
 
         public readonly List<Action<DownloadStageTypes, ProgressHandlerArguments>> DownloadActions = new List<Action<DownloadStageTypes, ProgressHandlerArguments>>();
         public readonly List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
 
 
-        private bool _isPrepareOnly = true;
-
-
         #region Properties
+
+
+        private bool _isPrepareOnly = true;
+        public bool IsPrepareOnly 
+        {
+            get => _isPrepareOnly; set 
+            {
+                _isPrepareOnly = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         private bool _isDownloadInProgress;
@@ -132,8 +139,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             instanceFormModel.InstanceClient.ProgressHandler += DownloadProcess;
             instanceFormModel.InstanceClient.ComplitedDownload += ComplitedDownloadAction;
-
-            _mainViewModel = mainViewModel;
         }
 
 
@@ -181,7 +186,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
                 if (downloadStageType != DownloadStageTypes.Prepare)
                 {
-                    _isPrepareOnly = false;
+                    IsPrepareOnly = false;
                 }
 
                 if (downloadStageType == DownloadStageTypes.Java)
@@ -210,7 +215,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 {
                     case InstanceInit.Successful:
                         {
-                            if (!_isPrepareOnly) {
+                            if (!IsPrepareOnly) {
                                 IsDownloadInProgress = false;
                                 MainViewModel.ShowToastMessage(
                                     "Download Successfully Completed",
@@ -334,10 +339,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         break;
                 }
 
-                if (!_isPrepareOnly)
+                if (!IsPrepareOnly)
                     _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
                 else
-                    _instanceFormModel.OverviewField = "Идёт запуск игры...";
+                    _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
             }); 
         }
 

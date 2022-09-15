@@ -25,7 +25,7 @@
     <Grid x:Name="MainGrid">
 
         <Grid.Background>
-            <SolidColorBrush Opacity="0.70" Color="#121212" />
+            <SolidColorBrush Opacity="0.84" Color="{DynamicResource PrimaryColor}" />
         </Grid.Background>
 
         <!--  ListBox - ScrollViewer.CanContentScroll="False" создаёт плавный скролл.  -->

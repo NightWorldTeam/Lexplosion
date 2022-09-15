@@ -45,7 +45,7 @@ namespace Lexplosion.Controls
         // 3) done (play button)
         // 4) close game 
 
-        #region dependency properities 
+        #region Dependency Properities 
 
 
         public static readonly DependencyProperty InstanceFormVMProperty
@@ -256,7 +256,7 @@ namespace Lexplosion.Controls
 
 
 
-        #region ctors
+        #region Constructors
 
 
         static DownloadButton()
@@ -265,7 +265,7 @@ namespace Lexplosion.Controls
         }
 
 
-        #endregion ctors
+        #endregion Constructors
 
 
         public override void OnApplyTemplate()
@@ -404,38 +404,7 @@ namespace Lexplosion.Controls
         }
 
 
-        #endregion Private Methods
-
-
-        #region On DependencyProperties Changed
-
-
-        private static void OnInstanceFormChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue == null || e.OldValue == e.NewValue)
-                return;
-
-            var button = (DownloadButton)d;
-            var newValue = (InstanceFormViewModel)e.NewValue;
-
-            if (newValue.Client.IsInstalled)
-            {
-                button.HideButton(button._downloadButton);
-                button.HideButton(button._loader);
-            }
-            else if (newValue.Model.DownloadModel.IsDownloadInProgress)
-            {
-                button.HideButton(button._downloadButton);
-                button.Download();
-            }
-            else
-            {
-                button.ShowButton(button._downloadButton);
-                button.ShowButton(button._loader);
-            }
-        }
-
-        private void Download() 
+        private void Download()
         {
             Action<DownloadStageTypes, ProgressHandlerArguments> progressHandlerMethod = delegate (DownloadStageTypes stageType, ProgressHandlerArguments progressHandlerArguments)
             {
@@ -457,22 +426,62 @@ namespace Lexplosion.Controls
         }
 
 
-        private void ChangePlayButtonText(string text) 
+        private void ChangePlayButtonText(string text)
         {
-            if (this._playButtonText == null) 
+            if (this._playButtonText == null)
             {
                 this._playButtonText = GetTemplateChild(PART_PLAY_BUTTON_TEXT) as TextBlock;
             }
             this._playButtonText.Text = text;
         }
 
-        private void ChangeLoaderText(string text) 
+        private void ChangeLoaderText(string text)
         {
-            if (this._loaderText == null) 
+            if (this._loaderText == null)
             {
                 this._loaderText = GetTemplateChild(PART_LOADER_TEXT) as TextBlock;
             }
             this._loaderText.Text = text;
+        }
+
+
+        #endregion Private Methods
+
+
+        #region On DependencyProperties Changed
+
+
+        private static void OnInstanceFormChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue == null || e.OldValue == e.NewValue)
+                return;
+
+            var button = (DownloadButton)d;
+            var newValue = (InstanceFormViewModel)e.NewValue;
+
+            Console.WriteLine("TESTISHJETJKLJSEKLJTKLSEJTKLJKELSJTKL");
+
+            if (newValue.Client.IsInstalled && !newValue.Model.LaunchModel.IsGameLaunched)
+            {
+                button.HideButton(button._downloadButton);
+                button.HideButton(button._loader);
+            }
+            else if (newValue.Model.LaunchModel.IsGameLaunched) 
+            {
+                button.HideButton(button._downloadButton);
+                button.HideButton(button._loader);
+                button.HideButton(button._playButton);
+            }
+            else if (newValue.Model.DownloadModel.IsDownloadInProgress)
+            {
+                button.HideButton(button._downloadButton);
+                button.Download();
+            }
+            else
+            {
+                button.ShowButton(button._downloadButton);
+                button.ShowButton(button._loader);
+            }
         }
 
 

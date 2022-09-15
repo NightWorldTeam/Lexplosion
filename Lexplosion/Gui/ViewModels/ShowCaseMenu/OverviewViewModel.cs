@@ -1,14 +1,11 @@
 ﻿using Lexplosion.Gui.Models.ShowCaseMenu;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Objects;
-using System;
-using System.Collections.Generic;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
     public class OverviewViewModel : VMBase
     {
-        #region props
+        #region Properties
 
         private OverviewModel _overviewModel;
         public OverviewModel Model 
@@ -30,20 +27,35 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
-        private bool _isLoaded = true;
-        public bool IsLoaded
+        private bool _isLoadedFailed;
+        public bool IsLoadedFailed 
         {
-            get => _isLoaded;
+            get => _isLoadedFailed; set 
+            {
+                _isLoadedFailed = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private bool _isLoading = true;
+        public bool IsLoading
+        {
+            get => _isLoading;
             set
             {
-                _isLoaded = value;
-                OnPropertyChanged(nameof(IsLoaded));
+                _isLoading = value;
+                OnPropertyChanged();
             }
         }
 
         public bool IsCategoriesExist { get; set; }
 
-        #endregion props
+        #endregion Properties
+
+
+        #region Commands
+
 
         public RelayCommand CurseforgePageCommand
         {
@@ -60,17 +72,24 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             });
         }
 
+
+        #endregion Commands
+
+
+        #region Constructors
         public OverviewViewModel(InstanceClient instanceClient, ISubmenu submenuViewModel)
         {
             Lexplosion.Run.TaskRun(() => { 
-                Model = new OverviewModel(instanceClient, submenuViewModel);
-
+                Model = new OverviewModel(instanceClient, submenuViewModel, this);
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
-                IsLoaded = false;
+                IsLoading = false;
             });
         }
+        #endregion Constructors
 
-        public double CalcCategoryBorderHeight() 
+
+        #region Private Methods
+        private double CalcCategoryBorderHeight() 
         {
             if (Model.InstanceData.Categories == null || Model.InstanceData.Categories.Count == 0)
             {
@@ -91,5 +110,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             else
                 return 60;
         }
+
+        #endregion Private Methods
     }
 }
