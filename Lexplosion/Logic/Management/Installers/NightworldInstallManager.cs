@@ -27,7 +27,8 @@ namespace Lexplosion.Logic.Management.Installers
         private bool requiresUpdates = true;
         private bool onlyBase;
         private int stagesCount = 0;
-        private int baseFaliseUpdatesCount = 0;
+        private int _baseFaliseUpdatesCount = 0;
+        private int _modpackFilesUpdatesCount = 0;
 
         private int actualVersion = -1;
 
@@ -173,13 +174,13 @@ namespace Lexplosion.Logic.Management.Installers
 
                 requiresUpdates = (requiresUpdates || Updates.Count == 0);
 
-                baseFaliseUpdatesCount = installer.CheckBaseFiles(manifest, ref Updates); // проверяем основные файлы клиента на обновление
-                if (baseFaliseUpdatesCount == -1)
+                _baseFaliseUpdatesCount = installer.CheckBaseFiles(manifest, ref Updates); // проверяем основные файлы клиента на обновление
+                if (_baseFaliseUpdatesCount == -1)
                 {
                     return InstanceInit.GuardError;
                 }
 
-                if (baseFaliseUpdatesCount > 0)
+                if (_baseFaliseUpdatesCount > 0)
                 {
                     stagesCount++;
                 }
@@ -195,14 +196,13 @@ namespace Lexplosion.Logic.Management.Installers
                         }
                     }
 
-                    int variableFilesUpdatesCount = 0;
-                    variableFilesUpdatesCount = installer.CheckInstance(nightworldManifest, ref Updates, _instanceContent); // проверяем дополнительные файлы клиента (моды и прочее)
-                    if (variableFilesUpdatesCount == -1)
+                    _modpackFilesUpdatesCount = installer.CheckInstance(nightworldManifest, ref Updates, _instanceContent); // проверяем дополнительные файлы клиента (моды и прочее)
+                    if (_modpackFilesUpdatesCount == -1)
                     {
                         return InstanceInit.GuardError;
                     }
 
-                    if (variableFilesUpdatesCount > 0)
+                    if (_modpackFilesUpdatesCount > 0)
                     {
                         stagesCount++;
                     }
@@ -231,22 +231,43 @@ namespace Lexplosion.Logic.Management.Installers
         {
             Console.WriteLine("NightWorld Update " + requiresUpdates);
 
+            Action<string, int, DownloadFileProgress> singleDownloadMethod = null;
+
             if (stagesCount > 0)
             {
-                installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+                if (_baseFaliseUpdatesCount > 1)
                 {
-                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                     {
-                        StagesCount = stagesCount,
-                        Stage = 1,
-                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
-                        TotalFilesCount = totalDataCount,
-                        FilesCount = nowDataCount
-                    });
-                };
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = stagesCount,
+                            Stage = 1,
+                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
+                            TotalFilesCount = totalDataCount,
+                            FilesCount = nowDataCount
+                        });
+                    };
+                }
+                else
+                {
+                    singleDownloadMethod = delegate (string file, int pr, DownloadFileProgress stage_)
+                    {
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = stagesCount,
+                            Stage = 1,
+                            Procents = pr,
+                            TotalFilesCount = 1,
+                            FilesCount = 0
+                        });
+                    };
+
+                    installer.FileDownloadEvent += singleDownloadMethod;
+                }
             }
 
-            if (baseFaliseUpdatesCount > 0)
+            if (_baseFaliseUpdatesCount > 0)
             {
                 progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
                 {
@@ -262,38 +283,55 @@ namespace Lexplosion.Logic.Management.Installers
             if (requiresUpdates)
             {
                 int stage;
-                if (baseFaliseUpdatesCount > 0)
+                if (_baseFaliseUpdatesCount > 0)
                 {
                     stage = 2;
-                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
-                    {
-                        StagesCount = stagesCount,
-                        Stage = stage,
-                        Procents = 0
-                    });
                 }
                 else
                 {
-                    stage = 1;
-                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
-                    {
-                        StagesCount = stagesCount,
-                        Stage = stage,
-                        Procents = 0
-                    });
+                    stage = 1;           
                 }
 
-                installer.FilesDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+                progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
                 {
-                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    StagesCount = stagesCount,
+                    Stage = stage,
+                    Procents = 0
+                });
+
+                if (_modpackFilesUpdatesCount > 1)
+                {
+                    if (singleDownloadMethod != null)
                     {
-                        StagesCount = stagesCount,
-                        Stage = stage,
-                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
-                        TotalFilesCount = totalDataCount,
-                        FilesCount = nowDataCount
-                    });
-                };
+                        installer.FileDownloadEvent -= singleDownloadMethod;
+                    }
+
+                    installer.FilesDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+                    {
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = stagesCount,
+                            Stage = stage,
+                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
+                            TotalFilesCount = totalDataCount,
+                            FilesCount = nowDataCount
+                        });
+                    };
+                }
+                else if (singleDownloadMethod == null)
+                {
+                    installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
+                    {
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = stagesCount,
+                            Stage = stage,
+                            Procents = pr,
+                            TotalFilesCount = 1,
+                            FilesCount = 0
+                        });
+                    };
+                }
 
                 errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates, _instanceContent);
             }

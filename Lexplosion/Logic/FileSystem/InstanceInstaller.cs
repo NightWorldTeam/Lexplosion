@@ -467,6 +467,8 @@ namespace Lexplosion.Logic.FileSystem
             List<string> errors = new List<string>();           
             string temp = CreateTempDir();
 
+            BaseDownloadEvent?.Invoke(updatesCount, 0);
+
             //скачивание файла версии
             if (minecraftJar)
             {
@@ -480,22 +482,10 @@ namespace Lexplosion.Logic.FileSystem
                     addr = minecraftJar.url;
                 }
 
-                Action<int> progressMethod;
-                if (libraries.Count == 0 && (assets.objects == null || assets.objects.Count == 0) && !assetsIndexes) // если скачать надо только minecraft jar
+                Action<int> progressMethod = delegate (int a)
                 {
-                    progressMethod = delegate (int a)
-                    {
-                        BaseDownloadEvent?.Invoke(100, a);
-                        _fileDownloadHandler?.Invoke(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
-                    };
-                }
-                else
-                {
-                    progressMethod = delegate (int a)
-                    {
-                        _fileDownloadHandler?.Invoke(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
-                    };
-                }
+                    _fileDownloadHandler?.Invoke(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
+                };
 
                 bool isDownload;
                 if (minecraftJar.notArchived)

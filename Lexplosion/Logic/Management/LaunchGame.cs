@@ -251,19 +251,26 @@ namespace Lexplosion.Logic.Management
                     {
                         Thread.Sleep(1000);
 
-                        if (GuiIsExists(process.Id))
+                        try
                         {
-                            ComplitedLaunch(_instanceId, true);
-
-                            if (_settings.HiddenMode == true)
+                            if (GuiIsExists(process.Id))
                             {
-                                //MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
-                                launcherVisible = false;
-                            }
+                                ComplitedLaunch(_instanceId, true);
 
-                            gameVisible = true;
+                                if (_settings.HiddenMode == true)
+                                {
+                                    //MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
+                                    launcherVisible = false;
+                                }
+
+                                gameVisible = true;
+                                break;
+                            }
+                        }
+                        catch
+                        {
                             break;
-                        }   
+                        }
                     }
                 });
 

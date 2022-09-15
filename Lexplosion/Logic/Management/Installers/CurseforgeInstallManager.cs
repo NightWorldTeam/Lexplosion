@@ -141,7 +141,7 @@ namespace Lexplosion.Logic.Management.Installers
                         Stage = 1,
                         Procents = percent,
                         TotalFilesCount = 1,
-                        FilesCount = 1
+                        FilesCount = 0
                     });
                 };
 
@@ -227,10 +227,13 @@ namespace Lexplosion.Logic.Management.Installers
                     }
                 }
 
-                if (updatesCount > 0)
+                Action<string, int, DownloadFileProgress> singleDownloadMethod = null;
+
+                if (updatesCount > 1)
                 {
                     installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                     {
+                        Console.WriteLine("EVENT " + totalDataCount + " " + nowDataCount);
                         progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
                         {
                             StagesCount = 3,
@@ -240,6 +243,22 @@ namespace Lexplosion.Logic.Management.Installers
                             FilesCount = nowDataCount
                         });
                     };
+                } 
+                else if (updatesCount == 1)
+                {
+                    singleDownloadMethod = delegate (string file, int pr, DownloadFileProgress stage_)
+                    {
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = 3,
+                            Stage = 2,
+                            Procents = pr,
+                            TotalFilesCount = 1,
+                            FilesCount = 0
+                        });
+                    };
+
+                    installer.FileDownloadEvent += singleDownloadMethod;
                 }
 
                 installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
@@ -250,6 +269,11 @@ namespace Lexplosion.Logic.Management.Installers
                     Procents = 100
                 });
 
+                if (singleDownloadMethod != null)
+                {
+                    installer.FileDownloadEvent -= singleDownloadMethod;
+                }
+
                 installer.AddonsDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                 {
                     if (nowDataCount != 0)
@@ -257,7 +281,7 @@ namespace Lexplosion.Logic.Management.Installers
                         progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
                         {
                             StagesCount = 3,
-                            Stage = 2,
+                            Stage = 3,
                             Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
                             TotalFilesCount = totalDataCount,
                             FilesCount = nowDataCount
@@ -268,7 +292,7 @@ namespace Lexplosion.Logic.Management.Installers
                         progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
                         {
                             StagesCount = 3,
-                            Stage = 2,
+                            Stage = 3,
                             Procents = 0
                         });
                     }
@@ -290,7 +314,7 @@ namespace Lexplosion.Logic.Management.Installers
             {
                 if (BaseFilesIsCheckd)
                 {
-                    if (updatesCount > 0)
+                    if (updatesCount > 1)
                     {
                         installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                         {
@@ -301,6 +325,20 @@ namespace Lexplosion.Logic.Management.Installers
                                 Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
                                 TotalFilesCount = totalDataCount,
                                 FilesCount = nowDataCount
+                            });
+                        };
+                    }
+                    else if (updatesCount == 1)
+                    {
+                        installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
+                        {
+                            progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                            {
+                                StagesCount = 1,
+                                Stage = 1,
+                                Procents = pr,
+                                TotalFilesCount = 1,
+                                FilesCount = 0
                             });
                         };
                     }

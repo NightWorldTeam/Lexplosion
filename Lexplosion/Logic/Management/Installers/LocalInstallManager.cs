@@ -14,6 +14,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         private string InstanceId;
         private int stagesCount = 0;
+        private int updatesCount = 0;
 
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent
         {
@@ -49,7 +50,6 @@ namespace Lexplosion.Logic.Management.Installers
 
             if (Manifest != null)
             {
-                int updatesCount = 0;
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
                 updatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
 
@@ -84,17 +84,34 @@ namespace Lexplosion.Logic.Management.Installers
                     Procents = 0
                 });
 
-                installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
+                if (updatesCount > 1)
                 {
-                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                     {
-                        StagesCount = 1,
-                        Stage = 1,
-                        Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
-                        TotalFilesCount = totalDataCount,
-                        FilesCount = nowDataCount
-                    });
-                };
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = 1,
+                            Stage = 1,
+                            Procents = (int)(((decimal)nowDataCount / (decimal)totalDataCount) * 100),
+                            TotalFilesCount = totalDataCount,
+                            FilesCount = nowDataCount
+                        });
+                    };
+                }
+                else
+                {
+                    installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
+                    {
+                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        {
+                            StagesCount = 1,
+                            Stage = 1,
+                            Procents = pr,
+                            TotalFilesCount = 1,
+                            FilesCount = 0
+                        });
+                    };
+                }
             }
 
             List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);

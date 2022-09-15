@@ -297,6 +297,8 @@ namespace Lexplosion.Logic.FileSystem
 
             string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
 
+            FilesDownloadEvent?.Invoke(updatesCount, 0);
+
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
                 //скачивание файлов из списка data
@@ -337,12 +339,14 @@ namespace Lexplosion.Logic.FileSystem
                         string sha1 = filesList.data[dir].objects[file].sha1;
                         long size = filesList.data[dir].objects[file].size;
 
-                        if (!SaveDownloadZip(addr, filename, path, tempDir, sha1, size, delegate (int a) { }))
+                        if (!SaveDownloadZip(addr, filename, path, tempDir, sha1, size, delegate (int a) { _fileDownloadHandler?.Invoke(filename, a, DownloadFileProgress.PercentagesChanged); }))
                         {
+                            _fileDownloadHandler?.Invoke(filename, 100, DownloadFileProgress.Error);
                             errors.Add(dir + "/" + file);
                         }
                         else
                         {
+                            _fileDownloadHandler?.Invoke(filename, 100, DownloadFileProgress.Successful);
                             updates[dir + "/" + file] = filesList.data[dir].objects[file].lastUpdate; //добавляем файл в список последних обновлений
                             if (actualPath != basePath) //перименовываем файл, если его actualPath отличается от basePath
                             {
