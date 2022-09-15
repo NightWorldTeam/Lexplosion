@@ -35,6 +35,12 @@ namespace Lexplosion.Logic.Management.Instances
         public override InstanceData GetFullInfo(string localId, string externalId)
         {
             var data = CurseforgeApi.GetInstance(externalId);
+
+            if (data == null)
+            {
+                return null;
+            }
+
             var images = new List<byte[]>();
             if (data.screenshots != null)
             {

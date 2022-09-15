@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.Management.Instances
             var data = NightWorldApi.GetInstanceInfo(externalId);
             var images = new List<byte[]>();
 
-            if(data != null)
+            if (data != null)
             {
                 if (data.Images != null)
                 {
@@ -55,20 +55,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
             else
             {
-                return new InstanceData
-                {
-                    Source = InstanceSource.Nightworld,
-                    Categories = new List<Category>(),
-                    Description = null,
-                    Summary = null,
-                    TotalDownloads = 0,
-                    GameVersion = null,
-                    LastUpdate = "",
-                    Modloader = ModloaderType.None,
-                    Images = null,
-                    WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + externalId,
-                    Changelog = ""
-                };
+                return null;
             }
         }
 

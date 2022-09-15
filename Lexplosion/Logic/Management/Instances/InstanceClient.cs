@@ -545,6 +545,11 @@ namespace Lexplosion.Logic.Management.Instances
         {
             InstanceData fullInfo = _dataManager.GetFullInfo(_localId, _externalId);
 
+            if (fullInfo == null)
+            {
+                return null;
+            }
+
             if (fullInfo.Description == null)
                 fullInfo.Description = NoDescription;
             if (fullInfo.Summary == null)
