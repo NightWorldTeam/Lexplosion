@@ -103,13 +103,20 @@ namespace Lexplosion.Logic.Network
 
                 if (DirectConnection)
                 {
-                    string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
-                    string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-                    string hostIp = str.Replace(":" + hostPort, "");
-                    //hostPort = "9654";
-                    //hostIp = "127.0.0.1";
-                    Console.WriteLine("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
-                    isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
+                    try
+                    {
+                        string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
+                        string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
+                        string hostIp = str.Replace(":" + hostPort, "");
+                        //hostPort = "9654";
+                        //hostIp = "127.0.0.1";
+                        Console.WriteLine("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
+                        isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
+                    }
+                    catch
+                    {
+                        isConected = false;
+                    }
                 }
                 else
                 {
@@ -117,7 +124,7 @@ namespace Lexplosion.Logic.Network
                     isConected = ((TurnBridgeClient)Bridge).Connect(UUID, serverUUID);
                 }
 
-                if (isConected) // TODO: было исключени о неверном формате строки
+                if (isConected)
                 {
                     //Console.WriteLine("Ping " + Bridge.ping);
                     stream.Close();

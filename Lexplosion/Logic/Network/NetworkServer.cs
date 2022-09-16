@@ -12,7 +12,7 @@ namespace Lexplosion.Logic.Network
     using SMP;
     using TURN;
 
-    abstract class NetworkServer // TODO: на стороне сервера проверять есть один у дркгого в списке друзей
+    abstract class NetworkServer
     {
         protected Thread AcceptingThread;
         protected Thread ReadingThread;

@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {
-    class ClientBridge : NetworkClient // TODO: возможно Initialization заменить на конструктор
+    class ClientBridge : NetworkClient
     {
         protected Socket ServerSimulator;
 

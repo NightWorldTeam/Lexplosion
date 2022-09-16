@@ -517,7 +517,7 @@ namespace Lexplosion.Logic.Network.SMP
                     new Thread(delegate ()
                     {
                         Close();
-                        // TODO: ClientClosing вызывать
+                        ClientClosing?.Invoke(point);
                     }).Start();
                 }
 
@@ -839,7 +839,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Send(byte[] inputData)
         {
-            if (inStopping) // TODO: думаю конкретно в лаунчере это можно убрать, а вообще в протоколе оставить надо
+            if (inStopping)
             {
                 return;
             }
