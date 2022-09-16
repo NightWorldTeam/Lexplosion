@@ -8,6 +8,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 {
     public sealed class DownloadModel : VMBase
     {
+        private readonly MainViewModel _mainViewModel;
         private readonly InstanceFormModel _instanceFormModel;
 
         public readonly List<Action<DownloadStageTypes, ProgressHandlerArguments>> DownloadActions = new List<Action<DownloadStageTypes, ProgressHandlerArguments>>();
@@ -26,7 +27,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 OnPropertyChanged();
             }
         }
-
 
         private bool _isDownloadInProgress;
         public bool IsDownloadInProgress 
@@ -132,6 +132,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public DownloadModel(MainViewModel mainViewModel, InstanceFormModel instanceFormModel)
         {
+            _mainViewModel = mainViewModel;
             _instanceFormModel = instanceFormModel;
 
             DownloadActions.Add(Download);
@@ -215,7 +216,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 {
                     case InstanceInit.Successful:
                         {
-                            if (!IsPrepareOnly) {
+                            if (_mainViewModel.IsInstanceRunning) 
+                            {
+                                IsPrepareOnly = true;
+                            } 
+                            else if (!IsPrepareOnly) {
                                 IsDownloadInProgress = false;
                                 MainViewModel.ShowToastMessage(
                                     "Download Successfully Completed",

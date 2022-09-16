@@ -105,13 +105,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     if (InstanceClient.Type == InstanceSource.Curseforge)
                     {
                         LowerButtons.Add(
-                                new LowerButton(ResourceGetter.GetString("visitCurseforge"), ResourceGetter.GetIcon("CurseforgeLogo"), LowerButtonFunc.OpenWebsite)
+                                new LowerButton(ResourceGetter.GetString("visitCurseforge"), ResourceGetter.GetIcon("Planet"), LowerButtonFunc.OpenWebsite)
                             );
                     }
                     else if (InstanceClient.Type == InstanceSource.Nightworld)
                     {
                         LowerButtons.Add(
-                            new LowerButton(ResourceGetter.GetString("visitNightWorld"), ResourceGetter.GetIcon("NightworldLogo"), LowerButtonFunc.OpenWebsite)
+                            new LowerButton(ResourceGetter.GetString("visitNightWorld"), ResourceGetter.GetIcon("Planet"), LowerButtonFunc.OpenWebsite)
                         );
                     }
 

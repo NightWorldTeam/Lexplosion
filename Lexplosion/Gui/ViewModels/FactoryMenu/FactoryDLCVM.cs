@@ -112,7 +112,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             
             Lexplosion.Run.TaskRun(() =>
             {
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods));
+                if (_instanceClient.GetBaseData.Modloader != ModloaderType.None)
+                    _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods));
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), CfProjectType.Resourcepacks));
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), CfProjectType.Maps));
 

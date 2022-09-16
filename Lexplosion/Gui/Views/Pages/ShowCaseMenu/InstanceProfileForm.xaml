@@ -164,12 +164,12 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="{DynamicResource gameTypeNoEdit}" />
+                                        Text="{DynamicResource gameType}" />
                                     <ComboBox
                                         Width="400"
                                         Height="40"
                                         HorizontalContentAlignment="Left"
-                                        IsEnabled="False"
+                                        IsEnabled="{Binding IsModloader, Converter={StaticResource InverseBooleanConverter}}"
                                         ItemsSource="{Binding Source={StaticResource ModloaderType}}"
                                         SelectedValue="{Binding ModloaderType}"
                                         Style="{StaticResource LighterDefaultComboBox}" />
