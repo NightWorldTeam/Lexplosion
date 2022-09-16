@@ -261,7 +261,7 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        private void PreformAuthMicrosoft(string microsoftData) 
+        private void PreformAuthMicrosoft(string microsoftData, MicrosoftAuthRes reult) 
         {
             // на случае нештатной ситуации.
             if (_accountType != AccountType.Microsoft)
@@ -304,7 +304,7 @@ namespace Lexplosion.Gui.ViewModels
                     FollowToMicrosoft();
                     break;
                 default:
-                    MainViewModel.ShowToastMessage("Ошибка что-то не так", authCode.ToString(), TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    MainViewModel.ShowToastMessage("Ошибка. Что-то не так", authCode.ToString(), TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     break;
             }
         }

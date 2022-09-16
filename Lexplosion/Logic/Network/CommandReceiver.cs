@@ -20,14 +20,58 @@ namespace Lexplosion.Logic.Network
             remove => _openModpackPage -= value;
         }
 
-        private static Action<string> _microsoftAuthPassed;
-        public static event Action<string> MicrosoftAuthPassed
+        private static Action<string, MicrosoftAuthRes> _microsoftAuthPassed;
+        public static event Action<string, MicrosoftAuthRes> MicrosoftAuthPassed
         {
             add => _microsoftAuthPassed += value;
             remove => _microsoftAuthPassed -= value;
         }
 
         #endregion
+
+        private static string CommandHandler(string text)
+        {
+            if (text.StartsWith("$openModpackPage:"))
+            {
+                if (_openModpackPage != null)
+                {
+                    string modpackId = text.Replace("$openModpackPage:", "");
+                    _openModpackPage(modpackId);
+                    return "OK";
+                }
+                else
+                {
+                    return "NO_AUTH";
+                }
+            }
+            else if (text.StartsWith("$microsoftAuth:"))
+            {
+                text = text.Replace("$microsoftAuth:", "");
+                if (text.StartsWith("$result:ERROR-0"))
+                {
+                    _microsoftAuthPassed.Invoke("", MicrosoftAuthRes.UnknownError);
+                }
+                else if (text.StartsWith("$result:ERROR-1"))
+                {
+                    _microsoftAuthPassed.Invoke("", MicrosoftAuthRes.UserDenied);
+                }
+                else if (text.StartsWith("$result:ERROR-2"))
+                {
+                    _microsoftAuthPassed.Invoke("", MicrosoftAuthRes.Minor);
+                }
+                else if (text.StartsWith("$result:ERROR-3"))
+                {
+                    _microsoftAuthPassed.Invoke("", MicrosoftAuthRes.NoXbox);
+                }
+                else if (text.StartsWith("$result:OK,"))
+                {
+                    string data = text.Replace("$result:OK,", "");
+                    _microsoftAuthPassed.Invoke(data, MicrosoftAuthRes.Successful);
+                }
+            }
+
+            return null;
+        }
 
         public static void StartCommandServer()
         {
@@ -36,15 +80,27 @@ namespace Lexplosion.Logic.Network
                 Lexplosion.Run.TaskRun(delegate ()
                 {
                     var ws = new WebSocketServer();
+                    ws.ReceivedData += CommandHandler;
                     ws.Run();
                 });
             }
         }
 
+        /// <summary>
+        /// Сервер Веб-советов, который обрабатывеат команды. 
+        /// Работает подобно html серверам - принял запрос, получил данные, дал ответ, закрыл соединение.
+        /// </summary>
         class WebSocketServer
         {
             Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
             private const string guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+
+            public delegate string ReceivedDataDelegate(string text);
+
+            /// <summary>
+            /// Принимает строку - полученные данные. Возвращает тоже строку - данные которые нужно отправить.
+            /// </summary>
+            public event ReceivedDataDelegate ReceivedData;
 
             public void Run()
             {
@@ -86,24 +142,10 @@ namespace Lexplosion.Logic.Network
                         if (decodedFrame != null)
                         {
                             string text = Encoding.UTF8.GetString(decodedFrame);
-
-                            if (text.Contains("$openModpackPage:"))
+                            string data = ReceivedData?.Invoke(text);
+                            if (data != null)
                             {
-                                if (_openModpackPage != null)
-                                {
-                                    string modpackId = text.Replace("$openModpackPage:", "");
-                                    _openModpackPage(modpackId);
-                                    client.Send(EncodeFrame(Encoding.UTF8.GetBytes("OK")));
-                                }
-                                else
-                                {
-                                    client.Send(EncodeFrame(Encoding.UTF8.GetBytes("NO_AUTH")));
-                                }
-                            }
-                            else if (text.Contains("$microsoftAuth:"))
-                            {
-                                string data = text.Replace("$microsoftAuth:", "");
-                                _microsoftAuthPassed.Invoke(data);
+                                client.Send(EncodeFrame(Encoding.UTF8.GetBytes(data)));
                             }
                         }
                     }

@@ -280,4 +280,13 @@ namespace Lexplosion
         Beta,
         Release
     }
+
+    public enum MicrosoftAuthRes
+    {
+        UnknownError,
+        UserDenied,
+        Minor,
+        NoXbox,
+        Successful
+    }
 }
