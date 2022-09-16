@@ -61,7 +61,7 @@ namespace Lexplosion.Logic.Management.Installers
                 return InstanceInit.VersionError;
             }
 
-            if (Manifest.version.modloaderVersion != null && Manifest.version.modloaderVersion != "" && Manifest.version.modloaderType != ModloaderType.None)
+            if (Manifest.version.modloaderVersion != null && Manifest.version.modloaderVersion != "" && Manifest.version.modloaderType != ModloaderType.Vanilla)
             {
                 BaseFilesIsCheckd = true;
 
@@ -170,7 +170,7 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     //определяем приоритетную версию модлоадера
                     string modLoaderVersion = "";
-                    ModloaderType modloader = ModloaderType.None;
+                    ModloaderType modloader = ModloaderType.Vanilla;
                     foreach (var loader in manifest.minecraft.modLoaders)
                     {
                         if (loader.primary)

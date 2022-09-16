@@ -102,13 +102,13 @@ namespace Lexplosion.Logic.Objects.Curseforge
         {
             get
             {
-                ModloaderType modloaderType = ModloaderType.None;
+                ModloaderType modloaderType = ModloaderType.Vanilla;
                 if (latestFiles != null && latestFiles.Count > 0)
                 {
                     long maxId = latestFiles[0].id;
                     foreach (var value in latestFiles)
                     {
-                        if (value.id > maxId || modloaderType == ModloaderType.None)
+                        if (value.id > maxId || modloaderType == ModloaderType.Vanilla)
                         {
                             if (value.gameVersions != null)
                             {

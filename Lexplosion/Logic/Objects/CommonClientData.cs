@@ -53,7 +53,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
                     return CustomVersionName;
 
                 string endName = "";
-                if (modloaderType != ModloaderType.None)
+                if (modloaderType != ModloaderType.Vanilla)
                 {
                     endName = "-" + modloaderType.ToString() + "-" + modloaderVersion;
                 }

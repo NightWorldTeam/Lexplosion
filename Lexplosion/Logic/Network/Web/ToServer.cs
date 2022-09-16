@@ -62,7 +62,7 @@ namespace Lexplosion.Logic.Network
         public static List<string> GetModloadersList(string gameVersion, ModloaderType modloaderType)
         {
             string modloader;
-            if (modloaderType != ModloaderType.None)
+            if (modloaderType != ModloaderType.Vanilla)
             {
                 modloader = "/"+ modloaderType.ToString().ToLower() + "/";
             }
@@ -127,7 +127,7 @@ namespace Lexplosion.Logic.Network
                     string modloaderUrl = "";
                     if (!string.IsNullOrEmpty(modloaderVersion))
                     {
-                        if (modloader != ModloaderType.None)
+                        if (modloader != ModloaderType.Vanilla)
                         {
                             modloaderUrl = "/" + modloader.ToString().ToLower() + "/";
                             modloaderUrl += modloaderVersion;

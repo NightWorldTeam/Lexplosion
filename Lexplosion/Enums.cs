@@ -63,7 +63,7 @@ namespace Lexplosion
 
     public enum ModloaderType
     {
-        None,
+        Vanilla,
         Forge,
         Fabric = 4,
         Quilt

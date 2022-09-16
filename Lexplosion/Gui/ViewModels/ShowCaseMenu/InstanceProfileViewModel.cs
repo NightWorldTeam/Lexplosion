@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             CurrentInstanceClient = instanceClient;
             BaseInstanceData = CurrentInstanceClient.GetBaseData;
-            IsModloader = BaseInstanceData.Modloader != ModloaderType.None;
+            IsModloader = BaseInstanceData.Modloader != ModloaderType.Vanilla;
             ModloaderType = BaseInstanceData.Modloader;
             ModloaderVersion = BaseInstanceData.ModloaderVersion;
             GameVersion = BaseInstanceData.GameVersion ?? GameVersions[0];
@@ -30,7 +30,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             {
                 _gameVersion = BaseInstanceData.GameVersion = value;
 
-                if (ModloaderType != ModloaderType.None) 
+                if (ModloaderType != ModloaderType.Vanilla) 
                 {
                     GetModloaderVersions(value, ModloaderType);
                 }
@@ -114,7 +114,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 modloaderType = BaseInstanceData.Modloader = value;
 
                 // проверяем выбран ли modloader
-                IsModloader = modloaderType != ModloaderType.None;
+                IsModloader = modloaderType != ModloaderType.Vanilla;
 
                 // загружаем версии modloader для конкретной версии.
                 GetModloaderVersions(BaseInstanceData.GameVersion, value);
@@ -178,7 +178,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             Lexplosion.Run.TaskRun(() =>
             {
                 ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(gameVersion, modloader));
-                if (CurrentInstanceClient.GetBaseData.Modloader != ModloaderType.None)
+                if (CurrentInstanceClient.GetBaseData.Modloader != ModloaderType.Vanilla)
                 {
                     ModloaderVersion = CurrentInstanceClient.GetBaseData.ModloaderVersion;
                 }

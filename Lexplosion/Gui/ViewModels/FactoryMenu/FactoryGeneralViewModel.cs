@@ -82,7 +82,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 _selectedVersion = value;
                 OnPropertyChanged();
 
-                if (Model.ModloaderType != ModloaderType.None) 
+                if (Model.ModloaderType != ModloaderType.Vanilla) 
                 { 
                     Lexplosion.Run.TaskRun(() =>
                     {
@@ -110,7 +110,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 {
                     Model.ModloaderType = (ModloaderType)obj;
 
-                    IsModloaderSelected = Model.ModloaderType != ModloaderType.None;
+                    IsModloaderSelected = Model.ModloaderType != ModloaderType.Vanilla;
 
                     Lexplosion.Run.TaskRun(() =>
                     {
@@ -179,7 +179,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
             GameVersions = new ObservableCollection<string>(MainViewModel.GameVersions.ToList());
             Model = new InstanceFactoryModel();
-            Model.ModloaderType = ModloaderType.None;
+            Model.ModloaderType = ModloaderType.Vanilla;
             SelectedVersion = GameVersions[0];
             
 

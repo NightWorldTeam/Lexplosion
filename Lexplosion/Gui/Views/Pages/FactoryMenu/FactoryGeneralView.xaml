@@ -108,7 +108,7 @@
                             <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
                                 <RadioButton
                                     Command="{Binding SwitchModloaderType}"
-                                    CommandParameter="{x:Static objects:ModloaderType.None}"
+                                    CommandParameter="{x:Static objects:ModloaderType.Vanilla}"
                                     Content="Vanilla"
                                     FontSize="16"
                                     GroupName="GameType"

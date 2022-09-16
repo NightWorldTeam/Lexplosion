@@ -294,7 +294,7 @@ namespace Lexplosion.Logic.Management.Instances
                     Name = _name,
                     Summary = _summary,
                     ModloaderVersion = manifest?.version?.modloaderVersion ?? "",
-                    Modloader = manifest?.version.modloaderType ?? ModloaderType.None
+                    Modloader = manifest?.version.modloaderType ?? ModloaderType.Vanilla
                 };
             }
         }
@@ -666,7 +666,7 @@ namespace Lexplosion.Logic.Management.Instances
             if (!InLibrary)
             {
                 _localId = GenerateInstanceId();
-                CreateFileStruct(ModloaderType.None, "");
+                CreateFileStruct(ModloaderType.Vanilla, "");
                 _installedInstances[_localId] = this;
                 _idsPairs[_externalId] = _localId;
                 SaveInstalledInstancesList();
@@ -968,7 +968,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Author = Author,
                 Description = Description,
                 GameVersion = instanceManifest?.version?.gameVersion,
-                ModloaderType = instanceManifest?.version?.modloaderType ?? ModloaderType.None,
+                ModloaderType = instanceManifest?.version?.modloaderType ?? ModloaderType.Vanilla,
                 ModloaderVersion = instanceManifest?.version?.modloaderVersion,
                 Name = name ?? Name,
                 Categories = Categories,
