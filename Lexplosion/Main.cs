@@ -24,9 +24,7 @@ namespace Lexplosion
 {
     static class Run
     {
-        public static StreamList threads = new StreamList();
         private static App app = new App();
-        public delegate void StopTask();
 
         public static Process CurrentProcess { get; private set; }
 
@@ -331,6 +329,15 @@ namespace Lexplosion
             // проверяем было ли закрытие отменено
             if (_exitIsCanceled)
             {
+                // снова блочим waitingClosing, если сохранилась приоритетная задача, ибо метод CancelExit ее разлочил
+                lock (locker)
+                {
+                    if (importantThreads > 0)
+                    {
+                        waitingClosing.Reset();
+                    }       
+                }
+
                 _exitIsCanceled = false;
                 foreach (Window window in app.Windows)
                 {
@@ -338,6 +345,7 @@ namespace Lexplosion
                     window.ShowInTaskbar = true;
                 }
 
+                _inExited = false;
                 return;
             }
 
@@ -354,39 +362,10 @@ namespace Lexplosion
                 window.Close();
             }
 
-            // стопаем все процессы вроде скачивания и тп
-            threads.StopThreads();
-
             //waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
             ExitEvent?.Invoke();
         }
 
-        public static StopTask TaskRun(ThreadStart ThreadFunc)
-        {
-            threads.Wait();
-
-            int key = threads.Add(null);
-
-            var thread = new Thread(delegate ()
-            {
-                int threadKey = key;
-
-                ThreadFunc();
-
-                threads.RemoveAt(threadKey);
-            });
-
-            threads[key] = thread;
-
-            thread.Start();
-            threads.Release();
-
-            return delegate ()
-            {
-                thread.Abort();
-                int threadKey = key;
-                threads.RemoveAt(threadKey);
-            };
-        }
+        public static void TaskRun(ThreadStart threadFunc) => new Thread(threadFunc).Start();
     }
 }

@@ -339,7 +339,6 @@
     <Compile Include="Logic\Objects\Curseforge.cs" />
     <Compile Include="Logic\Objects\Nightworld.cs" />
     <Compile Include="Logic\Settings.cs" />
-    <Compile Include="Tools\StreamList.cs" />
     <Compile Include="Logic\Сryptography.cs" />
     <Compile Include="Main.cs" />
     <Page Include="App.xaml">
