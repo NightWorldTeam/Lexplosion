@@ -57,7 +57,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             {
                 _uploadedFiles = value;
                 OnPropertyChanged();
-                OnPropertyChanged(IsEmptyUploadedFiles);
+                OnPropertyChanged(nameof(IsEmptyUploadedFiles));
             }
         }
 

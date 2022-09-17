@@ -94,16 +94,20 @@
                         </StackPanel>
 
                         <!--  Minecraft Version  -->
-                        <StackPanel Orientation="Vertical">
+                        <StackPanel>
                             <TextBlock HorizontalAlignment="Left" Text="{DynamicResource minecraftVersion}" />
                             <ComboBox
                                 Margin="0,5,0,0"
                                 ItemsSource="{Binding GameVersions}"
                                 SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox
+                                    Margin="5,10,0,5"
+                                    HorizontalAlignment="Left" IsChecked="{Binding IsShowSnapshots}"
+                                    Content="Показывать снапшоты" />
                         </StackPanel>
 
                         <!--  Game Type  -->
-                        <StackPanel Margin="0,15,0,0" Orientation="Vertical">
+                        <StackPanel Margin="0,10,0,0" Orientation="Vertical">
                             <TextBlock HorizontalAlignment="Left" Text="{DynamicResource gameType}" />
                             <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
                                 <RadioButton

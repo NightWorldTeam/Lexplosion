@@ -36,6 +36,12 @@ namespace Lexplosion.Gui.Views.Windows
             TrayMenu = (Popup)this.TryFindResource("TTrayMenu");
 
             notifyIcon.Click += NofityIcon_Click;
+            Run.ExitEvent += LauncherClosedHandler;
+        }
+
+        private void LauncherClosedHandler()
+        {
+            notifyIcon.Dispose();
         }
 
         private void NofityIcon_Click(object sender, EventArgs e)

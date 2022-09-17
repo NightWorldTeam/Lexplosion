@@ -3,6 +3,9 @@ using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
+using Lexplosion.Tools.Immutable;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
@@ -41,8 +44,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
-        private ObservableCollection<string> _gameVersions;
-        public ObservableCollection<string> GameVersions
+        private string[] _gameVersions;
+        public string[] GameVersions
         {
             get => _gameVersions; set
             {
@@ -75,16 +78,27 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 _selectedVersion = value;
                 OnPropertyChanged();
-
+                Console.WriteLine(value.Replace("snapshot ", "").Replace("release ", ""));
                 if (Model.ModloaderType != ModloaderType.Vanilla) 
                 { 
                     Lexplosion.Run.TaskRun(() =>
                     {
-                        ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(SelectedVersion, Model.ModloaderType));
+                        ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(value.Replace("snapshot ", "").Replace("release ", ""), Model.ModloaderType));
                         if (ModloaderVersions.Count > 0)
                             SelectedModloaderVersion = ModloaderVersions[0];
                     });
                 }
+            }
+        }
+
+        private bool _isShowSnapshots;
+        public bool IsShowSnapshots 
+        {
+            get => _isShowSnapshots; set 
+            {
+                _isShowSnapshots = value; 
+                OnPropertyChanged();
+                UpdateVersions();
             }
         }
 
@@ -136,9 +150,14 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         public override RelayCommand ActionCommand
         {
             get => _createInstance ?? (new RelayCommand(obj =>
-            {
-                    var instanceClient = InstanceClient.CreateClient(
-                        Model.Name ?? "New Client", InstanceSource.Local, SelectedVersion, Model.ModloaderType, Model.LogoPath, SelectedModloaderVersion);
+            {                    var instanceClient = InstanceClient.CreateClient(
+                        Model.Name ?? "New Client", 
+                        InstanceSource.Local, 
+                        SelectedVersion, 
+                        Model.ModloaderType, 
+                        Model.LogoPath,
+                        SelectedModloaderVersion
+                        );
 
                     _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
                     _mainViewModel.ModalWindowVM.IsOpen = false;
@@ -180,12 +199,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         public FactoryGeneralViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
-
-            GameVersions = new ObservableCollection<string>(MainViewModel.GameVersions.ToList());
             Model = new InstanceFactoryModel();
             Model.ModloaderType = ModloaderType.Vanilla;
-            SelectedVersion = GameVersions[0];
-            
+            UpdateVersions();  
 
             _importViewModel = new ImportViewModel(_mainViewModel, this);
         }
@@ -193,7 +209,15 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         #region Private Methods
 
 
-
+        private void UpdateVersions() 
+        {
+            if (IsShowSnapshots)
+            {
+                GameVersions = MainViewModel.AllGameVersions.ToArray();
+            }
+            else GameVersions = MainViewModel.ReleaseGameVersions.ToArray();
+            SelectedVersion = GameVersions[0];
+        }
 
 
         #endregion Private Methods

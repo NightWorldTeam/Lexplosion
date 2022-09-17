@@ -52,7 +52,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// <summary>
         /// Список версий майнкрафта.
         /// </summary>
-        public List<string> GameVersions { get; } = MainViewModel.GameVersions.ToList();
+        public List<string> GameVersions { get; } = MainViewModel.ReleaseGameVersions.ToList();
 
         /// <summary>
         /// Список версий конкретного modloader, для конкретной версии.

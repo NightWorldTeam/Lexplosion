@@ -41,7 +41,8 @@ namespace Lexplosion.Gui.ViewModels
         /// Данное свойство содержит в себе версии игры.
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
         /// </summary>
-        public static ImmutableArray<string> GameVersions { get; private set; }
+        public static ImmutableArray<string> ReleaseGameVersions { get; private set; }
+        public static ImmutableArray<string> AllGameVersions { get; private set; }
 
         /// <summary>
         /// Выведенные сообщения.
@@ -224,19 +225,31 @@ namespace Lexplosion.Gui.ViewModels
 
         /// <summary>
         /// Метод в отдельном потоке загружает данные о версии игры.
-        /// После данные заносятся в статичный неизменяемый лист [ImmutableList] - GameVersions. 
+        /// После данные заносятся в статичный неизменяемый лист [ImmutableList] - ReleaseGameVersions. 
         /// </summary>
         private void PreLoadGameVersions()
         {
-            var versions = new List<string>();
+            var releaseOnlyVersions = new List<string>();
+            var allVersions = new List<string>();
             Lexplosion.Run.TaskRun(() =>
             {
                 foreach (var v in ToServer.GetVersionsList())
                 {
-                    if (v.type == "release") versions.Add(v.id);
+                    if (v.type == "release")
+                    {
+                        releaseOnlyVersions.Add(v.id);
+                        allVersions.Add("release " + v.id);
+                    }
+                    else 
+                    {
+                        allVersions.Add("snapshot " + v.id);
+                    }
+                    
                 }
-                GameVersions = new ImmutableArray<string>(versions);
-                versions.Clear();
+                ReleaseGameVersions = new ImmutableArray<string>(releaseOnlyVersions);
+                AllGameVersions = new ImmutableArray<string>(allVersions);
+                releaseOnlyVersions.Clear();
+                allVersions.Clear();
             });
 
         }
