@@ -16,7 +16,7 @@
     Icon="pack://application:,,,/Assets/images/icons/logo.ico"
     ResizeMode="NoResize"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Loaded="Window_Loaded">
 
     <Window.Resources>
         <ObjectDataProvider
@@ -29,6 +29,114 @@
         </ObjectDataProvider>
 
         <converters:AcitivityStatusToColorConverter x:Key="AcitivityStatusToColorConverter" />
+
+        <SolidColorBrush x:Key="MidBrsh" Color="#202020" />
+
+        <!--  ContextMenu separator style  -->
+        <Style x:Key="MenuSeparatorStyle" TargetType="{x:Type Separator}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+            <Setter Property="Background" Value="#323232" />
+            <Setter Property="Height" Value="5" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Separator}">
+                        <Border
+                            Height="5"
+                            Margin="-2,2"
+                            VerticalAlignment="Center"
+                            Background="#FF464646" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  MenuItem style  -->
+        <Style TargetType="{x:Type MenuItem}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Foreground" Value="#BEBEBE" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Grid
+                            Name="Root"
+                            Height="27"
+                            Background="{StaticResource MidBrsh}">
+                            <ContentPresenter
+                                Name="HeaderHost"
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                ContentSource="Header"
+                                RecognizesAccessKey="True"
+                                TextBlock.FontSize="12"
+                                TextBlock.Foreground="{TemplateBinding Foreground}"
+                                TextOptions.TextFormattingMode="Display"
+                                TextOptions.TextRenderingMode="ClearType" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#505050" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#808080" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  ContextMenu style  -->
+        <Style TargetType="{x:Type ContextMenu}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Width" Value="170" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                        <Grid Background="Transparent">
+                            <Border
+                                Margin="0,0,5,5"
+                                Background="{StaticResource MidBrsh}"
+                                BorderThickness="0">
+                                <StackPanel
+                                    Margin="2"
+                                    IsItemsHost="True"
+                                    KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                <Border.Effect>
+                                    <DropShadowEffect
+                                        BlurRadius="3"
+                                        Opacity="0.5"
+                                        ShadowDepth="3"
+                                        Color="Black" />
+                                </Border.Effect>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Popup
+            x:Key="TTrayMenu"
+            Placement="MousePoint"
+            PopupAnimation="Fade"
+            StaysOpen="False">
+            <Border Padding="10">
+                <StackPanel>
+                    <TextBlock FontSize="14" Foreground="White"></TextBlock>
+                    <TextBlock FontSize="14" Foreground="White">Закрыть</TextBlock>
+                    <TextBlock FontSize="14" Foreground="White">Закрыть</TextBlock>
+                    <TextBlock FontSize="14" Foreground="White">Закрыть</TextBlock>
+                </StackPanel>
+            </Border>
+        </Popup>
     </Window.Resources>
 
     <Grid Margin="0,0,0,0" ShowGridLines="False">

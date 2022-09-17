@@ -5,7 +5,6 @@ using System.Net;
 using System.Reflection;
 using System.Windows;
 using System.Threading;
-using System.Runtime.InteropServices;
 using System.IO.Compression;
 using Lexplosion.Properties;
 using Lexplosion.Global;
@@ -14,7 +13,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Gui.Views.Windows;
-using Lexplosion.Logic.Network.Web;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
