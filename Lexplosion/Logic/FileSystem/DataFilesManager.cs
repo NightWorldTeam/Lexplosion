@@ -311,7 +311,8 @@ namespace Lexplosion.Logic.FileSystem
                     assetsIndexes = data.version.assetsIndexes,
                     mainClass = data.version.mainClass,
                     modloaderVersion = data.version.modloaderVersion,
-                    modloaderType = data.version.modloaderType
+                    modloaderType = data.version.modloaderType,
+                    releaseIndex = data.version.releaseIndex
                 }
             };
 

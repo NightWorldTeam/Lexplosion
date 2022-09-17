@@ -499,7 +499,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     if (Directory.Exists(javaPath + javaName))
                     {
-                        Directory.Delete(javaPath, true);
+                        Directory.Delete(javaPath + javaName, true);
                     }
                 }
 

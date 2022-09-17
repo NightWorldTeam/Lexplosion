@@ -19,137 +19,82 @@ namespace Lexplosion.Logic.Management
             DefinitionError
         }
 
-        private struct GameVersion
-        {
-            private int[] _numbers;
-            public bool IsValid { get; private set; }
-
-            public GameVersion(string gameVersion)
-            {
-                if (gameVersion == "max")
-                {
-                    _numbers = new int[3]
-                    {
-                        Int32.MaxValue,
-                        Int32.MaxValue,
-                        Int32.MaxValue
-                    };
-
-                    IsValid = true;
-                    return;
-                }
-
-                string[] numbers = gameVersion.Split('.');
-
-                int num1 = 0, num2 = 0, num3 = 0;
-                if (numbers.Length == 3)
-                {
-                    IsValid = Int32.TryParse(numbers[0], out num1) && Int32.TryParse(numbers[1], out num2) && Int32.TryParse(numbers[2], out num3);
-                    
-                }
-                else if (numbers.Length == 2)
-                {
-                    IsValid = Int32.TryParse(numbers[0], out num1) && Int32.TryParse(numbers[1], out num2);
-                }
-                else if (numbers.Length == 1)
-                {
-                    IsValid = Int32.TryParse(numbers[0], out num1);
-                }
-                else
-                {
-                    IsValid = false;
-                }
-
-                _numbers = new int[3] {
-                    num1,
-                    num2,
-                    num3
-                };
-            }
-
-            public static bool operator >=(GameVersion elem1, GameVersion elem2)
-            {
-                if (elem1._numbers[0] > elem2._numbers[0])
-                    return true;
-                else if (elem1._numbers[0] < elem2._numbers[0])
-                    return false;
-
-                if (elem1._numbers[1] > elem2._numbers[1])
-                    return true;
-                else if (elem1._numbers[1] < elem2._numbers[1])
-                    return false;
-
-                if (elem1._numbers[2] > elem2._numbers[2])
-                    return true;
-                else if (elem1._numbers[2] < elem2._numbers[2])
-                    return false;
-
-                return true;
-            }
-
-            public static bool operator <=(GameVersion elem1, GameVersion elem2)
-            {
-                if (elem1._numbers[0] < elem2._numbers[0])
-                    return true;
-                else if (elem1._numbers[0] > elem2._numbers[0])
-                    return false;
-
-                if (elem1._numbers[1] < elem2._numbers[1])
-                    return true;
-                else if (elem1._numbers[1] > elem2._numbers[1])
-                    return false;
-
-                if (elem1._numbers[2] < elem2._numbers[2])
-                    return true;
-                else if (elem1._numbers[2] > elem2._numbers[2])
-                    return false;
-
-                return true;
-            }
-        }
-
         private static readonly KeySemaphore<string> _downloadSemaphore = new KeySemaphore<string>();
 
         private bool _semIsReleased = false;
-        private GameVersion _gameVersion;
+        private long _releaseIndex;
         private JavaVersion _thisJava = null;
         private JavaVersionsFile _versionsFile;
 
-        public bool IsValid
+        public JavaChecker(long releaseIndex)
         {
-            get
-            {
-                return _gameVersion.IsValid;
-            }
-        }
-
-        public JavaChecker(string gameVersion)
-        {
-            _gameVersion = new GameVersion(gameVersion);
+            _releaseIndex = releaseIndex;
         }
 
         public bool Check(out CheckResult result, out JavaVersion java)
         {
-            List<JavaVersion> versions = ToServer.GetJavaVersions();
+            List<JavaVersion> versions = ToServer.GetJavaVersions(); // получамем данные с сервера
 
+            if (versions == null) //данные получены не были. пытаемся выехать на том, что есть на диске
+            {
+                _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
+
+                //ищем нужную версию джавы
+                foreach (JavaVersion javaVer in _versionsFile.Values)
+                {
+                    if (javaVer.LastReleaseIndex >= _releaseIndex)
+                    {
+                        _thisJava = javaVer;
+                        break;
+                    }
+                }
+
+                if (_thisJava?.JavaName != null) //нашли
+                {
+                    java = _thisJava;
+                    result = CheckResult.Successful;
+                    return false;
+                }
+                else //не нашли
+                {
+                    java = null;
+                    result = CheckResult.DefinitionError;
+                    return false;
+                }
+            }
+
+            //данне с сервера нормально получили. ищем нужную дажву
             foreach (JavaVersion javaVer in versions)
             {
-                GameVersion version = new GameVersion(javaVer.LastGameVersion);
-                if (version.IsValid && version >= _gameVersion)
+                if (javaVer.LastReleaseIndex >= _releaseIndex)
                 {
                     _thisJava = javaVer;
                     break;
                 }
             }
 
+            if (_thisJava?.JavaName == null)
+            {
+                java = null;
+                result = CheckResult.DefinitionError;
+                return false;
+            }
+
             _downloadSemaphore.WaitOne(_thisJava.JavaName);
 
-            if (_thisJava != null && _thisJava.JavaName != null)
+            _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
+            if (_versionsFile != null && _versionsFile.ContainsKey(_thisJava.JavaName) && _versionsFile[_thisJava.JavaName] != null)
             {
-                _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
-                if (_versionsFile != null && _versionsFile.ContainsKey(_thisJava.JavaName) && _versionsFile[_thisJava.JavaName] != null)
+                //проверяем версию
+                if (_versionsFile[_thisJava.JavaName].LastUpdate < _thisJava.LastUpdate)
+                {   //версия старая, нужно обновить
+                    java = _thisJava;
+                    result = CheckResult.Successful;
+                    return true;
+                }
+                else // с версией все нормально. проверяем наличие на диске
                 {
-                    if (_versionsFile[_thisJava.JavaName].LastUpdate < _thisJava.LastUpdate)
+                    if (!File.Exists(WithDirectory.DirectoryPath + "/java/" + _thisJava.JavaName + "/" + _thisJava.ExecutableFile))
                     {
                         java = _thisJava;
                         result = CheckResult.Successful;
@@ -157,43 +102,34 @@ namespace Lexplosion.Logic.Management
                     }
                     else
                     {
-                        if (!File.Exists(WithDirectory.DirectoryPath + "/java/" + _thisJava.JavaName + "/" + _thisJava.ExecutableFile))
-                        {
-                            java = _thisJava;
-                            result = CheckResult.Successful;
-                            return true;
-                        }
-                        else
-                        {
-                            java = _versionsFile[_thisJava.JavaName];
-                            result = CheckResult.Successful;
-                            return false;
-                        }
+                        java = _versionsFile[_thisJava.JavaName];
+                        result = CheckResult.Successful;
+                        return false;
                     }
-                }
-                else
-                {
-                    java = _thisJava;
-                    result = CheckResult.Successful;
-                    return true;
                 }
             }
             else
             {
-                java = null;
-                result = CheckResult.DefinitionError;
-                return false;
+                java = _thisJava;
+                result = CheckResult.Successful;
+                return true;
             }
         }
 
-        public bool Update(Action<int> percentHandler)
+        public bool Update(Action<int, string> percentHandler)
         {
             if (_versionsFile == null)
             {
                 _versionsFile = new JavaVersionsFile();
             }
 
-            if (WithDirectory.DonwloadJava(_thisJava.JavaName, percentHandler))
+            string filename = _thisJava.JavaName + ".zip";
+            Action<int> prHandler = delegate (int value)
+            {
+                percentHandler(value, filename);
+            };
+
+            if (WithDirectory.DonwloadJava(_thisJava.JavaName, prHandler))
             {
                 _versionsFile[_thisJava.JavaName] = _thisJava;
                 DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/java/javaVersions.json", JsonConvert.SerializeObject(_versionsFile));

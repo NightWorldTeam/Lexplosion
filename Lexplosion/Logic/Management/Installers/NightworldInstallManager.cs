@@ -52,9 +52,9 @@ namespace Lexplosion.Logic.Management.Installers
             installer = new NightWorldInstaller(instanceid);
         }
 
-        public InstanceInit Check(out string gameVersion, string instanceVersion)
+        public InstanceInit Check(out long releaseIndex, string instanceVersion)
         {
-            gameVersion = "";
+            releaseIndex = 0;
             InfoData = DataFilesManager.GetFile<NwInstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null)
@@ -210,7 +210,7 @@ namespace Lexplosion.Logic.Management.Installers
                     requiresUpdates = true;
                 }
 
-                gameVersion = manifest.version.gameVersion;
+                releaseIndex = manifest.version.releaseIndex;
 
                 if (actualVersion == -1)
                 {

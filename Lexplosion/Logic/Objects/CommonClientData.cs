@@ -69,6 +69,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
     public class LocalVersionInfo
     {
         public Dictionary<string, string> minecraftJar;
+        public long releaseIndex;
         public string arguments;
         public string gameVersion;
         public string assetsVersion;

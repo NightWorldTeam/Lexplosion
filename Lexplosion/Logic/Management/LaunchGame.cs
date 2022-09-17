@@ -311,7 +311,7 @@ namespace Lexplosion.Logic.Management
             }
 
             instance.FileDownloadEvent += fileDownloadHandler;
-            InstanceInit result = instance.Check(out string gameVersion, version);
+            InstanceInit result = instance.Check(out long releaseIndex, version);
 
             if (result != InstanceInit.Successful)
             {
@@ -323,7 +323,7 @@ namespace Lexplosion.Logic.Management
 
             if (_settings.CustomJava == false)
             {
-                using (JavaChecker javaCheck = new JavaChecker(gameVersion))
+                using (JavaChecker javaCheck = new JavaChecker(releaseIndex))
                 {
                     if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                     {
@@ -331,19 +331,26 @@ namespace Lexplosion.Logic.Management
                         {
                             StagesCount = 0,
                             Stage = 0,
-                            Procents = 0
+                            Procents = 0,
+                            FilesCount = 0,
+                            TotalFilesCount = 1
                         });
 
-                        bool downloadResult = javaCheck.Update(delegate (int percent)
+                        bool downloadResult = javaCheck.Update(delegate (int percent, string fileName)
                         {
                             progressHandler?.Invoke(DownloadStageTypes.Java, new ProgressHandlerArguments()
                             {
                                 StagesCount = 0,
                                 Stage = 0,
-                                Procents = percent
+                                Procents = percent,
+                                FilesCount = 0,
+                                TotalFilesCount = 1
                             });
+
+                            fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
                         });
 
+                        // TODO: намутить вызов удачного или неудачного fileDownloadHandler при окончании скачивнаия
                         if (!downloadResult)
                         {
                             return new InitData

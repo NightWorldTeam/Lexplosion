@@ -43,15 +43,18 @@ namespace Lexplosion.Tools
         {
             lock (_locker)
             {
-                _semaphores[key].users--;
-                if (_semaphores[key].users < 1)
+                if (_semaphores.ContainsKey(key) && _semaphores[key].users > 0)
                 {
-                    _semaphores[key].semaphore.Release();
-                    _semaphores.Remove(key);
-                }
-                else
-                {
-                    _semaphores[key].semaphore.Release();
+                    _semaphores[key].users--;
+                    if (_semaphores[key].users < 1)
+                    {
+                        _semaphores[key].semaphore.Release();
+                        _semaphores.Remove(key);
+                    }
+                    else
+                    {
+                        _semaphores[key].semaphore.Release();
+                    }
                 }
             }
         }

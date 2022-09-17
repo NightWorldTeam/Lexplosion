@@ -99,7 +99,7 @@ namespace Lexplosion.Logic.Objects
     /// </summary>
     public class JavaVersion
     {
-        public string LastGameVersion;
+        public long LastReleaseIndex;
         public string JavaName;
         public long LastUpdate;
         public string ExecutableFile = "/bin/javaw.exe";

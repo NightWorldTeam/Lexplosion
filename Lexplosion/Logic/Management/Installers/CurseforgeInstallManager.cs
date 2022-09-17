@@ -42,9 +42,9 @@ namespace Lexplosion.Logic.Management.Installers
             installer = new CurseforgeInstaller(instanceid);
         }
 
-        public InstanceInit Check(out string gameVersion, string instanceVersion)
+        public InstanceInit Check(out long releaseIndex, string instanceVersion)
         {
-            gameVersion = "";
+            releaseIndex = 0;
 
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
@@ -109,7 +109,7 @@ namespace Lexplosion.Logic.Management.Installers
 
             DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
 
-            gameVersion = Manifest.version.gameVersion;
+            releaseIndex = Manifest.version.releaseIndex;
             return InstanceInit.Successful;
         }
 
