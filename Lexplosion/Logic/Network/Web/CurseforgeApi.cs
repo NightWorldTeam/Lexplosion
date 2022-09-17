@@ -183,7 +183,17 @@ namespace Lexplosion.Logic.Network
 
         public static List<CurseforgeCategory> GetCategories(CfProjectType type)
         {
-            return GetApiData<List<CurseforgeCategory>>("https://api.curseforge.com/v1/categories?gameId=432&classId=" + (int)type);
+            List<CurseforgeCategory> categories = GetApiData<List<CurseforgeCategory>>("https://api.curseforge.com/v1/categories?gameId=432&classId=" + (int)type);
+            categories.Add(new CurseforgeCategory
+            {
+                id = -1,
+                name = "All",
+                iconUrl = null,
+                classId = 0,
+                parentCategoryId = 0
+            });
+
+            return categories;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

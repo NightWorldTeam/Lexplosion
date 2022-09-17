@@ -12,7 +12,7 @@ namespace Lexplosion.Logic.Management
         public int StagesCount;
         public int Stage;
         public int Procents;
-        public int TotalFilesCount { get; set; }
-        public int FilesCount { get; set; }
+        public int TotalFilesCount;
+        public int FilesCount;
     }
 }
