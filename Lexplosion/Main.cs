@@ -273,9 +273,9 @@ namespace Lexplosion
         /// </summary>
         public static void AddImportantTask()
         {
-            importantThreads++;
             lock (locker)
             {
+                importantThreads++;
                 waitingClosing.Reset();
             }
         }
@@ -285,9 +285,9 @@ namespace Lexplosion
         /// </summary>
         public static void RemoveImportantTask()
         {
-            importantThreads--;
             lock (locker)
             {
+                importantThreads--;
                 if (importantThreads == 0)
                 {
                     waitingClosing.Set();
@@ -295,8 +295,44 @@ namespace Lexplosion
             }
         }
 
+        private static bool exitIsCanceled = false;
+
+        public static void CancelExit()
+        {
+            lock (locker)
+            {
+                exitIsCanceled = true;
+                waitingClosing.Set();
+            }
+        }
+
         public static void Exit()
         {
+            lock (locker)
+            {
+                if (importantThreads > 0)
+                {
+                    foreach (Window window in app.Windows)
+                    {
+                        window.Visibility = Visibility.Hidden;
+                        window.ShowInTaskbar = false;
+                    }
+                }
+            }    
+
+            waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
+            // проверяем было ли закрытие отменено
+            if (exitIsCanceled)
+            {
+                foreach (Window window in app.Windows)
+                {
+                    window.Visibility = Visibility.Visible;
+                    window.ShowInTaskbar = true;
+                }
+
+                return;
+            }
+
             BeforeExit(null, null);
             Environment.Exit(0);
         }
@@ -313,7 +349,7 @@ namespace Lexplosion
             // стопаем все процессы вроде скачивания и тп
             threads.StopThreads();
 
-            waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
+            //waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
             ExitEvent?.Invoke();
         }
 
