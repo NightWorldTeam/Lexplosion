@@ -57,8 +57,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             {
                 _uploadedFiles = value;
                 OnPropertyChanged();
+                OnPropertyChanged(IsEmptyUploadedFiles);
             }
         }
+
+        public bool IsEmptyUploadedFiles { get => UploadedFiles.Count == 0; }
 
         /// <summary>
         /// Делегат который вызывает принимает в качестве агрумента массив строк.

@@ -11,5 +11,14 @@ namespace Lexplosion.Gui.Views.Pages.FactoryMenu
         {
             InitializeComponent();
         }
+
+        private void RadioButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            try
+            {
+                scroll.ScrollToBottom();
+            }
+            catch { }
+        }
     }
 }

@@ -3,16 +3,10 @@ using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
-using System;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
-    //public class ImportedFiles 
-    //{
-    //    private InstanceClient _instanceClient;
-    //}
-
     public sealed class FactoryGeneralViewModel : ModalVMBase
     {
         private readonly MainViewModel _mainViewModel;
@@ -91,6 +85,16 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                             SelectedModloaderVersion = ModloaderVersions[0];
                     });
                 }
+            }
+        }
+
+        private bool _hasSodiumInstall;
+        public bool HasSodiumInstall 
+        {
+            get => _hasSodiumInstall; set 
+            {
+                _hasSodiumInstall = value;
+                OnPropertyChanged();
             }
         }
 

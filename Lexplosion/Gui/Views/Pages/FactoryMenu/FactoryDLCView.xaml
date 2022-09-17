@@ -171,10 +171,7 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
 
-                    <ToggleButton
-                        Margin="5,0,0,0"
-                        IsChecked="{Binding IsEnable}"
-                        Style="{StaticResource EllipseToggleButton}">
+                    <ToggleButton Margin="5,0,0,0" IsChecked="{Binding IsEnable}">
 
                         <ToggleButton.ToolTip>
                             <ToolTip
@@ -183,9 +180,15 @@
                                 Style="{StaticResource CustomTipTool}"
                                 VerticalOffset="-27" />
                         </ToggleButton.ToolTip>
-                        <DataTrigger Binding="{Binding CurrentAddon.Type}" Value="{x:Static lexplosion:CfProjectType.Maps}">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </DataTrigger>
+                        <ToggleButton.Style>
+                            <Style BasedOn="{StaticResource EllipseToggleButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentAddon.Type}" Value="{x:Static lexplosion:CfProjectType.Maps}">
+                                        <Setter Property="Border.Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
                     </ToggleButton>
 
                     <Button
@@ -298,7 +301,7 @@
                         </Style>
                     </TabControl.Resources>
                     <!--  Mods  -->
-                    <TabItem
+                    <TabItem TabIndex="2"
                         Header="{DynamicResource mods}"
                         Style="{StaticResource ButtonItemStyle}"
                         Visibility="{Binding IsVanillaGameType, Converter={StaticResource NegativeConvertBoolToVisibility}}">
@@ -319,7 +322,7 @@
                         </StackPanel>
                     </TabItem>
 
-                    <TabItem Header="{DynamicResource resourcepacks}" Style="{StaticResource ButtonItemStyle}">
+                    <TabItem TabIndex="0" Header="{DynamicResource resourcepacks}" Style="{StaticResource ButtonItemStyle}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"
@@ -337,7 +340,7 @@
                         </StackPanel>
                     </TabItem>
 
-                    <TabItem Header="{DynamicResource worlds}" Style="{StaticResource ButtonItemStyle}">
+                    <TabItem TabIndex="1" Header="{DynamicResource worlds}" Style="{StaticResource ButtonItemStyle}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"

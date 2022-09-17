@@ -124,8 +124,6 @@ namespace Lexplosion.Gui.ViewModels
 
         internal void DownloadInstance(Action<DownloadStageTypes, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null) 
         {
-            Console.WriteLine("DJFKJGHALKDFJGJKADFJJGKJJKFDAJKGJAKDLFFJ;KLADJK;LFAG;JKLFAGDJ;AGDFLJKJLKDFG;AGFJ;KLDA");
-
             if (progressHandler != null)
                 Model.DownloadModel.DownloadActions.Add(progressHandler);
 

@@ -133,14 +133,22 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
             Lexplosion.Run.TaskRun(() =>
             {
-                if (_instanceClient.GetBaseData.Modloader != ModloaderType.Vanilla) {
-                    IsVanillaGameType = false;
-                    _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods));
-                }
+                IsVanillaGameType = _instanceClient.GetBaseData.Modloader == ModloaderType.Vanilla;
+
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), CfProjectType.Resourcepacks));
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), CfProjectType.Maps));
 
-                CurrentAddon = _models[0];
+                if (!IsVanillaGameType)
+                {
+                    _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods));
+                    SelectedAddonIndex = 1;
+                }
+                else 
+                {
+
+                    SelectedAddonIndex = 1;
+                }
+
                 IsLoaded = true;
             });
         }

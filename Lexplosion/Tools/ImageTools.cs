@@ -119,7 +119,11 @@ namespace Lexplosion.Tools
             byte[] imageBytes = null;
             using (var httpClient = new HttpClient())
             {
-                imageBytes = httpClient.GetByteArrayAsync(url).Result;
+                try
+                {
+                    imageBytes = httpClient.GetByteArrayAsync(url).Result;
+                }
+                catch { }
             }
             return imageBytes;
         }

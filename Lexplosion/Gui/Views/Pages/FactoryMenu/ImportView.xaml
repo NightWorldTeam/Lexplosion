@@ -110,8 +110,9 @@
 
         <ScrollViewer>
             <StackPanel
-                MinHeight="320"
-                Margin="20"
+                MinHeight="250"
+                Margin="17,10,10,20"
+                HorizontalAlignment="Center"
                 ScrollViewer.VerticalScrollBarVisibility="Auto">
 
                 <TextBlock
@@ -190,11 +191,12 @@
                 <StackPanel Margin="0,10,0,0">
                     <TextBlock
                         Margin="0,10,0,0"
+                        Opacity="0.8"
                         Text="{DynamicResource youNotUploadedAnythink}"
-                        Visibility="Collapsed" />
+                        Visibility="{Binding IsEmptyUploadedFiles, Converter={StaticResource ConvertBoolToVisibility}}" />
 
                     <!--  Instance File  -->
-                    <ItemsControl ItemsSource="{Binding UploadedFiles}" />
+                    <ItemsControl ItemsSource="{Binding UploadedFiles}" Visibility="{Binding IsEmptyUploadedFiles, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

@@ -65,7 +65,7 @@
                     <RowDefinition Height="50" />
                 </Grid.RowDefinitions>
 
-                <ScrollViewer>
+                <ScrollViewer x:Name="scroll">
                     <StackPanel Margin="20" Orientation="Vertical">
 
                         <!--  Name  -->
@@ -107,6 +107,7 @@
                             <TextBlock HorizontalAlignment="Left" Text="{DynamicResource gameType}" />
                             <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
                                 <RadioButton
+                                    Checked="RadioButton_Checked"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Vanilla}"
                                     Content="Vanilla"
@@ -115,6 +116,7 @@
                                     IsChecked="True" />
                                 <RadioButton
                                     Margin="10,0,0,0"
+                                    Checked="RadioButton_Checked"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Forge}"
                                     Content="Forge"
@@ -124,6 +126,7 @@
 
                             <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
                                 <RadioButton
+                                    Checked="RadioButton_Checked"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Fabric}"
                                     Content="Fabric"
@@ -132,6 +135,7 @@
 
                                 <RadioButton
                                     Margin="15,0,0,0"
+                                    Checked="RadioButton_Checked"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Quilt}"
                                     Content="Quilt"
@@ -151,8 +155,11 @@
                             </StackPanel>
 
                             <StackPanel Margin="0,15,0,0">
-                                <CheckBox Content="{DynamicResource installOptifine}" />
-                                <CheckBox Margin="0,2,0,0" Content="{DynamicResource installSodiumIris}" />
+                                <!--<CheckBox Content="{DynamicResource installOptifine}" />-->
+                                <CheckBox
+                                    Margin="0,2,0,0"
+                                    Content="{DynamicResource installSodiumIris}"
+                                    IsChecked="{Binding HasSodiumInstall}" />
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
