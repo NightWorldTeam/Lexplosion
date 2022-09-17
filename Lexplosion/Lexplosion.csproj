@@ -283,6 +283,7 @@
     <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />
     <Compile Include="Logic\Network\Values.cs" />
+    <Compile Include="Logic\Network\WebSocketServer.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
     <Compile Include="Tools\EnumerateExtension.cs" />
     <Compile Include="Tools\ExtendedEventHandler.cs" />

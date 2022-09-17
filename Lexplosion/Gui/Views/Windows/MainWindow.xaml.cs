@@ -50,7 +50,7 @@ namespace Lexplosion.Gui.Views.Windows
             if (mouseEventArgs.Button == MouseButtons.Left)
             {
                 // тут разворачивать окно.
-                Run.CancelExit();
+                Run.ShowApp();
                 
             }
             else if (mouseEventArgs.Button == MouseButtons.Right) 

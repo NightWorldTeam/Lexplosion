@@ -13,6 +13,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Gui.Views.Windows;
+using System.Runtime.CompilerServices;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -294,7 +295,7 @@ namespace Lexplosion
         private static bool _exitIsCanceled = false;
         private static bool _inExited = false;
 
-        public static void CancelExit()
+        public static void ShowApp()
         {
             lock (locker)
             {
@@ -307,6 +308,12 @@ namespace Lexplosion
 
             NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
             NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
+        }
+
+        public static void CloseApp()
+        {
+            BeforeExit(null, null);
+            Environment.Exit(0);
         }
 
         public static void Exit()
@@ -355,17 +362,16 @@ namespace Lexplosion
 
         public static void BeforeExit(object sender, EventArgs e)
         {
-            // TODO: сохранить все данные
             //закрываем все окна
             foreach (Window window in app.Windows)
             {
                 window.Close();
             }
 
-            //waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
             ExitEvent?.Invoke();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void TaskRun(ThreadStart threadFunc) => new Thread(threadFunc).Start();
     }
 }
