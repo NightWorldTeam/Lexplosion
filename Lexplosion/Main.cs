@@ -293,21 +293,30 @@ namespace Lexplosion
             }
         }
 
-        private static bool exitIsCanceled = false;
+        private static bool _exitIsCanceled = false;
+        private static bool _inExited = false;
 
         public static void CancelExit()
         {
             lock (locker)
             {
-                exitIsCanceled = true;
-                waitingClosing.Set();
+                if (_inExited)
+                {
+                    _exitIsCanceled = true;
+                    waitingClosing.Set();
+                }  
             }
+
+            NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
+            NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
         }
 
         public static void Exit()
         {
             lock (locker)
             {
+                _inExited = true;
+
                 if (importantThreads > 0)
                 {
                     foreach (Window window in app.Windows)
@@ -320,8 +329,9 @@ namespace Lexplosion
 
             waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
             // проверяем было ли закрытие отменено
-            if (exitIsCanceled)
+            if (_exitIsCanceled)
             {
+                _exitIsCanceled = false;
                 foreach (Window window in app.Windows)
                 {
                     window.Visibility = Visibility.Visible;
