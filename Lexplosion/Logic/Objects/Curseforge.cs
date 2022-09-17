@@ -70,7 +70,14 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public int id;
         public string name { get; set; }
         public string iconUrl { get; set; }
+        /// <summary>
+        /// Id типа аддона.
+        /// </summary>
         public int classId;
+        /// <summary>
+        /// Id родительской категории, 
+        /// Если не содержит родительскую категорию, содержит classId
+        /// </summary>
         public int parentCategoryId;
     }
 

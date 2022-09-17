@@ -2,7 +2,6 @@
     x:Class="Lexplosion.Gui.Views.CustomControls.InstanceForm"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:btnModel="clr-namespace:Lexplosion.Gui.Models.InstanceForm"
     xmlns:button="clr-namespace:Lexplosion.Gui.Models.InstanceForm"
     xmlns:controls="clr-namespace:Lexplosion.Controls"
