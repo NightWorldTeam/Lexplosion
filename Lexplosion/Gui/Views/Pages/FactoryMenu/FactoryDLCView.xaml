@@ -298,7 +298,10 @@
                         </Style>
                     </TabControl.Resources>
                     <!--  Mods  -->
-                    <TabItem Header="{DynamicResource mods}" Style="{StaticResource ButtonItemStyle}">
+                    <TabItem
+                        Header="{DynamicResource mods}"
+                        Style="{StaticResource ButtonItemStyle}"
+                        Visibility="{Binding IsVanillaGameType, Converter={StaticResource NegativeConvertBoolToVisibility}}">
                         <StackPanel>
                             <ListBox
                                 ItemsSource="{Binding CurrentAddon.InstalledAddons}"

@@ -9,12 +9,16 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private readonly MainViewModel _mainViewModel;
         private readonly InstanceClient _instanceClient;
 
+
+        #region Properties
+
+
         private List<FactoryDLCModel> _models = new List<FactoryDLCModel>();
 
         private FactoryDLCModel _currentAddon;
-        public FactoryDLCModel CurrentAddon 
+        public FactoryDLCModel CurrentAddon
         {
-            get => _currentAddon; set 
+            get => _currentAddon; set
             {
                 _currentAddon = value;
                 OnPropertyChanged();
@@ -33,14 +37,27 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
 
         private bool _isLoaded;
-        public bool IsLoaded 
+        public bool IsLoaded
         {
-            get => _isLoaded; set 
+            get => _isLoaded; set
             {
                 _isLoaded = value;
                 OnPropertyChanged();
             }
         }
+
+        private bool _isVanillaGameType = true; 
+        public bool IsVanillaGameType 
+        {
+            get => _isVanillaGameType; set 
+            {
+                _isVanillaGameType = value; 
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion Properties
+
 
         #region Command
 
@@ -66,7 +83,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _updateCommand ?? (new RelayCommand(obj =>
             {
                 var instanceAddon = (InstanceAddon)obj;
-                Lexplosion.Run.TaskRun(delegate() 
+                Lexplosion.Run.TaskRun(delegate ()
                 {
                     instanceAddon.Update();
                 });
@@ -94,9 +111,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
 
         private RelayCommand _openAddonsFolder;
-        public RelayCommand OpenAddonsFolder 
+        public RelayCommand OpenAddonsFolder
         {
-            get => _openAddonsFolder ?? (_openAddonsFolder = new RelayCommand(obj => 
+            get => _openAddonsFolder ?? (_openAddonsFolder = new RelayCommand(obj =>
             {
                 System.Diagnostics.Process.Start("explorer", GetAddonsFolder());
             }));
@@ -104,16 +121,22 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         #endregion
 
+
+        #region Constructors
+
+
         public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
             IsLoaded = false;
             _mainViewModel = mainViewModel;
             _instanceClient = instanceClient;
-            
+
             Lexplosion.Run.TaskRun(() =>
             {
-                if (_instanceClient.GetBaseData.Modloader != ModloaderType.Vanilla)
+                if (_instanceClient.GetBaseData.Modloader != ModloaderType.Vanilla) {
+                    IsVanillaGameType = false;
                     _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods));
+                }
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), CfProjectType.Resourcepacks));
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), CfProjectType.Maps));
 
@@ -122,8 +145,17 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             });
         }
 
+        #endregion Construtors
+
+
+        #region Public & Protected Methods
+
+
         public void ChangeCurrentAddonModel(int index) => CurrentAddon = _models[index];
 
         public string GetAddonsFolder() => _instanceClient.GetDirectoryPath();
+
+
+        #endregion Public & Protected Methods
     }
 }
