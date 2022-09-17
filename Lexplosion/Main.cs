@@ -312,7 +312,7 @@ namespace Lexplosion
                 {
                     foreach (Window window in app.Windows)
                     {
-                        window.Visibility = Visibility.Hidden;
+                        window.Visibility = Visibility.Collapsed;
                         window.ShowInTaskbar = false;
                     }
                 }

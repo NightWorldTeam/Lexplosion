@@ -16,7 +16,7 @@
     Icon="pack://application:,,,/Assets/images/icons/logo.ico"
     ResizeMode="NoResize"
     WindowStyle="None"
-    mc:Ignorable="d" Loaded="Window_Loaded">
+    mc:Ignorable="d">
 
     <Window.Resources>
         <ObjectDataProvider
@@ -130,10 +130,12 @@
             StaysOpen="False">
             <Border Padding="10">
                 <StackPanel>
-                    <TextBlock FontSize="14" Foreground="White"></TextBlock>
+                    <TextBlock FontSize="14" Foreground="White" />
                     <TextBlock FontSize="14" Foreground="White">Закрыть</TextBlock>
                     <TextBlock FontSize="14" Foreground="White">Закрыть</TextBlock>
-                    <TextBlock FontSize="14" Foreground="White">Закрыть</TextBlock>
+                    <Button Click="MenuExitClick">
+                        <TextBlock FontSize="14" Foreground="White">Закрыть</TextBlock>
+                    </Button>
                 </StackPanel>
             </Border>
         </Popup>

@@ -11,10 +11,10 @@ using ContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace Lexplosion.Gui.Views.Windows
 {
-    public class NofityIconMenuItem 
-    {
-        public 
-    }
+    //public class NofityIconMenuItem 
+    //{
+    //    public 
+    //}
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
@@ -44,6 +44,7 @@ namespace Lexplosion.Gui.Views.Windows
             if (mouseEventArgs.Button == MouseButtons.Left)
             {
                 // тут разворачивать окно.
+                Run.CancelExit();
                 
             }
             else if (mouseEventArgs.Button == MouseButtons.Right) 
