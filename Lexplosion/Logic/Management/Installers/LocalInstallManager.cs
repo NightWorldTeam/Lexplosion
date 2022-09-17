@@ -28,6 +28,8 @@ namespace Lexplosion.Logic.Management.Installers
             }
         }
 
+        public event Action DownloadStarted;
+
         public LocalInstallManager(string instanceid)
         {
             InstanceId = instanceid;
@@ -61,6 +63,7 @@ namespace Lexplosion.Logic.Management.Installers
                 if (updatesCount > 0)
                 {
                     stagesCount = 1;
+                    DownloadStarted?.Invoke();
                 }
 
                 releaseIndex = Manifest.version.releaseIndex;

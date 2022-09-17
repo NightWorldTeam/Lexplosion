@@ -44,12 +44,21 @@ namespace Lexplosion.Logic.Management.Installers
             }
         }
 
+        public event Action DownloadStarted;
+
         public NightworldInstallManager(string instanceid, bool onlyBase_)
         {
             Console.WriteLine("onlyBase_ = " + onlyBase_);
             InstanceId = instanceid;
             onlyBase = onlyBase_;
             installer = new NightWorldInstaller(instanceid);
+        }
+
+        private bool _downloadStartedIsCalled = false;
+        private void DownloadStartedCall()
+        {
+            if(!_downloadStartedIsCalled)
+                DownloadStarted?.Invoke();
         }
 
         public InstanceInit Check(out long releaseIndex, string instanceVersion)
@@ -182,6 +191,7 @@ namespace Lexplosion.Logic.Management.Installers
 
                 if (_baseFaliseUpdatesCount > 0)
                 {
+                    DownloadStartedCall();
                     stagesCount++;
                 }
 
@@ -204,6 +214,7 @@ namespace Lexplosion.Logic.Management.Installers
 
                     if (_modpackFilesUpdatesCount > 0)
                     {
+                        DownloadStartedCall();
                         stagesCount++;
                     }
 

@@ -24,5 +24,6 @@ namespace Lexplosion.Logic.Management.Installers
         InitData Update(string javaPath, ProgressHandlerCallback progressHandler); // TODO: сделать так, чтобы при неудачном скачивании некоторых файлов он сохранял результат работы, чтобы не перекачивать всё снова
 
         event Action<string, int, DownloadFileProgress> FileDownloadEvent;
+        event Action DownloadStarted;
     }
 }

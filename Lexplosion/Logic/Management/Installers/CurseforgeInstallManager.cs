@@ -35,11 +35,20 @@ namespace Lexplosion.Logic.Management.Installers
             }
         }
 
+        public event Action DownloadStarted;
+
         public CurseforgeInstallManager(string instanceid, bool onlyBase_)
         {
             InstanceId = instanceid;
             onlyBase = onlyBase_;
             installer = new CurseforgeInstaller(instanceid);
+        }
+
+        private bool _downloadStartedIsCalled = false;
+        private void DownloadStartedCall()
+        {
+            if (!_downloadStartedIsCalled)
+                DownloadStarted?.Invoke();
         }
 
         public InstanceInit Check(out long releaseIndex, string instanceVersion)
@@ -75,6 +84,10 @@ namespace Lexplosion.Logic.Management.Installers
                     if (updatesCount == -1)
                     {
                         return InstanceInit.GuardError;
+                    }
+                    else if (updatesCount > 0)
+                    {
+                        DownloadStartedCall();
                     }
                 }
                 else
@@ -120,6 +133,8 @@ namespace Lexplosion.Logic.Management.Installers
             //нашелся id, который больше id установленной версии. Значит доступно обновление. Или же отсуствуют некоторые файлы модпака. Обновляем
             if (Info != null || installer.InvalidStruct(localFiles))
             {
+                DownloadStartedCall();
+
                 if (Info == null)
                 {
                     Info = CurseforgeApi.GetProjectFile(InfoData.id, InfoData.instanceVersion.ToString()); //получем информацию об этом модпаке

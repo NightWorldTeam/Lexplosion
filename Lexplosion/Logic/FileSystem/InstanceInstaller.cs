@@ -59,7 +59,6 @@ namespace Lexplosion.Logic.FileSystem
 
         protected Action<string, int, DownloadFileProgress> _fileDownloadHandler;
 
-
         public event ProcentUpdate BaseDownloadEvent;
 
         private Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();

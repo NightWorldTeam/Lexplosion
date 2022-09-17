@@ -180,6 +180,7 @@ namespace Lexplosion.Logic.Management.Instances
         public event GameExitedCallback GameExited;
         public event Action StateChanged;
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
+        public event Action DownloadStartedEvent;
 
         /// <summary>
         /// Базовый конструктор, от него должны наследоваться все остальные
@@ -609,7 +610,7 @@ namespace Lexplosion.Logic.Management.Instances
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
-            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, instanceVersion);
+            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStartedEvent, instanceVersion);
 
             if (data.InitResult == InstanceInit.Successful)
             {
@@ -638,7 +639,7 @@ namespace Lexplosion.Logic.Management.Instances
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
-            InitData data = launchGame.Initialization(ProgressHandler, FileDownloadEvent);
+            InitData data = launchGame.Initialization(ProgressHandler, FileDownloadEvent, DownloadStartedEvent);
 
             if (data.InitResult == InstanceInit.Successful)
             {
