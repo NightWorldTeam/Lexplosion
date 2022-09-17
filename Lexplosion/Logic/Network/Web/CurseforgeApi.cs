@@ -189,8 +189,8 @@ namespace Lexplosion.Logic.Network
                 id = -1,
                 name = "All",
                 iconUrl = null,
-                classId = 0,
-                parentCategoryId = 0
+                classId = (int)type,
+                parentCategoryId = (int)type
             });
 
             return categories;
