@@ -3,7 +3,6 @@ using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Tools;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

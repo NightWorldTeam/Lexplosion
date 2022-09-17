@@ -106,7 +106,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _openMarket ?? (new RelayCommand(obj =>
             {
                 MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
-                MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(CurrentAddon.InstalledAddons, _mainViewModel, _instanceClient, ((FactoryDLCModel)obj).Type);
+                MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(_mainViewModel, _instanceClient, ((FactoryDLCModel)obj).Type, CurrentAddon.InstalledAddons);
             }));
         }
 

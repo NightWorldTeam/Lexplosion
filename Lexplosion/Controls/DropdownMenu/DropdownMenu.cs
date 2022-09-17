@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -52,6 +53,51 @@ namespace Lexplosion.Controls
                     FrameworkPropertyMetadataOptions.AffectsMeasure,
                     new PropertyChangedCallback(OnTransformDirty)),
                     new ValidateValueCallback(IsMaxWidthHeightValid));
+
+        public static readonly DependencyProperty ButtonTemplateProperty
+            = DependencyProperty.Register("ButtonTemplate", typeof(ControlTemplate), typeof(DropdownMenu), new PropertyMetadata());
+
+        public static readonly DependencyProperty PopupPlacementProperty
+            = DependencyProperty.Register("PopupPlacement", typeof(PlacementMode), typeof(DropdownMenu), new PropertyMetadata(PlacementMode.Left));
+
+        public static readonly DependencyProperty PopupStaysOpenProperty
+            = DependencyProperty.Register("PopupStaysOpen", typeof(bool), typeof(DropdownMenu), new PropertyMetadata(false));
+
+        public static readonly DependencyProperty PopupVerticalOffsetProperty
+            = DependencyProperty.Register("PopupVerticalOffset", typeof(double), typeof(DropdownMenu), new PropertyMetadata(-5d));
+
+        public static readonly DependencyProperty PopupHorizontalOffsetProperty
+            = DependencyProperty.Register("PopupHorizontalOffset", typeof(double), typeof(DropdownMenu), new PropertyMetadata(0d));
+
+        public PlacementMode PopupPlacement 
+        {
+            get => (PlacementMode)GetValue(PopupPlacementProperty);
+            set => SetValue(PopupPlacementProperty, value);
+        }
+
+        public bool PopupStaysOpen
+        {
+            get => (bool)GetValue(PopupStaysOpenProperty);
+            set => SetValue(PopupStaysOpenProperty, value);
+        }
+
+        public double PopupVerticalOffset
+        {
+            get => (double)GetValue(PopupVerticalOffsetProperty);
+            set => SetValue(PopupVerticalOffsetProperty, value);
+        }
+
+        public double PopupHorizontalOffset
+        {
+            get => (double)GetValue(PopupHorizontalOffsetProperty);
+            set => SetValue(PopupHorizontalOffsetProperty, value);
+        }
+
+        public ControlTemplate ButtonTemplate 
+        {
+            get => (ControlTemplate)GetValue(ButtonTemplateProperty);
+            set => SetValue(ButtonTemplateProperty, value);
+        }
 
         public bool IsOpen
         {
