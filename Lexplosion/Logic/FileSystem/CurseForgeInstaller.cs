@@ -8,10 +8,10 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.Curseforge;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
@@ -20,47 +20,6 @@ namespace Lexplosion.Logic.FileSystem
     class CurseforgeInstaller : InstanceInstaller
     {
         public CurseforgeInstaller(string instanceId) : base(instanceId) { }
-
-        public class InstanceManifest
-        {
-            public class McVersionInfo
-            {
-                public string version;
-                public List<ModLoaders> modLoaders;
-            }
-
-            public class ModLoaders
-            {
-                public string id;
-                public bool primary;
-            }
-
-            public class FileData
-            {
-                public int projectID;
-                public int fileID;
-            }
-
-            public McVersionInfo minecraft;
-            public string name;
-            public string version;
-            public string author;
-            public List<FileData> files;
-        }
-
-        public class InstanceContent
-        {
-            public InstalledAddonsFormat InstalledAddons;
-            public List<string> Files { get; set; }
-            public bool FullClient = false;
-        }
-
-        private class InstanceContentFile
-        {
-            public List<int> InstalledAddons;
-            public List<string> Files { get; set; }
-            public bool FullClient = false;
-        }
 
         public delegate void Procent(int procent);
 
@@ -328,6 +287,8 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (filesCount != 0)
                 {
+                    SaveInstanceContent(compliteDownload);
+
                     object fileBlock = new object(); // этот объект блокировщик нужен что бы синхронизировать работу с json файлами
 
                     // формируем список айдишников
@@ -467,7 +428,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (errors.Count == 0)
                 {
-                    compliteDownload.FullClient = true; // TODO: учитывать ошибки
+                    compliteDownload.FullClient = true;
                 }
 
                 SaveInstanceContent(compliteDownload);

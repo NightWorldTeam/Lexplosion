@@ -7,7 +7,7 @@ namespace Lexplosion.Logic.Management.Instances
 {
     class LocalInstance : PrototypeInstance
     {
-        public override bool CheckUpdates(InstancePlatformData infoData)
+        public override bool CheckUpdates(InstancePlatformData infoData, string localId)
         {
             return false;
         }

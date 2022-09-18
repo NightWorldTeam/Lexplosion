@@ -20,7 +20,7 @@ namespace Lexplosion.Logic.Management.Instances
             public string ExternalId;
         }
 
-        public abstract bool CheckUpdates(InstancePlatformData infoData);
+        public abstract bool CheckUpdates(InstancePlatformData infoData, string localId);
 
         public abstract InstanceData GetFullInfo(string localId, string externalId);
 

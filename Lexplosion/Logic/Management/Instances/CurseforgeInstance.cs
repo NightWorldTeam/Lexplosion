@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -10,8 +11,14 @@ namespace Lexplosion.Logic.Management.Instances
 {
     class CurseforgeInstance : PrototypeInstance
     {
-        public override bool CheckUpdates(InstancePlatformData infoData)
+        public override bool CheckUpdates(InstancePlatformData infoData, string localId)
         {
+            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instanceContent.json");
+            if (content != null && !content.FullClient)
+            {
+                return true;
+            }
+
             if (!Int32.TryParse(infoData.id, out _))
             {
                 return true;
@@ -25,7 +32,6 @@ namespace Lexplosion.Logic.Management.Instances
                 if (ver.id > infoData.instanceVersion)
                 {
                     return true;
-                
                 }
             }
 

@@ -685,7 +685,7 @@ namespace Lexplosion.Logic.Management.Instances
                 return;
             }
 
-            UpdateAvailable = _dataManager.CheckUpdates(infoData);
+            UpdateAvailable = _dataManager.CheckUpdates(infoData, _localId);
             return;
         }
 

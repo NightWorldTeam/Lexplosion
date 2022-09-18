@@ -150,4 +150,10 @@ namespace Lexplosion.Logic.Objects
         public bool CanInstall { get; set; } = true;
     }
 
+    /// <summary>
+    /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
+    /// Ключ - курсфордж id.
+    /// </summary>
+    public class InstalledAddonsFormat : Dictionary<int, InstalledAddonInfo> { }
+
 }

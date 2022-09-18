@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Objects.Curseforge
 {
@@ -200,5 +197,46 @@ namespace Lexplosion.Logic.Objects.Curseforge
                 }
             }
         }
+    }
+
+    public class InstanceManifest
+    {
+        public class McVersionInfo
+        {
+            public string version;
+            public List<ModLoaders> modLoaders;
+        }
+
+        public class ModLoaders
+        {
+            public string id;
+            public bool primary;
+        }
+
+        public class FileData
+        {
+            public int projectID;
+            public int fileID;
+        }
+
+        public McVersionInfo minecraft;
+        public string name;
+        public string version;
+        public string author;
+        public List<FileData> files;
+    }
+
+    public class InstanceContent
+    {
+        public InstalledAddonsFormat InstalledAddons;
+        public List<string> Files { get; set; }
+        public bool FullClient = false;
+    }
+
+    public class InstanceContentFile
+    {
+        public List<int> InstalledAddons;
+        public List<string> Files { get; set; }
+        public bool FullClient = false;
     }
 }

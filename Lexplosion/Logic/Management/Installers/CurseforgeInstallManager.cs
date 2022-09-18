@@ -308,7 +308,9 @@ namespace Lexplosion.Logic.Management.Installers
                         {
                             StagesCount = 3,
                             Stage = 3,
-                            Procents = 0
+                            Procents = 0,
+                            TotalFilesCount = totalDataCount,
+                            FilesCount = nowDataCount
                         });
                     }
                 };

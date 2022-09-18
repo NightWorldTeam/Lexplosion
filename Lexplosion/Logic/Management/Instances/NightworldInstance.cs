@@ -10,7 +10,7 @@ namespace Lexplosion.Logic.Management.Instances
 {
     class NightworldInstance : PrototypeInstance
     {
-        public override bool CheckUpdates(InstancePlatformData infoData)
+        public override bool CheckUpdates(InstancePlatformData infoData, string localId)
         {
             int version = NightWorldApi.GetInstanceVersion(infoData.id);
             return (infoData.instanceVersion < version);

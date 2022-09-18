@@ -130,10 +130,4 @@ namespace Lexplosion.Logic.Management.Instances
             return (elem1 is null) || (elem2 is null) || (elem1.LocalId != elem2.LocalId);
         }
     }
-
-    /// <summary>
-    /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
-    /// Ключ - курсфордж id.
-    /// </summary>
-    public class InstalledAddonsFormat : Dictionary<int, InstalledAddonInfo> { }
 }
