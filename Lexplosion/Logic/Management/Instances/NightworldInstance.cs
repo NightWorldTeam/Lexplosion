@@ -81,7 +81,7 @@ namespace Lexplosion.Logic.Management.Instances
                             Description = nwInstances[nwModpack].Description,
                             GameVersion = nwInstances[nwModpack].GameVersion,
                             WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + nwModpack,
-                            LogoUrl = nwInstances[nwModpack].MainImage,
+                            LogoUrl = nwInstances[nwModpack].LogoUrl,
                             ExternalId = nwModpack
                         });
                     }
@@ -126,7 +126,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Description = info.Description,
                 GameVersion = info.GameVersion,
                 WebsiteUrl = LaunсherSettings.URL.Base + "modpacks/" + instanceId,
-                LogoUrl = info.MainImage,
+                LogoUrl = info.LogoUrl,
                 ExternalId = instanceId
             };
         }

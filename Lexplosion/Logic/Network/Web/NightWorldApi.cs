@@ -32,7 +32,7 @@ namespace Lexplosion.Logic.Network
         public class InstanceInfo
         {
             public string Name;
-            public string MainImage;
+            public string LogoUrl;
             public string Author;
             public long Version;
             public string Description;
