@@ -104,6 +104,8 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public List<string> DownloadErrors;
         public VersionInfo VersionFile;
         public Dictionary<string, LibInfo> Libraries;
+        public bool UpdatesAvailable;
+        public string ClientVersion = "";
     }
 
     public struct MCVersionInfo

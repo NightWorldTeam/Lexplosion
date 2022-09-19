@@ -612,14 +612,12 @@ namespace Lexplosion.Logic.Management.Instances
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStartedEvent, instanceVersion);
 
+            UpdateAvailable = data.UpdatesAvailable;
+            ProfileVersion = data.ClientVersion;
+
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
-                UpdateAvailable = false;
-                if (instanceVersion != null)
-                {
-                    ProfileVersion = instanceVersion;
-                }
 
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
@@ -640,6 +638,9 @@ namespace Lexplosion.Logic.Management.Instances
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
             InitData data = launchGame.Initialization(ProgressHandler, FileDownloadEvent, DownloadStartedEvent);
+
+            UpdateAvailable = data.UpdatesAvailable;
+            ProfileVersion = data.ClientVersion;
 
             if (data.InitResult == InstanceInit.Successful)
             {

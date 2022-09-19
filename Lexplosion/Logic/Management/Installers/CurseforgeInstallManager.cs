@@ -168,6 +168,8 @@ namespace Lexplosion.Logic.Management.Installers
                     return new InitData
                     {
                         InitResult = InstanceInit.ManifestError,
+                        UpdatesAvailable = true,
+                        ClientVersion = Info.id.ToString()
                     };
                 }
 
@@ -230,6 +232,8 @@ namespace Lexplosion.Logic.Management.Installers
                             return new InitData
                             {
                                 InitResult = InstanceInit.GuardError,
+                                UpdatesAvailable = true,
+                                ClientVersion = Info.id.ToString()
                             };
                         }
                     }
@@ -238,6 +242,8 @@ namespace Lexplosion.Logic.Management.Installers
                         return new InitData
                         {
                             InitResult = InstanceInit.ServerError,
+                            UpdatesAvailable = true,
+                            ClientVersion = Info.id.ToString()
                         };
                     }
                 }
@@ -248,7 +254,6 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                     {
-                        Console.WriteLine("EVENT " + totalDataCount + " " + nowDataCount);
                         progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
                         {
                             StagesCount = 3,
@@ -324,6 +329,8 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         InitResult = InstanceInit.DownloadFilesError,
                         DownloadErrors = errors,
+                        UpdatesAvailable = true,
+                        ClientVersion = Info.id.ToString()
                     };
                 }
             }
@@ -367,6 +374,8 @@ namespace Lexplosion.Logic.Management.Installers
                     return new InitData
                     {
                         InitResult = InstanceInit.ForgeVersionError,
+                        UpdatesAvailable = true,
+                        ClientVersion = Info?.id.ToString() ?? ""
                     };
                 }
             }
@@ -377,7 +386,9 @@ namespace Lexplosion.Logic.Management.Installers
             {
                 InitResult = InstanceInit.Successful,
                 VersionFile = Manifest.version,
-                Libraries = Manifest.libraries
+                Libraries = Manifest.libraries,
+                UpdatesAvailable = false,
+                ClientVersion = Info?.id.ToString() ?? ""
             };
         }
     }

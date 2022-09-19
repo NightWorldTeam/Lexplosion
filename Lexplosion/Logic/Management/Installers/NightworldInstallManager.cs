@@ -381,7 +381,8 @@ namespace Lexplosion.Logic.Management.Installers
                 InitResult = result,
                 DownloadErrors = errors,
                 VersionFile = manifest.version,
-                Libraries = manifest.libraries
+                Libraries = manifest.libraries,
+                UpdatesAvailable = (result != InstanceInit.Successful)
             };
         }
     }
