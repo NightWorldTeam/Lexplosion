@@ -915,11 +915,11 @@ namespace Lexplosion.Logic.Management.Instances
         {
             string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
 
-            void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList)
+            void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList, string parentPath)
             {
-                foreach (string key in exportList.Keys)
+                foreach (string key in levelsList.Keys)
                 {
-                    PathLevel elem = exportList[key];
+                    PathLevel elem = levelsList[key];
                     if (elem.IsSelected)
                     {
                         if (elem.IsFile)
@@ -928,12 +928,12 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         else
                         {
-                            if (elem.UnitsList == null)
+                            if (elem.UnitsList == null || elem.UnitsList.Count == 0)
                             {
                                 string[] files;
                                 try
                                 {
-                                    files = Directory.GetFiles(dirPath + key, "*", SearchOption.AllDirectories);
+                                    files = Directory.GetFiles(dirPath + parentPath + key, "*", SearchOption.AllDirectories);
                                 }
                                 catch
                                 {
@@ -947,7 +947,7 @@ namespace Lexplosion.Logic.Management.Instances
                             }
                             else
                             {
-                                ParsePathLevel(ref list, elem.UnitsList);
+                                ParsePathLevel(ref list, elem.UnitsList, key);
                             }
                         }
                     }
@@ -955,7 +955,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             List<string> filesList = new List<string>();
-            ParsePathLevel(ref filesList, exportList);
+            ParsePathLevel(ref filesList, exportList, "");
 
             if (File.Exists(dirPath + "/installedAddons.json"))
             {
