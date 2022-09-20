@@ -59,7 +59,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        public static List<Info> GetCatalog(int pageSize, int pageIndex, int categoriy, string searchFilter)
+        public static List<Info> GetCatalog(int pageSize, int pageIndex)
         {
             Dictionary<string, NightWorldApi.InstanceInfo> nwInstances = NightWorldApi.GetInstancesList();
             var result = new List<Info>();

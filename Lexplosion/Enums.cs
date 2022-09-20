@@ -45,6 +45,18 @@ namespace Lexplosion
         None
     }
 
+    public enum CfSortField
+    {
+        Featured = 1,
+        Popularity,
+        LastUpdated,
+        Name,
+        Author,
+        TotalDownloads,
+        Category,
+        GameVersion
+    }
+
     public enum InstanceInit
     {
         Successful,

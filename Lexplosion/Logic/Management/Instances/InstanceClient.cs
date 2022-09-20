@@ -433,12 +433,12 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список модпаков для каталога.
         /// </summary>
         /// <returns>Список внешних модпаков.</returns>
-        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter = "")
+        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
         {
             Console.WriteLine("UploadInstances " + pageIndex);
 
             var instances = new List<InstanceClient>();
-            List<PrototypeInstance.Info> catalog = PrototypeInstance.GetCatalog(type, pageSize, pageIndex, categoriy, searchFilter);
+            List<PrototypeInstance.Info> catalog = PrototypeInstance.GetCatalog(type, pageSize, pageIndex, categoriy, searchFilter, sortField, gameVersion);
 
             foreach (var instance in catalog)
             {

@@ -123,9 +123,9 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        public static List<Info> GetCatalog(int pageSize, int pageIndex, int categoriy, string searchFilter)
+        public static List<Info> GetCatalog(int pageSize, int pageIndex, int categoriy, string searchFilter, CfSortField sortField, string gameVersion)
         {
-            List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, categoriy, searchFilter);
+            List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, categoriy, sortField, searchFilter, gameVersion);
             var result = new List<Info>();
 
             foreach (var instance in curseforgeInstances)
