@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.Network
 
         protected Semaphore AcceptingBlock; //блокировка во время приёма подключения
         protected Semaphore SendingBlock; //блокировка во время работы метода Sending
-        protected AutoResetEvent ControlConnectionBlock; // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
+        private AutoResetEvent ControlConnectionBlock; // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
 
         protected AutoResetEvent SendingWait;
         protected AutoResetEvent ReadingWait;
@@ -133,10 +133,23 @@ namespace Lexplosion.Logic.Network
                             Console.WriteLine("ControlServerRecv");
                             ControlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
                             controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
-                            int bytes = controlConnection.Receive(data); // TODO: в трай запихать
-                            ControlConnectionBlock.WaitOne(); // блочим семофор
-                            controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
-                            Console.WriteLine("ControlServerEndRecv");
+
+                            int bytes;
+                            try
+                            {
+                                bytes = controlConnection.Receive(data);
+                            }
+                            catch
+                            {
+                                needRepeat = true;
+                                break;
+                            }
+                            finally
+                            {
+                                ControlConnectionBlock.WaitOne(); // блочим семофор
+                                controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
+                                Console.WriteLine("ControlServerEndRecv");
+                            }
 
                             if (bytes > 1 && data[0] == ControlSrverCodes.A) // data[0] == 97 значит поступил запрос на поделючение
                             {
@@ -292,8 +305,6 @@ namespace Lexplosion.Logic.Network
 
                 if (needRepeat)
                 {
-                    AcceptingBlock.Release();
-
                     ControlConnectionBlock.WaitOne();
                     controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
                     controlConnection.Close();

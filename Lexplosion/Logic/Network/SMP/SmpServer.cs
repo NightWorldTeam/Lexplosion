@@ -105,15 +105,19 @@ namespace Lexplosion.Logic.Network.SMP
 
                         if ((WaitFullPackage && message.IsFull) || !WaitFullPackage)
                         {
-                            SmpClient client = clients[message.Point];
-                            if (client.Receive(out data))
+                            if (clients.ContainsKey(message.Point))
                             {
-                                return message.Point;
+                                SmpClient client = clients[message.Point];
+                                if (client.Receive(out data))
+                                {
+                                    return message.Point;
+                                }
+                                else
+                                {
+                                    return null;
+                                }
                             }
-                            else
-                            {
-                                return null;
-                            }
+
                         }
                     }
                 }

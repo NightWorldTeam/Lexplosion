@@ -169,7 +169,6 @@ namespace Lexplosion.Logic.Network
 
                 while (true)
                 {
-                    Console.WriteLine("GAME SERVER IS WORK");
                     // проверяем имеется ли этот порт. Если имеется - значит сервер запущен
                     if (!Utils.ContainsTcpPort(pid, port))
                     {

@@ -35,7 +35,7 @@ namespace Lexplosion.Logic.Network
         {
             lock (_abortLoocker)
             {
-                if (Connections.ContainsKey(point))// может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
+                if (point != null && Connections.ContainsKey(point)) // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
                 {
                     Console.WriteLine("clientAbort");
                     AcceptingBlock.WaitOne();
@@ -216,7 +216,6 @@ namespace Lexplosion.Logic.Network
                         Server.Close(point);
                         ClientAbort(point);
                     }
-
                 }
                 catch (Exception e) // Обрываем соединение с этми клиентом нахуй
                 {
