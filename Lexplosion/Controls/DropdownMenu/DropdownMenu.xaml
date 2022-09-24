@@ -47,7 +47,11 @@
                             PopupAnimation="Fade"
                             StaysOpen="{TemplateBinding PopupStaysOpen}"
                             VerticalOffset="{TemplateBinding PopupVerticalOffset}">
-                            <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
                                 <ContentControl Margin="2,7,2,7" Content="{TemplateBinding Content}" />
                             </Border>
                         </Popup>

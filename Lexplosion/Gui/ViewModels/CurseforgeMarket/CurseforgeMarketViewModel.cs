@@ -5,70 +5,59 @@ using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Management;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 {
-    public class CfCategory : CfCategoryBase
-    {
-        public CfCategory(CurseforgeCategory curseforgeCategory) : base(curseforgeCategory)
-        {
-        }
-    }
 
-    public sealed class CfParentCategory : CfCategory
-    {
-        private List<CfCategory> _cfSubCategories;
-        public List<CfCategory> CfSubCategories 
-        { 
-            get => _cfSubCategories; set 
-            {
-                _cfSubCategories = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public CfParentCategory(CurseforgeCategory curseforgeCategory, List<CfCategory> categories) : base(curseforgeCategory)
-        {
-            CfSubCategories = categories;
-        }
-    }
-
-
-    public abstract class CfCategoryBase : VMBase
+    public class CfCategory : VMBase
     {
         private readonly CurseforgeCategory _curseforgeCategory;
+
+        #region Properities
 
         public string Name { get; }
         public int Id { get; }
         public byte[] ImageBytes { get; private set; }
+        public bool HasSubCategories { get; }
 
-        public CfCategoryBase(CurseforgeCategory curseforgeCategory) 
+        private bool _hasSubcategies;
+        public bool HasSubcategories
+        {
+            get => _hasSubcategies; private set
+            {
+                _hasSubcategies = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private CfCategory[] _cfSubcategories;
+        public CfCategory[] CfSubCategories
+        {
+            get => _cfSubcategories; set
+            {
+                _cfSubcategories = value;
+                OnPropertyChanged();
+                Console.WriteLine(CfSubCategories != null ? CfSubCategories.Length : "null");
+                HasSubcategories = value != null;
+            }
+        }
+
+        #endregion Properities
+
+        #region Constructors
+
+        public CfCategory(CurseforgeCategory curseforgeCategory, CfCategory[] categories = null)
         {
             _curseforgeCategory = curseforgeCategory;
             Name = curseforgeCategory.name;
             Id = curseforgeCategory.id;
             ImageBytes = null;
-            //IsChildCategory = _curseforgeCategory.parentCategoryId != _curseforgeCategory.classId;
+            HasSubCategories = categories != null;
+            CfSubCategories = categories;
         }
 
-        public void LoadImage() 
-        {
-            ImageBytes = ImageTools.GetImageBytesByUrl(_curseforgeCategory.iconUrl);
-        }
-
-        public CfParentCategory GetParentCategory()
-        {
-            return new CfParentCategory(_curseforgeCategory, new List<CfCategory> { });
-        }
-
-        public CfCategory GetCfCategory() 
-        {
-            return new CfCategory(_curseforgeCategory);
-        }
+        #endregion Constructors
     }
 
     public sealed class CurseforgeMarketViewModel : VMBase
@@ -79,34 +68,47 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private readonly ObservableCollection<InstanceAddon> _instanceAddons;
         private readonly BaseInstanceData _baseInstanceData;
 
+        private int _pageSize = 20;
+
         public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, ObservableCollection<InstanceAddon> installedAddons)
         {
             _mainViewModel = mainViewModel;
+            _mainViewModel.UserProfile.IsShowInfoBar = false;
+
             _instanceClient = instanceClient;
             _projectType = addonsType;
             _instanceAddons = installedAddons;
             _baseInstanceData = instanceClient.GetBaseData;
-            LoadCategories();
-            IsLoaded = true;
 
-            Lexplosion.Run.TaskRun(() => 
-            {
-                Thread.Sleep(5000);
-                foreach (var cfc in ModCategories) 
-                {
-                    cfc.LoadImage();
-                }
-            });
+            // передача делегата загрузки при поиске по тексту
+            SearchMethod += InstancePageLoading;
+            PaginatorVM.PageChanged += InstancePageLoading;
+
+            // загрузка категорий
+            LoadContent();
+
+
+            IsLoaded = false;
+
+            //foreach (var cfc in CfCategories) 
+            //{
+            //    cfc.LoadImage();
+            //}
         }
 
 
         #region Properties
 
-        public ObservableCollection<CfCategoryBase> ModCategories { get; } = new ObservableCollection<CfCategoryBase>();
-        public ObservableCollection<InstanceAddon> InstanceAddons { get; }
+        public ObservableCollection<InstanceAddon> InstanceAddons { get; } = new ObservableCollection<InstanceAddon>();
 
-        public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel();
+        #region Navigation
+
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
+        public Action<string> SearchMethod { get; }
+
+        #endregion Navigation
+
+        #region load fields
 
         private bool _isLoaded;
         public bool IsLoaded
@@ -141,15 +143,36 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
-        private int _selectedCategoryId = -1;
-        public int SelectedCategoryId
+        #endregion load fields
+
+
+        #region Categories 
+
+        public ObservableCollection<CfCategory> CfCategories { get; } = new ObservableCollection<CfCategory>();
+
+        private CfCategory _selectedCategory;
+        public CfCategory SelectedCategory
         {
-            get => _selectedCategoryId; set
+            get => _selectedCategory; set
             {
-                _selectedCategoryId = value;
+                _selectedCategory = value;
+                OnPropertyChanged();
+                if (!_selectedCategory.HasSubCategories)
+                    SubCategorySelected = null;
+            }
+        }
+
+        private CfCategory _subCategorySelected;
+        public CfCategory SubCategorySelected
+        {
+            get => _subCategorySelected; set
+            {
+                _subCategorySelected = value;
                 OnPropertyChanged();
             }
         }
+        #endregion Categories
+
 
         #endregion Properties
 
@@ -157,7 +180,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         #region Commands
 
         private RelayCommand _closePageCommand;
-        public RelayCommand ClosePageCommand 
+        public RelayCommand ClosePageCommand
         {
             get => _closePageCommand ?? (_closePageCommand = new RelayCommand(obj =>
             {
@@ -165,20 +188,20 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }));
         }
 
-        private RelayCommand _goToCurserforgeCommand;
-        public RelayCommand GoToCurserforgeCommand 
+        private RelayCommand _goToCurseforgeCommand;
+        public RelayCommand GoToCurseforgeCommand
         {
-            get => _goToCurserforgeCommand ?? (_goToCurserforgeCommand = new RelayCommand(obj => 
+            get => _goToCurseforgeCommand ?? (_goToCurseforgeCommand = new RelayCommand(obj =>
             {
                 var link = (string)obj;
                 GoToCurseforge(link);
             }));
         }
 
-        private RelayCommand _installModCommand;
-        public RelayCommand InstallModCommand 
+        private RelayCommand _installAddonCommand;
+        public RelayCommand InstallAddonCommand
         {
-            get => _installModCommand ?? (_installModCommand = new RelayCommand(obj => 
+            get => _installAddonCommand ?? (_installAddonCommand = new RelayCommand(obj =>
             {
                 InstallAddon((InstanceAddon)obj);
             }));
@@ -193,15 +216,14 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #region Private Methods
 
-        private void LoadCategories() 
+        private void LoadContent()
         {
-            Lexplosion.Run.TaskRun(() => 
-            {
+            Lexplosion.Run.TaskRun(() => { 
                 var curseforgeCategories = CurseforgeApi.GetCategories(_projectType);
 
-                App.Current.Dispatcher.Invoke(() =>
-                {
+                App.Current.Dispatcher.Invoke(() => { 
                     var sortedByIdCategories = new Dictionary<int, List<CfCategory>>();
+
                     foreach (var cfc in curseforgeCategories)
                     {
                         if (!sortedByIdCategories.ContainsKey(cfc.parentCategoryId))
@@ -214,55 +236,52 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                         }
                     }
 
-                    List<CfParentCategory> parentCategories = new List<CfParentCategory>();
-                    foreach (var cfc in sortedByIdCategories.Keys) 
+                    List<CfCategory> parentCategories = new List<CfCategory>();
+                    foreach (var cfc in sortedByIdCategories.Keys)
                     {
                         // cfc == 6 -> Mods not Subcategory
                         if (cfc == (int)_projectType)
                         {
-                            foreach (var category in sortedByIdCategories[cfc]) 
+                            foreach (var category in sortedByIdCategories[cfc])
                             {
                                 var categoryInstance = category;
-                                if (sortedByIdCategories.ContainsKey(category.Id)) 
+                                if (sortedByIdCategories.ContainsKey(category.Id))
                                 {
-                                    categoryInstance = category.GetParentCategory();
-                                    parentCategories.Add((CfParentCategory)categoryInstance);
+                                    parentCategories.Add(category);
                                 }
-                                ModCategories.Add(categoryInstance);
+                                CfCategories.Add(categoryInstance);
                             }
                         }
-                        else 
+                        else
                         {
-                            foreach (var parentCategory in parentCategories) 
+                            foreach (var parentCategory in parentCategories)
                             {
-                                parentCategory.CfSubCategories = sortedByIdCategories[parentCategory.Id];
+                                foreach (var cfCategory in CfCategories) 
+                                {
+                                    if (cfCategory.Name == parentCategory.Name) 
+                                    {
+                                        cfCategory.CfSubCategories = sortedByIdCategories[parentCategory.Id].ToArray();
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
 
-
-
-                    foreach (var so in sortedByIdCategories) { 
-                        var str = "";
-                        foreach (var s in so.Value) 
-                        {
-                            str += s.Name + " ";
-                        }
-
-                        Console.WriteLine("Key: " + so.Key + " Value: " + str);
-                    }
+                    SelectedCategory = CfCategories[CfCategories.Count - 1];
+                    InstancePageLoading();
                 });
             });
         }
 
-        private void ClosePage() 
+        private void ClosePage()
         {
             _mainViewModel.UserProfile.IsShowInfoBar = true;
             InstanceAddon.ClearAddonsListCache();
             MainViewModel.NavigationStore.CurrentViewModel = MainViewModel.NavigationStore.PrevViewModel;
         }
 
-        private void GoToCurseforge(string link) 
+        private void GoToCurseforge(string link)
         {
             try
             {
@@ -274,7 +293,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
-        private void InstallAddon(InstanceAddon instanceAddon) 
+        private void InstallAddon(InstanceAddon instanceAddon)
         {
             Lexplosion.Run.TaskRun(delegate
             {
@@ -314,6 +333,38 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                     }
                 });
             });
+        }
+
+        private async void InstancePageLoading(string searchText = "")
+        {
+            // запускаем заставку загрузки
+            IsLoaded = false;
+
+            Console.WriteLine(searchText);
+
+            var instances = await Task.Run(() => InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1,
+                AddonType.Mods, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText)
+            );
+
+            IsPaginatorVisible = instances.Count == _pageSize;
+
+            // если аддоны не найдены
+            if (instances.Count == 0)
+            {
+                InstanceAddons.Clear();
+                IsEmptyList = true;
+            }
+            else
+            {
+                IsEmptyList = !IsEmptyList;
+                InstanceAddons.Clear();
+
+                foreach (var instance in instances)
+                {
+                    InstanceAddons.Add(instance);
+                }
+            }
+            IsLoaded = true;
         }
 
         #endregion Private Methods   

@@ -29,8 +29,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             get => _gameVersion; set
             {
                 _gameVersion = BaseInstanceData.GameVersion = value;
-
-                if (ModloaderType != ModloaderType.Vanilla) 
+                if (IsModloader) 
                 {
                     GetModloaderVersions(value, ModloaderType);
                 }
@@ -52,7 +51,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// <summary>
         /// Список версий майнкрафта.
         /// </summary>
-        public List<string> GameVersions { get; } = MainViewModel.ReleaseGameVersions.ToList();
+        public List<string> GameVersions { get; } = MainViewModel.AllGameVersions.ToList();
 
         /// <summary>
         /// Список версий конкретного modloader, для конкретной версии.

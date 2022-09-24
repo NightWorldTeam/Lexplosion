@@ -141,7 +141,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 if (!IsVanillaGameType)
                 {
                     _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods));
-                    SelectedAddonIndex = 1;
+                    SelectedAddonIndex = 2;
                 }
                 else 
                 {

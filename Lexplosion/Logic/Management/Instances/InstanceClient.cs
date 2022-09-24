@@ -433,12 +433,12 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список модпаков для каталога.
         /// </summary>
         /// <returns>Список внешних модпаков.</returns>
-        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
+        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter = "")
         {
             Console.WriteLine("UploadInstances " + pageIndex);
 
             var instances = new List<InstanceClient>();
-            List<PrototypeInstance.Info> catalog = PrototypeInstance.GetCatalog(type, pageSize, pageIndex, categoriy, searchFilter, sortField, gameVersion);
+            List<PrototypeInstance.Info> catalog = PrototypeInstance.GetCatalog(type, pageSize, pageIndex, categoriy, searchFilter);
 
             foreach (var instance in catalog)
             {
@@ -612,12 +612,14 @@ namespace Lexplosion.Logic.Management.Instances
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStartedEvent, instanceVersion);
 
-            UpdateAvailable = data.UpdatesAvailable;
-            ProfileVersion = data.ClientVersion;
-
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
+                UpdateAvailable = false;
+                if (instanceVersion != null)
+                {
+                    ProfileVersion = instanceVersion;
+                }
 
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
@@ -638,9 +640,6 @@ namespace Lexplosion.Logic.Management.Instances
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
             InitData data = launchGame.Initialization(ProgressHandler, FileDownloadEvent, DownloadStartedEvent);
-
-            UpdateAvailable = data.UpdatesAvailable;
-            ProfileVersion = data.ClientVersion;
 
             if (data.InitResult == InstanceInit.Successful)
             {
@@ -870,7 +869,8 @@ namespace Lexplosion.Logic.Management.Instances
                     foreach (DirectoryInfo item in dir.GetDirectories())
                     {
                         pathContent["/" + item.Name] =
-                            new PathLevel(item.Name, false, path + "/" + item.Name, (item.Name == "mods" || item.Name == "scripts" || item.Name == "resources" || item.Name == "resourcepacks" || item.Name == "config"));
+                            new PathLevel(item.Name, false, path + "/" + item.Name, 
+                            (item.Name == "mods" || item.Name == "scripts" || item.Name == "resources" || item.Name == "resourcepacks" || item.Name == "config"));
                     }
                 }
                 catch { }
@@ -879,7 +879,8 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     foreach (var item in dir.GetFiles())
                     {
-                        if (path == "/" && item.Name != "installedAddons.json" && item.Name != "lastUpdates.json" && item.Name != "manifest.json" && item.Name != "instanceContent.json" && item.Name != "instancePlatformData.json")
+                        if (path == "/" && item.Name != "installedAddons.json" && item.Name != "lastUpdates.json" && item.Name != "manifest.json" 
+                            && item.Name != "instanceContent.json" && item.Name != "instancePlatformData.json")
                             pathContent["/" + item.Name] = new PathLevel(item.Name, true, path + "/" + item.Name);
                     }
                 }
@@ -915,7 +916,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
 
-            void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList, string parentPath)
+            void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList)
             {
                 foreach (string key in levelsList.Keys)
                 {
@@ -928,12 +929,12 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         else
                         {
-                            if (elem.UnitsList == null || elem.UnitsList.Count == 0)
+                            if (elem.UnitsList == null)
                             {
                                 string[] files;
                                 try
                                 {
-                                    files = Directory.GetFiles(dirPath + parentPath + key, "*", SearchOption.AllDirectories);
+                                    files = Directory.GetFiles(dirPath + key, "*", SearchOption.AllDirectories);
                                 }
                                 catch
                                 {
@@ -947,7 +948,7 @@ namespace Lexplosion.Logic.Management.Instances
                             }
                             else
                             {
-                                ParsePathLevel(ref list, elem.UnitsList, key);
+                                ParsePathLevel(ref list, elem.UnitsList);
                             }
                         }
                     }
@@ -955,7 +956,8 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             List<string> filesList = new List<string>();
-            ParsePathLevel(ref filesList, exportList, "");
+            Console.WriteLine("1289980123890123890321908");
+            ParsePathLevel(ref filesList, exportList);
 
             if (File.Exists(dirPath + "/installedAddons.json"))
             {

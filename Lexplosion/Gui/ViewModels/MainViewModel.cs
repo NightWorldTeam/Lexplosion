@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Controls;
 using Lexplosion.Gui.Models;
+using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
@@ -23,6 +24,8 @@ namespace Lexplosion.Gui.ViewModels
 
         public MainMenuViewModel MainMenuVM { get; private set; }
 
+
+        public InstanceFormModel RunningInstance = null;
 
         private bool _isInstanceRunning = false;
         /// <summary>

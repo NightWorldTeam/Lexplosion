@@ -90,16 +90,17 @@
     </Style>
 
 
-    <Style x:Key="TagStyle" TargetType="Button">
+    <Style x:Key="TagStyle" TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="TextBlock.SnapsToDevicePixels" Value="True" />
         <Setter Property="Height" Value="25" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="Margin" Value="2,0,2,2" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Margin" Value="2,0,2,3" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
         <Setter Property="Focusable" Value="False" />
+        <Setter Property="FontFamily" Value="{DynamicResource FuturaBookC}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -184,8 +185,11 @@
                             <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Border" Property="Background" Value="#5a5a5a" />
-                            <Setter TargetName="Border" Property="DropShadowEffect.Color" Value="#5a5a5a" />
+                            <Setter TargetName="Border" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.4" Color="{DynamicResource ActivityColor}" />
+                                </Setter.Value>
+                            </Setter>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

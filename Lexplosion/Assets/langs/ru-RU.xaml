@@ -96,8 +96,8 @@
     <s:String x:Key="save">Сохранить</s:String>
     <s:String x:Key="dlc">Дополнения</s:String>
     <s:String x:Key="instanceTitle">Название</s:String>
-    <s:String x:Key="versionNoEdit">Версия (неизменяется)</s:String>
-    <s:String x:Key="gameTypeNoEdit">Тип игры (неизменяется)</s:String>
+    <s:String x:Key="immutableParameter">(неизменяется)</s:String>
+    <s:String x:Key="immutableVersionParameter">Версия (неизменяется)</s:String>
     <s:String x:Key="generalUpperCase">ОСНОВНОЕ</s:String>
 
     <!--  Factory DLC  -->
