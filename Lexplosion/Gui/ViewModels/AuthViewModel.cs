@@ -32,6 +32,7 @@ namespace Lexplosion.Gui.ViewModels
 
         #region Main Auth
 
+        private string _savedLogin = string.Empty;
         private string _login = String.Empty;
         /// <summary>
         /// Содержит логин пользователя.
@@ -218,9 +219,9 @@ namespace Lexplosion.Gui.ViewModels
         /// <param name="accountType">Тип аккаунта, если null, то возвращает последний использованный сохранённый аккаунт.</param>
         public void LoadSavedAccount(AccountType? accountType)
         {
-            AccountType type = _authentication.GetAccount(accountType, out _login);
+            AccountType type = _authentication.GetAccount(accountType, out _savedLogin);
 
-            if (_login != null)
+            if (_savedLogin != null)
             {
                 if (type == AccountType.Microsoft)
                 {
@@ -230,7 +231,7 @@ namespace Lexplosion.Gui.ViewModels
                 else IsMicrosoftAccountManager = false;
 
                 IsSaveMe = true;
-                Login = _login;
+                Login = _savedLogin; Password = "*******";
             }
             else
             {
@@ -241,7 +242,7 @@ namespace Lexplosion.Gui.ViewModels
                 }
                 else IsMicrosoftAccountManager = false;
 
-                Login = "";
+                Login = ""; Password = "";
             }
 
             _accountType = type;
@@ -259,7 +260,7 @@ namespace Lexplosion.Gui.ViewModels
                 _accountType = (AccountType)AccountTypeSelectedIndex;
 
                 // получаем ответ от проверки данных.
-                AuthCode authCode = _authentication.Auth(_accountType, Login, Password, IsSaveMe);
+                AuthCode authCode = _authentication.Auth(_accountType, Login == , Password == "*******" ? "", IsSaveMe);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
