@@ -158,7 +158,7 @@ namespace Lexplosion.Gui.ViewModels
                     }
                     else 
                     {
-                        MainViewModel.ShowToastMessage("Алло! А кто будет данными заполять.", "Заполните логин и пароль!", Controls.ToastMessageState.Error);
+                        MainViewModel.ShowToastMessage("Заполните логин и пароль!", "Алло! А кто будет данными заполять?", Controls.ToastMessageState.Error);
                     }
                 }
             }));
@@ -199,7 +199,7 @@ namespace Lexplosion.Gui.ViewModels
             // получаем последний выбранный аккаунт
             _authentication = new Authentication();
 
-            LoadSavedAccount(null);
+            _accountTypeSelectedIndex = (int)LoadSavedAccount(null);
 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => viewModel.MainMenuVM);
@@ -217,7 +217,7 @@ namespace Lexplosion.Gui.ViewModels
         /// Загружает данные сохранённого аккаунта.
         /// </summary>
         /// <param name="accountType">Тип аккаунта, если null, то возвращает последний использованный сохранённый аккаунт.</param>
-        public void LoadSavedAccount(AccountType? accountType)
+        public AccountType LoadSavedAccount(AccountType? accountType)
         {
             AccountType type = _authentication.GetAccount(accountType, out _savedLogin);
 
@@ -246,6 +246,8 @@ namespace Lexplosion.Gui.ViewModels
             }
 
             _accountType = type;
+
+            return type;
         }
 
 
@@ -260,7 +262,7 @@ namespace Lexplosion.Gui.ViewModels
                 _accountType = (AccountType)AccountTypeSelectedIndex;
 
                 // получаем ответ от проверки данных.
-                AuthCode authCode = _authentication.Auth(_accountType, string.IsNullOrEmpty(_savedLogin) ? null : _savedLogin, Password == "*******" ? null : Password, IsSaveMe);
+                AuthCode authCode = _authentication.Auth(_accountType, (Login == _savedLogin) ? null : Login, Password == "*******" ? null : Password, IsSaveMe);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {

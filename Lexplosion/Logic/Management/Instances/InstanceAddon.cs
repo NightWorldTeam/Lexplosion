@@ -721,6 +721,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 }
                             }
                             catch { }
+
                             // определяем айдишник
                             int addonId;
                             if (notContains) // мод есть в папке, но нет в списке, значит установлен собственноручно
@@ -737,8 +738,6 @@ namespace Lexplosion.Logic.Management.Instances
                             {
                                 addonId = existsAddons[xyi].Value2;
                             }
-
-                            Console.WriteLine("ADD ADDON");
 
                             actualAddonsList[addonId] = new InstalledAddonInfo
                             {
@@ -766,7 +765,6 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                     }
                 }
-
 
                 installedAddons.Save(actualAddonsList);
             }
