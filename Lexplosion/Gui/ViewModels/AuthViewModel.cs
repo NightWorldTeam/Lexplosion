@@ -1,12 +1,11 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using System;
 using System.Windows.Input;
-using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
+using Lexplosion.Logic.Management.Authentication;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -15,7 +14,7 @@ namespace Lexplosion.Gui.ViewModels
         private readonly MainViewModel _mainViewModel;
         private AccountType _accountType;
         private bool _isSavedAccountOAuth2 = false;
-
+        private Authentication _authentication;
 
         #region Properties
 
@@ -72,7 +71,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        private int _accountTypeSelectedIndex;
+        private int _accountTypeSelectedIndex = 1;
         /// <summary>
         /// Хранит индекс выбранного типа авторизации.
         /// [0] - NoAuth
@@ -86,13 +85,11 @@ namespace Lexplosion.Gui.ViewModels
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
 
-                if (_accountTypeSelectedIndex == 3 && !_isSavedAccountOAuth2) 
+                if (_accountTypeSelectedIndex == 3) 
                 {
-                    FollowToMicrosoft();
-                }
-                else 
-                {
-                    IsMicrosoftAccountManager = true;
+                    if (_isSavedAccountOAuth2)
+                        IsMicrosoftAccountManager = true;
+                    else FollowToMicrosoft();
                 }
                 LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
             }
@@ -153,7 +150,16 @@ namespace Lexplosion.Gui.ViewModels
             get => _signUpCommand ?? (new RelayCommand(obj =>
             {
                 if (!IsAuthing)
-                    Authorization();
+                {
+                    if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password))
+                    {
+                        Authorization();
+                    }
+                    else 
+                    {
+                        MainViewModel.ShowToastMessage("Алло! А кто будет данными заполять.", "Заполните логин и пароль!", Controls.ToastMessageState.Error);
+                    }
+                }
             }));
         }
 
@@ -178,6 +184,7 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
+
         #endregion Commands
 
 
@@ -189,9 +196,9 @@ namespace Lexplosion.Gui.ViewModels
             _mainViewModel = viewModel;
 
             // получаем последний выбранный аккаунт
+            _authentication = new Authentication();
+
             LoadSavedAccount(null);
-            // устанавливаем тип этого аккаунта
-            AccountTypeSelectedIndex = (int)_accountType;
 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => viewModel.MainMenuVM);
@@ -211,32 +218,35 @@ namespace Lexplosion.Gui.ViewModels
         /// <param name="accountType">Тип аккаунта, если null, то возвращает последний использованный сохранённый аккаунт.</param>
         public void LoadSavedAccount(AccountType? accountType)
         {
-            AccountType type = DataFilesManager.GetAccount(out _login, out _password, accountType);
+            AccountType type = _authentication.GetAccount(accountType, out _login);
 
-            if (_login != null && _password != null)
+            if (_login != null)
             {
-                if (type == AccountType.Microsoft) { 
+                if (type == AccountType.Microsoft)
+                {
                     _isSavedAccountOAuth2 = true;
                     IsMicrosoftAccountManager = true;
                 }
                 else IsMicrosoftAccountManager = false;
 
                 IsSaveMe = true;
-                Login = _login; Password = _password;
+                Login = _login;
             }
             else
             {
-                if (type == AccountType.Microsoft) { 
+                if (type == AccountType.Microsoft)
+                {
                     _isSavedAccountOAuth2 = false;
                     IsMicrosoftAccountManager = false;
                 }
                 else IsMicrosoftAccountManager = false;
 
-                Login = ""; Password = "";
+                Login = "";
             }
 
             _accountType = type;
         }
+
 
         /// <summary>
         /// Запускает процесс авторизации.
@@ -249,7 +259,7 @@ namespace Lexplosion.Gui.ViewModels
                 _accountType = (AccountType)AccountTypeSelectedIndex;
 
                 // получаем ответ от проверки данных.
-                AuthCode authCode = UserData.Auth(Login, Password, IsSaveMe, _accountType);
+                AuthCode authCode = _authentication.Auth(_accountType, Login, Password, IsSaveMe);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
@@ -267,8 +277,7 @@ namespace Lexplosion.Gui.ViewModels
             if (_accountType != AccountType.Microsoft)
                 return;
 
-            var token = MojangApi.GetToken(microsoftData);
-            var authCode = UserData.MicrosoftAuth(token, true);
+            var authCode = _authentication.Auth(_accountType, "", microsoftData, true);
             PerformAuthCode(authCode);
             NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
             NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
