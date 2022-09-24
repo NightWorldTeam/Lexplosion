@@ -260,7 +260,7 @@ namespace Lexplosion.Gui.ViewModels
                 _accountType = (AccountType)AccountTypeSelectedIndex;
 
                 // получаем ответ от проверки данных.
-                AuthCode authCode = _authentication.Auth(_accountType, Login, Password == "*******" ? "" : Password, IsSaveMe);
+                AuthCode authCode = _authentication.Auth(_accountType, string.IsNullOrEmpty(_savedLogin) ? null : _savedLogin, Password == "*******" ? null : Password, IsSaveMe);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
