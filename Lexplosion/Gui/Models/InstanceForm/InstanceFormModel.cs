@@ -93,7 +93,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
                 LowerButtons.Clear();
 
-                if (InstanceClient.UpdateAvailable)
+                if (InstanceClient.UpdateAvailable && !DownloadModel.IsPrepareOnly)
                 {
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("update"), ResourceGetter.GetIcon("UpdateInstance"), LowerButtonFunc.Update)
@@ -138,10 +138,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     );
                 }
 
-                if (InstanceClient.IsInstalled)
+                if (InstanceClient.IsInstalled && !DownloadModel.IsDownloadInProgress)
                 {
                     LowerButtons.Add(
-                        new LowerButton(ResourceGetter.GetString("removeInstance"), ResourceGetter.GetIcon("RemoveInstance"), LowerButtonFunc.RemoveInstance)
+                        new LowerButton(ResourceGetter.GetString("removeInstance"), ResourceGetter.GetIcon("Delete"), LowerButtonFunc.RemoveInstance, int.MaxValue)
                     );
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("export"), ResourceGetter.GetIcon("Export"), LowerButtonFunc.Export)
@@ -157,6 +157,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         new LowerButton(ResourceGetter.GetString("instanceDLC"), ResourceGetter.GetIcon("Extension"), LowerButtonFunc.OpenDLCPage)
                     );
                 }
+
+                ObservableCollectionExtensions.ObservableColletionSort(LowerButtons);
             });
         }
 

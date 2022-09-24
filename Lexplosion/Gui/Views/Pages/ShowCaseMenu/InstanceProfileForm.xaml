@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -134,6 +135,7 @@
                                     Margin="30,0,30,30"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Top">
+
                                     <TextBlock
                                         Margin="0,0,0,5"
                                         HorizontalAlignment="Left"
@@ -141,15 +143,24 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="{DynamicResource versionNoEdit}" />
-                                    <ComboBox
+                                        Text="{DynamicResource immutableVersionParameter}" />
+
+                                    <TextBox
+                                        Width="400"
+                                        Height="40"
+                                        Background="#1f1f1f"
+                                        FontSize="14"
+                                        IsEnabled="False"
+                                        Text="{Binding GameVersion}" />
+
+                                    <!--<ComboBox
                                         Width="400"
                                         Height="40"
                                         HorizontalContentAlignment="Left"
                                         IsEnabled="False"
                                         ItemsSource="{Binding GameVersions}"
                                         SelectedValue="{Binding GameVersion, UpdateSourceTrigger=PropertyChanged}"
-                                        Style="{StaticResource LighterDefaultComboBox}" />
+                                        Style="{StaticResource LighterDefaultComboBox}" />-->
                                 </StackPanel>
 
                                 <!--  Modloader  -->
@@ -157,14 +168,58 @@
                                     Margin="30,0,30,30"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Top">
-                                    <TextBlock
-                                        Margin="0,0,0,5"
-                                        HorizontalAlignment="Left"
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,0,0,5"
+                                            HorizontalAlignment="Left"
+                                            FontSize="14"
+                                            Foreground="White"
+                                            Opacity="0.8"
+                                            Style="{StaticResource Tex}"
+                                            Text="{DynamicResource gameType}" />
+
+                                        <TextBlock
+                                            Margin="3,0,0,5"
+                                            HorizontalAlignment="Left"
+                                            FontSize="14"
+                                            Foreground="White"
+                                            Opacity="0.8"
+                                            Text="{DynamicResource immutableParameter}" />
+                                        <Border Background="Transparent">
+                                            <Viewbox
+                                                Width="15"
+                                                Height="15"
+                                                Margin="5,0,0,2">
+                                                <Path
+                                                    extension:PathExtension.StringData="{StaticResource Question}"
+                                                    Fill="White"
+                                                    Stretch="Fill" />
+                                            </Viewbox>
+
+                                            <Border.ToolTip>
+                                                <ToolTip
+                                                    Width="250"
+                                                    Padding="5"
+                                                    HorizontalOffset="-80"
+                                                    Style="{StaticResource CustomTipTool}"
+                                                    VerticalOffset="-60">
+                                                    <StackPanel>
+                                                        <TextBlock Text="Вы не можете изменить установленный modloader. Вы можете только изменить vanilla на какой-либо modloader." TextWrapping="WrapWithOverflow" />
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Border.ToolTip>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <TextBox
+                                        Width="400"
+                                        Height="40"
+                                        Background="#1f1f1f"
                                         FontSize="14"
-                                        Foreground="White"
-                                        Opacity="0.8"
-                                        Style="{StaticResource Tex}"
-                                        Text="{DynamicResource gameType}" />
+                                        IsEnabled="False"
+                                        Text="{Binding ModloaderType}"
+                                        Visibility="{Binding IsModloader, Converter={StaticResource ConvertBoolToVisibility}}" />
+
                                     <ComboBox
                                         Width="400"
                                         Height="40"
@@ -172,7 +227,8 @@
                                         IsEnabled="{Binding IsModloader, Converter={StaticResource InverseBooleanConverter}}"
                                         ItemsSource="{Binding Source={StaticResource ModloaderType}}"
                                         SelectedValue="{Binding ModloaderType}"
-                                        Style="{StaticResource LighterDefaultComboBox}" />
+                                        Style="{StaticResource LighterDefaultComboBox}"
+                                        Visibility="{Binding IsModloader, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                                 </StackPanel>
 
                                 <!--  Modloader Version  -->

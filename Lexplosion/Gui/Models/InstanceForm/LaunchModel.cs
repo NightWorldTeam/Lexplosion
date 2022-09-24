@@ -45,6 +45,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _formModel.DownloadModel.HasProcents = false;
                 _formModel.InstanceClient.Run();
                 _mainViewModel.IsInstanceRunning = true;
+                _mainViewModel.RunningInstance = _formModel;
             });
         }
 

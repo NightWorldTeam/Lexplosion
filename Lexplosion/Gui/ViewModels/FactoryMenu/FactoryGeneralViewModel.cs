@@ -3,9 +3,6 @@ using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
-using Lexplosion.Tools.Immutable;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
@@ -13,10 +10,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
     public sealed class FactoryGeneralViewModel : ModalVMBase
     {
         private readonly MainViewModel _mainViewModel;
-        private ObservableCollection<string> _modloaderVersion;
-        private string _selectedVersion;
-        private string _selectedModloaderVersion;
-        private bool _isModloaderSelected = false;
 
 
         #region Properties
@@ -35,6 +28,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private bool _isModloaderSelected = false;
         public bool IsModloaderSelected
         {
             get => _isModloaderSelected; set
@@ -54,6 +48,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private ObservableCollection<string> _modloaderVersion;
         public ObservableCollection<string> ModloaderVersions
         {
             get => _modloaderVersion; set
@@ -63,6 +58,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private string _selectedModloaderVersion;
         public string SelectedModloaderVersion
         {
             get => _selectedModloaderVersion; set
@@ -72,24 +68,18 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private string _selectedVersion;
         public string SelectedVersion
         {
             get => _selectedVersion; set
             {
-                _selectedVersion = value;
+                _selectedVersion = value ?? GameVersions[0];
                 OnPropertyChanged();
-                Console.WriteLine(value.Replace("snapshot ", "").Replace("release ", ""));
-                if (Model.ModloaderType != ModloaderType.Vanilla) 
-                { 
-                    Lexplosion.Run.TaskRun(() =>
-                    {
-                        ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(value.Replace("snapshot ", "").Replace("release ", ""), Model.ModloaderType));
-                        if (ModloaderVersions.Count > 0)
-                            SelectedModloaderVersion = ModloaderVersions[0];
-                    });
-                }
+                ReselectVersionLoadModloaderVersions(_selectedVersion);
             }
         }
+
+        private string _selectedOnlyVersion;
 
         private bool _isShowSnapshots;
         public bool IsShowSnapshots 
@@ -122,25 +112,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private RelayCommand _switchModloaderType;
         public RelayCommand SwitchModloaderType
         {
-            get
+            get => _switchModloaderType ?? (_switchModloaderType = new RelayCommand(obj =>
             {
-                return _switchModloaderType ?? (new RelayCommand(obj =>
-                {
-                    Model.ModloaderType = (ModloaderType)obj;
-
-                    IsModloaderSelected = Model.ModloaderType != ModloaderType.Vanilla;
-
-                    Lexplosion.Run.TaskRun(() =>
-                    {
-                        var versions = ToServer.GetModloadersList(SelectedVersion, Model.ModloaderType);
-
-                        ModloaderVersions = new ObservableCollection<string>(versions);
-
-                        if (ModloaderVersions.Count > 0)
-                            SelectedModloaderVersion = ModloaderVersions[0];
-                    });
-                }));
-            }
+                ChangeModloaderType((ModloaderType)obj);
+            }));
         }
 
         private RelayCommand _createInstance;
@@ -150,17 +125,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         public override RelayCommand ActionCommand
         {
             get => _createInstance ?? (new RelayCommand(obj =>
-            {                    var instanceClient = InstanceClient.CreateClient(
-                        Model.Name ?? "New Client", 
-                        InstanceSource.Local, 
-                        SelectedVersion, 
-                        Model.ModloaderType, 
-                        Model.LogoPath,
-                        SelectedModloaderVersion
-                        );
-
-                    _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
-                    _mainViewModel.ModalWindowVM.IsOpen = false;
+            {
+                CreateInstance();
             }));
         }
 
@@ -178,17 +144,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => new RelayCommand(obj =>
             {
-                using (var dialog = new System.Windows.Forms.OpenFileDialog())
-                {
-                    dialog.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
-
-                    // Process open file dialog box results
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        Model.LogoPath = dialog.FileName;
-                    }
-
-                }
+                OpenDialogWindowForImage();
             });
         }
 
@@ -219,7 +175,73 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             SelectedVersion = GameVersions[0];
         }
 
+        private void CreateInstance() 
+        {
+            var instanceClient = InstanceClient.CreateClient(
+                Model.Name ?? "New Client",
+                InstanceSource.Local,
+                _selectedOnlyVersion,
+                Model.ModloaderType,
+                Model.LogoPath,
+                SelectedModloaderVersion
+           );
 
+            _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
+            _mainViewModel.ModalWindowVM.IsOpen = false;
+        }
+
+        private void ChangeModloaderType(ModloaderType modloaderType) 
+        {
+            Model.ModloaderType = modloaderType;
+
+            IsModloaderSelected = Model.ModloaderType != ModloaderType.Vanilla;
+
+            Lexplosion.Run.TaskRun(() =>
+            {
+                var versions = ToServer.GetModloadersList(_selectedOnlyVersion, Model.ModloaderType);
+
+                ModloaderVersions = new ObservableCollection<string>(versions);
+
+                if (ModloaderVersions.Count > 0)
+                    SelectedModloaderVersion = ModloaderVersions[0];
+            });
+        }
+
+        private void ReselectVersionLoadModloaderVersions(string selectedVersion) 
+        {
+            if (IsShowSnapshots)
+            {
+                if (selectedVersion.Contains("snapshot"))
+                    _selectedOnlyVersion = selectedVersion.Replace("snapshot ", "");
+                else
+                    _selectedOnlyVersion = selectedVersion.Replace("release ", "");
+            }
+            else _selectedOnlyVersion = selectedVersion;
+
+            if (Model.ModloaderType != ModloaderType.Vanilla)
+            {
+                Lexplosion.Run.TaskRun(() =>
+                {
+                    ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(_selectedOnlyVersion, Model.ModloaderType));
+
+                    if (ModloaderVersions.Count > 0) SelectedModloaderVersion = ModloaderVersions[0];
+                });
+            }
+        }
+
+        private void OpenDialogWindowForImage() 
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
+
+                // Process open file dialog box results
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    Model.LogoPath = dialog.FileName;
+                }
+            }
+        }
         #endregion Private Methods
     }
 }

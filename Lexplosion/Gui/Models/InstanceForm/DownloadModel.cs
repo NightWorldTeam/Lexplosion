@@ -28,6 +28,16 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
+        private bool _isFilesDownload;
+        public bool IsFilesDownload 
+        {
+            get => _isFilesDownload; set 
+            {
+                _isFilesDownload = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _isDownloadInProgress;
         public bool IsDownloadInProgress 
         {
@@ -194,16 +204,19 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 {
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("javaInstalling");
                     HasProcents = false;
+                    IsFilesDownload = true;
                 }
                 else if (downloadStageType == DownloadStageTypes.Prepare)
                 {
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("runPrepare");
                     HasProcents = true;
+                    IsFilesDownload = false;
                 }
                 else
                 {
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("instanceLoading") + " " + Stage + '/' + StagesCount;
                     HasProcents = false;
+                    IsFilesDownload = true;
                 }
             });         
         }
@@ -216,12 +229,15 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 {
                     case InstanceInit.Successful:
                         {
-                            if (_mainViewModel.IsInstanceRunning) 
+                            IsFilesDownload = false;
+                            if (_mainViewModel.RunningInstance != null && _mainViewModel.IsInstanceRunning && _mainViewModel.RunningInstance == _instanceFormModel) 
                             {
                                 IsPrepareOnly = true;
+                                _instanceFormModel.UpdateLowerButton();
                             } 
                             else if (!IsPrepareOnly) {
                                 IsDownloadInProgress = false;
+                                //TODO: ЛОКАЗИЛАЦИЯ ТУТ
                                 MainViewModel.ShowToastMessage(
                                     "Download Successfully Completed",
                                     "Название: " + _instanceFormModel.InstanceClient.Name + 
@@ -344,10 +360,18 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         break;
                 }
 
-                if (!IsPrepareOnly)
+                if (!IsPrepareOnly) 
+                { 
                     _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
-                else
+                    _instanceFormModel.UpdateLowerButton();
+                }
+                else 
+                {
+                    //IsDownloadInProgress = false;
+                    _instanceFormModel.UpdateLowerButton();
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
+                }
+                    
             }); 
         }
 

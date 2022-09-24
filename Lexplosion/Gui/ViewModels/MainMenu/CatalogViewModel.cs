@@ -118,7 +118,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         #region Private Methods
 
-        private void InstancesPageLoading()
+        private void InstancesPageLoading(string searchText = "")
         {
             IsLoaded = false;
             Lexplosion.Run.TaskRun(() =>
@@ -138,7 +138,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 {
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        InstanceList.Clear();
                         InstanceList.Clear();
                         IsEmptyList = true;
                     });

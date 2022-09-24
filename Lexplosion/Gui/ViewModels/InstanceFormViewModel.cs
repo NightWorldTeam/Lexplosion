@@ -103,6 +103,16 @@ namespace Lexplosion.Gui.ViewModels
                     Client.GameExited += gameExitedCallback;
                 }
                 MainVM.IsInstanceRunning = true;
+
+                Model.InstanceClient.DownloadStartedEvent += () => 
+                {
+                    MainVM.DownloadManager.AddProcess(this);
+
+                    Model.UpperButton.ChangeFuncProgressBar();
+                    Model.DownloadModel.IsDownloadInProgress = true;
+                    Model.UpdateLowerButton();
+                };
+
                 Model.LaunchModel.LaunchInstance();
             }
         }
@@ -219,7 +229,6 @@ namespace Lexplosion.Gui.ViewModels
                     {
                         // TODO: может сделать, что-то типо меню скачивания??
                         // ну да просто добавим открытие downloadmanager
-
                         MainVM.ModalWindowVM.OpenWindow(MainVM.DownloadManager);
                         break;
                     }

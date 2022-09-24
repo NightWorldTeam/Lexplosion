@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Lexplosion.Controls
@@ -33,7 +28,7 @@ namespace Lexplosion.Controls
 
 
         public static readonly DependencyProperty SearchActionProperty
-            = DependencyProperty.Register("SearchAction", typeof(Action), typeof(SearchBox), new PropertyMetadata(null));
+            = DependencyProperty.Register("SearchAction", typeof(Action<string>), typeof(SearchBox), new PropertyMetadata(null));
 
 
         #endregion Dependency Properties fields
@@ -42,9 +37,9 @@ namespace Lexplosion.Controls
         #region setters / getters
 
 
-        public Action SearchAction
+        public Action<string> SearchAction
         {
-            get => (Action)GetValue(SearchActionProperty);
+            get => (Action<string>)GetValue(SearchActionProperty);
             set => SetValue(SearchActionProperty, value);
         }
 
@@ -52,15 +47,26 @@ namespace Lexplosion.Controls
         #endregion setters / getters
 
 
+        #region Constructors
+        
         static SearchBox() 
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchBox), new FrameworkPropertyMetadata(typeof(SearchBox)));
         }
 
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
         public override void OnApplyTemplate()
         {
             _textBox = Template.FindName(PART_TEXTBOX_NAME, this) as TextBox;
             _searchButton = Template.FindName(PART_BUTTON_NAME, this) as Button;
+
+            if (_textBox == null)
+                throw new Exception("SearchBox: " + PART_TEXTBOX_NAME + " doesn't exist");
 
             try
             {
@@ -68,18 +74,10 @@ namespace Lexplosion.Controls
             }
             catch 
             {
-                throw new Exception("SearchBox: PART_Button doesn't exist");
+                throw new Exception("SearchBox: " + PART_BUTTON_NAME +" doesn't exist");
             }
 
             base.OnApplyTemplate();
-        }
-
-        private void SearchButtonClicked(object sender, RoutedEventArgs e)
-        {
-            if (sender == null)
-                return;
-
-            SearchAction?.Invoke();
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -87,10 +85,29 @@ namespace Lexplosion.Controls
             if (e.Key != Key.Enter) return;
             
             e.Handled = true;
-
-            SearchAction?.Invoke();
+            Search();
 
             base.OnKeyDown(e);
         }
+
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+        private void Search() 
+        {
+            SearchAction?.Invoke(_textBox.Text);
+        }
+
+        private void SearchButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (sender == null)
+                return;
+
+            Search();
+        }
+        #endregion Private Methods
     }
 }

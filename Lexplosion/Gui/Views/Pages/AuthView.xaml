@@ -181,72 +181,156 @@
                         </StackPanel>
 
                         <!--  For Microsoft Auth  -->
+                        <!--  Border size 120-150  -->
                         <StackPanel Margin="0,60,0,0" Visibility="{Binding IsMicrosoftAccountManager, Converter={StaticResource ConvertBoolToVisibility}}">
-                            <Border>
+                            <Border
+                                Width="200"
+                                Height="120"
+                                Background="{DynamicResource SepSolidColorBrush}"
+                                CornerRadius="5">
                                 <StackPanel>
+                                    <StackPanel x:Name="HeaderStackPanel">
+                                        <Grid x:Name="HeaderGrid" Margin="5,0,0,0">
 
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        FontSize="16"
-                                        FontWeight="Medium"
-                                        Foreground="White"
-                                        Text="Выберите аккаунт для входа" />
-
-                                    <Button
-                                        Width="150"
-                                        Margin="0,30,0,0"
-                                        Command="{Binding SignUpCommand}"
-                                        Style="{StaticResource DefaultBrandColorButton}">
-                                        <DockPanel>
-                                            <StackPanel>
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    DockPanel.Dock="Left"
-                                                    FontSize="16"
-                                                    Text="{Binding Login}" />
-                                            </StackPanel>
-
-                                            <controls:DropdownMenu
+                                            <!--  Skin Ellipse  -->
+                                            <Ellipse
                                                 Width="30"
                                                 Height="30"
+                                                Margin="0,5,0,0"
+                                                HorizontalAlignment="Center"
+                                                Fill="#167FCC" />
+
+                                            <!--  Logout  -->
+                                            <Border
+                                                Margin="0,5,5,0"
+                                                Padding="5"
+                                                HorizontalAlignment="Right"
                                                 VerticalAlignment="Center"
-                                                BorderBrush="Black"
-                                                DockPanel.Dock="Right" />
-                                        </DockPanel>
-                                    </Button>
-
-                                    <!--  Nickname  -->
-
-                                    <Button
-                                        Margin="0,30,0,0"
-                                        Padding="3,5,5,3"
-                                        Command="{Binding SingUpMicrosoftCommand}"
-                                        Style="{StaticResource DefaultBrandColorButton}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Grid>
-                                                <Ellipse
-                                                    Width="25"
-                                                    Height="25"
-                                                    Fill="#eceef2" />
-
-                                                <Viewbox Height="15">
+                                                Background="Transparent"
+                                                CornerRadius="5">
+                                                <Viewbox
+                                                    Width="20"
+                                                    Height="20"
+                                                    Stretch="Fill">
                                                     <Path
-                                                        Data="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"
-                                                        Fill="Gray"
-                                                        Stretch="Fill" />
+                                                        Data="M9 42q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h14.55v3H9v30h14.55v3Zm24.3-9.25-2.15-2.15 5.1-5.1h-17.5v-3h17.4l-5.1-5.1 2.15-2.15 8.8 8.8Z"
+                                                        Fill="White"
+                                                        Stroke="White"
+                                                        StrokeThickness="1" />
                                                 </Viewbox>
-                                            </Grid>
+                                            </Border>
 
+                                            <!--
+                                                If Text.Lenght == 8 -> to HeaderGrid *and* Margin="5,5,0,0"
+                                                Else Text.Lenght > 8 -> to HeaderStackPanel *and* Margin="5,10,0,0"
+                                            -->
                                             <TextBlock
-                                                Margin="5,0,0,0"
+                                                x:Name="NicknameTextBlock"
+                                                Margin="5,5,0,0"
+                                                HorizontalAlignment="Left"
                                                 VerticalAlignment="Center"
-                                                FontSize="14"
-                                                FontWeight="Regular"
-                                                Text="Сменить аккаунт"
-                                                TextAlignment="Center" />
-                                        </StackPanel>
-                                    </Button>
+                                                FontFamily="{DynamicResource FuturaBookC}"
+                                                FontSize="16"
+                                                Foreground="White"
+                                                Loaded="NicknameTextBlock_Loaded"
+                                                Text="_Hel2xS_" />
+                                        </Grid>
 
+                                    </StackPanel>
+
+                                    <!--  Buttons  -->
+                                    <Border Margin="0,5,0,0" BorderThickness="0,1,0,0">
+                                        <Border.BorderBrush>
+                                            <SolidColorBrush Opacity="0.5" Color="Black" />
+                                        </Border.BorderBrush>
+                                        <StackPanel HorizontalAlignment="Left">
+
+                                            <Button
+                                                Width="130"
+                                                Height="30"
+                                                Margin="5,5,0,0"
+                                                HorizontalContentAlignment="Left"
+                                                Style="{StaticResource IconicButton}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Viewbox
+                                                        Width="20"
+                                                        Height="20"
+                                                        Stretch="Fill">
+                                                        <Path
+                                                            Data="M24.45 42v-3H39V9H24.45V6H39q1.2 0 2.1.9.9.9.9 2.1v30q0 1.2-.9 2.1-.9.9-2.1.9Zm-3.9-9.25L18.4 30.6l5.1-5.1H6v-3h17.4l-5.1-5.1 2.15-2.15 8.8 8.8Z"
+                                                            Fill="White"
+                                                            Stroke="White"
+                                                            StrokeThickness="1" />
+                                                    </Viewbox>
+                                                    <TextBlock
+                                                        Margin="10,0,0,0"
+                                                        VerticalAlignment="Bottom"
+                                                        FontFamily="{DynamicResource FuturaBookC}"
+                                                        FontSize="14"
+                                                        Foreground="White"
+                                                        Text="Войти" />
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Button
+                                                Width="130"
+                                                Height="30"
+                                                Margin="5,5,0,0"
+                                                HorizontalContentAlignment="Left"
+                                                Style="{StaticResource IconicButton}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Viewbox
+                                                        Width="20"
+                                                        Height="20"
+                                                        Stretch="Fill">
+                                                        <Path
+                                                            Data="M20 23.75q-3.3 0-5.4-2.1-2.1-2.1-2.1-5.4 0-3.3 2.1-5.4 2.1-2.1 5.4-2.1 3.3 0 5.4 2.1 2.1 2.1 2.1 5.4 0 3.3-2.1 5.4-2.1 2.1-5.4 2.1ZM4 39.8v-4.7q0-1.75.875-3.15T7.4 29.8q3.6-1.6 6.675-2.3 3.075-.7 5.925-.7h1.15q-.3.7-.45 1.375-.15.675-.25 1.625H20q-2.9 0-5.675.625T8.6 32.5q-.8.4-1.2 1.125Q7 34.35 7 35.1v1.7h13.45q.25.9.6 1.625t.85 1.375ZM33.35 42l-.5-3.3q-.85-.25-1.725-.725-.875-.475-1.475-1.075l-2.75.6-1.25-2.1L28 33.2q-.1-.45-.1-1.25t.1-1.25l-2.35-2.2 1.25-2.1 2.75.6q.6-.6 1.475-1.075.875-.475 1.725-.725l.5-3.3h2.7l.5 3.3q.85.25 1.725.725.875.475 1.475 1.075l2.75-.6 1.25 2.1-2.35 2.2q.1.45.1 1.25t-.1 1.25l2.35 2.2-1.25 2.1-2.75-.6q-.6.6-1.475 1.075-.875.475-1.725.725l-.5 3.3Zm1.35-6.05q1.8 0 2.9-1.1 1.1-1.1 1.1-2.9 0-1.8-1.1-2.9-1.1-1.1-2.9-1.1-1.8 0-2.9 1.1-1.1 1.1-1.1 2.9 0 1.8 1.1 2.9 1.1 1.1 2.9 1.1ZM20 20.75q1.95 0 3.225-1.275Q24.5 18.2 24.5 16.25q0-1.95-1.275-3.225Q21.95 11.75 20 11.75q-1.95 0-3.225 1.275Q15.5 14.3 15.5 16.25q0 1.95 1.275 3.225Q18.05 20.75 20 20.75Zm0-4.5Zm.45 20.55Z"
+                                                            Fill="White"
+                                                            Stroke="White"
+                                                            StrokeThickness="1" />
+                                                    </Viewbox>
+
+                                                    <TextBlock
+                                                        Margin="10,0,0,0"
+                                                        VerticalAlignment="Bottom"
+                                                        FontFamily="{DynamicResource FuturaBookC}"
+                                                        FontSize="14"
+                                                        Foreground="White"
+                                                        Text="Сменить аккаунт" />
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Button
+                                                Width="130"
+                                                Height="30"
+                                                Margin="5,5,0,0"
+                                                HorizontalContentAlignment="Left"
+                                                Style="{StaticResource IconicButton}"
+                                                Visibility="Collapsed">
+                                                <StackPanel Background="Transparent" Orientation="Horizontal">
+                                                    <Viewbox
+                                                        Width="20"
+                                                        Height="20"
+                                                        Stretch="Fill">
+                                                        <Path
+                                                            Data="M9 42q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h14.55v3H9v30h14.55v3Zm24.3-9.25-2.15-2.15 5.1-5.1h-17.5v-3h17.4l-5.1-5.1 2.15-2.15 8.8 8.8Z"
+                                                            Fill="White"
+                                                            Stroke="White"
+                                                            StrokeThickness="1" />
+                                                    </Viewbox>
+
+                                                    <TextBlock
+                                                        Margin="10,0,0,0"
+                                                        VerticalAlignment="Bottom"
+                                                        FontFamily="{DynamicResource FuturaBookC}"
+                                                        FontSize="14"
+                                                        Foreground="White"
+                                                        Text="Выйти" />
+                                                </StackPanel>
+                                            </Button>
+
+                                        </StackPanel>
+                                    </Border>
                                 </StackPanel>
                             </Border>
                         </StackPanel>

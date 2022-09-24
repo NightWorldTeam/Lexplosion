@@ -159,7 +159,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
                 // key - directory, value - pathlevel class
                 var keyvaluepair = (KeyValuePair<string, PathLevel>)obj;
-                //                          PathLevel.FullPath | PathLevel
+                // PathLevel.FullPath | PathLevel
+
                 var sub = LoadDirContent(keyvaluepair.Value.FullPath, keyvaluepair.Value);
                 ContentPreload(sub);
             }));
@@ -170,6 +171,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
 
         #region Private Methods
+
 
         /// <summary>
         /// Загрузка данных для UnitsList, на один шаг вперёд.
@@ -204,10 +206,16 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// <param name="dir"></param>
         private Dictionary<string, PathLevel> LoadDirContent(string dir, PathLevel pathLevel)
         {
-            if (LoadedDirectories.Contains(dir) || dir == null || pathLevel.IsFile)
+            if (pathLevel.IsFile)
+                return pathLevel.UnitsList = new Dictionary<string, PathLevel>();
+
+            if (LoadedDirectories.Contains(dir) || dir == null)
                 return pathLevel.UnitsList;
 
-            pathLevel.UnitsList = _instanceClient.GetPathContent(dir, pathLevel);
+            pathLevel.UnitsList = _instanceClient.GetPathContent(dir);
+
+            foreach (var i in pathLevel.UnitsList.Values)
+            Console.WriteLine(pathLevel.FullPath + " into " + i.FullPath);
 
             if (pathLevel.IsSelected)
                 pathLevel.IsSelected = true;

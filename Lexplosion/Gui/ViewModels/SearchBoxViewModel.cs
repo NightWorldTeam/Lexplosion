@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -11,9 +12,7 @@ namespace Lexplosion.Gui.ViewModels
 
         #region Properties
 
-
-        public delegate void SearchChangedCallback();
-        public event SearchChangedCallback SearchChanged;
+        public event Action<string> SearchChanged;
 
         public ObservableCollection<CurseforgeCategory> Categories { get; private set; }
 
@@ -95,7 +94,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _selectedCurseforgeCategory = value;
                 OnPropertyChanged();
-                SearchChanged?.Invoke();
+                SearchChanged?.Invoke("");
             }
         }
 
@@ -204,7 +203,7 @@ namespace Lexplosion.Gui.ViewModels
                 }
             }
 
-            SearchChanged.Invoke();
+            SearchChanged?.Invoke("");
         }
 
 

@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Gui.ModalWindow;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
