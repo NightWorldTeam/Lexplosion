@@ -42,7 +42,7 @@ namespace Lexplosion.Global
             public const string LauncherParts = "https://night-world.org/assets/launcher/windows/";
             public const string LogicScripts = "https://night-world.org/api/user/";
             public const string Base = "https://night-world.org/";
-            public const string Account = "http://nw-prod/api/account/";
+            public const string Account = "https://night-world.org/api/account/";
         }
 
         public static string LauncherDataPath = Environment.ExpandEnvironmentVariables("%appdata%") + "/night-world";
