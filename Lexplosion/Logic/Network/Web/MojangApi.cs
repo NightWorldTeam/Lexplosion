@@ -1,10 +1,11 @@
-﻿using Lexplosion.Logic.Objects;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network.Web
 {
@@ -19,75 +20,149 @@ namespace Lexplosion.Logic.Network.Web
             }
 
             public string accessToken;
+            public string clientToken;
             public SelectedProfile selectedProfile;
         }
 
-        class AccsessTokenData
+        public class AuthResult
         {
-            public string yggt;
+            public AuthCode Status;
+            public string Login;
+            public string UUID;
+            public string AccesToken;
+            public string ClientToken;
         }
 
-        public static AuthResult Authorization(string username, string password)
+        private static Random random = new Random();
+
+        public static AuthResult Auth(string username, string password)
         {
             try
             {
-                WebRequest req = WebRequest.Create("https://authserver.mojang.com/authenticate");
-                req.Method = "POST";
-                req.ContentType = "application/json";
-
-                byte[] byteArray = Encoding.UTF8.GetBytes(
+                string payload = 
                     "{" +
                         "\"agent\" : {" +
                             "\"name\": \"Minecraft\", " +
                             "\"version\": 1" +
                         "}," +
                         "\"username\": \"" + username + "\"," +
-                        "\"password\": \"" + password + "\"" +
-                    "}"
-                    );
+                        "\"password\": \"" + password + "\"," +
+                        "\"clientToken\": \"" + random.GenerateString(20) + "\"" +
+                    "}";
 
-                req.ContentLength = byteArray.Length;
+                string answer = ToServer.HttpPostJson("https://authserver.mojang.com/authenticate", payload, out HttpStatusCode? statusCode);
 
-                using (Stream dataStream = req.GetRequestStream())
+                if (answer == null)
                 {
-                    dataStream.Write(byteArray, 0, byteArray.Length);
-                }
-
-                string answer;
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
+                    if (statusCode == null)
                     {
-                        using (StreamReader sr = new StreamReader(stream))
+                        return new AuthResult
                         {
-                            answer = sr.ReadToEnd();
-                        }
+                            Status = AuthCode.NoConnect
+                        };
+                    }
+
+                    if (statusCode == HttpStatusCode.Gone)
+                    {
+                        return new AuthResult
+                        {
+                            Status = AuthCode.NeedMicrosoftAuth
+                        };
+
+                    }
+                    else if (statusCode == HttpStatusCode.Unauthorized || statusCode == HttpStatusCode.Forbidden)
+                    {
+                        return new AuthResult
+                        {
+                            Status = AuthCode.DataError
+                        };
                     }
                 }
 
                 var data = JsonConvert.DeserializeObject<AuthAnswer>(answer);
+                Console.WriteLine("Mojang Auth " + data.accessToken);
 
                 if (data != null && !string.IsNullOrEmpty(data.accessToken) && data.selectedProfile != null
                     && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
                 {
-                    string accessToken = DecodeToken(data.accessToken);
-
                     return new AuthResult 
                     { 
                         Status = AuthCode.Successfully,
                         Login = data.selectedProfile.name,
                         UUID = data.selectedProfile.id,
-                        AccesToken = accessToken,
-                        SessionToken = null
+                        AccesToken = data.accessToken,
+                        ClientToken = data.clientToken
                     };
                 }
             }
             catch { }
 
+            return new AuthResult
+            {
+                Status = AuthCode.NoConnect
+            };
+        }
+
+        public static AuthResult Refresh(string username, string accessToken, string clientToken)
+        {
+            try
+            {
+                string payload =
+                    "{" +
+                        "\"accessToken\": \"" + accessToken + "\"," +
+                        "\"clientToken\": \"" + clientToken + "\"" +
+                    "}";
+
+                string answer = ToServer.HttpPostJson("https://authserver.mojang.com/refresh", payload, out HttpStatusCode? statusCode);
+
+                if (answer == null)
+                {
+                    if (statusCode == null)
+                    {
+                        return new AuthResult
+                        {
+                            Status = AuthCode.NoConnect
+                        };
+                    }
+
+                    if (statusCode == HttpStatusCode.Gone)
+                    {
+                        return new AuthResult
+                        {
+                            Status = AuthCode.NeedMicrosoftAuth
+                        };
+
+                    }
+                    else if (statusCode == HttpStatusCode.Unauthorized || statusCode == HttpStatusCode.Forbidden)
+                    {
+                        return new AuthResult
+                        {
+                            Status = AuthCode.SessionExpired
+                        };
+                    }
+                }
+
+                var data = JsonConvert.DeserializeObject<AuthAnswer>(answer);
+                Console.WriteLine("Mojang Refresh " + data.accessToken);
+
+                if (data != null && !string.IsNullOrEmpty(data.accessToken) && !string.IsNullOrEmpty(data.clientToken) 
+                    && data.selectedProfile != null && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
+                {
+                    return new AuthResult
+                    {
+                        Status = AuthCode.Successfully,
+                        Login = data.selectedProfile.name,
+                        UUID = data.selectedProfile.id,
+                        AccesToken = data.accessToken,
+                        ClientToken = data.clientToken
+                    };
+                }
+            }
+            catch { }
 
             return new AuthResult
             {
-                Status = AuthCode.DataError
+                Status = AuthCode.SessionExpired
             };
         }
 
@@ -115,75 +190,29 @@ namespace Lexplosion.Logic.Network.Web
         /// <returns>Возвращает токен, который можно использовать для получения аккаунта.</returns>
         public static string GetToken(string microsoftData)
         {
-            var mcfData = JsonConvert.DeserializeObject<MicrosoftData>(microsoftData);
-
-            WebRequest req = WebRequest.Create("https://api.minecraftservices.com/authentication/login_with_xbox");
-            req.Method = "POST";
-            req.ContentType = "application/json";
-
-            byte[] byteArray = Encoding.UTF8.GetBytes(
-                "{" +
-                    "\"identityToken\" : \"XBL3.0 x=" + mcfData.uhs + ";" + mcfData.xsts_token + "\"," +
-                    "\"ensureLegacyEnabled\" : true" +
-                "}"
-               );
-
-            req.ContentLength = byteArray.Length;
-
-            using (Stream dataStream = req.GetRequestStream())
+            try
             {
-                dataStream.Write(byteArray, 0, byteArray.Length);
-            }
 
-            string answer;
-            using (WebResponse resp = req.GetResponse())
-            {
-                using (Stream stream = resp.GetResponseStream())
+                var mcfData = JsonConvert.DeserializeObject<MicrosoftData>(microsoftData);
+                string payload =
+                    "{" +
+                        "\"identityToken\" : \"XBL3.0 x=" + mcfData.uhs + ";" + mcfData.xsts_token + "\"," +
+                        "\"ensureLegacyEnabled\" : true" +
+                    "}";
+
+                string answer = ToServer.HttpPostJson("https://api.minecraftservices.com/authentication/login_with_xbox", payload, out _);
+                
+                if(answer == null)
                 {
-                    using (StreamReader sr = new StreamReader(stream))
-                    {
-                        answer = sr.ReadToEnd();
-                    }
-                }
-            }
-
-            Console.WriteLine("1 " + answer);
-
-            return JsonConvert.DeserializeObject<MicrosoftAuthRes>(answer).access_token;
-        }
-
-        /// <summary>
-        /// олучаем из моджанговского токена аксесс токен для майкрафта.
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns>Акссес токен</returns>
-        private static string DecodeToken(string token)
-        {
-            string accessToken = null;
-            int i = 0;
-            string ednPart = "";
-            // по сути ебанный костыль. Я не собираюсь юзать либо для декодирования jwt, она весит больше товарного состава блять и тащит за собой пару миллиардов других dll'ников
-            while (i < 3)
-            {
-                try
-                {
-                    var a = token.Split('.')[1] + ednPart;
-                    var b = Convert.FromBase64String(a);
-                    var c = Encoding.UTF8.GetString(b);
-                    var obj = JsonConvert.DeserializeObject<AccsessTokenData>(c);
-                    accessToken = obj.yggt;
-
-                    break;
-                }
-                catch
-                {
-                    ednPart += "=";
+                    return null;
                 }
 
-                i++;
+                return JsonConvert.DeserializeObject<MicrosoftAuthRes>(answer).access_token;
             }
-
-            return accessToken; 
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -195,7 +224,6 @@ namespace Lexplosion.Logic.Network.Web
         {
             //try
             {
-                string accessToken = token;
                 string answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>
@@ -205,6 +233,14 @@ namespace Lexplosion.Logic.Network.Web
                     )
                 });
 
+                if (answer == null)
+                {
+                    return new AuthResult
+                    {
+                        Status = AuthCode.DataError
+                    };
+                }
+
                 var profile = JsonConvert.DeserializeObject<MojangProfile>(answer);
 
                 return new AuthResult
@@ -212,8 +248,7 @@ namespace Lexplosion.Logic.Network.Web
                     Status = AuthCode.Successfully,
                     Login = profile.name,
                     UUID = profile.id,
-                    AccesToken = accessToken,
-                    SessionToken = null
+                    AccesToken = token
                 };
             }
             //catch { }

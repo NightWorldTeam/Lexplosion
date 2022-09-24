@@ -19,9 +19,9 @@ namespace Lexplosion.Logic.FileSystem
             public LocalVersionInfo version;
         }
 
-        public static void SaveAccount(string login, string password, AccountType accountType)
+        public static void SaveAccount(string login, string accessData, AccountType accountType)
         {
-            password = Convert.ToBase64String(AesСryp.Encode(password, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
+            accessData = Convert.ToBase64String(AesСryp.Encode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
 
             var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
             if (data != null && data.Profiles != null && data.Profiles.Count > 0)
@@ -30,7 +30,7 @@ namespace Lexplosion.Logic.FileSystem
                 data.Profiles[accountType] = new AcccountsFormat.Profile
                 {
                     Login = login,
-                    Password = password
+                    AccessData = accessData
                 };
             }
             else
@@ -43,7 +43,7 @@ namespace Lexplosion.Logic.FileSystem
                         [accountType] = new AcccountsFormat.Profile
                         {
                             Login = login,
-                            Password = password
+                            AccessData = accessData
                         }
                     }
                 };
@@ -56,13 +56,13 @@ namespace Lexplosion.Logic.FileSystem
         /// Получает сохраненный аккаунт.
         /// </summary>
         /// <param name="login">Сюда будет помещен логин.</param>
-        /// <param name="password">Сюда будет помещен пароль.</param>
+        /// <param name="accessData">Данные для получения доступа. Может быть пароль, а может какой-нибудь токен.</param>
         /// <param name="accountType">Сюда передавать тип аккаунта, который нужно получить. Передавать null, если нужно получить использованный в последний раз аккаунт.</param>
         /// <returns>
         /// Возвращает тип полученного аккаунта, он может отличаться от параметра accountType, 
         /// ведь если accountType будет null, то будет возвращен тип аккаунта, использованного в последний раз.
         /// </returns>
-        public static AccountType GetAccount(out string login, out string password, AccountType? accountType)
+        public static AccountType GetAccount(out string login, out string accessData, AccountType? accountType)
         {
             var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
             if (data != null && data.Profiles != null && data.Profiles.Count > 0)
@@ -73,15 +73,15 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     AcccountsFormat.Profile profile = data.Profiles[selectedAccount];
 
-                    if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.Password))
+                    if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.AccessData))
                     {
                         login = profile.Login;
-                        password = AesСryp.Decode(Convert.FromBase64String(profile.Password), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                        accessData = AesСryp.Decode(Convert.FromBase64String(profile.AccessData), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
                     }
                     else
                     {
                         login = null;
-                        password = null;
+                        accessData = null;
                     }
 
                     return selectedAccount;
@@ -89,7 +89,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             login = null;
-            password = null;
+            accessData = null;
 
             return accountType ?? AccountType.NightWorld;
         }

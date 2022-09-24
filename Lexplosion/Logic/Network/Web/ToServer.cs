@@ -185,7 +185,17 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static AuthResult Authorization(string login, string password, out int baseStatus)
+        public class AuthResult
+        {
+            public AuthCode Status;
+            public string Login;
+            public string UUID;
+            public string AccesToken;
+            public string SessionToken;
+            public string AccessID;
+        }
+
+        public static AuthResult Authorization(string login, string accessData, out int baseStatus)
         {
             baseStatus = 0;
 
@@ -212,10 +222,14 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
+                accessData = Convert.ToBase64String(Encoding.UTF8.GetBytes(accessData)) + ":" + str;
+                string planText = Convert.ToBase64String(Encoding.UTF8.GetBytes(accessData)) + ":" + salt;
+                byte[] encrypted = AesСryp.Encode(planText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+
                 Dictionary<string, string> data = new Dictionary<string, string>() 
                 {
                     ["login"] = login,
-                    ["password"] = Convert.ToBase64String(AesСryp.Encode(Convert.ToBase64String(Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(password)) + ":" + str)) + ":" + salt, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)))),
+                    ["accessData"] = Convert.ToBase64String(encrypted),
                     ["str"] = str,
                     ["str2"] = str2,
                     ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
@@ -224,18 +238,29 @@ namespace Lexplosion.Logic.Network
                 AuthResult response = new AuthResult();
                 string answer;
 
-                try
+                //try
                 {
                     answer = HttpPost(LaunсherSettings.URL.Account + "auth", data);
+                    Console.WriteLine(answer);
 
                     if (answer == null)
                     {
                         return null;
 
                     }
+                    else if (answer == "ERROR:0")
+                    {
+                        response.Status = AuthCode.NoConnect;
+                        return response;
+                    }
                     else if (answer == "ERROR:1")
                     {
                         response.Status = AuthCode.DataError;
+                        return response;
+                    }
+                    else if (answer == "ERROR:2")
+                    {
+                        response.Status = AuthCode.SessionExpired;
                         return response;
                     }
                     else
@@ -252,6 +277,7 @@ namespace Lexplosion.Logic.Network
                                 response.UUID = userData["UUID"];
                                 response.AccesToken = userData["accesToken"];
                                 response.SessionToken = userData["sessionToken"];
+                                response.AccessID = userData["accessID"];
 
                                 Int32.TryParse(userData["baseStatus"], out baseStatus);
 
@@ -269,10 +295,10 @@ namespace Lexplosion.Logic.Network
                         }
                     }
                 }
-                catch
-                {
-                    return null;
-                }
+                //catch
+                //{
+                //    return null;
+                //}
             }
         }
 
@@ -356,6 +382,61 @@ namespace Lexplosion.Logic.Network
             //    Console.WriteLine(url + " " + e);
             //    return null;
             //}
+        }
+
+        public static string HttpPostJson(string url, string data, out HttpStatusCode? httpStatus)
+        {
+            httpStatus = null;
+
+            try
+            {
+                WebRequest req = WebRequest.Create(url);
+                req.Method = "POST";
+                req.ContentType = "application/json";
+
+                byte[] byteArray = Encoding.UTF8.GetBytes(data);
+
+                req.ContentLength = byteArray.Length;
+
+                using (Stream dataStream = req.GetRequestStream())
+                {
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                }
+
+                string answer;
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                httpStatus = HttpStatusCode.OK;
+                return answer;
+            }
+            catch (WebException ex)
+            {
+                WebExceptionStatus status = ex.Status;
+
+                if (status == WebExceptionStatus.ProtocolError)
+                {
+                    HttpWebResponse httpResponse = (HttpWebResponse)ex.Response;
+                    httpStatus = httpResponse.StatusCode;
+                }
+
+                using (var stream = ex.Response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    Console.WriteLine("ERROR " + reader.ReadToEnd());
+                }
+            }
+            catch { }
+
+            return null;
         }
     }
 }

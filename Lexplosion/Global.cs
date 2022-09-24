@@ -9,29 +9,14 @@ namespace Lexplosion.Global
     {
         private static User _user;
 
-        public static AuthCode Auth(string login, string password, bool saveUser, AccountType type)
-        {
-            _user = new User();
-
-            if (type == AccountType.NightWorld)
-            {
-                LaunchGame.GameStartEvent += _user.GameStart;
-                LaunchGame.GameStopEvent += _user.GameStop;
-                Lexplosion.Run.ExitEvent += _user.Exit;
-            }
-
-            return _user.Auth(login, password, saveUser, type);
-        }
-
-        public static AuthCode MicrosoftAuth(string token, bool saveUser) 
-        {
-            _user = new User();
-            return _user.Auth("", token, saveUser, AccountType.Microsoft);
-        }
-
         public static User User
         {
             get => _user;
+        }
+
+        public static void SetUser(User user)
+        {
+            _user = user;
         }
 
         public static readonly bool Offline = false;
@@ -57,7 +42,7 @@ namespace Lexplosion.Global
             public const string LauncherParts = "https://night-world.org/assets/launcher/windows/";
             public const string LogicScripts = "https://night-world.org/api/user/";
             public const string Base = "https://night-world.org/";
-            public const string Account = "https://night-world.org/api/account/";
+            public const string Account = "http://nw-prod/api/account/";
         }
 
         public static string LauncherDataPath = Environment.ExpandEnvironmentVariables("%appdata%") + "/night-world";

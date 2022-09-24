@@ -121,6 +121,7 @@ namespace Lexplosion.Logic.Network
 
         public static List<CurseforgeAddonInfo> GetAddonsInfo(int[] ids)
         {
+            // TODO: заменить это на ToServer.HttpPostJson
             string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
             try

@@ -34,7 +34,9 @@ namespace Lexplosion
         Successfully,
         DataError,
         NoConnect,
-        TokenError
+        TokenError,
+        SessionExpired,
+        NeedMicrosoftAuth
     }
 
     public enum InstanceSource

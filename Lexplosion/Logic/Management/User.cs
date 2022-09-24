@@ -10,10 +10,10 @@ namespace Lexplosion.Logic
 {
     class User : VMBase
     {
-        public string Login { get; private set; } = "";
-        public string UUID { get; private set; } = "00000000-0000-0000-0000-000000000000";
-        public string AccessToken { get; private set; } = "null";
-        public string SessionToken { get; private set; } = "";
+        public string Login { get; private set; }
+        public string UUID { get; private set; }
+        public string AccessToken { get; private set; }
+        public string SessionToken { get; private set; }
         public AccountType AccountType { get; private set; }
 
         private ActivityStatus _status;
@@ -27,79 +27,30 @@ namespace Lexplosion.Logic
             }
         }
 
-        private string _gameClientName = "";
-
-        public AuthCode Auth(string login, string password, bool saveUser, AccountType accountType)
+        public User(string login, string uuid, string accessToken, string sessionToken, AccountType accountType, ActivityStatus status)
         {
-            AuthResult response = null;
+            Login = login;
+            UUID = uuid;
+            AccessToken = accessToken;
+            SessionToken = sessionToken;
+            AccountType = accountType;
+            Status = status;
 
             if (accountType == AccountType.NightWorld)
             {
-                response = ToServer.Authorization(login, password, out int baseStatus);
-
-                Status = ActivityStatus.Online;
-                if (baseStatus == 1)
+                // запускаем поток который постоянно будет уведомлять сервер о том что мы в сети
+                Lexplosion.Run.TaskRun(delegate ()
                 {
-                    Status = ActivityStatus.Offline;
-                }
-                else if (baseStatus == 2)
-                {
-                    Status = ActivityStatus.NotDisturb;
-                }
-            }
-            else if (accountType == AccountType.Mojang)
-            {
-                response = MojangApi.Authorization(login, password);
-                Status = ActivityStatus.Online;
-            }
-            else if (accountType == AccountType.Microsoft)
-            {
-                response = MojangApi.AuthFromToken(password);
-                login = response?.Login;
-                Status = ActivityStatus.Online;
-            }
-
-            if (response != null)
-            {
-                if (response.Status == AuthCode.Successfully)
-                {
-                    Login = response.Login;
-                    UUID = response.UUID;
-                    AccessToken = response.AccesToken;
-                    SessionToken = response.SessionToken;
-
-                    if (saveUser)
+                    while (true)
                     {
-                        DataFilesManager.SaveAccount(login, password, accountType);
+                        ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
+                        Thread.Sleep(54000); // Ждём 9 минут
                     }
-
-                    AccountType = accountType;
-
-                    if (accountType == AccountType.NightWorld)
-                    {
-                        // запускаем поток который постоянно будет уведомлять сервер о том что мы в сети
-                        Lexplosion.Run.TaskRun(delegate ()
-                        {
-                            while (true)
-                            {
-                                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
-                                Thread.Sleep(54000); // Ждём 9 минут
-                            }
-                        });
-                    }
-
-                    return AuthCode.Successfully;
-                }
-                else
-                {
-                    return response.Status;
-                }
-            }
-            else
-            {
-                return AuthCode.NoConnect;
+                });
             }
         }
+
+        private string _gameClientName = "";
 
         public void GameStart(string clientName_)
         {

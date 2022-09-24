@@ -275,6 +275,12 @@
     <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Management\Authentication\Authentication.cs" />
+    <Compile Include="Logic\Management\Authentication\IAuthHandler.cs" />
+    <Compile Include="Logic\Management\Authentication\LocalAuth.cs" />
+    <Compile Include="Logic\Management\Authentication\MicrosoftAuth.cs" />
+    <Compile Include="Logic\Management\Authentication\MojangAuth.cs" />
+    <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\InstalledAddons.cs" />
     <Compile Include="Logic\Management\Instances\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Instances\LocalInstance.cs" />
@@ -295,6 +301,7 @@
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Tools\Immutable\ImmutableArray.cs" />
     <Compile Include="Tools\Immutable\ImmutableList.cs" />
+    <Compile Include="Tools\RandomExtensions.cs" />
     <Compile Include="Tools\ResourceGetter.cs" />
     <Compile Include="Tools\TasksPerfomer.cs" />
     <Compile Include="Tools\ValuePair.cs" />
