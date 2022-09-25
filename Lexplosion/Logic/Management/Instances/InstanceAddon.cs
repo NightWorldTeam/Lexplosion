@@ -1039,7 +1039,7 @@ namespace Lexplosion.Logic.Management.Instances
                         using (var webClient = new WebClient())
                         {
 
-                            Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 40, 40);
+                            Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 80, 80);
                         }
                     }
                     catch { }

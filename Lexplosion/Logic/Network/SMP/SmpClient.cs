@@ -51,10 +51,12 @@ namespace Lexplosion.Logic.Network.SMP
         private struct RttCalculator
         {
             private const int DeltesCount = 10;
-            private long[] deltes = new long[DeltesCount];
+            private long[] deltes;
 
             public RttCalculator(long firstRtt)
             {
+                deltes = new long[DeltesCount];
+
                 for (int i = 0; i < DeltesCount; i++)
                 {
                     deltes[i] = firstRtt;
@@ -66,7 +68,7 @@ namespace Lexplosion.Logic.Network.SMP
             public void AddDelta(long delta)
             {
                 double rtt = 0;
-                double multiplier = 0.6;
+                double multiplier = 0.5;
                 for (int i = 0; i < DeltesCount - 1; i++)
                 {
                     long nextDelta = deltes[i + 1];
@@ -77,7 +79,7 @@ namespace Lexplosion.Logic.Network.SMP
                 }
 
                 deltes[DeltesCount - 1] = delta;
-                rtt += delta * (multiplier + 0.1);
+                rtt += delta * (multiplier + 0.2);
 
                 _rtt = Convert.ToInt64(rtt / DeltesCount);
             }
@@ -483,31 +485,37 @@ namespace Lexplosion.Logic.Network.SMP
                 deliveryWait.Reset();
                 repeatDeliveryBlock.Release();
 
-                byte attemptCounts = 0;
+                byte attemptCount = 0;
                 int delay = (int)rtt;
+                long lastTime = 0;
+                bool repeated = false;
+
                 // цикл отправки
-                while (IsConnected && attemptCounts < 15)
+                while (IsConnected && attemptCount < 15)
                 {
-                    if (attemptCounts > 0)
+                    if (attemptCount > 0)
                     {
-                        Console.WriteLine("AXAXAXAXAXAX " + attemptCounts + " " + lastPackageId);
+                        Console.WriteLine("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId);
                     }
 
                     foreach (ushort id in packages.Keys)
                     {
-                        packages[id][HeaderPositions.AttemptsCounts] = attemptCounts; // увставляем номер попытки
+                        packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
                         socket.Send(packages[id], packages[id].Length);
                     }
 
                     _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                    long lastTime = _lastTime;
-                    bool deliveredFirstTime = true;
+                    if (attemptCount == 0 || repeated)
+                    {
+                        lastTime = _lastTime;
+                        repeated = false;
+                    }
 
                 Begin:
                     if (!deliveryWait.WaitOne(delay)) // истекло время ожидания
                     {
-                        delay *= _delayMultipliers[attemptCounts];
-                        attemptCounts++;
+                        delay *= _delayMultipliers[attemptCount];
+                        attemptCount++;
                     }
                     else // либо пришло подтверждение доставки, либо пришел запрос на повторную доставку
                     {
@@ -515,12 +523,9 @@ namespace Lexplosion.Logic.Network.SMP
                         if (repeatDeliveryList == null) // пакеты удачно доставлены
                         {
                             //рассчитываем задержку
-                            if (deliveredFirstTime)
-                            {
-                                long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
-                                _rttCalculator.AddDelta(deltaTime);
-                                rtt = _rttCalculator.GetRtt;
-                            }
+                            long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
+                            _rttCalculator.AddDelta(deltaTime);
+                            rtt = _rttCalculator.GetRtt;
 
                             //Console.WriteLine("YRAAAAA " + lastPackageId);
                             repeatDeliveryBlock.Release();
@@ -528,8 +533,6 @@ namespace Lexplosion.Logic.Network.SMP
                         }
                         else // хост просит повторить отправку некоторых пакетов
                         {
-                            deliveredFirstTime = false;
-
                             // оставляем в списке только те айдишники, которые надо повторить
                             SortedDictionary<ushort, byte[]> packages_ = new SortedDictionary<ushort, byte[]>();
                             bool isValid = true;
@@ -552,7 +555,9 @@ namespace Lexplosion.Logic.Network.SMP
                             {
                                 packages_[maxId][HeaderPositions.Flag] = Flags.NeedConfirm;
 
+                                repeated = true;
                                 packages = packages_;
+
                                 repeatDeliveryList = null;
                                 repeatDeliveryBlock.Release();
                             }
@@ -565,7 +570,7 @@ namespace Lexplosion.Logic.Network.SMP
                     }
                 }
 
-                if (attemptCounts == 15)
+                if (attemptCount == 15)
                 {
                     Console.WriteLine("PIZDETS!!!!");
                     new Thread(delegate ()
