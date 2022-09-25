@@ -11,7 +11,7 @@ namespace Lexplosion.Logic.Management.Authentication
         /// <param name="accessData">Данные для доступа. Так же эта переменная изменится, в нее будут помещены данные доступа, которые можно сохранять</param>
         /// <param name="code">Результат выполнения.</param>
         /// <returns></returns>
-        User Auth(string login, ref string accessData, out AuthCode code);
+        User Auth(ref string login, ref string accessData, out AuthCode code);
 
         /// <summary>
         /// Проверяет сохраненные данных аунтефикации.
@@ -20,6 +20,6 @@ namespace Lexplosion.Logic.Management.Authentication
         /// <param name="accessData">Данные для доступа. Так же эта переменная изменится, в нее будут помещены данные доступа, которые можно сохранять</param>
         /// <param name="code">Результат выполнения.</param>
         /// <returns></returns>
-        User ReAuth(string login, ref string accessData, out AuthCode code);
+        User ReAuth(ref string login, ref string accessData, out AuthCode code);
     }
 }

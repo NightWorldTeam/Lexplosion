@@ -7,13 +7,13 @@ namespace Lexplosion.Logic.Management.Authentication
 {
     internal class NightWorldAuth : IAuthHandler
     {
-        public User Auth(string login, ref string accessData, out AuthCode code)
+        public User Auth(ref string login, ref string accessData, out AuthCode code)
         {
             accessData = "{\"type\":\"password\",\"data\":\"" + accessData + "\"}";
             return Execute(login, ref accessData, out code);      
         }
 
-        public User ReAuth(string login, ref string accessData, out AuthCode code)
+        public User ReAuth(ref string login, ref string accessData, out AuthCode code)
         {
             accessData = "{\"type\":\"accessID\",\"data\":\"" + accessData + "\"}";
             return Execute(login, ref accessData, out code);

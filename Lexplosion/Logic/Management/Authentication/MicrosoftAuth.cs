@@ -4,7 +4,7 @@ namespace Lexplosion.Logic.Management.Authentication
 {
     class MicrosoftAuth : IAuthHandler
     {
-        public User Auth(string login, ref string accessData, out AuthCode code)
+        public User Auth(ref string login, ref string accessData, out AuthCode code)
         {
             string token = MojangApi.GetToken(accessData);
             if(token == null)
@@ -17,6 +17,7 @@ namespace Lexplosion.Logic.Management.Authentication
             if (response.Status == AuthCode.Successfully)
             {
                 code = AuthCode.Successfully;
+                login = response.Login;
                 return new User(response.Login, response.UUID, response.AccesToken, null, AccountType.Microsoft, ActivityStatus.Online);
             }
 
@@ -24,9 +25,9 @@ namespace Lexplosion.Logic.Management.Authentication
             return null;
         }
 
-        public User ReAuth(string login, ref string accessData, out AuthCode code)
+        public User ReAuth(ref string login, ref string accessData, out AuthCode code)
         {
-            return Auth(login, ref accessData, out code);
+            return Auth(ref login, ref accessData, out code);
         }
     }
 }

@@ -93,7 +93,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 login = account.Login;
                 accessData = AesСryp.Decode(Convert.FromBase64String(account.AccessData), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
 
-                user = authHandler.ReAuth(login, ref accessData, out result);
+                user = authHandler.ReAuth(ref login, ref accessData, out result);
             }
             else
             {
@@ -105,7 +105,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 login = newLogin;
                 accessData = newPassword;
 
-                user = authHandler.Auth(login, ref accessData, out result);
+                user = authHandler.Auth(ref login, ref accessData, out result);
             }
 
             if (result == AuthCode.Successfully)

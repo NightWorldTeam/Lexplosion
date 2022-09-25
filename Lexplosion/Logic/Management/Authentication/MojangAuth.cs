@@ -12,7 +12,7 @@ namespace Lexplosion.Logic.Management.Authentication
             public string AccessToken;
         }
 
-        public User Auth(string login, ref string accessData, out AuthCode code)
+        public User Auth(ref string login, ref string accessData, out AuthCode code)
         {
             MojangApi.AuthResult response = MojangApi.Auth(login, accessData);
 
@@ -39,7 +39,7 @@ namespace Lexplosion.Logic.Management.Authentication
             return null;
         }
 
-        public User ReAuth(string login, ref string accessData, out AuthCode code)
+        public User ReAuth(ref string login, ref string accessData, out AuthCode code)
         {
             try
             {
