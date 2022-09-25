@@ -223,6 +223,8 @@ namespace Lexplosion.Gui.ViewModels
 
             if (_savedLogin != null)
             {
+                // так как логин сохранён, а при авторизации Microsoft
+                // логин == Ник, мы выводим авторизацию с сохранёным аккаунтов для Microsoft
                 if (type == AccountType.Microsoft)
                 {
                     _isSavedAccountOAuth2 = true;
