@@ -77,7 +77,7 @@ namespace Lexplosion.Logic.Network.SMP
                 }
 
                 deltes[DeltesCount - 1] = delta;
-                rtt += delta * (multiplier = 0.1);
+                rtt += delta * (multiplier + 0.1);
 
                 _rtt = Convert.ToInt64(rtt / DeltesCount);
             }
