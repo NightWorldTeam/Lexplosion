@@ -10,6 +10,7 @@ using LumiSoft.Net.STUN.Client;
 namespace Lexplosion.Logic.Network
 {
     using SMP;
+    using System.Runtime.CompilerServices;
     using TURN;
 
     abstract class NetworkServer
@@ -35,9 +36,9 @@ namespace Lexplosion.Logic.Network
         protected bool DirectConnection;
         protected string ControlServer;
 
-        private readonly IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9654);
-
-        private Socket controlConnection;
+        private readonly IPEndPoint _udpSocketPoint;
+        private Socket _udpSocket;
+        private Socket _controlConnection;
 
         public event Action<string> ConnectingUser;
         public event Action<string> DisconnectedUser;
@@ -46,6 +47,14 @@ namespace Lexplosion.Logic.Network
         protected ConcurrentDictionary<IPEndPoint, string> PointUuidPair;
 
         protected HashSet<string> KickedClients; //тут хранятся выкинутые клиенты
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void CreateUdpSocket(IPEndPoint point)
+        {
+            _udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            _udpSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            _udpSocket.Bind(point);
+        }
 
         public NetworkServer(string uuid, string sessionToken, string serverType, bool directConnection, string controlServer)
         {
@@ -67,11 +76,14 @@ namespace Lexplosion.Logic.Network
             UuidPointPair = new ConcurrentDictionary<string, IPEndPoint>();
             PointUuidPair = new ConcurrentDictionary<IPEndPoint, string>();
 
-            controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             if (DirectConnection)
             {
-                Server = new SmpServer(localPoint);
+                CreateUdpSocket(new IPEndPoint(IPAddress.Any, 0));
+                _udpSocketPoint = (IPEndPoint)_udpSocket.LocalEndPoint;
+
+                Server = new SmpServer(_udpSocketPoint);
             }
             else
             {
@@ -112,12 +124,12 @@ namespace Lexplosion.Logic.Network
                 bool needRepeat = false;
 
                 //подключаемся к управляющему серверу
-                controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
+                _controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
 
                 string st =
                     "{\"UUID\" : \"" + UUID + "\", \"type\": \"" + serverType + "\", \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\", \"sessionToken\" : \"" + _sessionToken + "\"}";
                 byte[] sendData = Encoding.UTF8.GetBytes(st);
-                controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
+                _controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
                 MaintainingThread.Start();
                 Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD");
 
@@ -132,12 +144,12 @@ namespace Lexplosion.Logic.Network
 
                             Console.WriteLine("ControlServerRecv");
                             ControlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
-                            controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
+                            _controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
 
                             int bytes;
                             try
                             {
-                                bytes = controlConnection.Receive(data);
+                                bytes = _controlConnection.Receive(data);
                             }
                             catch
                             {
@@ -147,7 +159,7 @@ namespace Lexplosion.Logic.Network
                             finally
                             {
                                 ControlConnectionBlock.WaitOne(); // блочим семофор
-                                controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
+                                _controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
                                 Console.WriteLine("ControlServerEndRecv");
                             }
 
@@ -160,32 +172,32 @@ namespace Lexplosion.Logic.Network
                                 {
                                     if (KickedClients.Contains(clientUUID))
                                     {
-                                        controlConnection.Send(new byte[1] { ControlSrverCodes.E }); //отправляем серверу отказ
+                                        _controlConnection.Send(new byte[1] { ControlSrverCodes.E }); //отправляем серверу отказ
                                         continue;
                                     }
                                 }
 
-                                controlConnection.Send(new byte[1] { ControlSrverCodes.A }); //отправляем серверу соглашение
+                                _controlConnection.Send(new byte[1] { ControlSrverCodes.A }); //отправляем серверу соглашение
 
-                                bytes = controlConnection.Receive(data);
+                                bytes = _controlConnection.Receive(data);
                                 if (bytes == 1 && data[0] == ControlSrverCodes.B) //сервер запрашивает мой порт
                                 {
                                     byte[] portData;
                                     if (DirectConnection)
                                     {
-                                        UdpClient sock = new UdpClient();
-                                        sock.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                                        sock.Client.Bind(localPoint);
+                                        if (_udpSocket == null) CreateUdpSocket(_udpSocketPoint);
 
                                         // TODO: сделать получения списка stun серверов с нашего сервера
                                         STUN_Result result = null;
                                         try
                                         {
-                                            result = STUN_Client.Query("stun.l.google.com", 19305, sock.Client); //получем наш внешний адрес
+                                            result = STUN_Client.Query("stun.l.google.com", 19305, _udpSocket); //получем наш внешний адрес
                                             Console.WriteLine("NatType " + result.NetType.ToString());
                                         }
                                         catch { }
-                                        sock.Close();
+
+                                        _udpSocket.Close();
+                                        _udpSocket = null;
 
                                         // какая-то хуйня. Преходим на соединение через ретранслятор
                                         if (result == null)
@@ -215,7 +227,7 @@ namespace Lexplosion.Logic.Network
                                         portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                                     }
 
-                                    controlConnection.Send(portData); //отправляем серверу наш порт
+                                    _controlConnection.Send(portData); //отправляем серверу наш порт
                                 }
                                 else
                                 {
@@ -234,7 +246,7 @@ namespace Lexplosion.Logic.Network
 
                         {
                             byte[] data = new byte[21];
-                            int bytes = controlConnection.Receive(data); //получем ip клиента
+                            int bytes = _controlConnection.Receive(data); //получем ip клиента
 
                             byte[] resp = new byte[bytes];
                             for (int i = 0; i < bytes; i++) // TODO: сделать этот перенос нормально, но не через resize
@@ -249,9 +261,6 @@ namespace Lexplosion.Logic.Network
                                 string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
                                 string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                                 string hostIp = str.Replace(":" + hostPort, "");
-
-                                //hostPort = "9655";
-                                //hostIp = "127.0.0.1";
 
                                 point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
                                 Console.WriteLine("Host EndPoint " + point);
@@ -306,9 +315,9 @@ namespace Lexplosion.Logic.Network
                 if (needRepeat)
                 {
                     ControlConnectionBlock.WaitOne();
-                    controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
-                    controlConnection.Close();
-                    controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    _controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
+                    _controlConnection.Close();
+                    _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                     Console.WriteLine("Repeat connection to control server");
                     DirectConnection = false;
@@ -328,10 +337,10 @@ namespace Lexplosion.Logic.Network
             MaintainingThread.Abort();
             try
             {
-                controlConnection.Send(new byte[1] { ControlSrverCodes.Z }); // отправляем управляющиму серверу сообщение что мы отключаемся
+                _controlConnection.Send(new byte[1] { ControlSrverCodes.Z }); // отправляем управляющиму серверу сообщение что мы отключаемся
             }
             catch { }
-            controlConnection.Close(); //закрываем соединение с управляющим сервером
+            _controlConnection.Close(); //закрываем соединение с управляющим сервером
 
             SendingThread.Abort();
             ReadingThread.Abort();
@@ -349,6 +358,7 @@ namespace Lexplosion.Logic.Network
                     {
                         KickedClients.Add(uuid);
                     }    
+
                     IPEndPoint point = UuidPointPair[uuid];
                     ClientAbort(point);
                 }
@@ -376,7 +386,7 @@ namespace Lexplosion.Logic.Network
                 while (IsWork)
                 {
                     ControlConnectionBlock.WaitOne();
-                    controlConnection.Send(new byte[1] { ControlSrverCodes.Y });
+                    _controlConnection.Send(new byte[1] { ControlSrverCodes.Y });
                     ControlConnectionBlock.Set();
                     Thread.Sleep(240000); // ждём 4 минуты
                 }

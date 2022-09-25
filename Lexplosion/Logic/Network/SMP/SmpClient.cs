@@ -48,6 +48,47 @@ namespace Lexplosion.Logic.Network.SMP
             public bool IsFull;
         }
 
+        private struct RttCalculator
+        {
+            private const int DeltesCount = 10;
+            private long[] deltes = new long[DeltesCount];
+
+            public RttCalculator(long firstRtt)
+            {
+                for (int i = 0; i < DeltesCount; i++)
+                {
+                    deltes[i] = firstRtt;
+                }
+
+                _rtt = firstRtt;
+            }
+
+            public void AddDelta(long delta)
+            {
+                double rtt = 0;
+                double multiplier = 0.6;
+                for (int i = 0; i < DeltesCount - 1; i++)
+                {
+                    long nextDelta = deltes[i + 1];
+                    deltes[i] = nextDelta;
+
+                    multiplier += 0.1;
+                    rtt += nextDelta * multiplier;
+                }
+
+                deltes[DeltesCount - 1] = delta;
+                rtt += delta * (multiplier = 0.1);
+
+                _rtt = Convert.ToInt64(rtt);
+            }
+
+            private long _rtt;
+            public long GetRtt
+            {
+                get => _rtt;
+            }
+        }
+
         private readonly ConcurrentQueue<List<Package>> sendingBuffer = new ConcurrentQueue<List<Package>>(); // Буфер пакетов на отправку
         private readonly ConcurrentQueue<Message> receivingBuffer = new ConcurrentQueue<Message>();
         private readonly ConcurrentDictionary<ushort, byte[]> packagesBuffer = new ConcurrentDictionary<ushort, byte[]>(); //буфер принятых пакетов
@@ -67,8 +108,10 @@ namespace Lexplosion.Logic.Network.SMP
 
         private int _maxPackagesCount = 100;
         private long rtt = -1; // пинг в обе стороны (время ожидание ответа)
-        private int _mtu = 68; //68
+        private int _mtu = 68;
         private int _hostMtu = -1; // mtu удалённого хоста
+
+        private RttCalculator _rttCalculator;
 
         private IPEndPoint point = null;
         private readonly UdpClient socket = null;
@@ -77,13 +120,13 @@ namespace Lexplosion.Logic.Network.SMP
         private Thread serviceReceive;
         private Thread connectionControl;
 
-        private bool workPing = false; // когда работает метод, вычислящий rtt эта переменная становится true
-        private readonly long[] times = new long[20]; // этот массив тоже нужен для метода вычисления пинга
-        private long pingPackagesDelay = 0;
-        private readonly AutoResetEvent pingWait = new AutoResetEvent(false);
+        private bool _workPing = false; // когда работает метод, вычислящий rtt эта переменная становится true
+        private readonly long[] _times = new long[20]; // этот массив тоже нужен для метода вычисления пинга
+        private long _pingPackagesDelay = 0;
+        private readonly AutoResetEvent _pingWait = new AutoResetEvent(false);
 
-        private readonly AutoResetEvent mtuWait = new AutoResetEvent(false); // ожидание ответа при вычислении mtu
-        private int mtuPackageId = -1; // айди mtu пакета
+        private readonly AutoResetEvent _mtuWait = new AutoResetEvent(false); // ожидание ответа при вычислении mtu
+        private int _mtuPackageId = -1; // айди mtu пакета
 
         private readonly AutoResetEvent mtuInfoWait = new AutoResetEvent(false); // ожидание ответа при отправке своего mtu
         private readonly Semaphore calculateMtuBlock = new Semaphore(1, 1);
@@ -92,8 +135,8 @@ namespace Lexplosion.Logic.Network.SMP
         public event ReceiveHandle MessageReceived;
 
         private bool inStopping = false; // это флаг чтобы в процессе закрытия соединения нельзя было вызвать метод send
-        private long lastTime = 0; //время отправки последнего пакета
-        private readonly int[] delayMultipliers = new int[15] //этот массив хранит множители rtt при отправке сообщений.
+        private long _lastTime = 0; //время отправки последнего пакета
+        private readonly int[] _delayMultipliers = new int[15] //этот массив хранит множители rtt при отправке сообщений.
         { 2, 2, 2, 2, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1 };      //Ключ - номер неуспешной попытки отправки. Будет сипользовано на следующий итерации.
                                                               //То есть если на нулевой итеарции не получилось доставить, то rtt будет домножен на нулвой множитель и полученное число будет использоваться как задержка на первой итерации.
 
@@ -109,21 +152,11 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
-        public SmpClient(IPEndPoint point, bool a = false)
+        public SmpClient(IPEndPoint point, bool multiSocket = false)
         {
             socket = new UdpClient();
-            if (a) socket.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            if (multiSocket) socket.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             socket.Client.Bind(point);
-
-            var sioUdpConnectionReset = -1744830452;
-            var inValue = new byte[] { 0 };
-            var outValue = new byte[] { 0 };
-            socket.Client.IOControl(sioUdpConnectionReset, inValue, outValue);
-        }
-
-        public SmpClient(UdpClient sock)
-        {
-            socket = sock;
 
             var sioUdpConnectionReset = -1744830452;
             var inValue = new byte[] { 0 };
@@ -170,6 +203,7 @@ namespace Lexplosion.Logic.Network.SMP
             thread.Start();
 
             rtt = CalculateRTT(); //измеряем rtt
+            _rttCalculator = new RttCalculator(rtt);
             Console.WriteLine("RTT " + rtt);
 
             if (rtt != -1) // если -1, значит ответные пакеты не дошли. Соединение установить не удалось
@@ -206,7 +240,7 @@ namespace Lexplosion.Logic.Network.SMP
                 serviceSend.Start();
                 connectionControl.Start();
 
-                lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() + 10000;
+                _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() + 10000;
 
                 Console.WriteLine("MTU " + _mtu);
 
@@ -231,7 +265,7 @@ namespace Lexplosion.Logic.Network.SMP
             {
                 difference = lostData - thisData;
 
-                mtuPackageId = packageId;
+                _mtuPackageId = packageId;
                 byte[] data = new byte[thisData];
                 data[1] = packageId;
 
@@ -242,7 +276,7 @@ namespace Lexplosion.Logic.Network.SMP
                     {
                         socket.Send(data, thisData);
 
-                        if (mtuWait.WaitOne((int)rtt * 2) && mtuPackageId == packageId)
+                        if (_mtuWait.WaitOne((int)rtt * 2) && _mtuPackageId == packageId)
                         {
                             break;
                         }
@@ -265,7 +299,7 @@ namespace Lexplosion.Logic.Network.SMP
                 packageId++;
             }
 
-            mtuPackageId = -1;
+            _mtuPackageId = -1;
 
             socket.Client.DontFragment = false;
             return thisData;
@@ -303,17 +337,17 @@ namespace Lexplosion.Logic.Network.SMP
                 byte i = 0;
                 for (int j = 0; j < 5; j++) // сий процесс повторяем 5 раз
                 {
-                    workPing = true;
+                    _workPing = true;
 
                     bool successful = false;
                     while (!successful && i < 20)
                     {
-                        times[i] = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                        _times[i] = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                         Console.WriteLine("SEND");
                         socket.Send(new byte[2] { 0x01, i }, 2);
                         i++;
 
-                        successful = pingWait.WaitOne(200);
+                        successful = _pingWait.WaitOne(200);
                     }
 
                     if (!successful)
@@ -321,7 +355,7 @@ namespace Lexplosion.Logic.Network.SMP
                         return -1;
                     }
 
-                    rttSum += pingPackagesDelay;
+                    rttSum += _pingPackagesDelay;
                 }
             }
             catch
@@ -335,14 +369,13 @@ namespace Lexplosion.Logic.Network.SMP
             return (rttSum / 5) + 1;
         }
 
-
         private void PingProcessing(byte[] data)
         {
-            if (data.Length == 2 && data[1] < 21 && workPing)
+            if (data.Length == 2 && data[1] < 21 && _workPing)
             {
-                pingPackagesDelay = DateTimeOffset.Now.ToUnixTimeMilliseconds() - times[data[1]]; //вчитаем из данного времени время отправки пакета
-                workPing = false;
-                pingWait.Set();
+                _pingPackagesDelay = DateTimeOffset.Now.ToUnixTimeMilliseconds() - _times[data[1]]; //вчитаем из данного времени время отправки пакета
+                _workPing = false;
+                _pingWait.Set();
             }
         }
 
@@ -350,7 +383,7 @@ namespace Lexplosion.Logic.Network.SMP
         { // TODO: потом на сервере этот метод как-то занести в один поток для всех клиентов
             while (IsConnected)
             {
-                if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime >= 10000) //проверяем что последний пакет был отправлен более 2 секунд назад
+                if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - _lastTime >= 10000) //проверяем что последний пакет был отправлен более 2 секунд назад
                 {
                     if (CalculateRTT() == -1) //проверяем ответил ли хост
                     {
@@ -466,12 +499,14 @@ namespace Lexplosion.Logic.Network.SMP
                         socket.Send(packages[id], packages[id].Length);
                     }
 
-                    lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                    _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                    long lastTime = _lastTime;
+                    bool deliveredFirstTime = true;
 
                 Begin:
                     if (!deliveryWait.WaitOne(delay)) // истекло время ожидания
                     {
-                        delay *= delayMultipliers[attemptCounts];
+                        delay *= _delayMultipliers[attemptCounts];
                         attemptCounts++;
                     }
                     else // либо пришло подтверждение доставки, либо пришел запрос на повторную доставку
@@ -479,12 +514,22 @@ namespace Lexplosion.Logic.Network.SMP
                         repeatDeliveryBlock.WaitOne();
                         if (repeatDeliveryList == null) // пакеты удачно доставлены
                         {
+                            //рассчитываем задержку
+                            if (deliveredFirstTime)
+                            {
+                                long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
+                                _rttCalculator.AddDelta(deltaTime);
+                                rtt = _rttCalculator.GetRtt;
+                            }
+
                             //Console.WriteLine("YRAAAAA " + lastPackageId);
                             repeatDeliveryBlock.Release();
                             break;
                         }
                         else // хост просит повторить отправку некоторых пакетов
                         {
+                            deliveredFirstTime = false;
+
                             // оставляем в списке только те айдишники, которые надо повторить
                             SortedDictionary<ushort, byte[]> packages_ = new SortedDictionary<ushort, byte[]>();
                             bool isValid = true;
@@ -576,7 +621,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     if (data.Length > 0)
                     {
-                        lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                        _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
                         switch (data[0])
                         {
@@ -805,8 +850,8 @@ namespace Lexplosion.Logic.Network.SMP
                             case 7: // пришел ответ на вычисление mtu
                                 if (data.Length == 2)
                                 {
-                                    mtuPackageId = data[1];
-                                    mtuWait.Set();
+                                    _mtuPackageId = data[1];
+                                    _mtuWait.Set();
                                 }
                                 break;
                             case 8: // пришёл пакет с инфой об mtu

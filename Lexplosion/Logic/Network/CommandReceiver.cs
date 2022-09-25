@@ -49,24 +49,24 @@ namespace Lexplosion.Logic.Network
                 text = text.Replace("$microsoftAuth:", "");
                 if (text.StartsWith("$result:ERROR-0"))
                 {
-                    _microsoftAuthPassed.Invoke("", MicrosoftAuthRes.UnknownError);
+                    _microsoftAuthPassed?.Invoke("", MicrosoftAuthRes.UnknownError);
                 }
                 else if (text.StartsWith("$result:ERROR-1"))
                 {
-                    _microsoftAuthPassed.Invoke("", MicrosoftAuthRes.UserDenied);
+                    _microsoftAuthPassed?.Invoke("", MicrosoftAuthRes.UserDenied);
                 }
                 else if (text.StartsWith("$result:ERROR-2"))
                 {
-                    _microsoftAuthPassed.Invoke("", MicrosoftAuthRes.Minor);
+                    _microsoftAuthPassed?.Invoke("", MicrosoftAuthRes.Minor);
                 }
                 else if (text.StartsWith("$result:ERROR-3"))
                 {
-                    _microsoftAuthPassed.Invoke("", MicrosoftAuthRes.NoXbox);
+                    _microsoftAuthPassed?.Invoke("", MicrosoftAuthRes.NoXbox);
                 }
                 else if (text.StartsWith("$result:OK,"))
                 {
                     string data = text.Replace("$result:OK,", "");
-                    _microsoftAuthPassed.Invoke(data, MicrosoftAuthRes.Successful);
+                    _microsoftAuthPassed?.Invoke(data, MicrosoftAuthRes.Successful);
                 }
             }
 

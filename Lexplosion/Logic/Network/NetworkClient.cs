@@ -20,8 +20,6 @@ namespace Lexplosion.Logic.Network
         protected Thread readingThread;
         protected Thread sendingThread;
 
-        private IPEndPoint localPoint = new IPEndPoint(IPAddress.Any, 9655);
-
         public NetworkClient(string clientType, string controlServer)
         {
             ClientType = clientType;
@@ -54,12 +52,15 @@ namespace Lexplosion.Logic.Network
                         byte[] portData;
                         if (buf[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
                         {
-                            UdpClient sock = new UdpClient();
-                            sock.Client.Bind(localPoint);
-                            Bridge = new SmpClient(sock);
+                            var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                            udpSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
 
-                            STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, sock.Client);
+                            STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, udpSocket);
                             Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
+
+                            var point = (IPEndPoint)udpSocket.LocalEndPoint;
+                            udpSocket.Close();
+                            Bridge = new SmpClient(point);
 
                             //парсим и получаем порт
                             string externalPort = result.PublicEndPoint.ToString();
@@ -108,8 +109,7 @@ namespace Lexplosion.Logic.Network
                         string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
                         string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                         string hostIp = str.Replace(":" + hostPort, "");
-                        //hostPort = "9654";
-                        //hostIp = "127.0.0.1";
+
                         Console.WriteLine("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
                         isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
                     }

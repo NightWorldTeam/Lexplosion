@@ -179,7 +179,6 @@ namespace Lexplosion.Logic.Network
                 {
                     isDisconected = new List<IPEndPoint>();
                 }
-
             }
         }
 
