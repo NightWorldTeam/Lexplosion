@@ -1,9 +1,13 @@
 ﻿using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
+using LumiSoft.Net.Mime.vCard;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -18,11 +22,14 @@ namespace Lexplosion.Gui.ViewModels
 
         public static List<string> CfSortToString { get; } = new List<string>()
         {
-            ResourceGetter.GetString("dateCreated"),
-            ResourceGetter.GetString("lastUpdated"),
-            ResourceGetter.GetString("name"),
-            ResourceGetter.GetString("popularity"),
-            ResourceGetter.GetString("totalDownloadsFl"),
+            ResourceGetter.GetString("featuredSortBy"),
+            ResourceGetter.GetString("popularitySortBy"),
+            ResourceGetter.GetString("lastUpdatedSortBy"),
+            ResourceGetter.GetString("nameSortBy"),
+            ResourceGetter.GetString("authorSortBy"),
+            ResourceGetter.GetString("totalDownloadsFlSortBy"),
+            ResourceGetter.GetString("categorySortBy"),
+            ResourceGetter.GetString("gameVersionSortBy"),
         };
 
         public bool IsMultiSource { get; }
@@ -99,7 +106,7 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        public CfSortBy SelectedCfSortBy = CfSortBy.Popularity;
+        public CfSortField SelectedCfSortBy = CfSortField.Popularity;
         
         private string _selectedCfSortByString = CfSortToString[(int)CfSortBy.Popularity];
         public string SelectedCfSortByString
@@ -108,7 +115,8 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _selectedCfSortByString = value;
                 OnPropertyChanged();
-                SelectedCfSortBy = (CfSortBy)CfSortToString.IndexOf(value);
+                SelectedCfSortBy = (CfSortField)CfSortToString.IndexOf(value) - 1;
+                SearchChanged?.Invoke("");
             }
         }
 
@@ -120,6 +128,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _selectedVersion = value;
                 OnPropertyChanged();
+                StartSearch();
             }
         }
 
@@ -156,6 +165,7 @@ namespace Lexplosion.Gui.ViewModels
             Lexplosion.Run.TaskRun(() => { 
                 Categories = PrepareCategories();
             });
+            SelectedVersion = ResourceGetter.GetString("allVersions");
         }
 
 

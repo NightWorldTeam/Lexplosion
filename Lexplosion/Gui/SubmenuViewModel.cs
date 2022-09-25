@@ -5,7 +5,7 @@ namespace Lexplosion.Gui
 {
     public abstract class SubmenuViewModel : VMBase
     {
-        public ObservableCollection<Tab> Tabs { get; protected set; } = new ObservableCollection<Tab>();
-        public Tab SelectedTab { get; set; } = new Tab();
+        public ObservableCollection<Tab<VMBase>> Tabs { get; protected set; } = new ObservableCollection<Tab<VMBase>>();
+        public Tab<VMBase> SelectedTab { get; set; } = new Tab<VMBase>();
     }
 }

@@ -43,7 +43,7 @@ namespace Lexplosion.Tools.Immutable
 
         public IEnumerator<T> GetEnumerator()
         {
-            return (IEnumerator<T>)_array.GetEnumerator();
+            return ((IEnumerable<T>)_array).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

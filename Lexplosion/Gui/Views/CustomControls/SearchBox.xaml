@@ -205,16 +205,13 @@
                             Opacity="0.8"
                             Text="{DynamicResource gameVersion}" />
 
-                        <ComboBox
-                            Margin="0,3,0,0"
-                            SelectedIndex="0"
-                            SelectedValue="{Binding SelectedVersion}">
-                            <ComboBoxItem>
-                                <TextBlock Text="1.19.2" />
-                            </ComboBoxItem>
-                            <ComboBoxItem>
-                                <TextBlock Text="1.19" />
-                            </ComboBoxItem>
+                        <ComboBox Margin="0,3,0,0" SelectedValue="{Binding SelectedVersion}" SelectedItem="0">
+                            <ComboBox.ItemsSource>
+                                <CompositeCollection>
+                                    <ComboBoxItem Content="{DynamicResource allVersions}" IsSelected="True" />
+                                    <CollectionContainer Collection="{Binding Source={StaticResource MainVM}, Path=ReleaseGameVersions}" />
+                                </CompositeCollection>
+                            </ComboBox.ItemsSource>
                         </ComboBox>
 
                     </StackPanel>

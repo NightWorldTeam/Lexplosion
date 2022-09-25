@@ -88,6 +88,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 if (_accountTypeSelectedIndex == 3) 
                 {
+                    LoadSavedAccount(AccountType.Microsoft);
                     if (_isSavedAccountOAuth2)
                         IsMicrosoftAccountManager = true;
                     else FollowToMicrosoft();
@@ -185,7 +186,6 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
-
         #endregion Commands
 
 
@@ -221,7 +221,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             AccountType type = _authentication.GetAccount(accountType, out _savedLogin);
 
-            if (_savedLogin != null)
+            if (!string.IsNullOrEmpty(_savedLogin))
             {
                 // так как логин сохранён, а при авторизации Microsoft
                 // логин == Ник, мы выводим авторизацию с сохранёным аккаунтов для Microsoft

@@ -1,9 +1,12 @@
 ﻿using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
+
     public sealed class FactoryDLCVM : VMBase
     {
         private readonly MainViewModel _mainViewModel;
@@ -12,8 +15,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         #region Properties
 
-
-        private List<FactoryDLCModel> _models = new List<FactoryDLCModel>();
+        private ObservableCollection<FactoryDLCModel> _models = new ObservableCollection<FactoryDLCModel>();
+        public ObservableCollection<Tab<FactoryDLCVM>> AddonTabs { get; set; } = new ObservableCollection<Tab<FactoryDLCVM>>();
 
         private FactoryDLCModel _currentAddon;
         public FactoryDLCModel CurrentAddon
@@ -135,21 +138,27 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 IsVanillaGameType = _instanceClient.GetBaseData.Modloader == ModloaderType.Vanilla;
 
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), CfProjectType.Resourcepacks));
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), CfProjectType.Maps));
-
                 if (!IsVanillaGameType)
                 {
-                    _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods));
-                    SelectedAddonIndex = 2;
-                }
-                else 
-                {
-
-                    SelectedAddonIndex = 1;
+                    _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods, ResourceGetter.GetString("noInstalledModification")));
+                    App.Current.Dispatcher.Invoke(() => 
+                    { 
+                        AddonTabs.Add(new Tab<FactoryDLCVM>() { Header = ResourceGetter.GetString("mods"), Content = this });
+                    });
                 }
 
-                IsLoaded = true;
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), CfProjectType.Resourcepacks, ResourceGetter.GetString("noInstalledResourcepacks")));
+                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), CfProjectType.Maps, ResourceGetter.GetString("noInstalledMaps")));
+
+                App.Current.Dispatcher.Invoke(() => 
+                { 
+                    AddonTabs.Add(new Tab<FactoryDLCVM>() { Header = ResourceGetter.GetString("resourcepacks"), Content = this });
+                    AddonTabs.Add(new Tab<FactoryDLCVM>() { Header = ResourceGetter.GetString("worlds"), Content = this });
+
+                    SelectedAddonIndex = 0;
+
+                    IsLoaded = true;
+                });
             });
         }
 

@@ -16,8 +16,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private readonly MainViewModel _mainViewModel;
 
-        private readonly ObservableCollection<Tab> _showCaseTabMenu = new ObservableCollection<Tab>();
-        private readonly ObservableCollection<Tab> _settingsTabs = new ObservableCollection<Tab>();
+        private readonly ObservableCollection<Tab<VMBase>> _showCaseTabMenu = new ObservableCollection<Tab<VMBase>>();
+        private readonly ObservableCollection<Tab<VMBase>> _settingsTabs = new ObservableCollection<Tab<VMBase>>();
 
         private readonly InstanceFormViewModel _instanceForm;
 
@@ -107,9 +107,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private void UpdateShowCaseMenu()
         {
-            _showCaseTabMenu.Add(new Tab() { Header = ResourceGetter.GetString("general"), Content = new OverviewViewModel(_instanceForm.Client, this) });
-            _showCaseTabMenu.Add(new Tab() { Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
-            _showCaseTabMenu.Add(new Tab() { Header = ResourceGetter.GetString("version"), Content = new InstancePreviousVersionsViewModel(_instanceForm) });
+            _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("general"), Content = new OverviewViewModel(_instanceForm.Client, this) });
+            _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
+            _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("version"), Content = new InstancePreviousVersionsViewModel(_instanceForm) });
         }
 
         private void UpdateTabMenu() 
@@ -122,9 +122,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 Tabs.Clear();
 
                 
-                Tabs.Add(new Tab { Header = ResourceGetter.GetString("overview"), Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, 0, _instanceForm) });
-                Tabs.Add(new Tab { Header = ResourceGetter.GetString("configuration"), Content = new TabMenuViewModel(_settingsTabs, ResourceGetter.GetString("instanceSettings"), _selectedSettingsTabIndex) });
-                Tabs.Add(new Tab { Header = ResourceGetter.GetString("back"), Content = null, Command = ClearMemory });
+                Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("overview"), Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, 0, _instanceForm) });
+                Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("configuration"), Content = new TabMenuViewModel(_settingsTabs, ResourceGetter.GetString("instanceSettings"), _selectedSettingsTabIndex) });
+                Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("back"), Content = null, Command = ClearMemory });
             }
             else 
             {
@@ -133,8 +133,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
                 Tabs.Clear();
 
-                Tabs.Add(new Tab { Header = ResourceGetter.GetString("overview"), Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, 0, _instanceForm) });
-                Tabs.Add(new Tab { Header = ResourceGetter.GetString("back"), Content = null, Command = ClearMemory });
+                Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("overview"), Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, 0, _instanceForm) });
+                Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("back"), Content = null, Command = ClearMemory });
             }
         }
 
@@ -145,12 +145,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 if (_settingsTabs.Count == 4)
                     return;
 
-                _settingsTabs.Add(new Tab { Id = 1, Header = ResourceGetter.GetString("aboutInstance"), Content = new InstanceProfileViewModel(_instanceForm.Client) });
-                _settingsTabs.Add(new Tab { Id = 4, Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
+                _settingsTabs.Add(new Tab<VMBase> { Id = 1, Header = ResourceGetter.GetString("aboutInstance"), Content = new InstanceProfileViewModel(_instanceForm.Client) });
+                _settingsTabs.Add(new Tab<VMBase> { Id = 4, Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
             }
 
-            _settingsTabs.Add(new Tab { Id = 0, Header = ResourceGetter.GetString("settings"), Content = new InstanceSettingsViewModel(_instanceForm.Client) });
-            _settingsTabs.Add(new Tab { Id = 3, Header = ResourceGetter.GetString("dlc"), Content = new FactoryDLCVM(_mainViewModel, _instanceForm.Client) });
+            _settingsTabs.Add(new Tab<VMBase> { Id = 0, Header = ResourceGetter.GetString("settings"), Content = new InstanceSettingsViewModel(_instanceForm.Client) });
+            _settingsTabs.Add(new Tab<VMBase> { Id = 3, Header = ResourceGetter.GetString("dlc"), Content = new FactoryDLCVM(_mainViewModel, _instanceForm.Client) });
         }
 
 

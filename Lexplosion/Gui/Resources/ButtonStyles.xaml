@@ -296,7 +296,6 @@
         </Setter>
     </Style>
 
-
     <!--  Toggle Button  -->
     <Style x:Key="EllipseToggleButton" TargetType="{x:Type ToggleButton}">
         <Setter Property="Focusable" Value="False" />

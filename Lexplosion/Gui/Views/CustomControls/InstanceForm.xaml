@@ -205,7 +205,7 @@
                         Grid.Row="0"
                         HorizontalAlignment="Stretch"
                         Loaded="Grid_Loaded"
-                        ShowGridLines="True">
+                        ShowGridLines="False">
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30" />

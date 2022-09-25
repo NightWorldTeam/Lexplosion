@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -123,12 +124,16 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             IsLoaded = false;
             Lexplosion.Run.TaskRun(() =>
             {
+                var gameVersion = SearchBoxVM.SelectedVersion == null || SearchBoxVM.SelectedVersion.Contains(ResourceGetter.GetString("allVersions")) ? "" : SearchBoxVM.SelectedVersion;
+                Console.WriteLine(gameVersion);
                 var instances = InstanceClient.GetOutsideInstances(
                     SearchBoxVM.SelectedInstanceSource,
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
                     SearchBoxVM.SelectedCurseforgeCategory.id,
-                    SearchBoxVM.SearchTextComfirmed
+                    SearchBoxVM.SearchTextComfirmed,
+                    SearchBoxVM.SelectedCfSortBy,
+                    gameVersion
                     );
 
                 if (instances.Count == _pageSize) IsPaginatorVisible = true;

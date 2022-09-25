@@ -157,6 +157,7 @@
     <Compile Include="Gui\SubmenuViewModel.cs" />
     <Compile Include="Gui\Tab.cs" />
     <Compile Include="Gui\ViewModels\AuthViewModel.cs" />
+    <Compile Include="Gui\ViewModels\CurseforgeMarket\CfCategory.cs" />
     <Compile Include="Gui\ViewModels\CurseforgeMarket\CurseforgeMarketViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryDLCVM.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />

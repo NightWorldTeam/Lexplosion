@@ -23,6 +23,16 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             }
         }
 
+        private string _emptyListMessage;
+        public string EmptyListMessage 
+        {
+            get => _emptyListMessage; set 
+            {
+                _emptyListMessage = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _isEmptyList;
         public bool IsEmptyList
         {
@@ -37,6 +47,11 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         {
             InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
             Type = type;
+        }
+
+        public FactoryDLCModel(List<InstanceAddon> addons, CfProjectType type, string emptyListMessage) : this(addons, type)
+        {
+            EmptyListMessage = emptyListMessage;
         }
 
         public void Uninstall(InstanceAddon addon) => InstalledAddons.Remove(addon);

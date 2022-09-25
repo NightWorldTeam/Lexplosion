@@ -13,14 +13,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private readonly MainViewModel _mainViewModel;
 
         /* multiplayer fields */
-        private readonly List<Tab> _multiplayerTabs;
+        private readonly List<Tab<VMBase>> _multiplayerTabs;
         private GeneralMultiplayerViewModel _generalMultiplayerViewModel = new GeneralMultiplayerViewModel();
         private FriendsTabViewModel _friendsTabViewModel = new FriendsTabViewModel();
         private ChannelTabViewModel _channelTabViewModel = new ChannelTabViewModel();
         /* multiplayer fields */
 
         /* settings fields*/
-        private readonly List<Tab> GeneralSettingsTabs;
+        private readonly List<Tab<VMBase>> GeneralSettingsTabs;
         /* settings fields*/
 
         /* mainmenu fields */
@@ -142,26 +142,26 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         #region Private Methods
 
 
-        private List<Tab> InitializeMultiplayerTabs() 
+        private List<Tab<VMBase>> InitializeMultiplayerTabs() 
         {
-            return new List<Tab>()
+            return new List<Tab<VMBase>>()
             {
                 //new Tab 
                 //{
                 //    Header = "Cервера партнёров",
                 //    Content = null
                 //},
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("general"),
                     Content = _generalMultiplayerViewModel
                 },
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("friends"),
                     Content = _friendsTabViewModel
                 },
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("channels"),
                     Content = _channelTabViewModel
@@ -169,21 +169,21 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             };
         }
 
-        private List<Tab> InitializeSettingsTabs() 
+        private List<Tab<VMBase>> InitializeSettingsTabs() 
         {
-            return new List<Tab>()
+            return new List<Tab<VMBase>>()
             {
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("general"),
                     Content = new GeneralSettingsViewModel()
                 },
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("account"),
                     Content = new DevСurtainViewModel()
                 },
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("about"),
                     Content = new DevСurtainViewModel()
@@ -191,26 +191,26 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             };
         }
 
-        private ObservableCollection<Tab> InitializeMainMenuTabs() 
+        private ObservableCollection<Tab<VMBase>> InitializeMainMenuTabs() 
         {
-            return new ObservableCollection<Tab>
+            return new ObservableCollection<Tab<VMBase>>
             {
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("catalog"),
                     Content = _catalogVM
                 },
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("library"),
                     Content = _libraryVM
                 },
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("multiplayer"),
                     Content = _multiplayerTabMenu
                 },
-                new Tab
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("settings"),
                     Content = _settingsTabMenu

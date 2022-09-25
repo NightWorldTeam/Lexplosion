@@ -192,14 +192,19 @@
 
     <s:String x:Key="microsoftAuthInProgress">Ожидание окончания авторизации через Microsoft</s:String>
 
-    <s:String x:Key="dateCreated">дате создания</s:String>
-    <s:String x:Key="lastUpdated">обновлению</s:String>
-    <s:String x:Key="name">названию</s:String>
-    <s:String x:Key="popularity">популярности</s:String>
-    <s:String x:Key="totalDownloadsFl">скачивания</s:String>
+    <s:String x:Key="dateCreatedSortBy">дате создания</s:String>
+    <s:String x:Key="lastUpdatedSortBy">обновлению</s:String>
+    <s:String x:Key="nameSortBy">названию</s:String>
+    <s:String x:Key="popularitySortBy">популярности</s:String>
+    <s:String x:Key="totalDownloadsFlSortBy">скачиваниям</s:String>
+    <s:String x:Key="featuredSortBy">признакам</s:String>
+    <s:String x:Key="categorySortBy">категории</s:String>
+    <s:String x:Key="authorSortBy">автору</s:String>
+    <s:String x:Key="gameVersionSortBy">версии игры</s:String>
 
 
     <s:String x:Key="downloadFilesCountNof">Скаченно {0}/{1} файлов</s:String>
     <s:String x:Key="gameRunning">Идёт запуск игры...</s:String>
+    <s:String x:Key="allVersions">Все версии</s:String>
 
 </ResourceDictionary>

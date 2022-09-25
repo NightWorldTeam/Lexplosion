@@ -33,7 +33,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public InstanceClient InstanceClient { get; private set; }
 
-        public TabMenuViewModel(IList<Tab> tabs, string header, int selectedTabIndex = 0, InstanceFormViewModel instanceFormViewModel = null)
+        public TabMenuViewModel(IList<Tab<VMBase>> tabs, string header, int selectedTabIndex = 0, InstanceFormViewModel instanceFormViewModel = null)
         {
             if (instanceFormViewModel != null) 
             { 
@@ -44,7 +44,7 @@ namespace Lexplosion.Gui.ViewModels
             else IsInstance = false;
 
             Header = header;
-            Tabs = new ObservableCollection<Tab>(tabs);
+            Tabs = new ObservableCollection<Tab<VMBase>>(tabs);
             if (tabs.Count > 0)
                 SelectedTab = Tabs[selectedTabIndex];
         }

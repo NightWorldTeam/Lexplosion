@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -9,57 +8,6 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 {
-
-    public class CfCategory : VMBase
-    {
-        private readonly CurseforgeCategory _curseforgeCategory;
-
-        #region Properities
-
-        public string Name { get; }
-        public int Id { get; }
-        public byte[] ImageBytes { get; private set; }
-        public bool HasSubCategories { get; }
-
-        private bool _hasSubcategies;
-        public bool HasSubcategories
-        {
-            get => _hasSubcategies; private set
-            {
-                _hasSubcategies = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private CfCategory[] _cfSubcategories;
-        public CfCategory[] CfSubCategories
-        {
-            get => _cfSubcategories; set
-            {
-                _cfSubcategories = value;
-                OnPropertyChanged();
-                Console.WriteLine(CfSubCategories != null ? CfSubCategories.Length : "null");
-                HasSubcategories = value != null;
-            }
-        }
-
-        #endregion Properities
-
-        #region Constructors
-
-        public CfCategory(CurseforgeCategory curseforgeCategory, CfCategory[] categories = null)
-        {
-            _curseforgeCategory = curseforgeCategory;
-            Name = curseforgeCategory.name;
-            Id = curseforgeCategory.id;
-            ImageBytes = null;
-            HasSubCategories = categories != null;
-            CfSubCategories = categories;
-        }
-
-        #endregion Constructors
-    }
-
     public sealed class CurseforgeMarketViewModel : VMBase
     {
         private readonly MainViewModel _mainViewModel;
@@ -87,13 +35,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             // загрузка категорий
             LoadContent();
 
-
             IsLoaded = false;
-
-            //foreach (var cfc in CfCategories) 
-            //{
-            //    cfc.LoadImage();
-            //}
         }
 
 
@@ -171,6 +113,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                 OnPropertyChanged();
             }
         }
+
         #endregion Categories
 
 
@@ -340,10 +283,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             // запускаем заставку загрузки
             IsLoaded = false;
 
-            Console.WriteLine(searchText);
+            Console.WriteLine((AddonType)(int)_projectType);
 
             var instances = await Task.Run(() => InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1,
-                AddonType.Mods, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText)
+                (AddonType)(int)_projectType, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText)
             );
 
             IsPaginatorVisible = instances.Count == _pageSize;
