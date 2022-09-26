@@ -50,7 +50,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         private struct RttCalculator
         {
-            private const int DeltesCount = 10;
+            private const int DeltesCount = 25;
             private long[] deltes;
 
             public RttCalculator(long firstRtt)
@@ -67,25 +67,32 @@ namespace Lexplosion.Logic.Network.SMP
 
             public void AddDelta(long delta)
             {
-                long rtt = 0;
+                long maxDelta = 0;
+                long maxDelta2 = 0;
                 for (int i = 0; i < DeltesCount - 1; i++)
                 {
                     long nextDelta = deltes[i + 1];
                     deltes[i] = nextDelta;
 
-                    if (nextDelta > rtt) rtt = nextDelta;
+                    if (nextDelta > maxDelta)
+                    {
+                        maxDelta2 = maxDelta;
+                        maxDelta = nextDelta;
+                    }
                 }
 
                 deltes[DeltesCount - 1] = delta;
-                if (delta > rtt) rtt = delta;
+                if (delta > maxDelta) maxDelta = delta;
 
-                if (rtt < _rtt)
+                if (maxDelta < _rtt)
                 {
-                    _rtt = (_rtt + rtt) / 2;
+                    long div = _rtt - maxDelta;
+                    double multiplier = maxDelta2 / maxDelta;
+                    _rtt -= Convert.ToInt64(div * (1 - multiplier));
                 }
                 else
                 {
-                    _rtt = rtt;
+                    _rtt = maxDelta;
                 }
             }
 
@@ -114,7 +121,7 @@ namespace Lexplosion.Logic.Network.SMP
         private List<ushort> repeatDeliveryList = null;
 
         private int _maxPackagesCount = 100;
-        private long rtt = -1; // пинг в обе стороны (время ожидание ответа)
+        private long _rtt = -1; // пинг в обе стороны (время ожидание ответа)
         private int _mtu = 68;
         private int _hostMtu = -1; // mtu удалённого хоста
 
@@ -155,7 +162,7 @@ namespace Lexplosion.Logic.Network.SMP
         {
             get
             {
-                return rtt / 2;
+                return _rtt / 2;
             }
         }
 
@@ -209,11 +216,11 @@ namespace Lexplosion.Logic.Network.SMP
             });
             thread.Start();
 
-            rtt = CalculateRTT(); //измеряем rtt
-            _rttCalculator = new RttCalculator(rtt);
-            Console.WriteLine("RTT " + rtt);
+            _rtt = CalculateRTT(); //измеряем rtt
+            _rttCalculator = new RttCalculator(_rtt);
+            Console.WriteLine("RTT " + _rtt);
 
-            if (rtt != -1) // если -1, значит ответные пакеты не дошли. Соединение установить не удалось
+            if (_rtt != -1) // если -1, значит ответные пакеты не дошли. Соединение установить не удалось
             {
                 IsConnected = true;
                 point = remoteIp;
@@ -283,7 +290,7 @@ namespace Lexplosion.Logic.Network.SMP
                     {
                         socket.Send(data, thisData);
 
-                        if (_mtuWait.WaitOne((int)rtt * 2) && _mtuPackageId == packageId)
+                        if (_mtuWait.WaitOne((int)_rtt * 2) && _mtuPackageId == packageId)
                         {
                             break;
                         }
@@ -326,7 +333,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     socket.Send(data, data.Length);
 
-                    if (mtuInfoWait.WaitOne((int)rtt))
+                    if (mtuInfoWait.WaitOne((int)_rtt))
                     {
                         break;
                     }
@@ -491,7 +498,7 @@ namespace Lexplosion.Logic.Network.SMP
                 repeatDeliveryBlock.Release();
 
                 byte attemptCount = 0;
-                int delay = (int)rtt;
+                int delay = (int)(_rtt + _rtt / 10);
                 long lastTime = 0;
                 bool repeated = false;
 
@@ -500,7 +507,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     if (attemptCount > 0)
                     {
-                        Console.WriteLine("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId);
+                        Console.WriteLine("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt);
                     }
 
                     foreach (ushort id in packages.Keys)
@@ -530,7 +537,7 @@ namespace Lexplosion.Logic.Network.SMP
                             //рассчитываем задержку
                             long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
                             _rttCalculator.AddDelta(deltaTime);
-                            rtt = _rttCalculator.GetRtt;
+                            _rtt = _rttCalculator.GetRtt;
 
                             //Console.WriteLine("YRAAAAA " + lastPackageId);
                             repeatDeliveryBlock.Release();

@@ -94,7 +94,13 @@ namespace Lexplosion.Logic.Network
                 categoryStr = "&categoryId=" + category;
             }
 
-            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + "&modLoaderType=" + (int)modloader + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+            string _modloader = "";
+            if (type == AddonType.Mods)
+            {
+                _modloader = "&modLoaderType=" + (int)modloader;
+            }
+
+            string url = "https://api.curseforge.com/v1/mods/search?gameId=432&sortField=1&sortOrder=desc&classId=" + (int)type + "&pageSize=" + pageSize + "&index=" + index + gameVersion + categoryStr + _modloader + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 
