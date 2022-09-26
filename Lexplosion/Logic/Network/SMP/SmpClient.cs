@@ -67,21 +67,26 @@ namespace Lexplosion.Logic.Network.SMP
 
             public void AddDelta(long delta)
             {
-                double rtt = 0;
-                double multiplier = 0.5;
+                long rtt = 0;
                 for (int i = 0; i < DeltesCount - 1; i++)
                 {
                     long nextDelta = deltes[i + 1];
                     deltes[i] = nextDelta;
 
-                    multiplier += 0.1;
-                    rtt += nextDelta * multiplier;
+                    if (nextDelta > rtt) rtt = nextDelta;
                 }
 
                 deltes[DeltesCount - 1] = delta;
-                rtt += delta * (multiplier + 0.2);
+                if (delta > rtt) rtt = delta;
 
-                _rtt = Convert.ToInt64(rtt / DeltesCount);
+                if (rtt < _rtt)
+                {
+                    _rtt = (_rtt + rtt) / 2;
+                }
+                else
+                {
+                    _rtt = rtt;
+                }
             }
 
             private long _rtt;
