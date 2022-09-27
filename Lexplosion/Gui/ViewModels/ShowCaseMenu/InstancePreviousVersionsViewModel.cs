@@ -78,7 +78,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private void LoadPreviousVersions() 
         {
-            Lexplosion.Run.TaskRun(() => 
+            Lexplosion.Runtime.TaskRun(() => 
             {
                 var versions = _viewModel.Model.InstanceClient.GetVersions();
                 App.Current.Dispatcher.Invoke(() => 

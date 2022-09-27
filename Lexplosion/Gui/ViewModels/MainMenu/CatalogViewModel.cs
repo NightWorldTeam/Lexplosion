@@ -122,7 +122,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private void InstancesPageLoading(string searchText = "")
         {
             IsLoaded = false;
-            Lexplosion.Run.TaskRun(() =>
+            Lexplosion.Runtime.TaskRun(() =>
             {
                 var gameVersion = SearchBoxVM.SelectedVersion == null || SearchBoxVM.SelectedVersion.Contains(ResourceGetter.GetString("allVersions")) ? "" : SearchBoxVM.SelectedVersion;
                 Console.WriteLine(gameVersion);

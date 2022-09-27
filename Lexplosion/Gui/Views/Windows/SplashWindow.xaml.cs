@@ -25,7 +25,7 @@ namespace Lexplosion.Gui.Views.Windows
             _oa.Duration = new Duration(TimeSpan.FromMilliseconds(190d));
             BeginAnimation(OpacityProperty, _oa);
 
-            Lexplosion.Run.TaskRun(delegate ()
+            Lexplosion.Runtime.TaskRun(delegate ()
             {
                 Thread.Sleep(190);
                 App.Current.Dispatcher.Invoke(delegate ()

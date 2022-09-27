@@ -31,7 +31,7 @@ namespace Lexplosion.Gui.Views.Windows
             TrayMenu = (Popup)this.TryFindResource("TTrayMenu");
 
             notifyIcon.Click += NofityIcon_Click;
-            Run.ExitEvent += LauncherClosedHandler;
+            Runtime.ExitEvent += LauncherClosedHandler;
         }
 
         private void LauncherClosedHandler()
@@ -45,7 +45,7 @@ namespace Lexplosion.Gui.Views.Windows
             if (mouseEventArgs.Button == MouseButtons.Left)
             {
                 // тут разворачивать окно.
-                Run.ShowApp();
+                Runtime.ShowApp();
                 
             }
             else if (mouseEventArgs.Button == MouseButtons.Right) 

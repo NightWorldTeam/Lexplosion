@@ -161,7 +161,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private void LoadContent()
         {
-            Lexplosion.Run.TaskRun(() => { 
+            Lexplosion.Runtime.TaskRun(() => { 
                 var curseforgeCategories = CurseforgeApi.GetCategories(_projectType);
 
                 App.Current.Dispatcher.Invoke(() => { 
@@ -238,7 +238,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private void InstallAddon(InstanceAddon instanceAddon)
         {
-            Lexplosion.Run.TaskRun(delegate
+            Lexplosion.Runtime.TaskRun(delegate
             {
                 DownloadAddonRes result = instanceAddon.InstallLatestVersion(out Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>> dependenciesResults);
                 App.Current.Dispatcher.Invoke(() =>

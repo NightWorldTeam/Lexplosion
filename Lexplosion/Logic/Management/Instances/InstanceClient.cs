@@ -602,7 +602,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
         /// </summary>
-        public void UpdateInstance(string instanceVersion = null)
+        public void Update(string instanceVersion = null)
         {
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
 

@@ -129,7 +129,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public void UpdateInstance() 
         {
-            Model.InstanceClient.UpdateInstance();
+            Model.InstanceClient.Update();
         }
 
         internal void DownloadInstance(Action<DownloadStageTypes, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null) 

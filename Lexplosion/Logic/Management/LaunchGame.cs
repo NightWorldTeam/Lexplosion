@@ -117,7 +117,7 @@ namespace Lexplosion.Logic.Management
                 {
                     gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", _settings.OnlineGameDirectConnection);
                     removeImportantTaskMark = false;
-                    Lexplosion.Run.AddImportantTask();
+                    Lexplosion.Runtime.AddImportantTask();
 
                     gameGateway.ConnectingUser += delegate (string uuid)
                     {
@@ -220,7 +220,7 @@ namespace Lexplosion.Logic.Management
                         if (!removeImportantTaskMark)
                         {
                             removeImportantTaskMark = true;
-                            Lexplosion.Run.RemoveImportantTask();
+                            Lexplosion.Runtime.RemoveImportantTask();
                         }
                     }                  
 
@@ -246,7 +246,7 @@ namespace Lexplosion.Logic.Management
                 process.BeginOutputReadLine();
 
                 // отслеживаем появление окна
-                Lexplosion.Run.TaskRun(delegate ()
+                Lexplosion.Runtime.TaskRun(delegate ()
                 {
                     while (_processIsWork)
                     {
@@ -468,7 +468,7 @@ namespace Lexplosion.Logic.Management
                 if (!removeImportantTaskMark)
                 {
                     removeImportantTaskMark = true;
-                    Lexplosion.Run.RemoveImportantTask();
+                    Lexplosion.Runtime.RemoveImportantTask();
                 }
             }
         }

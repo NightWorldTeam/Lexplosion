@@ -25,7 +25,7 @@ namespace Lexplosion.Tools
             _sem.WaitOne();
             try
             {
-                Lexplosion.Run.TaskRun(delegate ()
+                Lexplosion.Runtime.TaskRun(delegate ()
                 {
                     _sem.WaitOne();
 

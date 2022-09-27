@@ -6,13 +6,13 @@ using System.Reflection;
 using System.Windows;
 using System.Threading;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Instances;
-using System.Runtime.CompilerServices;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -22,7 +22,7 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion
 {
-    static class Run
+    static class Runtime
     {
         private static App app = new App();
 
@@ -305,8 +305,8 @@ namespace Lexplosion
                 }  
             }
 
-            NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
-            NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
+            NativeMethods.ShowWindow(Runtime.CurrentProcess.MainWindowHandle, 1);
+            NativeMethods.SetForegroundWindow(Runtime.CurrentProcess.MainWindowHandle);
         }
 
         public static void CloseApp()

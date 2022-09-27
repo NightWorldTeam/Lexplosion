@@ -48,7 +48,7 @@ namespace Lexplosion.Logic.Management.Authentication
 
                     LaunchGame.GameStartEvent += user.GameStart;
                     LaunchGame.GameStopEvent += user.GameStop;
-                    Lexplosion.Run.ExitEvent += user.Exit;
+                    Lexplosion.Runtime.ExitEvent += user.Exit;
 
                     code = AuthCode.Successfully;
                     return user;

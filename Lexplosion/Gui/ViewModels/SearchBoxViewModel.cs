@@ -162,7 +162,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             IsMultiSource = isMultiSource;
             HasCategories = hasCategories;
-            Lexplosion.Run.TaskRun(() => { 
+            Lexplosion.Runtime.TaskRun(() => { 
                 Categories = PrepareCategories();
             });
         }

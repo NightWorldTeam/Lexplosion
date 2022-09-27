@@ -174,7 +174,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private void GetModloaderVersions(string gameVersion, ModloaderType modloader)
         {
-            Lexplosion.Run.TaskRun(() =>
+            Lexplosion.Runtime.TaskRun(() =>
             {
                 ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(gameVersion, modloader));
                 if (CurrentInstanceClient.GetBaseData.Modloader != ModloaderType.Vanilla)

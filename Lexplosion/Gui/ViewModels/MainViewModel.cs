@@ -123,7 +123,7 @@ namespace Lexplosion.Gui.ViewModels
         private RelayCommand _closeCommand;
         public RelayCommand CloseCommand
         {
-            get => _closeCommand ?? (_closeCommand = new RelayCommand(obj => Run.Exit()));
+            get => _closeCommand ?? (_closeCommand = new RelayCommand(obj => Runtime.Exit()));
         }
 
         /// <summary>
@@ -193,8 +193,8 @@ namespace Lexplosion.Gui.ViewModels
                     }
 
                     MainMenuVM.OpenModpackPage(viewModel);
-                    NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
-                    NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
+                    NativeMethods.ShowWindow(Runtime.CurrentProcess.MainWindowHandle, 1);
+                    NativeMethods.SetForegroundWindow(Runtime.CurrentProcess.MainWindowHandle);
                 }
             };
         }
@@ -234,7 +234,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             var releaseOnlyVersions = new List<string>();
             var allVersions = new List<string>();
-            Lexplosion.Run.TaskRun(() =>
+            Lexplosion.Runtime.TaskRun(() =>
             {
                 foreach (var v in ToServer.GetVersionsList())
                 {

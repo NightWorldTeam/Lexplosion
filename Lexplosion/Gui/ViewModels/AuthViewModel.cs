@@ -258,7 +258,7 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         private void Authorization()
         {
-            Lexplosion.Run.TaskRun(() =>
+            Lexplosion.Runtime.TaskRun(() =>
             {
                 // получаем выбранный тип акканута.
                 _accountType = (AccountType)AccountTypeSelectedIndex;
@@ -284,8 +284,8 @@ namespace Lexplosion.Gui.ViewModels
 
             var authCode = _authentication.Auth(_accountType, "", microsoftData, true);
             PerformAuthCode(authCode);
-            NativeMethods.ShowWindow(Run.CurrentProcess.MainWindowHandle, 1);
-            NativeMethods.SetForegroundWindow(Run.CurrentProcess.MainWindowHandle);
+            NativeMethods.ShowWindow(Runtime.CurrentProcess.MainWindowHandle, 1);
+            NativeMethods.SetForegroundWindow(Runtime.CurrentProcess.MainWindowHandle);
         }
 
         private void PerformAuthCode(AuthCode authCode) 

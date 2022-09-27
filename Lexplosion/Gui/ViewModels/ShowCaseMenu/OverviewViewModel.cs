@@ -79,7 +79,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region Constructors
         public OverviewViewModel(InstanceClient instanceClient, ISubmenu submenuViewModel)
         {
-            Lexplosion.Run.TaskRun(() => { 
+            Lexplosion.Runtime.TaskRun(() => { 
                 Model = new OverviewModel(instanceClient, submenuViewModel, this);
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
                 IsLoading = false;

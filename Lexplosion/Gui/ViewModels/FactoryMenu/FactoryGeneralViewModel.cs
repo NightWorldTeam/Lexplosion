@@ -196,7 +196,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
             IsModloaderSelected = Model.ModloaderType != ModloaderType.Vanilla;
 
-            Lexplosion.Run.TaskRun(() =>
+            Lexplosion.Runtime.TaskRun(() =>
             {
                 var versions = ToServer.GetModloadersList(_selectedOnlyVersion, Model.ModloaderType);
 
@@ -220,7 +220,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
             if (Model.ModloaderType != ModloaderType.Vanilla)
             {
-                Lexplosion.Run.TaskRun(() =>
+                Lexplosion.Runtime.TaskRun(() =>
                 {
                     ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(_selectedOnlyVersion, Model.ModloaderType));
 

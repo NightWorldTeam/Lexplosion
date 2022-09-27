@@ -39,7 +39,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public void LaunchInstance()
         {
-            Lexplosion.Run.TaskRun(() =>
+            Lexplosion.Runtime.TaskRun(() =>
             {
                 _formModel.DownloadModel.IsDownloadInProgress = true;
                 _formModel.DownloadModel.HasProcents = false;

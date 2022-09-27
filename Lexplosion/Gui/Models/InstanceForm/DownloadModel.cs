@@ -170,9 +170,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             _instanceFormModel.UpdateLowerButton();
 
-            Lexplosion.Run.TaskRun(delegate
+            Lexplosion.Runtime.TaskRun(delegate
             {
-                _instanceFormModel.InstanceClient.UpdateInstance(version);
+                _instanceFormModel.InstanceClient.Update(version);
             });
         }
 

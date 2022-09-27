@@ -86,7 +86,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _updateCommand ?? (new RelayCommand(obj =>
             {
                 var instanceAddon = (InstanceAddon)obj;
-                Lexplosion.Run.TaskRun(delegate ()
+                Lexplosion.Runtime.TaskRun(delegate ()
                 {
                     instanceAddon.Update();
                 });
@@ -134,7 +134,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             _mainViewModel = mainViewModel;
             _instanceClient = instanceClient;
 
-            Lexplosion.Run.TaskRun(() =>
+            Lexplosion.Runtime.TaskRun(() =>
             {
                 IsVanillaGameType = _instanceClient.GetBaseData.Modloader == ModloaderType.Vanilla;
 

@@ -39,7 +39,7 @@ namespace Lexplosion.Logic
             if (accountType == AccountType.NightWorld)
             {
                 // запускаем поток который постоянно будет уведомлять сервер о том что мы в сети
-                Lexplosion.Run.TaskRun(delegate ()
+                Lexplosion.Runtime.TaskRun(delegate ()
                 {
                     while (true)
                     {
