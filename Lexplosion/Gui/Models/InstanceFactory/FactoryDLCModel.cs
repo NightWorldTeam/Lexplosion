@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -54,6 +55,9 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             EmptyListMessage = emptyListMessage;
         }
 
-        public void Uninstall(InstanceAddon addon) => InstalledAddons.Remove(addon);
+        public void Uninstall(InstanceAddon addon) 
+        {
+            InstalledAddons.Remove(addon);
+        }
     }
 }

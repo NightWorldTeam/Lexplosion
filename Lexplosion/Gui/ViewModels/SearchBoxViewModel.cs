@@ -165,7 +165,6 @@ namespace Lexplosion.Gui.ViewModels
             Lexplosion.Run.TaskRun(() => { 
                 Categories = PrepareCategories();
             });
-            SelectedVersion = ResourceGetter.GetString("allVersions");
         }
 
 

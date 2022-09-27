@@ -23,8 +23,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         public void AddProcess(InstanceFormViewModel instanceForm) 
         {
-            if (!InstanceDownloadProcess.Contains(InstanceDownloadProcessList, instanceForm))
-                InstanceDownloadProcessList.Add(new InstanceDownloadProcess(instanceForm));
+            App.Current.Dispatcher.Invoke(() => 
+            { 
+                if (!InstanceDownloadProcess.Contains(InstanceDownloadProcessList, instanceForm))
+                    InstanceDownloadProcessList.Add(new InstanceDownloadProcess(instanceForm));
+            });
         }
     }
 }

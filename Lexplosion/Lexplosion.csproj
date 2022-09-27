@@ -270,6 +270,9 @@
     <Compile Include="Gui\Views\Pages\TabMenuView.xaml.cs">
       <DependentUpon>TabMenuView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Gui\Views\Windows\Console.xaml.cs">
+      <DependentUpon>Console.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gui\Views\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -559,6 +562,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\TabMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Windows\Console.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,88 @@
+﻿<Window
+    x:Class="Lexplosion.Gui.Views.Windows.Console"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.Gui.Views.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="700"
+    Height="430"
+    AllowsTransparency="True"
+    Background="Transparent"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <Border Background="{DynamicResource PrimarySolidColorBrush}" CornerRadius="5">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Header  -->
+            <Border Background="{DynamicResource SepSolidColorBrush}" CornerRadius="5">
+                <Grid>
+                    <!--  Logo  -->
+                    <StackPanel
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Image
+                            Width="18"
+                            Height="18"
+                            Source="pack://Application:,,,/Assets/images/icons/logo.ico" />
+
+                        <TextBlock
+                            Margin="3,0,0,0"
+                            VerticalAlignment="Center"
+                            FontFamily="{DynamicResource FuturaBookC}"
+                            FontSize="14"
+                            Foreground="White"
+                            Opacity="0.8"
+                            Text="Lexplosion Console" />
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <TextBlock
+                            Width="20"
+                            Height="20"
+                            Foreground="White"
+                            Text="-"
+                            TextAlignment="Center" />
+                        <TextBlock
+                            Width="20"
+                            Height="20"
+                            Foreground="White"
+                            Text="x"
+                            TextAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <!--  Messages Box  -->
+                <Border
+                    Margin="10,10,10,13"
+                    Background="{DynamicResource HeaderSolidColorBrush}"
+                    CornerRadius="5">
+                    <ScrollViewer Margin="0,2,0,0">
+                        <StackPanel Margin="10,8,10,0" VerticalAlignment="Top">
+                            <Border
+                                Margin="0,10,0,5"
+                                Padding="5"
+                                Background="{DynamicResource SepSolidColorBrush}">
+                                <TextBlock
+                                    Margin="3,0,0,1"
+                                    VerticalAlignment="Center"
+                                    Foreground="#FFC700"
+                                    FontSize="13"
+                                    Text="[10:20:23.549 WARN]: This server has a new version" />
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

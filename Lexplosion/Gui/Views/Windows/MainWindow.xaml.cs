@@ -1,13 +1,8 @@
-﻿using Lexplosion.Tools;
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Media;
-using ContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace Lexplosion.Gui.Views.Windows
 {

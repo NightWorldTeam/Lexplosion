@@ -12,7 +12,6 @@ using Lexplosion.Tools;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Gui.Views.Windows;
 using System.Runtime.CompilerServices;
 
 /*
@@ -39,7 +38,7 @@ namespace Lexplosion
             Thread thread = new Thread(InitializedSystem);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-            app.Run(new SplashWindow());
+            app.Run(new Lexplosion.Gui.Views.Windows.SplashWindow());
         }
 
         private static void InitializedSystem()
@@ -102,14 +101,14 @@ namespace Lexplosion
             {
                 app.MainWindow.Topmost = true;
 
-                var mainWindow = new MainWindow()
+                var mainWindow = new Gui.Views.Windows.MainWindow()
                 {
                     Left = app.MainWindow.Left - 322,
                     Top = app.MainWindow.Top - 89
                 };
 
                 mainWindow.Show();
-                ((SplashWindow)app.MainWindow).SmoothClosing();
+                ((Gui.Views.Windows.SplashWindow)app.MainWindow).SmoothClosing();
                 app.MainWindow = mainWindow;
             });
         }

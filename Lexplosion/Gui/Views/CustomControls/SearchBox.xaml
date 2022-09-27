@@ -205,10 +205,19 @@
                             Opacity="0.8"
                             Text="{DynamicResource gameVersion}" />
 
-                        <ComboBox Margin="0,3,0,0" SelectedValue="{Binding SelectedVersion}" SelectedItem="0">
+                        <ComboBox
+                            x:Name="VersionBox"
+                            Margin="0,3,0,0"
+                            IsSynchronizedWithCurrentItem="True"
+                            SelectedValue="{Binding SelectedVersion, Mode=TwoWay}"
+                            SelectedValuePath="DefaultValue">
                             <ComboBox.ItemsSource>
                                 <CompositeCollection>
-                                    <ComboBoxItem Content="{DynamicResource allVersions}" IsSelected="True" />
+                                    <ComboBoxItem
+                                        x:Name="DefaultValue"
+                                        Content="{DynamicResource allVersions}"
+                                        IsSelected="True"
+                                        TabIndex="0" />
                                     <CollectionContainer Collection="{Binding Source={StaticResource MainVM}, Path=ReleaseGameVersions}" />
                                 </CompositeCollection>
                             </ComboBox.ItemsSource>

@@ -278,7 +278,11 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.Update:
                     {
-                        Model.DownloadModel.DownloadPrepare();
+                        if (!Model.DownloadModel.IsDownloadInProgress)
+                        { 
+                            MainVM.DownloadManager.AddProcess(this);
+                            Model.DownloadModel.DownloadPrepare();
+                        }
                         break;
                     }
 

@@ -93,10 +93,10 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }));
         }
 
-        private RelayCommand _deleteCommand;
-        public RelayCommand DeleteCommand
+        private RelayCommand _uninstallAddonCommand;
+        public RelayCommand UninstallAddonCommand
         {
-            get => _deleteCommand ?? (new RelayCommand(obj =>
+            get => _uninstallAddonCommand ?? (new RelayCommand(obj =>
             {
                 var instanceAddon = (InstanceAddon)obj;
                 CurrentAddon.Uninstall(instanceAddon);

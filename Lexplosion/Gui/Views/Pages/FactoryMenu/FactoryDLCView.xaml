@@ -184,9 +184,13 @@
                         <ToggleButton.Style>
                             <Style BasedOn="{StaticResource EllipseToggleButton}" TargetType="{x:Type ToggleButton}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentAddon.Type, Source={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Maps}">
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding CurrentAddon.Type, Source={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Resourcepacks}" />
+                                            <Condition Binding="{Binding CurrentAddon.Type, Source={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Maps}" />
+                                        </MultiDataTrigger.Conditions>
                                         <Setter Property="Border.Visibility" Value="Collapsed" />
-                                    </DataTrigger>
+                                    </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </ToggleButton.Style>
@@ -241,7 +245,7 @@
 
                     <Button
                         Margin="8,0,0,0"
-                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                        Command="{Binding DataContext.UninstallAddonCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                         CommandParameter="{Binding}"
                         Style="{StaticResource IconicButton}">
 
