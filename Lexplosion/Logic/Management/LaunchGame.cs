@@ -208,7 +208,8 @@ namespace Lexplosion.Logic.Management
                         {
                             gameGateway?.StopWork();
                             gameGateway = null;
-                        }                
+                        }
+                        StateChanged?.Invoke(OnlineGameStatus.None, "");
                     }
                     catch { }
 
@@ -457,7 +458,8 @@ namespace Lexplosion.Logic.Management
                 {
                     gameGateway?.StopWork();
                     gameGateway = null;
-                }               
+                }
+                StateChanged?.Invoke(OnlineGameStatus.None, "");
             }
             catch { }
 

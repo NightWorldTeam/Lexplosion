@@ -901,6 +901,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _idsPairs.Remove(_externalId);
             }
+            UpdateAvailable = false;
             InLibrary = false;
             SaveInstalledInstancesList();
         }

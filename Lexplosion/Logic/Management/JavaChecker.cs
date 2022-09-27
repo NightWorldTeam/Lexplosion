@@ -129,7 +129,8 @@ namespace Lexplosion.Logic.Management
                 percentHandler(value, filename);
             };
 
-            if (WithDirectory.DonwloadJava(_thisJava.JavaName, prHandler))
+            string bitDepth = Environment.Is64BitOperatingSystem ? "x64" : "x32";
+            if (WithDirectory.DonwloadJava(_thisJava.JavaName, bitDepth, prHandler))
             {
                 _versionsFile[_thisJava.JavaName] = _thisJava;
                 DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/java/javaVersions.json", JsonConvert.SerializeObject(_versionsFile));

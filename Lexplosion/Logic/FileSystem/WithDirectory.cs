@@ -478,14 +478,14 @@ namespace Lexplosion.Logic.FileSystem
             return ImportResult.Successful;
         }
 
-        public static bool DonwloadJava(string javaName, Action<int> percentHandler)
+        public static bool DonwloadJava(string javaName, string bitDepth, Action<int> percentHandler)
         {
             string tempDir = CreateTempDir();
             string fileName = javaName + ".zip";
 
             try
             {
-                if (!DownloadFile(LaunсherSettings.URL.JavaData + "download/" + fileName, fileName, tempDir, percentHandler))
+                if (!DownloadFile(LaunсherSettings.URL.JavaData + "windows/" + bitDepth + "/download/" + fileName, fileName, tempDir, percentHandler))
                 {
                     return false;
                 }

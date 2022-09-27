@@ -32,7 +32,7 @@ namespace Lexplosion.Logic.Network.SMP
             public const byte LastId_2 = 5; // Вторая часть
             public const byte AttemptsCounts = 6; // Количество попыток отправки данного пакета
 
-            public const byte FirstDataByte = AttemptsCounts + 1; // Позиция первого байта вне заголовка и совестно размер хэадера
+            public const byte FirstDataByte = AttemptsCounts + 1; // Позиция первого байта вне заголовка и соотвественно размер хэадера
         }
 
         private class Package
