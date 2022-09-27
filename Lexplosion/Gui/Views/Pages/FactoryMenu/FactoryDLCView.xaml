@@ -125,7 +125,7 @@
                     CornerRadius="5">
 
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                        <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}, IsAsync=True}" />
                     </Border.Background>
 
                 </Border>

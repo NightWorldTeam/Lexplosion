@@ -194,7 +194,7 @@
                                     FontSize="12"
                                     Opacity="0.8"
                                     Style="{StaticResource DLCInfo}"
-                                    Text="{Binding DownloadCount, StringFormat='{}{0}M Downloads'}" />
+                                    Text="{Binding DownloadCount, StringFormat='{}{0:#,#.00} Downloads'}" />
                                 <TextBlock
                                     Grid.Column="1"
                                     FontSize="12"
@@ -383,75 +383,67 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Grid Background="Blue" Visibility="Collapsed">
-                <TextBlock
-                    FontFamily="{DynamicResource FuturaBookC}"
-                    FontSize="18"
-                    Foreground="White"
-                    Opacity="0.8"
-                    Text="Моды установленные за сесию для modpack name"
-                    TextAlignment="Center"
-                    TextWrapping="WrapWithOverflow" />
-
-                <StackPanel Margin="0,60,0,0">
-                    <Border
-                        Width="210"
-                        Height="30"
-                        Background="Purple"
-                        CornerRadius="10">
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="14"
-                            Foreground="White"
-                            Text="Industrial Craft" />
-                    </Border>
+            <Grid Background="Black" Visibility="Visible">
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock
+                        Margin="0,0,0,10"
+                        FontFamily="{DynamicResource FuturaBookC}"
+                        FontSize="18"
+                        Foreground="White"
+                        Opacity="0.8"
+                        Text="Instance Name"
+                        TextAlignment="Center"
+                        TextWrapping="WrapWithOverflow" />
 
                     <Border
-                        Width="210"
-                        Height="30"
-                        Margin="0,10,0,0"
-                        Background="Purple"
-                        CornerRadius="10">
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="14"
-                            Foreground="White"
-                            Text="Industrial Craft" />
-                    </Border>
+                        Width="220"
+                        Padding="10"
+                        Background="{DynamicResource SepSolidColorBrush}"
+                        CornerRadius="5">
+                        <Grid ShowGridLines="False">
 
-                    <Border
-                        Width="210"
-                        Margin="0,10,0,0"
-                        Background="Purple"
-                        CornerRadius="10">
-                        <StackPanel>
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="14"
-                                Foreground="White"
-                                Text="Mekanism" />
-
-                            <Border Height="30" Background="Green">
-                                <StackPanel>
-                                    <Border
-                                        Width="210"
-                                        Height="30"
-                                        Margin="0,10,0,0"
-                                        Background="Purple"
-                                        CornerRadius="10">
+                            <StackPanel Grid.Column="1" Margin="0,5,0,0">
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
                                         <TextBlock
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
+                                            Margin="0,0,0,0"
+                                            HorizontalAlignment="Left"
                                             FontSize="14"
                                             Foreground="White"
-                                            Text="Industrial Craft" />
-                                    </Border>
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
+                                            Text="Immersive Engenering" />
+                                        <TextBlock
+                                            Margin="5,0,8,0"
+                                            VerticalAlignment="Center"
+                                            Foreground="White"
+                                            Text="100%" />
+                                        <!--  IsImportFinished - False  -->
+                                        <Button
+                                            Margin="0,0,5,0"
+                                            HorizontalAlignment="Right"
+                                            Background="Transparent"
+                                            Command="{Binding CancelUploadCommand}"
+                                            Style="{StaticResource IconicButton}"
+                                            Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                                            <Grid>
+                                                <Viewbox Width="20" Height="20">
+                                                    <Path
+                                                        Data="m16.5 33.6 7.5-7.5 7.5 7.5 2.1-2.1-7.5-7.5 7.5-7.5-2.1-2.1-7.5 7.5-7.5-7.5-2.1 2.1 7.5 7.5-7.5 7.5ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
+                                                        Fill="#FF7575"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                            </Grid>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                                <!--  IsImportFinished - False  -->
+                                <ProgressBar
+                                    Height="5"
+                                    Margin="0,4,5,0"
+                                    Foreground="{DynamicResource BrandSolidColorBrush}"
+                                    IsIndeterminate="True"
+                                    Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+                            </StackPanel>
+                        </Grid>
                     </Border>
                 </StackPanel>
             </Grid>

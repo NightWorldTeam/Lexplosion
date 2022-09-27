@@ -67,19 +67,7 @@
                     Background="{DynamicResource HeaderSolidColorBrush}"
                     CornerRadius="5">
                     <ScrollViewer Margin="0,2,0,0">
-                        <StackPanel Margin="10,8,10,0" VerticalAlignment="Top">
-                            <Border
-                                Margin="0,10,0,5"
-                                Padding="5"
-                                Background="{DynamicResource SepSolidColorBrush}">
-                                <TextBlock
-                                    Margin="3,0,0,1"
-                                    VerticalAlignment="Center"
-                                    Foreground="#FFC700"
-                                    FontSize="13"
-                                    Text="[10:20:23.549 WARN]: This server has a new version" />
-                            </Border>
-                        </StackPanel>
+                        <RichTextBox />
                     </ScrollViewer>
                 </Border>
             </Grid>

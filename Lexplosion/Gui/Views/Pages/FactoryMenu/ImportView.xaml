@@ -78,11 +78,10 @@
                         <!--  IsImportFinished - False  -->
                         <ProgressBar
                             Height="5"
-                            Margin="6,8,10,0"
+                            Margin="0,8,10,0"
                             Foreground="{DynamicResource BrandSolidColorBrush}"
-                            IsIndeterminate="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}"
-                            Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}"
-                            Value="30" />
+                            IsIndeterminate="True"
+                            Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
 
                         <!--  IsImportFinished - True  -->
                         <TextBlock

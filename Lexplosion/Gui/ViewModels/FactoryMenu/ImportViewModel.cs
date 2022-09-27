@@ -103,7 +103,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             var importFile = new ImportFile(this, path);
 
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
-            UploadedFiles.Add(importFile);
+            UploadedFilesChanged(importFile);
 
             // Начинаем импорт файла.
             var result = await Task.Run(() => InstanceClient.Import(path, out instanceClient));
@@ -180,6 +180,12 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                     }
                 }
             }
+        }
+
+        private void UploadedFilesChanged(ImportFile importFile) 
+        {
+            UploadedFiles.Add(importFile);
+            OnPropertyChanged(nameof(IsEmptyUploadedFiles));
         }
 
 
