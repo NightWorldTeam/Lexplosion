@@ -285,7 +285,7 @@ namespace Lexplosion.Logic.Management.Instances
             return addons;
         }
 
-        private void DeleteAddon()
+        public void Delete()
         {
             string instanceId = _modpackInfo.LocalId;
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))

@@ -58,6 +58,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         public void Uninstall(InstanceAddon addon) 
         {
             InstalledAddons.Remove(addon);
+            addon.Delete();
         }
     }
 }
