@@ -275,25 +275,16 @@
             </StackPanel>
         </controls:DropdownMenu>
 
-        <!--  SearchBox  -->
-        <TextBox
-            Width="243"
-            Margin="10,0,0,0"
-            HorizontalAlignment="Left"
-            Background="{DynamicResource SepSolidColorBrush}"
-            Style="{StaticResource SearchTextBox}"
-            Text="{Binding SearchTextUncomfirmed, UpdateSourceTrigger=PropertyChanged}">
-            <TextBox.InputBindings>
-                <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
-            </TextBox.InputBindings>
-        </TextBox>
-
-        <Button
-            Width="43"
+        <controls:SearchBox
+            Width="320"
             Height="40"
-            Background="{DynamicResource HeaderSolidColorBrush}"
-            Command="{Binding SearchCommand}"
-            Style="{StaticResource SearchButtonStyle}" />
+            CaretBrush="{DynamicResource BrandSolidColorBrush}"
+            FontFamily="{DynamicResource FuturaBookC}"
+            FontSize="16"
+            Foreground="#efefef"
+            Placeholder="{DynamicResource download}"
+            PlaceholderFontSize="14"
+            SearchAction="{Binding SearchChanged}" />
 
         <!--  InstanceSource  -->
         <ComboBox

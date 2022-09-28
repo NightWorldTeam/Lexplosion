@@ -57,8 +57,6 @@ namespace Lexplosion.Gui.Views.CustomControls
                 Width = new GridLength(440 - authorTextBoxFinalWidth)
             };
 
-            Console.WriteLine(Author.ActualWidth);
-
             var columnDefin1 = new ColumnDefinition()
             {
                 MaxWidth = authorTextBoxFinalWidth,

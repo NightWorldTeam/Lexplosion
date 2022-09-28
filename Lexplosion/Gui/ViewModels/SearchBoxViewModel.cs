@@ -94,7 +94,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        private CurseforgeCategory _selectedCurseforgeCategory = new CurseforgeCategory() { name = "All", id = -1 };
+        private CurseforgeCategory _selectedCurseforgeCategory = new CurseforgeCategory();
         public CurseforgeCategory SelectedCurseforgeCategory
         {
             get => _selectedCurseforgeCategory; set 
@@ -165,19 +165,11 @@ namespace Lexplosion.Gui.ViewModels
             Lexplosion.Runtime.TaskRun(() => { 
                 Categories = PrepareCategories();
             });
+            SearchChanged += SearchChanged;
         }
 
 
         #endregion Constructors
-
-
-        #region Public & Protected Methods
-
-
-
-
-
-        #endregion Public & Protected Methods
 
 
         #region Private Methods
@@ -189,11 +181,7 @@ namespace Lexplosion.Gui.ViewModels
                 CurseforgeApi.GetCategories(CfProjectType.Modpacks)
             );
 
-            categories.Add(SelectedCurseforgeCategory);
-
-            categories.Move(categories.Count - 1, 0);
-
-            SelectedCurseforgeCategory = categories[0];
+            SelectedCurseforgeCategory = categories[categories.Count - 1];
 
             return categories;
         }
