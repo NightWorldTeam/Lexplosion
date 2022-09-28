@@ -123,7 +123,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
 
             //Закрываем модальное окно.
-            FactoryGeneralViewModel.CloseModalWindowCommand.Execute(null);
+            // TODO: Надо ли?
+            //FactoryGeneralViewModel.CloseModalWindowCommand.Execute(null);
 
             // Добавляем сборку в библиотеку.
             _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));

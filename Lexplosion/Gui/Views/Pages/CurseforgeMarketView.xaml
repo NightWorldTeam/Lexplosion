@@ -537,7 +537,7 @@
                             FontFamily="{DynamicResource FuturaBookC}"
                             FontSize="16"
                             Foreground="#efefef"
-                            Placeholder="{DynamicResource download}"
+                            Placeholder="{DynamicResource search}"
                             PlaceholderFontSize="14"
                             SearchAction="{Binding SearchMethod}" />
                     </StackPanel>

@@ -258,7 +258,8 @@
                             <ContentPresenter
                                 x:Name="ContentPresenter"
                                 Margin="3"
-                                HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
                             <Viewbox
                                 x:Name="selectData"
                                 Width="20"

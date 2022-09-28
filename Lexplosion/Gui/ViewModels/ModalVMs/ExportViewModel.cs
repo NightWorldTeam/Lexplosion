@@ -85,9 +85,9 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        private bool _isExportFinished = false;
+        private bool _isExportFinished = true;
         /// <summary>
-        /// Отвечает навопрос закончился ли экспорт сборка.
+        /// Отвечает на вопрос закончился ли экспорт сборка.
         /// </summary>
         public bool IsExportFinished 
         {
@@ -115,7 +115,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             get => _actionCommand ?? (_actionCommand = new RelayCommand(obj =>
             {
                 Export();
-                MainVM.ModalWindowVM.IsOpen = false;
             }));
         }
 
@@ -240,6 +239,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
                 if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
+                    IsExportFinished = false;
                     MainViewModel.ExportedInstance.Add(this);
 
                     var result = await Task.Run(() => InstanceClient.Export(UnitsList, saveFileDialog.FileName, InstanceName));
@@ -252,13 +252,18 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                             ResourceGetter.GetString("instanceExport"),
                             String.Format(ResourceGetter.GetString("instanceExportSuccessfulOpenFolder"), InstanceName),
                             ToastMessageState.Notification);
+
+                        IsExportFinished = true;
+                        MainVM.ModalWindowVM.IsOpen = false;
                     }
                     else 
-                    { 
+                    {
                         MainViewModel.ShowToastMessage(
                             result.ToString(),
                             String.Format(ResourceGetter.GetString("instanceExportUnsuccessful"), InstanceName),
                             ToastMessageState.Error);
+
+                        IsExportFinished = true;
                     }
                 }
             }

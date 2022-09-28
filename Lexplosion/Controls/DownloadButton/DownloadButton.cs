@@ -459,8 +459,6 @@ namespace Lexplosion.Controls
             var button = (DownloadButton)d;
             var newValue = (InstanceFormViewModel)e.NewValue;
 
-            Console.WriteLine("TESTISHJETJKLJSEKLJTKLSEJTKLJKELSJTKL");
-
             if (newValue.Client.IsInstalled && !newValue.Model.LaunchModel.IsGameLaunched)
             {
                 button.HideButton(button._downloadButton);

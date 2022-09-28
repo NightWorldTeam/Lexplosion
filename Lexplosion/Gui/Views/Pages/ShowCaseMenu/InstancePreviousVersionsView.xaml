@@ -105,28 +105,60 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
 
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Viewbox
-                                                        Width="16"
-                                                        Height="16"
-                                                        VerticalAlignment="Center"
-                                                        Stretch="Fill">
-                                                        <Path extension:PathExtension.StringData="{StaticResource Download}" Fill="White" />
-                                                    </Viewbox>
+                                                <Grid>
+                                                    <StackPanel x:Name="DownloadContent" Orientation="Horizontal">
+                                                        <Viewbox
+                                                            Width="16"
+                                                            Height="16"
+                                                            VerticalAlignment="Center"
+                                                            Stretch="Fill">
+                                                            <Path extension:PathExtension.StringData="{StaticResource Download}" Fill="White" />
+                                                        </Viewbox>
+                                                        <TextBlock
+                                                            Margin="5,0,0,2"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="14"
+                                                            Foreground="White"
+                                                            Text="{DynamicResource download}" />
+                                                    </StackPanel>
 
-                                                    <TextBlock
-                                                        Margin="5,0,0,2"
-                                                        VerticalAlignment="Center"
-                                                        FontSize="14"
-                                                        Foreground="White"
-                                                        Text="{DynamicResource download}" />
-                                                </StackPanel>
+                                                    <!--<StackPanel
+                                                        x:Name="UpdateContent"
+                                                        Orientation="Horizontal"
+                                                        Visibility="Collapsed">
+                                                        <Viewbox
+                                                            Width="16"
+                                                            Height="16"
+                                                            VerticalAlignment="Center"
+                                                            Stretch="Fill">
+                                                            <Path extension:PathExtension.StringData="{StaticResource Update}" Fill="White" />
+                                                        </Viewbox>
+
+                                                        <TextBlock
+                                                            Margin="5,0,0,2"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="14"
+                                                            Foreground="White"
+                                                            Text="{DynamicResource update}" />
+                                                    </StackPanel>-->
+                                                </Grid>
                                             </Border>
 
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsEnabled" Value="False">
                                                     <Setter TargetName="Border" Property="Border.Background" Value="Gray" />
                                                 </Trigger>
+
+                                                <!--<DataTrigger Binding="{Binding DataContext.ViewModel.Model.InstanceClient.UpdateAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="False">
+                                                    <Setter TargetName="DownloadContent" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="UpdateContent" Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding DataContext.ViewModel.Model.InstanceClient.UpdateAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                                    <Setter TargetName="DownloadContent" Property="Visibility" Value="Collapsed" />
+                                                    <Setter TargetName="UpdateContent" Property="Visibility" Value="Visible" />
+                                                </DataTrigger>-->
+
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
                                     </Setter.Value>

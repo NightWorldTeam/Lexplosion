@@ -1,15 +1,15 @@
 ﻿using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
     public class InstancePreviousVersionsViewModel : VMBase
     {
-        private readonly InstanceFormViewModel _viewModel;
-
         #region Properties
 
+        public InstanceFormViewModel ViewModel { get; }
 
         private ObservableCollection<InstanceVersion> _previousVersions;
         public ObservableCollection<InstanceVersion> PreviousVersions 
@@ -43,7 +43,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             get => _installInstanceCommand ?? (_installInstanceCommand = new RelayCommand(obj =>
             {
                 var instanceVersion = (InstanceVersion)obj;
-                _viewModel.DownloadInstance(version: instanceVersion.Id);
+                ViewModel.DownloadInstance(version: instanceVersion.Id);
                 foreach (var pv in PreviousVersions) 
                 {
                     pv.CanInstall = false;
@@ -52,7 +52,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         }
 
 
-        #endregion
+        #endregion Commands
 
 
         #region Constructors
@@ -60,49 +60,37 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         public InstancePreviousVersionsViewModel(InstanceFormViewModel viewModel)
         {
-            _viewModel = viewModel;
+            ViewModel = viewModel;
             LoadPreviousVersions();
-            _viewModel.Model.DownloadModel.ComplitedDownloadActions.Add(ComplitedInstalled);
         }
 
 
         #endregion Constructors
 
 
-        #region Public & Protected Methods
-        #endregion Public & Protected Methods
-
-
         #region Private Methods
 
 
-        private void LoadPreviousVersions() 
+        private async void LoadPreviousVersions() 
         {
-            Lexplosion.Runtime.TaskRun(() => 
-            {
-                var versions = _viewModel.Model.InstanceClient.GetVersions();
-                App.Current.Dispatcher.Invoke(() => 
-                {
-                    PreviousVersions = new ObservableCollection<InstanceVersion>(versions);
-                    DisableButton();
-                    IsLoadingFinished = true;
-                });
-            });
+            var versions = await Task.Run(() => ViewModel.Model.InstanceClient.GetVersions());
+            PreviousVersions = new ObservableCollection<InstanceVersion>(versions);
+            if (ViewModel.Model.InstanceClient.IsInstalled || ViewModel.Model.InstanceClient.InLibrary)
+                ChangeButtonState();
+            IsLoadingFinished = true;
+            ViewModel.Model.DownloadModel.ComplitedDownloadActions.Add(ComplitedInstalled);
         }
 
-        private void DisableButton(bool isDisable = false) 
+        private void ChangeButtonState(bool isDisable = false) 
         {
             foreach (var pv in PreviousVersions)
             {
-                if (pv.Id == _viewModel.Client.ProfileVersion)
+                pv.CanInstall = true;
+                if (pv.Id == ViewModel.Client.ProfileVersion)
                 {
                     pv.CanInstall = false;
                     if (isDisable)
                         break;
-                }
-                else 
-                {
-                    pv.CanInstall = true;
                 }
             }
         }
@@ -110,7 +98,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private void ComplitedInstalled(InstanceInit result, List<string> downloadErrors, bool launchGame)
         {
-            DisableButton(true);
+            ChangeButtonState(true);
         }
 
         #endregion Private Methods

@@ -40,11 +40,19 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+        private ImmutableArray<string> _releaseGameVersions;
         /// <summary>
         /// Данное свойство содержит в себе версии игры.
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
         /// </summary>
-        public static ImmutableArray<string> ReleaseGameVersions { get; private set; }
+        public ImmutableArray<string> ReleaseGameVersions 
+        {   
+            get => _releaseGameVersions; private set 
+            {
+                _releaseGameVersions = value;
+                OnPropertyChanged();
+            }
+        }
         public static ImmutableArray<string> AllGameVersions { get; private set; }
 
         /// <summary>

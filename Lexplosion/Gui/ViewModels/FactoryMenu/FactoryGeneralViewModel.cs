@@ -171,7 +171,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 GameVersions = MainViewModel.AllGameVersions.ToArray();
             }
-            else GameVersions = MainViewModel.ReleaseGameVersions.ToArray();
+            else GameVersions = _mainViewModel.ReleaseGameVersions.ToArray();
             SelectedVersion = GameVersions[0];
         }
 

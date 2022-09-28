@@ -17,6 +17,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private readonly BaseInstanceData _baseInstanceData;
 
         private int _pageSize = 20;
+        private string _previousSearchKeyWords = string.Empty;
+        private bool _firstLoad = true;
 
         public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, ObservableCollection<InstanceAddon> installedAddons)
         {
@@ -153,10 +155,6 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         #endregion Commands
 
 
-        #region Public & Protected Methods
-        #endregion Public & Protected Methods
-
-
         #region Private Methods
 
         private void LoadContent()
@@ -283,7 +281,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             // запускаем заставку загрузки
             IsLoaded = false;
 
-            Console.WriteLine((AddonType)(int)_projectType);
+            if (_previousSearchKeyWords == searchText || !_firstLoad)
+                return;
 
             var instances = await Task.Run(() => InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1,
                 (AddonType)(int)_projectType, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText)

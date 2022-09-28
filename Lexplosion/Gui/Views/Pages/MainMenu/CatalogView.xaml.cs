@@ -25,5 +25,10 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
 
             }
         }
+
+        private void Filter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FiltersDropdownMenu.IsOpen = false;
+        }
     }
 }

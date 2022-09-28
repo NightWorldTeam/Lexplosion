@@ -54,6 +54,8 @@
                                 Foreground="White"
                                 SnapsToDevicePixels="False"
                                 Text="{TemplateBinding Placeholder}" />
+
+                            <ContentPresenter />
                         </StackPanel>
                     </Grid>
 

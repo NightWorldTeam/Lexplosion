@@ -1,8 +1,10 @@
 ﻿using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
 {
@@ -10,7 +12,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
     {
         private const int _pageSize = 10;
         private readonly MainViewModel _mainViewModel;
-
+        private string _previousSearch = string.Empty;
+        private bool _initSearch = true;
 
         #region Properties
 
@@ -18,7 +21,108 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public ObservableCollection<InstanceFormViewModel> InstanceList { get => _mainViewModel.Model.CurrentInstanceCatalog; }
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
-        public SearchBoxViewModel SearchBoxVM { get; } = new SearchBoxViewModel(true, true);
+
+        #region Filter
+
+        public Action<string> SearchMethod { get; }
+
+        public ObservableCollection<CurseforgeCategory> Categories { get; private set; }
+
+        public static List<string> CfSortToString { get; } = new List<string>()
+        {
+            ResourceGetter.GetString("featuredSortBy"),
+            ResourceGetter.GetString("popularitySortBy"),
+            ResourceGetter.GetString("lastUpdatedSortBy"),
+            ResourceGetter.GetString("nameSortBy"),
+            ResourceGetter.GetString("authorSortBy"),
+            ResourceGetter.GetString("totalDownloadsFlSortBy"),
+            ResourceGetter.GetString("categorySortBy"),
+            ResourceGetter.GetString("gameVersionSortBy"),
+        };
+
+        private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
+        /// <summary>
+        /// Ресурс откуда получаем данные.
+        /// Curseforge, NightWorld
+        /// </summary>
+        public InstanceSource SelectedInstanceSource
+        {
+            get => _selectedInstanceSource; set
+            {
+                _selectedInstanceSource = value;
+                OnPropertyChanged();
+                SearchMethod?.Invoke("");
+            }
+        }
+
+        private string _searchTextUncomfirmed = string.Empty;
+        /// <summary>
+        /// Содержит текст, который пользователь ввел, но не запустил поиск.
+        /// </summary>
+        public string SearchTextUncomfirmed
+        {
+            get => _searchTextUncomfirmed; set
+            {
+                _searchTextUncomfirmed = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private byte _selectedSourceIndex = 1;
+        /// <summary>
+        /// Индекс выбраного источника.
+        /// 0 - NightWorld
+        /// 1 - Curseforge
+        /// </summary>
+        public byte SelectedSourceIndex
+        {
+            get => _selectedSourceIndex; set
+            {
+                _selectedSourceIndex = value;
+                SetSelectedInstanceSourceByIndex(value);
+                OnPropertyChanged();
+            }
+        }
+
+        private CurseforgeCategory _selectedCurseforgeCategory;
+        public CurseforgeCategory SelectedCurseforgeCategory
+        {
+            get => _selectedCurseforgeCategory; set
+            {
+                _selectedCurseforgeCategory = value;
+                OnPropertyChanged();
+                SearchMethod?.Invoke("");
+            }
+        }
+
+
+        public CfSortField SelectedCfSortBy = CfSortField.Popularity;
+
+        private string _selectedCfSortByString = CfSortToString[(int)CfSortField.Popularity];
+        public string SelectedCfSortByString
+        {
+            get => _selectedCfSortByString; set
+            {
+                _selectedCfSortByString = value;
+                OnPropertyChanged();
+                SelectedCfSortBy = (CfSortField)CfSortToString.IndexOf(value) - 1;
+                SearchMethod?.Invoke("");
+            }
+        }
+
+
+        private int _selectedVersionIndex;
+        public int SelectedVersionIndex 
+        {
+            get => _selectedVersionIndex; set 
+            {
+                _selectedVersionIndex = value;
+                OnPropertyChanged();
+                SearchMethod?.Invoke("");
+            }
+        }
+
+        #endregion Filter
 
 
         private bool _isLoaded;
@@ -59,16 +163,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }
         }
 
-        private string _searchText = "";
-        public string SearchText
-        {
-            get => _searchText; set 
-            {
-                _searchText = value;
-                OnPropertyChanged();
-            }
-        }
-
 
         #endregion Properties
 
@@ -98,41 +192,63 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public CatalogViewModel(MainViewModel mainViewModel)
         {
+            IsLoaded = false;
             _mainViewModel = mainViewModel;
-            SearchBoxVM.SearchChanged += InstancesPageLoading;
+
+            SearchMethod += InstancesPageLoading;
             PaginatorVM.PageChanged += InstancesPageLoading;
-            InstancesPageLoading();
+
+            // выбираем первый вариант из списка версий [Все версии]
+            Lexplosion.Runtime.TaskRun(() => {
+                Categories = PrepareCategories();
+                SelectedVersionIndex = 0;
+                InstancesPageLoading();
+            });
         }
 
 
         #endregion Constructors
 
 
-        #region Public & Protected Methods
-
-
-
-
-
-        #endregion Public & Protected Methods
-
-
         #region Private Methods
+
+        private ObservableCollection<CurseforgeCategory> PrepareCategories()
+        {
+            var categories = new ObservableCollection<CurseforgeCategory>(
+                CurseforgeApi.GetCategories(CfProjectType.Modpacks)
+            );
+
+            SelectedCurseforgeCategory = categories[categories.Count - 1];
+
+            return categories;
+        }
+
+
+        private void SetSelectedInstanceSourceByIndex(byte value)
+        {
+            if (value == 0)
+                SelectedInstanceSource = InstanceSource.Nightworld;
+            else if (value == 1)
+                SelectedInstanceSource = InstanceSource.Curseforge;
+        }
 
         private void InstancesPageLoading(string searchText = "")
         {
             IsLoaded = false;
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var gameVersion = SearchBoxVM.SelectedVersion == null || SearchBoxVM.SelectedVersion.Contains(ResourceGetter.GetString("allVersions")) ? "" : SearchBoxVM.SelectedVersion;
-                Console.WriteLine(gameVersion);
+                if (searchText == _previousSearch && !_initSearch)
+                    return;
+
+                var gameVersion = SelectedVersionIndex == 0 ? "" : _mainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
+
                 var instances = InstanceClient.GetOutsideInstances(
-                    SearchBoxVM.SelectedInstanceSource,
+                    SelectedInstanceSource,
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
-                    SearchBoxVM.SelectedCurseforgeCategory.id,
-                    SearchBoxVM.SearchTextComfirmed,
-                    SearchBoxVM.SelectedCfSortBy,
+                    SelectedCurseforgeCategory.id,
+                    searchText,
+                    SelectedCfSortBy,
                     gameVersion
                     );
 

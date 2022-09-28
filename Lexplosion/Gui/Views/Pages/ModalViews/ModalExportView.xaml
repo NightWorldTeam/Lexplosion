@@ -298,22 +298,20 @@
                 Style="{StaticResource DefaultBrandColorButton}" />
         </StackPanel>
 
-        <Grid Visibility="{Binding IsExportFinished, Converter={StaticResource ConvertBoolToVisibility}}">
-            <controls:LoadingBoard
-                BackgroundColor="Black"
-                BackgroundOpacity="0.9"
-                IsLoadingFinished="{Binding IsExportFinished}"
-                Placeholder="{DynamicResource exportInProgress}" />
-
+        <controls:LoadingBoard
+            BackgroundColor="Black"
+            BackgroundOpacity="0.9"
+            IsLoadingFinished="{Binding IsExportFinished}"
+            Placeholder="{DynamicResource exportInProgress}">
             <Button
-                Width="80"
+                Width="100"
                 Height="30"
-                Margin="0,0,0,25"
+                Margin="0,50,0,25"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Command="{Binding HideModalWindowCommand}"
                 Content="{DynamicResource minimizeWindow}"
                 Style="{StaticResource DefaultBrandColorButton}" />
-        </Grid>
+        </controls:LoadingBoard>
     </Grid>
 </UserControl>
