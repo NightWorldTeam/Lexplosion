@@ -176,15 +176,11 @@
                                         x:Name="VersionBox"
                                         Margin="0,3,0,0"
                                         IsSynchronizedWithCurrentItem="True"
-                                        SelectedValue="{Binding SelectedVersion, Mode=TwoWay}"
-                                        SelectedValuePath="DefaultValue">
+                                        SelectedIndex="{Binding SelectedVersionIndex}"
+                                        SelectionChanged="Filter_SelectionChanged">
                                         <ComboBox.ItemsSource>
                                             <CompositeCollection>
-                                                <ComboBoxItem
-                                                    x:Name="DefaultValue"
-                                                    Content="{DynamicResource allVersions}"
-                                                    IsSelected="True"
-                                                    TabIndex="0" />
+                                                <ComboBoxItem Content="{DynamicResource allVersions}" />
                                                 <CollectionContainer Collection="{Binding Source={StaticResource MainVM}, Path=ReleaseGameVersions}" />
                                             </CompositeCollection>
                                         </ComboBox.ItemsSource>
@@ -206,7 +202,8 @@
                                         HorizontalContentAlignment="Left"
                                         Background="{DynamicResource SepSolidColorBrush}"
                                         ItemsSource="{Binding CfSortToString}"
-                                        SelectedValue="{Binding SelectedCfSortByString}" />
+                                        SelectedValue="{Binding SelectedCfSortByString}"
+                                        SelectionChanged="Filter_SelectionChanged" />
 
                                 </StackPanel>
 
@@ -237,6 +234,7 @@
                                 ItemTemplate="{StaticResource CurseforgeCategory}"
                                 ItemsSource="{Binding Categories}"
                                 SelectedItem="{Binding SelectedCurseforgeCategory}"
+                                SelectionChanged="Filter_SelectionChanged"
                                 Style="{StaticResource CategoriesListBox}" />
                         </StackPanel>
                     </controls:DropdownMenu>

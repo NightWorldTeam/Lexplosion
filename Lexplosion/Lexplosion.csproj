@@ -180,7 +180,6 @@
     <Compile Include="Gui\ViewModels\ModalVMs\InstanceFile.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ModalWindowViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
-    <Compile Include="Gui\ViewModels\SearchBoxViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\ChangelogViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstancePreviousVersionsViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceProfileViewModel.cs" />

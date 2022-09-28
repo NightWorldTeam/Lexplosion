@@ -68,20 +68,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }
         }
 
-
-        private string _searchTextComfirmed = string.Empty;
-        /// <summary>
-        /// Содержит текст, по которому в данный момент выдаются данные.
-        /// </summary>
-        public string SearchTextComfirmed
-        {
-            get => _searchTextComfirmed; set
-            {
-                _searchTextComfirmed = value;
-                OnPropertyChanged();
-            }
-        }
-
         private byte _selectedSourceIndex = 1;
         /// <summary>
         /// Индекс выбраного источника.
@@ -98,7 +84,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }
         }
 
-        private CurseforgeCategory _selectedCurseforgeCategory = new CurseforgeCategory();
+        private CurseforgeCategory _selectedCurseforgeCategory;
         public CurseforgeCategory SelectedCurseforgeCategory
         {
             get => _selectedCurseforgeCategory; set
@@ -112,7 +98,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public CfSortField SelectedCfSortBy = CfSortField.Popularity;
 
-        private string _selectedCfSortByString = CfSortToString[(int)CfSortBy.Popularity];
+        private string _selectedCfSortByString = CfSortToString[(int)CfSortField.Popularity];
         public string SelectedCfSortByString
         {
             get => _selectedCfSortByString; set
@@ -125,12 +111,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         }
 
 
-        private string _selectedVersion;
-        public string SelectedVersion
+        private int _selectedVersionIndex;
+        public int SelectedVersionIndex 
         {
-            get => _selectedVersion; set
+            get => _selectedVersionIndex; set 
             {
-                _selectedVersion = value;
+                _selectedVersionIndex = value;
                 OnPropertyChanged();
                 SearchMethod?.Invoke("");
             }
@@ -212,8 +198,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             SearchMethod += InstancesPageLoading;
             PaginatorVM.PageChanged += InstancesPageLoading;
 
+            // выбираем первый вариант из списка версий [Все версии]
             Lexplosion.Runtime.TaskRun(() => {
                 Categories = PrepareCategories();
+                SelectedVersionIndex = 0;
                 InstancesPageLoading();
             });
         }
@@ -252,7 +240,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 if (searchText == _previousSearch && !_initSearch)
                     return;
 
-                var gameVersion = SelectedVersion == null || SelectedVersion.Contains(ResourceGetter.GetString("allVersions")) ? "" : SelectedVersion;
+                var gameVersion = SelectedVersionIndex == 0 ? "" : _mainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
 
                 var instances = InstanceClient.GetOutsideInstances(
                     SelectedInstanceSource,
