@@ -297,9 +297,21 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        private CancellationTokenSource _cancelTokenSource = null;
+
+        /// <summary>
+        /// Отменяет скачивание аддона.
+        /// </summary>
+        public void CancellDownload()
+        {
+            _cancelTokenSource?.Cancel();
+        }
+
         private DownloadAddonRes InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies, out Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>> dependenciesResults)
         {
+            _cancelTokenSource = new CancellationTokenSource();
             dependenciesResults = null;
+
             string instanceId = _modpackInfo.LocalId;
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
@@ -310,10 +322,21 @@ namespace Lexplosion.Logic.Management.Instances
                 };
                 _installingSemaphore.Release(_modInfo.id);
 
-                var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
+                var taskArgs = new TaskArgs
                 {
-                    DownloadPercentages = percentages;
-                });
+                    PercentHandler = delegate (int percentages)
+                    {
+                        DownloadPercentages = percentages;
+                    },
+                    CancelToken = _cancelTokenSource.Token
+                };
+
+                if (_cancelTokenSource.Token.IsCancellationRequested)
+                {
+                    return DownloadAddonRes.IsCanselled;
+                }
+
+                var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", taskArgs);
 
                 IsInstalling = false;
                 _installingSemaphore.WaitOne(_modInfo.id);
@@ -323,6 +346,11 @@ namespace Lexplosion.Logic.Management.Instances
                 if (ressult.Value2 == DownloadAddonRes.Successful)
                 {
                     IsInstalled = true;
+
+                    if (_cancelTokenSource.Token.IsCancellationRequested)
+                    {
+                        return DownloadAddonRes.Successful;
+                    }
 
                     // удаляем старый файл
                     if (installedAddons[addonInfo.modId] != null && installedAddons[addonInfo.modId].ActualPath != ressult.Value1.ActualPath)
@@ -351,6 +379,11 @@ namespace Lexplosion.Logic.Management.Instances
                         int i = 0, count = dependencies.Count;
                         while (i < count)
                         {
+                            if (_cancelTokenSource.Token.IsCancellationRequested)
+                            {
+                                return DownloadAddonRes.Successful;
+                            }
+
                             var value = dependencies[i];
                             if (value.ContainsKey("relationType") && value["relationType"] == 3 && value.ContainsKey("modId") && !installedAddons.ContainsKey(value["modId"]))
                             {
@@ -372,13 +405,24 @@ namespace Lexplosion.Logic.Management.Instances
                                     _installingAddons[file.modId] = addonPointer;
                                     _installingSemaphore.Release(file.modId);
 
-                                    var res = CurseforgeApi.DownloadAddon(file, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", delegate (int percentages)
+                                    taskArgs = new TaskArgs
                                     {
-                                        if (addonPointer.Point != null)
+                                        PercentHandler = delegate (int percentages)
                                         {
-                                            addonPointer.Point.DownloadPercentages = percentages;
-                                        }
-                                    });
+                                            if (addonPointer.Point != null)
+                                            {
+                                                addonPointer.Point.DownloadPercentages = percentages;
+                                            }
+                                        },
+                                        CancelToken = _cancelTokenSource.Token
+                                    };
+
+                                    if (_cancelTokenSource.Token.IsCancellationRequested)
+                                    {
+                                        return DownloadAddonRes.Successful;
+                                    }
+
+                                    var res = CurseforgeApi.DownloadAddon(file, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", taskArgs);
 
                                     if (addonPointer.Point != null)
                                     {
@@ -454,12 +498,18 @@ namespace Lexplosion.Logic.Management.Instances
                 }
                 else
                 {
+                    if (_cancelTokenSource.Token.IsCancellationRequested)
+                    {
+                        return DownloadAddonRes.IsCanselled;
+                    }
+
                     return ressult.Value2;
                 }
 
                 installedAddons.Save();
             }
 
+            _cancelTokenSource = null;
             return DownloadAddonRes.Successful;
         }
 

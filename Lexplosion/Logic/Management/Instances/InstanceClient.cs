@@ -599,17 +599,28 @@ namespace Lexplosion.Logic.Management.Instances
             SaveInstalledInstancesList();
         }
 
+        private CancellationTokenSource _cancelTokenSource = null;
+
+        /// <summary>
+        /// Отменяет скачивание сборки.
+        /// </summary>
+        public void CancellDownload()
+        {
+            _cancelTokenSource?.Cancel();
+        }
+
         /// <summary>
         /// Обновляет или скачивает сборку. Сборка должна быть добавлена в библиотеку.
         /// </summary>
         public void Update(string instanceVersion = null)
         {
+            _cancelTokenSource = new CancellationTokenSource();
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
-            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
+            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStartedEvent, instanceVersion);
 
             UpdateAvailable = data.UpdatesAvailable;
@@ -624,6 +635,8 @@ namespace Lexplosion.Logic.Management.Instances
 
             ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
             Console.WriteLine("UpdateInstance-end " + data.InitResult);
+
+            _cancelTokenSource = null;
         }
 
         /// <summary>
@@ -631,12 +644,13 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void Run()
         {
+            _cancelTokenSource = new CancellationTokenSource();
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
-            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type);
+            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
             InitData data = launchGame.Initialization(ProgressHandler, FileDownloadEvent, DownloadStartedEvent);
 
             UpdateAvailable = data.UpdatesAvailable;
@@ -658,6 +672,8 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             Console.WriteLine("Run-end " + data.InitResult);
+
+            _cancelTokenSource = null;
         }
 
         /// <summary>

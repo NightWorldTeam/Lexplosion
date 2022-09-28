@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
@@ -20,12 +21,13 @@ namespace Lexplosion.Logic.Management.Installers
         private LastUpdates Updates;
         private Dictionary<string, int> _instanceContent;
         private NightWorldInstaller installer;
+        private CancellationToken _cancelToken;
 
         private string InstanceId;
         private NwInstancePlatformData InfoData;
 
-        private bool requiresUpdates = true;
-        private bool onlyBase;
+        private bool _requiresUpdates = true;
+        private bool _onlyBase;
         private int stagesCount = 0;
         private int _baseFaliseUpdatesCount = 0;
         private int _modpackFilesUpdatesCount = 0;
@@ -46,11 +48,12 @@ namespace Lexplosion.Logic.Management.Installers
 
         public event Action DownloadStarted;
 
-        public NightworldInstallManager(string instanceid, bool onlyBase_)
+        public NightworldInstallManager(string instanceid, bool onlyBase, CancellationToken cancelToken)
         {
-            Console.WriteLine("onlyBase_ = " + onlyBase_);
+            Console.WriteLine("onlyBase = " + onlyBase);
             InstanceId = instanceid;
-            onlyBase = onlyBase_;
+            _onlyBase = onlyBase;
+            _cancelToken = cancelToken;
             installer = new NightWorldInstaller(instanceid);
         }
 
@@ -72,18 +75,18 @@ namespace Lexplosion.Logic.Management.Installers
             }
 
             int version = 0;
-            if (!onlyBase)
+            if (!_onlyBase)
             {
                 version = NightWorldApi.GetInstanceVersion(InfoData.id);
-                requiresUpdates = version > InfoData.instanceVersion;
+                _requiresUpdates = version > InfoData.instanceVersion;
                 actualVersion = version;
             }
             else
             {
-                requiresUpdates = false;
+                _requiresUpdates = false;
             }
 
-            if (!requiresUpdates)
+            if (!_requiresUpdates)
             {
                 VersionManifest manifest_ = DataFilesManager.GetManifest(InstanceId, false);
                 if (manifest_ == null || manifest_.version == null || manifest_.version.gameVersion == null || manifest_.version.gameVersion == "")
@@ -181,7 +184,7 @@ namespace Lexplosion.Logic.Management.Installers
                 Updates = WithDirectory.GetLastUpdates(InstanceId);
                 _instanceContent = installer.GetInstanceContent();
 
-                requiresUpdates = (requiresUpdates || Updates.Count == 0);
+                _requiresUpdates = (_requiresUpdates || Updates.Count == 0);
 
                 _baseFaliseUpdatesCount = installer.CheckBaseFiles(manifest, ref Updates); // проверяем основные файлы клиента на обновление
                 if (_baseFaliseUpdatesCount == -1)
@@ -195,7 +198,7 @@ namespace Lexplosion.Logic.Management.Installers
                     stagesCount++;
                 }
 
-                if (requiresUpdates || installer.InvalidStruct(Updates, _instanceContent))
+                if (_requiresUpdates || installer.InvalidStruct(Updates, _instanceContent))
                 {
                     if (nightworldManifest == null)
                     {
@@ -218,7 +221,7 @@ namespace Lexplosion.Logic.Management.Installers
                         stagesCount++;
                     }
 
-                    requiresUpdates = true;
+                    _requiresUpdates = true;
                 }
 
                 releaseIndex = manifest.version.releaseIndex;
@@ -240,7 +243,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
-            Console.WriteLine("NightWorld Update " + requiresUpdates);
+            Console.WriteLine("NightWorld Update " + _requiresUpdates);
 
             Action<string, int, DownloadFileProgress> singleDownloadMethod = null;
 
@@ -288,10 +291,26 @@ namespace Lexplosion.Logic.Management.Installers
                 });
             }
 
-            List<string> errors_ = installer.UpdateBaseFiles(manifest, ref Updates, javaPath);
+            if (_cancelToken.IsCancellationRequested)
+            {
+                return new InitData
+                {
+                    InitResult = InstanceInit.IsCancelled
+                };
+            }
+
+            List<string> errors_ = installer.UpdateBaseFiles(manifest, ref Updates, javaPath, _cancelToken);
             List<string> errors = null;
 
-            if (requiresUpdates)
+            if (_cancelToken.IsCancellationRequested)
+            {
+                return new InitData
+                {
+                    InitResult = InstanceInit.IsCancelled
+                };
+            }
+
+            if (_requiresUpdates)
             {
                 int stage;
                 if (_baseFaliseUpdatesCount > 0)
@@ -344,7 +363,23 @@ namespace Lexplosion.Logic.Management.Installers
                     };
                 }
 
-                errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates, _instanceContent);
+                if (_cancelToken.IsCancellationRequested)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.IsCancelled
+                    };
+                }
+
+                errors = installer.UpdateInstance(nightworldManifest, InfoData.id, ref Updates, _instanceContent, _cancelToken);
+
+                if (_cancelToken.IsCancellationRequested)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.IsCancelled
+                    };
+                }
             }
 
             DataFilesManager.SaveManifest(InstanceId, manifest);
@@ -373,6 +408,7 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     InfoData.instanceVersion = actualVersion;
                 }
+
                 DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));
             }
 

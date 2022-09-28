@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Global;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -81,11 +82,11 @@ namespace Lexplosion.Logic.FileSystem
 
         }
 
-        public static bool InstallZipContent(string url, string fileName, string path, Action<int> percentHandler)
+        public static bool InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)
         {
             path = DirectoryPath + "/" + path;
             string tempDir = CreateTempDir();
-            if (!DownloadFile(url, fileName, tempDir, percentHandler))
+            if (!DownloadFile(url, fileName, tempDir, taskArgs))
             {
                 return false;
             }
@@ -125,45 +126,7 @@ namespace Lexplosion.Logic.FileSystem
             return true;
         }
 
-        public static bool InstallFile(string url, string fileName, string path)
-        {
-            string tempDir = null;
-            //Console.WriteLine("INSTALL " + url);
-
-            try
-            {
-                tempDir = CreateTempDir();
-
-                if (!Directory.Exists(DirectoryPath + "/" + path))
-                {
-                    Directory.CreateDirectory(DirectoryPath + "/" + path);
-                }
-
-                using (WebClient wc = new WebClient())
-                {
-                    wc.DownloadFile(url, tempDir + fileName);
-                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
-                    File.Move((tempDir + fileName).Replace("/", "\\"), (DirectoryPath + "/" + path + "/" + fileName).Replace("/", "\\"));
-                    Directory.Delete(tempDir, true);
-                }
-
-                Console.WriteLine("RETURN TRUE ");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(url + " " + ex);
-                if (tempDir != null)
-                {
-                    DelFile(tempDir + fileName);
-                    DelFile(DirectoryPath + "/" + path + "/" + fileName);
-                }
-
-                return false;
-            }
-        }
-
-        public static bool InstallFile(string url, string fileName, string path, Action<int> percentHandler)
+        public static bool InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
         {
             Console.WriteLine("INSTALL " + url);
 
@@ -176,7 +139,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(DirectoryPath + "/" + path);
                 }
 
-                if (DownloadFile(url, fileName, tempDir, percentHandler))
+                if (DownloadFile(url, fileName, tempDir, taskArgs))
                 {
                     DelFile(DirectoryPath + "/" + path + "/" + fileName);
                     File.Move((tempDir + fileName).Replace("/", "\\"), (DirectoryPath + "/" + path + "/" + fileName).Replace("/", "\\"));
@@ -202,35 +165,19 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public static bool DownloadFile(string url, string fileName, string tempDir)
-        {
-            try
-            {
-                using (WebClient wc = new WebClient())
-                {
-                    DelFile(tempDir + fileName);
-                    wc.DownloadFile(url, tempDir + fileName);
-                }
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public static bool DownloadFile(string url, string fileName, string tempDir, Action<int> percentHandler)
+        public static bool DownloadFile(string url, string fileName, string tempDir, TaskArgs taskArgs)
         {
             using (var webClient = new WebClient())
             {
                 DelFile(tempDir + fileName);
                 bool result = true;
 
+                taskArgs.CancelToken.Register(webClient.CancelAsync);
                 webClient.DownloadProgressChanged += (sender, e) =>
                 {
-                    percentHandler(e.ProgressPercentage);
+                    taskArgs.PercentHandler(e.ProgressPercentage);
                 };
+
                 webClient.DownloadFileCompleted += (sender, e) =>
                 {
                     result = (e.Error == null);
@@ -238,7 +185,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 try
                 {
-                    Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);
+                    Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);                  
                     task.Wait();        
 
                     return result;
@@ -478,14 +425,14 @@ namespace Lexplosion.Logic.FileSystem
             return ImportResult.Successful;
         }
 
-        public static bool DonwloadJava(string javaName, string bitDepth, Action<int> percentHandler)
+        public static bool DonwloadJava(string javaName, string bitDepth, TaskArgs taskArgs)
         {
             string tempDir = CreateTempDir();
             string fileName = javaName + ".zip";
 
             try
             {
-                if (!DownloadFile(LaunсherSettings.URL.JavaData + "windows/" + bitDepth + "/download/" + fileName, fileName, tempDir, percentHandler))
+                if (!DownloadFile(LaunсherSettings.URL.JavaData + "windows/" + bitDepth + "/download/" + fileName, fileName, tempDir, taskArgs))
                 {
                     return false;
                 }

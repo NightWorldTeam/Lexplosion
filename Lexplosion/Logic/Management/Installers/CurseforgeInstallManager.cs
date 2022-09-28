@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -20,8 +21,9 @@ namespace Lexplosion.Logic.Management.Installers
 
         private bool BaseFilesIsCheckd = false;
         private bool onlyBase;
+        private CancellationToken _cancelToken;
 
-        int updatesCount = 0;
+        private int updatesCount = 0;
 
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent
         {
@@ -37,10 +39,11 @@ namespace Lexplosion.Logic.Management.Installers
 
         public event Action DownloadStarted;
 
-        public CurseforgeInstallManager(string instanceid, bool onlyBase_)
+        public CurseforgeInstallManager(string instanceid, bool onlyBase_, CancellationToken cancelToken)
         {
             InstanceId = instanceid;
             onlyBase = onlyBase_;
+            _cancelToken = cancelToken;
             installer = new CurseforgeInstaller(instanceid);
         }
 
@@ -160,8 +163,24 @@ namespace Lexplosion.Logic.Management.Installers
                     });
                 };
 
+                if (_cancelToken.IsCancellationRequested)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.IsCancelled
+                    };
+                }
+
                 // скачиваем архив модпака и из него получаем манифест
-                var manifest = installer.DownloadInstance(Info.downloadUrl, Info.fileName, ref localFiles);
+                var manifest = installer.DownloadInstance(Info.downloadUrl, Info.fileName, ref localFiles, _cancelToken);
+
+                if (_cancelToken.IsCancellationRequested)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.IsCancelled
+                    };
+                }
 
                 if (manifest == null || manifest.minecraft == null || manifest.minecraft.modLoaders == null || manifest.minecraft.version == null)
                 {
@@ -224,6 +243,14 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         DataFilesManager.SaveManifest(InstanceId, Manifest);
 
+                        if (_cancelToken.IsCancellationRequested)
+                        {
+                            return new InitData
+                            {
+                                InitResult = InstanceInit.IsCancelled
+                            };
+                        }
+
                         Updates = WithDirectory.GetLastUpdates(InstanceId);
                         updatesCount = installer.CheckBaseFiles(Manifest, ref Updates); // проверяем основные файлы клиента на обновление
 
@@ -281,7 +308,35 @@ namespace Lexplosion.Logic.Management.Installers
                     installer.FileDownloadEvent += singleDownloadMethod;
                 }
 
-                installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
+                if (_cancelToken.IsCancellationRequested)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.IsCancelled
+                    };
+                }
+
+                List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
+
+                if (_cancelToken.IsCancellationRequested)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.IsCancelled
+                    };
+                }
+
+                if (errors.Count > 0)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.DownloadFilesError,
+                        DownloadErrors = errors,
+                        UpdatesAvailable = true,
+                        ClientVersion = Info.id.ToString()
+                    };
+                }
+
                 progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
                 {
                     StagesCount = 3,
@@ -320,8 +375,24 @@ namespace Lexplosion.Logic.Management.Installers
                     }
                 };
 
+                if (_cancelToken.IsCancellationRequested)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.IsCancelled
+                    };
+                }
+
                 // скачиваем аддоны
-                List<string> errors = installer.InstallInstance(manifest, localFiles);
+                errors = installer.InstallInstance(manifest, localFiles, _cancelToken);
+
+                if (_cancelToken.IsCancellationRequested)
+                {
+                    return new InitData
+                    {
+                        InitResult = InstanceInit.IsCancelled
+                    };
+                }
 
                 if (errors.Count > 0)
                 {
@@ -367,7 +438,34 @@ namespace Lexplosion.Logic.Management.Installers
                         };
                     }
 
-                    installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
+                    if (_cancelToken.IsCancellationRequested)
+                    {
+                        return new InitData
+                        {
+                            InitResult = InstanceInit.IsCancelled
+                        };
+                    }
+
+                    List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
+
+                    if (_cancelToken.IsCancellationRequested)
+                    {
+                        return new InitData
+                        {
+                            InitResult = InstanceInit.IsCancelled
+                        };
+                    }
+
+                    if (errors.Count > 0)
+                    {
+                        return new InitData
+                        {
+                            InitResult = InstanceInit.DownloadFilesError,
+                            DownloadErrors = errors,
+                            UpdatesAvailable = true,
+                            ClientVersion = Info?.id.ToString() ?? ""
+                        };
+                    }
                 }
                 else
                 {

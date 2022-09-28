@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
+using System.Threading;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects;
@@ -14,6 +12,7 @@ using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Global;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -286,7 +285,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список файлов, скачивание которых закончилось ошибкой
         /// </returns>
-        public List<string> UpdateInstance(NightWorldManifest filesList, string externalId, ref LastUpdates updates, Dictionary<string, int> content)
+        public List<string> UpdateInstance(NightWorldManifest filesList, string externalId, ref LastUpdates updates, Dictionary<string, int> content, CancellationToken cancelToken)
         {
             int updated = 0;
             WebClient wc = new WebClient();
@@ -304,8 +303,12 @@ namespace Lexplosion.Logic.FileSystem
                 //скачивание файлов из списка data
                 foreach (string dir in data.Keys)
                 {
+                    if (cancelToken.IsCancellationRequested) break;
+
                     foreach (string file in data[dir])
                     {
+                        if (cancelToken.IsCancellationRequested) break;
+
                         if (filesList.data[dir].objects[file].url == null)
                         {
                             addr = LaunсherSettings.URL.Upload + "modpacks/" + externalId + "/" + dir + "/" + file;
@@ -339,7 +342,16 @@ namespace Lexplosion.Logic.FileSystem
                         string sha1 = filesList.data[dir].objects[file].sha1;
                         long size = filesList.data[dir].objects[file].size;
 
-                        if (!SaveDownloadZip(addr, filename, path, tempDir, sha1, size, delegate (int a) { _fileDownloadHandler?.Invoke(filename, a, DownloadFileProgress.PercentagesChanged); }))
+                        var taskArgs = new TaskArgs
+                        {
+                            PercentHandler = delegate (int a)
+                            {
+                                _fileDownloadHandler?.Invoke(filename, a, DownloadFileProgress.PercentagesChanged);
+                            },
+                            CancelToken = cancelToken
+                        };
+
+                        if (!SaveDownloadZip(addr, filename, path, tempDir, sha1, size, taskArgs))
                         {
                             _fileDownloadHandler?.Invoke(filename, 100, DownloadFileProgress.Error);
                             errors.Add(dir + "/" + file);
@@ -363,7 +375,6 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 wc.Dispose();
-
 
                 //удаляем старые файлы
                 foreach (string file in oldFiles)

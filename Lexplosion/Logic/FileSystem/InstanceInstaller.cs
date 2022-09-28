@@ -14,6 +14,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Threading;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -272,9 +273,9 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="file">Имя файла</param>
         /// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
         /// <param name="temp">Временная директория (без имени файла), должена заканчиваться на слеш.</param>
-        /// <param name="percentHandler">Обработчик процентов</param>
+        /// <param name="taskArgs">Аргументы задачи</param>
         /// <returns></returns>
-        protected bool UnsafeDownloadZip(string url, string to, string file, string temp, Action<int> percentHandler)
+        protected bool UnsafeDownloadZip(string url, string to, string file, string temp, TaskArgs taskArgs)
         {                
             string zipFile = file + ".zip";
 
@@ -286,7 +287,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 DelFile(temp + zipFile);
-                DownloadFile(url + ".zip", zipFile, temp, percentHandler);
+                DownloadFile(url + ".zip", zipFile, temp, taskArgs);
 
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
                 File.Delete(temp + zipFile);
@@ -317,7 +318,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="size">Размер</param>
         /// <param name="percentHandler">Обработчик процентов</param>
         /// <returns></returns>
-        protected bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, long size, Action<int> percentHandler)
+        protected bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs)
         {
             string zipFile = file + ".zip";
 
@@ -328,7 +329,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                DownloadFile(url + ".zip", zipFile, temp, percentHandler);
+                DownloadFile(url + ".zip", zipFile, temp, taskArgs);
                 DelFile(to + file);
 
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
@@ -376,7 +377,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем.</param>
         /// /// <param name="percentHandler">Обработчик процентов.</param>
         /// <returns>Охуенно или пиздец</returns>
-        protected bool UnsafeDownloadJar(string url, string to, string file, string temp, Action<int> percentHandler)
+        protected bool UnsafeDownloadJar(string url, string to, string file, string temp, TaskArgs taskArgs)
         {
             //try
             {
@@ -385,7 +386,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
                 
-                DownloadFile(url, file, temp, percentHandler);
+                DownloadFile(url, file, temp, taskArgs);
                 DelFile(to + file);
                 File.Move(temp + file, to + file);
 
@@ -409,7 +410,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="size">Размер файла</param>
         /// <param name="percentHandler">Обработчик процентов скачивнаия</param>
         /// <returns></returns>
-        protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, Action<int> percentHandler)
+        protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs)
         {
             try
             {
@@ -418,7 +419,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                DownloadFile(url, file, temp, percentHandler);
+                DownloadFile(url, file, temp, taskArgs);
                 DelFile(to + file);
 
                 using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
@@ -457,7 +458,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список файлов, скачивание которых закончилось ошибкой
         /// </returns>
-        public List<string> UpdateBaseFiles(in VersionManifest manifest, ref LastUpdates updates, string javaPath)
+        public List<string> UpdateBaseFiles(in VersionManifest manifest, ref LastUpdates updates, string javaPath, CancellationToken cancelToken)
         {
             string gameVersionName = manifest.version.CustomVersionName ?? manifest.version.gameVersion;
 
@@ -481,19 +482,23 @@ namespace Lexplosion.Logic.FileSystem
                     addr = minecraftJar.url;
                 }
 
-                Action<int> progressMethod = delegate (int a)
+                var taskArgs = new TaskArgs
                 {
-                    _fileDownloadHandler?.Invoke(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
+                    PercentHandler = delegate (int a)
+                    {
+                        _fileDownloadHandler?.Invoke(minecraftJar.name, a, DownloadFileProgress.PercentagesChanged);
+                    },
+                    CancelToken = cancelToken
                 };
 
                 bool isDownload;
                 if (minecraftJar.notArchived)
                 {
-                    isDownload = SaveDownloadJar(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, progressMethod);
+                    isDownload = SaveDownloadJar(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, taskArgs);
                 }
                 else
                 {
-                    isDownload = SaveDownloadZip(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, progressMethod);
+                    isDownload = SaveDownloadZip(addr, minecraftJar.name, DirectoryPath + "/instances/" + instanceId + "/version/", temp, minecraftJar.sha1, minecraftJar.size, taskArgs);
                 }
 
                 DownloadFileProgress downloadResult;
@@ -506,6 +511,12 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     errors.Add("version/" + minecraftJar.name);
                     downloadResult = DownloadFileProgress.Error;
+                }
+
+                if (cancelToken.IsCancellationRequested)
+                {
+                    SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+                    return errors;
                 }
 
                 updated++;
@@ -532,6 +543,8 @@ namespace Lexplosion.Logic.FileSystem
             string tempDir = CreateTempDir();
             foreach (string lib in libraries.Keys)
             {
+                if (cancelToken.IsCancellationRequested) return errors;
+
                 if (libraries[lib].obtainingMethod == null)
                 {
                     if (libraries[lib].url == null)
@@ -554,19 +567,26 @@ namespace Lexplosion.Logic.FileSystem
                     bool isDownload;
                     string name = folders[folders.Length - 1];
                     string fileDir = DirectoryPath + "/libraries/" + ff;
-                    Action<int> progressHandler = delegate (int pr)
+
+                    var taskArgs = new TaskArgs
                     {
-                        _fileDownloadHandler?.Invoke(name, pr, DownloadFileProgress.PercentagesChanged);
+                        PercentHandler = delegate (int pr)
+                        {
+                            _fileDownloadHandler?.Invoke(name, pr, DownloadFileProgress.PercentagesChanged);
+                        },
+                        CancelToken = cancelToken
                     };
 
                     if (libraries[lib].notArchived)
                     {
-                        isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, progressHandler);
+                        isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, taskArgs);
                     }
                     else
                     {
-                        isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, progressHandler);
+                        isDownload = UnsafeDownloadZip(addr, fileDir, name, tempDir, taskArgs);
                     }
+
+                    if (cancelToken.IsCancellationRequested) return errors;
 
                     _fileDownloadHandler?.Invoke(name, 100, isDownload ? DownloadFileProgress.Successful : DownloadFileProgress.Error);
 
@@ -632,12 +652,16 @@ namespace Lexplosion.Logic.FileSystem
                                     case "downloadFile":
                                         Console.WriteLine("download " + obtainingMethod[i][1]);
 
-                                        Action<int> prHandler = delegate (int pr)
+                                        var taskArgs = new TaskArgs
                                         {
-                                            _fileDownloadHandler?.Invoke(obtainingMethod[i][2], pr, DownloadFileProgress.PercentagesChanged);
+                                            PercentHandler = delegate (int pr)
+                                            {
+                                                _fileDownloadHandler?.Invoke(obtainingMethod[i][2], pr, DownloadFileProgress.PercentagesChanged);
+                                            },
+                                            CancelToken = cancelToken
                                         };
-                                        
-                                        if (obtainingMethod[i].Count > 1 && !DownloadFile(obtainingMethod[i][1], obtainingMethod[i][2], tempDir, prHandler))
+
+                                        if (obtainingMethod[i].Count > 1 && !DownloadFile(obtainingMethod[i][1], obtainingMethod[i][2], tempDir, taskArgs))
                                         {
                                             _fileDownloadHandler?.Invoke(obtainingMethod[i][2], 100, DownloadFileProgress.Error);
                                             goto EndWhile; //возникла ошибка
@@ -723,6 +747,8 @@ namespace Lexplosion.Logic.FileSystem
 
                     //теперь добавляем этот метод в уже выполненные и если не существует файла, который мы должны получить - значит произошла ошибка
                     EndWhile: executedMethods.Add(obtainingMethod[0][0]);
+                        if (cancelToken.IsCancellationRequested) return errors;
+
                         if (!File.Exists(DirectoryPath + "/libraries/" + lib))
                         {
                             Console.WriteLine(DirectoryPath + "/libraries/" + lib);
@@ -775,6 +801,12 @@ namespace Lexplosion.Logic.FileSystem
                 if (assetsCount > 0)
                     perfomer = new TasksPerfomer(15, assetsCount);
 
+                var taskArgs = new TaskArgs
+                {
+                    PercentHandler = delegate (int pr) { },
+                    CancelToken = cancelToken
+                };
+
                 int i = 0;
                 foreach (string asset in assets.objects.Keys)
                 {
@@ -789,12 +821,14 @@ namespace Lexplosion.Logic.FileSystem
                                 bool flag = false;
                                 for (int i = 0; i < 3; i++) // 3 попытки делаем
                                 {
-                                    if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath))
+                                    if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs))
                                     {
                                         flag = true;
                                         break;
                                     }
                                 }
+
+                                if (cancelToken.IsCancellationRequested) return;
 
                                 if (!flag)
                                 {
@@ -815,6 +849,8 @@ namespace Lexplosion.Logic.FileSystem
                         i++;
                         _fileDownloadHandler?.Invoke("assets files", (int)(((decimal)i / (decimal)assetsCount) * 100), DownloadFileProgress.PercentagesChanged);
                     });
+
+                    if (cancelToken.IsCancellationRequested) return errors;
                 }
 
                 perfomer?.WaitEnd();
@@ -834,10 +870,17 @@ namespace Lexplosion.Logic.FileSystem
                         Directory.CreateDirectory(DirectoryPath + "/assets/indexes");
 
                     string filename = manifest.version.assetsVersion + ".json";
-                    InstallFile(manifest.version.assetsIndexes, filename, "/assets/indexes/", delegate (int pr)
+
+                    var taskArgs = new TaskArgs
                     {
-                        _fileDownloadHandler?.Invoke(filename, pr, DownloadFileProgress.PercentagesChanged);
-                    });
+                        PercentHandler = delegate (int pr) 
+                        {
+                            _fileDownloadHandler?.Invoke(filename, pr, DownloadFileProgress.PercentagesChanged);
+                        },
+                        CancelToken = cancelToken
+                    };
+
+                    InstallFile(manifest.version.assetsIndexes, filename, "/assets/indexes/", taskArgs);
 
                     _fileDownloadHandler?.Invoke(filename, 100, DownloadFileProgress.Successful);
                     // TODO: я на ошибки тут не проверяю то ли потмоу что мне лень было, толи просто не хотел делать так, чтобы от одного этогоф айла клиент не запускался

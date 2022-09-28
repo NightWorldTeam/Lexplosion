@@ -72,6 +72,7 @@ namespace Lexplosion
         GamePathError,
         ManifestError,
         JavaDownloadError,
+        IsCancelled,
         UnknownError
     }
 
@@ -257,6 +258,7 @@ namespace Lexplosion
         UrlError,
         FileNameError,
         UzipError,
+        IsCanselled,
         UncnownError
     }
 

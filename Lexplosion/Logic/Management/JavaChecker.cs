@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
@@ -25,10 +26,12 @@ namespace Lexplosion.Logic.Management
         private long _releaseIndex;
         private JavaVersion _thisJava = null;
         private JavaVersionsFile _versionsFile;
+        private CancellationToken _cancelToken;
 
-        public JavaChecker(long releaseIndex)
+        public JavaChecker(long releaseIndex, CancellationToken cancelToken)
         {
             _releaseIndex = releaseIndex;
+            _cancelToken = cancelToken;
         }
 
         public bool Check(out CheckResult result, out JavaVersion java)
@@ -124,13 +127,18 @@ namespace Lexplosion.Logic.Management
             }
 
             string filename = _thisJava.JavaName + ".zip";
-            Action<int> prHandler = delegate (int value)
+
+            var taskArgs = new TaskArgs
             {
-                percentHandler(value, filename);
+                PercentHandler = delegate (int value)
+                {
+                    percentHandler(value, filename);
+                },
+                CancelToken = _cancelToken
             };
 
             string bitDepth = Environment.Is64BitOperatingSystem ? "x64" : "x32";
-            if (WithDirectory.DonwloadJava(_thisJava.JavaName, bitDepth, prHandler))
+            if (WithDirectory.DonwloadJava(_thisJava.JavaName, bitDepth, taskArgs))
             {
                 _versionsFile[_thisJava.JavaName] = _thisJava;
                 DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/java/javaVersions.json", JsonConvert.SerializeObject(_versionsFile));

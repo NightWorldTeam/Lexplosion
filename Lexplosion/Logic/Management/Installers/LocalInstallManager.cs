@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -11,6 +12,7 @@ namespace Lexplosion.Logic.Management.Installers
         private VersionManifest Manifest;
         private LastUpdates Updates;
         private InstanceInstaller installer;
+        private CancellationToken _cancelToken;
 
         private string InstanceId;
         private int stagesCount = 0;
@@ -30,9 +32,10 @@ namespace Lexplosion.Logic.Management.Installers
 
         public event Action DownloadStarted;
 
-        public LocalInstallManager(string instanceid)
+        public LocalInstallManager(string instanceid, CancellationToken cancelToken)
         {
             InstanceId = instanceid;
+            _cancelToken = cancelToken;
             installer = new InstanceInstaller(instanceid);
         }
 
@@ -117,8 +120,24 @@ namespace Lexplosion.Logic.Management.Installers
                 }
             }
 
-            List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath);
+            if (_cancelToken.IsCancellationRequested)
+            {
+                return new InitData
+                {
+                    InitResult = InstanceInit.IsCancelled
+                };
+            }
+
+            List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
             DataFilesManager.SaveManifest(InstanceId, Manifest);
+
+            if (_cancelToken.IsCancellationRequested)
+            {
+                return new InitData
+                {
+                    InitResult = InstanceInit.IsCancelled
+                };
+            }
 
             InstanceInit result = InstanceInit.Successful;
             if (errors.Count > 0)

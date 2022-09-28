@@ -129,7 +129,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает манифест, полученный из архива.
         /// </returns>
-        public InstanceManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles)
+        public InstanceManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken)
         {
             //try
             {
@@ -146,13 +146,20 @@ namespace Lexplosion.Logic.FileSystem
 
                 string tempDir = CreateTempDir();
 
-                // скачивание архива
                 MainFileDownloadEvent?.Invoke(0);
-                bool res = DownloadFile(downloadUrl, fileName, tempDir, delegate(int percent) 
+
+                var taskArgs = new TaskArgs
                 {
-                    _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
-                    MainFileDownloadEvent?.Invoke(percent);
-                });
+                    PercentHandler = delegate (int percent)
+                    {
+                        _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
+                        MainFileDownloadEvent?.Invoke(percent);
+                    },
+                    CancelToken = cancelToken
+                };
+
+                // скачивание архива
+                bool res = DownloadFile(downloadUrl, fileName, tempDir, taskArgs);
 
                 if (!res)
                 {
@@ -218,7 +225,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список ошибок.
         /// </returns>
-        public List<string> InstallInstance(InstanceManifest data, InstanceContent localFiles)
+        public List<string> InstallInstance(InstanceManifest data, InstanceContent localFiles, CancellationToken cancelToken)
         {
             InstalledAddonsFormat installedAddons = null;
             installedAddons = localFiles.InstalledAddons;
@@ -340,10 +347,16 @@ namespace Lexplosion.Logic.FileSystem
                                 addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
                             }
 
-                            var result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", delegate (int percent)
+                            var taskArgs = new TaskArgs
                             {
-                                _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
-                            });
+                                PercentHandler = delegate (int percent)
+                                {
+                                    _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
+                                },
+                                CancelToken = cancelToken
+                            };
+
+                            var result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
 
                             _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
 
@@ -367,63 +380,73 @@ namespace Lexplosion.Logic.FileSystem
 
                             Console.WriteLine("EXIT PERFOMER");
                         });
+
+                        if (cancelToken.IsCancellationRequested) break;
                     }
 
-                    Console.WriteLine("ЖДЁМ КОНЦА ");
-                    perfomer?.WaitEnd();
-                    Console.WriteLine("КОНЕЦ ");
-
-                    Console.WriteLine("ДОКАЧИВАЕМ " + noDownloaded.Count);
-                    foreach (InstanceManifest.FileData file in noDownloaded)
+                    if (!cancelToken.IsCancellationRequested)
                     {
-                        CurseforgeAddonInfo addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
-                        if (addonInfo.latestFiles == null && addons.ContainsKey(file.projectID))
-                        {
-                            addonInfo = addons[file.projectID];
-                        }
+                        Console.WriteLine("ЖДЁМ КОНЦА ");
+                        perfomer?.WaitEnd();
+                        Console.WriteLine("КОНЕЦ ");
 
-                        int count = 0;
-                        ValuePair<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", delegate (int percent)
+                        Console.WriteLine("ДОКАЧИВАЕМ " + noDownloaded.Count);
+                        foreach (InstanceManifest.FileData file in noDownloaded)
                         {
-                            _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
-                        });
+                            if (cancelToken.IsCancellationRequested) break;
 
-                        while (count < 4 && result.Value2 != DownloadAddonRes.Successful)
-                        {
-                            Thread.Sleep(1000);
-                            Console.WriteLine("REPEAT DOWNLOAD " + addonInfo.id);
-                            addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
-
-                            result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", delegate (int percent)
+                            CurseforgeAddonInfo addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                            if (addonInfo.latestFiles == null && addons.ContainsKey(file.projectID))
                             {
-                                _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
-                            });
+                                addonInfo = addons[file.projectID];
+                            }
 
-                            count++;
-                        }
-
-                        if (result.Value2 != DownloadAddonRes.Successful)
-                        {
-                            Console.WriteLine("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.projectID + " " + result.Value2);
-                            if (addonInfo != null)
+                            var taskArgs = new TaskArgs
                             {
-                                errors.Add(addonInfo.name + ", File id: " + file.fileID);
+                                PercentHandler = delegate (int percent)
+                                {
+                                    _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
+                                },
+                                CancelToken = cancelToken
+                            };
+
+                            int count = 0;
+                            ValuePair<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
+
+                            while (count < 4 && result.Value2 != DownloadAddonRes.Successful && !cancelToken.IsCancellationRequested)
+                            {
+                                Thread.Sleep(1000);
+                                Console.WriteLine("REPEAT DOWNLOAD " + addonInfo.id);
+                                addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                                result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
+
+                                count++;
+                            }
+
+                            if (result.Value2 != DownloadAddonRes.Successful)
+                            {
+                                Console.WriteLine("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.projectID + " " + result.Value2);
+                                if (addonInfo != null)
+                                {
+                                    errors.Add(addonInfo.name + ", File id: " + file.fileID);
+                                }
+                                else
+                                {
+                                    errors.Add("Project Id: " + file.projectID + ", File id: " + file.fileID);
+                                }
+
+                                _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Error);
                             }
                             else
                             {
-                                errors.Add("Project Id: " + file.projectID + ", File id: " + file.fileID);
+                                _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
                             }
 
-                            _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Error);
+                            downloadedCount++;
+                            AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
                         }
-                        else
-                        {
-                            _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
-                        }
-
-                        downloadedCount++;
-                        AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
                     }
+                    
                 }
 
                 if (errors.Count == 0)

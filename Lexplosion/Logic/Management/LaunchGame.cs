@@ -36,7 +36,9 @@ namespace Lexplosion.Logic.Management
 
         private static object loocker = new object();
 
-        public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type)
+        private CancellationToken _updateCancelToken;
+
+        public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type, CancellationToken updateCancelToken)
         {
             classInstance = this;
 
@@ -45,6 +47,8 @@ namespace Lexplosion.Logic.Management
             _settings = instanceSettings;
             _instanceId = instanceId;
             _type = type;
+
+            _updateCancelToken = updateCancelToken;
         }
 
         public static event Action<Player> UserConnected;
@@ -298,13 +302,13 @@ namespace Lexplosion.Logic.Management
             switch (_type)
             {
                 case InstanceSource.Nightworld:
-                    instance = new NightworldInstallManager(_instanceId, onlyBase);
+                    instance = new NightworldInstallManager(_instanceId, onlyBase, _updateCancelToken);
                     break;
                 case InstanceSource.Local:
-                    instance = new LocalInstallManager(_instanceId);
+                    instance = new LocalInstallManager(_instanceId, _updateCancelToken);
                     break;
                 case InstanceSource.Curseforge:
-                    instance = new CurseforgeInstallManager(_instanceId, onlyBase);
+                    instance = new CurseforgeInstallManager(_instanceId, onlyBase, _updateCancelToken);
                     break;
                 default:
                     instance = null;
@@ -316,6 +320,14 @@ namespace Lexplosion.Logic.Management
 
             InstanceInit result = instance.Check(out long releaseIndex, version);
 
+            if (_updateCancelToken.IsCancellationRequested)
+            {
+                return new InitData
+                {
+                    InitResult = InstanceInit.IsCancelled
+                };
+            }
+
             if (result != InstanceInit.Successful)
             {
                 return new InitData
@@ -326,7 +338,7 @@ namespace Lexplosion.Logic.Management
 
             if (_settings.CustomJava == false)
             {
-                using (JavaChecker javaCheck = new JavaChecker(releaseIndex))
+                using (JavaChecker javaCheck = new JavaChecker(releaseIndex, _updateCancelToken))
                 {
                     if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                     {
@@ -353,6 +365,14 @@ namespace Lexplosion.Logic.Management
                             fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
                         });
 
+                        if (_updateCancelToken.IsCancellationRequested)
+                        {
+                            return new InitData
+                            {
+                                InitResult = InstanceInit.IsCancelled
+                            };
+                        }
+
                         // TODO: намутить вызов удачного или неудачного fileDownloadHandler при окончании скачивнаия
                         if (!downloadResult)
                         {
@@ -361,6 +381,14 @@ namespace Lexplosion.Logic.Management
                                 InitResult = InstanceInit.JavaDownloadError
                             };
                         }
+                    }
+
+                    if (_updateCancelToken.IsCancellationRequested)
+                    {
+                        return new InitData
+                        {
+                            InitResult = InstanceInit.IsCancelled
+                        };
                     }
 
                     if (checkResult == JavaChecker.CheckResult.Successful)

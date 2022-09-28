@@ -63,6 +63,7 @@ namespace Lexplosion.Logic.Network
 
         public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, int categoriy, CfSortField sortField, string searchFilter, string gameVersion)
         {
+            Console.WriteLine("GetInstances, sort by " + sortField.ToString());
             if (gameVersion != "")
             {
                 gameVersion = "&gameVersion=" + gameVersion;
@@ -191,7 +192,7 @@ namespace Lexplosion.Logic.Network
         public static List<CurseforgeCategory> GetCategories(CfProjectType type)
         {
             List<CurseforgeCategory> categories = GetApiData<List<CurseforgeCategory>>("https://api.curseforge.com/v1/categories?gameId=432&classId=" + (int)type);
-            categories.Add(new CurseforgeCategory
+            categories.Insert(0, new CurseforgeCategory
             {
                 id = -1,
                 name = "All",
@@ -204,11 +205,11 @@ namespace Lexplosion.Logic.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ValuePair<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, int projectID, int fileID, Action<int> percentHandler)
+        private static ValuePair<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, int projectID, int fileID, TaskArgs taskArgs)
         {
             if (addonType != AddonType.Maps)
             {
-                if (!WithDirectory.InstallFile(fileUrl, fileName, path + folderName, percentHandler))
+                if (!WithDirectory.InstallFile(fileUrl, fileName, path + folderName, taskArgs))
                 {
                     return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                     {
@@ -221,7 +222,7 @@ namespace Lexplosion.Logic.Network
             }
             else
             {
-                if (!WithDirectory.InstallZipContent(fileUrl, fileName, path + folderName, percentHandler))
+                if (!WithDirectory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs))
                 {
 
                     return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
@@ -247,7 +248,7 @@ namespace Lexplosion.Logic.Network
             };
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, Action<int> percentHandler)
+        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, TaskArgs taskArgs)
         {
             //Console.WriteLine("");
             Console.WriteLine("PR ID " + addonInfo.id);
@@ -307,7 +308,7 @@ namespace Lexplosion.Logic.Network
                 }
 
                 // устанавливаем
-                return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, percentHandler);
+                return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, taskArgs);
             }
             //catch
             //{
@@ -318,7 +319,7 @@ namespace Lexplosion.Logic.Network
             //}
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, int fileID, string path, Action<int> percentHandler)
+        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, int fileID, string path, TaskArgs taskArgs)
         {
             //try
             {
@@ -410,7 +411,7 @@ namespace Lexplosion.Logic.Network
                 }
 
                 // устанавливаем
-                return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, percentHandler);
+                return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, taskArgs);
             }
             //catch
             //{
