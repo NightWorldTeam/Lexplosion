@@ -212,7 +212,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             SearchMethod += InstancesPageLoading;
             PaginatorVM.PageChanged += InstancesPageLoading;
 
-            Lexplosion.Run.TaskRun(() => {
+            Lexplosion.Runtime.TaskRun(() => {
                 Categories = PrepareCategories();
                 InstancesPageLoading();
             });
@@ -259,7 +259,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
                     SelectedCurseforgeCategory.id,
-                    SearchTextComfirmed,
+                    searchText,
                     SelectedCfSortBy,
                     gameVersion
                     );
