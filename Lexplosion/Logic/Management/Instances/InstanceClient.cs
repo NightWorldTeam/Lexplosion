@@ -604,7 +604,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Отменяет скачивание сборки.
         /// </summary>
-        public void CancellDownload()
+        public void CancelDownload()
         {
             _cancelTokenSource?.Cancel();
         }

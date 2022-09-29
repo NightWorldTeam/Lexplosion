@@ -272,7 +272,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.CancelDownload:
                     {
-                        //Client.CancelDownload();
+                        Client.CancelDownload();
                         break;
                     }
 
