@@ -12,6 +12,7 @@ using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 
 /*
@@ -70,8 +71,7 @@ namespace Lexplosion
                 {
                     if (proc.Id != CurrentProcess.Id)
                     {
-                        NativeMethods.ShowWindow(proc.MainWindowHandle, 1);
-                        NativeMethods.SetForegroundWindow(proc.MainWindowHandle);
+                        NativeMethods.ShowProcessWindows(proc.MainWindowHandle);
                     }
                 }
 
@@ -92,8 +92,47 @@ namespace Lexplosion
             }
 
             InstanceClient.DefineInstalledInstances();
-
             CommandReceiver.StartCommandServer();
+
+            LaunchGame.GameStartEvent += delegate (string _) //подписываемся на эвент запуска игры
+            {
+                // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам галвное окно
+                if (UserData.GeneralSettings.HiddenMode == true)
+                {
+                    app.Dispatcher.Invoke(delegate ()
+                    {
+                        foreach (Window window in app.Windows)
+                        {
+                            if (window is Gui.Views.Windows.MainWindow)
+                            {
+                                window.Visibility = Visibility.Collapsed;
+                                window.ShowInTaskbar = false;
+                                break;
+                            }
+                        }
+                    });
+                }
+            };
+
+            LaunchGame.GameStopEvent += delegate () //подписываемся на эвент завершения игры
+            {
+                // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
+                if (UserData.GeneralSettings.HiddenMode == true)
+                {
+                    app.Dispatcher.Invoke(delegate ()
+                    {
+                        foreach (Window window in app.Windows)
+                        {
+                            if (window is Gui.Views.Windows.MainWindow)
+                            {
+                                window.Visibility = Visibility.Visible;
+                                window.ShowInTaskbar = true;
+                                break;
+                            }
+                        }
+                    });
+                }
+            };
 
             Thread.Sleep(800);
 
@@ -312,8 +351,7 @@ namespace Lexplosion
                 }  
             }
 
-            NativeMethods.ShowWindow(Runtime.CurrentProcess.MainWindowHandle, 1);
-            NativeMethods.SetForegroundWindow(Runtime.CurrentProcess.MainWindowHandle);
+            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
         }
 
         public static void CloseApp()

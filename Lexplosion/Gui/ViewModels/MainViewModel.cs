@@ -200,8 +200,7 @@ namespace Lexplosion.Gui.ViewModels
                     }
 
                     MainMenuVM.OpenModpackPage(viewModel);
-                    NativeMethods.ShowWindow(Runtime.CurrentProcess.MainWindowHandle, 1);
-                    NativeMethods.SetForegroundWindow(Runtime.CurrentProcess.MainWindowHandle);
+                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
                 }
             };
         }

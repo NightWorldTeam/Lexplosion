@@ -13,10 +13,16 @@ namespace Lexplosion.Tools
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool ShowWindow(IntPtr hWnd, int showWindowCommand);
+        private static extern bool ShowWindow(IntPtr hWnd, int showWindowCommand);
+
+        public static void ShowProcessWindows(IntPtr hWnd)
+        {
+            ShowWindow(hWnd, 1);
+            SetForegroundWindow(hWnd);
+        }
     }
 }

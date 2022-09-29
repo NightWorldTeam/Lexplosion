@@ -284,8 +284,7 @@ namespace Lexplosion.Gui.ViewModels
 
             var authCode = _authentication.Auth(_accountType, "", microsoftData, true);
             PerformAuthCode(authCode);
-            NativeMethods.ShowWindow(Runtime.CurrentProcess.MainWindowHandle, 1);
-            NativeMethods.SetForegroundWindow(Runtime.CurrentProcess.MainWindowHandle);
+            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
         }
 
         private void PerformAuthCode(AuthCode authCode) 
