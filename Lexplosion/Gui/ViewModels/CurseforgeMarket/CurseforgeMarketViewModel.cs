@@ -17,8 +17,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private readonly BaseInstanceData _baseInstanceData;
 
         private int _pageSize = 20;
-        private string _previousSearchKeyWords = string.Empty;
-        private bool _firstLoad = true;
+        private string _previousSearch = string.Empty;
 
         public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, ObservableCollection<InstanceAddon> installedAddons)
         {
@@ -44,6 +43,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         #region Properties
 
         public ObservableCollection<InstanceAddon> InstanceAddons { get; } = new ObservableCollection<InstanceAddon>();
+        public ObservableCollection<DownloadAddonFile> DownloadAddonFiles { get; } = new ObservableCollection<DownloadAddonFile>();
+
 
         #region Navigation
 
@@ -103,6 +104,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                 OnPropertyChanged();
                 if (!_selectedCategory.HasSubCategories)
                     SubCategorySelected = null;
+                SearchMethod?.Invoke(null);
             }
         }
 
@@ -113,11 +115,13 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 _subCategorySelected = value;
                 OnPropertyChanged();
+                SearchMethod?.Invoke(null);
             }
         }
 
         #endregion Categories
 
+        public bool IsDownloadingSomething { get => DownloadAddonFiles.Count != 0; }
 
         #endregion Properties
 
@@ -209,7 +213,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                         }
                     }
 
-                    SelectedCategory = CfCategories[CfCategories.Count - 1];
+                    SelectedCategory = CfCategories[0];
                     InstancePageLoading();
                 });
             });
@@ -236,21 +240,34 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private void InstallAddon(InstanceAddon instanceAddon)
         {
+            DownloadAddonFiles.Add(new DownloadAddonFile(instanceAddon));
+            OnPropertyChanged(nameof(IsDownloadingSomething));
+
             Lexplosion.Runtime.TaskRun(delegate
             {
-                DownloadAddonRes result = instanceAddon.InstallLatestVersion(out Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>> dependenciesResults);
+                var result = instanceAddon.InstallLatestVersion(out Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>> dependenciesResults);
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    /*  */
                     if (result == DownloadAddonRes.Successful)
                     {
                         _instanceAddons.Add(instanceAddon);
                         MainViewModel.ShowToastMessage("Мод успешно установлен. Не за что.", "Название: " + instanceAddon.Name, TimeSpan.FromSeconds(5d));
+                        DownloadAddonFile.Remove(DownloadAddonFiles, instanceAddon);
+                        OnPropertyChanged(nameof(IsDownloadingSomething));
+                    }
+                    else if (result == DownloadAddonRes.IsCanselled) 
+                    {
+                        MainViewModel.ShowToastMessage("Скачивание аддона было отменено.",
+                            "Название аддона: " + instanceAddon.Name, Controls.ToastMessageState.Notification);
+                        DownloadAddonFile.Remove(DownloadAddonFiles, instanceAddon);
+                        OnPropertyChanged(nameof(IsDownloadingSomething));
                     }
                     else
                     {
                         MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод",
                             "Название: " + instanceAddon.Name + ".\nОшибка " + result, Controls.ToastMessageState.Error);
+                        DownloadAddonFile.Remove(DownloadAddonFiles, instanceAddon);
+                        OnPropertyChanged(nameof(IsDownloadingSomething));
                     }
 
                     /* обработка установки зависимых модов */
@@ -279,14 +296,21 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private async void InstancePageLoading(string searchText = "")
         {
             // запускаем заставку загрузки
+            
+
+            if (searchText == _previousSearch && searchText != null)
+            {
+                IsLoaded = true;
+                return;
+            }
+
             IsLoaded = false;
 
-            if (_previousSearchKeyWords == searchText || !_firstLoad)
-                return;
-
             var instances = await Task.Run(() => InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1,
-                (AddonType)(int)_projectType, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText)
+                (AddonType)(int)_projectType, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText == null ? "" : searchText)
             );
+
+            _previousSearch = searchText == null ? "" : searchText;
 
             IsPaginatorVisible = instances.Count == _pageSize;
 

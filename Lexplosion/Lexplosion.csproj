@@ -159,6 +159,7 @@
     <Compile Include="Gui\ViewModels\AuthViewModel.cs" />
     <Compile Include="Gui\ViewModels\CurseforgeMarket\CfCategory.cs" />
     <Compile Include="Gui\ViewModels\CurseforgeMarket\CurseforgeMarketViewModel.cs" />
+    <Compile Include="Gui\ViewModels\CurseforgeMarket\DownloadAddonFile.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryDLCVM.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />
     <Compile Include="Gui\ViewModels\FactoryMenu\ImportViewModel.cs" />

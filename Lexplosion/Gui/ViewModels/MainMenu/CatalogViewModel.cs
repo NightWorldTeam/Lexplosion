@@ -12,8 +12,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
     {
         private const int _pageSize = 10;
         private readonly MainViewModel _mainViewModel;
-        private string _previousSearch = string.Empty;
-        private bool _initSearch = true;
+        private string _previousSearch = null;
 
         #region Properties
 
@@ -51,7 +50,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedInstanceSource = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke("");
+                SearchMethod?.Invoke(null);
             }
         }
 
@@ -91,7 +90,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedCurseforgeCategory = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke("");
+                SearchMethod?.Invoke(null);
             }
         }
 
@@ -106,7 +105,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 _selectedCfSortByString = value;
                 OnPropertyChanged();
                 SelectedCfSortBy = (CfSortField)CfSortToString.IndexOf(value) + 1;
-                SearchMethod?.Invoke("");
+                SearchMethod?.Invoke(null);
             }
         }
 
@@ -118,7 +117,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedVersionIndex = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke("");
+                SearchMethod?.Invoke(null);
             }
         }
 
@@ -217,7 +216,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 CurseforgeApi.GetCategories(CfProjectType.Modpacks)
             );
 
-            _selectedCurseforgeCategory = categories[categories.Count - 1];
+            _selectedCurseforgeCategory = categories[0];
 
             return categories;
         }
@@ -233,23 +232,28 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private void InstancesPageLoading(string searchText = "")
         {
+            if (searchText == _previousSearch && searchText != null)
+            {
+                IsLoaded = true;
+                return;
+            }
+
             IsLoaded = false;
             Lexplosion.Runtime.TaskRun(() =>
             {
-                if (searchText == _previousSearch && !_initSearch)
-                    return;
-
                 var gameVersion = SelectedVersionIndex == 0 ? "" : _mainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
-                Console.WriteLine(SelectedCfSortBy.ToString());
+
                 var instances = InstanceClient.GetOutsideInstances(
                     SelectedInstanceSource,
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
                     SelectedCurseforgeCategory.id,
-                    searchText,
+                    searchText == null ? "" : searchText,
                     SelectedCfSortBy,
                     gameVersion
                     );
+
+                _previousSearch = searchText == null ? "" : searchText;
 
                 if (instances.Count == _pageSize) IsPaginatorVisible = true;
                 else IsPaginatorVisible = false;

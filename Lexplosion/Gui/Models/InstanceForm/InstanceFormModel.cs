@@ -18,7 +18,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public InstanceClient InstanceClient { get; }
         public DownloadModel DownloadModel { get; }
         public LaunchModel LaunchModel { get; }
-        // buttons
         public UpperButton UpperButton { get; set; }
 
 

@@ -350,6 +350,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             }
                         }
                         break;
+                    case InstanceInit.IsCancelled: 
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload();
+                            MainViewModel.ShowToastMessage("Скачивание сборки было успешно отменено.", "Название модпака: " + _instanceFormModel.InstanceClient.Name, Controls.ToastMessageState.Error);
+                            break;
+                        }
                     default:
                         IsDownloadInProgress = false;
                         _instanceFormModel.UpperButton.ChangeFuncDownload();
