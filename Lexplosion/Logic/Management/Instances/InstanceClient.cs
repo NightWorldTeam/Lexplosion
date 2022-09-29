@@ -181,6 +181,7 @@ namespace Lexplosion.Logic.Management.Instances
         public event Action StateChanged;
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
         public event Action DownloadStartedEvent;
+        public event Action DownloadCanselledEvent;
 
         /// <summary>
         /// Базовый конструктор, от него должны наследоваться все остальные
@@ -607,6 +608,7 @@ namespace Lexplosion.Logic.Management.Instances
         public void CancelDownload()
         {
             _cancelTokenSource?.Cancel();
+            DownloadCanselledEvent?.Invoke();
         }
 
         /// <summary>
