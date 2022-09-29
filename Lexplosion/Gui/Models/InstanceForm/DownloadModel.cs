@@ -225,11 +225,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             App.Current.Dispatcher.Invoke(() =>
             {
+                IsFilesDownload = false;
                 switch (result)
                 {
                     case InstanceInit.Successful:
                         {
-                            IsFilesDownload = false;
                             if (_mainViewModel.RunningInstance != null && _mainViewModel.IsInstanceRunning && _mainViewModel.RunningInstance == _instanceFormModel) 
                             {
                                 IsPrepareOnly = true;
@@ -358,6 +358,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             MainViewModel.ShowToastMessage("Unknown Error", de, Controls.ToastMessageState.Error);
                         }
                         break;
+
                 }
 
                 if (!IsPrepareOnly) 

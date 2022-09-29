@@ -98,20 +98,20 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public CfSortField SelectedCfSortBy = CfSortField.Popularity;
 
-        private string _selectedCfSortByString = CfSortToString[(int)CfSortField.Popularity];
+        private string _selectedCfSortByString = CfSortToString[(int)CfSortField.Popularity - 1];
         public string SelectedCfSortByString
         {
             get => _selectedCfSortByString; set
             {
                 _selectedCfSortByString = value;
                 OnPropertyChanged();
-                SelectedCfSortBy = (CfSortField)CfSortToString.IndexOf(value) - 1;
+                SelectedCfSortBy = (CfSortField)CfSortToString.IndexOf(value) + 1;
                 SearchMethod?.Invoke("");
             }
         }
 
 
-        private int _selectedVersionIndex;
+        private int _selectedVersionIndex = 0;
         public int SelectedVersionIndex 
         {
             get => _selectedVersionIndex; set 
@@ -201,7 +201,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             // выбираем первый вариант из списка версий [Все версии]
             Lexplosion.Runtime.TaskRun(() => {
                 Categories = PrepareCategories();
-                SelectedVersionIndex = 0;
                 InstancesPageLoading();
             });
         }
@@ -218,7 +217,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 CurseforgeApi.GetCategories(CfProjectType.Modpacks)
             );
 
-            SelectedCurseforgeCategory = categories[categories.Count - 1];
+            _selectedCurseforgeCategory = categories[categories.Count - 1];
 
             return categories;
         }
@@ -241,7 +240,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     return;
 
                 var gameVersion = SelectedVersionIndex == 0 ? "" : _mainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
-
+                Console.WriteLine(SelectedCfSortBy.ToString());
                 var instances = InstanceClient.GetOutsideInstances(
                     SelectedInstanceSource,
                     _pageSize,
