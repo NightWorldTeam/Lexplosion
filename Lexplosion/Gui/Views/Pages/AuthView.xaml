@@ -228,28 +228,30 @@
 
                             <!--  Password area  -->
                             <StackPanel
-                                Margin="40,50,0,0"
+                                Margin="0,50,0,0"
                                 HorizontalAlignment="Center"
                                 Orientation="Horizontal"
                                 Visibility="Visible">
 
                                 <!--  password box  -->
                                 <Grid Width="145">
-                                    <TextBox
+                                    <!--<TextBox
                                         x:Name="PasswordVisible"
                                         Height="30"
                                         HorizontalContentAlignment="Center"
                                         Style="{StaticResource AuthTextBox}"
                                         Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
-                                        Visibility="Hidden" />
+                                        Visibility="Hidden" />-->
                                     <PasswordBox
+                                        Width="145"
                                         Height="30"
+                                        HorizontalAlignment="Center"
                                         extension:PasswordBox.Attach="True"
                                         extension:PasswordBox.Password="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         Style="{StaticResource CustomPasswordBox}" />
                                 </Grid>
 
-                                <ToggleButton
+                                <!--<ToggleButton
                                     x:Name="ShowPassword"
                                     Grid.Column="2"
                                     Width="20"
@@ -257,7 +259,7 @@
                                     Margin="10"
                                     HorizontalAlignment="Left"
                                     IsChecked="True"
-                                    Style="{StaticResource SPS}" />
+                                    Style="{StaticResource SPS}" />-->
                                 <!--  Click="ShowPassword_Click"  -->
                             </StackPanel>
 

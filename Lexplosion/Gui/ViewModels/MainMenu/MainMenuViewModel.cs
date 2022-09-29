@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Commands;
+﻿using Lexplosion.Global;
+using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
 using Lexplosion.Tools;
@@ -144,6 +145,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private List<Tab<VMBase>> InitializeMultiplayerTabs() 
         {
+            VMBase curtains = new DevСurtainViewModel() { Message = "Функции нашей сетевой игры доступны только при использовании аккаунта NightWorld" };
+
             return new List<Tab<VMBase>>()
             {
                 //new Tab 
@@ -154,17 +157,17 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("general"),
-                    Content = _generalMultiplayerViewModel
+                    Content =  UserData.User.AccountType == AccountType.NightWorld ? _generalMultiplayerViewModel : curtains
                 },
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("friends"),
-                    Content = _friendsTabViewModel
+                    Content = UserData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
                 },
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("channels"),
-                    Content = _channelTabViewModel
+                    Content = UserData.User.AccountType == AccountType.NightWorld ?_channelTabViewModel : curtains
                 }
             };
         }

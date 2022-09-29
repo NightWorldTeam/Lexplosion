@@ -14,9 +14,11 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         CornerRadius="5">
+
                         <Border.Background>
                             <SolidColorBrush Color="#131313" />
                         </Border.Background>
+
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -62,9 +64,9 @@
 
                             <Border Grid.Row="1">
 
-                                <Border.Background>
+                                <!--<Border.Background>
                                     <SolidColorBrush Opacity="0.9" Color="{DynamicResource ActivityColor}" />
-                                </Border.Background>
+                                </Border.Background>-->
 
                                 <TextBlock
                                     Width="255"

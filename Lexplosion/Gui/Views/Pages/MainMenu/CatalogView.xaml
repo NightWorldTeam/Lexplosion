@@ -98,18 +98,23 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type controls:DropdownMenu}">
                                             <Grid>
-                                                <CheckBox x:Name="PART_Toggle" IsChecked="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                                <CheckBox
+                                                    x:Name="PART_Toggle"
+                                                    Width="40"
+                                                    Height="40"
+                                                    IsChecked="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                                     <CheckBox.Template>
                                                         <ControlTemplate TargetType="{x:Type CheckBox}">
                                                             <Border
                                                                 x:Name="Border"
                                                                 Padding="5"
-                                                                Background="{DynamicResource SepSolidColorBrush}"
+                                                                Background="#131313"
                                                                 CornerRadius="5">
-                                                                <Viewbox Width="23">
+                                                                <Viewbox
+                                                                    Width="20"
+                                                                    Height="20"
+                                                                    Stretch="Fill">
                                                                     <Path
-                                                                        HorizontalAlignment="Center"
-                                                                        VerticalAlignment="Center"
                                                                         extension:PathExtension.StringData="{StaticResource Filter}"
                                                                         Fill="White"
                                                                         Stretch="Fill" />
@@ -256,7 +261,9 @@
                         Grid.Column="4"
                         Margin="10,3,0,0"
                         VerticalAlignment="Top"
-                        SelectedIndex="{Binding SelectedSourceIndex}">
+                        Background="#131313"
+                        SelectedIndex="{Binding SelectedSourceIndex}"
+                        Style="{StaticResource DarkCombobox}">
                         <ComboBoxItem>NightWorld</ComboBoxItem>
                         <ComboBoxItem>CurseForge</ComboBoxItem>
                     </ComboBox>

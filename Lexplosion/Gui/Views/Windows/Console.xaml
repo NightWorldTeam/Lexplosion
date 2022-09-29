@@ -65,9 +65,16 @@
                 <Border
                     Margin="10,10,10,13"
                     Background="{DynamicResource HeaderSolidColorBrush}"
+                    BorderBrush="{DynamicResource SepSolidColorBrush}"
+                    BorderThickness="2"
                     CornerRadius="5">
                     <ScrollViewer Margin="0,2,0,0">
-                        <RichTextBox />
+                        <RichTextBox
+                            x:Name="ConsoleOutput"
+                            Background="{DynamicResource PrimarySolidColorBrush}"
+                            BorderThickness="0"
+                            Foreground="White"
+                            IsReadOnly="True" />
                     </ScrollViewer>
                 </Border>
             </Grid>

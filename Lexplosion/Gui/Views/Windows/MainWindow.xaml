@@ -374,7 +374,8 @@
                     Command=""
                     Content="Logout"
                     Foreground="#fff"
-                    Style="{StaticResource LogoutButton}">
+                    Style="{StaticResource LogoutButton}"
+                    Visibility="Collapsed">
                     <Button.ToolTip>
                         <ToolTip
                             Background="Black"

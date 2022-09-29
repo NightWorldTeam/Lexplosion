@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -143,7 +144,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _hideCommand ?? (_hideCommand = new RelayCommand(obj =>
             {
-                Application.Current.MainWindow.WindowState = WindowState.Minimized;
+                System.Windows.Application.Current.MainWindow.WindowState = WindowState.Minimized;
             }));
         }
 
@@ -160,8 +161,6 @@ namespace Lexplosion.Gui.ViewModels
             Model = new MainModel();
 
             LibraryInstanceLoading();
-
-            MainMenuVM = new MainMenuViewModel(this);
 
             NavigationStore.CurrentViewModel = new AuthViewModel(this);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
@@ -225,13 +224,10 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         private void LibraryInstanceLoading()
         {
-            Console.WriteLine("\n-----Library Instance Loading-----");
             foreach (var instanceClient in InstanceClient.GetInstalledInstances())
             {
-                Console.WriteLine("Instance [" + instanceClient.Name + "] loaded.");
                 Model.LibraryInstances.Add(new InstanceFormViewModel(this, instanceClient));
             }
-            Console.WriteLine("\n");
         }
 
         /// <summary>
@@ -262,9 +258,14 @@ namespace Lexplosion.Gui.ViewModels
                 releaseOnlyVersions.Clear();
                 allVersions.Clear();
             });
-
         }
 
+        public MainMenuViewModel InitMainMenuViewModel(MainMenuViewModel mainMenuViewModel) 
+        {
+            if (MainMenuVM == null)
+                return MainMenuVM = mainMenuViewModel;
+            else return MainMenuVM;
+        }
 
         #endregion Private Methods
     }

@@ -16,6 +16,8 @@
             FontSize="25"
             Foreground="White"
             Opacity="0.8"
-            Text="{Binding Message}" />
+            Text="{Binding Message}"
+            TextAlignment="Center"
+            TextWrapping="WrapWithOverflow" />
     </Grid>
 </UserControl>

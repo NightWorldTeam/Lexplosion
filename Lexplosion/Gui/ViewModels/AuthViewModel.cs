@@ -202,7 +202,7 @@ namespace Lexplosion.Gui.ViewModels
             _accountTypeSelectedIndex = (int)LoadSavedAccount(null);
 
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
-                MainViewModel.NavigationStore, () => viewModel.MainMenuVM);
+                MainViewModel.NavigationStore, () => viewModel.MainMenuVM ?? viewModel.InitMainMenuViewModel(new MainMenuViewModel(viewModel)));
 
             CommandReceiver.MicrosoftAuthPassed += PreformAuthMicrosoft;
         }
