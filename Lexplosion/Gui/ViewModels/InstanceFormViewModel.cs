@@ -2,6 +2,7 @@
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 
@@ -272,7 +273,10 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.CancelDownload:
                     {
+                        Model.OverviewField = ResourceGetter.GetString("downloadCancelling");
+                        Model.DownloadModel.HasProcents = false;
                         Client.CancelDownload();
+                        Model.OverviewField = Model.InstanceClient.Summary;
                         break;
                     }
 

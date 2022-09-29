@@ -254,7 +254,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             string files = "Не удалось скачать следующие файлы:\n";
-                            foreach (var de in downloadErrors)
+                            foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 files += de + "\n";
                             }
@@ -266,7 +266,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors)
+                            foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 MainViewModel.ShowToastMessage("Nightworld Id Error", de, Controls.ToastMessageState.Error);
                             }
@@ -277,7 +277,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             if (downloadErrors != null) 
-                                foreach (var de in downloadErrors)
+                                foreach (var de in downloadErrors ?? new List<string>())
                                 {
                                     MainViewModel.ShowToastMessage("Curseforge Id Error", de, Controls.ToastMessageState.Error);
                                 }
@@ -294,7 +294,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors)
+                            foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 MainViewModel.ShowToastMessage("Guard Error", de, Controls.ToastMessageState.Error);
                             }
@@ -304,7 +304,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors)
+                            foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 MainViewModel.ShowToastMessage("Version Error", de, Controls.ToastMessageState.Error);
                             }
@@ -314,7 +314,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors)
+                            foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 MainViewModel.ShowToastMessage("Forge Version Error", de, Controls.ToastMessageState.Error);
                             }
@@ -324,7 +324,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors)
+                            foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 MainViewModel.ShowToastMessage("Game Path Error", de, Controls.ToastMessageState.Error);
                             }
@@ -334,7 +334,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors)
+                            foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 MainViewModel.ShowToastMessage("Manifest Error", de, Controls.ToastMessageState.Error);
                             }
@@ -344,7 +344,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors)
+                            foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 MainViewModel.ShowToastMessage("Java Download Error", de, Controls.ToastMessageState.Error);
                             }
@@ -353,7 +353,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     default:
                         IsDownloadInProgress = false;
                         _instanceFormModel.UpperButton.ChangeFuncDownload();
-                        foreach (var de in downloadErrors)
+                        foreach (var de in downloadErrors ?? new List<string>())
                         {
                             MainViewModel.ShowToastMessage("Unknown Error", de, Controls.ToastMessageState.Error);
                         }

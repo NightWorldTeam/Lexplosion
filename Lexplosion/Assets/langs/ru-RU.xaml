@@ -207,4 +207,5 @@
     <s:String x:Key="gameRunning">Идёт запуск игры...</s:String>
     <s:String x:Key="allVersions">Все версии</s:String>
     <s:String x:Key="search">Поиск</s:String>
+    <s:String x:Key="downloadCancelling">Отмена скачивания...</s:String>
 </ResourceDictionary>
