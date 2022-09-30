@@ -215,9 +215,24 @@
 
                         <!--  Auth fields [All except Microsoft OAuth2]  -->
                         <StackPanel Margin="0,60,0,0" Visibility="{Binding IsMicrosoftAccountManager, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+
+                            <TextBlock
+                                Width="220"
+                                Margin="0,0,0,30"
+                                HorizontalAlignment="Center"
+                                FontFamily="{DynamicResource FuturaBookC}"
+                                FontSize="16"
+                                Foreground="White"
+                                Opacity="0.9"
+                                Text="Для игры без аккаунта введите желаемый ник в поле логин."
+                                TextAlignment="Center"
+                                TextWrapping="WrapWithOverflow"
+                                Visibility="{Binding NoAccountAuth, Converter={StaticResource ConvertBoolToVisibility}}" />
+
                             <controls:PlaceholderTextBox
                                 Width="145"
                                 Height="30"
+                                Margin="0,0,0,50"
                                 HorizontalAlignment="Center"
                                 HorizontalContentAlignment="Center"
                                 IsEnabled="True"
@@ -228,10 +243,10 @@
 
                             <!--  Password area  -->
                             <StackPanel
-                                Margin="0,50,0,0"
+                                Margin="0,0,0,23"
                                 HorizontalAlignment="Center"
                                 Orientation="Horizontal"
-                                Visibility="Visible">
+                                Visibility="{Binding NoAccountAuth, Converter={StaticResource NegativeConvertBoolToVisibility}}">
 
                                 <!--  password box  -->
                                 <Grid Width="145">
@@ -266,7 +281,7 @@
                             <!--  Save AuthData checkBox  -->
                             <CheckBox
                                 Height="Auto"
-                                Margin="0,23,0,0"
+                                Margin="0,0,0,0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Content="{DynamicResource saveMe}"

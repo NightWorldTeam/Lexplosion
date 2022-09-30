@@ -256,7 +256,8 @@
                     x:Name="StatusButton"
                     Margin="11"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center"
+                    IsEnabled="{Binding UserProfile.IsNightWorldAccount, Source={StaticResource MainVM}}">
                     <ToggleButton.Template>
                         <ControlTemplate TargetType="{x:Type ToggleButton}">
                             <Grid>

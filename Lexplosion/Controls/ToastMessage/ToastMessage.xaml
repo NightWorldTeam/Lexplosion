@@ -16,7 +16,7 @@
                         CornerRadius="5">
 
                         <Border.Background>
-                            <SolidColorBrush Color="#131313" />
+                            <SolidColorBrush Color="{DynamicResource ActivityColor}" />
                         </Border.Background>
 
                         <Grid>
@@ -39,7 +39,8 @@
                                         Background="Transparent"
                                         FontWeight="Bold"
                                         Foreground="White"
-                                        Text="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        Text="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}"
+                                        TextWrapping="WrapWithOverflow" />
 
                                     <Button
                                         Width="25"

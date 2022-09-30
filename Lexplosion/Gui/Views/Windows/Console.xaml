@@ -74,7 +74,29 @@
                             Background="{DynamicResource PrimarySolidColorBrush}"
                             BorderThickness="0"
                             Foreground="White"
-                            IsReadOnly="True" />
+                            IsReadOnly="True">
+                            <FlowDocument>
+                                <Paragraph>
+                                    <Run Foreground="Red" FontSize="14">
+                                        <Run.Background>
+                                            <SolidColorBrush Opacity="0.1" Color="rED" />
+                                        </Run.Background>
+                                        [11:00:100 Error] Украина сегодня подаёт заявку на вступление в ускоренном порядке в НАТО — Зеленский
+                                    </Run>
+                                    <LineBreak/>
+                                    <Run Foreground="Orange" FontSize="14">
+                                        <Run.Background>
+                                            <SolidColorBrush Opacity="0.1" Color="Orange" />
+                                        </Run.Background>
+                                        [11:00:100 WARN] Мир вступил в период революционных трансформаций.
+                                    </Run>
+                                    <LineBreak/>
+                                    <Run Foreground="LightGray" FontSize="14">
+                                        [11:00:100 INFO] Рынок акций пошел  в рост после выступления Путина, индекс Мосбиржи превысил 2000 пунктов.
+                                    </Run>
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
                     </ScrollViewer>
                 </Border>
             </Grid>

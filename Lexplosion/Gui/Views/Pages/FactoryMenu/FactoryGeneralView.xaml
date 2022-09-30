@@ -158,13 +158,13 @@
                                     SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
 
-                            <StackPanel Margin="0,15,0,0">
-                                <!--<CheckBox Content="{DynamicResource installOptifine}" />-->
+                            <!--<StackPanel Margin="0,15,0,0">
+                                --><!--<CheckBox Content="{DynamicResource installOptifine}" />--><!--
                                 <CheckBox
                                     Margin="0,2,0,0"
                                     Content="{DynamicResource installSodiumIris}"
                                     IsChecked="{Binding HasSodiumInstall}" />
-                            </StackPanel>
+                            </StackPanel>-->
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

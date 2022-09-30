@@ -44,6 +44,16 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+        private bool _isNightWorldAccount;
+        public bool IsNightWorldAccount
+        {
+            get => _isNightWorldAccount; set
+            {
+                _isNightWorldAccount = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand ChangeStatusCommand
         {
             get => new RelayCommand(obj =>

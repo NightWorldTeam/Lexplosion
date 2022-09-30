@@ -18,6 +18,7 @@ namespace Lexplosion.Gui.ViewModels
 
         #region Properties
 
+        public bool NoAccountAuth { get => _accountType == AccountType.NoAuth; }
 
         private bool _isMicrosoftAccountManager = false;
         public bool IsMicrosoftAccountManager 
@@ -85,7 +86,6 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
-
                 if (_accountTypeSelectedIndex == 3) 
                 {
                     LoadSavedAccount(AccountType.Microsoft);
@@ -94,6 +94,7 @@ namespace Lexplosion.Gui.ViewModels
                     else FollowToMicrosoft();
                 }
                 LoadSavedAccount((AccountType)_accountTypeSelectedIndex);
+                OnPropertyChanged(nameof(NoAccountAuth));
             }
         }
 
@@ -153,13 +154,17 @@ namespace Lexplosion.Gui.ViewModels
             {
                 if (!IsAuthing)
                 {
-                    if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password))
+                    if (_accountType == AccountType.NoAuth && !string.IsNullOrEmpty(Login))
+                    {
+                        Authorization();
+                    }
+                    else if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password))
                     {
                         Authorization();
                     }
                     else 
                     {
-                        MainViewModel.ShowToastMessage("Заполните логин и пароль!", "Алло! А кто будет данными заполять?", Controls.ToastMessageState.Error);
+                        MainViewModel.ShowToastMessage("Заполните логин и пароль!", "Алло! А кто будет данными заполять? :)", Controls.ToastMessageState.Error);
                     }
                 }
             }));
@@ -298,6 +303,7 @@ namespace Lexplosion.Gui.ViewModels
 
                         _mainViewModel.UserProfile.Nickname = UserData.User.Login;
                         _mainViewModel.UserProfile.IsAuthorized = true;
+                        _mainViewModel.UserProfile.IsNightWorldAccount = _accountType == AccountType.NightWorld;
 
                         NavigationCommand.Execute(null);
                         
@@ -307,15 +313,20 @@ namespace Lexplosion.Gui.ViewModels
                         break;
                     }
                 case AuthCode.DataError:
-                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    MainViewModel.ShowToastMessage("Ошибка авторизации!", "Неверный логин или пароль.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     break;
                 case AuthCode.NoConnect:
-                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    MainViewModel.ShowToastMessage("Ошибка авторизации!", "Нет соединения с сервером.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     break;
                 case AuthCode.TokenError:
-                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером!", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    MainViewModel.ShowToastMessage("Ошибка авторизации!", "Ошибка с токеном.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     FollowToMicrosoft();
                     break;
+                case AuthCode.SessionExpired:
+                    {
+                        MainViewModel.ShowToastMessage("Ошибка авторизации!", "Ошмбка сессии. Попробуйте переавторизировать.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                        break;
+                    }
                 default:
                     MainViewModel.ShowToastMessage("Ошибка. Что-то не так", authCode.ToString(), TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     break;

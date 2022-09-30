@@ -344,10 +344,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors ?? new List<string>())
-                            {
-                                MainViewModel.ShowToastMessage("Java Download Error", de, Controls.ToastMessageState.Error);
-                            }
+                            MainViewModel.ShowToastMessage("Java Download Error", "Попробуйте поставить свой путь до джавы в настройках.", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.IsCancelled: 
@@ -385,7 +382,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public void CancelInstanceDownload() 
         {
-            
+            _instanceFormModel.OverviewField = ResourceGetter.GetString("downloadCancelling");
+            _instanceFormModel.DownloadModel.HasProcents = false;
+            _instanceFormModel.InstanceClient.DownloadCanselledEvent += () =>
+            {
+                _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
+            };
+            _instanceFormModel.InstanceClient.CancelDownload();
         }
 
         #endregion Public & Protected Methods

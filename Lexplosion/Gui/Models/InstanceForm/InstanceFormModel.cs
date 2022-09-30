@@ -157,7 +157,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     );
                 }
 
-                ObservableCollectionExtensions.ObservableColletionSort(LowerButtons);
+                //ObservableCollectionExtensions.ObservableColletionSort(LowerButtons);
             });
         }
 
