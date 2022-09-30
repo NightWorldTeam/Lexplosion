@@ -31,7 +31,17 @@ namespace Lexplosion.Logic.Management
         private bool removeImportantTaskMark = true;
         private object removeImportantTaskLocker = new object();
 
+        /// <summary>
+        /// Выполняется при запуске процесса игры
+        /// </summary>
         public static event Action<string> GameStartEvent;
+        /// <summary>
+        /// Выполняется после GameStartEvent, когда у майкнрафт появляется окно.
+        /// </summary>
+        public static event Action GameStartedEvent;
+        /// <summary>
+        /// Выполняется при завершении процесса игры
+        /// </summary>
         public static event Action GameStopEvent;
 
         private static object loocker = new object();
@@ -161,7 +171,6 @@ namespace Lexplosion.Logic.Management
                 });
             }
 
-            bool launcherVisible = true;
             bool gameVisible = false;
 
             try
@@ -213,7 +222,7 @@ namespace Lexplosion.Logic.Management
                             gameGateway?.StopWork();
                             gameGateway = null;
                         }
-                        StateChanged?.Invoke(OnlineGameStatus.None, "");
+                        //StateChanged?.Invoke(OnlineGameStatus.None, "");
                     }
                     catch { }
 
@@ -238,11 +247,6 @@ namespace Lexplosion.Logic.Management
                         });
                     }
 
-                    if (!launcherVisible)
-                    {
-                        //App.Current.Dispatcher.Invoke(delegate { MainWindow.Obj.Show(); });
-                    }
-
                     GameExited(_instanceId);
                 };
 
@@ -261,12 +265,7 @@ namespace Lexplosion.Logic.Management
                             if (GuiIsExists(process.Id))
                             {
                                 ComplitedLaunch(_instanceId, true);
-
-                                if (_settings.HiddenMode == true)
-                                {
-                                    //MainWindow.Obj.Dispatcher.Invoke(delegate { MainWindow.Obj.Hide(); });
-                                    launcherVisible = false;
-                                }
+                                GameStartedEvent?.Invoke();
 
                                 gameVisible = true;
                                 break;

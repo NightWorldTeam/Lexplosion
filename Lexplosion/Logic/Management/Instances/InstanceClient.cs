@@ -921,6 +921,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
             UpdateAvailable = false;
             InLibrary = false;
+            IsInstalled = false;
             SaveInstalledInstancesList();
         }
 

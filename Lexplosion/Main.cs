@@ -94,7 +94,7 @@ namespace Lexplosion
             InstanceClient.DefineInstalledInstances();
             CommandReceiver.StartCommandServer();
 
-            LaunchGame.GameStartEvent += delegate (string _) //подписываемся на эвент запуска игры
+            LaunchGame.GameStartedEvent += delegate () //подписываемся на эвент запуска игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам галвное окно
                 if (UserData.GeneralSettings.HiddenMode == true)
@@ -117,21 +117,7 @@ namespace Lexplosion
             LaunchGame.GameStopEvent += delegate () //подписываемся на эвент завершения игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
-                if (UserData.GeneralSettings.HiddenMode == true)
-                {
-                    app.Dispatcher.Invoke(delegate ()
-                    {
-                        foreach (Window window in app.Windows)
-                        {
-                            if (window is Gui.Views.Windows.MainWindow)
-                            {
-                                window.Visibility = Visibility.Visible;
-                                window.ShowInTaskbar = true;
-                                break;
-                            }
-                        }
-                    });
-                }
+                if (UserData.GeneralSettings.HiddenMode == true) app.Dispatcher.Invoke(MakeVisible);
             };
 
             Thread.Sleep(800);
@@ -340,6 +326,18 @@ namespace Lexplosion
         private static bool _exitIsCanceled = false;
         private static bool _inExited = false;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void MakeVisible()
+        {
+            foreach (Window window in app.Windows)
+            {
+                window.Visibility = Visibility.Visible;
+                window.ShowInTaskbar = true;
+            }
+
+            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+        }
+
         public static void ShowApp()
         {
             lock (locker)
@@ -351,7 +349,7 @@ namespace Lexplosion
                 }  
             }
 
-            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+            MakeVisible();
         }
 
         public static void CloseApp()
@@ -390,13 +388,8 @@ namespace Lexplosion
                 }
 
                 _exitIsCanceled = false;
-                foreach (Window window in app.Windows)
-                {
-                    window.Visibility = Visibility.Visible;
-                    window.ShowInTaskbar = true;
-                }
-
                 _inExited = false;
+
                 return;
             }
 
