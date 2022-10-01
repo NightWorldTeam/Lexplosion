@@ -11,6 +11,7 @@ using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Gui;
+using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management;
@@ -27,10 +28,12 @@ namespace Lexplosion
     static class Runtime
     {
         private static App app = new App();
+        private static SplashWindow _splashWindow;
 
         public static Process CurrentProcess { get; private set; }
 
         public static event Action ExitEvent;
+
 
         [STAThread]
         static void Main()
@@ -40,9 +43,9 @@ namespace Lexplosion
             Thread thread = new Thread(InitializedSystem);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-            var splashWindow = new Lexplosion.Gui.Views.Windows.SplashWindow();
-            splashWindow.ChangeLoadingBoardPlaceholder();
-            app.Run(splashWindow);
+            _splashWindow = new SplashWindow();
+            _splashWindow.ChangeLoadingBoardPlaceholder();
+            app.Run(_splashWindow);
         }
 
         private static void InitializedSystem()
@@ -90,7 +93,10 @@ namespace Lexplosion
 
             if (ToServer.CheckLauncherUpdates())
             {
-                // TODO: при отсуствии коннекта с сервером тут лаунчер повиснет на секунд 30
+                app.Dispatcher.Invoke(() =>
+                {
+                    _splashWindow.ChangeLoadingBoardPlaceholder(true);
+                });
                 LauncherUpdate();
             }
 
@@ -146,13 +152,13 @@ namespace Lexplosion
                 //};
                 //test.Show();
             });
+
+            _splashWindow = null;
         }
 
         private static void LauncherUpdate()
         {
-            MessageBox.Show("Лаунчер нуждается в обновлении! Для продолжения нажмите 'ОК'");
-
-            try
+            //try
             {
                 int upgradeToolVersion = Int32.Parse(ToServer.HttpPost(LaunсherSettings.URL.LauncherParts + "upgradeToolVersion.html"));
                 string gamePath = UserData.GeneralSettings.GamePath;
@@ -163,35 +169,47 @@ namespace Lexplosion
                     if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(gamePath + "/UpgradeTool.exe"))
                     {
                         File.Delete(gamePath + "/UpgradeTool.exe");
-                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe", gamePath + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?3", gamePath + "/UpgradeTool.exe");
                         DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
 
                     }
                     else if (!File.Exists(gamePath + "/UpgradeTool.exe"))
                     {
-                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe", gamePath + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?3", gamePath + "/UpgradeTool.exe");
                         DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
                     }
 
                 }
 
+                string arguments = null;
+
+                app.Dispatcher.Invoke(() =>
+                {
+                    arguments =
+                    Assembly.GetExecutingAssembly().Location + " " +
+                    LaunсherSettings.URL.LauncherParts + "Lexplosion.exe" + " " +
+                    Process.GetCurrentProcess().ProcessName + " " +
+                    Convert.ToInt32(_splashWindow.Left) + " " +
+                    Convert.ToInt32(_splashWindow.Top);
+                });
+
+                System.Console.WriteLine(arguments);
+
                 // запуск UpgradeTool.exe
                 Process proc = new Process();
                 proc.StartInfo.FileName = gamePath + "/UpgradeTool.exe";
-                proc.StartInfo.Arguments = Assembly.GetExecutingAssembly().Location + " " + LaunсherSettings.URL.LauncherParts + "Lexplosion.exe" + " " + Process.GetCurrentProcess().ProcessName;
-                proc.StartInfo.CreateNoWindow = true;
-                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.Arguments = arguments;
                 proc.Start();
             }
-            catch
-            {
-                MessageBox.Show("Не удалось обновить лаунчер!");
-            }
+            //catch
+            //{
+            //    MessageBox.Show("Не удалось обновить лаунчер!");
+            //}
         }
 
         private static byte[] UnzipBytesArray(byte[] zipBytes)
         {
-            Console.WriteLine("UnzipBytesArray");
+            System.Console.WriteLine("UnzipBytesArray");
             using (Stream archivedBytes = new MemoryStream(zipBytes))
             {
                 using (var zip = new ZipArchive(archivedBytes, ZipArchiveMode.Read))
@@ -211,7 +229,7 @@ namespace Lexplosion
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            Console.WriteLine("DLL LOAD " + string.Join(", ", args.Name));
+            System.Console.WriteLine("DLL LOAD " + string.Join(", ", args.Name));
             if (args.Name.Contains("Newtonsoft.Json"))
             {
                 return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson_zip));
