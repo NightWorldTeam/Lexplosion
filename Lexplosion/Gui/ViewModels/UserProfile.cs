@@ -4,6 +4,8 @@ namespace Lexplosion.Gui.ViewModels
 {
     public sealed class UserProfile : VMBase
     {
+        public event Action AuthorizationSuccessful;
+
         /// <summary>
         /// Данное свойство содержить информации - о том показан ли InfoBar.
         /// </summary>
@@ -50,6 +52,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _isNightWorldAccount; set
             {
                 _isNightWorldAccount = value;
+                AuthorizationSuccessful?.Invoke();
                 OnPropertyChanged();
             }
         }
@@ -66,6 +69,11 @@ namespace Lexplosion.Gui.ViewModels
                 Enum.TryParse((string)obj, out newStatus);
                 Global.UserData.User.ChangeBaseStatus(newStatus);
             });
+        }
+
+        public UserProfile(Action action)
+        {
+            AuthorizationSuccessful += action;
         }
     }
 }

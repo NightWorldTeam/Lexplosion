@@ -114,7 +114,7 @@ namespace Lexplosion.Gui.ViewModels
         public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
         public ExportViewModel ExportViewModel { get; set; }
         public LoadingBoard LoadingBoard { get; } = new LoadingBoard();
-        public UserProfile UserProfile { get; } = new UserProfile();
+        public UserProfile UserProfile { get; }
         public ModalWindowViewModel ModalWindowVM { get; } = new ModalWindowViewModel();
 
         public DownloadManagerViewModel DownloadManager;
@@ -162,12 +162,12 @@ namespace Lexplosion.Gui.ViewModels
             PreLoadGameVersions();
 
             Model = new MainModel();
-
+            UserProfile = new UserProfile(InitTrayComponents);
             LibraryInstanceLoading();
 
             NavigationStore.CurrentViewModel = new AuthViewModel(this);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
-
+            
             ExportViewModel = new ExportViewModel(this);
 
             DownloadManager = new DownloadManagerViewModel(this);
@@ -219,6 +219,7 @@ namespace Lexplosion.Gui.ViewModels
 
         private void InitTrayComponents() 
         {
+            TrayComponents.Clear();
             TrayComponents.Add(new TrayButton(0, "Развернуть окно", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = false });
             TrayComponents.Add(new TrayButton(1, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
             TrayComponents.Add(new TrayButton(2, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), Runtime.GoToSupport) { IsEnable = true });

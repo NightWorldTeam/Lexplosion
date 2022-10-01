@@ -1,13 +1,8 @@
-﻿using Lexplosion.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Lexplosion.Gui
 {
-    public static class Constants
+    public class Constants
     {
         public const string VKGroupUrl = @"https://vk.com/nightworld_offical";
         public const string DiscordServerInviteUrl = "https://discord.gg/FfSWhMWxsj";

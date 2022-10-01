@@ -2,14 +2,22 @@
 
 namespace Lexplosion.Gui.TrayMenu
 {
-    public abstract class TrayCompontent : IComparable
+    public abstract class TrayCompontent : VMBase, IComparable
     {
         protected int _id;
-        
+
         /// <summary>
         /// Если true, то компонент Трея не будет виден и занимать место.
         /// </summary>
-        public bool IsEnable { get; set; }
+        private bool _isEnable;
+        public bool IsEnable 
+        { 
+            get => _isEnable; set 
+            {
+                _isEnable = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int CompareTo(object obj)
         {
