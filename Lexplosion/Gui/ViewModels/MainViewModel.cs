@@ -4,6 +4,7 @@ using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
+using Lexplosion.Gui.TrayMenu;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
@@ -12,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Lexplosion.Logic.Management;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -118,6 +120,8 @@ namespace Lexplosion.Gui.ViewModels
         public DownloadManagerViewModel DownloadManager;
 
 
+        public ObservableCollection<TrayCompontent> TrayComponents { get; } = new ObservableCollection<TrayCompontent>();
+
         #endregion Properties
 
 
@@ -167,6 +171,8 @@ namespace Lexplosion.Gui.ViewModels
             ExportViewModel = new ExportViewModel(this);
 
             DownloadManager = new DownloadManagerViewModel(this);
+
+            InitTrayComponents();
         }
 
 
@@ -210,6 +216,14 @@ namespace Lexplosion.Gui.ViewModels
 
         #region Private Methods
 
+
+        private void InitTrayComponents() 
+        {
+            TrayComponents.Add(new TrayButton(0, "Развернуть окно", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = false });
+            TrayComponents.Add(new TrayButton(1, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+            TrayComponents.Add(new TrayButton(2, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), Runtime.GoToSupport) { IsEnable = true });
+            TrayComponents.Add(new TrayButton(3, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.CloseApp) { IsEnable = true });
+        } 
 
         // обновляем свойство currentviewmodel
         private void OnCurrentViewModelChanged()

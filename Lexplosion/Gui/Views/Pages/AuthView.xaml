@@ -350,7 +350,6 @@
                                                 FontFamily="{DynamicResource FuturaBookC}"
                                                 FontSize="16"
                                                 Foreground="White"
-                                                Loaded="NicknameTextBlock_Loaded"
                                                 Text="{Binding Login}" />
                                         </Grid>
 

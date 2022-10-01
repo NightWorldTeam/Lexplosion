@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui
 {
-    public class Constants
+    public static class Constants
     {
+        public const string VKGroupUrl = @"https://vk.com/nightworld_offical";
+        public const string DiscordServerInviteUrl = "https://discord.gg/FfSWhMWxsj";
+        public const string BoostyUrl = "";
+        public const string NightWorldOfficalWebsiteUrl = "https://night-world.org/";
+
         public static string[] ScreenResolutions { get; } = new string[20]
         {
             "1920x1080", "1768x992", "1680x1050",  "1600x1024", "1600x900", "1440x900", "1280x1024",

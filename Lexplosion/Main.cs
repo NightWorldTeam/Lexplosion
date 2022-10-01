@@ -14,6 +14,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Gui;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -136,12 +137,12 @@ namespace Lexplosion
                 ((Gui.Views.Windows.SplashWindow)app.MainWindow).SmoothClosing();
                 app.MainWindow = mainWindow;
 
-                var test = new Gui.Views.Windows.Console()
-                {
-                    Left = app.MainWindow.Left - 322,
-                    Top = app.MainWindow.Top - 89
-                };
-                test.Show();
+                //var test = new Gui.Views.Windows.Console()
+                //{
+                //    Left = app.MainWindow.Left - 322,
+                //    Top = app.MainWindow.Top - 89
+                //};
+                //test.Show();
             });
         }
 
@@ -410,5 +411,15 @@ namespace Lexplosion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void TaskRun(ThreadStart threadFunc) => new Thread(threadFunc).Start();
+
+        public static void GoToSupport() 
+        {
+            try
+            {
+                Process.Start(Constants.VKGroupUrl);
+            }
+            catch 
+            { }
+        }
     }
 }

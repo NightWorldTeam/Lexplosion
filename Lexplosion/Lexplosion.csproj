@@ -188,6 +188,8 @@
     <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\OverviewViewModel.cs" />
     <Compile Include="Gui\ViewModels\TabMenuViewModel.cs" />
+    <Compile Include="Gui\TrayMenu\TrayCompontent.cs" />
+    <Compile Include="Gui\TrayMenu\TrayButton.cs" />
     <Compile Include="Gui\ViewModels\UserProfile.cs" />
     <Compile Include="Gui\Views\CustomControls\Gallery.xaml.cs">
       <DependentUpon>Gallery.xaml</DependentUpon>
