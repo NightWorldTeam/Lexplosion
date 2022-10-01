@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -355,11 +356,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             break;
                         }
                     default:
-                        IsDownloadInProgress = false;
-                        _instanceFormModel.UpperButton.ChangeFuncDownload();
-                        foreach (var de in downloadErrors ?? new List<string>())
-                        {
-                            MainViewModel.ShowToastMessage("Unknown Error", de, Controls.ToastMessageState.Error);
+                        { 
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload();
+                            foreach (var de in downloadErrors ?? new List<string>())
+                            {
+                                MainViewModel.ShowToastMessage("Unknown Error", de, Controls.ToastMessageState.Error);
+                            }
                         }
                         break;
 
@@ -377,7 +380,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
                 }
                     
-            }); 
+            });
         }
 
         public void CancelInstanceDownload() 

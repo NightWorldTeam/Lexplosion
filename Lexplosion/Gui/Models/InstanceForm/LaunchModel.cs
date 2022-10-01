@@ -43,9 +43,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
             {
                 _formModel.DownloadModel.IsDownloadInProgress = true;
                 _formModel.DownloadModel.HasProcents = false;
+                _mainViewModel.RunningInstance = _formModel;
                 _formModel.InstanceClient.Run();
                 _mainViewModel.IsInstanceRunning = true;
-                _mainViewModel.RunningInstance = _formModel;
             });
         }
 
@@ -78,12 +78,14 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 );
             }
             _formModel.OverviewField = _formModel.InstanceClient.Summary;
+            _formModel.UpdateLowerButton();
         }
 
         private void GameExited(string id)
         {
             _formModel.UpperButton.ChangeFuncPlay();
             _mainViewModel.IsInstanceRunning = false;
+            _formModel.UpdateLowerButton();
         }
 
 

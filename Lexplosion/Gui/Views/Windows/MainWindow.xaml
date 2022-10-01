@@ -127,6 +127,7 @@
 
         <Popup
             x:Key="TTrayMenu"
+            AllowsTransparency="True"
             Placement="MousePoint"
             PopupAnimation="Fade"
             StaysOpen="False">

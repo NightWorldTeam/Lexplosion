@@ -20,7 +20,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public LaunchModel LaunchModel { get; }
         public UpperButton UpperButton { get; set; }
 
-
         private string _overviewField;
         public string OverviewField
         {
@@ -130,7 +129,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     );
                 }
 
-                if (DownloadModel.IsDownloadInProgress)
+                if (DownloadModel.IsDownloadInProgress && !DownloadModel.IsPrepareOnly)
                 {
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("cancelDownload"), MultiButtonProperties.GeometryCancelIcon, LowerButtonFunc.CancelDownload)
