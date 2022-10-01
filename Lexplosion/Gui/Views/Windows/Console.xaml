@@ -75,7 +75,7 @@
                             BorderThickness="0"
                             Foreground="White"
                             IsReadOnly="True">
-                            <FlowDocument>
+                            <!--<FlowDocument>
                                 <Paragraph>
                                     <Run Foreground="Red" FontSize="14">
                                         <Run.Background>
@@ -95,7 +95,7 @@
                                         [11:00:100 INFO] Рынок акций пошел  в рост после выступления Путина, индекс Мосбиржи превысил 2000 пунктов.
                                     </Run>
                                 </Paragraph>
-                            </FlowDocument>
+                            </FlowDocument>-->
                         </RichTextBox>
                     </ScrollViewer>
                 </Border>

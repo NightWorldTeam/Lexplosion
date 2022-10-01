@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using Lexplosion.Logic.Management;
+using System;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -11,17 +13,17 @@ namespace Lexplosion.Gui.Views.Windows
     /// </summary>
     public partial class Console : Window
     {
+        private Paragraph paragraph;
+
         public Console()
         {
             InitializeComponent();
             MouseDown += delegate { try { DragMove(); } catch { } };
 
+            paragraph = new Paragraph();
+            LaunchGame.ProcessDataReceived += AddNewLine;
             //ConsoleOutput.Document.PageWidth = ConsoleOutput.Width;
             //ConsoleOutput.Document.Blocks.Add(AddNewLine("[10:20:23.159 ERROR]: Unknown error when was launch prepare minecraft client", "#f7a737", 0.3, "#f7a737"));
-        }
-
-        private Paragraph AddNewLine(string text, string backgroundHex, double opacity, string foregroundHex)
-        {
             //var paragraph = new Paragraph();
             //var run = new Run(text);
 
@@ -37,7 +39,17 @@ namespace Lexplosion.Gui.Views.Windows
 
 
             //paragraph.Inlines.Add(run);
-            return null;
+        }
+
+        private void AddNewLine(string text)
+        {
+            App.Current.Dispatcher.Invoke(() => { 
+                //
+                //paragraph.Inlines.Add(text + "\n");
+                //ConsoleOutput.Document.Blocks.Add(paragraph);
+                //if (ConsoleOutput.ScrollToVerticalOffset != ConsoleOutput.)
+                //ConsoleOutput.ScrollToEnd();
+            });
         }
     }
 }

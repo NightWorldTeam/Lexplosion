@@ -334,7 +334,7 @@ namespace Lexplosion.Gui.ViewModels
                     break;
                 case AuthCode.SessionExpired:
                     {
-                        MainViewModel.ShowToastMessage("Ошибка авторизации!", "Ошибка сессии. Попробуйте переавторизировать.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                        MainViewModel.ShowToastMessage("Ошибка авторизации!", "Ошибка сессии. Попробуйте переавторизироваться.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                         break;
                     }
                 default:
