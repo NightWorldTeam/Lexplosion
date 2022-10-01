@@ -223,7 +223,7 @@ namespace Lexplosion.Gui.ViewModels
             TrayComponents.Add(new TrayButton(0, "Развернуть окно", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = false });
             TrayComponents.Add(new TrayButton(1, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
             TrayComponents.Add(new TrayButton(2, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), Runtime.GoToSupport) { IsEnable = true });
-            TrayComponents.Add(new TrayButton(3, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.CloseApp) { IsEnable = true });
+            TrayComponents.Add(new TrayButton(3, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
         } 
 
         // обновляем свойство currentviewmodel

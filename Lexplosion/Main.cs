@@ -10,11 +10,11 @@ using System.Runtime.CompilerServices;
 using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
+using Lexplosion.Gui;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Gui;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -327,6 +327,22 @@ namespace Lexplosion
         private static bool _exitIsCanceled = false;
         private static bool _inExited = false;
 
+        /// <summary>
+        /// Длеает все окна лаунчера видимыми и выводит их на экран
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void MakeHidden()
+        {
+            foreach (Window window in app.Windows)
+            {
+                window.Visibility = Visibility.Collapsed;
+                window.ShowInTaskbar = false;
+            }
+        }
+
+        /// <summary>
+        /// Длеает все окна лаунчера видимыми и выводит их на экран
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void MakeVisible()
         {
@@ -339,6 +355,9 @@ namespace Lexplosion
             NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
         }
 
+        /// <summary>
+        /// Открывает лаунчер и отменяет закрытие, если оно было.
+        /// </summary>
         public static void ShowApp()
         {
             lock (locker)
@@ -353,12 +372,18 @@ namespace Lexplosion
             MakeVisible();
         }
 
-        public static void CloseApp()
+        /// <summary>
+        /// убивает процесс лаунчера
+        /// </summary>
+        public static void KillApp()
         {
             BeforeExit(null, null);
             Environment.Exit(0);
         }
 
+        /// <summary>
+        /// Выход из лаунчера. Если запущен приоритетный процесс, то ждет его завршения и только потом закрывеат лаунчер. Закртие может быть омтенено методов ShowApp
+        /// </summary>
         public static void Exit()
         {
             lock (locker)
