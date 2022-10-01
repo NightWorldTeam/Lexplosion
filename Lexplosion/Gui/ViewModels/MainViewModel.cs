@@ -238,13 +238,16 @@ namespace Lexplosion.Gui.ViewModels
 
         private void InitTrayComponents() 
         {
-            TrayComponents.Clear();
+            App.Current.Dispatcher.Invoke(() => 
+            { 
+                TrayComponents.Clear();
 
-            TrayComponents.Add(new TrayButton(0, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Visible });
-            TrayComponents.Add(new TrayButton(1, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Collapsed });
-            TrayComponents.Add(new TrayButton(2, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
-            TrayComponents.Add(new TrayButton(3, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"),ContentSupport) { IsEnable = true });
-            TrayComponents.Add(new TrayButton(4, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(0, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Visible });
+                TrayComponents.Add(new TrayButton(1, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Collapsed });
+                TrayComponents.Add(new TrayButton(2, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+                TrayComponents.Add(new TrayButton(3, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"),ContentSupport) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(4, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+            });
         } 
 
         // обновляем свойство currentviewmodel

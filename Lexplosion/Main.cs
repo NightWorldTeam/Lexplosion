@@ -145,12 +145,13 @@ namespace Lexplosion
                 ((Gui.Views.Windows.SplashWindow)app.MainWindow).SmoothClosing();
                 app.MainWindow = mainWindow;
 
-                //var test = new Gui.Views.Windows.Console()
-                //{
-                //    Left = app.MainWindow.Left - 322,
-                //    Top = app.MainWindow.Top - 89
-                //};
-                //test.Show();
+                var ConsoleWindow = new Gui.Views.Windows.Console()
+                {
+                    Left = app.MainWindow.Left - 322,
+                    Top = app.MainWindow.Top - 89
+                };
+
+                ConsoleWindow.Show();
             });
 
             _splashWindow = null;
