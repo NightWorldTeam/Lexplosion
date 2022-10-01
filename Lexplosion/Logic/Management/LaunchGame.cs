@@ -168,11 +168,8 @@ namespace Lexplosion.Logic.Management
 
             if (_settings.ShowConsole == true)
             {
-                App.Current.Dispatcher.Invoke(delegate ()
-                {
-                    ProcessDataReceived?.Invoke("Выполняется запуск игры...");
-                    ProcessDataReceived?.Invoke(command);
-                });
+                ProcessDataReceived?.Invoke("Выполняется запуск игры...");
+                ProcessDataReceived?.Invoke(command);
             }
 
             bool gameVisible = false;
