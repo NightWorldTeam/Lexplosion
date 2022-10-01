@@ -16,6 +16,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using System.Collections.Generic;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -29,6 +30,7 @@ namespace Lexplosion
     {
         private static App app = new App();
         private static SplashWindow _splashWindow;
+        private static Dictionary<string, Lexplosion.Gui.Views.Windows.Console> ConsoleList = new Dictionary<string, Lexplosion.Gui.Views.Windows.Console>();
 
         public static Process CurrentProcess { get; private set; }
 
@@ -123,10 +125,23 @@ namespace Lexplosion
                 }
             };
 
-            LaunchGame.GameStopEvent += delegate () //подписываемся на эвент завершения игры
+            LaunchGame.GameStartEvent += (string str) =>
+            {
+                ConsoleList.Add(str, new Gui.Views.Windows.Console()
+                {
+                    Left = app.MainWindow.Left - 322,
+                    Top = app.MainWindow.Top - 89
+                });
+
+                ConsoleList[str].Show();
+            };
+
+            LaunchGame.GameStopEvent += delegate (string str) //подписываемся на эвент завершения игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
                 if (UserData.GeneralSettings.HiddenMode == true) app.Dispatcher.Invoke(MakeVisible);
+                ConsoleList[str].Close();
+                ConsoleList.Remove(str);
             };
 
             Thread.Sleep(800);
@@ -144,14 +159,6 @@ namespace Lexplosion
                 mainWindow.Show();
                 ((Gui.Views.Windows.SplashWindow)app.MainWindow).SmoothClosing();
                 app.MainWindow = mainWindow;
-
-                var ConsoleWindow = new Gui.Views.Windows.Console()
-                {
-                    Left = app.MainWindow.Left - 322,
-                    Top = app.MainWindow.Top - 89
-                };
-
-                ConsoleWindow.Show();
             });
 
             _splashWindow = null;

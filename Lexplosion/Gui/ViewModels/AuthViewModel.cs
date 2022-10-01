@@ -113,7 +113,7 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Запустил ли пользователь метод авторизации.
         /// </summary>
-        public bool IsAuthing
+        public bool IsAuthProcessStarted
         {
             get => _isAuthing; set
             {
@@ -161,8 +161,9 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _signUpCommand ?? (new RelayCommand(obj =>
             {
-                if (!IsAuthing)
+                if (!IsAuthProcessStarted)
                 {
+                    IsAuthProcessStarted = false;
                     if (_accountType == AccountType.NoAuth && !string.IsNullOrEmpty(Login))
                     {
                         Authorization();
@@ -286,7 +287,7 @@ namespace Lexplosion.Gui.ViewModels
                     PerformAuthCode(authCode);
                 });
 
-                IsAuthing = false;
+                IsAuthProcessStarted = false;
             });
         }
 
