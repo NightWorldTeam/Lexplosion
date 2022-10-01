@@ -35,6 +35,24 @@ namespace Lexplosion.Logic.FileSystem
             catch { }
         }
 
+        public static void SetNewDirectory(string path)
+        {
+            Create(path);
+
+            try
+            {
+                foreach (string dirPath in Directory.GetDirectories(DirectoryPath, "*", SearchOption.AllDirectories))
+                    Directory.CreateDirectory(dirPath.Replace(DirectoryPath, path));
+
+                foreach (string newPath in Directory.GetFiles(DirectoryPath, "*.*", SearchOption.AllDirectories))
+                    File.Copy(newPath, newPath.Replace(DirectoryPath, path), true);
+
+                Directory.Delete(DirectoryPath, true);
+                DirectoryPath = path;
+            }
+            catch { }
+        }
+
         private static Random random = new Random();
 
         public static string CreateTempDir() // TODO: пр использовании этого метода разными потоками может создаться одна папка на два вызова. Так же сделать try
