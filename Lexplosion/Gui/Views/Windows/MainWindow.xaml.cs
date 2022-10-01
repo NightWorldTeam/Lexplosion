@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Lexplosion.Tools;
+using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
@@ -28,11 +31,29 @@ namespace Lexplosion.Gui.Views.Windows
             notifyIcon.Visible = true;
             notifyIcon.Text = "Lexplosion";
 
-
             _trayMenu = (Popup)this.TryFindResource("TTrayMenu");
+            _trayMenu.Opened += _trayMenu_Opened;
+            _trayMenu.Closed += _trayMenu_Closed;
 
             notifyIcon.Click += NofityIcon_Click;
             Runtime.ExitEvent += LauncherClosedHandler;
+        }
+
+        private void _trayMenu_Closed(object sender, EventArgs e)
+        {
+            MouseHelper.Stop();
+            MouseHelper.MouseLeftClickedEvent -= MouseHelper_MouseLeftClickedEvent;
+        }
+
+        private void _trayMenu_Opened(object sender, EventArgs e)
+        {
+            MouseHelper.Start();
+            MouseHelper.MouseLeftClickedEvent += MouseHelper_MouseLeftClickedEvent;
+        }
+
+        private void MouseHelper_MouseLeftClickedEvent(int x, int y)
+        {
+            _trayMenu.IsOpen = false;
         }
 
         private void LauncherClosedHandler()

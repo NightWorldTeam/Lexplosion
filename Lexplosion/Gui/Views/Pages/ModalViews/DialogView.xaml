@@ -8,9 +8,9 @@
     mc:Ignorable="d">
     <Grid>
         <TextBlock
-            Background="Red"
-            Margin="20,60,20,0"
-            FontSize="16"
+            Margin="0,40,0,0"
+            Padding="10,0,10,10"
+            FontSize="18"
             Foreground="White"
             Text="{Binding Title}"
             TextAlignment="Center"

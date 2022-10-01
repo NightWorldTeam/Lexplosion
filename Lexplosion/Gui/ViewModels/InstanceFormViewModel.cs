@@ -218,6 +218,7 @@ namespace Lexplosion.Gui.ViewModels
 
         private void ExecuteUpperButtonFunc(UpperButtonFunc buttonFunc) 
         {
+            Console.WriteLine(buttonFunc.ToString());
             switch (buttonFunc)
             {
                 case UpperButtonFunc.Download:
@@ -227,7 +228,6 @@ namespace Lexplosion.Gui.ViewModels
                     }
                 case UpperButtonFunc.ProgressBar:
                     {
-                        // TODO: может сделать, что-то типо меню скачивания??
                         // ну да просто добавим открытие downloadmanager
                         MainVM.ModalWindowVM.OpenWindow(MainVM.DownloadManager);
                         break;
