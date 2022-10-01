@@ -600,6 +600,7 @@
     </None>
     <None Include="App.config" />
     <Resource Include="Assets\fonts\Montserrat.ttf" />
+    <Resource Include="Assets\fonts\PassDots.ttf" />
     <None Include="DLL\LumiSoft.Net.zip" />
     <None Include="DLL\NewtonsoftJson.zip" />
     <None Include="DLL\Tommy.zip" />

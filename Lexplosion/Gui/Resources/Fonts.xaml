@@ -2,4 +2,5 @@
     <FontFamily x:Key="CasperBold">pack://application:,,,/assets/fonts/#Casper Bold</FontFamily>
     <FontFamily x:Key="FuturaBookC">pack://application:,,,/Assets/fonts/#FuturaBookC</FontFamily>
     <FontFamily x:Key="Montserrat">pack://application:,,,/Assets/fonts/#Montserrat</FontFamily>
+    <FontFamily x:Key="Passdots">pack://application:,,,/Assets/fonts/#Password Dots</FontFamily>
 </ResourceDictionary>

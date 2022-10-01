@@ -250,17 +250,18 @@
 
                                 <!--  password box  -->
                                 <Grid Width="145">
-                                    <!--<TextBox
+                                    <TextBox
                                         x:Name="PasswordVisible"
                                         Height="30"
                                         HorizontalContentAlignment="Center"
                                         Style="{StaticResource AuthTextBox}"
                                         Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
-                                        Visibility="Hidden" />-->
+                                        Visibility="Hidden" />
                                     <PasswordBox
                                         Width="145"
                                         Height="30"
                                         HorizontalAlignment="Center"
+                                        extension:PasswordBox.IsPasswordSaved="True"
                                         extension:PasswordBox.Attach="True"
                                         extension:PasswordBox.Password="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         Style="{StaticResource CustomPasswordBox}" />

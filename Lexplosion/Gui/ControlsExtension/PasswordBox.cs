@@ -1,25 +1,36 @@
-﻿using Lexplosion.Controls;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 
 namespace Lexplosion.Gui.Extension
 {
     public static class PasswordBox
     {
-        public static readonly DependencyProperty PasswordProperty = DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBox),
-            new FrameworkPropertyMetadata(string.Empty, OnPasswordPropertyChanged));
+        public static readonly DependencyProperty PasswordProperty 
+            = DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBox), new FrameworkPropertyMetadata(string.Empty, OnPasswordPropertyChanged));
 
-        public static readonly DependencyProperty AttachProperty = DependencyProperty.RegisterAttached("Attach", typeof(bool), typeof(PasswordBox),
-            new PropertyMetadata(false, Attach));
+        public static readonly DependencyProperty AttachProperty 
+            = DependencyProperty.RegisterAttached("Attach", typeof(bool), typeof(PasswordBox), new PropertyMetadata(false, Attach));
 
-        private static readonly DependencyProperty IsUpdatingProperty = DependencyProperty.RegisterAttached("IsUpdating", typeof(bool),
-           typeof(PasswordBox));
+        private static readonly DependencyProperty IsUpdatingProperty 
+            = DependencyProperty.RegisterAttached("IsUpdating", typeof(bool), typeof(PasswordBox));
 
         //IsPasswordEmpty
         public static readonly DependencyPropertyKey IsEmptyPasswordPropertyKey
             = DependencyProperty.RegisterAttachedReadOnly("IsEmptyPassword", typeof(bool), typeof(PasswordBox), new PropertyMetadata(false));
 
         public static readonly DependencyProperty IsEmptyPasswordProperty = IsEmptyPasswordPropertyKey.DependencyProperty;
+
+        public static readonly DependencyProperty IsPassowordSavedProperty 
+            = DependencyProperty.Register("IsPasswordSaved", typeof(bool), typeof(PasswordBox));
+
+        public static void SetIsPasswordSaved(DependencyObject dp, bool value)
+        {
+            dp.SetValue(IsPassowordSavedProperty, value);
+        }
+
+        public static bool GetIsPasswordSaved(DependencyObject dp)
+        {
+            return (bool)dp.GetValue(IsPassowordSavedProperty);
+        }
 
         public static void SetAttach(DependencyObject dp, bool value)
         {

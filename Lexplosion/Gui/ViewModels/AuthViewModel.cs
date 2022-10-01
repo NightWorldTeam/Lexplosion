@@ -238,7 +238,7 @@ namespace Lexplosion.Gui.ViewModels
                 else IsMicrosoftAccountManager = false;
 
                 IsSaveMe = true;
-                Login = _savedLogin; Password = "*******";
+                Login = _savedLogin; Password = "";
             }
             else
             {
@@ -269,7 +269,7 @@ namespace Lexplosion.Gui.ViewModels
                 _accountType = (AccountType)AccountTypeSelectedIndex;
 
                 // получаем ответ от проверки данных.
-                AuthCode authCode = _authentication.Auth(_accountType, (Login == _savedLogin) ? null : Login, Password == "*******" ? null : Password, IsSaveMe);
+                AuthCode authCode = _authentication.Auth(_accountType, (Login == _savedLogin) ? null : Login, Password == "" ? null : Password, IsSaveMe);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {

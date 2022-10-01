@@ -238,11 +238,47 @@
                                 HorizontalAlignment="Center"
                                 Foreground="Gray"
                                 Text="{DynamicResource password}" />
+
+                            <TextBlock
+                                Name="password"
+                                Margin="0,7,0,0"
+                                HorizontalAlignment="Center"
+                                FontFamily="{DynamicResource Passdots}"
+                                FontSize="10"
+                                Foreground="#b9b7b7"
+                                Text="password"
+                                TextBlock.FontStretch="Normal"
+                                Visibility="Collapsed" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="extension:PasswordBox.IsEmptyPassword" Value="True" />
+                                <Condition Property="extension:PasswordBox.IsPasswordSaved" Value="True" />
+
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="password" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="placeholder" Property="Visibility" Value="Collapsed" />
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="extension:PasswordBox.IsEmptyPassword" Value="True" />
+                                <Condition Property="extension:PasswordBox.IsPasswordSaved" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="placeholder" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="password" Property="Visibility" Value="Collapsed" />
+                        </MultiTrigger>
+
                         <Trigger Property="extension:PasswordBox.IsEmptyPassword" Value="False">
                             <Setter TargetName="placeholder" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="password" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="placeholder" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="password" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

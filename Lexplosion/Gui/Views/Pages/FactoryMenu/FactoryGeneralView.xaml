@@ -46,7 +46,7 @@
         </Style>
     </UserControl.Resources>
 
-    <TabControl
+    <TabControl Width="360" Height="420"
         BorderThickness="0"
         ItemContainerStyle="{StaticResource ButtonItemStyle}"
         Style="{StaticResource TabControlStyle}">
