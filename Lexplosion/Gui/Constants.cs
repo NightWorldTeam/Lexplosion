@@ -5,6 +5,7 @@ namespace Lexplosion.Gui
     public class Constants
     {
         public const string VKGroupUrl = @"https://vk.com/nightworld_offical";
+        public const string VKGroupToChatUrl = "https://vk.com/im?media=&sel=-155979422";
         public const string DiscordServerInviteUrl = "https://discord.gg/FfSWhMWxsj";
         public const string BoostyUrl = "";
         public const string NightWorldOfficalWebsiteUrl = "https://night-world.org/";

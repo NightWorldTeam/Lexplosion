@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Lexplosion.Logic.Management;
+using System.Diagnostics;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -151,6 +152,15 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
+        private RelayCommand _contactSupportCommand;
+        public RelayCommand ContactSupportCommand 
+        {
+            get => _contactSupportCommand ?? (_contactSupportCommand = new RelayCommand(obj => 
+            {
+                MainViewModel.ContentSupport();
+            }));
+        }
+
         #endregion Command
 
 
@@ -210,6 +220,15 @@ namespace Lexplosion.Gui.ViewModels
             };
         }
 
+        public static void ContentSupport()
+        {
+            try
+            {
+                Process.Start(Constants.VKGroupToChatUrl);
+            }
+            catch
+            { }
+        }
 
         #endregion Public & Protected Methods
 
@@ -220,10 +239,12 @@ namespace Lexplosion.Gui.ViewModels
         private void InitTrayComponents() 
         {
             TrayComponents.Clear();
-            TrayComponents.Add(new TrayButton(0, "Развернуть окно", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = false });
-            TrayComponents.Add(new TrayButton(1, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
-            TrayComponents.Add(new TrayButton(2, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), Runtime.GoToSupport) { IsEnable = true });
-            TrayComponents.Add(new TrayButton(3, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+
+            TrayComponents.Add(new TrayButton(0, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Visible });
+            TrayComponents.Add(new TrayButton(1, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Collapsed });
+            TrayComponents.Add(new TrayButton(2, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+            TrayComponents.Add(new TrayButton(3, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"),ContentSupport) { IsEnable = true });
+            TrayComponents.Add(new TrayButton(4, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
         } 
 
         // обновляем свойство currentviewmodel

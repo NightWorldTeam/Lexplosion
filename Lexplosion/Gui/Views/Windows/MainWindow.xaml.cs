@@ -16,7 +16,8 @@ namespace Lexplosion.Gui.Views.Windows
     public partial class MainWindow : Window
     {
         private System.Windows.Forms.NotifyIcon notifyIcon;
-        private Popup TrayMenu;
+        private Popup _trayMenu;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -28,7 +29,7 @@ namespace Lexplosion.Gui.Views.Windows
             notifyIcon.Text = "Lexplosion";
 
 
-            TrayMenu = (Popup)this.TryFindResource("TTrayMenu");
+            _trayMenu = (Popup)this.TryFindResource("TTrayMenu");
 
             notifyIcon.Click += NofityIcon_Click;
             Runtime.ExitEvent += LauncherClosedHandler;
@@ -51,13 +52,8 @@ namespace Lexplosion.Gui.Views.Windows
             else if (mouseEventArgs.Button == MouseButtons.Right) 
             {
                 // открываем меню
-                TrayMenu.IsOpen = true;
+                _trayMenu.IsOpen = true;
             }
-        }
-
-        private void MenuExitClick(object sender, RoutedEventArgs e) 
-        {
-            // тут закрытие программы
         }
 
         private void ChangeStatusButtonClick(object sender, RoutedEventArgs e)

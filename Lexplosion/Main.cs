@@ -40,7 +40,9 @@ namespace Lexplosion
             Thread thread = new Thread(InitializedSystem);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-            app.Run(new Lexplosion.Gui.Views.Windows.SplashWindow());
+            var splashWindow = new Lexplosion.Gui.Views.Windows.SplashWindow();
+            splashWindow.ChangeLoadingBoardPlaceholder();
+            app.Run(splashWindow);
         }
 
         private static void InitializedSystem()
@@ -436,15 +438,5 @@ namespace Lexplosion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void TaskRun(ThreadStart threadFunc) => new Thread(threadFunc).Start();
-
-        public static void GoToSupport() 
-        {
-            try
-            {
-                Process.Start(Constants.VKGroupUrl);
-            }
-            catch 
-            { }
-        }
     }
 }

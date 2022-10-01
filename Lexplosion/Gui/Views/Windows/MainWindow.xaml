@@ -439,6 +439,36 @@
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
+                <Button
+                    Grid.Column="2"
+                    Margin="0,0,10,0"
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Command="{Binding ContactSupportCommand, Source={StaticResource MainVM}}"
+                    Foreground="#fff"
+                    Style="{StaticResource IconicButton}">
+                    <Viewbox
+                        Width="23"
+                        Height="23"
+                        Stretch="Fill">
+                        <Path extension:PathExtension.StringData="{StaticResource ContactSupport}" Fill="White" />
+                    </Viewbox>
+                    <Button.ToolTip>
+                        <ToolTip
+                            Background="Black"
+                            BorderThickness="0"
+                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                            HorizontalOffset="-80"
+                            Placement="Relative"
+                            VerticalOffset="-30">
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="White"
+                                Text="Связаться с поддержкой" />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
             </Grid>
         </Border>
 

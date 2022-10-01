@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexplosion.Controls;
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
@@ -11,10 +12,23 @@ namespace Lexplosion.Gui.Views.Windows
     /// </summary>
     public partial class SplashWindow : Window
     {
+        private const string loadingPlaceholder = "Идет загрузка...";
+        private const string updatePlaceholder = "Идет обновление...";
+
         public SplashWindow()
         {
             InitializeComponent();
             MouseDown += delegate { DragMove(); };
+        }
+
+        public void ChangeLoadingBoardPlaceholder(bool isUpdate = false) 
+        {
+            if (isUpdate && this.LoadingBoard.Placeholder == updatePlaceholder || !isUpdate && this.LoadingBoard.Placeholder == loadingPlaceholder) 
+            {
+                return;
+            }
+
+            this.LoadingBoard.Placeholder = isUpdate ? updatePlaceholder : loadingPlaceholder;
         }
 
         public void SmoothClosing()

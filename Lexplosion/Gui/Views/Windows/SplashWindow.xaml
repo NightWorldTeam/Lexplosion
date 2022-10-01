@@ -16,13 +16,13 @@
 
     <Grid Background="#0B101C">
         <controls:LoadingBoard
+            x:Name="LoadingBoard"
             Margin="0,80,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             BackgroundColor="Transparent"
             BorderColor="{DynamicResource BrandSolidColorBrush}"
             Opacity="0.8"
-            Placeholder="Идет загрузка..."
             RectangeColor="{DynamicResource BrandSolidColorBrush}" />
 
         <StackPanel
