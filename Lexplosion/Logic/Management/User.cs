@@ -62,7 +62,7 @@ namespace Lexplosion.Logic
             }
         }
 
-        public void GameStop()
+        public void GameStop(string str)
         {
             if (Status == ActivityStatus.InGame)
             {

@@ -13,6 +13,7 @@ namespace Lexplosion.Gui.Views.Windows
     {
         private Paragraph _paragraph;
         private bool _isLastLineError;
+        private bool _isFirstLine;
 
         public Console()
         {
@@ -21,8 +22,6 @@ namespace Lexplosion.Gui.Views.Windows
 
             _paragraph = new Paragraph();
             LaunchGame.ProcessDataReceived += AddNewLine;
-
-            ConsoleOutput.ScrollToVerticalOffset(Double.PositiveInfinity);
 
             ConsoleOutput.Document.Blocks.Add(_paragraph);
         }
@@ -48,7 +47,7 @@ namespace Lexplosion.Gui.Views.Windows
 
             App.Current.Dispatcher.Invoke(() => 
             {
-                var isEnd = ConsoleOutput.VerticalOffset == Double.PositiveInfinity;
+                //var isEnd = ConsoleOutput.VerticalOffset == Double.PositiveInfinity;
 
                 if (text[0] == '[') 
                 {
@@ -79,7 +78,14 @@ namespace Lexplosion.Gui.Views.Windows
                     _paragraph.Inlines.Add(new LineBreak());
                 }
 
-                ConsoleOutput.ScrollToEnd();
+                //if (_isFirstLine)
+                //{
+                //    _isFirstLine = false;
+                //    ConsoleOutputScrollViewer.ScrollToBottom();
+                //}
+
+                //if (isEnd)
+                    ConsoleOutputScrollViewer.ScrollToEnd();
             });
         }
     }

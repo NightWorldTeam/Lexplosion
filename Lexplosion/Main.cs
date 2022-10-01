@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
-using Lexplosion.Gui;
 using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
@@ -125,23 +124,31 @@ namespace Lexplosion
                 }
             };
 
+            // подписываемся на запуск игры до запуска окна
             LaunchGame.GameStartEvent += (string str) =>
             {
-                ConsoleList.Add(str, new Gui.Views.Windows.Console()
-                {
-                    Left = app.MainWindow.Left - 322,
-                    Top = app.MainWindow.Top - 89
+                app.Dispatcher.Invoke(() => 
+                { 
+                    ConsoleList.Add(str, new Gui.Views.Windows.Console()
+                    {
+                        Left = app.MainWindow.Left - 322,
+                        Top = app.MainWindow.Top - 89
+                    });
+                
+                    ConsoleList[str].Show();
                 });
-
-                ConsoleList[str].Show();
             };
 
             LaunchGame.GameStopEvent += delegate (string str) //подписываемся на эвент завершения игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
                 if (UserData.GeneralSettings.HiddenMode == true) app.Dispatcher.Invoke(MakeVisible);
-                ConsoleList[str].Close();
-                ConsoleList.Remove(str);
+
+                app.Dispatcher.Invoke(() =>
+                {
+                    ConsoleList[str].Close();
+                    ConsoleList.Remove(str);
+                });
             };
 
             Thread.Sleep(800);
