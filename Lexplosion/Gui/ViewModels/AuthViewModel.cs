@@ -30,6 +30,15 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
+        private bool _isAccountSaved;
+        public bool IsAccountSaved 
+        { 
+            get => _isAccountSaved; set 
+            {
+                _isAccountSaved = value;
+                OnPropertyChanged();
+            } 
+        }
 
         #region Main Auth
 
@@ -158,7 +167,7 @@ namespace Lexplosion.Gui.ViewModels
                     {
                         Authorization();
                     }
-                    else if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password))
+                    else if (!string.IsNullOrEmpty(Login) && (IsAccountSaved || !string.IsNullOrEmpty(Password)))
                     {
                         Authorization();
                     }
@@ -228,6 +237,7 @@ namespace Lexplosion.Gui.ViewModels
 
             if (!string.IsNullOrEmpty(_savedLogin))
             {
+                IsAccountSaved = true;
                 // так как логин сохранён, а при авторизации Microsoft
                 // логин == Ник, мы выводим авторизацию с сохранёным аккаунтов для Microsoft
                 if (type == AccountType.Microsoft)

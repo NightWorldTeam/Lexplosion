@@ -261,8 +261,8 @@
                                         Width="145"
                                         Height="30"
                                         HorizontalAlignment="Center"
-                                        extension:PasswordBox.IsPasswordSaved="True"
                                         extension:PasswordBox.Attach="True"
+                                        extension:PasswordBox.IsPasswordSaved="{Binding IsAccountSaved}"
                                         extension:PasswordBox.Password="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         Style="{StaticResource CustomPasswordBox}" />
                                 </Grid>
