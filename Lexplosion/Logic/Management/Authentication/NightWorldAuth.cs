@@ -1,4 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
@@ -9,7 +11,7 @@ namespace Lexplosion.Logic.Management.Authentication
     {
         public User Auth(ref string login, ref string accessData, out AuthCode code)
         {
-            accessData = "{\"type\":\"password\",\"data\":\"" + accessData + "\"}";
+            accessData = "{\"type\":\"password\",\"data\":\"" + Sha256(accessData + login) + "\"}";
             return Execute(login, ref accessData, out code);      
         }
 
@@ -60,6 +62,22 @@ namespace Lexplosion.Logic.Management.Authentication
 
             code = AuthCode.NoConnect;
             return null;
+        }
+
+        private string Sha256(string value)
+        {
+            StringBuilder Sb = new StringBuilder();
+
+            using (SHA256 hash = SHA256Managed.Create())
+            {
+                Encoding enc = Encoding.UTF8;
+                byte[] result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            return Sb.ToString();
         }
     }
 }
