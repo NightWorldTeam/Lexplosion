@@ -31,6 +31,8 @@ namespace Lexplosion.Logic.Management
         private bool removeImportantTaskMark = true;
         private object removeImportantTaskLocker = new object();
 
+        private string _gameClientName;
+
         /// <summary>
         /// Выполняется при запуске процесса игры
         /// </summary>
@@ -42,7 +44,7 @@ namespace Lexplosion.Logic.Management
         /// <summary>
         /// Выполняется при завершении процесса игры
         /// </summary>
-        public static event Action GameStopEvent;
+        public static event Action<string> GameStopEvent;
         /// <summary>
         /// Отрабатывает когда поялвяются данные из консоли майкрафта.
         /// </summary>
@@ -126,6 +128,7 @@ namespace Lexplosion.Logic.Management
 
         public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
         {
+            _gameClientName = gameClientName;
             string command = CreateCommand(data);
 
             process = new Process();
@@ -212,7 +215,7 @@ namespace Lexplosion.Logic.Management
                     }
                     catch { }
 
-                    GameStopEvent?.Invoke();
+                    GameStopEvent?.Invoke(gameClientName);
 
                     lock (removeImportantTaskLocker)
                     {
@@ -397,7 +400,6 @@ namespace Lexplosion.Logic.Management
             return instance.Update(_javaPath, progressHandler);
         }
 
-
         public InitData Initialization(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, Action downloadStarted)
         {
             //try
@@ -456,7 +458,7 @@ namespace Lexplosion.Logic.Management
         {
             _processIsWork = false;
 
-            GameStopEvent?.Invoke();
+            GameStopEvent?.Invoke(_gameClientName);
 
             try
             {
