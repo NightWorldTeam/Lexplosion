@@ -43,6 +43,10 @@ namespace Lexplosion.Logic.Management
         /// Выполняется при завершении процесса игры
         /// </summary>
         public static event Action GameStopEvent;
+        /// <summary>
+        /// Отрабатывает когда поялвяются данные из консоли майкрафта.
+        /// </summary>
+        public static event Action<string> ProcessDataReceived;
 
         private static object loocker = new object();
 
@@ -166,8 +170,8 @@ namespace Lexplosion.Logic.Management
             {
                 App.Current.Dispatcher.Invoke(delegate ()
                 {
-                    Console.WriteLine("Выполняется запуск игры...");
-                    Console.WriteLine(command);
+                    ProcessDataReceived?.Invoke("Выполняется запуск игры...");
+                    ProcessDataReceived?.Invoke(command);
                 });
             }
 
@@ -182,28 +186,13 @@ namespace Lexplosion.Logic.Management
                 process.StartInfo.UseShellExecute = false;
                 process.EnableRaisingEvents = true;
 
-                void WriteToConsole(object s, DataReceivedEventArgs e)
+                void ReadFromConsole(object s, DataReceivedEventArgs e)
                 {
-                    //if (ConsoleWindow.isShow)
-                    //{
-                    //    MainWindow.Obj.Dispatcher.Invoke(delegate
-                    //    {
-                    //        ConsoleWindow.Window.Update(e.Data);
-                    //    });
-                    //}
-                    //else
-                    //{
-                    //    process.OutputDataReceived -= WriteToConsole;
-                    //}
-
-                    if (_settings.ShowConsole == true)
-                    {
-                        Console.WriteLine(e.Data);
-                    }
+                    ProcessDataReceived?.Invoke(e.Data);
                 }
 
                 if (_settings.ShowConsole == true)
-                    process.OutputDataReceived += WriteToConsole;
+                    process.OutputDataReceived += ReadFromConsole;
 
                 process.Exited += (sender, ea) =>
                 {
