@@ -6,6 +6,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 {
     public sealed class LaunchModel
     {
+        private readonly InstanceFormViewModel _formViewModel;
         private readonly InstanceFormModel _formModel;
         private readonly MainViewModel _mainViewModel;
 
@@ -22,12 +23,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Constructors
 
 
-        public LaunchModel(MainViewModel mainViewModel, InstanceFormModel instanceFormModel)
+        public LaunchModel(MainViewModel mainViewModel, InstanceFormModel instanceFormModel, InstanceFormViewModel instanceFormViewModel)
         {
             _mainViewModel = mainViewModel;
-            _formModel = instanceFormModel;   
-            instanceFormModel.InstanceClient.ComplitedLaunch += LaunchCompleted;
-            instanceFormModel.InstanceClient.GameExited += GameExited;
+            _formViewModel = instanceFormViewModel;
+            _formModel = instanceFormModel;
+            _formModel.InstanceClient.ComplitedLaunch += LaunchCompleted;
+            _formModel.InstanceClient.GameExited += GameExited;
         }
 
 
@@ -43,7 +45,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             {
                 _formModel.DownloadModel.IsDownloadInProgress = true;
                 _formModel.DownloadModel.HasProcents = false;
-                _mainViewModel.RunningInstance = _formModel;
+                _mainViewModel.RunningInstance = _formViewModel;
                 _formModel.InstanceClient.Run();
                 _mainViewModel.IsInstanceRunning = true;
             });
@@ -66,6 +68,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     TimeSpan.FromSeconds(5)
                 );
 
+                _mainViewModel.InitTrayComponents(_formViewModel);
+
                 _formModel.DownloadModel.IsDownloadInProgress = false;
                 _formModel.UpperButton.ChangeFuncClose();
             }
@@ -77,13 +81,14 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     Controls.ToastMessageState.Error
                 );
             }
-            _formModel.OverviewField = _formModel.InstanceClient.Summary;
+            _formModel.OverviewField = _formViewModel.Model.InstanceClient.Summary;
             _formModel.UpdateLowerButton();
         }
 
         private void GameExited(string id)
         {
-            _formModel.UpperButton.ChangeFuncPlay();
+            _mainViewModel.InitTrayComponents(null);
+           _formModel.UpperButton.ChangeFuncPlay();
             _mainViewModel.IsInstanceRunning = false;
             _formModel.UpdateLowerButton();
         }

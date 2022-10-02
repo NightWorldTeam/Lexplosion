@@ -37,7 +37,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Constructors
 
 
-        public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient)
+        public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient, InstanceFormViewModel instanceFormViewModel)
         {
             InstanceClient = instanceClient;
 
@@ -54,7 +54,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 Stage = 0,
                 StagesCount = 0
             };
-            LaunchModel = new LaunchModel(mainViewModel, this);
+            LaunchModel = new LaunchModel(mainViewModel, this, instanceFormViewModel);
 
             UpdateButtons();
         }

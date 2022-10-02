@@ -27,8 +27,15 @@ namespace Lexplosion.Gui.ViewModels
 
         public MainMenuViewModel MainMenuVM { get; private set; }
 
-
-        public InstanceFormModel RunningInstance = null;
+        private InstanceFormViewModel _runningInstance;
+        public InstanceFormViewModel RunningInstance 
+        {
+            get => _runningInstance; set
+            {
+                _runningInstance = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool _isInstanceRunning = false;
         /// <summary>
@@ -235,18 +242,34 @@ namespace Lexplosion.Gui.ViewModels
 
         #region Private Methods
 
+        internal void InitTrayComponents(InstanceFormViewModel instanceFormViewModel) 
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                TrayComponents.Clear();
 
-        private void InitTrayComponents() 
+                if (instanceFormViewModel != null)
+                    TrayComponents.Add(new TrayButton(0, "Закрыть игру", ResourceGetter.GetString("ExtensionOff"), instanceFormViewModel.CloseInstance) { IsEnable = IsInstanceRunning });
+
+                TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Visible });
+                TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Collapsed });
+                TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+                TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(5, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+            });
+        }
+
+        internal void InitTrayComponents() 
         {
             App.Current.Dispatcher.Invoke(() => 
             { 
                 TrayComponents.Clear();
 
-                TrayComponents.Add(new TrayButton(0, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Visible });
-                TrayComponents.Add(new TrayButton(1, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Collapsed });
-                TrayComponents.Add(new TrayButton(2, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
-                TrayComponents.Add(new TrayButton(3, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"),ContentSupport) { IsEnable = true });
-                TrayComponents.Add(new TrayButton(4, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Visible });
+                TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Collapsed });
+                TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+                TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"),ContentSupport) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(5, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
             });
         } 
 

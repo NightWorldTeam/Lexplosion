@@ -231,7 +231,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 {
                     case InstanceInit.Successful:
                         {
-                            if (_mainViewModel.RunningInstance != null && _mainViewModel.IsInstanceRunning && _mainViewModel.RunningInstance == _instanceFormModel) 
+                            if (_mainViewModel.RunningInstance != null && _mainViewModel.IsInstanceRunning && _mainViewModel.RunningInstance.Model == _instanceFormModel) 
                             {
                                 IsPrepareOnly = true;
                                 _instanceFormModel.UpdateLowerButton();

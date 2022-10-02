@@ -253,6 +253,7 @@ namespace Lexplosion.Gui.ViewModels
             }
             else
             {
+                IsAccountSaved = false;
                 if (type == AccountType.Microsoft)
                 {
                     _isSavedAccountOAuth2 = false;

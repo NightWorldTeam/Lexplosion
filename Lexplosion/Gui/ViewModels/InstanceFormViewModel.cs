@@ -79,7 +79,7 @@ namespace Lexplosion.Gui.ViewModels
         public InstanceFormViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
             MainVM = mainViewModel;
-            Model = new InstanceFormModel(mainViewModel, instanceClient);
+            Model = new InstanceFormModel(mainViewModel, instanceClient, this);
             Client = instanceClient;
         }
 
@@ -125,6 +125,8 @@ namespace Lexplosion.Gui.ViewModels
             Model.InstanceClient.StopGame();
             Model.UpperButton.ChangeFuncPlay();
             MainVM.IsInstanceRunning = false;
+            Model.DownloadModel.HasProcents = false;
+            Model.OverviewField = Model.InstanceClient.Summary;
         }
 
         public void UpdateInstance() 
