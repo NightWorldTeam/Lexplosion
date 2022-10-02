@@ -112,7 +112,7 @@ namespace Lexplosion
 
             LaunchGame.GameStartedEvent += delegate () //подписываемся на эвент запуска игры
             {
-                // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам галвное окно
+                // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
                 if (UserData.GeneralSettings.HiddenMode == true)
                 {
                     app.Dispatcher.Invoke(delegate ()
@@ -382,8 +382,11 @@ namespace Lexplosion
         {
             foreach (Window window in app.Windows)
             {
-                window.Visibility = Visibility.Collapsed;
-                window.ShowInTaskbar = false;
+                if (window is MainWindow || window is Lexplosion.Gui.Views.Windows.Console)
+                {
+                    window.Visibility = Visibility.Collapsed;
+                    window.ShowInTaskbar = false;
+                }         
             }
         }
 
@@ -395,8 +398,11 @@ namespace Lexplosion
         {
             foreach (Window window in app.Windows)
             {
-                window.Visibility = Visibility.Visible;
-                window.ShowInTaskbar = true;
+                if (window is MainWindow || window is Lexplosion.Gui.Views.Windows.Console)
+                {
+                    window.Visibility = Visibility.Visible;
+                    window.ShowInTaskbar = true;
+                }
             }
 
             NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
@@ -441,8 +447,11 @@ namespace Lexplosion
                 {
                     foreach (Window window in app.Windows)
                     {
-                        window.Visibility = Visibility.Collapsed;
-                        window.ShowInTaskbar = false;
+                        if (window is MainWindow || window is Lexplosion.Gui.Views.Windows.Console)
+                        {
+                            window.Visibility = Visibility.Collapsed;
+                            window.ShowInTaskbar = false;
+                        }
                     }
                 }
             }    

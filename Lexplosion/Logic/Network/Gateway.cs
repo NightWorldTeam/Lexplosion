@@ -46,6 +46,7 @@ namespace Lexplosion.Logic.Network
             sessionToken = sessionToken_;
             ControlServer = controlServer;
             _directConnection = directConnection;
+            Console.WriteLine("Create Gateway");
         }
 
         public void Initialization(int pid)
