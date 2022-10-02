@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.Management
         private string _javaPath = "";
         private bool _processIsWork;
 
-        private static LaunchGame classInstance = null;
+        private static LaunchGame _classInstance = null;
 
         private bool removeImportantTaskMark = true;
         private object removeImportantTaskLocker = new object();
@@ -56,7 +56,8 @@ namespace Lexplosion.Logic.Management
 
         public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type, CancellationToken updateCancelToken)
         {
-            classInstance = this;
+            if (_classInstance == null)
+                _classInstance = this;
 
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
@@ -236,6 +237,7 @@ namespace Lexplosion.Logic.Management
                         });
                     }
 
+                    _classInstance = null;
                     GameExited(_instanceId);
                 };
 
@@ -448,14 +450,9 @@ namespace Lexplosion.Logic.Management
             //}
         }
 
-        public static void GameStop()
+        public void Stop()
         {
-            classInstance.Stop();
-            classInstance = null;
-        }
-
-        private void Stop()
-        {
+            _classInstance = null;
             _processIsWork = false;
 
             GameStopEvent?.Invoke(_gameClientName);
@@ -490,20 +487,20 @@ namespace Lexplosion.Logic.Management
 
         public static void RebootOnlineGame()
         {
-            if (classInstance != null)
+            if (_classInstance != null)
             {
                 lock (loocker)
                 {
-                    if (classInstance.gameGateway != null)
+                    if (_classInstance.gameGateway != null)
                     {
                         try
                         {
-                            classInstance.gameGateway.StopWork();
+                            _classInstance.gameGateway.StopWork();
                         }
                         catch { }
 
-                        classInstance.gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", classInstance._settings.OnlineGameDirectConnection);
-                        classInstance.gameGateway.Initialization(classInstance.process.Id);
+                        _classInstance.gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", _classInstance._settings.OnlineGameDirectConnection);
+                        _classInstance.gameGateway.Initialization(_classInstance.process.Id);
                     }
                 }
             }

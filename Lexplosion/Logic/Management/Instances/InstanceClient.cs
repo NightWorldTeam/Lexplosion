@@ -36,6 +36,9 @@ namespace Lexplosion.Logic.Management.Instances
         private string _localId = null;
         private readonly PrototypeInstance _dataManager;
 
+        private CancellationTokenSource _cancelTokenSource = null;
+        private LaunchGame _gameManager = null;
+
         private const string LogoFileName = "logo.png";
         private const string UnknownName = "Unknown name";
         private const string UnknownAuthor = "Unknown author";
@@ -201,6 +204,11 @@ namespace Lexplosion.Logic.Management.Instances
                     _dataManager = new LocalInstance();
                     break;
             }
+
+            GameExited += delegate (string _)
+            {
+                _gameManager = null;
+            };
         }
 
         /// <summary>
@@ -600,7 +608,13 @@ namespace Lexplosion.Logic.Management.Instances
             SaveInstalledInstancesList();
         }
 
-        private CancellationTokenSource _cancelTokenSource = null;
+        /// <summary>
+        /// Останавливает игру
+        /// </summary>
+        public void StopGame()
+        {
+            _gameManager?.Stop();
+        }
 
         /// <summary>
         /// Отменяет скачивание сборки.
@@ -652,8 +666,8 @@ namespace Lexplosion.Logic.Management.Instances
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(UserData.GeneralSettings, true);
 
-            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
-            InitData data = launchGame.Initialization(ProgressHandler, FileDownloadEvent, DownloadStartedEvent);
+            _gameManager = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
+            InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStartedEvent);
 
             UpdateAvailable = data.UpdatesAvailable;
             ProfileVersion = data.ClientVersion;
@@ -664,7 +678,7 @@ namespace Lexplosion.Logic.Management.Instances
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
 
-                launchGame.Run(data, ComplitedLaunch, GameExited, Name, UserData.User.AccountType == AccountType.NightWorld);
+                _gameManager.Run(data, ComplitedLaunch, GameExited, Name, UserData.User.AccountType == AccountType.NightWorld);
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);
                 // TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
             }

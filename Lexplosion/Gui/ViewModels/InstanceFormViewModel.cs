@@ -122,7 +122,7 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public void CloseInstance() 
         {
-            LaunchGame.GameStop();
+            Model.InstanceClient.StopGame();
             Model.UpperButton.ChangeFuncPlay();
             MainVM.IsInstanceRunning = false;
         }
