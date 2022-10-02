@@ -123,11 +123,11 @@ namespace Lexplosion
                 {
                     app.Dispatcher.Invoke(() =>
                     {
-                        ConsoleList.Add(str, new Gui.Views.Windows.Console()
+                        ConsoleList[str] = new Gui.Views.Windows.Console()
                         {
                             Left = app.MainWindow.Left - 322,
                             Top = app.MainWindow.Top - 89
-                        });
+                        };
 
                         ConsoleList[str].Show();
                     });
@@ -142,14 +142,14 @@ namespace Lexplosion
                     ShowMainWindow();
                 }
 
-                if (UserData.GeneralSettings.ShowConsole == true)
-                {
-                    //app.Dispatcher.Invoke(() =>
-                    //{
-                    //    ConsoleList[str].Exit(null, null);
-                    //    ConsoleList.Remove(str);
-                    //});
-                }
+                //if (UserData.GeneralSettings.ShowConsole == true)
+                //{
+                //    app.Dispatcher.Invoke(() =>
+                //    {
+                //        ConsoleList[str].Exit(null, null);
+                //        ConsoleList.Remove(str);
+                //    });
+                //}
             };
 
             Thread.Sleep(800);
