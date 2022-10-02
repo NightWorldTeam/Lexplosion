@@ -16,6 +16,7 @@ namespace Lexplosion.Gui.Views.Windows
     {
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private Popup _trayMenu;
+        private bool _isTrayButtonClicked;
 
         public MainWindow()
         {
@@ -33,7 +34,7 @@ namespace Lexplosion.Gui.Views.Windows
 
             notifyIcon.Click += NofityIcon_Click;
             Runtime.ExitEvent += LauncherClosedHandler;
-            Runtime.TrayMenuElementClicked += () => { _trayMenu.IsOpen = false; };
+            Runtime.TrayMenuElementClicked += () => { _trayMenu.IsOpen = false; _isTrayButtonClicked = true; };
         }
 
         private void _trayMenu_Closed(object sender, EventArgs e)
@@ -44,6 +45,7 @@ namespace Lexplosion.Gui.Views.Windows
 
         private void _trayMenu_Opened(object sender, EventArgs e)
         {
+            _isTrayButtonClicked = false;
             MouseHelper.Start();
             MouseHelper.MouseLeftClickedEvent += MouseHelper_MouseLeftClickedEvent;
         }
@@ -51,7 +53,14 @@ namespace Lexplosion.Gui.Views.Windows
         private void MouseHelper_MouseLeftClickedEvent(int x, int y)
         {
             var coords = NativeMethods.GetControlCoordinate(_trayMenu.Child);
-            _trayMenu.IsOpen = IsPointInControl(coords[0], coords[1], coords[2], coords[3], x, y);
+            if (IsPointInControl(coords[0], coords[1], coords[2], coords[3], x, y)) 
+            {
+                if (_isTrayButtonClicked)
+                    return;
+                else
+                    _trayMenu.IsOpen = true;
+            }
+            else _trayMenu.IsOpen = false;
         }
 
         private void LauncherClosedHandler()
