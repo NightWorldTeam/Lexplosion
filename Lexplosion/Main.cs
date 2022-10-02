@@ -16,6 +16,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
+using Hardcodet.Wpf.TaskbarNotification;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
@@ -40,6 +41,7 @@ namespace Lexplosion
         [STAThread]
         static void Main()
         {
+            app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             app.Exit += BeforeExit;
 
             Thread thread = new Thread(InitializedSystem);
@@ -50,18 +52,13 @@ namespace Lexplosion
             app.Run(_splashWindow);
         }
 
-        public static void TrayMenuElementClickExecute() 
+        public static void TrayMenuElementClickExecute()
         {
             TrayMenuElementClicked?.Invoke();
         }
 
         private static void InitializedSystem()
         {
-            //System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, string>> headers = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, string>>();
-            //headers.Add(new System.Collections.Generic.KeyValuePair<string, string>("x-api-key", "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we"));
-            //string answer = ToServer.HttpGet("https://api.curseforge.com/v1/categories?gameId=432&classId=6", headers);
-            //Console.WriteLine(answer);
-
             //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
             AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
             {
@@ -115,25 +112,14 @@ namespace Lexplosion
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
                 if (UserData.GeneralSettings.HiddenMode == true)
                 {
-                    app.Dispatcher.Invoke(delegate ()
-                    {
-                        foreach (Window window in app.Windows)
-                        {
-                            if (window is Gui.Views.Windows.MainWindow)
-                            {
-                                window.Visibility = Visibility.Collapsed;
-                                window.ShowInTaskbar = false;
-                                break;
-                            }
-                        }
-                    });
+                    CloseMainWindow();
                 }
             };
 
             // подписываемся на запуск игры до запуска окна
             LaunchGame.GameStartEvent += (string str) =>
             {
-                if(UserData.GeneralSettings.ShowConsole == true)
+                if (UserData.GeneralSettings.ShowConsole == true)
                 {
                     app.Dispatcher.Invoke(() =>
                     {
@@ -145,28 +131,32 @@ namespace Lexplosion
 
                         ConsoleList[str].Show();
                     });
-                } 
+                }
             };
 
             LaunchGame.GameStopEvent += delegate (string str) //подписываемся на эвент завершения игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
-                if (UserData.GeneralSettings.HiddenMode == true) app.Dispatcher.Invoke(MakeVisible);
+                if (UserData.GeneralSettings.HiddenMode == true)
+                {
+                    ShowMainWindow();
+                }
 
                 if (UserData.GeneralSettings.ShowConsole == true)
                 {
                     app.Dispatcher.Invoke(() =>
                     {
-                        ConsoleList[str].Close();
+                        ConsoleList[str].Exit(null, null);
                         ConsoleList.Remove(str);
                     });
-                }            
+                }
             };
 
             Thread.Sleep(800);
 
             app.Dispatcher.Invoke(() =>
             {
+                nofityIcon = (TaskbarIcon)app.FindResource("NofityIcon");
                 app.MainWindow.Topmost = true;
 
                 var mainWindow = new Gui.Views.Windows.MainWindow()
@@ -373,40 +363,7 @@ namespace Lexplosion
 
         private static bool _exitIsCanceled = false;
         private static bool _inExited = false;
-
-        /// <summary>
-        /// Длеает все окна лаунчера видимыми и выводит их на экран
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void MakeHidden()
-        {
-            foreach (Window window in app.Windows)
-            {
-                if (window is MainWindow || window is Lexplosion.Gui.Views.Windows.Console)
-                {
-                    window.Visibility = Visibility.Collapsed;
-                    window.ShowInTaskbar = false;
-                }         
-            }
-        }
-
-        /// <summary>
-        /// Длеает все окна лаунчера видимыми и выводит их на экран
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void MakeVisible()
-        {
-            foreach (Window window in app.Windows)
-            {
-                if (window is MainWindow || window is Lexplosion.Gui.Views.Windows.Console)
-                {
-                    window.Visibility = Visibility.Visible;
-                    window.ShowInTaskbar = true;
-                }
-            }
-
-            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
-        }
+        private static TaskbarIcon nofityIcon;
 
         /// <summary>
         /// Открывает лаунчер и отменяет закрытие, если оно было.
@@ -419,10 +376,13 @@ namespace Lexplosion
                 {
                     _exitIsCanceled = true;
                     waitingClosing.Set();
-                }  
+                }
             }
 
-            MakeVisible();
+            app.Dispatcher.Invoke(() =>
+            {
+                app.MainWindow = new MainWindow();
+            });
         }
 
         /// <summary>
@@ -445,16 +405,8 @@ namespace Lexplosion
 
                 if (importantThreads > 0)
                 {
-                    foreach (Window window in app.Windows)
-                    {
-                        if (window is MainWindow || window is Lexplosion.Gui.Views.Windows.Console)
-                        {
-                            window.Visibility = Visibility.Collapsed;
-                            window.ShowInTaskbar = false;
-                        }
-                    }
                 }
-            }    
+            }
 
             waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
             // проверяем было ли закрытие отменено
@@ -466,7 +418,7 @@ namespace Lexplosion
                     if (importantThreads > 0)
                     {
                         waitingClosing.Reset();
-                    }       
+                    }
                 }
 
                 _exitIsCanceled = false;
@@ -492,5 +444,30 @@ namespace Lexplosion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void TaskRun(ThreadStart threadFunc) => new Thread(threadFunc).Start();
+
+        public static void ShowMainWindow()
+        {
+            app.Dispatcher.Invoke(() => {
+                app.MainWindow = new MainWindow() 
+                {
+                    Left = app.MainWindow.Left - 322,
+                    Top = app.MainWindow.Top - 89
+                };
+                app.MainWindow.Show();
+            });
+        }
+
+        public static void CloseMainWindow()
+        {
+            System.Console.WriteLine("Test");
+            app.Dispatcher.Invoke(() =>
+            {
+                if (app.MainWindow != null) 
+                { 
+                    app.MainWindow.Close();
+                    app.MainWindow = null;
+                }
+            });
+        }
     }
 }
