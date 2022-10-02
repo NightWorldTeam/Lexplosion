@@ -144,11 +144,11 @@ namespace Lexplosion
 
                 if (UserData.GeneralSettings.ShowConsole == true)
                 {
-                    app.Dispatcher.Invoke(() =>
-                    {
-                        ConsoleList[str].Exit(null, null);
-                        ConsoleList.Remove(str);
-                    });
+                    //app.Dispatcher.Invoke(() =>
+                    //{
+                    //    ConsoleList[str].Exit(null, null);
+                    //    ConsoleList.Remove(str);
+                    //});
                 }
             };
 
@@ -453,12 +453,15 @@ namespace Lexplosion
         public static void ShowMainWindow()
         {
             app.Dispatcher.Invoke(() => {
-                app.MainWindow = new MainWindow() 
-                {
-                    Left = app.MainWindow.Left - 322,
-                    Top = app.MainWindow.Top - 89
-                };
-                app.MainWindow.Show();
+                if (app.MainWindow == null) 
+                { 
+                    app.MainWindow = new MainWindow() 
+                    {
+                        Left = app.MainWindow.Left - 322,
+                        Top = app.MainWindow.Top - 89
+                    };
+                    app.MainWindow.Show();
+                    }
             });
         }
 

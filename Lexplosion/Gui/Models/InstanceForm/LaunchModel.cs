@@ -87,6 +87,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private void GameExited(string id)
         {
+            if (_formModel.DownloadModel.IsDownloadInProgress)
+                _formModel.DownloadModel.IsDownloadInProgress = false;
+
             _mainViewModel.InitTrayComponents(null);
            _formModel.UpperButton.ChangeFuncPlay();
             _mainViewModel.IsInstanceRunning = false;
