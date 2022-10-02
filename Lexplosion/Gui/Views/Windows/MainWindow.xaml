@@ -130,7 +130,7 @@
             AllowsTransparency="True"
             Placement="MousePoint"
             PopupAnimation="Fade"
-            StaysOpen="False">
+            StaysOpen="False" >
 
             <!--
                 Развернуть окно
@@ -142,10 +142,9 @@
             <Border Padding="10" Background="#161819">
                 <Border.Resources>
                     <DataTemplate DataType="{x:Type trayMenu:TrayButton}">
-                        <Button Visibility="{Binding IsEnable, Converter={StaticResource ConvertBoolToVisibility}}">
+                        <Button Command="{Binding ActionMethodCommand}" Visibility="{Binding IsEnable, Converter={StaticResource ConvertBoolToVisibility}}">
                             <Button.Style>
                                 <Style TargetType="{x:Type Button}">
-                                    <Setter Property="Command" Value="{Binding ActionMethodCommand}" />
                                     <Setter Property="Margin" Value="2" />
                                     <Setter Property="Template">
                                         <Setter.Value>

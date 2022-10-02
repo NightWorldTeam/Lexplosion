@@ -14,6 +14,7 @@
 
     <Border Background="{DynamicResource PrimarySolidColorBrush}" CornerRadius="5">
         <Grid>
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
@@ -44,18 +45,47 @@
                     </StackPanel>
 
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                        <TextBlock
-                            Width="20"
-                            Height="20"
-                            Foreground="White"
-                            Text="-"
-                            TextAlignment="Center" />
-                        <TextBlock
-                            Width="20"
-                            Height="20"
-                            Foreground="White"
-                            Text="x"
-                            TextAlignment="Center" />
+                        <Button
+                            Grid.Column="4"
+                            Click="Hide"
+                            Style="{StaticResource HeaderButton}">
+                            <Canvas>
+                                <Line
+                                    Canvas.Left="8"
+                                    Canvas.Top="15"
+                                    Stroke="LightGray"
+                                    StrokeThickness="0.5"
+                                    X1="0"
+                                    X2="12.5"
+                                    Y1="0"
+                                    Y2="0" />
+                            </Canvas>
+                        </Button>
+                        <Button
+                            Grid.Column="5"
+                            Click="Exit"
+                            Style="{StaticResource HeaderButton}">
+                            <Canvas>
+                                <Line
+                                    Canvas.Left="7"
+                                    Canvas.Top="8"
+                                    Stroke="LightGray"
+                                    StrokeThickness="0.5"
+                                    X1="1"
+                                    X2="13"
+                                    Y1="0"
+                                    Y2="13" />
+                                <Line
+                                    Canvas.Left="7"
+                                    Canvas.Top="8"
+                                    Stroke="LightGray"
+                                    StrokeThickness="0.5"
+                                    X1="1"
+                                    X2="13"
+                                    Y1="13"
+                                    Y2="0" />
+                            </Canvas>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </Border>

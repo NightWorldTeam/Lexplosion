@@ -78,6 +78,7 @@ namespace Lexplosion.Tools
                     switch ((MouseMessages)wParam)
                     {
                         case MouseMessages.WM_LBUTTONDOWN:
+                            Console.WriteLine(hookStruct.pt.x.ToString() + " " + hookStruct.pt.y.ToString());
                             MouseLeftClickedEvent?.Invoke(hookStruct.pt.x, hookStruct.pt.y);
                             break;
                         case MouseMessages.WM_RBUTTONDOWN:

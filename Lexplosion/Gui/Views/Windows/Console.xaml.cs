@@ -15,6 +15,9 @@ namespace Lexplosion.Gui.Views.Windows
         private bool _isLastLineError;
         private bool _isFirstLine;
 
+
+        #region Constructor
+
         public Console()
         {
             InitializeComponent();
@@ -25,6 +28,11 @@ namespace Lexplosion.Gui.Views.Windows
 
             ConsoleOutput.Document.Blocks.Add(_paragraph);
         }
+
+        #endregion Constructor
+
+
+        #region Private Methods
 
         private Run GetRun(string text, string foregroundHex, string backgroundHex, double opacity = 0.3) 
         {
@@ -88,5 +96,30 @@ namespace Lexplosion.Gui.Views.Windows
                     ConsoleOutputScrollViewer.ScrollToEnd();
             });
         }
+
+        #region Header Menu
+
+
+        /// <summary>
+        /// Закрывает окно консоли.
+        /// </summary>
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+            LaunchGame.ProcessDataReceived -= AddNewLine;
+            this.Close();
+        }
+
+        /// <summary>
+        /// Сворачиваем консоль.
+        /// </summary>
+        private void Hide(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+
+        #endregion Header Menu
+
+        #endregion Private Methods
     }
 }

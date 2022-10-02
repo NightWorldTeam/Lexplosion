@@ -35,6 +35,7 @@ namespace Lexplosion
 
         public static event Action ExitEvent;
 
+        public static event Action TrayMenuElementClicked;
 
         [STAThread]
         static void Main()
@@ -47,6 +48,11 @@ namespace Lexplosion
             _splashWindow = new SplashWindow();
             _splashWindow.ChangeLoadingBoardPlaceholder();
             app.Run(_splashWindow);
+        }
+
+        public static void TrayMenuElementClickExecute() 
+        {
+            TrayMenuElementClicked?.Invoke();
         }
 
         private static void InitializedSystem()
