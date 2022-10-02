@@ -11,6 +11,8 @@
     xmlns:pages="clr-namespace:Lexplosion.Gui.Views.Pages"
     xmlns:showcasemenu="clr-namespace:Lexplosion.Gui.ViewModels.ShowCaseMenu"
     xmlns:showcasepage="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
+    xmlns:trayMenu="clr-namespace:Lexplosion.Gui.TrayMenu"
     xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
     xmlns:vmcurseforgemarket="clr-namespace:Lexplosion.Gui.ViewModels.CurseforgeMarket"
     xmlns:vmfactorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu"
@@ -123,4 +125,71 @@
     <DataTemplate DataType="{x:Type modalvms:DialogViewModel}">
         <modalviews:DialogView />
     </DataTemplate>
+
+
+    <tb:TaskbarIcon
+        x:Key="NofityIcon"
+        IconSource="/Assets/images/icons/logo.ico"
+        PopupActivation="RightClick">
+        <tb:TaskbarIcon.TrayPopup>
+            <Border Padding="10" Background="#161819">
+                <Border.Resources>
+                    <DataTemplate DataType="{x:Type trayMenu:TrayButton}">
+                        <Button Command="{Binding ActionMethodCommand}" Visibility="{Binding IsEnable, Converter={StaticResource ConvertBoolToVisibility}}">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Margin" Value="2" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Border
+                                                    x:Name="Border"
+                                                    Padding="5"
+                                                    Background="Transparent"
+                                                    CornerRadius="5">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Viewbox
+                                                            Width="18"
+                                                            Height="18"
+                                                            Stretch="Fill">
+                                                            <Path
+                                                                x:Name="Icon"
+                                                                Data="{Binding Icon}"
+                                                                Fill="#b8becc"
+                                                                Stroke="#b8becc" />
+                                                        </Viewbox>
+
+                                                        <TextBlock
+                                                            x:Name="TextContent"
+                                                            Width="120"
+                                                            Margin="10,0,0,1"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="14"
+                                                            FontWeight="Medium"
+                                                            Foreground="#b8becc"
+                                                            Text="{Binding Text}"
+                                                            TextWrapping="WrapWithOverflow" />
+                                                    </StackPanel>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Border" Property="Background" Value="#292b2d" />
+                                                        <Setter TargetName="TextContent" Property="Foreground" Value="#ffffff" />
+                                                        <Setter TargetName="Icon" Property="Path.Fill" Value="#ffffff" />
+                                                        <Setter TargetName="Icon" Property="Path.Stroke" Value="#ffffff" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </DataTemplate>
+                </Border.Resources>
+
+                <ItemsControl ItemsSource="{Binding TrayComponents, Source={StaticResource MainVM}}" />
+            </Border>
+        </tb:TaskbarIcon.TrayPopup>
+    </tb:TaskbarIcon>
 </ResourceDictionary>

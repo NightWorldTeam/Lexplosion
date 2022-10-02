@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Controls;
 using Lexplosion.Gui.Models;
-using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.Stores;
 using Lexplosion.Gui.ViewModels.MainMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
@@ -15,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using Lexplosion.Logic.Management;
 using System.Diagnostics;
+using Lexplosion.Global;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -37,7 +37,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        private bool _isInstanceRunning = false;
+        private static bool _isInstanceRunning = false;
         /// <summary>
         /// Если запушена сборка true, иначе else.
         /// </summary>
@@ -80,17 +80,26 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
-            ShowToastMessage(header, message, state, null);
+            if (UserData.GeneralSettings.HiddenMode == true && !_isInstanceRunning) 
+            { 
+                ShowToastMessage(header, message, state, null);
+            }
         }
 
         public static void ShowToastMessage(string header, string message)
         {
-            ShowToastMessage(header, message, ToastMessageState.Notification, null);
+            if (UserData.GeneralSettings.HiddenMode == true && !_isInstanceRunning)
+            {
+                ShowToastMessage(header, message, ToastMessageState.Notification, null);
+            }
         }
 
         public static void ShowToastMessage(string header, string message, TimeSpan? time = null, ToastMessageState state = ToastMessageState.Notification)
         {
-            ShowToastMessage(header, message, state, time);
+            if (UserData.GeneralSettings.HiddenMode == true && !_isInstanceRunning)
+            {
+                ShowToastMessage(header, message, state, time);
+            }
         }
 
         private static void ShowToastMessage(string header, string message, ToastMessageState state, TimeSpan? time)
@@ -189,6 +198,8 @@ namespace Lexplosion.Gui.ViewModels
 
             DownloadManager = new DownloadManagerViewModel(this);
 
+            Runtime.TrayMenuElementClicked += InitTrayComponents;
+
             InitTrayComponents();
         }
 
@@ -251,8 +262,8 @@ namespace Lexplosion.Gui.ViewModels
                 if (instanceFormViewModel != null)
                     TrayComponents.Add(new TrayButton(0, "Закрыть игру", ResourceGetter.GetString("ExtensionOff"), instanceFormViewModel.CloseInstance) { IsEnable = IsInstanceRunning });
 
-                TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Visible });
-                TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Collapsed });
+                TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
+                TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
                 TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
                 TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
                 TrayComponents.Add(new TrayButton(5, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
@@ -265,8 +276,8 @@ namespace Lexplosion.Gui.ViewModels
             { 
                 TrayComponents.Clear();
 
-                TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Visible });
-                TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowApp) { IsEnable = App.Current.MainWindow.Visibility == Visibility.Collapsed });
+                TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
+                TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
                 TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
                 TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"),ContentSupport) { IsEnable = true });
                 TrayComponents.Add(new TrayButton(5, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });

@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Logic.Management;
-using System;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -13,7 +12,6 @@ namespace Lexplosion.Gui.Views.Windows
     {
         private Paragraph _paragraph;
         private bool _isLastLineError;
-        private bool _isFirstLine;
 
 
         #region Constructor
@@ -50,7 +48,7 @@ namespace Lexplosion.Gui.Views.Windows
 
         private void AddNewLine(string text)
         {
-            if (text == null)
+            if (string.IsNullOrEmpty(text))
                 return;
 
             App.Current.Dispatcher.Invoke(() => 
@@ -103,9 +101,10 @@ namespace Lexplosion.Gui.Views.Windows
         /// <summary>
         /// Закрывает окно консоли.
         /// </summary>
-        private void Exit(object sender, RoutedEventArgs e)
+        internal void Exit(object sender, RoutedEventArgs e)
         {
             LaunchGame.ProcessDataReceived -= AddNewLine;
+            ConsoleOutput.Document.Blocks.Clear();
             this.Close();
         }
 

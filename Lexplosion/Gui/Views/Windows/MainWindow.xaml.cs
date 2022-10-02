@@ -14,10 +14,6 @@ namespace Lexplosion.Gui.Views.Windows
 
     public partial class MainWindow : Window
     {
-        private System.Windows.Forms.NotifyIcon notifyIcon;
-        private Popup _trayMenu;
-        private bool _isTrayButtonClicked;
-
         public MainWindow()
         {
             InitializeComponent();

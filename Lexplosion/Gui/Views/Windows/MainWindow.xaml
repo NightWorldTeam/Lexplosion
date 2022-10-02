@@ -10,15 +10,12 @@
     xmlns:global="clr-namespace:Lexplosion.Global"
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tb="http://www.hardcodet.net/taskbar"
-    xmlns:trayMenu="clr-namespace:Lexplosion.Gui.TrayMenu"
     Width="944"
     Height="528"
     Background="{DynamicResource PrimarySolidColorBrush}"
     Icon="pack://application:,,,/Assets/images/icons/logo.ico"
     ResizeMode="NoResize"
     WindowStyle="None"
-     
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -57,75 +54,6 @@
             </Setter>
         </Style>
 
-        <!--  MenuItem style  -->
-        <Style TargetType="{x:Type MenuItem}">
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Foreground" Value="#BEBEBE" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type MenuItem}">
-                        <Grid
-                            Name="Root"
-                            Height="27"
-                            Background="{StaticResource MidBrsh}">
-                            <ContentPresenter
-                                Name="HeaderHost"
-                                Margin="10,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                ContentSource="Header"
-                                RecognizesAccessKey="True"
-                                TextBlock.FontSize="12"
-                                TextBlock.Foreground="{TemplateBinding Foreground}"
-                                TextOptions.TextFormattingMode="Display"
-                                TextOptions.TextRenderingMode="ClearType" />
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#505050" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#808080" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  ContextMenu style  -->
-        <Style TargetType="{x:Type ContextMenu}">
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Width" Value="170" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ContextMenu}">
-                        <Grid Background="Transparent">
-                            <Border
-                                Margin="0,0,5,5"
-                                Background="{StaticResource MidBrsh}"
-                                BorderThickness="0">
-                                <StackPanel
-                                    Margin="2"
-                                    IsItemsHost="True"
-                                    KeyboardNavigation.DirectionalNavigation="Cycle" />
-                                <Border.Effect>
-                                    <DropShadowEffect
-                                        BlurRadius="3"
-                                        Opacity="0.5"
-                                        ShadowDepth="3"
-                                        Color="Black" />
-                                </Border.Effect>
-                            </Border>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
     </Window.Resources>
 
     <Grid Margin="0,0,0,0" ShowGridLines="False">
@@ -134,69 +62,6 @@
             <RowDefinition Height="28" />
             <RowDefinition Height="499*" />
         </Grid.RowDefinitions>
-
-        <tb:TaskbarIcon PopupActivation="RightClick" >
-            <tb:TaskbarIcon.TrayPopup>
-                <Border Padding="10" Background="#161819">
-                    <Border.Resources>
-                        <DataTemplate DataType="{x:Type trayMenu:TrayButton}">
-                            <Button Command="{Binding ActionMethodCommand}" Visibility="{Binding IsEnable, Converter={StaticResource ConvertBoolToVisibility}}">
-                                <Button.Style>
-                                    <Style TargetType="{x:Type Button}">
-                                        <Setter Property="Margin" Value="2" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type Button}">
-                                                    <Border
-                                                        x:Name="Border"
-                                                        Padding="5"
-                                                        Background="Transparent"
-                                                        CornerRadius="5">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Viewbox
-                                                                Width="18"
-                                                                Height="18"
-                                                                Stretch="Fill">
-                                                                <Path
-                                                                    x:Name="Icon"
-                                                                    Data="{Binding Icon}"
-                                                                    Fill="#b8becc"
-                                                                    Stroke="#b8becc" />
-                                                            </Viewbox>
-
-                                                            <TextBlock
-                                                                x:Name="TextContent"
-                                                                Width="120"
-                                                                Margin="10,0,0,1"
-                                                                VerticalAlignment="Center"
-                                                                FontSize="14"
-                                                                FontWeight="Medium"
-                                                                Foreground="#b8becc"
-                                                                Text="{Binding Text}"
-                                                                TextWrapping="WrapWithOverflow" />
-                                                        </StackPanel>
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="Border" Property="Background" Value="#292b2d" />
-                                                            <Setter TargetName="TextContent" Property="Foreground" Value="#ffffff" />
-                                                            <Setter TargetName="Icon" Property="Path.Fill" Value="#ffffff" />
-                                                            <Setter TargetName="Icon" Property="Path.Stroke" Value="#ffffff" />
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </DataTemplate>
-                    </Border.Resources>
-
-                    <ItemsControl ItemsSource="{Binding TrayComponents, Source={StaticResource MainVM}}" />
-                </Border>
-            </tb:TaskbarIcon.TrayPopup>
-        </tb:TaskbarIcon>
 
         <!--  Header  -->
         <Border BorderBrush="{DynamicResource HeaderSolidColorBrush}" BorderThickness="0,0,0,1">
