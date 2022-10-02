@@ -17,7 +17,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         /* multiplayer fields */
         private readonly List<Tab<VMBase>> _multiplayerTabs;
         private GeneralMultiplayerViewModel _generalMultiplayerViewModel = new GeneralMultiplayerViewModel();
-        private FriendsTabViewModel _friendsTabViewModel = new DevCurtainView();
+        private FriendsTabViewModel _friendsTabViewModel = new FriendsTabViewModel();
         private ChannelTabViewModel _channelTabViewModel = new ChannelTabViewModel();
         /* multiplayer fields */
 

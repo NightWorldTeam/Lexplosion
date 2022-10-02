@@ -370,7 +370,8 @@ namespace Lexplosion.Logic.FileSystem
                         updated++;
                         FilesDownloadEvent?.Invoke(updatesCount, updated);
 
-                        // TODO: где-то тут записывать что файл был обновлен, чтобы если загрузка была первана она началась с того же места
+                        //сохарняем updates
+                        SaveFile(instancePath + "lastUpdates.json", JsonConvert.SerializeObject(updates));
                     }
                 }
 
@@ -387,8 +388,11 @@ namespace Lexplosion.Logic.FileSystem
                             addon.RemoveFromDir(instancePath);
                             installedAddons.TryRemove(addon.ProjectID);
                             updates.Remove(file);
+
                             updated++;
                             FilesDownloadEvent?.Invoke(updatesCount, updated);
+
+                            installedAddons.Save();
                         }
                         else
                         {
@@ -418,8 +422,6 @@ namespace Lexplosion.Logic.FileSystem
                         }
                     }
                 }
-
-                installedAddons.Save();
             }
 
             //сохарняем updates

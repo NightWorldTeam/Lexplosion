@@ -127,6 +127,9 @@
   <data name="NewtonsoftJson_zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\DLL\NewtonsoftJson.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="TaskbarNotification_zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\DLL\TaskbarNotification.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Tommy_zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\DLL\Tommy.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

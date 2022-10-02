@@ -262,6 +262,11 @@ namespace Lexplosion
                 return Assembly.Load(UnzipBytesArray(Resources.Tommy_zip));
             }
 
+            if (args.Name.Contains("Hardcodet.Wpf.TaskbarNotification"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.TaskbarNotification_zip));
+            }
+
             if (args.Name.Contains("System.IO.Compression"))
             {
                 return Assembly.Load(Resources.Compression);
