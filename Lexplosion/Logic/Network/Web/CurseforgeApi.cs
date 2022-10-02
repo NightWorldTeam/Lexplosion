@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Runtime.CompilerServices;
+using System.IO.Compression;
 using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
-using System.IO.Compression;
 
 namespace Lexplosion.Logic.Network
 {

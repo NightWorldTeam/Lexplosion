@@ -45,8 +45,8 @@ namespace Lexplosion.Global
             public const string Account = "https://night-world.org/api/account/";
         }
 
-        public static string LauncherDataPath = Environment.ExpandEnvironmentVariables("%appdata%") + "/night-world";
-        public static string gamePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile).Replace(@"\", "/") + "/" + "night-world";
+        public static string LauncherDataPath = Environment.ExpandEnvironmentVariables("%appdata%") + "/lexplosion-data";
+        public static string gamePath = Environment.ExpandEnvironmentVariables("%appdata%") + "/" + "lexplosion";
         public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ";
         public const string passwordKey = "ZEmMJ0ZaXQXuHu8tUnfdaCLCQaFgRjOP";
         public const int version = 1574676433;
