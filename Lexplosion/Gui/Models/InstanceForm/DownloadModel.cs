@@ -1,6 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;

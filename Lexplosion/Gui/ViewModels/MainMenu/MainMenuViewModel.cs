@@ -2,6 +2,7 @@
 using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
+using Lexplosion.Gui.Views.Pages;
 using Lexplosion.Tools;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,7 +17,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         /* multiplayer fields */
         private readonly List<Tab<VMBase>> _multiplayerTabs;
         private GeneralMultiplayerViewModel _generalMultiplayerViewModel = new GeneralMultiplayerViewModel();
-        private FriendsTabViewModel _friendsTabViewModel = new FriendsTabViewModel();
+        private FriendsTabViewModel _friendsTabViewModel = new DevCurtainView();
         private ChannelTabViewModel _channelTabViewModel = new ChannelTabViewModel();
         /* multiplayer fields */
 
@@ -162,12 +163,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("friends"),
-                    Content = UserData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
+                    Content = UserData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
                 },
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("channels"),
-                    Content = UserData.User.AccountType == AccountType.NightWorld ?_channelTabViewModel : curtains
+                    Content = UserData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
                 }
             };
         }

@@ -286,14 +286,14 @@
 
                 <ItemsControl
                     Grid.Row="1"
-                    Margin="15,0,0,0"
+                    Margin="15,0,0,30"
                     BorderBrush="Transparent"
                     IsTabStop="False"
                     ItemsSource="{Binding InstanceList}" />
 
                 <customcontrols:Paginator
                     Grid.Row="2"
-                    Margin="0,30,0,15"
+                    Margin="0,0,0,15"
                     DataContext="{Binding PaginatorVM}"
                     Visibility="{Binding DataContext.IsPaginatorVisible, Converter={StaticResource ConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
 

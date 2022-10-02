@@ -13,6 +13,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Properties
 
 
+        private MainViewModel _mainViewModel;
         public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
         public List<Category> Categories { get; } = new List<Category>();
         public InstanceClient InstanceClient { get; }
@@ -39,6 +40,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient, InstanceFormViewModel instanceFormViewModel)
         {
+            _mainViewModel = mainViewModel;
             InstanceClient = instanceClient;
 
             instanceClient.StateChanged += UpdateLowerButton;
@@ -129,7 +131,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     );
                 }
 
-                if (DownloadModel.IsDownloadInProgress && !DownloadModel.IsPrepareOnly)
+                if (DownloadModel.IsDownloadInProgress && !_mainViewModel.IsInstanceRunning)
                 {
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("cancelDownload"), MultiButtonProperties.GeometryCancelIcon, LowerButtonFunc.CancelDownload)
