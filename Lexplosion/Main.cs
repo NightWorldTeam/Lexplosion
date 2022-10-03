@@ -226,7 +226,6 @@ namespace Lexplosion
 
         private static byte[] UnzipBytesArray(byte[] zipBytes)
         {
-            System.Console.WriteLine("UnzipBytesArray");
             using (Stream archivedBytes = new MemoryStream(zipBytes))
             {
                 using (var zip = new ZipArchive(archivedBytes, ZipArchiveMode.Read))
