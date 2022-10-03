@@ -46,7 +46,7 @@ namespace Lexplosion.Global
         }
 
         public static string LauncherDataPath = Environment.ExpandEnvironmentVariables("%appdata%") + "/lexplosion-data";
-        public static string gamePath = Environment.ExpandEnvironmentVariables("%appdata%") + "/" + "lexplosion";
+        public static string gamePath = Environment.ExpandEnvironmentVariables("%appdata%") + "/" + ".lexplosion";
         public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ";
         public const string passwordKey = "ZEmMJ0ZaXQXuHu8tUnfdaCLCQaFgRjOP";
         public const int version = 1574676433;
