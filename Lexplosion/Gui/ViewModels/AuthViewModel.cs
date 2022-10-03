@@ -325,18 +325,18 @@ namespace Lexplosion.Gui.ViewModels
                         break;
                     }
                 case AuthCode.DataError:
-                    MainViewModel.ShowToastMessage("Ошибка авторизации!", "Неверный логин или пароль.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     break;
                 case AuthCode.NoConnect:
-                    MainViewModel.ShowToastMessage("Ошибка авторизации!", "Нет соединения с сервером.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     break;
                 case AuthCode.TokenError:
-                    MainViewModel.ShowToastMessage("Ошибка авторизации!", "Ошибка с токеном.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                    MainViewModel.ShowToastMessage("Ошибка авторизации", "Ошибка с токеном.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                     FollowToMicrosoft();
                     break;
                 case AuthCode.SessionExpired:
                     {
-                        MainViewModel.ShowToastMessage("Ошибка авторизации!", "Ошибка сессии. Попробуйте переавторизироваться.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                        MainViewModel.ShowToastMessage("Ошибка входа", "Сессия истекла. Стоит попробовать снова ввести пароль.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                         break;
                     }
                 default:

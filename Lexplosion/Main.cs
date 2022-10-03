@@ -30,7 +30,6 @@ namespace Lexplosion
     {
         private static App app = new App();
         private static SplashWindow _splashWindow;
-        private static Dictionary<string, Lexplosion.Gui.Views.Windows.Console> ConsoleList = new Dictionary<string, Lexplosion.Gui.Views.Windows.Console>();
 
         public static Process CurrentProcess { get; private set; }
 
@@ -117,24 +116,24 @@ namespace Lexplosion
             };
 
             // подписываемся на запуск игры до запуска окна
-            LaunchGame.GameStartEvent += (string str) =>
+            LaunchGame.GameStartEvent += (LaunchGame gameManager) =>
             {
                 if (UserData.GeneralSettings.ShowConsole == true)
                 {
                     app.Dispatcher.Invoke(() =>
                     {
-                        ConsoleList[str] = new Gui.Views.Windows.Console()
+                        var console = new Gui.Views.Windows.Console(gameManager)
                         {
                             Left = app.MainWindow.Left - 322,
                             Top = app.MainWindow.Top - 89
                         };
 
-                        ConsoleList[str].Show();
+                        console.Show();
                     });
                 }
             };
 
-            LaunchGame.GameStopEvent += delegate (string str) //подписываемся на эвент завершения игры
+            LaunchGame.GameStopEvent += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
                 if (UserData.GeneralSettings.HiddenMode == true)

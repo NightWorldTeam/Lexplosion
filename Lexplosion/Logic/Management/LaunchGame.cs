@@ -15,7 +15,7 @@ using Lexplosion.Logic.Management.Installers;
 
 namespace Lexplosion.Logic.Management
 {
-    class LaunchGame
+    public class LaunchGame
     {
         private Process process = null;
         private Gateway gameGateway = null;
@@ -31,12 +31,12 @@ namespace Lexplosion.Logic.Management
         private bool removeImportantTaskMark = true;
         private object removeImportantTaskLocker = new object();
 
-        private string _gameClientName;
+        public string GameClientName { get; private set; } = "";
 
         /// <summary>
         /// Выполняется при запуске процесса игры
         /// </summary>
-        public static event Action<string> GameStartEvent;
+        public static event Action<LaunchGame> GameStartEvent;
         /// <summary>
         /// Выполняется после GameStartEvent, когда у майкнрафт появляется окно.
         /// </summary>
@@ -44,11 +44,11 @@ namespace Lexplosion.Logic.Management
         /// <summary>
         /// Выполняется при завершении процесса игры
         /// </summary>
-        public static event Action<string> GameStopEvent;
+        public static event Action<LaunchGame> GameStopEvent;
         /// <summary>
         /// Отрабатывает когда поялвяются данные из консоли майкрафта.
         /// </summary>
-        public static event Action<string> ProcessDataReceived;
+        public event Action<string> ProcessDataReceived;
 
         private static object loocker = new object();
 
@@ -129,7 +129,7 @@ namespace Lexplosion.Logic.Management
 
         public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
         {
-            _gameClientName = gameClientName;
+            GameClientName = gameClientName;
             string command = CreateCommand(data);
 
             process = new Process();
@@ -168,7 +168,7 @@ namespace Lexplosion.Logic.Management
                 }  
             }
             
-            GameStartEvent?.Invoke(gameClientName);
+            GameStartEvent?.Invoke(this);
 
             if (_settings.ShowConsole == true)
             {
@@ -216,7 +216,7 @@ namespace Lexplosion.Logic.Management
                     }
                     catch { }
 
-                    GameStopEvent?.Invoke(gameClientName);
+                    GameStopEvent?.Invoke(this);
 
                     lock (removeImportantTaskLocker)
                     {
@@ -455,7 +455,7 @@ namespace Lexplosion.Logic.Management
             _classInstance = null;
             _processIsWork = false;
 
-            GameStopEvent?.Invoke(_gameClientName);
+            GameStopEvent?.Invoke(this);
 
             try
             {

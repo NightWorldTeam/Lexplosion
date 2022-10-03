@@ -98,7 +98,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
     /// <summary>
     /// Нужен для передачи данных между методами при запуске игры.
     /// </summary>
-    class InitData
+    public class InitData
     {
         public InstanceInit InitResult;
         public List<string> DownloadErrors;

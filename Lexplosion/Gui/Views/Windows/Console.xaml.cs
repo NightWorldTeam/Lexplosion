@@ -12,17 +12,19 @@ namespace Lexplosion.Gui.Views.Windows
     {
         private Paragraph _paragraph;
         private bool _isLastLineError;
+        private LaunchGame _gameManager;
 
 
         #region Constructor
 
-        public Console()
+        public Console(LaunchGame gameManager)
         {
             InitializeComponent();
             MouseDown += delegate { try { DragMove(); } catch { } };
 
             _paragraph = new Paragraph();
-            LaunchGame.ProcessDataReceived += AddNewLine;
+            _gameManager = gameManager;
+            gameManager.ProcessDataReceived += AddNewLine;
 
             ConsoleOutput.Document.Blocks.Add(_paragraph);
         }
@@ -103,7 +105,7 @@ namespace Lexplosion.Gui.Views.Windows
         /// </summary>
         internal void Exit(object sender, RoutedEventArgs e)
         {
-            LaunchGame.ProcessDataReceived -= AddNewLine;
+            _gameManager.ProcessDataReceived -= AddNewLine;
             ConsoleOutput.Document.Blocks.Clear();
             this.Close();
         }
