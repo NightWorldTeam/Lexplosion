@@ -450,7 +450,7 @@ namespace Lexplosion.Logic.FileSystem
 
             try
             {
-                if (!DownloadFile(LaunсherSettings.URL.JavaData + "windows/" + bitDepth + "/download/" + fileName, fileName, tempDir, taskArgs))
+                if (!DownloadFile(LaunсherSettings.URL.JavaData + "download/windows/" + bitDepth + "/" + fileName + "?1", fileName, tempDir, taskArgs))
                 {
                     return false;
                 }
