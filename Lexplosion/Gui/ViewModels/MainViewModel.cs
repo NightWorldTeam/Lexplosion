@@ -80,7 +80,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
-            if (UserData.GeneralSettings.HiddenMode != true && !_isInstanceRunning) 
+            if ((bool)!UserData.GeneralSettings.HiddenMode || ((bool)UserData.GeneralSettings.HiddenMode && !_isInstanceRunning)) 
             { 
                 ShowToastMessage(header, message, state, null);
             }
@@ -88,7 +88,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message)
         {
-            if (UserData.GeneralSettings.HiddenMode != true && !_isInstanceRunning)
+            if ((bool)!UserData.GeneralSettings.HiddenMode || ((bool)UserData.GeneralSettings.HiddenMode && !_isInstanceRunning))
             {
                 ShowToastMessage(header, message, ToastMessageState.Notification, null);
             }
@@ -96,7 +96,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message, TimeSpan? time = null, ToastMessageState state = ToastMessageState.Notification)
         {
-            if (UserData.GeneralSettings.HiddenMode != true && !_isInstanceRunning)
+            if ((bool)!UserData.GeneralSettings.HiddenMode || ((bool)UserData.GeneralSettings.HiddenMode && !_isInstanceRunning))
             {
                 ShowToastMessage(header, message, state, time);
             }

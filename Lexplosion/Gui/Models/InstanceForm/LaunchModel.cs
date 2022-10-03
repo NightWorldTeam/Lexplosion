@@ -75,6 +75,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
             else
             {
+                _mainViewModel.IsInstanceRunning = false;
                 MainViewModel.ShowToastMessage(
                     ResourceGetter.GetString("runUnsuccessfulNotification"),
                     ResourceGetter.GetString("instanceName") + " : " + _formModel.InstanceClient.Name,
@@ -87,12 +88,12 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private void GameExited(string id)
         {
+            _mainViewModel.IsInstanceRunning = false;
             if (_formModel.DownloadModel.IsDownloadInProgress)
                 _formModel.DownloadModel.IsDownloadInProgress = false;
 
             _mainViewModel.InitTrayComponents(null);
-           _formModel.UpperButton.ChangeFuncPlay();
-            _mainViewModel.IsInstanceRunning = false;
+            _formModel.UpperButton.ChangeFuncPlay();
             _formModel.UpdateLowerButton();
         }
 
