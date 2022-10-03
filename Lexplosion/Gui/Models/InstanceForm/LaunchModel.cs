@@ -68,7 +68,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     TimeSpan.FromSeconds(5)
                 );
 
-                _mainViewModel.InitTrayComponents(_formViewModel);
+                _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
 
                 _formModel.DownloadModel.IsDownloadInProgress = false;
                 _formModel.UpperButton.ChangeFuncClose();
@@ -92,7 +92,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             if (_formModel.DownloadModel.IsDownloadInProgress)
                 _formModel.DownloadModel.IsDownloadInProgress = false;
 
-            _mainViewModel.InitTrayComponents(null);
+            _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
             _formModel.UpperButton.ChangeFuncPlay();
             _formModel.UpdateLowerButton();
         }
