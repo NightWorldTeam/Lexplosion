@@ -392,7 +392,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                if (DownloadFile(url, file, temp, taskArgs))
+                if (!DownloadFile(url, file, temp, taskArgs))
                 {
                     return false;
                 }
@@ -428,7 +428,7 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                if (DownloadFile(url, file, temp, taskArgs))
+                if (!DownloadFile(url, file, temp, taskArgs))
                 {
                     return false;
                 }
@@ -576,10 +576,7 @@ namespace Lexplosion.Logic.FileSystem
                         addr = addr + lib;
                     }
 
-                    if (lib == "net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860.jar")
-                    {
-
-                    }
+                    Console.WriteLine(addr);
 
                     bool isDownload;
                     string name = folders[folders.Length - 1];
