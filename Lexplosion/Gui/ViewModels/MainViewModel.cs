@@ -28,7 +28,7 @@ namespace Lexplosion.Gui.ViewModels
         public MainMenuViewModel MainMenuVM { get; private set; }
 
         private InstanceFormViewModel _runningInstance;
-        public InstanceFormViewModel RunningInstance 
+        public InstanceFormViewModel RunningInstance
         {
             get => _runningInstance; set
             {
@@ -55,9 +55,9 @@ namespace Lexplosion.Gui.ViewModels
         /// Данное свойство содержит в себе версии игры.
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
         /// </summary>
-        public ImmutableArray<string> ReleaseGameVersions 
-        {   
-            get => _releaseGameVersions; private set 
+        public ImmutableArray<string> ReleaseGameVersions
+        {
+            get => _releaseGameVersions; private set
             {
                 _releaseGameVersions = value;
                 OnPropertyChanged();
@@ -80,8 +80,8 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
-            if ((bool)!UserData.GeneralSettings.HiddenMode || ((bool)UserData.GeneralSettings.HiddenMode && !_isInstanceRunning)) 
-            { 
+            if ((bool)!UserData.GeneralSettings.HiddenMode || ((bool)UserData.GeneralSettings.HiddenMode && !_isInstanceRunning))
+            {
                 ShowToastMessage(header, message, state, null);
             }
         }
@@ -152,7 +152,11 @@ namespace Lexplosion.Gui.ViewModels
         private RelayCommand _closeCommand;
         public RelayCommand CloseCommand
         {
-            get => _closeCommand ?? (_closeCommand = new RelayCommand(obj => Runtime.Exit()));
+            get => _closeCommand ?? (_closeCommand = new RelayCommand(obj =>
+            {
+                Runtime.Exit();
+                InitTrayComponents();
+            }));
         }
 
         /// <summary>
@@ -169,18 +173,18 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         private RelayCommand _contactSupportCommand;
-        public RelayCommand ContactSupportCommand 
+        public RelayCommand ContactSupportCommand
         {
-            get => _contactSupportCommand ?? (_contactSupportCommand = new RelayCommand(obj => 
+            get => _contactSupportCommand ?? (_contactSupportCommand = new RelayCommand(obj =>
             {
                 MainViewModel.ContentSupport();
             }));
         }
 
         private RelayCommand _showMainWindowCommand;
-        public RelayCommand ShowMainWindowCommand 
+        public RelayCommand ShowMainWindowCommand
         {
-            get => _showMainWindowCommand ?? (_showMainWindowCommand = new RelayCommand(obj => 
+            get => _showMainWindowCommand ?? (_showMainWindowCommand = new RelayCommand(obj =>
             {
                 Runtime.ShowMainWindow();
                 InitTrayComponents();
@@ -203,7 +207,7 @@ namespace Lexplosion.Gui.ViewModels
 
             NavigationStore.CurrentViewModel = new AuthViewModel(this);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
-            
+
             ExportViewModel = new ExportViewModel(this);
 
             DownloadManager = new DownloadManagerViewModel(this);
@@ -263,10 +267,18 @@ namespace Lexplosion.Gui.ViewModels
 
         #region Private Methods
 
-        internal void InitTrayComponents(InstanceFormViewModel instanceFormViewModel) 
+        internal void InitTrayComponents()
         {
-            App.Current.Dispatcher.Invoke(() =>
-            {
+            App.Current.Dispatcher.Invoke(() => {
+                if (RunningInstance == null)
+                    InitTrayComponentsWithoutGame();
+                else InitTrayComponentsWithGame(RunningInstance);
+            });
+        }
+
+        internal void InitTrayComponentsWithGame(InstanceFormViewModel instanceFormViewModel)
+        {
+            App.Current.Dispatcher.Invoke(() => {
                 TrayComponents.Clear();
 
                 if (instanceFormViewModel != null)
@@ -280,19 +292,18 @@ namespace Lexplosion.Gui.ViewModels
             });
         }
 
-        internal void InitTrayComponents() 
+        internal void InitTrayComponentsWithoutGame()
         {
-            App.Current.Dispatcher.Invoke(() => 
-            { 
+            App.Current.Dispatcher.Invoke(() => {
                 TrayComponents.Clear();
 
                 TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
                 TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
                 TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
-                TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"),ContentSupport) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
                 TrayComponents.Add(new TrayButton(5, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
             });
-        } 
+        }
 
         // обновляем свойство currentviewmodel
         private void OnCurrentViewModelChanged()
@@ -328,11 +339,11 @@ namespace Lexplosion.Gui.ViewModels
                         releaseOnlyVersions.Add(v.id);
                         allVersions.Add("release " + v.id);
                     }
-                    else 
+                    else
                     {
                         allVersions.Add("snapshot " + v.id);
                     }
-                    
+
                 }
                 ReleaseGameVersions = new ImmutableArray<string>(releaseOnlyVersions);
                 AllGameVersions = new ImmutableArray<string>(allVersions);
@@ -341,7 +352,7 @@ namespace Lexplosion.Gui.ViewModels
             });
         }
 
-        public MainMenuViewModel InitMainMenuViewModel(MainMenuViewModel mainMenuViewModel) 
+        public MainMenuViewModel InitMainMenuViewModel(MainMenuViewModel mainMenuViewModel)
         {
             if (MainMenuVM == null)
                 return MainMenuVM = mainMenuViewModel;
