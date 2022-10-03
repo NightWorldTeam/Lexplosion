@@ -401,27 +401,33 @@ namespace Lexplosion
                 }
             }
 
-            waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
-            // проверяем было ли закрытие отменено
-            if (_exitIsCanceled)
+            TaskRun(delegate ()
             {
-                // снова блочим waitingClosing, если сохранилась приоритетная задача, ибо метод CancelExit ее разлочил
-                lock (locker)
+                waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
+                                          // проверяем было ли закрытие отменено
+                if (_exitIsCanceled)
                 {
-                    if (importantThreads > 0)
+                    // снова блочим waitingClosing, если сохранилась приоритетная задача, ибо метод CancelExit ее разлочил
+                    lock (locker)
                     {
-                        waitingClosing.Reset();
+                        if (importantThreads > 0)
+                        {
+                            waitingClosing.Reset();
+                        }
                     }
+
+                    _exitIsCanceled = false;
+                    _inExited = false;
+
+                    return;
                 }
 
-                _exitIsCanceled = false;
-                _inExited = false;
-
-                return;
-            }
-
-            BeforeExit(null, null);
-            Environment.Exit(0);
+                app.Dispatcher.Invoke(delegate ()
+                {
+                    BeforeExit(null, null);
+                    Environment.Exit(0);
+                });        
+            });
         }
 
         public static void BeforeExit(object sender, EventArgs e)
