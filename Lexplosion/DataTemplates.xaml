@@ -130,7 +130,8 @@
     <tb:TaskbarIcon
         x:Key="NofityIcon"
         IconSource="/Assets/images/icons/logo.ico"
-        PopupActivation="RightClick">
+        PopupActivation="RightClick"
+        LeftClickCommand="{Binding Source={StaticResource MainVM}, Path=ShowMainWindowCommand}">
         <tb:TaskbarIcon.TrayPopup>
             <Border Padding="10" Background="#161819">
                 <Border.Resources>
