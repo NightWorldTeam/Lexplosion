@@ -7,17 +7,17 @@ using System.Windows;
 using System.Threading;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using Hardcodet.Wpf.TaskbarNotification;
 using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
+using Lexplosion.Gui;
 using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
-using System.Collections.Generic;
-using Hardcodet.Wpf.TaskbarNotification;
-using Lexplosion.Gui;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.

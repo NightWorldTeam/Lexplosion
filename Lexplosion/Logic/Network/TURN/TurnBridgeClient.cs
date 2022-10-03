@@ -31,7 +31,7 @@ namespace Lexplosion.Logic.Network.TURN
             Console.WriteLine(Encoding.UTF8.GetString(data));
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 8765));
+            socket.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 9765));
             socket.Send(data);
 
             Console.WriteLine("CONNECTED FDHSGFHDFH");

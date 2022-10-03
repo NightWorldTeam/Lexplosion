@@ -20,35 +20,43 @@ namespace Lexplosion.Logic.Network.TURN
 
         public bool Connect(string selfUUID, string hostUUID, out IPEndPoint point)
         {
-            byte[] data = new byte[64];
-            byte[] bselfUUID = Encoding.UTF8.GetBytes(selfUUID);
-            byte[] bhostUUID = Encoding.UTF8.GetBytes(hostUUID);
-
-            for (int i = 0; i < bselfUUID.Length; i++)
+            try
             {
-                data[i] = bselfUUID[i];
-            }
+                byte[] data = new byte[64];
+                byte[] bselfUUID = Encoding.UTF8.GetBytes(selfUUID);
+                byte[] bhostUUID = Encoding.UTF8.GetBytes(hostUUID);
 
-            for (int i = 0; i < bhostUUID.Length; i++)
+                for (int i = 0; i < bselfUUID.Length; i++)
+                {
+                    data[i] = bselfUUID[i];
+                }
+
+                for (int i = 0; i < bhostUUID.Length; i++)
+                {
+                    data[i + 32] = bhostUUID[i];
+                }
+
+                Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 9765)); 
+                sock.Send(data);
+
+                lock (_waitDeletingLoocker)
+                {
+                    pointsSockets[(IPEndPoint)sock.LocalEndPoint] = sock;
+                    sockets.Add(sock);
+                }
+
+                WaitConnections.Set();
+
+                point = (IPEndPoint)sock.LocalEndPoint;
+
+                Console.WriteLine("CONNECTED FGDSGFSD");
+            }
+            catch
             {
-                data[i + 32] = bhostUUID[i];
+                point = null;
+                return false;
             }
-
-            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 8765)); // TODO: обернуть в трай
-            sock.Send(data);
-
-            lock (_waitDeletingLoocker)
-            {
-                pointsSockets[(IPEndPoint)sock.LocalEndPoint] = sock;
-                sockets.Add(sock);
-            }
-            
-            WaitConnections.Set();
-
-            point = (IPEndPoint)sock.LocalEndPoint;
-
-            Console.WriteLine("CONNECTED FGDSGFSD");
 
             return true;
         }
