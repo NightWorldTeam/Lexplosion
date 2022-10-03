@@ -177,6 +177,16 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
+        private RelayCommand _showMainWindowCommand;
+        public RelayCommand ShowMainWindowCommand 
+        {
+            get => _showMainWindowCommand ?? (_showMainWindowCommand = new RelayCommand(obj => 
+            {
+                Runtime.ShowMainWindow();
+                InitTrayComponents();
+            }));
+        }
+
         #endregion Command
 
 

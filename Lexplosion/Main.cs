@@ -17,6 +17,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using Hardcodet.Wpf.TaskbarNotification;
+using Lexplosion.Gui;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
