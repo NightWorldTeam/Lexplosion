@@ -276,7 +276,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="taskArgs">Аргументы задачи</param>
         /// <returns></returns>
         protected bool UnsafeDownloadZip(string url, string to, string file, string temp, TaskArgs taskArgs)
-        {                
+        {
             string zipFile = file + ".zip";
 
             //try
@@ -287,7 +287,10 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 DelFile(temp + zipFile);
-                DownloadFile(url + ".zip", zipFile, temp, taskArgs);
+                if (!DownloadFile(url + ".zip", zipFile, temp, taskArgs))
+                {
+                    return false;
+                }
 
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
                 File.Delete(temp + zipFile);
@@ -329,7 +332,10 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                DownloadFile(url + ".zip", zipFile, temp, taskArgs);
+                if (!DownloadFile(url + ".zip", zipFile, temp, taskArgs))
+                {
+                    return false;
+                }
                 DelFile(to + file);
 
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
@@ -385,8 +391,11 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     Directory.CreateDirectory(to);
                 }
-                
-                DownloadFile(url, file, temp, taskArgs);
+
+                if (DownloadFile(url, file, temp, taskArgs))
+                {
+                    return false;
+                }
                 DelFile(to + file);
                 File.Move(temp + file, to + file);
 
@@ -419,7 +428,10 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                DownloadFile(url, file, temp, taskArgs);
+                if (DownloadFile(url, file, temp, taskArgs))
+                {
+                    return false;
+                }
                 DelFile(to + file);
 
                 using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
@@ -464,7 +476,7 @@ namespace Lexplosion.Logic.FileSystem
 
             string addr;
             int updated = 0;
-            List<string> errors = new List<string>();           
+            List<string> errors = new List<string>();
             string temp = CreateTempDir();
 
             BaseDownloadEvent?.Invoke(updatesCount, 0);
@@ -564,6 +576,11 @@ namespace Lexplosion.Logic.FileSystem
                         addr = addr + lib;
                     }
 
+                    if (lib == "net/minecraftforge/forge/1.12.2-14.23.5.2860/forge-1.12.2-14.23.5.2860.jar")
+                    {
+
+                    }
+
                     bool isDownload;
                     string name = folders[folders.Length - 1];
                     string fileDir = DirectoryPath + "/libraries/" + ff;
@@ -637,7 +654,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    //try
+                    try
                     {
                         List<List<string>> obtainingMethod = libraries[lib].obtainingMethod; // получаем метод
 
@@ -719,7 +736,7 @@ namespace Lexplosion.Logic.FileSystem
                                             }
 
                                             File.Move(from, to);
-                                                
+
                                         }
                                         break;
                                     case "copyFile":
@@ -760,10 +777,10 @@ namespace Lexplosion.Logic.FileSystem
                             SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
                         }
                     }
-                    /*catch
+                    catch
                     {
                         errors.Add("libraries/" + lib);
-                    }*/
+                    }
 
                     updated++;
                     BaseDownloadEvent?.Invoke(updatesCount, updated);
@@ -873,7 +890,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     var taskArgs = new TaskArgs
                     {
-                        PercentHandler = delegate (int pr) 
+                        PercentHandler = delegate (int pr)
                         {
                             _fileDownloadHandler?.Invoke(filename, pr, DownloadFileProgress.PercentagesChanged);
                         },
