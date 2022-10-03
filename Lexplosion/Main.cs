@@ -370,26 +370,6 @@ namespace Lexplosion
         private static TaskbarIcon nofityIcon;
 
         /// <summary>
-        /// Открывает лаунчер и отменяет закрытие, если оно было.
-        /// </summary>
-        public static void ShowApp()
-        {
-            lock (locker)
-            {
-                if (_inExited)
-                {
-                    _exitIsCanceled = true;
-                    waitingClosing.Set();
-                }
-            }
-
-            app.Dispatcher.Invoke(() =>
-            {
-                app.MainWindow = new MainWindow();
-            });
-        }
-
-        /// <summary>
         /// убивает процесс лаунчера
         /// </summary>
         public static void KillApp()
@@ -399,7 +379,7 @@ namespace Lexplosion
         }
 
         /// <summary>
-        /// Выход из лаунчера. Если запущен приоритетный процесс, то ждет его завршения и только потом закрывеат лаунчер. Закртие может быть омтенено методов ShowApp
+        /// Выход из лаунчера. Если запущен приоритетный процесс, то ждет его завршения и только потом закрывеат лаунчер. Закртие может быть омтенено методом ShowMainWindow
         /// </summary>
         public static void Exit()
         {
@@ -409,6 +389,7 @@ namespace Lexplosion
 
                 if (importantThreads > 0)
                 {
+                    CloseMainWindow();
                 }
             }
 
@@ -451,6 +432,15 @@ namespace Lexplosion
 
         public static void ShowMainWindow()
         {
+            lock (locker)
+            {
+                if (_inExited)
+                {
+                    _exitIsCanceled = true;
+                    waitingClosing.Set();
+                }
+            }
+
             app.Dispatcher.Invoke(() => {
                 if (app.MainWindow == null) 
                 { 
@@ -460,7 +450,7 @@ namespace Lexplosion
                         Top = app.MainWindow.Top - 89
                     };
                     app.MainWindow.Show();
-                    }
+                }
             });
         }
 
