@@ -38,6 +38,11 @@ namespace Lexplosion
 
         public static event Action TrayMenuElementClicked;
 
+        // TODO: сохранять координаты закрытого главного окна, использовать при открытии следующего
+
+        private static double leftPos;
+        private static double topPos;
+
         [STAThread]
         static void Main()
         {
@@ -164,6 +169,9 @@ namespace Lexplosion
                     Left = app.MainWindow.Left - 322,
                     Top = app.MainWindow.Top - 89
                 };
+
+                leftPos = mainWindow.Left;
+                topPos = mainWindow.Top;
 
                 mainWindow.Show();
                 ((Gui.Views.Windows.SplashWindow)app.MainWindow).SmoothClosing();
@@ -447,8 +455,8 @@ namespace Lexplosion
                 { 
                     app.MainWindow = new MainWindow() 
                     {
-                        Left = app.MainWindow.Left - 322,
-                        Top = app.MainWindow.Top - 89
+                        Left = leftPos,
+                        Top = topPos
                     };
                     app.MainWindow.Show();
                 }
@@ -457,11 +465,12 @@ namespace Lexplosion
 
         public static void CloseMainWindow()
         {
-            System.Console.WriteLine("Test");
             app.Dispatcher.Invoke(() =>
             {
                 if (app.MainWindow != null) 
-                { 
+                {
+                    leftPos = app.MainWindow.Left;
+                    topPos = app.MainWindow.Top;
                     app.MainWindow.Close();
                     app.MainWindow = null;
                 }
