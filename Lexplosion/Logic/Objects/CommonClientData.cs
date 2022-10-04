@@ -26,6 +26,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public List<List<string>> obtainingMethod;
         public bool isNative;
         public ActivationConditions activationConditions;
+        public bool notLaunch;
     }
 
     public class VersionManifest
@@ -71,6 +72,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public Dictionary<string, string> minecraftJar;
         public long releaseIndex;
         public string arguments;
+        public string jvmArguments;
         public string gameVersion;
         public string assetsVersion;
         public string assetsIndexes;

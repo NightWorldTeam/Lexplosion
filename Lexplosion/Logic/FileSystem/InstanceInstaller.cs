@@ -651,7 +651,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    try
+                    //try
                     {
                         List<List<string>> obtainingMethod = libraries[lib].obtainingMethod; // получаем метод
 
@@ -774,10 +774,10 @@ namespace Lexplosion.Logic.FileSystem
                             SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
                         }
                     }
-                    catch
-                    {
-                        errors.Add("libraries/" + lib);
-                    }
+                    //catch
+                    //{
+                    //    errors.Add("libraries/" + lib);
+                    //}
 
                     updated++;
                     BaseDownloadEvent?.Invoke(updatesCount, updated);

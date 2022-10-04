@@ -101,18 +101,20 @@ namespace Lexplosion.Logic.Management
             string accountType = UserData.User.AccountType.ToString();
             foreach (string lib in data.Libraries.Keys)
             {
-                if (lib.Contains("auth"))
-                {
-
-                }
                 var activation = data.Libraries[lib].activationConditions;
-                if (activation?.accountTypes == null || activation.accountTypes.Contains(accountType))
+                if ((activation?.accountTypes == null || activation.accountTypes.Contains(accountType)) && !data.Libraries[lib].notLaunch)
                 {
                     command += "\"" + _settings.GamePath + "/libraries/" + lib + "\";";
                 }   
             }
 
-            command += "\"" + versionPath + "\"";
+            command += "\"" + versionPath + "\" ";
+
+            string jvmArgs = data.VersionFile.jvmArguments ?? "";
+            jvmArgs = jvmArgs.Replace("${version_file}", data.VersionFile.minecraftJar.name);
+            jvmArgs = jvmArgs.Replace("${library_directory}", _settings.GamePath + "/libraries");
+
+            command += jvmArgs;
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
@@ -232,8 +234,6 @@ namespace Lexplosion.Logic.Management
                         App.Current.Dispatcher.Invoke(delegate ()
                         {
                             ComplitedLaunch(_instanceId, false);
-
-                            Console.WriteLine(command);
                         });
                     }
 
