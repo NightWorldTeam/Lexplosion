@@ -534,6 +534,12 @@ namespace Lexplosion.Logic.FileSystem
                 updated++;
                 _fileDownloadHandler?.Invoke(minecraftJar.name, 100, downloadResult);
                 BaseDownloadEvent?.Invoke(updatesCount, updated);
+
+                if (downloadResult == DownloadFileProgress.Error)
+                {
+                    SaveFile(DirectoryPath + "/instances/" + instanceId + "/lastUpdates.json", JsonConvert.SerializeObject(updates));
+                    return errors;
+                }
             }
 
             //скачиваем libraries

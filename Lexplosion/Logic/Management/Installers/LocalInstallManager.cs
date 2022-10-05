@@ -74,7 +74,6 @@ namespace Lexplosion.Logic.Management.Installers
             }
             else
             {
-                releaseIndex = Manifest.version.releaseIndex;
                 return InstanceInit.Successful;
             }
         }

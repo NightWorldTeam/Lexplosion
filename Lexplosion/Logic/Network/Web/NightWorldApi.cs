@@ -202,7 +202,7 @@ namespace Lexplosion.Logic.Network
                             Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
                             foreach (string lib in filesData.libraries.Keys)
                             {
-                                if (filesData.libraries[lib].os == "all" || filesData.libraries[lib].os == "windows")
+                                if (filesData.libraries[lib].os == null || filesData.libraries[lib].os.Contains("windows"))
                                 {
                                     libraries[lib] = new LibInfo
                                     {

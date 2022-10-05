@@ -122,7 +122,7 @@ namespace Lexplosion.Logic.Network
                     ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
                 };
 
-                try
+                //try
                 {
                     string modloaderUrl = "";
                     if (!string.IsNullOrEmpty(modloaderVersion))
@@ -147,7 +147,7 @@ namespace Lexplosion.Logic.Network
                             Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
                             foreach (string lib in filesData.libraries.Keys)
                             {
-                                if (filesData.libraries[lib].os == "all" || filesData.libraries[lib].os == "windows")
+                                if (filesData.libraries[lib].os == null || filesData.libraries[lib].os.Contains("windows"))
                                 {
                                     libraries[lib] = new LibInfo
                                     {
@@ -179,10 +179,10 @@ namespace Lexplosion.Logic.Network
                         return null;
                     }
                 }
-                catch
-                {
-                    return null;
-                }
+                //catch
+                //{
+                //    return null;
+                //}
             }
         }
 

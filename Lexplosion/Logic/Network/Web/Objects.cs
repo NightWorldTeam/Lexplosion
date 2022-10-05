@@ -11,7 +11,7 @@ namespace Lexplosion.Logic.Network
     {
         public class DataLibInfo : LibInfo
         {
-            public string os;
+            public List<string> os;
         }
 
         public string code;
