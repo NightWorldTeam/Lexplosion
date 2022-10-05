@@ -115,7 +115,6 @@ namespace Lexplosion.Logic.Management
             jvmArgs = jvmArgs.Replace("${library_directory}", _settings.GamePath + "/libraries");
 
             command += jvmArgs;
-            command += data.VersionFile.arguments;
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
@@ -124,6 +123,7 @@ namespace Lexplosion.Logic.Management
             command += " --assetsDir \"" + _settings.GamePath + "/assets" + "\"";
             command += " --assetIndex " + data.VersionFile.assetsVersion;
             command += " --uuid " + UserData.User.UUID + " --accessToken " + UserData.User.AccessToken + " --userProperties [] --userType legacy ";
+            command += data.VersionFile.arguments;
             command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
 
             return command.Replace(@"\", "/");
