@@ -180,7 +180,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("general"),
-                    Content = new GeneralSettingsViewModel()
+                    Content = new GeneralSettingsViewModel(_mainViewModel)
                 },
                 new Tab<VMBase>
                 {

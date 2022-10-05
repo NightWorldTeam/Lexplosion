@@ -1,10 +1,15 @@
 ﻿using Lexplosion.Gui.Models;
+using Lexplosion.Gui.ViewModels.ModalVMs;
+using Lexplosion.Logic.FileSystem;
+using System;
 using System.Windows.Forms;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
 {
     public class GeneralSettingsViewModel : VMBase
     {
+        private MainViewModel _mainViewModel;
+
         public GeneralSettingsModel GeneralSettings { get; set; }
         public RelayCommand OpenFolderBrowser
         {
@@ -15,7 +20,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     dialog.SelectedPath = GeneralSettings.SystemPath.Replace("/", @"\");
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
-                        GeneralSettings.SystemPath = dialog.SelectedPath;
+                        var dialogModal = new DialogViewModel(_mainViewModel);
+                        dialogModal.ShowDialog("Желаете ли вы полностью перенести директорию?", () => {
+                            GeneralSettings.SystemPath = dialog.SelectedPath;
+                            WithDirectory.SetNewDirectory(GeneralSettings.SystemPath);
+                            MainViewModel.ShowToastMessage("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", TimeSpan.FromSeconds(2));
+                        });
                     }
                 }
             });
@@ -44,8 +54,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             });
         }
 
-        public GeneralSettingsViewModel()
+        public GeneralSettingsViewModel(MainViewModel mainViewModel)
         {
+            _mainViewModel = mainViewModel;
             GeneralSettings = new GeneralSettingsModel();
         }
     }
