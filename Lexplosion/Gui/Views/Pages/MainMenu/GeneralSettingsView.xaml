@@ -381,5 +381,11 @@
                 </StackPanel>
             </Grid>
         </ScrollViewer>
+
+        <controls:LoadingBoard
+            BackgroundColor="Black"
+            BackgroundOpacity="0.9"
+            IsLoadingFinished="{Binding IsDirectoryChanged}"
+            Placeholder="{DynamicResource directoryChanging}" />
     </Grid>
 </UserControl>

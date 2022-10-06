@@ -437,7 +437,7 @@ namespace Lexplosion
             {
                 window.Close();
             }
-
+            nofityIcon.Dispose();
             ExitEvent?.Invoke();
         }
 

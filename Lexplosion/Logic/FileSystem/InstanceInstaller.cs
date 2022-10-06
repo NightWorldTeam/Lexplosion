@@ -788,6 +788,12 @@ namespace Lexplosion.Logic.FileSystem
                 }
             }
 
+            if (errors.Count > 0) 
+            {
+
+            }
+
+
             try
             {
                 Directory.Delete(tempDir, true);
