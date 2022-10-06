@@ -12,8 +12,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public GeneralSettingsModel GeneralSettings { get; set; }
 
-        private bool _isDirectoryChanged;
-        public bool IsDirectoryChanged 
+        private bool _isDirectoryChanged = true;
+        public bool IsDirectoryChanged
         {
             get => _isDirectoryChanged; set 
             {
@@ -34,9 +34,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                         var dialogModal = new DialogViewModel(_mainViewModel);
                         dialogModal.ShowDialog("Желаете ли вы полностью перенести директорию?", () => {
                             GeneralSettings.SystemPath = dialog.SelectedPath;
+                            IsDirectoryChanged = false;
                             Lexplosion.Runtime.TaskRun(() => { 
                                 WithDirectory.SetNewDirectory(GeneralSettings.SystemPath);
-                                MainViewModel.ShowToastMessage("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", TimeSpan.FromSeconds(2));
+                                App.Current.Dispatcher.Invoke(() => 
+                                { 
+                                    MainViewModel.ShowToastMessage("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", TimeSpan.FromSeconds(2));
+                                    IsDirectoryChanged = true;
+                                });
                             });
                         });
                     }
