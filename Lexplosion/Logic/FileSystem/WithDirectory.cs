@@ -37,18 +37,17 @@ namespace Lexplosion.Logic.FileSystem
 
         public static void SetNewDirectory(string path)
         {
+            string oldDir = DirectoryPath;
             Create(path);
 
             try
             {
-                foreach (string dirPath in Directory.GetDirectories(DirectoryPath, "*", SearchOption.AllDirectories))
-                    Directory.CreateDirectory(dirPath.Replace(DirectoryPath, path));
+                foreach (string dirPath in Directory.GetDirectories(oldDir, "*", SearchOption.AllDirectories))
+                    Directory.CreateDirectory(dirPath.Replace(oldDir, path));
 
-                foreach (string newPath in Directory.GetFiles(DirectoryPath, "*.*", SearchOption.AllDirectories))
-                    File.Copy(newPath, newPath.Replace(DirectoryPath, path), true);
+                foreach (string newPath in Directory.GetFiles(oldDir, "*.*", SearchOption.AllDirectories))
+                    File.Copy(newPath, newPath.Replace(oldDir, path), true);
 
-                Directory.Delete(DirectoryPath, true);
-                DirectoryPath = path;
             }
             catch { }
         }
