@@ -28,13 +28,13 @@ namespace Lexplosion.Logic.Network.TURN
                 data[i + 32] = bhostUUID[i];
             }
 
-            Console.WriteLine(Encoding.UTF8.GetString(data));
+            Runtime.DebugWrite(Encoding.UTF8.GetString(data));
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 9765));
             socket.Send(data);
 
-            Console.WriteLine("CONNECTED FDHSGFHDFH");
+            Runtime.DebugWrite("CONNECTED FDHSGFHDFH");
             return true;
         }
 

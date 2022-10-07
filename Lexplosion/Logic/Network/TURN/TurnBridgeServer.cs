@@ -50,7 +50,7 @@ namespace Lexplosion.Logic.Network.TURN
 
                 point = (IPEndPoint)sock.LocalEndPoint;
 
-                Console.WriteLine("CONNECTED FGDSGFSD");
+                Runtime.DebugWrite("CONNECTED FGDSGFSD");
             }
             catch
             {
@@ -121,13 +121,13 @@ namespace Lexplosion.Logic.Network.TURN
 
         public bool Close(IPEndPoint point)
         {
-            Console.WriteLine("TURN CLOSE ");
+            Runtime.DebugWrite("TURN CLOSE ");
             lock (_waitDeletingLoocker)
             {
                 // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
                 if (IsWork && pointsSockets.ContainsKey(point))
                 {
-                    Console.WriteLine("TRUN CLOSE GSFSDGF");
+                    Runtime.DebugWrite("TRUN CLOSE GSFSDGF");
                     pointsSockets.TryRemove(point, out Socket sock);
                     sockets.Remove(sock);
                     if (sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
@@ -137,7 +137,7 @@ namespace Lexplosion.Logic.Network.TURN
                     sock.Close();
                 }
             }
-            Console.WriteLine("TURN END CLOSE ");
+            Runtime.DebugWrite("TURN END CLOSE ");
 
             return true;
         }

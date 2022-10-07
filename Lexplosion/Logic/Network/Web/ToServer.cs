@@ -122,7 +122,7 @@ namespace Lexplosion.Logic.Network
                     ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
                 };
 
-                //try
+                try
                 {
                     string modloaderUrl = "";
                     if (!string.IsNullOrEmpty(modloaderVersion))
@@ -134,7 +134,7 @@ namespace Lexplosion.Logic.Network
                         }
                     }
 
-                    Console.WriteLine("URL " + LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
+                    Runtime.DebugWrite("URL " + LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
                     string answer = HttpPost(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl, data);
 
                     if (answer != null && answer != "")
@@ -179,10 +179,10 @@ namespace Lexplosion.Logic.Network
                         return null;
                     }
                 }
-                //catch
-                //{
-                //    return null;
-                //}
+                catch
+                {
+                    return null;
+                }
             }
         }
 
@@ -239,10 +239,10 @@ namespace Lexplosion.Logic.Network
                 AuthResult response = new AuthResult();
                 string answer;
 
-                //try
+                try
                 {
                     answer = HttpPost(LaunсherSettings.URL.Account + "auth", data);
-                    Console.WriteLine(answer);
+                    Runtime.DebugWrite(answer);
 
                     if (answer == null)
                     {
@@ -296,10 +296,10 @@ namespace Lexplosion.Logic.Network
                         }
                     }
                 }
-                //catch
-                //{
-                //    return null;
-                //}
+                catch
+                {
+                    return null;
+                }
             }
         }
 
@@ -352,7 +352,7 @@ namespace Lexplosion.Logic.Network
 
         public static string HttpGet(string url, List<KeyValuePair<string, string>> headers = null)
         {
-            //try 
+            try
             {
                 string answer;
 
@@ -378,11 +378,10 @@ namespace Lexplosion.Logic.Network
 
                 return answer;
             }
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine(url + " " + e);
-            //    return null;
-            //}
+            catch
+            {
+                return null;
+            }
         }
 
         public static string HttpPostJson(string url, string data, out HttpStatusCode? httpStatus)
@@ -427,12 +426,6 @@ namespace Lexplosion.Logic.Network
                 {
                     HttpWebResponse httpResponse = (HttpWebResponse)ex.Response;
                     httpStatus = httpResponse.StatusCode;
-                }
-
-                using (var stream = ex.Response.GetResponseStream())
-                using (var reader = new StreamReader(stream))
-                {
-                    Console.WriteLine("ERROR " + reader.ReadToEnd());
                 }
             }
             catch { }

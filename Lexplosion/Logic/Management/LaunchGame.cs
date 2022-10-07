@@ -404,7 +404,7 @@ namespace Lexplosion.Logic.Management
 
         public InitData Initialization(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, Action downloadStarted)
         {
-            //try
+            try
             {
                 WithDirectory.Create(_settings.GamePath);
                 InitData data = null;
@@ -444,10 +444,13 @@ namespace Lexplosion.Logic.Management
 
                 return data;
             }
-            //catch 
-            //{
-            //    return Error(InstanceInit.UnknownError);
-            //}
+            catch
+            {
+                return new InitData
+                {
+                    InitResult = InstanceInit.UnknownError
+                };
+            }
         }
 
         public void Stop()

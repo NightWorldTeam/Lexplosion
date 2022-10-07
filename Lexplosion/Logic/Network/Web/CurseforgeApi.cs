@@ -54,16 +54,14 @@ namespace Lexplosion.Logic.Network
 
                 return new T();
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(url + " " + e);
                 return new T();
             }
         }
 
         public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, int categoriy, CfSortField sortField, string searchFilter, string gameVersion)
         {
-            Console.WriteLine("GetInstances, sort by " + sortField.ToString());
             if (gameVersion != "")
             {
                 gameVersion = "&gameVersion=" + gameVersion;
@@ -158,8 +156,6 @@ namespace Lexplosion.Logic.Network
                     }
                 }
 
-                Console.WriteLine("End GetAddonsInfo");
-
                 var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeAddonInfo>>>(answer);
 
                 return data.data;
@@ -218,7 +214,7 @@ namespace Lexplosion.Logic.Network
                     };
                 }
 
-                Console.WriteLine("SYS " + fileUrl);
+                Runtime.DebugWrite("SYS " + fileUrl);
             }
             else
             {
@@ -232,7 +228,7 @@ namespace Lexplosion.Logic.Network
                     };
                 }
 
-                Console.WriteLine("SYS " + fileUrl);
+                Runtime.DebugWrite("SYS " + fileUrl);
             }
 
             return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
@@ -250,14 +246,12 @@ namespace Lexplosion.Logic.Network
 
         public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, TaskArgs taskArgs)
         {
-            //Console.WriteLine("");
-            Console.WriteLine("PR ID " + addonInfo.id);
+            Runtime.DebugWrite("PR ID " + addonInfo.id);
             int projectID = addonInfo.modId;
             int fileID = addonInfo.id;
-            //try
+            try
             {
-
-                Console.WriteLine("fileData " + addonInfo.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
+                Runtime.DebugWrite("fileData " + addonInfo.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
 
                 string fileUrl = addonInfo.downloadUrl;
                 string fileName = addonInfo.fileName;
@@ -271,7 +265,7 @@ namespace Lexplosion.Logic.Network
                     };
                 }
 
-                Console.WriteLine(fileUrl);
+                Runtime.DebugWrite(fileUrl);
 
                 // проверяем имя файла на валидность
                 char[] invalidFileChars = Path.GetInvalidFileNameChars();
@@ -310,22 +304,23 @@ namespace Lexplosion.Logic.Network
                 // устанавливаем
                 return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, taskArgs);
             }
-            //catch
-            //{
-            //    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
-            //    {
-            //        [projectID.ToString()] = (null, DownloadAddonRes.UncnownError)
-            //    };
-            //}
+            catch
+            {
+                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                {
+                    Value1 = null,
+                    Value2 = DownloadAddonRes.UncnownError
+                };
+            }
         }
 
         public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, int fileID, string path, TaskArgs taskArgs)
         {
-            //try
+            try
             {
                 int projectID = addonInfo.id;
-                Console.WriteLine("");
-                Console.WriteLine("PR ID " + projectID);
+                Runtime.DebugWrite("");
+                Runtime.DebugWrite("PR ID " + projectID);
 
                 if (addonInfo.latestFiles == null)
                 {
@@ -353,7 +348,7 @@ namespace Lexplosion.Logic.Network
                     fileData = GetProjectFile(projectID.ToString(), fileID.ToString());
                 }
 
-                Console.WriteLine("fileData " + fileData.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
+                Runtime.DebugWrite("fileData " + fileData.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
 
                 string fileUrl = fileData.downloadUrl;
                 if (String.IsNullOrWhiteSpace(fileUrl))
@@ -362,16 +357,16 @@ namespace Lexplosion.Logic.Network
                     fileData = GetProjectFile(projectID.ToString(), fileID.ToString());
                     if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
                     {
-                        Console.WriteLine("URL ERROR - " + fileData.downloadUrl + " - " + fileData.fileName);
+                        Runtime.DebugWrite("URL ERROR - " + fileData.downloadUrl + " - " + fileData.fileName);
                         return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
                             Value2 = DownloadAddonRes.UrlError
                         };
                     }
-                }     
+                }
 
-                Console.WriteLine(fileUrl);
+                Runtime.DebugWrite(fileUrl);
 
                 string fileName = fileData.fileName;
 
@@ -413,13 +408,14 @@ namespace Lexplosion.Logic.Network
                 // устанавливаем
                 return InstallAddon(addonType, fileUrl, fileName, path, folderName, projectID, fileID, taskArgs);
             }
-            //catch
-            //{
-            //    return new Dictionary<string, (InstalledAddonInfo, DownloadAddonRes)>
-            //    {
-            //        [projectID.ToString()] = (null, DownloadAddonRes.UncnownError)
-            //    };
-            //}
+            catch
+            {
+                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                {
+                    Value1 = null,
+                    Value2 = DownloadAddonRes.UncnownError
+                };
+            }
         }
     }
 }

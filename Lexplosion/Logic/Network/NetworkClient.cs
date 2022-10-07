@@ -32,23 +32,21 @@ namespace Lexplosion.Logic.Network
             {
                 //подключаемся к управляющему серверу
                 TcpClient client = new TcpClient();
-                Console.WriteLine("CONNECT Initialization");
+                Runtime.DebugWrite("CONNECT Initialization");
                 client.Connect(ControlServer, 4565);
 
                 NetworkStream stream = client.GetStream();
                 string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"sessionToken\": \"" + sessionToken + "\"}";
                 byte[] sendData = Encoding.UTF8.GetBytes(st);
                 stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
-                Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);
+                Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);
 
                 {
                     byte[] buf = new byte[2];
                     int bytes = stream.Read(buf, 0, buf.Length);
-                    Console.WriteLine("BUF-0 " + buf[0]);
 
                     if (buf[0] == ControlSrverCodes.B) // сервер согласился, а управляющий сервер запрашивает порт
                     {
-                        Console.WriteLine("BUF " + buf[1]);
                         byte[] portData;
                         if (buf[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
                         {
@@ -56,7 +54,7 @@ namespace Lexplosion.Logic.Network
                             udpSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
 
                             STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, udpSocket);
-                            Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
+                            Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
 
                             var point = (IPEndPoint)udpSocket.LocalEndPoint;
                             udpSocket.Close();
@@ -110,7 +108,7 @@ namespace Lexplosion.Logic.Network
                         string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                         string hostIp = str.Replace(":" + hostPort, "");
 
-                        Console.WriteLine("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
+                        Runtime.DebugWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
                         isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
                     }
                     catch
@@ -120,13 +118,12 @@ namespace Lexplosion.Logic.Network
                 }
                 else
                 {
-                    Console.WriteLine("FFHNHBGHJCMGCHM,VHJ,HJ,HJ");
+                    Runtime.DebugWrite("FFHNHBGHJCMGCHM,VHJ,HJ,HJ");
                     isConected = ((TurnBridgeClient)Bridge).Connect(UUID, serverUUID);
                 }
 
                 if (isConected)
                 {
-                    //Console.WriteLine("Ping " + Bridge.ping);
                     stream.Close();
                     client.Close();
 
@@ -147,13 +144,13 @@ namespace Lexplosion.Logic.Network
                 }
                 else
                 {
-                    Console.WriteLine("пиздец");
+                    Runtime.DebugWrite("пиздец");
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine("NetworkClient Init exception " + ex);
+                Runtime.DebugWrite("NetworkClient Init exception ");
                 return false;
             }
         }

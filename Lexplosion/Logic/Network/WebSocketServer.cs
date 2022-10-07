@@ -98,7 +98,7 @@ namespace Lexplosion.Logic.Network
 
         private byte[] DecodeFrame(byte[] frame)
         {
-            //try
+            try
             {
                 bool fin = (frame[0] & 0b10000000) != 0,
                 mask = (frame[1] & 0b10000000) != 0;
@@ -133,10 +133,10 @@ namespace Lexplosion.Logic.Network
                     return null;
                 }
             }
-            //catch
-            //{
-            //    return null;
-            //}
+            catch
+            {
+                return null;
+            }
         }
 
         private string AcceptKey(ref string key)

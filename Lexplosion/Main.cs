@@ -21,7 +21,7 @@ using Lexplosion.Logic.Management.Instances;
 
 /*
  * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
- * Последнее обновление в апреле 2022 года
+ * Последнее обновление в октябре 2022 года
  * Главный исполняемый файл лаунчера. Здесь людей ебут
  */
 
@@ -183,7 +183,7 @@ namespace Lexplosion
 
         private static void LauncherUpdate()
         {
-            //try
+            try
             {
                 int upgradeToolVersion = Int32.Parse(ToServer.HttpPost(LaunсherSettings.URL.LauncherParts + "upgradeToolVersion.html"));
                 string gamePath = UserData.GeneralSettings.GamePath;
@@ -218,18 +218,16 @@ namespace Lexplosion
                     Convert.ToInt32(_splashWindow.Top);
                 });
 
-                System.Console.WriteLine(arguments);
-
                 // запуск UpgradeTool.exe
                 Process proc = new Process();
                 proc.StartInfo.FileName = gamePath + "/UpgradeTool.exe";
                 proc.StartInfo.Arguments = arguments;
                 proc.Start();
             }
-            //catch
-            //{
-            //    MessageBox.Show("Не удалось обновить лаунчер!");
-            //}
+            catch
+            {
+                MessageBox.Show("Не удалось обновить лаунчер!");
+            }
         }
 
         private static byte[] UnzipBytesArray(byte[] zipBytes)
@@ -253,7 +251,7 @@ namespace Lexplosion
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            System.Console.WriteLine("DLL LOAD " + string.Join(", ", args.Name));
+            Runtime.DebugWrite("DLL LOAD " + string.Join(", ", args.Name));
             if (args.Name.Contains("Newtonsoft.Json"))
             {
                 return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson_zip));
@@ -480,6 +478,22 @@ namespace Lexplosion
                     app.MainWindow = null;
                 }
             });
+        }
+
+        [Conditional("DEBUG")]
+        public static void DebugWrite<T>(T line)
+        {
+#if DEBUG
+            System.Console.WriteLine(line);
+#endif
+        }
+
+        [Conditional("DEBUG")]
+        public static void DebugWrite()
+        {
+#if DEBUG
+            System.Console.WriteLine();
+#endif
         }
     }
 }

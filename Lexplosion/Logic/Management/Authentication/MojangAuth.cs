@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.Management.Authentication
                         ClientToken = response.ClientToken,
                         AccessToken = response.AccesToken
                     });
-                    System.Console.WriteLine(accessData);
+                    Runtime.DebugWrite(accessData);
 
                     code = AuthCode.Successfully;
                     return new User(response.Login, response.UUID, response.AccesToken, null, AccountType.Mojang, ActivityStatus.Online);
@@ -47,7 +47,7 @@ namespace Lexplosion.Logic.Management.Authentication
 
                 if (data != null && !string.IsNullOrEmpty(data.AccessToken) && !string.IsNullOrEmpty(data.ClientToken))
                 {
-                    System.Console.WriteLine(accessData);
+                    Runtime.DebugWrite(accessData);
                     MojangApi.AuthResult response = MojangApi.Refresh(login, data.AccessToken, data.ClientToken);
 
                     if (response.Status == AuthCode.Successfully)

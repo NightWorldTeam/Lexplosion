@@ -133,7 +133,7 @@ namespace Lexplosion.Logic.Network.SMP
                 }
             }
 
-            Console.WriteLine("SMP SERVER STOP WORK");
+            Runtime.DebugWrite("SMP SERVER STOP WORK");
             data = null;
             return null;
         }

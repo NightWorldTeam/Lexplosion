@@ -63,7 +63,6 @@ namespace Lexplosion.Logic.Management.Installers
 
             if (InfoData == null || InfoData.id == null || !Int32.TryParse(InfoData.id, out _))
             {
-                Console.WriteLine("GRSFHFHFGHGFHF " + InstanceId);
                 return InstanceInit.CursforgeIdError;
             }
 
@@ -235,7 +234,7 @@ namespace Lexplosion.Logic.Management.Installers
                         }
                     }
 
-                    Console.WriteLine("modLoaderVersion " + modLoaderVersion);
+                    Runtime.DebugWrite("modLoaderVersion " + modLoaderVersion);
 
                     Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modloader, modLoaderVersion);
 

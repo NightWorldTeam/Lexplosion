@@ -131,18 +131,17 @@ namespace Lexplosion.Logic.Network
                 byte[] sendData = Encoding.UTF8.GetBytes(st);
                 _controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
                 MaintainingThread.Start();
-                Console.WriteLine("ASZSAFDSDFAFSADSAFDFSDSD");
+                Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD");
 
                 while (IsWork)
                 {
                     try
                     {
-                        Console.WriteLine("BVC1");
                         string clientUUID;
                         {
                             byte[] data = new byte[33];
 
-                            Console.WriteLine("ControlServerRecv");
+                            Runtime.DebugWrite("ControlServerRecv");
                             ControlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
                             _controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
 
@@ -160,7 +159,7 @@ namespace Lexplosion.Logic.Network
                             {
                                 ControlConnectionBlock.WaitOne(); // блочим семофор
                                 _controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
-                                Console.WriteLine("ControlServerEndRecv");
+                                Runtime.DebugWrite("ControlServerEndRecv");
                             }
 
                             if (bytes > 1 && data[0] == ControlSrverCodes.A) // data[0] == 97 значит поступил запрос на поделючение
@@ -192,7 +191,7 @@ namespace Lexplosion.Logic.Network
                                         try
                                         {
                                             result = STUN_Client.Query("stun.l.google.com", 19305, _udpSocket); //получем наш внешний адрес
-                                            Console.WriteLine("NatType " + result.NetType.ToString());
+                                            Runtime.DebugWrite("NatType " + result.NetType.ToString());
                                         }
                                         catch { }
 
@@ -220,7 +219,7 @@ namespace Lexplosion.Logic.Network
                                             break;
                                         }
 
-                                        Console.WriteLine("My EndPoint " + result.PublicEndPoint.ToString());
+                                        Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
                                     }
                                     else
                                     {
@@ -242,8 +241,6 @@ namespace Lexplosion.Logic.Network
                             }
                         }
 
-                        Console.WriteLine("BVC2");
-
                         {
                             byte[] data = new byte[21];
                             int bytes = _controlConnection.Receive(data); //получем ip клиента
@@ -263,22 +260,19 @@ namespace Lexplosion.Logic.Network
                                 string hostIp = str.Replace(":" + hostPort, "");
 
                                 point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
-                                Console.WriteLine("Host EndPoint " + point);
+                                Runtime.DebugWrite("Host EndPoint " + point);
                                 isConected = ((SmpServer)Server).Connect(point);
                             }
                             else
                             {
-                                Console.WriteLine("BVC3");
                                 isConected = ((TurnBridgeServer)Server).Connect(UUID, clientUUID, out point);
-                                Console.WriteLine("BVC4");
                             }
 
-                            Console.WriteLine("BVC5");
                             AcceptingBlock.WaitOne();
 
                             if (isConected)
                             {
-                                Console.WriteLine("КОННЕКТ!!!");
+                                Runtime.DebugWrite("КОННЕКТ!!!");
                                 if (BeforeConnect(point))
                                 {
                                     UuidPointPair[clientUUID] = point;
@@ -289,27 +283,24 @@ namespace Lexplosion.Logic.Network
                                         ConnectingUser?.Invoke(clientUUID);
                                     }
                                     catch { }
-                                    Console.WriteLine("КОННЕКТ2!!!");
+
                                     SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
                                     ReadingWait.Set();
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Пиздец");
+                                    Runtime.DebugWrite("Пиздец");
                                     AcceptingBlock.Release();
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Пиздец");
+                                Runtime.DebugWrite("Пиздец");
                                 AcceptingBlock.Release();
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                    }
+                    catch { }
                 }
 
                 if (needRepeat)
@@ -319,7 +310,7 @@ namespace Lexplosion.Logic.Network
                     _controlConnection.Close();
                     _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                    Console.WriteLine("Repeat connection to control server");
+                    Runtime.DebugWrite("Repeat connection to control server");
                     DirectConnection = false;
                 }
                 else

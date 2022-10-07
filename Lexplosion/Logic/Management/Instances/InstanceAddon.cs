@@ -177,7 +177,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public static void ClearAddonsListCache()
         {
-            Console.WriteLine("CHACHE");
+            Runtime.DebugWrite("CHACHE");
             _chacheSemaphore.WaitOne();
             _addonsCatalogChache = null;
             _chacheSemaphore.Release();
@@ -1106,7 +1106,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 addons.DisableAddon(projectID, !_isEnable, delegate (InstalledAddonInfo data)
                 {
-                    //try
+                    try
                     {
                         string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
                         if (data.IsExists(dir))
@@ -1114,11 +1114,11 @@ namespace Lexplosion.Logic.Management.Instances
                             File.Move(dir + data.Path + ".disable", dir + data.Path);
                         }
                     }
-                    //catch { }
+                    catch { }
                 }, 
                 delegate (InstalledAddonInfo data)
                 {
-                    //try
+                    try
                     {
                         string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
                         if (data.IsExists(dir))
@@ -1126,7 +1126,7 @@ namespace Lexplosion.Logic.Management.Instances
                             File.Move(dir + data.Path, dir + data.Path + ".disable");
                         }
                     }
-                    //catch { }
+                    catch { }
                 });
 
                 addons.Save();

@@ -73,98 +73,88 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает количество файлов, которые нужно обновить. -1 в случае неудачи (возможно только если включена защита целосности клиента). 
         /// </returns>
-        // TODO: его вызов обернуть в try
         public int CheckBaseFiles(in VersionManifest manifest, ref LastUpdates updates) // функция проверяет основные файлы клиента (файл версии, либрариесы и тп)
         {
-            string gameVersionName = manifest.version.CustomVersionName ?? manifest.version.gameVersion;
+            try
+            {
+                string gameVersionName = manifest.version.CustomVersionName ?? manifest.version.gameVersion;
 
-            //проверяем файл версии
-            Console.WriteLine(DirectoryPath + "/instances/" + instanceId + "/version");
-            if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/version"))
-            {
-                Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
-                minecraftJar = true; //сразу же добавляем minecraftJar в обновления
-                updatesCount++;
-            }
-            else
-            {
-                string minecraftJarFile = DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name;
-                if (updates.ContainsKey("version") && File.Exists(minecraftJarFile) && manifest.version.minecraftJar.lastUpdate == updates["version"]) //проверяем его наличие и версию
+                //проверяем файл версии
+                if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/version"))
                 {
-                    if (manifest.version.security) //если включена защита файла версии, то проверяем его 
+                    Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
+                    minecraftJar = true; //сразу же добавляем minecraftJar в обновления
+                    updatesCount++;
+                }
+                else
+                {
+                    string minecraftJarFile = DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name;
+                    if (updates.ContainsKey("version") && File.Exists(minecraftJarFile) && manifest.version.minecraftJar.lastUpdate == updates["version"]) //проверяем его наличие и версию
                     {
-                        try
+                        if (manifest.version.security) //если включена защита файла версии, то проверяем его 
                         {
-                            using (FileStream fstream = new FileStream(minecraftJarFile, FileMode.Open, FileAccess.Read))
+                            try
                             {
-                                byte[] bytes = new byte[fstream.Length];
-                                fstream.Read(bytes, 0, bytes.Length);
-                                fstream.Close();
-
-                                using (SHA1 sha = new SHA1Managed())
+                                using (FileStream fstream = new FileStream(minecraftJarFile, FileMode.Open, FileAccess.Read))
                                 {
-                                    if (Convert.ToBase64String(sha.ComputeHash(bytes)) != manifest.version.minecraftJar.sha1 || bytes.Length != manifest.version.minecraftJar.size)
+                                    byte[] bytes = new byte[fstream.Length];
+                                    fstream.Read(bytes, 0, bytes.Length);
+                                    fstream.Close();
+
+                                    using (SHA1 sha = new SHA1Managed())
                                     {
-                                        File.Delete(minecraftJarFile); //удаляем файл, если не сходится хэш или размер
-                                        minecraftJar = true;
-                                        updatesCount++;
+                                        if (Convert.ToBase64String(sha.ComputeHash(bytes)) != manifest.version.minecraftJar.sha1 || bytes.Length != manifest.version.minecraftJar.size)
+                                        {
+                                            File.Delete(minecraftJarFile); //удаляем файл, если не сходится хэш или размер
+                                            minecraftJar = true;
+                                            updatesCount++;
+                                        }
                                     }
                                 }
                             }
+                            catch
+                            {
+                                return -1; //чтение файла не удалось, стопаем весь процесс
+                            }
                         }
-                        catch
+                    }
+                    else
+                    {
+                        minecraftJar = true;
+                        updatesCount++;
+                    }
+                }
+
+                //получаем версию libraries
+                string libName = manifest.version.GetLibName;
+                if (File.Exists(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver"))
+                {
+                    try
+                    {
+                        using (FileStream fstream = new FileStream(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
                         {
-                            return -1; //чтение файла не удалось, стопаем весь процесс
+                            byte[] fileBytes = new byte[fstream.Length];
+                            fstream.Read(fileBytes, 0, fileBytes.Length);
+                            fstream.Close();
+
+                            long ver = 0;
+                            Int64.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
+                            updates["libraries"] = ver;
                         }
+                    }
+                    catch
+                    {
+                        updates["libraries"] = 0;
                     }
                 }
                 else
                 {
-                    minecraftJar = true;
-                    updatesCount++;
-                }
-            }
-
-            //получаем версию libraries
-            string libName = manifest.version.GetLibName;
-            if (File.Exists(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver"))
-            {
-                try
-                {
-                    using (FileStream fstream = new FileStream(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
-                    {
-                        byte[] fileBytes = new byte[fstream.Length];
-                        fstream.Read(fileBytes, 0, fileBytes.Length);
-                        fstream.Close();
-
-                        long ver = 0;
-                        Int64.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
-                        updates["libraries"] = ver;
-                    }
-                }
-                catch
-                {
+                    SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", "0");
                     updates["libraries"] = 0;
                 }
-            }
-            else
-            {
-                SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", "0");
-                updates["libraries"] = 0;
-            }
 
-            //проверяем папку libraries
-            if (!Directory.Exists(DirectoryPath + "/libraries"))
-            {
-                foreach (string lib in manifest.libraries.Keys)
-                {
-                    libraries[lib] = manifest.libraries[lib];
-                    updatesCount++;
-                }
-            }
-            else
-            {
-                if (manifest.version.librariesLastUpdate != updates["libraries"]) //если версия libraries старая, то отправляем на обновления
+                //проверяем папку libraries
+                if (!Directory.Exists(DirectoryPath + "/libraries"))
                 {
                     foreach (string lib in manifest.libraries.Keys)
                     {
@@ -174,91 +164,105 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    // получем файл, в ктором хранятси список либрариесов, которые удачно скачались в прошлый раз
-                    List<string> downloadedFiles = new List<string>();
-                    string downloadedInfoAddr = DirectoryPath + "/versions/libraries/" + libName + "-downloaded.json";
-                    bool fileExided = false;
-                    if (File.Exists(downloadedInfoAddr))
+                    if (manifest.version.librariesLastUpdate != updates["libraries"]) //если версия libraries старая, то отправляем на обновления
                     {
-                        downloadedFiles = GetFile<List<string>>(downloadedInfoAddr);
-                        fileExided = true;
+                        foreach (string lib in manifest.libraries.Keys)
+                        {
+                            libraries[lib] = manifest.libraries[lib];
+                            updatesCount++;
+                        }
                     }
+                    else
+                    {
+                        // получем файл, в ктором хранятси список либрариесов, которые удачно скачались в прошлый раз
+                        List<string> downloadedFiles = new List<string>();
+                        string downloadedInfoAddr = DirectoryPath + "/versions/libraries/" + libName + "-downloaded.json";
+                        bool fileExided = false;
+                        if (File.Exists(downloadedInfoAddr))
+                        {
+                            downloadedFiles = GetFile<List<string>>(downloadedInfoAddr);
+                            fileExided = true;
+                        }
 
-                    //ищем недостающие файлы
+                        //ищем недостающие файлы
+                        foreach (string lib in manifest.libraries.Keys)
+                        {
+                            if ((downloadedFiles == null && fileExided) || !File.Exists(DirectoryPath + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
+                            {
+                                libraries[lib] = manifest.libraries[lib];
+                                updatesCount++;
+                            }
+                        }
+                    }
+                }
+
+                if (!Directory.Exists(DirectoryPath + "/natives/" + gameVersionName))
+                {
                     foreach (string lib in manifest.libraries.Keys)
                     {
-                        if ((downloadedFiles == null && fileExided) || !File.Exists(DirectoryPath + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
+                        if (manifest.libraries[lib].isNative)
                         {
                             libraries[lib] = manifest.libraries[lib];
                             updatesCount++;
                         }
                     }
                 }
-            }
 
-            if (!Directory.Exists(DirectoryPath + "/natives/" + gameVersionName))
-            {
-                foreach (string lib in manifest.libraries.Keys)
+                // Проверяем assets
+
+                // Пытаемся получить список всех асетсов из json файла
+                Assets asstes = GetFile<Assets>(DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json");
+
+                // Файла нет, или он битый. Получаем асетсы с сервера
+                if (asstes.objects == null)
                 {
-                    if (manifest.libraries[lib].isNative)
+                    assetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
+                    updatesCount++;
+
+                    if (!File.Exists(DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json"))
                     {
-                        libraries[lib] = manifest.libraries[lib];
-                        updatesCount++;
-                    }
-                }
-            }
-
-            // Проверяем assets
-
-            // Пытаемся получить список всех асетсов из json файла
-            Assets asstes = GetFile<Assets>(DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json");
-
-            // Файла нет, или он битый. Получаем асетсы с сервера
-            if (asstes.objects == null)
-            {
-                assetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
-                updatesCount++;
-                Console.WriteLine("assetsIndexes ");
-
-                if (!File.Exists(DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json"))
-                {
-                    try
-                    {
-                        // Получем асетсы с сервера
-                        asstes = JsonConvert.DeserializeObject<Assets>(ToServer.HttpGet(manifest.version.assetsIndexes));
-                    }
-                    catch { }
-                }
-            }
-
-            if (asstes.objects != null) // проверяем не возникла ли ошибка
-            {
-                assets.objects = new Dictionary<string, Assets.AssetFile>();
-
-                foreach (string asset in asstes.objects.Keys)
-                {
-                    string assetHash = asstes.objects[asset].hash;
-                    if (assetHash != null)
-                    {
-                        // проверяем существует ли файл. Если нет - отправляем на обновление
-                        string assetPath = "/" + assetHash.Substring(0, 2);
-                        if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
+                        try
                         {
+                            // Получем асетсы с сервера
+                            asstes = JsonConvert.DeserializeObject<Assets>(ToServer.HttpGet(manifest.version.assetsIndexes));
+                        }
+                        catch { }
+                    }
+                }
+
+                if (asstes.objects != null) // проверяем не возникла ли ошибка
+                {
+                    assets.objects = new Dictionary<string, Assets.AssetFile>();
+
+                    foreach (string asset in asstes.objects.Keys)
+                    {
+                        string assetHash = asstes.objects[asset].hash;
+                        if (assetHash != null)
+                        {
+                            // проверяем существует ли файл. Если нет - отправляем на обновление
+                            string assetPath = "/" + assetHash.Substring(0, 2);
+                            if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
+                            {
+                                assets.objects[asset] = asstes.objects[asset];
+                                updatesCount++;
+                            }
+                        }
+                        else
+                        {
+                            // С этим файлом возникла ошибка. Добавляем его в список на обновление. Метод обновления законет его в список ошибок
                             assets.objects[asset] = asstes.objects[asset];
                             updatesCount++;
                         }
                     }
-                    else
-                    {
-                        // С этим файлом возникла ошибка. Добавляем его в список на обновление. Метод обновления законет его в список ошибок
-                        assets.objects[asset] = asstes.objects[asset];
-                        updatesCount++;
-                    }
+                }
+                else
+                {
+                    assets.objects = null;
                 }
             }
-            else
-            {
-                assets.objects = null;
+            catch 
+            { 
+                return 0; 
             }
 
             return updatesCount;
@@ -277,7 +281,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             string zipFile = file + ".zip";
 
-            //try
+            try
             {
                 if (!Directory.Exists(to))
                 {
@@ -298,13 +302,13 @@ namespace Lexplosion.Logic.FileSystem
 
                 return true;
             }
-            //catch
-            //{
-            //    DelFile(temp + file);
-            //    DelFile(temp + zipFile);
+            catch
+            {
+                DelFile(temp + file);
+                DelFile(temp + zipFile);
 
-            //    return false;
-            //}
+                return false;
+            }
 
         }
 
@@ -323,7 +327,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             string zipFile = file + ".zip";
 
-            //try
+            try
             {
                 if (!Directory.Exists(to))
                 {
@@ -362,13 +366,13 @@ namespace Lexplosion.Logic.FileSystem
                     }
                 }
             }
-            //catch
-            //{
-            //    DelFile(temp + file);
-            //    DelFile(temp + zipFile);
+            catch
+            {
+                DelFile(temp + file);
+                DelFile(temp + zipFile);
 
-            //    return false;
-            //}
+                return false;
+            }
         }
 
 
@@ -383,7 +387,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>Охуенно или пиздец</returns>
         protected bool UnsafeDownloadJar(string url, string to, string file, string temp, TaskArgs taskArgs)
         {
-            //try
+            try
             {
                 if (!Directory.Exists(to))
                 {
@@ -399,11 +403,11 @@ namespace Lexplosion.Logic.FileSystem
 
                 return true;
             }
-            /*catch
+            catch
             {
                 DelFile(temp + file);
                 return false;
-            }*/
+            }
         }
 
         /// <summary>
@@ -580,8 +584,6 @@ namespace Lexplosion.Logic.FileSystem
                         addr = addr + lib;
                     }
 
-                    Console.WriteLine(addr);
-
                     bool isDownload;
                     string name = folders[folders.Length - 1];
                     string fileDir = DirectoryPath + "/libraries/" + ff;
@@ -610,7 +612,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (libraries[lib].isNative && isDownload)
                     {
-                        //try
+                        try
                         {
                             string tempFolder = CreateTempDir();
                             // извлекаем во временную папку
@@ -632,11 +634,10 @@ namespace Lexplosion.Logic.FileSystem
 
                             Directory.Delete(tempFolder, true); // TODO: тут выползало исключение папка не пуста
                         }
-                        /*
                         catch
                         {
                             isDownload = false;
-                        }*/
+                        }
                     }
 
                     if (isDownload)
@@ -655,7 +656,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    //try
+                    try
                     {
                         List<List<string>> obtainingMethod = libraries[lib].obtainingMethod; // получаем метод
 
@@ -668,7 +669,7 @@ namespace Lexplosion.Logic.FileSystem
                                 switch (obtainingMethod[i][0])
                                 {
                                     case "downloadFile":
-                                        Console.WriteLine("download " + obtainingMethod[i][1]);
+                                        Runtime.DebugWrite("download " + obtainingMethod[i][1]);
 
                                         var taskArgs = new TaskArgs
                                         {
@@ -712,8 +713,9 @@ namespace Lexplosion.Logic.FileSystem
                                         command = command.Replace("{DIR}", DirectoryPath);
                                         command = command.Replace("{TEMP_DIR}", tempDir);
                                         command = command.Replace("{MINECRAFT_JAR}", DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name);
-                                        Console.WriteLine();
-                                        Console.WriteLine(command);
+
+                                        Runtime.DebugWrite();
+                                        Runtime.DebugWrite(command);
 
                                         if (!Utils.StartProcess(command, executord, javaPath))
                                         {
@@ -769,7 +771,6 @@ namespace Lexplosion.Logic.FileSystem
 
                         if (!File.Exists(DirectoryPath + "/libraries/" + lib))
                         {
-                            Console.WriteLine(DirectoryPath + "/libraries/" + lib);
                             errors.Add("libraries/" + lib);
                         }
                         else
@@ -778,21 +779,15 @@ namespace Lexplosion.Logic.FileSystem
                             SaveFile(downloadedLibsAddr, JsonConvert.SerializeObject(downloadedLibs));
                         }
                     }
-                    //catch
-                    //{
-                    //    errors.Add("libraries/" + lib);
-                    //}
+                    catch
+                    {
+                        errors.Add("libraries/" + lib);
+                    }
 
                     updated++;
                     BaseDownloadEvent?.Invoke(updatesCount, updated);
                 }
             }
-
-            if (errors.Count > 0) 
-            {
-
-            }
-
 
             try
             {

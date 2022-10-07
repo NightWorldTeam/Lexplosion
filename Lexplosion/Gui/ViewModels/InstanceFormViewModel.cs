@@ -220,7 +220,7 @@ namespace Lexplosion.Gui.ViewModels
 
         private void ExecuteUpperButtonFunc(UpperButtonFunc buttonFunc) 
         {
-            Console.WriteLine(buttonFunc.ToString());
+            Runtime.DebugWrite(buttonFunc.ToString());
             switch (buttonFunc)
             {
                 case UpperButtonFunc.Download:

@@ -112,7 +112,7 @@ namespace Lexplosion.Logic.Management.Instances
                         Date = file.fileDate
                     });
 
-                    Console.WriteLine(file.fileName + " " + file.id);
+                    Runtime.DebugWrite(file.fileName + " " + file.id);
                 }
 
                 return versions;

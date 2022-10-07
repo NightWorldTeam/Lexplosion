@@ -235,7 +235,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static bool SaveFile(string name, string content)
         {
-            //try
+            try
             {
                 string dirName = Path.GetDirectoryName(name);
                 if (!Directory.Exists(dirName))
@@ -253,10 +253,10 @@ namespace Lexplosion.Logic.FileSystem
                 return true;
 
             }
-            /*catch
+            catch
             {
                 return false;
-            }*/
+            }
         }
 
         public static T GetFile<T>(string file)

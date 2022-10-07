@@ -131,7 +131,7 @@ namespace Lexplosion.Logic.FileSystem
         /// </returns>
         public InstanceManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken)
         {
-            //try
+            try
             {
                 //удаляем старые файлы
                 if (localFiles.Files != null)
@@ -213,10 +213,10 @@ namespace Lexplosion.Logic.FileSystem
 
                 return data;
             }
-            /*catch
+            catch
             {
                 return null;
-            }*/
+            }
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Lexplosion.Logic.FileSystem
 
             var errors = new List<string>();
 
-            //try
+            try
             {
                 InstanceContent compliteDownload = new InstanceContent
                 {
@@ -246,7 +246,6 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (installedAddons != null)
                 {
-                    Console.WriteLine("fdsv " + installedAddons.Count);
                     List<int> tempList = new List<int>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
                     foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
                     {
@@ -286,8 +285,6 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     downloadList = data.files;
                 }
-
-                Console.WriteLine("qweqwe " + test);
 
                 int filesCount = downloadList.Count;
                 AddonsDownloadEvent?.Invoke(filesCount, 0);
@@ -331,12 +328,12 @@ namespace Lexplosion.Logic.FileSystem
                     var noDownloaded = new ConcurrentBag<InstanceManifest.FileData>();
                     int downloadedCount = 0;
 
-                    Console.WriteLine("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
+                    Runtime.DebugWrite("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
                     foreach (InstanceManifest.FileData file in downloadList)
                     {
                         perfomer.ExecuteTask(delegate ()
                         {
-                            Console.WriteLine("ADD MOD TO PERFOMER");
+                            Runtime.DebugWrite("ADD MOD TO PERFOMER");
                             CurseforgeAddonInfo addonInfo;
                             if (addons.ContainsKey(file.projectID))
                             {
@@ -367,18 +364,18 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else //скачивание мода не удалось.
                             {
-                                Console.WriteLine("ERROR " + result.Value2 + " " + result.Value1);
+                                Runtime.DebugWrite("ERROR " + result.Value2 + " " + result.Value1);
                                 noDownloaded.Add(file);
                             }
 
                             lock (fileBlock)
                             {
                                 compliteDownload.InstalledAddons[file.projectID] = result.Value1;
-                                Console.WriteLine("GGHT " + compliteDownload.InstalledAddons.Count);
+                                Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
                                 SaveInstanceContent(compliteDownload);
                             }
 
-                            Console.WriteLine("EXIT PERFOMER");
+                            Runtime.DebugWrite("EXIT PERFOMER");
                         });
 
                         if (cancelToken.IsCancellationRequested) break;
@@ -386,11 +383,9 @@ namespace Lexplosion.Logic.FileSystem
 
                     if (!cancelToken.IsCancellationRequested)
                     {
-                        Console.WriteLine("ЖДЁМ КОНЦА ");
                         perfomer?.WaitEnd();
-                        Console.WriteLine("КОНЕЦ ");
 
-                        Console.WriteLine("ДОКАЧИВАЕМ " + noDownloaded.Count);
+                        Runtime.DebugWrite("ДОКАЧИВАЕМ " + noDownloaded.Count);
                         foreach (InstanceManifest.FileData file in noDownloaded)
                         {
                             if (cancelToken.IsCancellationRequested) break;
@@ -416,7 +411,7 @@ namespace Lexplosion.Logic.FileSystem
                             while (count < 4 && result.Value2 != DownloadAddonRes.Successful && !cancelToken.IsCancellationRequested)
                             {
                                 Thread.Sleep(1000);
-                                Console.WriteLine("REPEAT DOWNLOAD " + addonInfo.id);
+                                Runtime.DebugWrite("REPEAT DOWNLOAD " + addonInfo.id);
                                 addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
                                 result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
 
@@ -425,7 +420,7 @@ namespace Lexplosion.Logic.FileSystem
 
                             if (result.Value2 != DownloadAddonRes.Successful)
                             {
-                                Console.WriteLine("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.projectID + " " + result.Value2);
+                                Runtime.DebugWrite("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.projectID + " " + result.Value2);
                                 if (addonInfo != null)
                                 {
                                     errors.Add(addonInfo.name + ", File id: " + file.fileID);
@@ -455,15 +450,15 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 SaveInstanceContent(compliteDownload);
-                Console.WriteLine("END INSTALL INSTANCE");
+                Runtime.DebugWrite("END INSTALL INSTANCE");
 
                 return errors;
             }
-            /*catch
+            catch
             {
                 errors.Add("uncnowError");
                 return null;
-            }*/
+            }
         }
     }
 }

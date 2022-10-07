@@ -188,7 +188,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                 while (!IsConnected)
                 {
-                    //try
+                    try
                     {
                         data = socket.Receive(ref remoteIp);
                         if (data.Length > 0)
@@ -210,7 +210,7 @@ namespace Lexplosion.Logic.Network.SMP
                             }
                         }
                     }
-                    //catch { }
+                    catch { }
                 }
 
             });
@@ -218,7 +218,7 @@ namespace Lexplosion.Logic.Network.SMP
 
             _rtt = CalculateRTT(); //измеряем rtt
             _rttCalculator = new RttCalculator(_rtt);
-            Console.WriteLine("RTT " + _rtt);
+            Runtime.DebugWrite("RTT " + _rtt);
 
             if (_rtt != -1) // если -1, значит ответные пакеты не дошли. Соединение установить не удалось
             {
@@ -256,7 +256,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                 _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() + 10000;
 
-                Console.WriteLine("MTU " + _mtu);
+                Runtime.DebugWrite("MTU " + _mtu);
 
                 return true;
             }
@@ -357,7 +357,7 @@ namespace Lexplosion.Logic.Network.SMP
                     while (!successful && i < 20)
                     {
                         _times[i] = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                        Console.WriteLine("SEND");
+                        Runtime.DebugWrite("SEND");
                         socket.Send(new byte[2] { 0x01, i }, 2);
                         i++;
 
@@ -377,7 +377,7 @@ namespace Lexplosion.Logic.Network.SMP
                 return -1;
             }
 
-            Console.WriteLine("RTT " + ((rttSum / 5) + 1));
+            Runtime.DebugWrite("RTT " + ((rttSum / 5) + 1));
 
             // вычиляем среднее значение и возвращаем его
             return (rttSum / 5) + 1;
@@ -401,7 +401,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     if (CalculateRTT() == -1) //проверяем ответил ли хост
                     {
-                        Console.WriteLine("ConnectionControl");
+                        Runtime.DebugWrite("ConnectionControl");
                         StopWork();
                         ClientClosing?.Invoke(point);
                     }
@@ -505,10 +505,12 @@ namespace Lexplosion.Logic.Network.SMP
                 // цикл отправки
                 while (IsConnected && attemptCount < 15)
                 {
+#if DEBUG
                     if (attemptCount > 0)
                     {
-                        Console.WriteLine("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt);
+                        Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt);
                     }
+#endif
 
                     foreach (ushort id in packages.Keys)
                     {
@@ -539,7 +541,6 @@ namespace Lexplosion.Logic.Network.SMP
                             _rttCalculator.AddDelta(deltaTime);
                             _rtt = _rttCalculator.GetRtt;
 
-                            //Console.WriteLine("YRAAAAA " + lastPackageId);
                             repeatDeliveryBlock.Release();
                             break;
                         }
@@ -584,7 +585,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                 if (attemptCount == 15)
                 {
-                    Console.WriteLine("PIZDETS!!!!");
+                    Runtime.DebugWrite("PIZDETS!!!!");
                     new Thread(delegate ()
                     {
                         Close();
@@ -670,8 +671,6 @@ namespace Lexplosion.Logic.Network.SMP
                                     data[HeaderPositions.LastId_2]
                                 }, 0);
 
-                                    //Console.WriteLine("RECV " + receivingPointer + " " + id + " " + lastId);
-
                                     if (id >= receivingPointer && id - receivingPointer < _maxPackagesCount)
                                     {
                                         waitingLastPackage = lastId;
@@ -705,7 +704,6 @@ namespace Lexplosion.Logic.Network.SMP
                                             // отправляем подтверждение
                                             byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
                                             socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
-                                            //Console.WriteLine("SUCS " + id + " " + receivingPointer);
                                             attemptSendCounts = -1;
                                             waitingLastPackage = -1;
                                         }
@@ -763,7 +761,6 @@ namespace Lexplosion.Logic.Network.SMP
                                                         var idg = BitConverter.ToUInt16(new byte[2] { array[h], array[h + 1] }, 0);
                                                         str += idg + ", ";
                                                     }
-                                                    Console.WriteLine("RETAT 1 ");
                                                 }
 
                                                 attemptSendCounts = data[HeaderPositions.AttemptsCounts];
@@ -794,7 +791,6 @@ namespace Lexplosion.Logic.Network.SMP
                                             {
                                                 byte[] array = package.ToArray();
                                                 socket.Send(array, array.Length);
-                                                Console.WriteLine("RETAT 2");
                                             }
                                             else
                                             {
@@ -808,7 +804,6 @@ namespace Lexplosion.Logic.Network.SMP
                                         {
                                             byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
                                             socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
-                                            //Console.WriteLine("SUCS0 " + id +  " " + lastId + " " + receivingPointer);
                                         }
                                     }
 
@@ -825,7 +820,6 @@ namespace Lexplosion.Logic.Network.SMP
                                     repeatDeliveryBlock.WaitOne();
                                     if (id == lastPackage)
                                     {
-                                        //Console.WriteLine("PODV " + id);
                                         repeatDeliveryList = null;
                                         deliveryWait.Set();
                                     }
@@ -834,7 +828,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                                 break;
                             case 5: // обрыв соединения
-                                Console.WriteLine("StopWork!!!!");
+                                Runtime.DebugWrite("StopWork!!!!");
                                 new Thread(delegate ()
                                 {
                                     StopWork();
@@ -1089,14 +1083,14 @@ namespace Lexplosion.Logic.Network.SMP
                 }
             }
 
-            Console.WriteLine("SMP CLIENT STOP WORK");
+            Runtime.DebugWrite("SMP CLIENT STOP WORK");
             data = null;
             return false;
         }
 
         private void StopWork()
         {
-            Console.WriteLine("StopWork() SMP CLIENT");
+            Runtime.DebugWrite("StopWork() SMP CLIENT");
             IsConnected = false;
             connectionControl.Abort();
             //serviceReceive.Abort();

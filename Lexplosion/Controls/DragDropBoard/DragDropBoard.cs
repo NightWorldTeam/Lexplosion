@@ -29,9 +29,7 @@ namespace Lexplosion.Controls
         protected override void OnDrop(DragEventArgs e)
         {
             //Console.WriteLine("----------Method OnDrop Started----------");
-            if (this.ImportAction == null)
-                Console.WriteLine("Uploaded Files - null");
-            else 
+            if (this.ImportAction != null)
             {
                 var allowedFiles = new List<string>();
 

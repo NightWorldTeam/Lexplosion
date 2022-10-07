@@ -372,11 +372,11 @@ namespace Lexplosion.Logic.Management.Instances
                             string file = WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/" + LogoFileName;
                             if (File.Exists(file))
                             {
-                                //try
+                                try
                                 {
                                     logo = File.ReadAllBytes(file);
                                 }
-                                //catch { }
+                                catch { }
                             }
                         }
 
@@ -444,7 +444,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <returns>Список внешних модпаков.</returns>
         public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
         {
-            Console.WriteLine("UploadInstances " + pageIndex);
+            Runtime.DebugWrite("UploadInstances " + pageIndex);
 
             var instances = new List<InstanceClient>();
             List<PrototypeInstance.Info> catalog = PrototypeInstance.GetCatalog(type, pageSize, pageIndex, categoriy, searchFilter, sortField, gameVersion);
@@ -491,7 +491,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                 instances.Add(instanceClient);
             }
-            Console.WriteLine("UploadInstances End " + pageIndex);
+            Runtime.DebugWrite("UploadInstances End " + pageIndex);
 
             return instances;
         }
@@ -650,7 +650,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
-            Console.WriteLine("UpdateInstance-end " + data.InitResult);
+            Runtime.DebugWrite("UpdateInstance-end " + data.InitResult);
 
             _cancelTokenSource = null;
         }
@@ -687,7 +687,7 @@ namespace Lexplosion.Logic.Management.Instances
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
             }
 
-            Console.WriteLine("Run-end " + data.InitResult);
+            Runtime.DebugWrite("Run-end " + data.InitResult);
 
             _cancelTokenSource = null;
         }
@@ -807,7 +807,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         private void SaveAssets()
         {
-            //try
+            try
             {
                 if (!Directory.Exists(WithDirectory.DirectoryPath + "/instances-assets/" + _localId))
                 {
@@ -819,7 +819,7 @@ namespace Lexplosion.Logic.Management.Instances
                     File.WriteAllBytes(WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName, Logo);
                 }
             }
-            //catch { }
+            catch { }
 
             string file = WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
             InstanceAssets assetsData_ = DataFilesManager.GetFile<InstanceAssets>(file);

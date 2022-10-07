@@ -213,8 +213,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
             pathLevel.UnitsList = _instanceClient.GetPathContent(dir);
 
+#if DEBUG
             foreach (var i in pathLevel.UnitsList.Values)
-            Console.WriteLine(pathLevel.FullPath + " into " + i.FullPath);
+            Runtime.DebugWrite(pathLevel.FullPath + " into " + i.FullPath);
+#endif
 
             if (pathLevel.IsSelected)
                 pathLevel.IsSelected = true;

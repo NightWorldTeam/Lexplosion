@@ -50,7 +50,6 @@ namespace Lexplosion.Logic.Management.Installers
 
         public NightworldInstallManager(string instanceid, bool onlyBase, CancellationToken cancelToken)
         {
-            Console.WriteLine("onlyBase = " + onlyBase);
             InstanceId = instanceid;
             _onlyBase = onlyBase;
             _cancelToken = cancelToken;
@@ -243,7 +242,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
-            Console.WriteLine("NightWorld Update " + _requiresUpdates);
+            Runtime.DebugWrite("NightWorld Update " + _requiresUpdates);
 
             Action<string, int, DownloadFileProgress> singleDownloadMethod = null;
 

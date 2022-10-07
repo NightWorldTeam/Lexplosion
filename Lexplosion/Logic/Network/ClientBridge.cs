@@ -79,7 +79,7 @@ namespace Lexplosion.Logic.Network
         // этот метод срабатывает при подключении клиента
         private void AcceptHandler(IAsyncResult data)
         {
-            Console.WriteLine("AcceptHandler1");
+            Runtime.DebugWrite("AcceptHandler1");
             AcceptingBlock.WaitOne();
 
             Socket listener = (Socket)data.AsyncState;
@@ -90,7 +90,7 @@ namespace Lexplosion.Logic.Network
                 AcceptingBlock.Release();
                 Socket sock = listener.EndAccept(data);
                 sock.Close();
-                Console.WriteLine("AcceptHandler1.1");
+                Runtime.DebugWrite("AcceptHandler1.1");
                 listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
 
                 return;
@@ -99,10 +99,10 @@ namespace Lexplosion.Logic.Network
             // TODO: тут проверить тот ли клиент подключился
             AvailableServersBlock.WaitOne();
             string serverUUID = AvailableServers[listener];
-            Console.WriteLine("AcceptHandler2");
+            Runtime.DebugWrite("AcceptHandler2");
             if (base.Initialization(UUID, _sessionToken, serverUUID))
             {
-                Console.WriteLine("AcceptHandler3");
+                Runtime.DebugWrite("AcceptHandler3");
                 Socket serverSimulator_ = listener.EndAccept(data);
                 ServerSimulator = serverSimulator_;
                 IsConnected = true;
@@ -125,7 +125,7 @@ namespace Lexplosion.Logic.Network
                 AvailableServersBlock.Release();
                 AcceptingBlock.Release();
 
-                Console.WriteLine("AcceptHandler4");
+                Runtime.DebugWrite("AcceptHandler4");
             }
             else
             {
@@ -133,7 +133,7 @@ namespace Lexplosion.Logic.Network
                 AcceptingBlock.Release();
                 Socket sock = listener.EndAccept(data);
                 sock.Close();
-                Console.WriteLine("AcceptHandler1.2");
+                Runtime.DebugWrite("AcceptHandler1.2");
             }
 
             listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
@@ -145,7 +145,7 @@ namespace Lexplosion.Logic.Network
             {
                 if (IsConnected)
                 {
-                    Console.WriteLine("Close");
+                    Runtime.DebugWrite("Close");
                     IsConnected = false;
                     Bridge.Close();
                     ServerSimulator.Close(); //закрываем соединение с клиентом   
@@ -156,7 +156,7 @@ namespace Lexplosion.Logic.Network
         override protected void Sending() //отправляет данные с майнкрафт клиента в сеть
         {
             SendingWait.WaitOne();
-            Console.WriteLine("sending begin");
+            Runtime.DebugWrite("sending begin");
 
             try
             {
@@ -167,7 +167,7 @@ namespace Lexplosion.Logic.Network
 
                     if (bytes == 0)
                     {
-                        Console.WriteLine("CLOSE. BYTES IS 0");
+                        Runtime.DebugWrite("CLOSE. BYTES IS 0");
                         Close(null);
                         readingThread.Abort();
                         break;
@@ -184,7 +184,7 @@ namespace Lexplosion.Logic.Network
             }
             catch (Exception e)
             {
-                Console.WriteLine("Sending " + e);
+                Runtime.DebugWrite("Sending " + e);
                 Close(null);
                 readingThread.Abort();
             }
@@ -194,7 +194,7 @@ namespace Lexplosion.Logic.Network
         override protected void Reading() //получаем данные из сети и отправляем на майкрафт клиент
         {
             ReadingWait.WaitOne();
-            Console.WriteLine("reading begin");
+            Runtime.DebugWrite("reading begin");
 
             bool isWorking = Bridge.Receive(out byte[] buffer);
 
@@ -207,12 +207,12 @@ namespace Lexplosion.Logic.Network
                 }
 
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("Reading exception " + e);
+                Runtime.DebugWrite("Reading exception ");
             }
 
-            Console.WriteLine("Reading " + Bridge.IsConnected);
+            Runtime.DebugWrite("Reading " + Bridge.IsConnected);
 
             Close(null);
             sendingThread.Abort();

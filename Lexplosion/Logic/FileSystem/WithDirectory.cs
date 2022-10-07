@@ -145,7 +145,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public static bool InstallFile(string url, string fileName, string path, TaskArgs taskArgs)
         {
-            Console.WriteLine("INSTALL " + url);
+            Runtime.DebugWrite("INSTALL " + url);
 
             string tempDir = null;
             try

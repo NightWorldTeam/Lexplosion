@@ -78,7 +78,7 @@ namespace Lexplosion.Logic.Network
                     if (OffsetsList[clientPoint] >= SFilesList[TransmittedFiles[clientPoint]].FileSize)
                     {
                         Server.Close(clientPoint);
-                        Console.WriteLine("END SEND");
+                        Runtime.DebugWrite("END SEND");
                         AvailableConnections.Remove(clientPoint);
                         AuthorizedClients.Remove(clientPoint);
                         OffsetsList.Remove(clientPoint);
@@ -111,7 +111,7 @@ namespace Lexplosion.Logic.Network
                     AcceptingBlock.WaitOne();
                     if (AvailableConnections.Contains(point))
                     {
-                        //try
+                        try
                         {
                             string profileId = Encoding.UTF8.GetString(data);
                             FilesListSemaphore.WaitOne();
@@ -124,19 +124,19 @@ namespace Lexplosion.Logic.Network
                                 AuthorizedClients.Add(point);
                                 Server.Send(BitConverter.GetBytes(SFilesList[profileId].FileSize), point);
                                 WaitClient.Set();
-                                Console.WriteLine("Авторизировал");
+                                Runtime.DebugWrite("Авторизировал");
                             }
                             else
                             {
-                                Console.WriteLine("PARASHA");
+                                Runtime.DebugWrite("PARASHA");
                                 FilesListSemaphore.Release();
                                 // TODO: че-то делать
                             }
                         }
-                        /*catch
+                        catch
                         {
                             // TODO: че-то делать
-                        }*/
+                        }
 
                     }
                     AcceptingBlock.Release();

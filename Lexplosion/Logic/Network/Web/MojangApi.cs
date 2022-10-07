@@ -80,7 +80,7 @@ namespace Lexplosion.Logic.Network.Web
                 }
 
                 var data = JsonConvert.DeserializeObject<AuthAnswer>(answer);
-                Console.WriteLine("Mojang Auth " + data.accessToken);
+                Runtime.DebugWrite("Mojang Auth " + data.accessToken);
 
                 if (data != null && !string.IsNullOrEmpty(data.accessToken) && data.selectedProfile != null
                     && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
@@ -143,7 +143,7 @@ namespace Lexplosion.Logic.Network.Web
                 }
 
                 var data = JsonConvert.DeserializeObject<AuthAnswer>(answer);
-                Console.WriteLine("Mojang Refresh " + data.accessToken);
+                Runtime.DebugWrite("Mojang Refresh " + data.accessToken);
 
                 if (data != null && !string.IsNullOrEmpty(data.accessToken) && !string.IsNullOrEmpty(data.clientToken) 
                     && data.selectedProfile != null && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
@@ -222,7 +222,7 @@ namespace Lexplosion.Logic.Network.Web
         /// <returns>Результат.</returns>
         public static AuthResult AuthFromToken(string token)
         {
-            //try
+            try
             {
                 string answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new List<KeyValuePair<string, string>>()
                 {
@@ -251,7 +251,7 @@ namespace Lexplosion.Logic.Network.Web
                     AccesToken = token
                 };
             }
-            //catch { }
+            catch { }
 
 
             return new AuthResult

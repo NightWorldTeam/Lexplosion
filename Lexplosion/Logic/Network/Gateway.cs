@@ -46,7 +46,7 @@ namespace Lexplosion.Logic.Network
             sessionToken = sessionToken_;
             ControlServer = controlServer;
             _directConnection = directConnection;
-            Console.WriteLine("Create Gateway");
+            Runtime.DebugWrite("Create Gateway");
         }
 
         public void Initialization(int pid)
@@ -148,7 +148,7 @@ namespace Lexplosion.Logic.Network
                         do
                         {
                             string ans = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setGameServer", input);
-                            Console.WriteLine(ans);
+                            Runtime.DebugWrite(ans);
                         }
                         while (!waitingInforming.WaitOne(120000));
                     }

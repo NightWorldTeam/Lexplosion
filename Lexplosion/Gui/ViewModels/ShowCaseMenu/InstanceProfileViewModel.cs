@@ -185,7 +185,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 {
                     if (ModloaderVersions.Count > 0)
                         ModloaderVersion = ModloaderVersions[0];
-                    Console.WriteLine(gameVersion + " " + modloader);
+                    Runtime.DebugWrite(gameVersion + " " + modloader);
                 }
             });
         }
