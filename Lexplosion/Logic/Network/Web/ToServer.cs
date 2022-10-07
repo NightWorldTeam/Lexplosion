@@ -26,15 +26,28 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static bool CheckLauncherUpdates()
+        /// <summary>
+        /// Проверяет есть ли на сервере новая версия лаунчера
+        /// </summary>
+        /// <returns>Возвращает версию нового лаунчера. И -1, если новых версий нет.</returns>
+        public static int CheckLauncherUpdates()
         {
             try
             {
                 int version = Int32.Parse(HttpPost(LaunсherSettings.URL.LauncherParts + "launcherVersion.html"));
-                return version > LaunсherSettings.version;
+                
+                if(version > LaunсherSettings.version)
+                {
+                    return version;
+                }
+
+                return -1;
 
             }
-            catch { return false; }
+            catch 
+            {
+                return -1;
+            }
         }
 
         public static List<MCVersionInfo> GetVersionsList()

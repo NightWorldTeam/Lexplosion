@@ -98,13 +98,14 @@ namespace Lexplosion
             UserData.InitSetting();
             WithDirectory.Create(UserData.GeneralSettings.GamePath);
 
-            if (ToServer.CheckLauncherUpdates())
+            int version = ToServer.CheckLauncherUpdates();
+            if (version != -1)
             {
                 app.Dispatcher.Invoke(() =>
                 {
                     _splashWindow.ChangeLoadingBoardPlaceholder(true);
                 });
-                LauncherUpdate();
+                LauncherUpdate(version);
             }
 
             InstanceClient.DefineInstalledInstances();
@@ -179,7 +180,7 @@ namespace Lexplosion
             _splashWindow = null;
         }
 
-        private static void LauncherUpdate()
+        private static void LauncherUpdate(int version)
         {
             try
             {
@@ -210,7 +211,7 @@ namespace Lexplosion
                 {
                     arguments =
                     Assembly.GetExecutingAssembly().Location + " " +
-                    LaunсherSettings.URL.LauncherParts + "Lexplosion.exe" + " " +
+                    LaunсherSettings.URL.LauncherParts + "Lexplosion.exe?" + version + " " +
                     Process.GetCurrentProcess().ProcessName + " " +
                     Convert.ToInt32(_splashWindow.Left) + " " +
                     Convert.ToInt32(_splashWindow.Top);
