@@ -28,7 +28,7 @@ namespace Lexplosion.Controls
 
 
         public static readonly DependencyProperty SearchActionProperty
-            = DependencyProperty.Register("SearchAction", typeof(Action<string>), typeof(SearchBox), new PropertyMetadata(null));
+            = DependencyProperty.Register("SearchAction", typeof(Action<string, bool>), typeof(SearchBox), new PropertyMetadata(null));
 
 
         #endregion Dependency Properties fields
