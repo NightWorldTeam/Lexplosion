@@ -8,11 +8,11 @@ using System.Windows;
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 [assembly: AssemblyTitle("NW Lexplosion")]
-[assembly: AssemblyDescription("NW Lexplosion - Minecraft Launcher")]
+[assembly: AssemblyDescription("Lexplosion - Minecraft Launcher")]
 [assembly: AssemblyConfiguration("NightWorld")]
 [assembly: AssemblyCompany("NightWorld.Inc")]
 [assembly: AssemblyProduct("Lexplosion")]
-[assembly: AssemblyCopyright("Copyright © NightWorld 2017-2021")]
+[assembly: AssemblyCopyright("Copyright © NightWorld 2017-2022")]
 [assembly: AssemblyTrademark("NightWorld")]
 [assembly: AssemblyCulture("")]
 
@@ -51,6 +51,6 @@ using System.Windows;
 // Можно задать все значения или принять номер сборки и номер редакции по умолчанию.
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.0")]
-[assembly: AssemblyFileVersion("0.2.0")]
+[assembly: AssemblyVersion("0.7.0")]
+[assembly: AssemblyFileVersion("0.7.0")]
 [assembly: NeutralResourcesLanguage("")]
