@@ -23,7 +23,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         #region Filter
 
-        public Action<string> SearchMethod { get; }
+        public Action<string, bool> SearchMethod { get; }
 
         public ObservableCollection<CurseforgeCategory> Categories { get; private set; }
 
@@ -50,7 +50,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedInstanceSource = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke(null);
+                SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedCurseforgeCategory = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke(null);
+                SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 _selectedCfSortByString = value;
                 OnPropertyChanged();
                 SelectedCfSortBy = (CfSortField)CfSortToString.IndexOf(value) + 1;
-                SearchMethod?.Invoke(null);
+                SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -117,7 +117,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedVersionIndex = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke(null);
+                SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -230,9 +230,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 SelectedInstanceSource = InstanceSource.Curseforge;
         }
 
-        private void InstancesPageLoading(string searchText = "")
+        private void InstancesPageLoading(string searchText = "", bool isPaginatorInvoke=false)
         {
-            if (searchText == _previousSearch && searchText != null)
+            if (!isPaginatorInvoke && searchText == _previousSearch && searchText != null)
             {
                 IsLoaded = true;
                 return;
@@ -252,6 +252,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     SelectedCfSortBy,
                     gameVersion
                     );
+
 
                 _previousSearch = searchText == null ? "" : searchText;
 

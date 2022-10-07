@@ -3,6 +3,7 @@ using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.FileSystem;
 using System;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
 {
@@ -31,19 +32,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     dialog.SelectedPath = GeneralSettings.SystemPath.Replace("/", @"\");
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
-                        var dialogModal = new DialogViewModel(_mainViewModel);
-                        dialogModal.ShowDialog("Желаете ли вы полностью перенести директорию?", () => {
-                            GeneralSettings.SystemPath = dialog.SelectedPath;
-                            IsDirectoryChanged = false;
-                            Lexplosion.Runtime.TaskRun(() => { 
-                                WithDirectory.SetNewDirectory(GeneralSettings.SystemPath);
-                                App.Current.Dispatcher.Invoke(() => 
-                                { 
-                                    MainViewModel.ShowToastMessage("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", TimeSpan.FromSeconds(2));
-                                    IsDirectoryChanged = true;
-                                });
-                            });
-                        });
+                        ChangedDirectory(dialog.SelectedPath);
                     }
                 }
             });
@@ -72,10 +61,28 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             });
         }
 
+        private void ChangedDirectory(string newPath) 
+        {
+            var dialogModal = new DialogViewModel(_mainViewModel);
+            dialogModal.ShowDialog("Желаете ли вы полностью перенести директорию?", () => {
+                GeneralSettings.SystemPath = newPath;
+                IsDirectoryChanged = false;
+                Lexplosion.Runtime.TaskRun(() => 
+                {
+                    WithDirectory.SetNewDirectory(GeneralSettings.SystemPath);
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        MainViewModel.ShowToastMessage("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", TimeSpan.FromSeconds(2));
+                        IsDirectoryChanged = true;
+                    });
+                });
+            });
+        }
+
         public GeneralSettingsViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
             GeneralSettings = new GeneralSettingsModel();
         }
-    }
+    } 
 }

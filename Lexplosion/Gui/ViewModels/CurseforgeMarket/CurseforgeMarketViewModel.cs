@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 {
@@ -49,7 +50,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         #region Navigation
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
-        public Action<string> SearchMethod { get; }
+        public Action<string, bool> SearchMethod { get; }
 
         #endregion Navigation
 
@@ -104,7 +105,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                 OnPropertyChanged();
                 if (!_selectedCategory.HasSubCategories)
                     SubCategorySelected = null;
-                SearchMethod?.Invoke(null);
+                SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -115,7 +116,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 _subCategorySelected = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke(null);
+                SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -293,12 +294,12 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             });
         }
 
-        private async void InstancePageLoading(string searchText = "")
+        private async void InstancePageLoading(string searchText = "", bool isPaginator=false)
         {
             // запускаем заставку загрузки
             
 
-            if (searchText == _previousSearch && searchText != null)
+            if (!isPaginator && searchText == _previousSearch && searchText != null)
             {
                 IsLoaded = true;
                 return;

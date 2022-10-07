@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels
 
 
         private InstanceSource _source;
-        public event Action<string> PageChanged;
+        public event Action<string, bool> PageChanged;
 
 
         #region Command
@@ -71,7 +71,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _pageIndex; set
             {
                 _pageIndex = value;
-                PageChanged?.Invoke(string.Empty);
+                PageChanged?.Invoke(string.Empty, true);
                 OnPropertyChanged();
             }
         }

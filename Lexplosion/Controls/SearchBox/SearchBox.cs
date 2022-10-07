@@ -37,9 +37,9 @@ namespace Lexplosion.Controls
         #region setters / getters
 
 
-        public Action<string> SearchAction
+        public Action<string, bool> SearchAction
         {
-            get => (Action<string>)GetValue(SearchActionProperty);
+            get => (Action<string, bool>)GetValue(SearchActionProperty);
             set => SetValue(SearchActionProperty, value);
         }
 
@@ -98,7 +98,7 @@ namespace Lexplosion.Controls
 
         private void Search() 
         {
-            SearchAction?.Invoke(_textBox.Text);
+            SearchAction?.Invoke(_textBox.Text, false);
         }
 
         private void SearchButtonClicked(object sender, RoutedEventArgs e)
