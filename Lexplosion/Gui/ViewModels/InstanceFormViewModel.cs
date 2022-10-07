@@ -45,7 +45,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _upperBtnCommand ?? (_upperBtnCommand = new RelayCommand(obj =>
             {
-                try 
+                try
                 {
                     ExecuteUpperButtonFunc((UpperButtonFunc)obj);
                 }
@@ -60,8 +60,8 @@ namespace Lexplosion.Gui.ViewModels
         public RelayCommand LowerBtnCommand
         {
             get => _lowerBtnCommand ?? (_lowerBtnCommand = new RelayCommand(obj =>
-            {   
-                try 
+            {
+                try
                 {
                     ExecuteLowerButtonFunc((LowerButtonFunc)obj);
                 }
@@ -93,18 +93,18 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Запускает сборку по данным формы.
         /// </summary>
-        public void LaunchInstance(ComplitedLaunchCallback complitedLaunchCallback = null, GameExitedCallback gameExitedCallback = null) 
+        public void LaunchInstance(ComplitedLaunchCallback complitedLaunchCallback = null, GameExitedCallback gameExitedCallback = null)
         {
             if (!MainVM.IsInstanceRunning)
             {
-                if (complitedLaunchCallback != null && gameExitedCallback != null) 
-                { 
+                if (complitedLaunchCallback != null && gameExitedCallback != null)
+                {
                     Client.ComplitedLaunch += complitedLaunchCallback;
                     Client.GameExited += gameExitedCallback;
                 }
                 MainVM.IsInstanceRunning = true;
 
-                Model.InstanceClient.DownloadStartedEvent += () => 
+                Model.InstanceClient.DownloadStartedEvent += () =>
                 {
                     MainVM.DownloadManager.AddProcess(this);
 
@@ -120,7 +120,7 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Закрывает сборку по данным формы.
         /// </summary>
-        public void CloseInstance() 
+        public void CloseInstance()
         {
             Model.InstanceClient.StopGame();
             Model.UpperButton.ChangeFuncPlay();
@@ -129,12 +129,12 @@ namespace Lexplosion.Gui.ViewModels
             Model.OverviewField = Model.InstanceClient.Summary;
         }
 
-        public void UpdateInstance() 
+        public void UpdateInstance()
         {
             Model.InstanceClient.Update();
         }
 
-        internal void DownloadInstance(Action<DownloadStageTypes, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null) 
+        internal void DownloadInstance(Action<DownloadStageTypes, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null)
         {
             if (progressHandler != null)
                 Model.DownloadModel.DownloadActions.Add(progressHandler);
@@ -155,17 +155,17 @@ namespace Lexplosion.Gui.ViewModels
         /// Удаляет сборку из библиотеки, но перед этим спрашивает пользователя действительно ли он хочет удалить.
         /// </summary>
         /// <param name="IsFromLibrary">Если сборка не установленная но в библиотеки. Влияет на выводимое сообщение</param>
-        internal void RemoveInstance(bool IsFromLibrary) 
+        internal void RemoveInstance(bool IsFromLibrary)
         {
             var dialog = new DialogViewModel(MainVM);
             string message = "Вы действительно желеает удалить клиент?";
 
-            if (IsFromLibrary) 
+            if (IsFromLibrary)
             {
                 // TODO: LOCALIZATE
                 message = "Вы действительно желаете удалить " + Model.InstanceClient.Name + " из библиотеки?";
             }
-            else 
+            else
             {
                 message = "Вы действительно желаете удалить " + Model.InstanceClient.Name;
             }
@@ -184,7 +184,7 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        internal void OpenWebsite() 
+        internal void OpenWebsite()
         {
             try
             {
@@ -196,7 +196,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        internal void StartExportAndOpenModal() 
+        internal void StartExportAndOpenModal()
         {
             MainVM.ModalWindowVM.IsOpen = true;
 
@@ -218,7 +218,7 @@ namespace Lexplosion.Gui.ViewModels
         #region Private Methods
 
 
-        private void ExecuteUpperButtonFunc(UpperButtonFunc buttonFunc) 
+        private void ExecuteUpperButtonFunc(UpperButtonFunc buttonFunc)
         {
             Runtime.DebugWrite(buttonFunc.ToString());
             switch (buttonFunc)
@@ -249,7 +249,7 @@ namespace Lexplosion.Gui.ViewModels
             }
         }
 
-        private void ExecuteLowerButtonFunc(LowerButtonFunc buttonFunc) 
+        private void ExecuteLowerButtonFunc(LowerButtonFunc buttonFunc)
         {
             IsDropdownMenuOpen = false;
             switch (buttonFunc)
@@ -281,7 +281,7 @@ namespace Lexplosion.Gui.ViewModels
                 case LowerButtonFunc.Update:
                     {
                         if (!Model.DownloadModel.IsDownloadInProgress)
-                        { 
+                        {
                             MainVM.DownloadManager.AddProcess(this);
                             Model.DownloadModel.DownloadPrepare();
                         }

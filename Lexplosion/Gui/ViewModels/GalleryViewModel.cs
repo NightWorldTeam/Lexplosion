@@ -44,7 +44,7 @@ namespace Lexplosion.Gui.ViewModels
         public ObservableCollection<BitmapImage> Images { get; } = new ObservableCollection<BitmapImage>();
 
         private double _blurEffectRadius;
-        public double BlurEffectRadius 
+        public double BlurEffectRadius
         {
             get => _blurEffectRadius; set
             {
@@ -78,7 +78,7 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         private bool _isNoneImages = false;
-        public bool IsNoneImages 
+        public bool IsNoneImages
         {
             get => _isNoneImages; set
             {
@@ -92,7 +92,7 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         private bool _isLeftBorder;
-        public bool IsLeftBorder 
+        public bool IsLeftBorder
         {
             get => _isLeftBorder; set
             {
@@ -102,7 +102,7 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         private bool _isRightBorder;
-        public bool IsRightBorder 
+        public bool IsRightBorder
         {
             get => _isRightBorder; set
             {
@@ -121,7 +121,8 @@ namespace Lexplosion.Gui.ViewModels
         public GalleryViewModel(List<byte[]> images, ISubmenu submenuViewModel)
         {
             submenuViewModel.NavigationToMainMenu += ClearGallery;
-            App.Current.Dispatcher.Invoke(() => {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 foreach (var i in images)
                     Images.Add(ImageTools.ToImageWithResize(i, 450, 240));
 
@@ -143,10 +144,10 @@ namespace Lexplosion.Gui.ViewModels
 
 
         #region Public & Protected Methods
-        
-        public void ClearGallery() 
+
+        public void ClearGallery()
         {
-            for (var i = 0; i < Images.Count; i++) 
+            for (var i = 0; i < Images.Count; i++)
             {
                 Images[i] = null;
             }

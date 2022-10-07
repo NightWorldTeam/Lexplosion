@@ -136,7 +136,7 @@ namespace Lexplosion.Gui.Extension
                                     break;
                             }
                         }
-                        else 
+                        else
                             e.Handled = true;
                         break;
                     }

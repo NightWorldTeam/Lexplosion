@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Text;
 using Newtonsoft.Json;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network.Web
@@ -13,7 +10,7 @@ namespace Lexplosion.Logic.Network.Web
     {
         class AuthAnswer
         {
-            public class SelectedProfile 
+            public class SelectedProfile
             {
                 public string name;
                 public string id;
@@ -39,7 +36,7 @@ namespace Lexplosion.Logic.Network.Web
         {
             try
             {
-                string payload = 
+                string payload =
                     "{" +
                         "\"agent\" : {" +
                             "\"name\": \"Minecraft\", " +
@@ -85,8 +82,8 @@ namespace Lexplosion.Logic.Network.Web
                 if (data != null && !string.IsNullOrEmpty(data.accessToken) && data.selectedProfile != null
                     && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
                 {
-                    return new AuthResult 
-                    { 
+                    return new AuthResult
+                    {
                         Status = AuthCode.Successfully,
                         Login = data.selectedProfile.name,
                         UUID = data.selectedProfile.id,
@@ -145,7 +142,7 @@ namespace Lexplosion.Logic.Network.Web
                 var data = JsonConvert.DeserializeObject<AuthAnswer>(answer);
                 Runtime.DebugWrite("Mojang Refresh " + data.accessToken);
 
-                if (data != null && !string.IsNullOrEmpty(data.accessToken) && !string.IsNullOrEmpty(data.clientToken) 
+                if (data != null && !string.IsNullOrEmpty(data.accessToken) && !string.IsNullOrEmpty(data.clientToken)
                     && data.selectedProfile != null && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
                 {
                     return new AuthResult
@@ -201,8 +198,8 @@ namespace Lexplosion.Logic.Network.Web
                     "}";
 
                 string answer = ToServer.HttpPostJson("https://api.minecraftservices.com/authentication/login_with_xbox", payload, out _);
-                
-                if(answer == null)
+
+                if (answer == null)
                 {
                     return null;
                 }

@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 
@@ -82,7 +81,7 @@ namespace Lexplosion.Logic.Management
             if (_data.ContainsKey(key))
             {
                 _data.Remove(key);
-            }            
+            }
             _semaphore.Release(_instanceId);
         }
 
@@ -102,7 +101,7 @@ namespace Lexplosion.Logic.Management
                     onFunction(data);
                     data.IsDisable = false;
                 }
-            }         
+            }
             _semaphore.Release(_instanceId);
         }
 
@@ -130,6 +129,6 @@ namespace Lexplosion.Logic.Management
                 _memoryStore.TryRemove(_instanceId, out _);
             }
             _semaphore.Release(_instanceId);
-        } 
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
@@ -8,7 +7,6 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
@@ -64,7 +62,7 @@ namespace Lexplosion.Logic.FileSystem
 
         public void SaveInstanceContent(InstanceContent content)
         {
-            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json", 
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json",
                 JsonConvert.SerializeObject(new InstanceContentFile
                 {
                     FullClient = content.FullClient,
@@ -441,7 +439,7 @@ namespace Lexplosion.Logic.FileSystem
                             AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
                         }
                     }
-                    
+
                 }
 
                 if (errors.Count == 0)

@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
@@ -49,12 +48,12 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
-        private bool _isVanillaGameType = true; 
-        public bool IsVanillaGameType 
+        private bool _isVanillaGameType = true;
+        public bool IsVanillaGameType
         {
-            get => _isVanillaGameType; set 
+            get => _isVanillaGameType; set
             {
-                _isVanillaGameType = value; 
+                _isVanillaGameType = value;
                 OnPropertyChanged();
             }
         }
@@ -141,8 +140,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 if (!IsVanillaGameType)
                 {
                     _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods, ResourceGetter.GetString("noInstalledModification")));
-                    App.Current.Dispatcher.Invoke(() => 
-                    { 
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
                         AddonTabs.Add(new Tab<FactoryDLCVM>() { Header = ResourceGetter.GetString("mods"), Content = this });
                     });
                 }
@@ -150,8 +149,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), CfProjectType.Resourcepacks, ResourceGetter.GetString("noInstalledResourcepacks")));
                 _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), CfProjectType.Maps, ResourceGetter.GetString("noInstalledMaps")));
 
-                App.Current.Dispatcher.Invoke(() => 
-                { 
+                App.Current.Dispatcher.Invoke(() =>
+                {
                     AddonTabs.Add(new Tab<FactoryDLCVM>() { Header = ResourceGetter.GetString("resourcepacks"), Content = this });
                     AddonTabs.Add(new Tab<FactoryDLCVM>() { Header = ResourceGetter.GetString("worlds"), Content = this });
 

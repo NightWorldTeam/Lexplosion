@@ -105,7 +105,8 @@ namespace Lexplosion.Gui.ViewModels
         private static void ShowToastMessage(string header, string message, ToastMessageState state, TimeSpan? time)
         {
             var model = new ToastMessageModel(header, message, state, time);
-            App.Current.Dispatcher.Invoke(() => {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 Messages.Add(model);
             });
         }
@@ -269,7 +270,8 @@ namespace Lexplosion.Gui.ViewModels
 
         internal void InitTrayComponents()
         {
-            App.Current.Dispatcher.Invoke(() => {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 if (RunningInstance == null)
                     InitTrayComponentsWithoutGame();
                 else InitTrayComponentsWithGame(RunningInstance);
@@ -278,7 +280,8 @@ namespace Lexplosion.Gui.ViewModels
 
         internal void InitTrayComponentsWithGame(InstanceFormViewModel instanceFormViewModel)
         {
-            App.Current.Dispatcher.Invoke(() => {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 TrayComponents.Clear();
 
                 if (instanceFormViewModel != null)
@@ -294,7 +297,8 @@ namespace Lexplosion.Gui.ViewModels
 
         internal void InitTrayComponentsWithoutGame()
         {
-            App.Current.Dispatcher.Invoke(() => {
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 TrayComponents.Clear();
 
                 TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });

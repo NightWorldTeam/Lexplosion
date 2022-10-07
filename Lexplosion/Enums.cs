@@ -1,12 +1,4 @@
-﻿using Lexplosion.Properties;
-using Lexplosion.Tools;
-using LumiSoft.Net.Mime.vCard;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Security.AccessControl;
-using System.Windows;
-
-namespace Lexplosion
+﻿namespace Lexplosion
 {
     public enum ImportResult
     {
@@ -136,7 +128,7 @@ namespace Lexplosion
         ConnectedToUser
     }
 
-    public enum InstanceChangelog 
+    public enum InstanceChangelog
     {
         Fixes,
         Changes,
@@ -148,7 +140,7 @@ namespace Lexplosion
         ModloaderDowngraded,
     }
 
-    public enum UpdateType 
+    public enum UpdateType
     {
         Alpha,
         Beta,

@@ -27,7 +27,7 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty StateProperty =
             DependencyProperty.Register("State", typeof(ToastMessageState), typeof(ToastMessage), new PropertyMetadata(ToastMessageState.Notification));
 
-        public static readonly DependencyProperty CloseCommandProperty = 
+        public static readonly DependencyProperty CloseCommandProperty =
             DependencyProperty.Register("CloseCommand", typeof(ICommand), typeof(ToastMessage), new PropertyMetadata());
 
         public static readonly DependencyProperty VisibilityTimeProperty =
@@ -36,13 +36,14 @@ namespace Lexplosion.Controls
         private static void OnVisibilityTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var obj = d as ToastMessage;
-            if (e.NewValue == null && e.OldValue == null) 
+            if (e.NewValue == null && e.OldValue == null)
                 return;
 
-            if (e.NewValue != null) 
+            if (e.NewValue != null)
             {
                 var newValue = (TimeSpan)e.NewValue;
-                if (newValue.TotalMilliseconds != TimeSpan.MaxValue.TotalMilliseconds) { 
+                if (newValue.TotalMilliseconds != TimeSpan.MaxValue.TotalMilliseconds)
+                {
                     Lexplosion.Runtime.TaskRun(() =>
                     {
                         Thread.Sleep((Int32)newValue.TotalMilliseconds);
@@ -63,31 +64,31 @@ namespace Lexplosion.Controls
         #region getters / settes
 
 
-        public string Header 
+        public string Header
         {
             get => (string)GetValue(HeaderProperty);
             set => SetValue(HeaderProperty, value);
         }
 
-        public string Message 
+        public string Message
         {
             get => (string)GetValue(MessageProperty);
             set => SetValue(MessageProperty, value);
         }
 
-        public ToastMessageState State 
+        public ToastMessageState State
         {
             get => (ToastMessageState)GetValue(StateProperty);
             set => SetValue(StateProperty, value);
         }
 
-        public ICommand CloseCommand 
+        public ICommand CloseCommand
         {
             get => (ICommand)GetValue(CloseCommandProperty);
             set => SetValue(CloseCommandProperty, value);
         }
 
-        public TimeSpan? VisibilityTime 
+        public TimeSpan? VisibilityTime
         {
             get => (TimeSpan?)GetValue(VisibilityTimeProperty);
             set => SetValue(VisibilityTimeProperty, value);
@@ -99,7 +100,7 @@ namespace Lexplosion.Controls
 
         #region constructors
 
-        static ToastMessage() 
+        static ToastMessage()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ToastMessage), new FrameworkPropertyMetadata(typeof(ToastMessage)));
         }

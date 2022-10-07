@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic
 {
@@ -17,9 +13,9 @@ namespace Lexplosion.Logic
         public AccountType AccountType { get; private set; }
 
         private ActivityStatus _status;
-        public ActivityStatus Status 
+        public ActivityStatus Status
         {
-            get => _status; 
+            get => _status;
             private set
             {
                 _status = value;

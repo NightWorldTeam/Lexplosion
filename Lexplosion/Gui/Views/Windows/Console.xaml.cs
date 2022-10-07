@@ -34,7 +34,7 @@ namespace Lexplosion.Gui.Views.Windows
 
         #region Private Methods
 
-        private Run GetRun(string text, string foregroundHex, string backgroundHex, double opacity = 0.3) 
+        private Run GetRun(string text, string foregroundHex, string backgroundHex, double opacity = 0.3)
         {
             return new Run(text)
             {
@@ -53,11 +53,11 @@ namespace Lexplosion.Gui.Views.Windows
             if (string.IsNullOrEmpty(text))
                 return;
 
-            App.Current.Dispatcher.Invoke(() => 
+            App.Current.Dispatcher.Invoke(() =>
             {
                 //var isEnd = ConsoleOutput.VerticalOffset == Double.PositiveInfinity;
 
-                if (text[0] == '[') 
+                if (text[0] == '[')
                 {
                     _isLastLineError = false;
                 }
@@ -93,7 +93,7 @@ namespace Lexplosion.Gui.Views.Windows
                 //}
 
                 //if (isEnd)
-                    ConsoleOutputScrollViewer.ScrollToEnd();
+                ConsoleOutputScrollViewer.ScrollToEnd();
             });
         }
 

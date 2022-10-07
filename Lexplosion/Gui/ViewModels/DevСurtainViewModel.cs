@@ -12,9 +12,9 @@ namespace Lexplosion.Gui.ViewModels
         private string _defaultMessageWithName = ResourceGetter.GetString("devCurtainsMessage1");
 
         private string _message;
-        public string Message 
+        public string Message
         {
-            get => _message; set 
+            get => _message; set
             {
                 _message = value;
                 OnPropertyChanged();

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.Extension
@@ -16,15 +11,15 @@ namespace Lexplosion.Gui.Extension
                 "Command",
                 typeof(ICommand),
                 typeof(System.Windows.Controls.TabItem),
-                new FrameworkPropertyMetadata(new RelayCommand(obj => {}))
+                new FrameworkPropertyMetadata(new RelayCommand(obj => { }))
                 );
 
-        public static void SetCommand(DependencyObject obj, Action value) 
+        public static void SetCommand(DependencyObject obj, Action value)
         {
             obj.SetValue(CommandProperty, value);
         }
 
-        public static Action GetCommand(DependencyObject obj) 
+        public static Action GetCommand(DependencyObject obj)
         {
             return (Action)obj.GetValue(CommandProperty);
         }

@@ -15,11 +15,11 @@ namespace Lexplosion.Gui.Models
         /// <param name="instanceClient">Клиент по которому осуществляется проверка</param>
         /// <param name="instanceFormViewModel">Если сборка есть в библиотеке возвращает её InstanceFormViewModel</param>
         /// <returns></returns>
-        public bool IsLibraryContainsInstance(InstanceClient instanceClient, out InstanceFormViewModel instanceFormViewModel) 
+        public bool IsLibraryContainsInstance(InstanceClient instanceClient, out InstanceFormViewModel instanceFormViewModel)
         {
-            foreach (var instance in LibraryInstances) 
+            foreach (var instance in LibraryInstances)
             {
-                if (instance.Client == instanceClient) 
+                if (instance.Client == instanceClient)
                 {
                     instanceFormViewModel = instance;
                     return true;
@@ -41,20 +41,20 @@ namespace Lexplosion.Gui.Models
             return false;
         }
 
-        public void RemoveInstanceFromLibrary(InstanceClient instanceClient) 
+        public void RemoveInstanceFromLibrary(InstanceClient instanceClient)
         {
             InstanceFormViewModel viewmodel;
-            if (IsLibraryContainsInstance(instanceClient, out viewmodel)) 
+            if (IsLibraryContainsInstance(instanceClient, out viewmodel))
             {
                 if (viewmodel != null)
                     LibraryInstances.Remove(viewmodel);
             }
         }
 
-        public InstanceFormViewModel GetInstance(InstanceClient instanceClient) 
+        public InstanceFormViewModel GetInstance(InstanceClient instanceClient)
         {
             InstanceFormViewModel viewmodel;
-            if (IsLibraryContainsInstance(instanceClient, out viewmodel)) 
+            if (IsLibraryContainsInstance(instanceClient, out viewmodel))
             {
                 if (viewmodel != null)
                     return viewmodel;
@@ -62,9 +62,9 @@ namespace Lexplosion.Gui.Models
             return null;
         }
 
-        public bool IsCatalogInstanceContains(InstanceClient instanceClient) 
+        public bool IsCatalogInstanceContains(InstanceClient instanceClient)
         {
-            foreach (var instance in LibraryInstances) 
+            foreach (var instance in LibraryInstances)
             {
                 if (instance.Client == instanceClient)
                     return true;
@@ -72,9 +72,9 @@ namespace Lexplosion.Gui.Models
             return false;
         }
 
-        public InstanceFormViewModel GetCatalogInstance(InstanceClient instanceClient) 
+        public InstanceFormViewModel GetCatalogInstance(InstanceClient instanceClient)
         {
-            foreach (var instance in CurrentInstanceCatalog) 
+            foreach (var instance in CurrentInstanceCatalog)
             {
                 if (instance.Client == instanceClient)
                     return instance;
@@ -82,7 +82,7 @@ namespace Lexplosion.Gui.Models
             return null;
         }
 
-        public void ClearCatalogInstanceList() 
+        public void ClearCatalogInstanceList()
         {
             CurrentInstanceCatalog.Clear();
         }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Windows.Media.Imaging;
 
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects
@@ -89,7 +88,8 @@ namespace Lexplosion.Logic.Objects
                 try
                 {
                     Directory.Delete(instancePath + ActualPath, true);
-                } catch{ }
+                }
+                catch { }
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using Lexplosion.Logic.Objects;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Network

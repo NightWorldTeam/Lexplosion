@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -52,7 +51,7 @@ namespace Lexplosion.Logic.Network
                     AcceptingBlock.Release();
                     SendingBlock.Release();
                     Runtime.DebugWrite("clientAbort end");
-                }       
+                }
             }
         }
 
@@ -174,7 +173,7 @@ namespace Lexplosion.Logic.Network
         {
             ReadingWait.WaitOne(); //ждём первого подключения
             ReadingWait.Set();
-            
+
             while (IsWork)
             {
                 IPEndPoint point = Server.Receive(out byte[] data);
@@ -195,7 +194,7 @@ namespace Lexplosion.Logic.Network
                             AcceptingBlock.Release();
                             Server.Close(point);
                             ClientAbort(point);
-                        } 
+                        }
                     }
                     else // Количество байт 0 - значит соединение было оборвано
                     {

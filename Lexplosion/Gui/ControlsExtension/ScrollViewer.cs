@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.Extension
@@ -14,7 +9,7 @@ namespace Lexplosion.Gui.Extension
             = DependencyProperty.RegisterAttached(
                 "OnScrollCommand",
                 typeof(ICommand),
-                typeof(ScrollViewer), 
+                typeof(ScrollViewer),
                 new FrameworkPropertyMetadata(
                     new RelayCommand(
                         obj => { }
@@ -24,9 +19,9 @@ namespace Lexplosion.Gui.Extension
 
         public static readonly DependencyProperty ChildItemsUpdatedProperty
             = DependencyProperty.RegisterAttached(
-                "ChildItemsUpdated", 
-                typeof(bool), 
-                typeof(ScrollViewer), 
+                "ChildItemsUpdated",
+                typeof(bool),
+                typeof(ScrollViewer),
                 new FrameworkPropertyMetadata(false, OnChildItemsUpdatedChanged));
 
 
@@ -38,7 +33,7 @@ namespace Lexplosion.Gui.Extension
             return (ICommand)d.GetValue(OnScrollCommandProperty);
         }
 
-        public static void SetOnScrollCommand(DependencyObject d, ICommand value) 
+        public static void SetOnScrollCommand(DependencyObject d, ICommand value)
         {
             d.SetValue(OnScrollCommandProperty, value);
         }
@@ -55,7 +50,7 @@ namespace Lexplosion.Gui.Extension
             return (bool)d.GetValue(ChildItemsUpdatedProperty);
         }
 
-        public static void SetChildItemsUpdated(DependencyObject d, bool value) 
+        public static void SetChildItemsUpdated(DependencyObject d, bool value)
         {
             d.SetValue(ChildItemsUpdatedProperty, value);
         }

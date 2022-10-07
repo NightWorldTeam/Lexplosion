@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using Lexplosion.Logic.Network;
@@ -10,14 +9,14 @@ namespace Lexplosion.Logic.Management
     public partial class Player : VMBase
     {
         public string UUID { get; }
-        private Action<Player> _unkickedAction = null; 
+        private Action<Player> _unkickedAction = null;
 
         private string _nickname = "Player";
         /// <summary>
         /// Содержит ник пользователя.
         /// <para>Стаднартное значение: Player</para>
         /// </summary>
-        public string Nickname 
+        public string Nickname
         {
             get => _nickname;
             private set
@@ -50,13 +49,13 @@ namespace Lexplosion.Logic.Management
         /// <summary>
         /// Отвечает на вопрос был ли кикнут пользователь.
         /// </summary>
-        public bool IsKicked 
-        { 
-            get => _isKicked; private set 
+        public bool IsKicked
+        {
+            get => _isKicked; private set
             {
                 _isKicked = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         private Action _kickMethod;
@@ -91,11 +90,11 @@ namespace Lexplosion.Logic.Management
         /// <summary>
         /// Вызывает метод Kick или Unkick взависимости от статуса пользователя.
         /// </summary>
-        private void AccessChange() 
+        private void AccessChange()
         {
-            if (IsKicked) 
+            if (IsKicked)
                 Unkick();
-            else 
+            else
                 Kick();
         }
 
@@ -122,7 +121,7 @@ namespace Lexplosion.Logic.Management
         /// Присваивает значение делегату. Поменять значение можно только единажды.
         /// </summary>
         /// <param name="action"></param>
-        public void SetUnkickedAction(Action<Player> action) 
+        public void SetUnkickedAction(Action<Player> action)
         {
             if (_unkickedAction != null)
                 return;

@@ -45,7 +45,7 @@ namespace Lexplosion.Tools
         /// </summary>
         /// <param name="uIElement"></param>
         /// <returns>Возвращает массив из 4 элементов [LEFT, TOP, RIGHT, BOTTOM]</returns>
-        public static int[] GetControlCoordinate(UIElement uIElement) 
+        public static int[] GetControlCoordinate(UIElement uIElement)
         {
             IntPtr handle = (PresentationSource.FromVisual(uIElement) as HwndSource).Handle;
             RECT rect = new RECT();

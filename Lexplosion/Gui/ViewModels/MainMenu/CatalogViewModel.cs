@@ -111,9 +111,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
 
         private int _selectedVersionIndex = 0;
-        public int SelectedVersionIndex 
+        public int SelectedVersionIndex
         {
-            get => _selectedVersionIndex; set 
+            get => _selectedVersionIndex; set
             {
                 _selectedVersionIndex = value;
                 OnPropertyChanged();
@@ -143,21 +143,21 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         /// <summary>
         /// <para>Отвечает на вопрос количество найденого контента равно 0?</para>
         /// </summary>
-        public bool IsEmptyList 
+        public bool IsEmptyList
         {
-            get => _isEmptyList; set 
+            get => _isEmptyList; set
             {
-                _isEmptyList = value; 
+                _isEmptyList = value;
                 OnPropertyChanged();
             }
         }
 
         private bool _isPaginatorVisible = false;
-        public bool IsPaginatorVisible 
+        public bool IsPaginatorVisible
         {
-            get => _isPaginatorVisible; set 
+            get => _isPaginatorVisible; set
             {
-                _isPaginatorVisible = value; 
+                _isPaginatorVisible = value;
                 OnPropertyChanged();
             }
         }
@@ -170,9 +170,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
 
         private RelayCommand _onScrollCommand;
-        public RelayCommand OnScrollCommand 
+        public RelayCommand OnScrollCommand
         {
-            get => _onScrollCommand ?? (_onScrollCommand = new RelayCommand(obj => 
+            get => _onScrollCommand ?? (_onScrollCommand = new RelayCommand(obj =>
             {
                 // TODO: Возможно тяжелый код.
                 foreach (var instance in _mainViewModel.Model.CurrentInstanceCatalog)
@@ -198,7 +198,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             PaginatorVM.PageChanged += InstancesPageLoading;
 
             // выбираем первый вариант из списка версий [Все версии]
-            Lexplosion.Runtime.TaskRun(() => {
+            Lexplosion.Runtime.TaskRun(() =>
+            {
                 Categories = PrepareCategories();
                 InstancesPageLoading();
             });
@@ -230,7 +231,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 SelectedInstanceSource = InstanceSource.Curseforge;
         }
 
-        private void InstancesPageLoading(string searchText = "", bool isPaginatorInvoke=false)
+        private void InstancesPageLoading(string searchText = "", bool isPaginatorInvoke = false)
         {
             if (!isPaginatorInvoke && searchText == _previousSearch && searchText != null)
             {

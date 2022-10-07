@@ -64,7 +64,7 @@ namespace Lexplosion.Logic.Network
             string modloader;
             if (modloaderType != ModloaderType.Vanilla)
             {
-                modloader = "/"+ modloaderType.ToString().ToLower() + "/";
+                modloader = "/" + modloaderType.ToString().ToLower() + "/";
             }
             else
             {
@@ -115,8 +115,8 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
-                Dictionary<string, string> data = new Dictionary<string, string>() 
-                { 
+                Dictionary<string, string> data = new Dictionary<string, string>()
+                {
                     ["str"] = str,
                     ["str2"] = str2,
                     ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
@@ -227,7 +227,7 @@ namespace Lexplosion.Logic.Network
                 string planText = Convert.ToBase64String(Encoding.UTF8.GetBytes(accessData)) + ":" + salt;
                 byte[] encrypted = AesСryp.Encode(planText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
-                Dictionary<string, string> data = new Dictionary<string, string>() 
+                Dictionary<string, string> data = new Dictionary<string, string>()
                 {
                     ["login"] = login,
                     ["accessData"] = Convert.ToBase64String(encrypted),

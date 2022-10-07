@@ -7,7 +7,7 @@ namespace Lexplosion.Logic.Management.Authentication
         public User Auth(ref string login, ref string accessData, out AuthCode code)
         {
             string token = MojangApi.GetToken(accessData);
-            if(token == null)
+            if (token == null)
             {
                 code = AuthCode.SessionExpired;
                 return null;

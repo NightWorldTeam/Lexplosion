@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lexplosion.Gui.Extension;
+﻿using System.Collections.Generic;
 using Lexplosion.Logic.Objects;
-using Newtonsoft.Json.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -82,13 +76,13 @@ namespace Lexplosion.Logic.Management.Instances
         #region Private Methods
 
 
-        private void ReselectUnits() 
+        private void ReselectUnits()
         {
             if (UnitsList != null)
-            foreach (var val in UnitsList.Values)
-            {
-                val.IsSelected = this.IsSelected;
-            }
+                foreach (var val in UnitsList.Values)
+                {
+                    val.IsSelected = this.IsSelected;
+                }
         }
 
 

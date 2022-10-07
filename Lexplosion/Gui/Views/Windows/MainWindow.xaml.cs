@@ -1,9 +1,5 @@
-﻿using Lexplosion.Tools;
-using System;
-using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace Lexplosion.Gui.Views.Windows
@@ -22,7 +18,7 @@ namespace Lexplosion.Gui.Views.Windows
 
         private void ChangeStatusButtonClick(object sender, RoutedEventArgs e)
         {
-           var element = FindElementByName<Popup>(StatusButton, "StatusPopup");
+            var element = FindElementByName<Popup>(StatusButton, "StatusPopup");
             element.IsOpen = false;
         }
 

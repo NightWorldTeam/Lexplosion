@@ -48,8 +48,8 @@ namespace Lexplosion.Controls
 
 
         #region Constructors
-        
-        static SearchBox() 
+
+        static SearchBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchBox), new FrameworkPropertyMetadata(typeof(SearchBox)));
         }
@@ -72,9 +72,9 @@ namespace Lexplosion.Controls
             {
                 _searchButton.Click += SearchButtonClicked;
             }
-            catch 
+            catch
             {
-                throw new Exception("SearchBox: " + PART_BUTTON_NAME +" doesn't exist");
+                throw new Exception("SearchBox: " + PART_BUTTON_NAME + " doesn't exist");
             }
 
             base.OnApplyTemplate();
@@ -83,7 +83,7 @@ namespace Lexplosion.Controls
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
-            
+
             e.Handled = true;
             Search();
 
@@ -96,7 +96,7 @@ namespace Lexplosion.Controls
 
         #region Private Methods
 
-        private void Search() 
+        private void Search()
         {
             SearchAction?.Invoke(_textBox.Text, false);
         }

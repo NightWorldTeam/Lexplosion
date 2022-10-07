@@ -55,9 +55,9 @@ namespace Lexplosion.Logic.Objects.Curseforge
 
         public string GetAuthorName
         {
-            get 
-            { 
-                return (authors != null && authors.Count > 0) ? authors[0].name : "Unknown author"; 
+            get
+            {
+                return (authors != null && authors.Count > 0) ? authors[0].name : "Unknown author";
             }
         }
     }

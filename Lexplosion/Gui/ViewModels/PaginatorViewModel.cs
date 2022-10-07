@@ -5,8 +5,8 @@ namespace Lexplosion.Gui.ViewModels
 {
     public sealed class PaginatorViewModel : VMBase
     {
-        public ValuePair<int, int> PageLimit = new ValuePair<int, int> 
-        { 
+        public ValuePair<int, int> PageLimit = new ValuePair<int, int>
+        {
             Value1 = 0,
             Value2 = 1638
         }; //min = value1, max = value2
@@ -24,7 +24,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _nextPageCommand ?? (new RelayCommand(obj =>
             {
-                if (PageIndex < PageLimit.Value2) 
+                if (PageIndex < PageLimit.Value2)
                 {
                     if (!CanGoNext) CanGoNext = true;
                     if (!CanGoBack) CanGoBack = true;

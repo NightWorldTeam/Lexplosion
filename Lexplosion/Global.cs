@@ -1,7 +1,6 @@
 ﻿using System;
 using Lexplosion.Logic;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Management;
 
 namespace Lexplosion.Global
 {

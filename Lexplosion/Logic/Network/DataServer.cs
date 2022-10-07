@@ -93,7 +93,7 @@ namespace Lexplosion.Logic.Network
                 }
 
                 AcceptingBlock.Release();
-                AfterAcceptingBlock:;
+            AfterAcceptingBlock:;
             }
         }
 

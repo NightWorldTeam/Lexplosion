@@ -1,18 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Data;
 
 namespace Lexplosion.Gui
 {
     public sealed class ButtonParameters : VMBase
     {
-        public delegate void ClickAction ();
+        public delegate void ClickAction();
         public ClickAction ActionClick { get; set; }
 
         private object _content;
@@ -125,9 +118,9 @@ namespace Lexplosion.Gui
         /// <summary>
         /// Номер активной стации.
         /// </summary>
-        public int CurrentStage 
+        public int CurrentStage
         {
-            get => _currentStage; set 
+            get => _currentStage; set
             {
                 _currentStage = value;
                 OnPropertyChanged();
@@ -136,8 +129,8 @@ namespace Lexplosion.Gui
 
         private ButtonParameters[] _buttonParametersList;
 
-        private void StageUp(ButtonConstructor constructor) 
-        { 
+        private void StageUp(ButtonConstructor constructor)
+        {
             CurrentStage++;
             constructor.ButtonParameters = _buttonParametersList[CurrentStage];
 
@@ -155,7 +148,7 @@ namespace Lexplosion.Gui
             _buttonParametersList = buttonsParametersList;
         }
 
-        public void StageSwitch(ButtonConstructor constructor) 
+        public void StageSwitch(ButtonConstructor constructor)
         {
             if (_currentStage < _stageCount)
                 StageUp(constructor);
@@ -173,9 +166,9 @@ namespace Lexplosion.Gui
         #region props
 
         private ButtonParameters _buttonParameters;
-        public ButtonParameters ButtonParameters 
+        public ButtonParameters ButtonParameters
         {
-            get => _buttonParameters; set 
+            get => _buttonParameters; set
             {
                 _buttonParameters = value;
                 OnPropertyChanged();

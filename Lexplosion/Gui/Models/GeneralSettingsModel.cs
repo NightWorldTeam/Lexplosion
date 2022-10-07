@@ -106,16 +106,16 @@ namespace Lexplosion.Gui.Models
             }
         }
 
-        public string JavaPath 
+        public string JavaPath
         {
-            get => UserData.GeneralSettings.JavaPath; set 
+            get => UserData.GeneralSettings.JavaPath; set
             {
                 UserData.GeneralSettings.JavaPath = value;
                 OnPropertyChanged();
 
                 if (value.Length == 0)
                     UserData.GeneralSettings.CustomJava = false;
-                else 
+                else
                     UserData.GeneralSettings.CustomJava = true;
 
                 DataFilesManager.SaveSettings(UserData.GeneralSettings);

@@ -1,7 +1,4 @@
-﻿using System.Windows;
-using System;
-using System.Windows.Controls;
-using static Lexplosion.Logic.Objects.Curseforge.CurseforgeProjectInfo;
+﻿using System.Windows.Controls;
 
 namespace Lexplosion.Gui.Views.Pages
 {

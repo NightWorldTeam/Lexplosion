@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace Lexplosion.Controls
@@ -28,7 +23,7 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty IsExpandedProperty
             = DependencyProperty.Register("IsExpanded", typeof(bool), typeof(ChangelogItem));
 
-        public UpdateType UpdateType 
+        public UpdateType UpdateType
         {
             get => (UpdateType)GetValue(UpdateTypeProperty);
             set => SetValue(UpdateTypeProperty, value);
@@ -46,7 +41,7 @@ namespace Lexplosion.Controls
             set => SetValue(IdProperty, value);
         }
 
-        public bool IsExpanded 
+        public bool IsExpanded
         {
             get => (bool)GetValue(IsExpandedProperty);
             set => SetValue(IsExpandedProperty, value);

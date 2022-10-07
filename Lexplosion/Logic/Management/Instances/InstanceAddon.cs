@@ -68,7 +68,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         private bool _isEnable = true;
-        public bool IsEnable 
+        public bool IsEnable
         {
             get => _isEnable;
             set
@@ -102,7 +102,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         private bool _isInstalling = false;
-        public bool IsInstalling 
+        public bool IsInstalling
         {
             get
             {
@@ -521,7 +521,7 @@ namespace Lexplosion.Logic.Management.Instances
                 int maxId = 0;
                 foreach (var fileInfo in addonInfo)
                 {
-                    
+
                     if (fileInfo.gameVersions != null && fileInfo.gameVersions.Contains(gameVersion) && maxId < fileInfo.id)
                     {
                         file = fileInfo;
@@ -818,7 +818,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                 installedAddons.Save(actualAddonsList);
             }
-                
+
             return addons;
         }
 
@@ -1115,7 +1115,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                     }
                     catch { }
-                }, 
+                },
                 delegate (InstalledAddonInfo data)
                 {
                     try

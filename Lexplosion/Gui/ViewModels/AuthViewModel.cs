@@ -21,9 +21,9 @@ namespace Lexplosion.Gui.ViewModels
         public bool NoAccountAuth { get => _accountType == AccountType.NoAuth; }
 
         private bool _isMicrosoftAccountManager = false;
-        public bool IsMicrosoftAccountManager 
+        public bool IsMicrosoftAccountManager
         {
-            get => _isMicrosoftAccountManager; set 
+            get => _isMicrosoftAccountManager; set
             {
                 _isMicrosoftAccountManager = value;
                 OnPropertyChanged();
@@ -31,13 +31,13 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         private bool _isAccountSaved;
-        public bool IsAccountSaved 
-        { 
-            get => _isAccountSaved; set 
+        public bool IsAccountSaved
+        {
+            get => _isAccountSaved; set
             {
                 _isAccountSaved = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         #region Main Auth
@@ -95,7 +95,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 _accountTypeSelectedIndex = value;
                 OnPropertyChanged();
-                if (_accountTypeSelectedIndex == 3) 
+                if (_accountTypeSelectedIndex == 3)
                 {
                     LoadSavedAccount(AccountType.Microsoft);
                     if (_isSavedAccountOAuth2)
@@ -123,19 +123,19 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         private bool _isAuthFinished = true;
-        public bool IsAuthFinished 
+        public bool IsAuthFinished
         {
-            get => _isAuthFinished; set 
+            get => _isAuthFinished; set
             {
-                _isAuthFinished = value; 
+                _isAuthFinished = value;
                 OnPropertyChanged();
             }
         }
 
         private string _loadingBoardPlaceholder;
-        public string LoadingBoardPlaceholder 
+        public string LoadingBoardPlaceholder
         {
-            get => _loadingBoardPlaceholder; set 
+            get => _loadingBoardPlaceholder; set
             {
                 _loadingBoardPlaceholder = value;
                 OnPropertyChanged();
@@ -172,7 +172,7 @@ namespace Lexplosion.Gui.ViewModels
                     {
                         Authorization();
                     }
-                    else 
+                    else
                     {
                         MainViewModel.ShowToastMessage("Заполните логин и пароль!", "Алло! А кто будет данными заполять? :)", Controls.ToastMessageState.Error);
                     }
@@ -186,16 +186,16 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public RelayCommand SingUpMicrosoftCommand
         {
-            get => _singUpMicrosoftCommand ?? (_singUpMicrosoftCommand = new RelayCommand(obj => 
+            get => _singUpMicrosoftCommand ?? (_singUpMicrosoftCommand = new RelayCommand(obj =>
             {
                 FollowToMicrosoft();
             }));
         }
 
         private RelayCommand _cancelMicrosoftAuthCommand;
-        public RelayCommand CancelMicrosoftAuthCommand 
+        public RelayCommand CancelMicrosoftAuthCommand
         {
-            get => _cancelMicrosoftAuthCommand ?? (_cancelMicrosoftAuthCommand = new RelayCommand(obj => 
+            get => _cancelMicrosoftAuthCommand ?? (_cancelMicrosoftAuthCommand = new RelayCommand(obj =>
             {
                 CancelMicrosoftAuth();
             }));
@@ -293,7 +293,7 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        private void PreformAuthMicrosoft(string microsoftData, MicrosoftAuthRes reult) 
+        private void PreformAuthMicrosoft(string microsoftData, MicrosoftAuthRes reult)
         {
             // на случае нештатной ситуации.
             if (_accountType != AccountType.Microsoft)
@@ -304,7 +304,7 @@ namespace Lexplosion.Gui.ViewModels
             NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
         }
 
-        private void PerformAuthCode(AuthCode authCode) 
+        private void PerformAuthCode(AuthCode authCode)
         {
             // обрабатываем полученный код.
             switch (authCode)
@@ -318,9 +318,9 @@ namespace Lexplosion.Gui.ViewModels
                         _mainViewModel.UserProfile.IsNightWorldAccount = _accountType == AccountType.NightWorld;
 
                         NavigationCommand.Execute(null);
-                        
+
                         _mainViewModel.SubscribeToOpenModpackEvent();
-                        
+
                         IsAuthFinished = true;
                         break;
                     }
@@ -346,14 +346,14 @@ namespace Lexplosion.Gui.ViewModels
         }
 
 
-        private void FollowToMicrosoft() 
+        private void FollowToMicrosoft()
         {
             IsAuthFinished = false;
             LoadingBoardPlaceholder = ResourceGetter.GetString("microsoftAuthInProgress");
             System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
         }
 
-        private void CancelMicrosoftAuth() 
+        private void CancelMicrosoftAuth()
         {
             AccountTypeSelectedIndex = 1;
             IsAuthFinished = true;

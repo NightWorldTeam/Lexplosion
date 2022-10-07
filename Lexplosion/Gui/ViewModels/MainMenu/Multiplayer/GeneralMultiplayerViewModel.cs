@@ -8,9 +8,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         public MultiplayerModel Model { get; }
 
         private RelayCommand _multiplayerOff;
-        public RelayCommand MultiplayerOff 
+        public RelayCommand MultiplayerOff
         {
-            get => _multiplayerOff ?? (_multiplayerOff = new RelayCommand(obj => 
+            get => _multiplayerOff ?? (_multiplayerOff = new RelayCommand(obj =>
             {
             }));
         }

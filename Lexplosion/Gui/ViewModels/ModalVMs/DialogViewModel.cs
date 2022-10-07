@@ -35,8 +35,9 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Commands
 
         private RelayCommand _actionCommand;
-        public override RelayCommand ActionCommand {
-            get => _actionCommand ?? (_actionCommand = new RelayCommand(obj => 
+        public override RelayCommand ActionCommand
+        {
+            get => _actionCommand ?? (_actionCommand = new RelayCommand(obj =>
             {
                 _function();
                 _mainViewModel.ModalWindowVM.IsOpen = false;
@@ -46,7 +47,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         private RelayCommand _closeButtonCommand;
         public override RelayCommand CloseModalWindowCommand
         {
-            get => _closeButtonCommand ?? (_closeButtonCommand = new RelayCommand(obj => 
+            get => _closeButtonCommand ?? (_closeButtonCommand = new RelayCommand(obj =>
             {
                 _mainViewModel.ModalWindowVM.IsOpen = false;
             }));
@@ -65,7 +66,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// </summary>
         /// <param name="title">Title - заголовк для dialog window</param>
         /// <param name="function">Делегат который выполниться при нажатии пользователем кнопки "Да".</param>
-        public void ShowDialog(string title, Action function) 
+        public void ShowDialog(string title, Action function)
         {
             _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(this);
             _mainViewModel.ModalWindowVM.IsOpen = true;

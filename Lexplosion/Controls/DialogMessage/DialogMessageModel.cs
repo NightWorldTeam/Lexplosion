@@ -9,14 +9,14 @@ namespace Lexplosion.Controls
         public Action _rightButtonCommand;
 
         public DialogMessageModel(
-            string header, 
+            string header,
             string message,
             Action leftButtonCommand,
             Action rightButtonCommand,
             string leftButtonContent,
             string rightButtonContent,
             ToastMessageState state = ToastMessageState.Notification
-            ) : base(header, message,  state)
+            ) : base(header, message, state)
         {
             _leftButtonCommand = leftButtonCommand;
             _rightButtonCommand = rightButtonCommand;
@@ -27,17 +27,17 @@ namespace Lexplosion.Controls
         public string LeftButtonContent { get; set; }
         public string RightButtonContent { get; set; }
 
-        public RelayCommand LeftButtonCommand 
+        public RelayCommand LeftButtonCommand
         {
-            get => new RelayCommand(obj => 
+            get => new RelayCommand(obj =>
             {
                 _leftButtonCommand();
             });
         }
-        
-        public RelayCommand RightButtonCommand 
+
+        public RelayCommand RightButtonCommand
         {
-            get => new RelayCommand(obj => 
+            get => new RelayCommand(obj =>
             {
                 _rightButtonCommand();
             });

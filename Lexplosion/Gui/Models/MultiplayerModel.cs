@@ -22,7 +22,7 @@ namespace Lexplosion.Gui.Models
             }
         }
 
-        public string StrGameStatus 
+        public string StrGameStatus
         {
             get => ResourceGetter.GetString("status" + _gameStatus.ToString());
         }

@@ -1,6 +1,4 @@
-﻿using Lexplosion.Logic.Objects;
-
-namespace Lexplosion.Logic.Management.Authentication
+﻿namespace Lexplosion.Logic.Management.Authentication
 {
     interface IAuthHandler
     {

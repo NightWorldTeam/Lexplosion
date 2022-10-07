@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Lexplosion.Logic.Network.Web;
-using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Authentication
 {
@@ -68,7 +67,7 @@ namespace Lexplosion.Logic.Management.Authentication
                     }
                 }
             }
-            catch {}
+            catch { }
 
             code = AuthCode.SessionExpired;
             return null;

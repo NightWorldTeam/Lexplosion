@@ -9,10 +9,10 @@ namespace Lexplosion.Gui.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string) 
+            if (value is string)
             {
                 var url = (string)value;
-                
+
                 return ImageTools.GetImageByUrl(url);
             }
             return null;

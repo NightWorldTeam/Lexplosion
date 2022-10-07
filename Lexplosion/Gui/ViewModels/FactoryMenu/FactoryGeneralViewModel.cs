@@ -19,9 +19,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
 
         private ImportViewModel _importViewModel;
-        public ImportViewModel ImportVM 
+        public ImportViewModel ImportVM
         {
-            get => _importViewModel; set 
+            get => _importViewModel; set
             {
                 _importViewModel = value;
                 OnPropertyChanged();
@@ -82,20 +82,20 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private string _selectedOnlyVersion;
 
         private bool _isShowSnapshots;
-        public bool IsShowSnapshots 
+        public bool IsShowSnapshots
         {
-            get => _isShowSnapshots; set 
+            get => _isShowSnapshots; set
             {
-                _isShowSnapshots = value; 
+                _isShowSnapshots = value;
                 OnPropertyChanged();
                 UpdateVersions();
             }
         }
 
         private bool _hasSodiumInstall;
-        public bool HasSodiumInstall 
+        public bool HasSodiumInstall
         {
-            get => _hasSodiumInstall; set 
+            get => _hasSodiumInstall; set
             {
                 _hasSodiumInstall = value;
                 OnPropertyChanged();
@@ -157,7 +157,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             _mainViewModel = mainViewModel;
             Model = new InstanceFactoryModel();
             Model.ModloaderType = ModloaderType.Vanilla;
-            UpdateVersions();  
+            UpdateVersions();
 
             _importViewModel = new ImportViewModel(_mainViewModel, this);
         }
@@ -165,7 +165,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         #region Private Methods
 
 
-        private void UpdateVersions() 
+        private void UpdateVersions()
         {
             if (IsShowSnapshots)
             {
@@ -175,7 +175,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             SelectedVersion = GameVersions[0];
         }
 
-        private void CreateInstance() 
+        private void CreateInstance()
         {
             var instanceClient = InstanceClient.CreateClient(
                 Model.Name ?? "New Client",
@@ -190,7 +190,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             _mainViewModel.ModalWindowVM.IsOpen = false;
         }
 
-        private void ChangeModloaderType(ModloaderType modloaderType) 
+        private void ChangeModloaderType(ModloaderType modloaderType)
         {
             Model.ModloaderType = modloaderType;
 
@@ -207,7 +207,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             });
         }
 
-        private void ReselectVersionLoadModloaderVersions(string selectedVersion) 
+        private void ReselectVersionLoadModloaderVersions(string selectedVersion)
         {
             if (IsShowSnapshots)
             {
@@ -229,7 +229,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
-        private void OpenDialogWindowForImage() 
+        private void OpenDialogWindowForImage()
         {
             using (var dialog = new System.Windows.Forms.OpenFileDialog())
             {

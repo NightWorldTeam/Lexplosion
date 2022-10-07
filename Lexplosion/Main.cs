@@ -7,12 +7,10 @@ using System.Windows;
 using System.Threading;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
-using System.Collections.Generic;
 using Hardcodet.Wpf.TaskbarNotification;
 using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
-using Lexplosion.Gui;
 using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
@@ -424,7 +422,7 @@ namespace Lexplosion
                 {
                     BeforeExit(null, null);
                     Environment.Exit(0);
-                });        
+                });
             });
         }
 
@@ -453,10 +451,11 @@ namespace Lexplosion
                 }
             }
 
-            app.Dispatcher.Invoke(() => {
-                if (app.MainWindow == null) 
-                { 
-                    app.MainWindow = new MainWindow() 
+            app.Dispatcher.Invoke(() =>
+            {
+                if (app.MainWindow == null)
+                {
+                    app.MainWindow = new MainWindow()
                     {
                         Left = leftPos,
                         Top = topPos
@@ -470,7 +469,7 @@ namespace Lexplosion
         {
             app.Dispatcher.Invoke(() =>
             {
-                if (app.MainWindow != null) 
+                if (app.MainWindow != null)
                 {
                     leftPos = app.MainWindow.Left;
                     topPos = app.MainWindow.Top;

@@ -29,10 +29,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => new NavigateCommand<MainMenuViewModel>
                 (
-                    MainViewModel.NavigationStore, () => 
-                    { 
+                    MainViewModel.NavigationStore, () =>
+                    {
                         NavigationToMainMenu?.Invoke();
-                        return _mainViewModel.MainMenuVM; 
+                        return _mainViewModel.MainMenuVM;
                     }
                 );
         }
@@ -96,7 +96,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region Private Methods
 
 
-        private void OnInstanceStateChanged() 
+        private void OnInstanceStateChanged()
         {
             if (_instanceForm.Client.InLibrary)
                 UpdateSettingsTab();
@@ -112,21 +112,21 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("version"), Content = new InstancePreviousVersionsViewModel(_instanceForm) });
         }
 
-        private void UpdateTabMenu() 
+        private void UpdateTabMenu()
         {
-            if (_instanceForm.Client.IsInstalled || _instanceForm.Client.InLibrary) 
+            if (_instanceForm.Client.IsInstalled || _instanceForm.Client.InLibrary)
             {
                 if (Tabs.Count == 3)
                     return;
 
                 Tabs.Clear();
 
-                
+
                 Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("overview"), Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, 0, _instanceForm) });
                 Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("configuration"), Content = new TabMenuViewModel(_settingsTabs, ResourceGetter.GetString("instanceSettings"), _selectedSettingsTabIndex) });
                 Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("back"), Content = null, Command = ClearMemory });
             }
-            else 
+            else
             {
                 if (Tabs.Count == 2)
                     return;
@@ -138,7 +138,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
-        private void UpdateSettingsTab() 
+        private void UpdateSettingsTab()
         {
             if (_instanceForm.Client.Type == InstanceSource.Local)
             {

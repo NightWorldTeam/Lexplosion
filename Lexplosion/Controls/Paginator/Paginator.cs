@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Lexplosion.Controls
 {
     [TemplatePart()]
-    public class Paginator : Control 
+    public class Paginator : Control
     {
         /// 2 кнопки и textbox/
 
@@ -23,31 +18,31 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty CurrentIndexProperty
             = DependencyProperty.Register("CurrentIndex", typeof(uint), typeof(Paginator), new FrameworkPropertyMetadata(1));
 
-        public static readonly DependencyProperty MaxIndexProperty 
+        public static readonly DependencyProperty MaxIndexProperty
             = DependencyProperty.Register("MaxIndex", typeof(uint), typeof(Paginator), new FrameworkPropertyMetadata(uint.MaxValue));
 
         public static readonly DependencyProperty IndexChangedActionProperty
-            = DependencyProperty.Register("IndexChangedAction", typeof(Action), typeof(Paginator)); 
+            = DependencyProperty.Register("IndexChangedAction", typeof(Action), typeof(Paginator));
 
-        public uint CurrentIndex 
+        public uint CurrentIndex
         {
             get => (uint)GetValue(CurrentIndexProperty);
             set => SetValue(CurrentIndexProperty, value);
         }
 
-        public uint MaxIndex 
+        public uint MaxIndex
         {
             get => (uint)GetValue(MaxIndexProperty);
             set => SetValue(MaxIndexProperty, value);
         }
 
-        public Action IndexChangedAction 
+        public Action IndexChangedAction
         {
             get => (Action)GetValue(IndexChangedActionProperty);
             set => SetValue(IndexChangedActionProperty, value);
         }
 
-        static Paginator() 
+        static Paginator()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Paginator), new FrameworkPropertyMetadata(typeof(Paginator)));
         }

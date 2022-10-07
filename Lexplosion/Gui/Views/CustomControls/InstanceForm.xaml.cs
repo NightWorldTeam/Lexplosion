@@ -1,6 +1,4 @@
-﻿using Lexplosion.Gui.Models.InstanceForm;
-using Lexplosion.Gui.ViewModels;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,7 +14,7 @@ namespace Lexplosion.Gui.Views.CustomControls
     {
         public InstanceForm()
         {
-            _ease = new SineEase() 
+            _ease = new SineEase()
             {
                 EasingMode = EasingMode.EaseOut
             };
@@ -28,11 +26,11 @@ namespace Lexplosion.Gui.Views.CustomControls
 
         private IEasingFunction _ease;
 
-        private void InstanceLogo_MouseEnter(object sender, MouseEventArgs e) 
+        private void InstanceLogo_MouseEnter(object sender, MouseEventArgs e)
         {
             InstanceLogo_Background.Effect = new BlurEffect();
             InstanceLogo_Background.BeginAnimation(Border.OpacityProperty, new DoubleAnimation(1, 0.5, TimeSpan.FromMilliseconds(AnimationTime)) { EasingFunction = _ease });
-            InstanceLogo_Background.Effect.BeginAnimation(BlurEffect.RadiusProperty, new DoubleAnimation(0, 5, TimeSpan.FromMilliseconds(AnimationTime)) { EasingFunction = _ease});
+            InstanceLogo_Background.Effect.BeginAnimation(BlurEffect.RadiusProperty, new DoubleAnimation(0, 5, TimeSpan.FromMilliseconds(AnimationTime)) { EasingFunction = _ease });
             InstanceLogo_Text.BeginAnimation(TextBlock.OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(AnimationTime)) { EasingFunction = _ease });
             InstanceLogo_Text.Visibility = Visibility.Visible;
         }

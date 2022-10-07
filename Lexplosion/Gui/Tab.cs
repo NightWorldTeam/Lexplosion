@@ -11,7 +11,7 @@ namespace Lexplosion.Gui
         public ICommand Command { get; set; } = new RelayCommand(obj => { });
         public bool IsVisible { get; set; } = true;
 
-        #nullable enable
+#nullable enable
         public int CompareTo(Tab<T>? tab)
         {
             if (tab is null) throw new ArgumentException("Некорректное значение параметра");

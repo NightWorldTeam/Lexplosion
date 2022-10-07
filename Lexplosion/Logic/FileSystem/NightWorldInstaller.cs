@@ -123,7 +123,7 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             string fileName = file.Replace(folder, "").Remove(0, 1).Replace(@"\", "/");
 
-                            if (filesInfo.data[dir].security) 
+                            if (filesInfo.data[dir].security)
                             {
                                 try
                                 {
@@ -162,7 +162,7 @@ namespace Lexplosion.Logic.FileSystem
                                     //чтение одного из файлов не удалось, стопаем весь процесс
                                     return -1;
                                 }
-                            } 
+                            }
                         }
                     }
                     #endregion
@@ -264,17 +264,17 @@ namespace Lexplosion.Logic.FileSystem
                                     oldFiles.Add(filePath);
                                     updatesCount++;
                                 }
-                            } 
+                            }
                         }
-                        catch 
-                        { 
+                        catch
+                        {
                             // TODO: тут ошибку выкидывать
                         }
                     }
                 }
 
                 installedAddons.Save();
-            }           
+            }
 
             return updatesCount;
         }
@@ -460,7 +460,7 @@ namespace Lexplosion.Logic.FileSystem
                                     }
                                 }
                                 else
-                                { 
+                                {
                                     // не получили. формируем ручками
                                     string path = instancePath + file;
                                     if (!File.Exists(path) && !Directory.Exists(path))

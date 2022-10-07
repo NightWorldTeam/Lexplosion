@@ -73,15 +73,15 @@ namespace Lexplosion.Gui.Models.InstanceForm
             Process.Start("explorer", InstanceClient.GetDirectoryPath());
         }
 
-        public void UpdateButtons() 
+        public void UpdateButtons()
         {
             UpdateLowerButton();
 
-            if (InstanceClient.IsInstalled) 
-            { 
+            if (InstanceClient.IsInstalled)
+            {
                 UpperButton.ChangeFuncPlay();
             }
-            else if (!InstanceClient.IsInstalled || !InstanceClient.InLibrary) 
+            else if (!InstanceClient.IsInstalled || !InstanceClient.InLibrary)
             {
                 UpperButton.ChangeFuncDownload();
             }
@@ -89,7 +89,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public void UpdateLowerButton()
         {
-            App.Current.Dispatcher.Invoke(() => { 
+            App.Current.Dispatcher.Invoke(() =>
+            {
 
                 LowerButtons.Clear();
 
@@ -148,7 +149,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     );
                 }
 
-                if (InstanceClient.IsInstalled || InstanceClient.InLibrary) 
+                if (InstanceClient.IsInstalled || InstanceClient.InLibrary)
                 {
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("openFolder"), ResourceGetter.GetIcon("OpenFolder"), LowerButtonFunc.OpenFolder)
@@ -169,7 +170,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Private Methods
 
 
-        private void LoadingCategories() 
+        private void LoadingCategories()
         {
             // set categories to list
             // add game version like category

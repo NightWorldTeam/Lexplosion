@@ -19,9 +19,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
 
         private bool _isPrepareOnly = true;
-        public bool IsPrepareOnly 
+        public bool IsPrepareOnly
         {
-            get => _isPrepareOnly; set 
+            get => _isPrepareOnly; set
             {
                 _isPrepareOnly = value;
                 OnPropertyChanged();
@@ -29,9 +29,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
         }
 
         private bool _isFilesDownload;
-        public bool IsFilesDownload 
+        public bool IsFilesDownload
         {
-            get => _isFilesDownload; set 
+            get => _isFilesDownload; set
             {
                 _isFilesDownload = value;
                 OnPropertyChanged();
@@ -39,10 +39,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
         }
 
         private bool _isDownloadInProgress;
-        public bool IsDownloadInProgress 
+        public bool IsDownloadInProgress
         {
             get => _isDownloadInProgress;
-            set 
+            set
             {
                 _isDownloadInProgress = value;
                 OnPropertyChanged();
@@ -80,9 +80,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
         }
 
         private bool _isIndeterminate;
-        public bool HasProcents 
+        public bool HasProcents
         {
-            get => _isIndeterminate; set 
+            get => _isIndeterminate; set
             {
                 _isIndeterminate = value;
                 OnPropertyChanged();
@@ -103,11 +103,11 @@ namespace Lexplosion.Gui.Models.InstanceForm
         /// <summary>
         /// Всего файлов для скачивания.
         /// </summary>
-        public int TotalDownloadingFilesCount 
+        public int TotalDownloadingFilesCount
         {
-            get => _totalDownloadingFilesCount; set 
+            get => _totalDownloadingFilesCount; set
             {
-                _totalDownloadingFilesCount = value; 
+                _totalDownloadingFilesCount = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(DownloadFilesNof));
             }
@@ -128,7 +128,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
-        public string DownloadFilesNof 
+        public string DownloadFilesNof
         {
             get => String.Format(ResourceGetter.GetString("downloadFilesCountNof"), DownloadingFilesCount, TotalDownloadingFilesCount);
         }
@@ -157,7 +157,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
 
         #region Public & Protected Methods
-        
+
 
         /// <summary>
         /// Запускает скачивание
@@ -218,7 +218,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     HasProcents = false;
                     IsFilesDownload = true;
                 }
-            });         
+            });
         }
 
         public void InstanceDownloadCompleted(InstanceInit result, IEnumerable<string> downloadErrors, bool IsGameRun)
@@ -230,17 +230,18 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 {
                     case InstanceInit.Successful:
                         {
-                            if (_mainViewModel.RunningInstance != null && _mainViewModel.IsInstanceRunning && _mainViewModel.RunningInstance.Model == _instanceFormModel) 
+                            if (_mainViewModel.RunningInstance != null && _mainViewModel.IsInstanceRunning && _mainViewModel.RunningInstance.Model == _instanceFormModel)
                             {
                                 IsPrepareOnly = true;
                                 _instanceFormModel.UpdateLowerButton();
-                            } 
-                            else if (!IsPrepareOnly) {
+                            }
+                            else if (!IsPrepareOnly)
+                            {
                                 IsDownloadInProgress = false;
                                 //TODO: ЛОКАЗИЛАЦИЯ ТУТ
                                 MainViewModel.ShowToastMessage(
                                     "Download Successfully Completed",
-                                    "Название: " + _instanceFormModel.InstanceClient.Name + 
+                                    "Название: " + _instanceFormModel.InstanceClient.Name +
                                     "\nВерсия: " + _instanceFormModel.InstanceClient.GameVersion,
                                     TimeSpan.FromSeconds(5d)
                                     );
@@ -276,7 +277,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            if (downloadErrors != null) 
+                            if (downloadErrors != null)
                                 foreach (var de in downloadErrors ?? new List<string>())
                                 {
                                     MainViewModel.ShowToastMessage("Curseforge Id Error", de, Controls.ToastMessageState.Error);
@@ -339,7 +340,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                                 MainViewModel.ShowToastMessage("Manifest Error", de, Controls.ToastMessageState.Error);
                             }
                         }
-                        break; 
+                        break;
                     case InstanceInit.JavaDownloadError:
                         {
                             IsDownloadInProgress = false;
@@ -347,7 +348,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             MainViewModel.ShowToastMessage("Java Download Error", "Попробуйте поставить свой путь до джавы в настройках.", Controls.ToastMessageState.Error);
                         }
                         break;
-                    case InstanceInit.IsCancelled: 
+                    case InstanceInit.IsCancelled:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
@@ -355,7 +356,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             break;
                         }
                     default:
-                        { 
+                        {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             foreach (var de in downloadErrors ?? new List<string>())
@@ -367,22 +368,22 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
                 }
 
-                if (!IsPrepareOnly) 
-                { 
+                if (!IsPrepareOnly)
+                {
                     _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
                     _instanceFormModel.UpdateLowerButton();
                 }
-                else 
+                else
                 {
                     //IsDownloadInProgress = false;
                     _instanceFormModel.UpdateLowerButton();
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
                 }
-                    
+
             });
         }
 
-        public void CancelInstanceDownload() 
+        public void CancelInstanceDownload()
         {
             _instanceFormModel.OverviewField = ResourceGetter.GetString("downloadCancelling");
             _instanceFormModel.DownloadModel.HasProcents = false;
@@ -397,7 +398,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
 
         #region Private Methods
-        
+
 
         private void DownloadProcess(DownloadStageTypes downloadStageType, ProgressHandlerArguments progressArgs)
         {
@@ -408,10 +409,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
-        private void ComplitedDownloadAction(InstanceInit result, List<string> downloadErrors, bool launchGame) 
+        private void ComplitedDownloadAction(InstanceInit result, List<string> downloadErrors, bool launchGame)
         {
             var actions = ComplitedDownloadActions.ToArray();
-            foreach (var action in actions) 
+            foreach (var action in actions)
             {
                 action(result, downloadErrors, launchGame);
             }

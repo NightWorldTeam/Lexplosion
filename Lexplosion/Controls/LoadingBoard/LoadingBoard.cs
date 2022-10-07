@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace Lexplosion.Controls
 {
@@ -25,13 +18,13 @@ namespace Lexplosion.Controls
         #region Properties and Events
 
 
-        public static readonly DependencyProperty IsLoadingFinishedProperty 
+        public static readonly DependencyProperty IsLoadingFinishedProperty
             = DependencyProperty.Register("IsLoadingFinished", typeof(bool), typeof(LoadingBoard), new PropertyMetadata(false));
 
-        public static readonly DependencyProperty PlaceholderProperty 
+        public static readonly DependencyProperty PlaceholderProperty
             = DependencyProperty.Register("Placeholder", typeof(string), typeof(LoadingBoard), new PropertyMetadata(string.Empty));
 
-        public static readonly DependencyProperty RectangeColorProperty 
+        public static readonly DependencyProperty RectangeColorProperty
             = DependencyProperty.Register("RectangeColor", typeof(Brush), typeof(LoadingBoard), new PropertyMetadata(Brushes.White));
 
         public static readonly DependencyProperty BorderColorProperty
@@ -49,7 +42,7 @@ namespace Lexplosion.Controls
             set => SetValue(IsLoadingFinishedProperty, value);
         }
 
-        public string Placeholder 
+        public string Placeholder
         {
             get => (string)GetValue(PlaceholderProperty);
             set => SetValue(PlaceholderProperty, value);

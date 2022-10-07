@@ -1,16 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace Lexplosion.Tools
@@ -128,7 +121,7 @@ namespace Lexplosion.Tools
             return imageBytes;
         }
 
-        public static BitmapImage GetImageByUrl(string url) 
+        public static BitmapImage GetImageByUrl(string url)
         {
             return ToImage(GetImageBytesByUrl(url));
         }

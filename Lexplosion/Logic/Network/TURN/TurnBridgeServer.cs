@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -37,7 +36,7 @@ namespace Lexplosion.Logic.Network.TURN
                 }
 
                 Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 9765)); 
+                sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 9765));
                 sock.Send(data);
 
                 lock (_waitDeletingLoocker)

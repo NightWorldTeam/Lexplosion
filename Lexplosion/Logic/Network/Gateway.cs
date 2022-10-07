@@ -68,7 +68,7 @@ namespace Lexplosion.Logic.Network
                 ClientSimulatorThread.Start();
 
                 _isInit = true;
-            }     
+            }
         }
 
         public bool ListenGameSrvers(UdpClient client, out string name, out int port, int pid)

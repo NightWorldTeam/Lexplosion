@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Lexplosion.Controls
 {
@@ -27,7 +24,7 @@ namespace Lexplosion.Controls
             = DependencyProperty.Register("IsInfoBox", typeof(bool), typeof(DropdownMenu), new PropertyMetadata(false));
 
         public static readonly DependencyProperty PopupMaxWidthProperty =
-            DependencyProperty.Register("PopupMaxWidth", typeof(double), typeof(DropdownMenu), 
+            DependencyProperty.Register("PopupMaxWidth", typeof(double), typeof(DropdownMenu),
                 new FrameworkPropertyMetadata(Double.PositiveInfinity,
                     FrameworkPropertyMetadataOptions.AffectsMeasure,
                     new PropertyChangedCallback(OnTransformDirty)),
@@ -69,7 +66,7 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty PopupHorizontalOffsetProperty
             = DependencyProperty.Register("PopupHorizontalOffset", typeof(double), typeof(DropdownMenu), new PropertyMetadata(0d));
 
-        public PlacementMode PopupPlacement 
+        public PlacementMode PopupPlacement
         {
             get => (PlacementMode)GetValue(PopupPlacementProperty);
             set => SetValue(PopupPlacementProperty, value);
@@ -93,7 +90,7 @@ namespace Lexplosion.Controls
             set => SetValue(PopupHorizontalOffsetProperty, value);
         }
 
-        public ControlTemplate ButtonTemplate 
+        public ControlTemplate ButtonTemplate
         {
             get => (ControlTemplate)GetValue(ButtonTemplateProperty);
             set => SetValue(ButtonTemplateProperty, value);
@@ -111,19 +108,19 @@ namespace Lexplosion.Controls
             set => SetValue(IsInfoBoxProperty, value);
         }
 
-        public double PopupMaxWidth 
+        public double PopupMaxWidth
         {
             get => (double)GetValue(PopupMaxWidthProperty);
             set => SetValue(PopupMaxWidthProperty, value);
         }
-        
-        public double PopupMinWidth 
+
+        public double PopupMinWidth
         {
             get => (double)GetValue(PopupMinWidthProperty);
             set => SetValue(PopupMinWidthProperty, value);
         }
 
-        public double PopupMaxHeight 
+        public double PopupMaxHeight
         {
             get => (double)GetValue(PopupMaxHeightProperty);
             set => SetValue(PopupMaxHeightProperty, value);
@@ -135,7 +132,7 @@ namespace Lexplosion.Controls
             set => SetValue(PopupMinHeightProperty, value);
         }
 
-        static DropdownMenu() 
+        static DropdownMenu()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DropdownMenu), new FrameworkPropertyMetadata(typeof(DropdownMenu)));
         }
@@ -143,8 +140,8 @@ namespace Lexplosion.Controls
         public override void OnApplyTemplate()
         {
             _popup = Template.FindName(PART_POPUP_NAME, this) as Popup;
-            
-            if (_popup != null) 
+
+            if (_popup != null)
                 _popup.Closed += _popup_Closed;
 
             if (!IsInfoBox)

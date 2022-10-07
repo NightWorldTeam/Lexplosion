@@ -29,7 +29,7 @@ namespace Lexplosion.Controls
 
         public static readonly DependencyProperty IsEmptyProperty = IsEmptyPropertyKey.DependencyProperty;
 
-        public string Placeholder 
+        public string Placeholder
         {
             get => (string)GetValue(PlaceholderProperty);
             set => SetValue(PlaceholderProperty, value);
@@ -41,19 +41,19 @@ namespace Lexplosion.Controls
             set => SetValue(PlaceholderColorProperty, value);
         }
 
-        public double PlaceholderOpacity 
+        public double PlaceholderOpacity
         {
             get => (double)GetValue(PlaceholderOpacityProperty);
             set => SetValue(PlaceholderOpacityProperty, value);
         }
 
-        public double PlaceholderFontSize 
+        public double PlaceholderFontSize
         {
             get => (double)GetValue(PlaceholderFontSizeProperty);
             set => SetValue(PlaceholderFontSizeProperty, value);
         }
 
-        public FontWeight PlaceholderFontWeight 
+        public FontWeight PlaceholderFontWeight
         {
             get => (FontWeight)GetValue(PlaceholderFontWeightProperty);
             set => SetValue(PlaceholderFontWeightProperty, value);
@@ -62,13 +62,13 @@ namespace Lexplosion.Controls
         /// <summary>
         /// Скрываем [private set => ...], чтобы нельзя было изменить значение вне класса.
         /// </summary>
-        public bool IsEmpty 
+        public bool IsEmpty
         {
             get => (bool)GetValue(IsEmptyProperty);
             private set => SetValue(IsEmptyPropertyKey, value);
         }
 
-        static PlaceholderTextBox() 
+        static PlaceholderTextBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(PlaceholderTextBox), new FrameworkPropertyMetadata(typeof(PlaceholderTextBox)));
         }

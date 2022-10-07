@@ -58,7 +58,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             string dirName = DirectoryPath + "/temp";
             string dirName_ = dirName;
-            
+
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
             do
@@ -202,8 +202,8 @@ namespace Lexplosion.Logic.FileSystem
 
                 try
                 {
-                    Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);                  
-                    task.Wait();        
+                    Task task = webClient.DownloadFileTaskAsync(url, tempDir + fileName);
+                    task.Wait();
 
                     return result;
                 }

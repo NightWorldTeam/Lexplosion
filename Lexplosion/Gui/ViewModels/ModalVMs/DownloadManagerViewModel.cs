@@ -11,7 +11,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public override double Width => 500;
         public override double Height => base.Height + 30;
 
-        public override RelayCommand CloseModalWindowCommand => new RelayCommand(obj => 
+        public override RelayCommand CloseModalWindowCommand => new RelayCommand(obj =>
         {
             _mainViewModel.ModalWindowVM.CloseWindow();
         });
@@ -21,10 +21,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             _mainViewModel = mainViewModel;
         }
 
-        public void AddProcess(InstanceFormViewModel instanceForm) 
+        public void AddProcess(InstanceFormViewModel instanceForm)
         {
-            App.Current.Dispatcher.Invoke(() => 
-            { 
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 if (!InstanceDownloadProcess.Contains(InstanceDownloadProcessList, instanceForm))
                     InstanceDownloadProcessList.Add(new InstanceDownloadProcess(instanceForm));
             });

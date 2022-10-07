@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Lexplosion.Global;
 using Lexplosion.Tools;
@@ -105,7 +103,7 @@ namespace Lexplosion.Logic.Management
                 if ((activation?.accountTypes == null || activation.accountTypes.Contains(accountType)) && !data.Libraries[lib].notLaunch)
                 {
                     command += "\"" + _settings.GamePath + "/libraries/" + lib + "\";";
-                }   
+                }
             }
 
             command += "\"" + versionPath + "\" ";
@@ -167,9 +165,9 @@ namespace Lexplosion.Logic.Management
                     };
 
                     gameGateway.StateChanged += StateChanged;
-                }  
+                }
             }
-            
+
             GameStartEvent?.Invoke(this);
 
             if (_settings.ShowConsole == true)
@@ -227,7 +225,7 @@ namespace Lexplosion.Logic.Management
                             removeImportantTaskMark = true;
                             Lexplosion.Runtime.RemoveImportantTask();
                         }
-                    }                  
+                    }
 
                     if (!gameVisible)
                     {
@@ -273,7 +271,7 @@ namespace Lexplosion.Logic.Management
                 {
                     gameGateway?.Initialization(process.Id);
                 }
-                    
+
                 return true;
             }
             catch
@@ -324,7 +322,7 @@ namespace Lexplosion.Logic.Management
                 {
                     InitResult = result
                 };
-            }   
+            }
 
             if (_settings.CustomJava == false)
             {

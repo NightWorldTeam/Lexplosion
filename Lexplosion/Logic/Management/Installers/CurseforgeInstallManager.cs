@@ -289,7 +289,7 @@ namespace Lexplosion.Logic.Management.Installers
                             FilesCount = nowDataCount
                         });
                     };
-                } 
+                }
                 else if (updatesCount == 1)
                 {
                     singleDownloadMethod = delegate (string file, int pr, DownloadFileProgress stage_)

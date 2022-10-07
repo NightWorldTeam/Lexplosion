@@ -4,13 +4,13 @@ namespace Lexplosion.Gui.Extension
 {
     public static class PasswordBox
     {
-        public static readonly DependencyProperty PasswordProperty 
+        public static readonly DependencyProperty PasswordProperty
             = DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBox), new FrameworkPropertyMetadata(string.Empty, OnPasswordPropertyChanged));
 
-        public static readonly DependencyProperty AttachProperty 
+        public static readonly DependencyProperty AttachProperty
             = DependencyProperty.RegisterAttached("Attach", typeof(bool), typeof(PasswordBox), new PropertyMetadata(false, Attach));
 
-        private static readonly DependencyProperty IsUpdatingProperty 
+        private static readonly DependencyProperty IsUpdatingProperty
             = DependencyProperty.RegisterAttached("IsUpdating", typeof(bool), typeof(PasswordBox));
 
         //IsPasswordEmpty
@@ -19,7 +19,7 @@ namespace Lexplosion.Gui.Extension
 
         public static readonly DependencyProperty IsEmptyPasswordProperty = IsEmptyPasswordPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty IsPassowordSavedProperty 
+        public static readonly DependencyProperty IsPassowordSavedProperty
             = DependencyProperty.Register("IsPasswordSaved", typeof(bool), typeof(PasswordBox));
 
         public static void SetIsPasswordSaved(DependencyObject dp, bool value)
@@ -62,12 +62,12 @@ namespace Lexplosion.Gui.Extension
             dp.SetValue(IsUpdatingProperty, value);
         }
 
-        private static void SetIsEmptyPassword(System.Windows.Controls.PasswordBox dp) 
+        private static void SetIsEmptyPassword(System.Windows.Controls.PasswordBox dp)
         {
             dp.SetValue(IsEmptyPasswordPropertyKey, dp.SecurePassword.Length == 0);
         }
 
-        public static bool GetIsEmptyPassword(DependencyObject dp) 
+        public static bool GetIsEmptyPassword(DependencyObject dp)
         {
             return (bool)dp.GetValue(IsEmptyPasswordProperty);
         }

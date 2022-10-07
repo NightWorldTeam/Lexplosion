@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace Lexplosion.Controls
 {
-    public enum DialogResult 
+    public enum DialogResult
     {
         Undefined,
         Yes,

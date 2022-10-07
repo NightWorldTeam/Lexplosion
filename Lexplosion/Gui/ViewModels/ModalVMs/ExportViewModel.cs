@@ -89,11 +89,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// <summary>
         /// Отвечает на вопрос закончился ли экспорт сборка.
         /// </summary>
-        public bool IsExportFinished 
+        public bool IsExportFinished
         {
-            get => _isExportFinished; set 
+            get => _isExportFinished; set
             {
-                _isExportFinished = value; 
+                _isExportFinished = value;
                 OnPropertyChanged();
             }
         }
@@ -137,7 +137,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// </summary>
         public override RelayCommand HideModalWindowCommand
         {
-            get => _hideModalWindowCommand ?? (_hideModalWindowCommand = new RelayCommand(obj => 
+            get => _hideModalWindowCommand ?? (_hideModalWindowCommand = new RelayCommand(obj =>
             {
                 //TODO: закрываем окно
                 MainVM.ModalWindowVM.IsOpen = false;
@@ -176,7 +176,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// Загрузка данных для UnitsList, на один шаг вперёд.
         /// </summary>
         /// <param name="subUnits">Словарь UnitsList</param>
-        private void ContentPreload(Dictionary<string, PathLevel> subUnits) 
+        private void ContentPreload(Dictionary<string, PathLevel> subUnits)
         {
             foreach (var i in subUnits)
                 LoadDirContent(i.Value.FullPath, i.Value);
@@ -187,7 +187,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// Перевыделяет все элементы в UnitsList.
         /// </summary>
         /// <param name="value">значение выделения</param>
-        private void ReselectedAllUnits(bool value) 
+        private void ReselectedAllUnits(bool value)
         {
             if (UnitsList != null)
             {
@@ -215,7 +215,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
 #if DEBUG
             foreach (var i in pathLevel.UnitsList.Values)
-            Runtime.DebugWrite(pathLevel.FullPath + " into " + i.FullPath);
+                Runtime.DebugWrite(pathLevel.FullPath + " into " + i.FullPath);
 #endif
 
             if (pathLevel.IsSelected)
@@ -231,8 +231,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// </summary>
         private async void Export()
         {
-            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog()) 
-            { 
+            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
+            {
                 saveFileDialog.InitialDirectory = @"C:\Users\GamerStorm_Hel2x_\night-world\export";
                 saveFileDialog.Filter = "zip files (*.zip)|*.zip";
                 saveFileDialog.FilterIndex = 2;
@@ -258,7 +258,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                         IsExportFinished = true;
                         MainVM.ModalWindowVM.IsOpen = false;
                     }
-                    else 
+                    else
                     {
                         MainViewModel.ShowToastMessage(
                             result.ToString(),

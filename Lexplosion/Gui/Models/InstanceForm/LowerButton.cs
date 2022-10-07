@@ -18,27 +18,27 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _index = index;
         }
 
-        public string Text 
+        public string Text
         {
-            get => _text; set 
+            get => _text; set
             {
                 _text = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
-        public Geometry Icon 
-        { 
-            get => _icon; set
-            { 
-                _icon = value; 
-                OnPropertyChanged(); 
-            } 
-        }
-
-        public LowerButtonFunc Func 
+        public Geometry Icon
         {
-            get => _func; set 
+            get => _icon; set
+            {
+                _icon = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public LowerButtonFunc Func
+        {
+            get => _func; set
             {
                 _func = value;
                 OnPropertyChanged();

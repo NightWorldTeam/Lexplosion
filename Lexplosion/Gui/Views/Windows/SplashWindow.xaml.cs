@@ -1,6 +1,4 @@
-﻿using Lexplosion.Controls;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
@@ -21,9 +19,9 @@ namespace Lexplosion.Gui.Views.Windows
             MouseDown += delegate { DragMove(); };
         }
 
-        public void ChangeLoadingBoardPlaceholder(bool isUpdate = false) 
+        public void ChangeLoadingBoardPlaceholder(bool isUpdate = false)
         {
-            if (isUpdate && this.LoadingBoard.Placeholder == updatePlaceholder || !isUpdate && this.LoadingBoard.Placeholder == loadingPlaceholder) 
+            if (isUpdate && this.LoadingBoard.Placeholder == updatePlaceholder || !isUpdate && this.LoadingBoard.Placeholder == loadingPlaceholder)
             {
                 return;
             }

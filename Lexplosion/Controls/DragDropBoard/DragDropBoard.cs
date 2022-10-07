@@ -10,7 +10,7 @@ namespace Lexplosion.Controls
         public static readonly DependencyProperty ImportActionProperty
             = DependencyProperty.Register(
                 "ImportAction",
-                typeof(Action<string[]>), 
+                typeof(Action<string[]>),
                 typeof(DragDropBoard),
                 new PropertyMetadata(null));
 
@@ -20,10 +20,10 @@ namespace Lexplosion.Controls
             set => SetValue(ImportActionProperty, value);
         }
 
-        static DragDropBoard() 
+        static DragDropBoard()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DragDropBoard), new FrameworkPropertyMetadata(typeof(DragDropBoard)));
-            AllowDropProperty.OverrideMetadata(typeof(DragDropBoard), new FrameworkPropertyMetadata(true));  
+            AllowDropProperty.OverrideMetadata(typeof(DragDropBoard), new FrameworkPropertyMetadata(true));
         }
 
         protected override void OnDrop(DragEventArgs e)
@@ -37,10 +37,10 @@ namespace Lexplosion.Controls
                 {
                     string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                    foreach(var file in files) 
+                    foreach (var file in files)
                     {
                         //Console.WriteLine(file + " <-- Allowed file? --> " + file.Contains(".zip"));
-                        if (file.Contains(".zip")) 
+                        if (file.Contains(".zip"))
                         {
                             allowedFiles.Add(file);
                         }

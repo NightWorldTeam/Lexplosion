@@ -7,9 +7,9 @@ namespace Lexplosion.Gui.ViewModels
     public sealed class TabMenuViewModel : SubmenuViewModel
     {
         private bool _isInstance;
-        public bool IsInstance 
-        {   
-            get => _isInstance; private set 
+        public bool IsInstance
+        {
+            get => _isInstance; private set
             {
                 _isInstance = value;
                 OnPropertyChanged();
@@ -20,9 +20,9 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Заголовок страницы.
         /// </summary>
-        public string Header 
+        public string Header
         {
-            get => _header; private set 
+            get => _header; private set
             {
                 _header = value;
                 OnPropertyChanged();
@@ -35,8 +35,8 @@ namespace Lexplosion.Gui.ViewModels
 
         public TabMenuViewModel(IList<Tab<VMBase>> tabs, string header, int selectedTabIndex = 0, InstanceFormViewModel instanceFormViewModel = null)
         {
-            if (instanceFormViewModel != null) 
-            { 
+            if (instanceFormViewModel != null)
+            {
                 InstanceFormVM = instanceFormViewModel;
                 InstanceClient = instanceFormViewModel.Client;
                 IsInstance = true;

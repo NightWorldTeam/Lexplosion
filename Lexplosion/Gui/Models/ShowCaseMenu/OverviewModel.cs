@@ -20,7 +20,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             }
         }
 
-        public bool IsLocalInstance 
+        public bool IsLocalInstance
         {
             get => _isLocalInstance; set
             {

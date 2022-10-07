@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -57,13 +53,13 @@ namespace Lexplosion.Controls
             set => SetValue(BackgroundOpacityProperty, value);
         }
 
-        public double WindowWidth 
+        public double WindowWidth
         {
             get => (double)GetValue(WindowWidthProperty);
             set => SetValue(WindowWidthProperty, value);
         }
 
-        public double WindowHeight 
+        public double WindowHeight
         {
             get => (double)GetValue(WindowHeightProperty);
             set => SetValue(WindowWidthProperty, value);
@@ -74,7 +70,7 @@ namespace Lexplosion.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Modal), new FrameworkPropertyMetadata(typeof(Modal)));
         }
 
-        private void ShowModalAnimation() 
+        private void ShowModalAnimation()
         {
             this.Opacity = 0.0;
             this.Visibility = Visibility.Visible;
@@ -87,8 +83,8 @@ namespace Lexplosion.Controls
             };
             this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
         }
-        
-        private void CloseModalAnimation() 
+
+        private void CloseModalAnimation()
         {
             DoubleAnimation doubleAnimation = new DoubleAnimation()
             {
@@ -97,7 +93,7 @@ namespace Lexplosion.Controls
                 Duration = TimeSpan.FromSeconds(0.2)
             };
 
-            doubleAnimation.Completed += (object sender, EventArgs e) => 
+            doubleAnimation.Completed += (object sender, EventArgs e) =>
             {
                 this.Visibility = Visibility.Collapsed;
             };
@@ -108,15 +104,15 @@ namespace Lexplosion.Controls
         private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var dObj = (Modal)d;
-            
-                if ((bool)e.NewValue == true) 
-                {
-                    dObj.ShowModalAnimation();
-                }
-                else 
-                {
-                    dObj.CloseModalAnimation();
-                }
+
+            if ((bool)e.NewValue == true)
+            {
+                dObj.ShowModalAnimation();
+            }
+            else
+            {
+                dObj.CloseModalAnimation();
+            }
         }
     }
 }

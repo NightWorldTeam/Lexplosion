@@ -5,7 +5,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
     public sealed class LibraryViewModel : VMBase
     {
         private MainViewModel _mainViewModel;
-        public MainViewModel MainVM 
+        public MainViewModel MainVM
         {
             get => _mainViewModel;
         }
@@ -25,9 +25,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         }
 
         private RelayCommand _openInstanceFactoryCommand;
-        public RelayCommand OpenInstanceFactoryCommand 
+        public RelayCommand OpenInstanceFactoryCommand
         {
-            get => _openInstanceFactoryCommand ?? (_openInstanceFactoryCommand = new RelayCommand(obj => 
+            get => _openInstanceFactoryCommand ?? (_openInstanceFactoryCommand = new RelayCommand(obj =>
             {
                 _mainViewModel.ModalWindowVM.IsOpen = true;
                 _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(new FactoryGeneralViewModel(_mainViewModel));

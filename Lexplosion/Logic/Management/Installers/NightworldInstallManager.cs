@@ -59,7 +59,7 @@ namespace Lexplosion.Logic.Management.Installers
         private bool _downloadStartedIsCalled = false;
         private void DownloadStartedCall()
         {
-            if(!_downloadStartedIsCalled)
+            if (!_downloadStartedIsCalled)
                 DownloadStarted?.Invoke();
         }
 
@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.Management.Installers
                         var versionInfo = nightworldManifest.version;
                         manifest = ToServer.GetVersionManifest(versionInfo.gameVersion, versionInfo.modloaderType, versionInfo.modloaderVersion);
                     }
-                    
+
                     if (manifest == null)
                     {
                         return InstanceInit.ServerError;
@@ -318,7 +318,7 @@ namespace Lexplosion.Logic.Management.Installers
                 }
                 else
                 {
-                    stage = 1;           
+                    stage = 1;
                 }
 
                 progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()

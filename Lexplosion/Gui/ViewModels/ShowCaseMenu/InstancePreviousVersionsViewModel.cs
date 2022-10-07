@@ -12,9 +12,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         public InstanceFormViewModel ViewModel { get; }
 
         private ObservableCollection<InstanceVersion> _previousVersions;
-        public ObservableCollection<InstanceVersion> PreviousVersions 
+        public ObservableCollection<InstanceVersion> PreviousVersions
         {
-            get => _previousVersions; set 
+            get => _previousVersions; set
             {
                 _previousVersions = value;
                 OnPropertyChanged();
@@ -24,7 +24,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private bool _isLoadingFinished;
         public bool IsLoadingFinished
         {
-            get => _isLoadingFinished; set 
+            get => _isLoadingFinished; set
             {
                 _isLoadingFinished = value;
                 OnPropertyChanged();
@@ -44,7 +44,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             {
                 var instanceVersion = (InstanceVersion)obj;
                 ViewModel.DownloadInstance(version: instanceVersion.Id);
-                foreach (var pv in PreviousVersions) 
+                foreach (var pv in PreviousVersions)
                 {
                     pv.CanInstall = false;
                 }
@@ -71,7 +71,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region Private Methods
 
 
-        private async void LoadPreviousVersions() 
+        private async void LoadPreviousVersions()
         {
             var versions = await Task.Run(() => ViewModel.Model.InstanceClient.GetVersions());
             PreviousVersions = new ObservableCollection<InstanceVersion>(versions);
@@ -81,7 +81,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             ViewModel.Model.DownloadModel.ComplitedDownloadActions.Add(ComplitedInstalled);
         }
 
-        private void ChangeButtonState(bool isDisable = false) 
+        private void ChangeButtonState(bool isDisable = false)
         {
             foreach (var pv in PreviousVersions)
             {

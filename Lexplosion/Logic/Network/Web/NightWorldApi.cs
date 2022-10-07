@@ -111,7 +111,7 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
-                Dictionary<string, string> data = new Dictionary<string, string> 
+                Dictionary<string, string> data = new Dictionary<string, string>
                 {
                     ["str"] = str,
                     ["str2"] = str2,
@@ -179,8 +179,8 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
-                Dictionary<string, string> data = new Dictionary<string, string> 
-                { 
+                Dictionary<string, string> data = new Dictionary<string, string>
+                {
                     ["str"] = str,
                     ["str2"] = str2,
                     ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
@@ -244,7 +244,7 @@ namespace Lexplosion.Logic.Network
         public static PlayerData GetPlayerData(string uuid)
         {
             string data = ToServer.HttpPost(LaunсherSettings.URL.Account + "getPlayerData", new Dictionary<string, string>
-            { 
+            {
                 ["playerUUID"] = uuid
             });
 

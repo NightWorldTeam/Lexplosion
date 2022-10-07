@@ -10,7 +10,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
         private Settings _instanceSettings;
         private Settings _instanceSettingsCopy;
 
-        public Settings InstanceSettings 
+        public Settings InstanceSettings
         {
             get => _instanceSettings; set
             {

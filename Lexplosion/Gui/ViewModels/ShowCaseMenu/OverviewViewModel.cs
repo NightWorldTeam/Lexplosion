@@ -8,19 +8,19 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region Properties
 
         private OverviewModel _overviewModel;
-        public OverviewModel Model 
-        { 
-            get => _overviewModel; set 
+        public OverviewModel Model
+        {
+            get => _overviewModel; set
             {
                 _overviewModel = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         private double _categoryPanelBorderHeight;
         public double CategoryPanelBorderHeight
         {
-            get => _categoryPanelBorderHeight; set 
+            get => _categoryPanelBorderHeight; set
             {
                 _categoryPanelBorderHeight = value;
                 OnPropertyChanged(nameof(CategoryPanelBorderHeight));
@@ -28,9 +28,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         }
 
         private bool _isLoadedFailed;
-        public bool IsLoadedFailed 
+        public bool IsLoadedFailed
         {
-            get => _isLoadedFailed; set 
+            get => _isLoadedFailed; set
             {
                 _isLoadedFailed = value;
                 OnPropertyChanged();
@@ -65,7 +65,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 {
                     System.Diagnostics.Process.Start(Model.InstanceData.WebsiteUrl);
                 }
-                catch 
+                catch
                 {
                     // message box here.
                 }
@@ -79,7 +79,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region Constructors
         public OverviewViewModel(InstanceClient instanceClient, ISubmenu submenuViewModel)
         {
-            Lexplosion.Runtime.TaskRun(() => { 
+            Lexplosion.Runtime.TaskRun(() =>
+            {
                 Model = new OverviewModel(instanceClient, submenuViewModel, this);
                 CategoryPanelBorderHeight = CalcCategoryBorderHeight();
                 IsLoading = false;
@@ -89,7 +90,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
 
         #region Private Methods
-        private double CalcCategoryBorderHeight() 
+        private double CalcCategoryBorderHeight()
         {
             if (Model.InstanceData.Categories == null || Model.InstanceData.Categories.Count == 0)
             {

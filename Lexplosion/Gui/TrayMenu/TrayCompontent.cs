@@ -10,9 +10,9 @@ namespace Lexplosion.Gui.TrayMenu
         /// Если true, то компонент Трея не будет виден и занимать место.
         /// </summary>
         private bool _isEnable;
-        public bool IsEnable 
-        { 
-            get => _isEnable; set 
+        public bool IsEnable
+        {
+            get => _isEnable; set
             {
                 _isEnable = value;
                 OnPropertyChanged();

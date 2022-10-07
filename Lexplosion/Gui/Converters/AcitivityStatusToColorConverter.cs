@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -15,19 +11,19 @@ namespace Lexplosion.Gui.Converters
         {
             var status = (ActivityStatus)value;
 
-            if (status == ActivityStatus.Online) 
+            if (status == ActivityStatus.Online)
             {
                 return (Brush)new BrushConverter().ConvertFrom("#167FFC");
             }
-            else if (status == ActivityStatus.InGame) 
+            else if (status == ActivityStatus.InGame)
             {
                 return Brushes.Green;
             }
-            else if (status == ActivityStatus.NotDisturb) 
+            else if (status == ActivityStatus.NotDisturb)
             {
                 return Brushes.Red;
             }
-            else if (status == ActivityStatus.Offline) 
+            else if (status == ActivityStatus.Offline)
             {
                 return Brushes.Gray;
             }

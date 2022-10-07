@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using System.Windows.Forms;
 
 namespace Lexplosion.Tools
 {
@@ -99,7 +93,7 @@ namespace Lexplosion.Tools
             hookId = Hook(process);
         }
 
-        public static void Stop() 
+        public static void Stop()
         {
             UnhookWindowsHookEx(hookId);
         }

@@ -97,7 +97,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         public async void Import(string path)
         {
-            #nullable enable
+#nullable enable
             InstanceClient? instanceClient = null;
 
             var importFile = new ImportFile(this, path);
@@ -115,8 +115,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             {
                 // Выводим сообщение о результате испорта.
                 MainViewModel.ShowToastMessage(
-                    ResourceGetter.GetString("importResultError"), 
-                    result.ToString(), 
+                    ResourceGetter.GetString("importResultError"),
+                    result.ToString(),
                     Controls.ToastMessageState.Error);
                 return;
             }
@@ -131,8 +131,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
             // Выводим сообщение о результате испорта.
             MainViewModel.ShowToastMessage(
-                ResourceGetter.GetString("importResult"), 
-                ResourceGetter.GetString("importResultSuccessfulWannaPlay"), 
+                ResourceGetter.GetString("importResult"),
+                ResourceGetter.GetString("importResultSuccessfulWannaPlay"),
                 Controls.ToastMessageState.Notification);
         }
 
@@ -150,7 +150,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
             ImportAction = (string[] files) =>
             {
-                foreach (var file in files) 
+                foreach (var file in files)
                     Import(file);
             };
 
@@ -183,7 +183,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        private void UploadedFilesChanged(ImportFile importFile) 
+        private void UploadedFilesChanged(ImportFile importFile)
         {
             UploadedFiles.Add(importFile);
             OnPropertyChanged(nameof(IsEmptyUploadedFiles));

@@ -1,5 +1,4 @@
-﻿using Hardcodet.Wpf.TaskbarNotification;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Lexplosion
 {

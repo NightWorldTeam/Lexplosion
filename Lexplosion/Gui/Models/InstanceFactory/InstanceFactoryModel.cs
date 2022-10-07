@@ -1,6 +1,4 @@
-﻿using Lexplosion.Global;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models.InstanceFactory
 {

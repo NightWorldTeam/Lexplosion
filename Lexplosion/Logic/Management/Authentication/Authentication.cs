@@ -115,7 +115,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 if (saveUser)
                 {
                     DataFilesManager.SaveAccount(login, accessData, accountType);
-                }               
+                }
             }
 
             return result;

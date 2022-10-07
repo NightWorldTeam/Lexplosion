@@ -4,10 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Runtime.CompilerServices;
-using System.IO.Compression;
 using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
@@ -19,7 +16,7 @@ namespace Lexplosion.Logic.Network
     static class CurseforgeApi
     {
         private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
-        
+
         private class ProjectTypeInfo
         {
             public class LatestFile

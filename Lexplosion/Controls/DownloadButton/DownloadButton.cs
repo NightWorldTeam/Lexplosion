@@ -279,7 +279,7 @@ namespace Lexplosion.Controls
             {
                 _downloadButton.MouseDown += OnDownloadButtonClicked;
             }
-            if (_loader != null) 
+            if (_loader != null)
             {
                 _progressBar = GetTemplateChild(PART_PROGRESSBAR) as ProgressBar;
             }
@@ -308,26 +308,26 @@ namespace Lexplosion.Controls
         private void OnPlayButtonClicked(object sender, MouseButtonEventArgs e)
         {
             ChangePlayButtonText(ResourceGetter.GetString("prepareRun"));
-                ComplitedLaunchCallback complitedLaunch = delegate (string instanceId, bool successful)
-                {
-                    // тут хз что
-                    // можно написать при запуске, до полного запуска, что-то типо запускается.
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        ChangePlayButtonText(ResourceGetter.GetString("play"));
-                        NextButtonAnimation(_playButton);
-                    });
-                };
+            ComplitedLaunchCallback complitedLaunch = delegate (string instanceId, bool successful)
+            {
+                // тут хз что
+                // можно написать при запуске, до полного запуска, что-то типо запускается.
+                App.Current.Dispatcher.Invoke(() =>
+            {
+                ChangePlayButtonText(ResourceGetter.GetString("play"));
+                NextButtonAnimation(_playButton);
+            });
+            };
 
-                GameExitedCallback gameExitedCallback = delegate (string instanceId)
+            GameExitedCallback gameExitedCallback = delegate (string instanceId)
+            {
+                App.Current.Dispatcher.Invoke(() =>
                 {
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        PreviewButtonAnimation(_playButton);
-                    });
-                };
+                    PreviewButtonAnimation(_playButton);
+                });
+            };
 
-                InstanceFormVM.LaunchInstance(complitedLaunch, gameExitedCallback);
+            InstanceFormVM.LaunchInstance(complitedLaunch, gameExitedCallback);
         }
 
         private void OnDownloadButtonClicked(object sender, MouseButtonEventArgs e)
@@ -464,7 +464,7 @@ namespace Lexplosion.Controls
                 button.HideButton(button._downloadButton);
                 button.HideButton(button._loader);
             }
-            else if (newValue.Model.LaunchModel.IsGameLaunched) 
+            else if (newValue.Model.LaunchModel.IsGameLaunched)
             {
                 button.HideButton(button._downloadButton);
                 button.HideButton(button._loader);

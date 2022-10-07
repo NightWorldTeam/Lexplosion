@@ -1,9 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
-using Lexplosion.Global;
 using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Objects;
 
 namespace Lexplosion.Logic.Management.Authentication
 {
@@ -12,7 +10,7 @@ namespace Lexplosion.Logic.Management.Authentication
         public User Auth(ref string login, ref string accessData, out AuthCode code)
         {
             accessData = "{\"type\":\"password\",\"data\":\"" + Sha256(accessData + login) + "\"}";
-            return Execute(login, ref accessData, out code);      
+            return Execute(login, ref accessData, out code);
         }
 
         public User ReAuth(ref string login, ref string accessData, out AuthCode code)
@@ -41,11 +39,11 @@ namespace Lexplosion.Logic.Management.Authentication
             {
                 if (response.Status == AuthCode.Successfully)
                 {
-                    User user = new User(response.Login, 
-                        response.UUID, 
-                        response.AccesToken, 
-                        response.SessionToken, 
-                        AccountType.NightWorld, 
+                    User user = new User(response.Login,
+                        response.UUID,
+                        response.AccesToken,
+                        response.SessionToken,
+                        AccountType.NightWorld,
                         status);
 
                     LaunchGame.GameStartEvent += delegate (LaunchGame gameManager)

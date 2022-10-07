@@ -260,9 +260,9 @@ namespace Lexplosion.Logic.FileSystem
                     assets.objects = null;
                 }
             }
-            catch 
-            { 
-                return 0; 
+            catch
+            {
+                return 0;
             }
 
             return updatesCount;

@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -24,12 +23,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// Версия игры.
         /// </summary>
         private string _gameVersion;
-        public string GameVersion 
+        public string GameVersion
         {
             get => _gameVersion; set
             {
                 _gameVersion = BaseInstanceData.GameVersion = value;
-                if (IsModloader) 
+                if (IsModloader)
                 {
                     GetModloaderVersions(value, ModloaderType);
                 }
@@ -57,9 +56,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// Список версий конкретного modloader, для конкретной версии.
         /// </summary>
         private ObservableCollection<string> _modloaderVersions;
-        public ObservableCollection<string> ModloaderVersions 
+        public ObservableCollection<string> ModloaderVersions
         {
-            get => _modloaderVersions; set 
+            get => _modloaderVersions; set
             {
                 _modloaderVersions = value;
                 OnPropertyChanged();
@@ -81,9 +80,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         }
 
         private byte[] _logoBytes;
-        public byte[] LogoBytes 
+        public byte[] LogoBytes
         {
-            get => _logoBytes; set 
+            get => _logoBytes; set
             {
                 _logoBytes = value;
                 OnPropertyChanged();
@@ -96,19 +95,19 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// </summary>
 
         private bool _isModloader;
-        public bool IsModloader 
+        public bool IsModloader
         {
-            get => _isModloader; set 
+            get => _isModloader; set
             {
                 _isModloader = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         private ModloaderType modloaderType;
         public ModloaderType ModloaderType
         {
-            get => modloaderType; set 
+            get => modloaderType; set
             {
                 modloaderType = BaseInstanceData.Modloader = value;
 
@@ -126,9 +125,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// Выбранная версия modloader
         /// </summary>
         private string _modloaderVersion;
-        public string ModloaderVersion 
+        public string ModloaderVersion
         {
-            get => _modloaderVersion; set 
+            get => _modloaderVersion; set
             {
                 _modloaderVersion = BaseInstanceData.ModloaderVersion = value;
                 OnPropertyChanged();
@@ -153,14 +152,14 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         /// </summary>
         public RelayCommand UploadLogoCommand
         {
-            get => new RelayCommand(obj => 
+            get => new RelayCommand(obj =>
             {
-                using (var dialog = new System.Windows.Forms.OpenFileDialog()) 
-                { 
+                using (var dialog = new System.Windows.Forms.OpenFileDialog())
+                {
                     dialog.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
 
                     // Process open file dialog box results
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         LogoPath = dialog.FileName;
                     }
@@ -181,7 +180,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 {
                     ModloaderVersion = CurrentInstanceClient.GetBaseData.ModloaderVersion;
                 }
-                else 
+                else
                 {
                     if (ModloaderVersions.Count > 0)
                         ModloaderVersion = ModloaderVersions[0];

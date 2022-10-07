@@ -1,5 +1,4 @@
-﻿using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -10,7 +9,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         public CfProjectType Type { get; }
 
         private ObservableCollection<InstanceAddon> _instanceAddons;
-        public ObservableCollection<InstanceAddon> InstalledAddons 
+        public ObservableCollection<InstanceAddon> InstalledAddons
         {
             get => _instanceAddons; set
             {
@@ -25,9 +24,9 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         }
 
         private string _emptyListMessage;
-        public string EmptyListMessage 
+        public string EmptyListMessage
         {
-            get => _emptyListMessage; set 
+            get => _emptyListMessage; set
             {
                 _emptyListMessage = value;
                 OnPropertyChanged();
@@ -55,7 +54,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             EmptyListMessage = emptyListMessage;
         }
 
-        public void Uninstall(InstanceAddon addon) 
+        public void Uninstall(InstanceAddon addon)
         {
             InstalledAddons.Remove(addon);
             addon.Delete();

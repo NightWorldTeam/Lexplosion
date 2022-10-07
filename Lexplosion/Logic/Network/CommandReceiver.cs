@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.IO;
-using System.Text;
-using System.Net.Sockets;
-using System.Text.RegularExpressions;
-using System.Security.Cryptography;
-using System.Threading;
 
 namespace Lexplosion.Logic.Network
 {

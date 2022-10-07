@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Windows.Media;
 
 namespace Lexplosion.Gui.TrayMenu
@@ -21,13 +20,13 @@ namespace Lexplosion.Gui.TrayMenu
         /// <summary>
         /// Команда которая сработает при клике по кнопке.
         /// </summary>
-        public RelayCommand ActionMethodCommand 
+        public RelayCommand ActionMethodCommand
         {
             get => _actionMethodCommand ?? (_actionMethodCommand = new RelayCommand(obj =>
             {
                 _actionMethod?.Invoke();
                 Runtime.TrayMenuElementClickExecute();
-            })); 
+            }));
         }
 
         public TrayButton(int id, string name, string icon, Action actionMethod)

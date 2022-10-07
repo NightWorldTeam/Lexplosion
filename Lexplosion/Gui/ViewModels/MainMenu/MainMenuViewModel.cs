@@ -2,7 +2,6 @@
 using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
-using Lexplosion.Gui.Views.Pages;
 using Lexplosion.Tools;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -109,25 +108,25 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         /// Открывает главную страницу модпака.
         /// </summary>
         /// <param name="viewModel">InstanceViewModel нужной сборки.</param>
-        public void OpenModpackPage(InstanceFormViewModel viewModel) 
+        public void OpenModpackPage(InstanceFormViewModel viewModel)
         {
             NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
                 MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel));
             NavigationShowCaseCommand?.Execute(null);
         }
-        
+
         /// <summary>
         /// Открывает страницу модпака сборки (дополнения).
         /// </summary>
         /// <param name="viewModel">InstanceViewModel нужной сборки.</param>
         /// <param name="isToDLC">Перейти на страницу с дополнениями?</param>
-        public void OpenModpackPage(InstanceFormViewModel viewModel, bool isToDLC = false) 
+        public void OpenModpackPage(InstanceFormViewModel viewModel, bool isToDLC = false)
         {
             var index = 0;
             var subIndex = 0;
 
-            if (isToDLC) 
-            { 
+            if (isToDLC)
+            {
                 index = 1;
                 subIndex = viewModel.Client.Type == InstanceSource.Local ? 3 : 1;
             }
@@ -144,7 +143,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         #region Private Methods
 
 
-        private List<Tab<VMBase>> InitializeMultiplayerTabs() 
+        private List<Tab<VMBase>> InitializeMultiplayerTabs()
         {
             VMBase curtains = new DevСurtainViewModel() { Message = "Функции нашей сетевой игры доступны только при использовании аккаунта NightWorld" };
 
@@ -173,7 +172,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             };
         }
 
-        private List<Tab<VMBase>> InitializeSettingsTabs() 
+        private List<Tab<VMBase>> InitializeSettingsTabs()
         {
             return new List<Tab<VMBase>>()
             {
@@ -195,7 +194,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             };
         }
 
-        private ObservableCollection<Tab<VMBase>> InitializeMainMenuTabs() 
+        private ObservableCollection<Tab<VMBase>> InitializeMainMenuTabs()
         {
             return new ObservableCollection<Tab<VMBase>>
             {

@@ -86,7 +86,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 UpperButtonFunc.Download,
                 ResourceGetter.GetIcon("Download"),
                 ResourceGetter.GetString("downloadInstance"), -110
-            ); 
+            );
 
         public void ChangeFunc(
             UpperButtonFunc func, Geometry icon, string tipText, int offset

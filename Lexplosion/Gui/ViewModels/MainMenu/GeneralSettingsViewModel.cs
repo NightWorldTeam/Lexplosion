@@ -3,7 +3,6 @@ using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.FileSystem;
 using System;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
 {
@@ -16,7 +15,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private bool _isDirectoryChanged = true;
         public bool IsDirectoryChanged
         {
-            get => _isDirectoryChanged; set 
+            get => _isDirectoryChanged; set
             {
                 _isDirectoryChanged = value;
                 OnPropertyChanged();
@@ -61,13 +60,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             });
         }
 
-        private void ChangedDirectory(string newPath) 
+        private void ChangedDirectory(string newPath)
         {
             var dialogModal = new DialogViewModel(_mainViewModel);
-            dialogModal.ShowDialog("Желаете ли вы полностью перенести директорию?", () => {
+            dialogModal.ShowDialog("Желаете ли вы полностью перенести директорию?", () =>
+            {
                 GeneralSettings.SystemPath = newPath;
                 IsDirectoryChanged = false;
-                Lexplosion.Runtime.TaskRun(() => 
+                Lexplosion.Runtime.TaskRun(() =>
                 {
                     WithDirectory.SetNewDirectory(GeneralSettings.SystemPath);
                     App.Current.Dispatcher.Invoke(() =>
@@ -84,5 +84,5 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             _mainViewModel = mainViewModel;
             GeneralSettings = new GeneralSettingsModel();
         }
-    } 
+    }
 }

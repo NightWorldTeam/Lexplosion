@@ -317,7 +317,7 @@ namespace Lexplosion.Logic.Network
                 {
                     break;
                 }
-            }  
+            }
         }
 
         public virtual void StopWork()
@@ -348,7 +348,7 @@ namespace Lexplosion.Logic.Network
                     lock (KickedClients)
                     {
                         KickedClients.Add(uuid);
-                    }    
+                    }
 
                     IPEndPoint point = UuidPointPair[uuid];
                     ClientAbort(point);
@@ -365,7 +365,7 @@ namespace Lexplosion.Logic.Network
                 {
                     KickedClients.Remove(uuid);
                 }
-            }         
+            }
         }
 
         private void MaintainingConnection()

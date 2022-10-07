@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 
 namespace Lexplosion.Tools
 {
@@ -49,9 +44,9 @@ namespace Lexplosion.Tools
             finally
             {
                 _sem.Release();
-            }        
+            }
         }
-        
+
         public void WaitEnd() => _endEvent.WaitOne();
     }
 }

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 {
@@ -164,10 +163,12 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private void LoadContent()
         {
-            Lexplosion.Runtime.TaskRun(() => { 
+            Lexplosion.Runtime.TaskRun(() =>
+            {
                 var curseforgeCategories = CurseforgeApi.GetCategories(_projectType);
 
-                App.Current.Dispatcher.Invoke(() => { 
+                App.Current.Dispatcher.Invoke(() =>
+                {
                     var sortedByIdCategories = new Dictionary<int, List<CfCategory>>();
 
                     foreach (var cfc in curseforgeCategories)
@@ -202,9 +203,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                         {
                             foreach (var parentCategory in parentCategories)
                             {
-                                foreach (var cfCategory in CfCategories) 
+                                foreach (var cfCategory in CfCategories)
                                 {
-                                    if (cfCategory.Name == parentCategory.Name) 
+                                    if (cfCategory.Name == parentCategory.Name)
                                     {
                                         cfCategory.CfSubCategories = sortedByIdCategories[parentCategory.Id].ToArray();
                                         break;
@@ -256,7 +257,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                         DownloadAddonFile.Remove(DownloadAddonFiles, instanceAddon);
                         OnPropertyChanged(nameof(IsDownloadingSomething));
                     }
-                    else if (result == DownloadAddonRes.IsCanselled) 
+                    else if (result == DownloadAddonRes.IsCanselled)
                     {
                         MainViewModel.ShowToastMessage("Скачивание аддона было отменено.",
                             "Название аддона: " + instanceAddon.Name, Controls.ToastMessageState.Notification);
@@ -294,10 +295,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             });
         }
 
-        private async void InstancePageLoading(string searchText = "", bool isPaginator=false)
+        private async void InstancePageLoading(string searchText = "", bool isPaginator = false)
         {
             // запускаем заставку загрузки
-            
+
 
             if (!isPaginator && searchText == _previousSearch && searchText != null)
             {
