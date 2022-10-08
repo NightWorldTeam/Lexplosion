@@ -196,6 +196,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                                 {
                                     parentCategories.Add(category);
                                 }
+                                if (categoryInstance.Name == "Fabric" && categoryInstance.Name != _baseInstanceData.Modloader.ToString())
+                                    continue;
                                 CfCategories.Add(categoryInstance);
                             }
                         }

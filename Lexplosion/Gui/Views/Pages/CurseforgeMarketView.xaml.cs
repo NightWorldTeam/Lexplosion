@@ -12,5 +12,24 @@ namespace Lexplosion.Gui.Views.Pages
         {
             InitializeComponent();
         }
+
+        private void ContainerPage_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            var viewer = (ScrollViewer)sender;
+            try
+            {
+                var onScrollCommand = Lexplosion.Gui.Extension.ScrollViewer.GetOnScrollCommand(viewer);
+                onScrollCommand.Execute(null);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void Filter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FiltersDropdownMenu.IsOpen = false;
+        }
     }
 }

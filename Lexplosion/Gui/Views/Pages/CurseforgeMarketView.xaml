@@ -201,12 +201,12 @@
                                     Opacity="0.8"
                                     Style="{StaticResource DLCInfo}"
                                     Text="{Binding LastUpdated}" />
-                                <TextBlock
+                                <!--<TextBlock
                                     Grid.Column="2"
                                     FontSize="12"
                                     Opacity="0.8"
                                     Style="{StaticResource DLCInfo}"
-                                    Text="{Binding CreatedTime}" />
+                                    Text="{Binding CreatedTime}" />-->
                             </Grid>
 
                             <!--  Description  -->
@@ -472,7 +472,10 @@
             <ScrollViewer
                 x:Name="ContainerPage_ScrollViewer"
                 Grid.Column="1"
+                extension:ScrollViewer.ChildItemsUpdated="{Binding IsLoaded}"
+                extension:ScrollViewer.OnScrollCommand="{Binding OnScrollCommand}"
                 IsTabStop="False"
+                ScrollChanged="ContainerPage_ScrollChanged"
                 VerticalScrollBarVisibility="Auto">
 
                 <ScrollViewer.Background>
@@ -515,6 +518,7 @@
                                         ItemTemplate="{StaticResource CurseforgeCategory}"
                                         ItemsSource="{Binding CfCategories}"
                                         SelectedItem="{Binding SelectedCategory}"
+                                        SelectionChanged="Filter_SelectionChanged"
                                         Style="{StaticResource CategoriesListBox}" />
 
                                     <StackPanel Visibility="{Binding SelectedCategory.HasSubcategories, Converter={StaticResource ConvertBoolToVisibility}}">
@@ -544,6 +548,7 @@
                                             ItemTemplate="{StaticResource CurseforgeCategory}"
                                             ItemsSource="{Binding SelectedCategory.CfSubCategories}"
                                             SelectedItem="{Binding SubCategorySelected}"
+                                            SelectionChanged="Filter_SelectionChanged"
                                             Style="{StaticResource CategoriesListBox}" />
                                     </StackPanel>
                                 </StackPanel>
@@ -591,11 +596,11 @@
             </Button>
         </Grid>
 
-        <!--<controls:LoadingBoard
+        <controls:LoadingBoard
             Grid.Column="1"
             BackgroundColor="#17141b"
             BackgroundOpacity="0.7"
             IsLoadingFinished="{Binding IsLoaded}"
-            Placeholder="Идет загрузка данных с curseforge.com..." />-->
+            Placeholder="Идет загрузка данных с curseforge.com..." />
     </Grid>
 </UserControl>
