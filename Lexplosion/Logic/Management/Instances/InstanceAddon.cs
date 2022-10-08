@@ -357,8 +357,14 @@ namespace Lexplosion.Logic.Management.Instances
                 }
 
                 var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", taskArgs);
-
                 IsInstalling = false;
+
+                ThreadPool.QueueUserWorkItem(delegate (object state)
+                {
+                    var addonData = CurseforgeApi.GetAddonInfo(addonInfo.modId.ToString());
+                    WebsiteUrl = addonData?.links?.websiteUrl;
+                });
+
                 _installingSemaphore.WaitOne(_modInfo.id);
                 _installingAddons.TryRemove(_modInfo.id, out _);
                 _installingSemaphore.Release(_modInfo.id);
