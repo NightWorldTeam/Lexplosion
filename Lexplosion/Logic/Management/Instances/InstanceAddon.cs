@@ -17,6 +17,7 @@ using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Instances
 {
+    
     public class InstanceAddon : VMBase
     {
         private const string UnknownName = "Без названия";
@@ -49,8 +50,6 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
-        public string WebsiteUrl { get; private set; } = null;
-        public bool IsUrlExist { get; set; }
         public string FileName { get; private set; } = "";
         public string Version { get; private set; } = "";
         public int DownloadCount { get; private set; } = 0;
@@ -129,6 +128,27 @@ namespace Lexplosion.Logic.Management.Instances
                 OnPropertyChanged();
             }
         }
+
+        private string _websiteUrl = null;
+        public string WebsiteUrl
+        {
+            get => _websiteUrl;
+            set
+            {
+                _websiteUrl = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsUrlExist));
+            }
+        }
+
+        public bool IsUrlExist
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(_websiteUrl);
+            }
+        }
+
         #endregion
 
         private readonly CurseforgeAddonInfo _modInfo;
@@ -475,7 +495,7 @@ namespace Lexplosion.Logic.Management.Instances
                                                 Description = addon.summary,
                                                 Name = addon.name,
                                                 Author = addon.GetAuthorName,
-                                                WebsiteUrl = addon.links.websiteUrl,
+                                                WebsiteUrl = addon.links?.websiteUrl,
                                                 DownloadCount = (int)addon.downloadCount,
                                                 LastUpdated = DateTime.Parse(addon.dateModified).ToString("dd MMM yyyy")
                                             };
@@ -630,8 +650,7 @@ namespace Lexplosion.Logic.Management.Instances
                                     Description = addon.summary,
                                     Name = addon.name,
                                     Version = "",
-                                    WebsiteUrl = addon.links?.websiteUrl,
-                                    IsUrlExist = (addon.links?.websiteUrl != null)
+                                    WebsiteUrl = addon.links?.websiteUrl
                                 };
 
                                 // проверяем наличие обновлений для мода
@@ -877,8 +896,7 @@ namespace Lexplosion.Logic.Management.Instances
                                     Description = addon.summary,
                                     Name = addon.name,
                                     Version = "",
-                                    WebsiteUrl = addon.links?.websiteUrl,
-                                    IsUrlExist = (addon.links?.websiteUrl != null)
+                                    WebsiteUrl = addon.links?.websiteUrl
                                 };
 
                                 // проверяем наличие обновлений для ресурпака
@@ -1043,8 +1061,7 @@ namespace Lexplosion.Logic.Management.Instances
                                     Description = addon.summary,
                                     Name = addon.name,
                                     Version = "",
-                                    WebsiteUrl = addon.links?.websiteUrl,
-                                    IsUrlExist = (addon.links?.websiteUrl != null)
+                                    WebsiteUrl = addon.links?.websiteUrl
                                 };
 
                                 // проверяем наличие обновлений для карты
