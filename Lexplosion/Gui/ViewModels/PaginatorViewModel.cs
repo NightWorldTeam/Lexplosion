@@ -71,7 +71,7 @@ namespace Lexplosion.Gui.ViewModels
             get => _pageIndex; set
             {
                 _pageIndex = value;
-                PageChanged?.Invoke(string.Empty, true);
+                PageChanged?.Invoke(null, true);
                 OnPropertyChanged();
             }
         }

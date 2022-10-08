@@ -23,6 +23,7 @@ namespace Lexplosion.Controls
         private TextBox _textBox;
         private Button _searchButton;
 
+        private string _confirmedText = String.Empty;
 
         #region Dependency Properties fields
 
@@ -34,7 +35,7 @@ namespace Lexplosion.Controls
         #endregion Dependency Properties fields
 
 
-        #region setters / getters
+        #region Setters / Getters
 
 
         public Action<string, bool> SearchAction
@@ -85,6 +86,7 @@ namespace Lexplosion.Controls
             if (e.Key != Key.Enter) return;
 
             e.Handled = true;
+            _confirmedText = _textBox.Text;
             Search();
 
             base.OnKeyDown(e);
@@ -98,13 +100,15 @@ namespace Lexplosion.Controls
 
         private void Search()
         {
-            SearchAction?.Invoke(_textBox.Text, false);
+            SearchAction?.Invoke(_confirmedText, false);
         }
 
         private void SearchButtonClicked(object sender, RoutedEventArgs e)
         {
             if (sender == null)
                 return;
+
+            _confirmedText = _textBox.Text;
 
             Search();
         }

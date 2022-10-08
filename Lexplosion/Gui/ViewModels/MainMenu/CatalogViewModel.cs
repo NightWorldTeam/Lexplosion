@@ -233,10 +233,15 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private void InstancesPageLoading(string searchText = "", bool isPaginatorInvoke = false)
         {
-            if (!isPaginatorInvoke && searchText == _previousSearch && searchText != null)
+            if (!isPaginatorInvoke && searchText == _previousSearch)
             {
                 IsLoaded = true;
                 return;
+            }
+
+            if (!isPaginatorInvoke && PaginatorVM.PageIndex > 1) 
+            {
+                PaginatorVM.PageIndex = 1;
             }
 
             IsLoaded = false;
@@ -249,13 +254,13 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
                     SelectedCurseforgeCategory.id,
-                    searchText == null ? "" : searchText,
+                    searchText == null ? _previousSearch : searchText,
                     SelectedCfSortBy,
                     gameVersion
                     );
 
 
-                _previousSearch = searchText == null ? "" : searchText;
+                _previousSearch = searchText == null ? _previousSearch : searchText;
 
                 if (instances.Count == _pageSize) IsPaginatorVisible = true;
                 else IsPaginatorVisible = false;
