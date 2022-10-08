@@ -20,7 +20,6 @@ namespace Lexplosion.Global
 
         public static readonly bool Offline = false;
 
-
         public static Settings GeneralSettings { get; private set; } // инициализируется в методе Main
 
         public static void InitSetting()

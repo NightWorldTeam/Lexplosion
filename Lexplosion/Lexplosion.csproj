@@ -308,6 +308,7 @@
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Tools\Immutable\ImmutableArray.cs" />
     <Compile Include="Tools\Immutable\ImmutableList.cs" />
+    <Compile Include="Tools\RuntimeTools.cs" />
     <Compile Include="Tools\TaskArgs.cs" />
     <Compile Include="Tools\RandomExtensions.cs" />
     <Compile Include="Tools\ResourceGetter.cs" />

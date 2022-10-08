@@ -35,8 +35,8 @@ namespace Lexplosion.Logic.Network
             try
             {
                 int version = Int32.Parse(HttpPost(LaunсherSettings.URL.LauncherParts + "launcherVersion.html"));
-                
-                if(version > LaunсherSettings.version)
+
+                if (version > LaunсherSettings.version)
                 {
                     return version;
                 }
@@ -44,7 +44,7 @@ namespace Lexplosion.Logic.Network
                 return -1;
 
             }
-            catch 
+            catch
             {
                 return -1;
             }

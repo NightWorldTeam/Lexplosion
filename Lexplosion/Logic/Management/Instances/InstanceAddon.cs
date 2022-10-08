@@ -17,7 +17,7 @@ using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    
+
     public class InstanceAddon : VMBase
     {
         private const string UnknownName = "Без названия";

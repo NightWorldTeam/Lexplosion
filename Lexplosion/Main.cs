@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Windows;
 using System.Threading;
 using System.IO.Compression;
-using System.Runtime.CompilerServices;
 using Hardcodet.Wpf.TaskbarNotification;
 using Lexplosion.Properties;
 using Lexplosion.Global;
@@ -25,7 +24,7 @@ using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion
 {
-    static class Runtime
+    static partial class Runtime
     {
         private static App app = new App();
         private static SplashWindow _splashWindow;
@@ -438,9 +437,6 @@ namespace Lexplosion
             ExitEvent?.Invoke();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void TaskRun(ThreadStart threadFunc) => new Thread(threadFunc).Start();
-
         public static void ShowMainWindow()
         {
             lock (locker)
@@ -478,22 +474,6 @@ namespace Lexplosion
                     app.MainWindow = null;
                 }
             });
-        }
-
-        [Conditional("DEBUG")]
-        public static void DebugWrite<T>(T line)
-        {
-#if DEBUG
-            System.Console.WriteLine(line);
-#endif
-        }
-
-        [Conditional("DEBUG")]
-        public static void DebugWrite()
-        {
-#if DEBUG
-            System.Console.WriteLine();
-#endif
         }
     }
 }
