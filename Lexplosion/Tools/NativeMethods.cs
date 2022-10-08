@@ -52,5 +52,27 @@ namespace Lexplosion.Tools
             GetWindowRect(handle, out rect);
             return new int[] { rect.Left, rect.Top, rect.Right, rect.Bottom };
         }
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
+
+        /// <summary>
+        /// Возвращает количество ОЗУ на устройстве в мегабайтах.
+        /// </summary>
+        public static long GetRamCount()
+        {
+            try
+            {
+                long memKb;
+                GetPhysicallyInstalledSystemMemory(out memKb);
+
+                return memKb / 1024;
+            }
+            catch
+            {
+                return 1024;
+            }
+        }
     }
 }

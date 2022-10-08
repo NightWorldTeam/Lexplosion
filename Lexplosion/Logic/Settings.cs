@@ -1,7 +1,8 @@
-﻿using Lexplosion.Global;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Lexplosion.Global;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic
 {
@@ -71,12 +72,13 @@ namespace Lexplosion.Logic
 
         public static Settings GetDefault()
         {
+            uint xmx = Environment.Is64BitOperatingSystem ? (uint)(NativeMethods.GetRamCount() / 2) : (uint)1024;
             return new Settings
             {
                 JavaPath = "",
                 CustomJava = false,
                 GamePath = LaunсherSettings.gamePath,
-                Xmx = 512,
+                Xmx = xmx,
                 Xms = 256,
                 WindowWidth = 854,
                 WindowHeight = 480,
