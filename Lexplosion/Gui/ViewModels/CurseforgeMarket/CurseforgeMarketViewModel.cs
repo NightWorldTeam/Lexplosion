@@ -4,6 +4,7 @@ using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
@@ -17,7 +18,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private readonly BaseInstanceData _baseInstanceData;
 
         private int _pageSize = 20;
-        private string _previousSearch = string.Empty;
+        private string _previousSearch = null;
+        private bool _isInit = true;
 
         public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, ObservableCollection<InstanceAddon> installedAddons)
         {
@@ -104,7 +106,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                 OnPropertyChanged();
                 if (!_selectedCategory.HasSubCategories)
                     SubCategorySelected = null;
-                SearchMethod?.Invoke(null, false);
+                if (!_isInit)
+                {
+                    SearchMethod?.Invoke(null, false);
+                }
             }
         }
 
@@ -115,7 +120,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 _subCategorySelected = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke(null, false);
+                if (!_isInit)
+                {
+                    SearchMethod?.Invoke(null, false);
+                }
             }
         }
 
@@ -219,6 +227,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
                     SelectedCategory = CfCategories[0];
                     InstancePageLoading();
+                    _isInit = false;
                 });
             });
         }
@@ -300,8 +309,6 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private async void InstancePageLoading(string searchText = "", bool isPaginator = false)
         {
             // запускаем заставку загрузки
-
-
             if (!isPaginator && searchText == _previousSearch && searchText != null)
             {
                 IsLoaded = true;
@@ -310,31 +317,38 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             IsLoaded = false;
 
-            var instances = await Task.Run(() => InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1,
-                (AddonType)(int)_projectType, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText == null ? "" : searchText)
-            );
-
-            _previousSearch = searchText == null ? "" : searchText;
-
-            IsPaginatorVisible = instances.Count == _pageSize;
-
-            // если аддоны не найдены
-            if (instances.Count == 0)
+            Lexplosion.Runtime.TaskRun(() => 
             {
-                InstanceAddons.Clear();
-                IsEmptyList = true;
-            }
-            else
-            {
-                IsEmptyList = !IsEmptyList;
-                InstanceAddons.Clear();
+                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1,
+                    (AddonType)(int)_projectType, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText == null ? "" : searchText
+                    );
 
-                foreach (var instance in instances)
-                {
-                    InstanceAddons.Add(instance);
-                }
-            }
-            IsLoaded = true;
+                App.Current.Dispatcher.Invoke(() => 
+                { 
+                    _previousSearch = searchText == null ? "" : searchText;
+
+                    IsPaginatorVisible = instances.Count == _pageSize;
+
+                    // если аддоны не найдены
+                    if (instances.Count == 0)
+                    {
+                        InstanceAddons.Clear();
+                        IsEmptyList = true;
+                    }
+                    else
+                    {
+                        IsEmptyList = !IsEmptyList;
+                        InstanceAddons.Clear();
+
+                        foreach (var instance in instances)
+                        {
+                            InstanceAddons.Add(instance);
+                        }
+                    }
+
+                    IsLoaded = true;
+                });
+            });
         }
 
         #endregion Private Methods   

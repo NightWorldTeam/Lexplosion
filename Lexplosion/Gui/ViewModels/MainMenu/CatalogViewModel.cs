@@ -13,6 +13,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private const int _pageSize = 10;
         private readonly MainViewModel _mainViewModel;
         private string _previousSearch = null;
+        private bool _isInit = true;
 
         #region Properties
 
@@ -50,7 +51,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedInstanceSource = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke(null, false);
+                if (!_isInit) SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -90,7 +91,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedCurseforgeCategory = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke(null, false);
+                if (!_isInit) SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -105,7 +106,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 _selectedCfSortByString = value;
                 OnPropertyChanged();
                 SelectedCfSortBy = (CfSortField)CfSortToString.IndexOf(value) + 1;
-                SearchMethod?.Invoke(null, false);
+                if (!_isInit) SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -117,7 +118,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 _selectedVersionIndex = value;
                 OnPropertyChanged();
-                SearchMethod?.Invoke(null, false);
+                if (!_isInit) SearchMethod?.Invoke(null, false);
             }
         }
 
@@ -202,6 +203,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             {
                 Categories = PrepareCategories();
                 InstancesPageLoading();
+                _isInit = false;
             });
         }
 
