@@ -85,7 +85,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
             _instanceForm.Client.StateChanged += OnInstanceStateChanged;
 
-            ObservableCollectionExtensions.ObservableColletionSort(_settingsTabs);
+            _settingsTabs.ObservableColletionSort<Tab<VMBase>>();
             SelectedTab = Tabs[selectedTab];
         }
 

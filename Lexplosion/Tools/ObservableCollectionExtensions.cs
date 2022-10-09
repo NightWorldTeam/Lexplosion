@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 
 namespace Lexplosion.Tools
 {
-    public class ObservableCollectionExtensions
+    public static class ObservableCollectionExtensions
     {
-        public static void ObservableColletionSort<T>(ObservableCollection<T> colletion)
+        public static void ObservableColletionSort<T>(this ObservableCollection<T> colletion)
         {
             List<T> list = new List<T>(colletion);
 

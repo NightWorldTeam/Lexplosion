@@ -298,12 +298,10 @@
     <Compile Include="Logic\Network\WebSocketServer.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
     <Compile Include="Tools\EnumerateExtension.cs" />
-    <Compile Include="Tools\ExtendedEventHandler.cs" />
     <Compile Include="Tools\ImageTools.cs" />
     <Compile Include="Tools\MouseHelper.cs" />
     <Compile Include="Tools\NativeMethods.cs" />
     <Compile Include="Tools\ObservableCollectionExtensions.cs" />
-    <Compile Include="Tools\ObservableDelegate.cs" />
     <Compile Include="Tools\Pointer.cs" />
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Tools\Immutable\ImmutableArray.cs" />
