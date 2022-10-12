@@ -415,7 +415,7 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
-                if (!UserData.Offline)
+                if (ToServer.ServerIsOnline())
                 {
                     return Update(progressHandler, fileDownloadHandler, downloadStarted, null, (_settings.AutoUpdate == false));
                 }
@@ -423,12 +423,35 @@ namespace Lexplosion.Logic.Management
                 {
                     VersionManifest files = DataFilesManager.GetManifest(_instanceId, true);
 
-                    if (files != null)
+                    if (files?.version != null && files.libraries != null)
                     {
+                        if (_settings.CustomJava == false)
+                        {
+                            using (JavaChecker javaCheck = new JavaChecker(files.version.releaseIndex, _updateCancelToken, true))
+                            {
+                                JavaVersion javaInfo = javaCheck.GetJavaInfo();
+                                if (javaInfo?.JavaName == null || javaInfo.ExecutableFile == null)
+                                {
+                                    return new InitData
+                                    {
+                                        InitResult = InstanceInit.JavaDownloadError
+                                    };
+                                }
+
+                                _javaPath = WithDirectory.DirectoryPath + "/java/" + javaInfo.JavaName + javaInfo.ExecutableFile;
+                            }
+                        }
+                        else
+                        {
+                            _javaPath = _settings.JavaPath;
+                        }
+
                         data = new InitData
                         {
                             VersionFile = files.version,
-                            Libraries = files.libraries
+                            Libraries = files.libraries,
+                            UpdatesAvailable = false,
+                            InitResult = InstanceInit.Successful
                         };
                     }
                     else

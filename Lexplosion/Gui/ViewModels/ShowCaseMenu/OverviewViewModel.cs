@@ -92,7 +92,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region Private Methods
         private double CalcCategoryBorderHeight()
         {
-            if (Model.InstanceData.Categories == null || Model.InstanceData.Categories.Count == 0)
+            if (Model.InstanceData?.Categories == null || Model.InstanceData.Categories.Count == 0)
             {
                 IsCategoriesExist = false;
                 return 0.0;

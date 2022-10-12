@@ -72,6 +72,11 @@ namespace Lexplosion.Logic.Network
 
         }
 
+        public static bool ServerIsOnline()
+        {
+            return HttpPost(LaunсherSettings.URL.Base) != null;
+        }
+
         public static List<string> GetModloadersList(string gameVersion, ModloaderType modloaderType)
         {
             string modloader;

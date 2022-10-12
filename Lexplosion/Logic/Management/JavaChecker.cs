@@ -28,10 +28,31 @@ namespace Lexplosion.Logic.Management
         private JavaVersionsFile _versionsFile;
         private CancellationToken _cancelToken;
 
-        public JavaChecker(long releaseIndex, CancellationToken cancelToken)
+        public JavaChecker(long releaseIndex, CancellationToken cancelToken, bool isReleased = false)
         {
             _releaseIndex = releaseIndex;
             _cancelToken = cancelToken;
+            _semIsReleased = isReleased;
+        }
+
+        public JavaVersion GetJavaInfo()
+        {
+            // получаем файл с версиями джавы
+            _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
+
+            JavaVersion javaInfo = null;
+
+            //ищем нужную версию джавы
+            foreach (JavaVersion javaVer in _versionsFile.Values)
+            {
+                if (javaVer.LastReleaseIndex >= _releaseIndex)
+                {
+                    javaInfo = javaVer;
+                    break;
+                }
+            }
+
+            return javaInfo;
         }
 
         public bool Check(out CheckResult result, out JavaVersion java)
@@ -40,30 +61,20 @@ namespace Lexplosion.Logic.Management
 
             if (versions == null) //данные получены не были. пытаемся выехать на том, что есть на диске
             {
-                _versionsFile = DataFilesManager.GetFile<JavaVersionsFile>(WithDirectory.DirectoryPath + "/java/javaVersions.json");
-
-                //ищем нужную версию джавы
-                foreach (JavaVersion javaVer in _versionsFile.Values)
-                {
-                    if (javaVer.LastReleaseIndex >= _releaseIndex)
-                    {
-                        _thisJava = javaVer;
-                        break;
-                    }
-                }
+                _thisJava = GetJavaInfo();
 
                 if (_thisJava?.JavaName != null) //нашли
                 {
                     java = _thisJava;
-                    result = CheckResult.Successful;
-                    return false;
+                    result = CheckResult.Successful;   
                 }
                 else //не нашли
                 {
                     java = null;
                     result = CheckResult.DefinitionError;
-                    return false;
                 }
+
+                return false;
             }
 
             //данне с сервера нормально получили. ищем нужную дажву

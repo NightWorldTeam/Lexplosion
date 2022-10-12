@@ -54,11 +54,6 @@ namespace Lexplosion
             app.Run(_splashWindow);
         }
 
-        public static void TrayMenuElementClickExecute()
-        {
-            TrayMenuElementClicked?.Invoke();
-        }
-
         private static void InitializedSystem()
         {
             //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
@@ -144,15 +139,6 @@ namespace Lexplosion
                 {
                     ShowMainWindow();
                 }
-
-                //if (UserData.GeneralSettings.ShowConsole == true)
-                //{
-                //    app.Dispatcher.Invoke(() =>
-                //    {
-                //        ConsoleList[str].Exit(null, null);
-                //        ConsoleList.Remove(str);
-                //    });
-                //}
             };
 
             Thread.Sleep(800);
@@ -250,6 +236,7 @@ namespace Lexplosion
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
             Runtime.DebugWrite("DLL LOAD " + string.Join(", ", args.Name));
+
             if (args.Name.Contains("Newtonsoft.Json"))
             {
                 return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson_zip));
@@ -336,6 +323,11 @@ namespace Lexplosion
             {
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
+        }
+
+        public static void TrayMenuElementClickExecute()
+        {
+            TrayMenuElementClicked?.Invoke();
         }
 
         private static int importantThreads = 0;

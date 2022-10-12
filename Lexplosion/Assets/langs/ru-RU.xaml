@@ -140,7 +140,7 @@
     <s:String x:Key="instanceLoading">Идёт скачивание... Этап</s:String>
 
     <s:String x:Key="runSuccessfulNotification">Игра успешно запущена.</s:String>
-    <s:String x:Key="runUnsuccessfulNotification">&quot;Не удалось запустить игру.</s:String>
+    <s:String x:Key="runUnsuccessfulNotification">Не удалось запустить игру.</s:String>
     <s:String x:Key="loadingProgressTip">Скачивание завершено на</s:String>
 
     <!--  Upper Button  -->
