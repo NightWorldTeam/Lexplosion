@@ -36,7 +36,7 @@
     <!--  settings  -->
     <s:String x:Key="generalTipText">Общие настройки. Настройки для конкретного клиента можно изенить на его странице</s:String>
 
-    <s:String x:Key="account">Учётая запись</s:String>
+    <s:String x:Key="account">Учётная запись</s:String>
     <s:String x:Key="about">О лаунчере</s:String>
 
     <s:String x:Key="width">Ширина</s:String>

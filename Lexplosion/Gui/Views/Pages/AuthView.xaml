@@ -308,52 +308,16 @@
                                 Background="{DynamicResource SepSolidColorBrush}"
                                 CornerRadius="5">
                                 <StackPanel>
-                                    <StackPanel x:Name="HeaderStackPanel">
-                                        <Grid x:Name="HeaderGrid" Margin="5,0,0,0">
-
-                                            <!--  Skin Ellipse  -->
-                                            <!--<Ellipse
-                                                Width="30"
-                                                Height="30"
-                                                Margin="0,5,0,0"
-                                                HorizontalAlignment="Center"
-                                                Fill="#167FCC" />-->
-
-                                            <!--  Logout  -->
-                                            <Border
-                                                Margin="0,5,5,0"
-                                                Padding="5"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Center"
-                                                Background="Transparent"
-                                                CornerRadius="5">
-                                                <Viewbox
-                                                    Width="20"
-                                                    Height="20"
-                                                    Stretch="Fill">
-                                                    <Path
-                                                        Data="M9 42q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h14.55v3H9v30h14.55v3Zm24.3-9.25-2.15-2.15 5.1-5.1h-17.5v-3h17.4l-5.1-5.1 2.15-2.15 8.8 8.8Z"
-                                                        Fill="White"
-                                                        Stroke="White"
-                                                        StrokeThickness="1" />
-                                                </Viewbox>
-                                            </Border>
-
-                                            <!--
-                                                If Text.Lenght == 8 -> to HeaderGrid *and* Margin="5,5,0,0"
-                                                Else Text.Lenght > 8 -> to HeaderStackPanel *and* Margin="5,10,0,0"
-                                            -->
-                                            <TextBlock
+                                    <StackPanel Height="30" x:Name="HeaderStackPanel">
+                                        <TextBlock
                                                 x:Name="NicknameTextBlock"
-                                                Margin="5,5,0,0"
-                                                HorizontalAlignment="Left"
+                                                Margin="5,10,0,0"
+                                                HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
                                                 FontFamily="{DynamicResource FuturaBookC}"
                                                 FontSize="16"
                                                 Foreground="White"
                                                 Text="{Binding Login}" />
-                                        </Grid>
-
                                     </StackPanel>
 
                                     <!--  Buttons  -->

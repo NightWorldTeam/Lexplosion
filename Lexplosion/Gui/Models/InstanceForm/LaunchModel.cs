@@ -81,6 +81,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     ResourceGetter.GetString("instanceName") + " : " + _formModel.InstanceClient.Name,
                     Controls.ToastMessageState.Error
                 );
+
+                _mainViewModel.IsInstanceRunning = false;
+                if (_formModel.DownloadModel.IsDownloadInProgress)
+                    _formModel.DownloadModel.IsDownloadInProgress = false;
+
+                _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
+                _formModel.UpperButton.ChangeFuncPlay();
             }
             _formModel.OverviewField = _formViewModel.Model.InstanceClient.Summary;
             _formModel.UpdateLowerButton();

@@ -15,7 +15,7 @@
     </UserControl.Resources>
     <Grid Margin="0,0,0,0">
 
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
 
             <Grid ShowGridLines="False">
 
@@ -258,9 +258,31 @@
                     </Grid>
                 </Grid>
 
-                <StackPanel Grid.Row="5" Grid.Column="1">
-                    <CheckBox Margin="0,0,0,2" Content="Обновлять автоматически" />
+                <!--  CheckBoxes  -->
+                <StackPanel
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Margin="0,0,0,15"
+                    Orientation="Horizontal">
+                    <StackPanel Margin="5,0,0,0" HorizontalAlignment="Left">
+
+                        <CheckBox
+                            Margin="0,0,0,5"
+                            Content="{DynamicResource autoUpdateInstance}"
+                            IsChecked="{Binding InstanceSettings.IsAutoUpdate}" />
+
+                        <CheckBox
+                            Margin="0,0,0,5"
+                            Content="{DynamicResource hideLauncher}"
+                            IsChecked="{Binding InstanceSettings.IsHiddenMode}" />
+
+                        <CheckBox
+                            Margin="0,0,0,5"
+                            Content="{DynamicResource showConsole}"
+                            IsChecked="{Binding InstanceSettings.IsShowConsole}" />
+                    </StackPanel>
                 </StackPanel>
+
             </Grid>
         </ScrollViewer>
     </Grid>
