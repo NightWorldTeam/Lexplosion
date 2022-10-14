@@ -52,6 +52,11 @@ namespace Lexplosion.Logic.Management
 
         private CancellationToken _updateCancelToken;
 
+        public Settings ClientSettings
+        {
+            get => _settings;
+        }
+
         public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type, CancellationToken updateCancelToken)
         {
             if (_classInstance == null)

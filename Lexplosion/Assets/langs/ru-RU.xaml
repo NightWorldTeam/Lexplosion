@@ -47,6 +47,7 @@
     <s:String x:Key="defaultJavaPath">Стандартное</s:String>
     <s:String x:Key="review">Обзор</s:String>
     <s:String x:Key="autoUpdateInstance">Обновлять сборки автоматически</s:String>
+    <s:String x:Key="autoUpdateClient">Обновлять автоматически</s:String>
     <s:String x:Key="hideLauncher">Скрывать лаунчер при запуске игры</s:String>
     <s:String x:Key="showConsole">Показывать консоль</s:String>
     <s:String x:Key="reboot">Сбросить</s:String>

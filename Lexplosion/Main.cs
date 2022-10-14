@@ -117,7 +117,7 @@ namespace Lexplosion
             // подписываемся на запуск игры до запуска окна
             LaunchGame.GameStartEvent += (LaunchGame gameManager) =>
             {
-                if (UserData.GeneralSettings.ShowConsole == true)
+                if (gameManager.ClientSettings.ShowConsole == true)
                 {
                     app.Dispatcher.Invoke(() =>
                     {
@@ -135,7 +135,7 @@ namespace Lexplosion
             LaunchGame.GameStopEvent += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
-                if (UserData.GeneralSettings.HiddenMode == true)
+                if (gameManager.ClientSettings.HiddenMode == true)
                 {
                     ShowMainWindow();
                 }
