@@ -241,7 +241,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 return;
             }
 
-            if (!isPaginatorInvoke && PaginatorVM.PageIndex > 1) 
+            if (!isPaginatorInvoke && PaginatorVM.PageIndex > 1)
             {
                 PaginatorVM.PageIndex = 1;
             }

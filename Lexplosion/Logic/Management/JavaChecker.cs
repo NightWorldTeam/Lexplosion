@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Management
                 if (_thisJava?.JavaName != null) //нашли
                 {
                     java = _thisJava;
-                    result = CheckResult.Successful;   
+                    result = CheckResult.Successful;
                 }
                 else //не нашли
                 {

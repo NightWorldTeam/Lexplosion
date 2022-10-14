@@ -4,8 +4,6 @@ using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 {
@@ -317,14 +315,14 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             IsLoaded = false;
 
-            Lexplosion.Runtime.TaskRun(() => 
+            Lexplosion.Runtime.TaskRun(() =>
             {
                 var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1,
                     (AddonType)(int)_projectType, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText == null ? "" : searchText
                     );
 
-                App.Current.Dispatcher.Invoke(() => 
-                { 
+                App.Current.Dispatcher.Invoke(() =>
+                {
                     _previousSearch = searchText == null ? "" : searchText;
 
                     IsPaginatorVisible = instances.Count == _pageSize;
