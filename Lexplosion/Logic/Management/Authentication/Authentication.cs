@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Management.Authentication
 
             if (result == AuthCode.Successfully)
             {
-                UserData.SetUser(user);
+                GlobalData.SetUser(user);
 
                 if (saveUser)
                 {

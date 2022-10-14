@@ -4,7 +4,7 @@ using Lexplosion.Logic.FileSystem;
 
 namespace Lexplosion.Global
 {
-    static class UserData
+    static class GlobalData
     {
         private static User _user;
 

@@ -313,7 +313,7 @@ namespace Lexplosion.Gui.ViewModels
                     {
                         CommandReceiver.MicrosoftAuthPassed -= PreformAuthMicrosoft;
 
-                        _mainViewModel.UserProfile.Nickname = UserData.User.Login;
+                        _mainViewModel.UserProfile.Nickname = GlobalData.User.Login;
                         _mainViewModel.UserProfile.IsAuthorized = true;
                         _mainViewModel.UserProfile.IsNightWorldAccount = _accountType == AccountType.NightWorld;
 

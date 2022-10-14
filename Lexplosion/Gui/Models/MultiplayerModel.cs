@@ -35,11 +35,11 @@ namespace Lexplosion.Gui.Models
 
         public bool DirectConnetion
         {
-            get => UserData.GeneralSettings.OnlineGameDirectConnection; set
+            get => GlobalData.GeneralSettings.OnlineGameDirectConnection; set
             {
-                UserData.GeneralSettings.OnlineGameDirectConnection = value;
+                GlobalData.GeneralSettings.OnlineGameDirectConnection = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 

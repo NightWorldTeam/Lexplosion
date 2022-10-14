@@ -157,17 +157,17 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("general"),
-                    Content =  UserData.User.AccountType == AccountType.NightWorld ? _generalMultiplayerViewModel : curtains
+                    Content =  GlobalData.User.AccountType == AccountType.NightWorld ? _generalMultiplayerViewModel : curtains
                 },
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("friends"),
-                    Content = UserData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
+                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
                 },
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("channels"),
-                    Content = UserData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
+                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
                 }
             };
         }

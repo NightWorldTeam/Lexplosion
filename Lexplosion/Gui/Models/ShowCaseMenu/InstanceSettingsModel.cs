@@ -96,28 +96,6 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             }
         }
 
-        public bool? IsHiddenMode
-        {
-            get => InstanceSettings.HiddenMode; set 
-            {
-                InstanceSettings.HiddenMode = value;
-                _instanceSettingsCopy.HiddenMode = value;
-                OnPropertyChanged();
-                _instanceClient.SaveSettings(_instanceSettingsCopy);
-            }
-        }
-
-        public bool? IsShowConsole
-        {
-            get => InstanceSettings.ShowConsole; set
-            {
-                InstanceSettings.ShowConsole = value;
-                _instanceSettingsCopy.ShowConsole = value;
-                OnPropertyChanged();
-                _instanceClient.SaveSettings(_instanceSettingsCopy);
-            }
-        }
-
         public string JavaPath
         {
             get => InstanceSettings.JavaPath; set
@@ -151,7 +129,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             _instanceClient = instanceClient;
             _instanceSettings = instanceClient.GetSettings();
             _instanceSettingsCopy = _instanceSettings.Copy();
-            InstanceSettings.Merge(UserData.GeneralSettings, true);
+            InstanceSettings.Merge(GlobalData.GeneralSettings, true);
         }
     }
 }

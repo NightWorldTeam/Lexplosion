@@ -67,7 +67,7 @@ namespace Lexplosion.Gui.ViewModels
                 ActivityStatus newStatus;
 
                 Enum.TryParse((string)obj, out newStatus);
-                Global.UserData.User.ChangeBaseStatus(newStatus);
+                Global.GlobalData.User.ChangeBaseStatus(newStatus);
             });
         }
 

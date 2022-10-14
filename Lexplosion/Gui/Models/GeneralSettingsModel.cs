@@ -7,31 +7,31 @@ namespace Lexplosion.Gui.Models
     {
         public string SystemPath
         {
-            get => UserData.GeneralSettings.GamePath.Replace(@"\", "/"); set
+            get => GlobalData.GeneralSettings.GamePath.Replace(@"\", "/"); set
             {
-                UserData.GeneralSettings.GamePath = value.Replace(@"\", "/");
+                GlobalData.GeneralSettings.GamePath = value.Replace(@"\", "/");
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public uint WindowHeight
         {
-            get => (uint)UserData.GeneralSettings.WindowHeight; set
+            get => (uint)GlobalData.GeneralSettings.WindowHeight; set
             {
-                UserData.GeneralSettings.WindowHeight = value;
+                GlobalData.GeneralSettings.WindowHeight = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public uint WindowWidth
         {
-            get => (uint)UserData.GeneralSettings.WindowWidth; set
+            get => (uint)GlobalData.GeneralSettings.WindowWidth; set
             {
-                UserData.GeneralSettings.WindowWidth = value;
+                GlobalData.GeneralSettings.WindowWidth = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
@@ -48,87 +48,87 @@ namespace Lexplosion.Gui.Models
 
         public uint Xmx
         {
-            get => (uint)UserData.GeneralSettings.Xmx; set
+            get => (uint)GlobalData.GeneralSettings.Xmx; set
             {
-                UserData.GeneralSettings.Xmx = value;
+                GlobalData.GeneralSettings.Xmx = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public uint Xms
         {
-            get => (uint)UserData.GeneralSettings.Xms; set
+            get => (uint)GlobalData.GeneralSettings.Xms; set
             {
-                UserData.GeneralSettings.Xms = value;
+                GlobalData.GeneralSettings.Xms = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public string GameArgs
         {
-            get => UserData.GeneralSettings.GameArgs; set
+            get => GlobalData.GeneralSettings.GameArgs; set
             {
-                UserData.GeneralSettings.GameArgs = value;
+                GlobalData.GeneralSettings.GameArgs = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public bool? IsShowConsole
         {
-            get => UserData.GeneralSettings.ShowConsole; set
+            get => GlobalData.GeneralSettings.ShowConsole; set
             {
-                UserData.GeneralSettings.ShowConsole = value;
+                GlobalData.GeneralSettings.ShowConsole = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public bool? IsHiddenMode
         {
-            get => UserData.GeneralSettings.HiddenMode; set
+            get => GlobalData.GeneralSettings.HiddenMode; set
             {
-                UserData.GeneralSettings.HiddenMode = value;
+                GlobalData.GeneralSettings.HiddenMode = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public bool? IsAutoUpdate
         {
-            get => UserData.GeneralSettings.AutoUpdate; set
+            get => GlobalData.GeneralSettings.AutoUpdate; set
             {
-                UserData.GeneralSettings.AutoUpdate = value;
+                GlobalData.GeneralSettings.AutoUpdate = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public string JavaPath
         {
-            get => UserData.GeneralSettings.JavaPath; set
+            get => GlobalData.GeneralSettings.JavaPath; set
             {
-                UserData.GeneralSettings.JavaPath = value;
+                GlobalData.GeneralSettings.JavaPath = value;
                 OnPropertyChanged();
 
                 if (value.Length == 0)
-                    UserData.GeneralSettings.CustomJava = false;
+                    GlobalData.GeneralSettings.CustomJava = false;
                 else
-                    UserData.GeneralSettings.CustomJava = true;
+                    GlobalData.GeneralSettings.CustomJava = true;
 
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
 
         public string JVMArgs
         {
-            get => UserData.GeneralSettings.GameArgs; set
+            get => GlobalData.GeneralSettings.GameArgs; set
             {
-                UserData.GeneralSettings.GameArgs = value;
+                GlobalData.GeneralSettings.GameArgs = value;
                 OnPropertyChanged();
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
         }
     }

@@ -259,7 +259,7 @@ namespace Lexplosion.Logic.Management.Instances
             var client = new InstanceClient(name, type, gameVersion)
             {
                 InLibrary = true,
-                Author = UserData.User.Login,
+                Author = GlobalData.User.Login,
                 Description = NoDescription,
                 Summary = NoDescription
             };
@@ -634,7 +634,7 @@ namespace Lexplosion.Logic.Management.Instances
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
-            instanceSettings.Merge(UserData.GeneralSettings, true);
+            instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStartedEvent, instanceVersion);
@@ -664,7 +664,7 @@ namespace Lexplosion.Logic.Management.Instances
             ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
-            instanceSettings.Merge(UserData.GeneralSettings, true);
+            instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             _gameManager = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
             InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStartedEvent);
@@ -678,8 +678,8 @@ namespace Lexplosion.Logic.Management.Instances
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
                 ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
 
-                _gameManager.Run(data, ComplitedLaunch, GameExited, Name, UserData.User.AccountType == AccountType.NightWorld);
-                DataFilesManager.SaveSettings(UserData.GeneralSettings);
+                _gameManager.Run(data, ComplitedLaunch, GameExited, Name, GlobalData.User.AccountType == AccountType.NightWorld);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                 // TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
             }
             else

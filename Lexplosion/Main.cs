@@ -89,8 +89,8 @@ namespace Lexplosion
             StylesInit();
 
             // инициализация
-            UserData.InitSetting();
-            WithDirectory.Create(UserData.GeneralSettings.GamePath);
+            GlobalData.InitSetting();
+            WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
 
             int version = ToServer.CheckLauncherUpdates();
             if (version != -1)
@@ -108,7 +108,7 @@ namespace Lexplosion
             LaunchGame.GameStartedEvent += delegate () //подписываемся на эвент запуска игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
-                if (UserData.GeneralSettings.HiddenMode == true)
+                if (GlobalData.GeneralSettings.HiddenMode == true)
                 {
                     CloseMainWindow();
                 }
@@ -170,7 +170,7 @@ namespace Lexplosion
             try
             {
                 int upgradeToolVersion = Int32.Parse(ToServer.HttpPost(LaunсherSettings.URL.LauncherParts + "upgradeToolVersion.html"));
-                string gamePath = UserData.GeneralSettings.GamePath;
+                string gamePath = GlobalData.GeneralSettings.GamePath;
 
                 // скачивание и проверка версии UpgradeTool.exe
                 using (WebClient wc = new WebClient())

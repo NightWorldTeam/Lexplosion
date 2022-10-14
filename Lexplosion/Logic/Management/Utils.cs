@@ -227,7 +227,7 @@ namespace Lexplosion.Logic.Management
                 process.StartInfo.FileName = fileName;
                 process.StartInfo.Arguments = command;
                 process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.WorkingDirectory = UserData.GeneralSettings.GamePath;
+                process.StartInfo.WorkingDirectory = GlobalData.GeneralSettings.GamePath;
                 process.Start();
                 return process.WaitForExit(300000); // ждём 5 минут
             }

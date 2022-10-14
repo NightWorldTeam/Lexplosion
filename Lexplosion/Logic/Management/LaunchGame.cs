@@ -62,7 +62,7 @@ namespace Lexplosion.Logic.Management
             if (_classInstance == null)
                 _classInstance = this;
 
-            instanceSettings.Merge(UserData.GeneralSettings, true);
+            instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             _settings = instanceSettings;
             _instanceId = instanceId;
@@ -101,7 +101,7 @@ namespace Lexplosion.Logic.Management
 
             command = " -Djava.library.path=\"" + _settings.GamePath + "/natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.gameVersion) + "\" -cp ";
 
-            string accountType = UserData.User.AccountType.ToString();
+            string accountType = GlobalData.User.AccountType.ToString();
             foreach (string lib in data.Libraries.Keys)
             {
                 var activation = data.Libraries[lib].activationConditions;
@@ -121,11 +121,11 @@ namespace Lexplosion.Logic.Management
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-            command += data.VersionFile.mainClass + " --username " + UserData.User.Login + " --version " + data.VersionFile.gameVersion;
+            command += data.VersionFile.mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.gameVersion;
             command += " --gameDir \"" + _settings.GamePath + "/instances/" + _instanceId + "\"";
             command += " --assetsDir \"" + _settings.GamePath + "/assets" + "\"";
             command += " --assetIndex " + data.VersionFile.assetsVersion;
-            command += " --uuid " + UserData.User.UUID + " --accessToken " + UserData.User.AccessToken + " --userProperties [] --userType legacy ";
+            command += " --uuid " + GlobalData.User.UUID + " --accessToken " + GlobalData.User.AccessToken + " --userProperties [] --userType legacy ";
             command += data.VersionFile.arguments;
             command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
 
@@ -142,7 +142,7 @@ namespace Lexplosion.Logic.Management
             {
                 lock (loocker)
                 {
-                    gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", _settings.OnlineGameDirectConnection);
+                    gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, "194.61.2.176", _settings.OnlineGameDirectConnection);
                     removeImportantTaskMark = false;
                     Lexplosion.Runtime.AddImportantTask();
 
@@ -528,7 +528,7 @@ namespace Lexplosion.Logic.Management
                         }
                         catch { }
 
-                        _classInstance.gameGateway = new Gateway(UserData.User.UUID, UserData.User.SessionToken, "194.61.2.176", _classInstance._settings.OnlineGameDirectConnection);
+                        _classInstance.gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, "194.61.2.176", _classInstance._settings.OnlineGameDirectConnection);
                         _classInstance.gameGateway.Initialization(_classInstance.process.Id);
                     }
                 }
