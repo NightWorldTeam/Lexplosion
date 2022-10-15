@@ -466,6 +466,14 @@ namespace Lexplosion.Logic.Management.Instances
                             Value2 = DownloadAddonRes.IsCanselled
                         }, InstallAddonState.EndDownload);
                     }
+                    else
+                    {
+                        stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>()
+                        {
+                            Value1 = this,
+                            Value2 = ressult.Value2
+                        }, InstallAddonState.EndDownload);
+                    }             
 
                     return;
                 }
