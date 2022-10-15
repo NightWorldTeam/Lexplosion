@@ -297,6 +297,7 @@
     <Compile Include="Logic\Network\Values.cs" />
     <Compile Include="Logic\Network\WebSocketServer.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
+    <Compile Include="Tools\DynamicStateData.cs" />
     <Compile Include="Tools\EnumerateExtension.cs" />
     <Compile Include="Tools\ImageTools.cs" />
     <Compile Include="Tools\MouseHelper.cs" />

@@ -251,56 +251,60 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private void InstallAddon(InstanceAddon instanceAddon)
         {
-            DownloadAddonFiles.Add(new DownloadAddonFile(instanceAddon));
-            OnPropertyChanged(nameof(IsDownloadingSomething));
+            var stateData = new DynamicStateData<ValuePair<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
 
-            Lexplosion.Runtime.TaskRun(delegate
+            stateData.StateChanged += (arg, state) =>
             {
-                var result = instanceAddon.InstallLatestVersion(out Dictionary<string, ValuePair<InstanceAddon, DownloadAddonRes>> dependenciesResults);
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    if (result == DownloadAddonRes.Successful)
+                    InstanceAddon addonInstance = arg.Value1;
+                    if (state == InstanceAddon.InstallAddonState.StartDownload)
                     {
-                        _instanceAddons.Add(instanceAddon);
-                        MainViewModel.ShowToastMessage("Мод успешно установлен. Не за что.", "Название: " + instanceAddon.Name, TimeSpan.FromSeconds(5d));
-                        DownloadAddonFile.Remove(DownloadAddonFiles, instanceAddon);
-                        OnPropertyChanged(nameof(IsDownloadingSomething));
-                    }
-                    else if (result == DownloadAddonRes.IsCanselled)
-                    {
-                        MainViewModel.ShowToastMessage("Скачивание аддона было отменено.",
-                            "Название аддона: " + instanceAddon.Name, Controls.ToastMessageState.Notification);
-                        DownloadAddonFile.Remove(DownloadAddonFiles, instanceAddon);
+                        DownloadAddonFiles.Add(new DownloadAddonFile(addonInstance));
                         OnPropertyChanged(nameof(IsDownloadingSomething));
                     }
                     else
                     {
-                        MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод",
-                            "Название: " + instanceAddon.Name + ".\nОшибка " + result, Controls.ToastMessageState.Error);
-                        DownloadAddonFile.Remove(DownloadAddonFiles, instanceAddon);
-                        OnPropertyChanged(nameof(IsDownloadingSomething));
-                    }
-
-                    /* обработка установки зависимых модов */
-                    if (dependenciesResults != null)
-                    {
-                        foreach (string key in dependenciesResults.Keys)
+                        if (arg.Value2 == DownloadAddonRes.Successful)
                         {
-                            ValuePair<InstanceAddon, DownloadAddonRes> data = dependenciesResults[key];
-                            if (data.Value2 == DownloadAddonRes.Successful)
+                            string text, title;
+                            if (instanceAddon == addonInstance)
                             {
-                                if (data.Value1 != null) _instanceAddons.Add(data.Value1);
-                                MainViewModel.ShowToastMessage("Зависимый мод успешно установлен",
-                                    "Название: " + key + ".\nНеобходим для " + instanceAddon.Name);
+                                title = "Мод успешно установлен. Не за что";
+                                text = "Название: " + addonInstance.Name;
                             }
                             else
                             {
-                                MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод",
-                                    "Название: " + key + ".\nОшибка " + result + ".\nНеобходим для " + instanceAddon.Name, Controls.ToastMessageState.Error);
+                                title = "Необходимый мод успешно установлен";
+                                text = "Название: " + addonInstance.Name + ".\nНеобходим для " + instanceAddon.Name;
                             }
+
+                            _instanceAddons.Add(addonInstance);
+                            MainViewModel.ShowToastMessage(title, text, TimeSpan.FromSeconds(5d));
+                            DownloadAddonFile.Remove(DownloadAddonFiles, addonInstance);
+                            OnPropertyChanged(nameof(IsDownloadingSomething));
+                        }
+                        else if (arg.Value2 == DownloadAddonRes.IsCanselled)
+                        {
+                            MainViewModel.ShowToastMessage("Скачивание аддона было отменено",
+                                "Название аддона: " + addonInstance.Name, Controls.ToastMessageState.Notification);
+                            DownloadAddonFile.Remove(DownloadAddonFiles, addonInstance);
+                            OnPropertyChanged(nameof(IsDownloadingSomething));
+                        }
+                        else
+                        {
+                            MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод",
+                                "Название: " + addonInstance.Name + ".\nОшибка " + arg.Value2, Controls.ToastMessageState.Error);
+                            DownloadAddonFile.Remove(DownloadAddonFiles, addonInstance);
+                            OnPropertyChanged(nameof(IsDownloadingSomething));
                         }
                     }
                 });
+            };
+
+            Lexplosion.Runtime.TaskRun(delegate
+            {
+                instanceAddon.InstallLatestVersion(stateData.GetHandler);
             });
         }
 

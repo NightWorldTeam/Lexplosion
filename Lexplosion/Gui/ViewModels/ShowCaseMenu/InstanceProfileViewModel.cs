@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -143,6 +144,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => new RelayCommand(obj =>
             {
+                MainViewModel.ShowToastMessage("Всё прекрасно!", "Настройки сохранены! Ура-а-а!", TimeSpan.FromSeconds(5d));
                 CurrentInstanceClient.ChangeParameters(BaseInstanceData, LogoPath);
             });
         }
