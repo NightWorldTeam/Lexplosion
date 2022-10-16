@@ -18,7 +18,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         public ObservableCollection<Tab<FactoryDLCVM>> AddonTabs { get; set; } = new ObservableCollection<Tab<FactoryDLCVM>>();
 
         private FactoryDLCModel _currentAddon;
-        public FactoryDLCModel CurrentAddon
+        public FactoryDLCModel CurrentAddonModel
         {
             get => _currentAddon; set
             {
@@ -98,7 +98,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _uninstallAddonCommand ?? (new RelayCommand(obj =>
             {
                 var instanceAddon = (InstanceAddon)obj;
-                CurrentAddon.Uninstall(instanceAddon);
+                CurrentAddonModel.Uninstall(instanceAddon);
             }));
         }
 
@@ -108,7 +108,13 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _openMarket ?? (new RelayCommand(obj =>
             {
                 MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
-                MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(_mainViewModel, _instanceClient, ((FactoryDLCModel)obj).Type, CurrentAddon.InstalledAddons);
+                MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(
+                    _mainViewModel, 
+                    _instanceClient, 
+                    ((FactoryDLCModel)obj).Type,
+                    CurrentAddonModel.InstalledAddons,
+                    this
+                );
             }));
         }
 
@@ -139,15 +145,38 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
                 if (!IsVanillaGameType)
                 {
-                    _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), CfProjectType.Mods, ResourceGetter.GetString("noInstalledModification")));
+                    // моды
+                    _models.Add(
+                        new FactoryDLCModel(
+                            InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), 
+                            CfProjectType.Mods, 
+                            ResourceGetter.GetString("noInstalledModification")
+                            )
+                        );
+
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         AddonTabs.Add(new Tab<FactoryDLCVM>() { Header = ResourceGetter.GetString("mods"), Content = this });
                     });
                 }
 
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), CfProjectType.Resourcepacks, ResourceGetter.GetString("noInstalledResourcepacks")));
-                _models.Add(new FactoryDLCModel(InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData), CfProjectType.Maps, ResourceGetter.GetString("noInstalledMaps")));
+                // ресурспаки
+                _models.Add(
+                    new FactoryDLCModel(
+                        InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), 
+                        CfProjectType.Resourcepacks,
+                        ResourceGetter.GetString("noInstalledResourcepacks")
+                        )
+                    );
+
+                // карты
+                _models.Add(
+                    new FactoryDLCModel(
+                        InstanceAddon.GetInstalledWorlds(instanceClient.GetBaseData),
+                        CfProjectType.Maps,
+                        ResourceGetter.GetString("noInstalledMaps")
+                        )
+                    );
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
@@ -167,7 +196,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         #region Public & Protected Methods
 
 
-        public void ChangeCurrentAddonModel(int index) => CurrentAddon = _models[index];
+        public void ChangeCurrentAddonModel(int index) => CurrentAddonModel = _models[index];
 
         public string GetAddonsFolder() => _instanceClient.GetDirectoryPath();
 

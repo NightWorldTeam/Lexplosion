@@ -569,6 +569,14 @@
                     </StackPanel>
 
                     <ItemsControl ItemsSource="{Binding InstanceAddons}" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Margin="0,150,0,0"
+                        Foreground="White"
+                        VerticalAlignment="Center" FontSize="23"
+                        Opacity="0.8"
+                        Text="Ничего не найдено по вашему запросу."
+                        Visibility="{Binding IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
 
                     <customcontrols:Paginator
                         Margin="0,20,0,20"

@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
 using System;
@@ -14,12 +15,13 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private readonly CfProjectType _projectType;
         private readonly ObservableCollection<InstanceAddon> _instanceAddons;
         private readonly BaseInstanceData _baseInstanceData;
+        private readonly FactoryDLCVM _factoryDLCVM;
 
         private int _pageSize = 20;
         private string _previousSearch = null;
         private bool _isInit = true;
 
-        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, ObservableCollection<InstanceAddon> installedAddons)
+        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, ObservableCollection<InstanceAddon> installedAddons, FactoryDLCVM factoryDLCVM)
         {
             _mainViewModel = mainViewModel;
             _mainViewModel.UserProfile.IsShowInfoBar = false;
@@ -28,7 +30,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             _projectType = addonsType;
             _instanceAddons = installedAddons;
             _baseInstanceData = instanceClient.GetBaseData;
-
+            _factoryDLCVM = factoryDLCVM;
             // передача делегата загрузки при поиске по тексту
             SearchMethod += InstancePageLoading;
             PaginatorVM.PageChanged += InstancePageLoading;
@@ -42,6 +44,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #region Properties
 
+
         public ObservableCollection<InstanceAddon> InstanceAddons { get; } = new ObservableCollection<InstanceAddon>();
         public ObservableCollection<DownloadAddonFile> DownloadAddonFiles { get; } = new ObservableCollection<DownloadAddonFile>();
 
@@ -53,7 +56,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion Navigation
 
-        #region load fields
+
+        #region Load fields
 
         private bool _isLoaded;
         public bool IsLoaded
@@ -127,7 +131,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion Categories
 
+
         public bool IsDownloadingSomething { get => DownloadAddonFiles.Count != 0; }
+
 
         #endregion Properties
 
@@ -167,6 +173,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #region Private Methods
 
+        /// <summary>
+        /// Загрузка категорий.
+        /// </summary>
         private void LoadContent()
         {
             Lexplosion.Runtime.TaskRun(() =>
@@ -230,6 +239,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             });
         }
 
+        /// <summary>
+        /// Закрытие страницы.
+        /// </summary>
         private void ClosePage()
         {
             _mainViewModel.UserProfile.IsShowInfoBar = true;
@@ -237,6 +249,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             MainViewModel.NavigationStore.CurrentViewModel = MainViewModel.NavigationStore.PrevViewModel;
         }
 
+        /// <summary>
+        /// Переход на страницу curseforge'a.
+        /// </summary>
+        /// <param name="link"></param>
         private void GoToCurseforge(string link)
         {
             try
@@ -280,6 +296,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                             }
 
                             _instanceAddons.Add(addonInstance);
+                            _factoryDLCVM.CurrentAddonModel.IsEmptyList = false;
                             MainViewModel.ShowToastMessage(title, text, TimeSpan.FromSeconds(5d));
                             DownloadAddonFile.Remove(DownloadAddonFiles, addonInstance);
                             OnPropertyChanged(nameof(IsDownloadingSomething));
@@ -308,26 +325,36 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             });
         }
 
-        private async void InstancePageLoading(string searchText = "", bool isPaginator = false)
+        private void InstancePageLoading(string searchText = "", bool isPaginatorInvoke = false)
         {
             // запускаем заставку загрузки
-            if (!isPaginator && searchText == _previousSearch && searchText != null)
+            if (!isPaginatorInvoke && searchText == _previousSearch)
             {
                 IsLoaded = true;
                 return;
+            }
+
+            if (!isPaginatorInvoke && PaginatorVM.PageIndex > 1)
+            {
+                PaginatorVM.PageIndex = 1;
             }
 
             IsLoaded = false;
 
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var instances = InstanceAddon.GetAddonsCatalog(_baseInstanceData, _pageSize, PaginatorVM.PageIndex - 1,
-                    (AddonType)(int)_projectType, SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, searchText == null ? "" : searchText
+                var instances = InstanceAddon.GetAddonsCatalog(
+                    _baseInstanceData, 
+                    _pageSize, 
+                    PaginatorVM.PageIndex - 1,
+                    (AddonType)(int)_projectType, 
+                    SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, 
+                    searchText == null ? _previousSearch : searchText
                     );
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    _previousSearch = searchText == null ? "" : searchText;
+                    _previousSearch = searchText == null ? _previousSearch : searchText;
 
                     IsPaginatorVisible = instances.Count == _pageSize;
 

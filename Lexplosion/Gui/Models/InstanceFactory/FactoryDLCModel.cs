@@ -1,6 +1,8 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
+using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Documents;
 
 namespace Lexplosion.Gui.Models.InstanceFactory
 {
@@ -15,11 +17,8 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             {
                 _instanceAddons = value;
 
-                if (_instanceAddons.Count == 0)
-                    IsEmptyList = true;
-                else IsEmptyList = false;
-
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsEmptyList));
             }
         }
 
@@ -34,9 +33,9 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         }
 
         private bool _isEmptyList;
-        public bool IsEmptyList
+        public bool IsEmptyList 
         {
-            get => _isEmptyList; set
+            get => _isEmptyList; set 
             {
                 _isEmptyList = value;
                 OnPropertyChanged();
@@ -47,17 +46,20 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         {
             InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
             Type = type;
+            IsEmptyList = addons.Count == 0;
         }
 
         public FactoryDLCModel(List<InstanceAddon> addons, CfProjectType type, string emptyListMessage) : this(addons, type)
         {
             EmptyListMessage = emptyListMessage;
+            IsEmptyList = addons.Count == 0;
         }
 
         public void Uninstall(InstanceAddon addon)
         {
             InstalledAddons.Remove(addon);
             addon.Delete();
+            IsEmptyList = InstalledAddons.Count == 0;
         }
     }
 }

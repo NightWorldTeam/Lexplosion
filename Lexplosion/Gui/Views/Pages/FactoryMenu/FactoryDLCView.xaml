@@ -59,7 +59,7 @@
                                     Height="30"
                                     Margin="0,0,0,0"
                                     Command="{Binding Content.OpenMarket}"
-                                    CommandParameter="{Binding Content.CurrentAddon}"
+                                    CommandParameter="{Binding Content.CurrentAddonModel}"
                                     Style="{StaticResource IconicButton}">
                                     <Path Data="M 12 7 C 12.1989 7 12.3897 7.07902 12.5303 7.21967 C 12.671 7.36032 12.75 7.55109 12.75 7.75 V 11.25 H 16.25 C 16.4489 11.25 16.6397 11.329 16.7803 11.4697 C 16.921 11.6103 17 11.8011 17 12 C 17 12.1989 16.921 12.3897 16.7803 12.5303 C 16.6397 12.671 16.4489 12.75 16.25 12.75 H 12.75 V 16.25 C 12.75 16.4489 12.671 16.6397 12.5303 16.7803 C 12.3897 16.921 12.1989 17 12 17 C 11.8011 17 11.6103 16.921 11.4697 16.7803 C 11.329 16.6397 11.25 16.4489 11.25 16.25 V 12.75 H 7.75 C 7.55109 12.75 7.36032 12.671 7.21967 12.5303 C 7.07902 12.3897 7 12.1989 7 12 C 7 11.8011 7.07902 11.6103 7.21967 11.4697 C 7.36032 11.329 7.55109 11.25 7.75 11.25 H 11.25 V 7.75 C 11.25 7.55109 11.329 7.36032 11.4697 7.21967 C 11.6103 7.07902 11.8011 7 12 7 Z M 3 6.25 C 3 5.38805 3.34241 4.5614 3.9519 3.9519 C 4.5614 3.34241 5.38805 3 6.25 3 H 17.75 C 18.612 3 19.4386 3.34241 20.0481 3.9519 C 20.6576 4.5614 21 5.38805 21 6.25 V 17.75 C 21 18.612 20.6576 19.4386 20.0481 20.0481 C 19.4386 20.6576 18.612 21 17.75 21 H 6.25 C 5.38805 21 4.5614 20.6576 3.9519 20.0481 C 3.34241 19.4386 3 18.612 3 17.75 V 6.25 Z M 6.25 4.5 C 5.78587 4.5 5.34075 4.68437 5.01256 5.01256 C 4.68437 5.34075 4.5 5.78587 4.5 6.25 V 17.75 C 4.5 18.716 5.284 19.5 6.25 19.5 H 17.75 C 18.2141 19.5 18.6592 19.3156 18.9874 18.9874 C 19.3156 18.6592 19.5 18.2141 19.5 17.75 V 6.25 C 19.5 5.78587 19.3156 5.34075 18.9874 5.01256 C 18.6592 4.68437 18.2141 4.5 17.75 4.5 H 6.25 Z" Fill="White" />
 
@@ -183,10 +183,10 @@
                         <ToggleButton.Style>
                             <Style BasedOn="{StaticResource EllipseToggleButton}" TargetType="{x:Type ToggleButton}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.CurrentAddon.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Resourcepacks}">
+                                    <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Resourcepacks}">
                                         <Setter Property="Border.Visibility" Value="Collapsed" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding DataContext.CurrentAddon.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Resourcepacks}">
+                                    <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Resourcepacks}">
                                         <Setter Property="Border.Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -309,7 +309,7 @@
                         <DataTemplate>
                             <StackPanel>
                                 <ListBox
-                                    ItemsSource="{Binding Content.CurrentAddon.InstalledAddons}"
+                                    ItemsSource="{Binding Content.CurrentAddonModel.InstalledAddons}"
                                     Tag="{Binding BindsDirectlyToSource=True}"
                                     Template="{StaticResource DLCHeaderControlTemplate}" />
 
@@ -320,8 +320,8 @@
                                     FontSize="20"
                                     Foreground="White"
                                     Opacity="0.8"
-                                    Text="{Binding Content.CurrentAddon.EmptyListMessage}"
-                                    Visibility="{Binding Content.CurrentAddon.IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                    Text="{Binding Content.CurrentAddonModel.EmptyListMessage}"
+                                    Visibility="{Binding Content.CurrentAddonModel.IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
                             </StackPanel>
                         </DataTemplate>
 
