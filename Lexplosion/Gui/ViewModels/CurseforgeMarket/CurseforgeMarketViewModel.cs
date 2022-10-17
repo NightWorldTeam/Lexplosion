@@ -21,6 +21,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private string _previousSearch = null;
         private bool _isInit = true;
 
+        private static readonly Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>> InstallingAddons = new Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>>();
+        private static object _installingAddonsLocker = new object();
+
         public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, ObservableCollection<InstanceAddon> installedAddons, FactoryDLCVM factoryDLCVM)
         {
             _mainViewModel = mainViewModel;
@@ -38,10 +41,17 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             // загрузка категорий
             LoadContent();
 
-            if (DownloadAddonFiles.Count == 0)
+            lock (_installingAddonsLocker)
             {
-                UpdateDownloadFiles();
-            }
+                if (InstallingAddons.ContainsKey(_instanceClient))
+                {
+                    DownloadAddonFiles = InstallingAddons[_instanceClient];
+                }
+                else
+                {
+                    DownloadAddonFiles = new ObservableCollection<DownloadAddonFile>();
+                }
+            }       
 
             IsLoaded = false;
         }
@@ -51,7 +61,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
 
         public ObservableCollection<InstanceAddon> InstanceAddons { get; } = new ObservableCollection<InstanceAddon>();
-        public ObservableCollection<DownloadAddonFile> DownloadAddonFiles { get; } = new ObservableCollection<DownloadAddonFile>();
+        public ObservableCollection<DownloadAddonFile> DownloadAddonFiles { get; }
 
 
         #region Navigation
@@ -270,28 +280,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
-        public void UpdateDownloadFiles() 
-        {
-            if (MainViewModel.InstallingAddons.ContainsKey(_instanceClient)) 
-            { 
-                foreach (var i in MainViewModel.InstallingAddons[_instanceClient]) 
-                {
-                    DownloadAddonFiles.Add(new DownloadAddonFile(i));
-                }
-            }
-        }
-
         private void InstallAddon(InstanceAddon instanceAddon)
         {
-            if (MainViewModel.InstallingAddons.ContainsKey(_instanceClient))
-            {
-                MainViewModel.InstallingAddons[_instanceClient].Add(instanceAddon);
-            }
-            else 
-            { 
-                MainViewModel.InstallingAddons.Add(_instanceClient, new List<InstanceAddon>() { instanceAddon });
-            }
-
             var stateData = new DynamicStateData<ValuePair<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
 
             stateData.StateChanged += (arg, state) =>
@@ -301,7 +291,12 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                     InstanceAddon addonInstance = arg.Value1;
                     if (state == InstanceAddon.InstallAddonState.StartDownload)
                     {
-                        DownloadAddonFiles.Add(new DownloadAddonFile(addonInstance));
+                        lock (_installingAddonsLocker)
+                        {
+                            DownloadAddonFiles.Add(new DownloadAddonFile(addonInstance));
+                            InstallingAddons[_instanceClient] = DownloadAddonFiles;
+                        } 
+                        
                         OnPropertyChanged(nameof(IsDownloadingSomething));
                     }
                     else
@@ -323,23 +318,29 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                             _instanceAddons.Add(addonInstance);
                             _factoryDLCVM.CurrentAddonModel.IsEmptyList = false;
                             MainViewModel.ShowToastMessage(title, text, TimeSpan.FromSeconds(5d));
-                            DownloadAddonFile.Remove(DownloadAddonFiles, addonInstance);
-                            OnPropertyChanged(nameof(IsDownloadingSomething));
                         }
                         else if (arg.Value2 == DownloadAddonRes.IsCanselled)
                         {
                             MainViewModel.ShowToastMessage("Скачивание аддона было отменено",
                                 "Название аддона: " + addonInstance.Name, Controls.ToastMessageState.Notification);
-                            DownloadAddonFile.Remove(DownloadAddonFiles, addonInstance);
-                            OnPropertyChanged(nameof(IsDownloadingSomething));
                         }
                         else
                         {
                             MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод",
                                 "Название: " + addonInstance.Name + ".\nОшибка " + arg.Value2, Controls.ToastMessageState.Error);
-                            DownloadAddonFile.Remove(DownloadAddonFiles, addonInstance);
-                            OnPropertyChanged(nameof(IsDownloadingSomething));
                         }
+
+                        lock (_installingAddonsLocker)
+                        {
+                            DownloadAddonFile.Remove(DownloadAddonFiles, addonInstance);
+                            if (DownloadAddonFiles.Count == 0)
+                            {
+                                InstallingAddons.Remove(_instanceClient);
+                            }       
+                        }
+                        
+
+                        OnPropertyChanged(nameof(IsDownloadingSomething));
                     }
                 });
             };
