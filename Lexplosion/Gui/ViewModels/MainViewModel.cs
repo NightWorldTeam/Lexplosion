@@ -24,7 +24,7 @@ namespace Lexplosion.Gui.ViewModels
 
 
         public static readonly NavigationStore NavigationStore = new NavigationStore();
-
+        public static readonly Dictionary<InstanceClient, List<InstanceAddon>> InstallingAddons = new Dictionary<InstanceClient, List<InstanceAddon>>();
         public MainMenuViewModel MainMenuVM { get; private set; }
 
         private InstanceFormViewModel _runningInstance;

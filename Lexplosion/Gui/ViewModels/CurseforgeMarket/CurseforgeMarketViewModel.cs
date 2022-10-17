@@ -38,6 +38,11 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             // загрузка категорий
             LoadContent();
 
+            if (DownloadAddonFiles.Count == 0)
+            {
+                UpdateDownloadFiles();
+            }
+
             IsLoaded = false;
         }
 
@@ -265,8 +270,28 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
+        public void UpdateDownloadFiles() 
+        {
+            if (MainViewModel.InstallingAddons.ContainsKey(_instanceClient)) 
+            { 
+                foreach (var i in MainViewModel.InstallingAddons[_instanceClient]) 
+                {
+                    DownloadAddonFiles.Add(new DownloadAddonFile(i));
+                }
+            }
+        }
+
         private void InstallAddon(InstanceAddon instanceAddon)
         {
+            if (MainViewModel.InstallingAddons.ContainsKey(_instanceClient))
+            {
+                MainViewModel.InstallingAddons[_instanceClient].Add(instanceAddon);
+            }
+            else 
+            { 
+                MainViewModel.InstallingAddons.Add(_instanceClient, new List<InstanceAddon>() { instanceAddon });
+            }
+
             var stateData = new DynamicStateData<ValuePair<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
 
             stateData.StateChanged += (arg, state) =>
@@ -366,7 +391,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                     }
                     else
                     {
-                        IsEmptyList = !IsEmptyList;
+                        IsEmptyList = false;
                         InstanceAddons.Clear();
 
                         foreach (var instance in instances)

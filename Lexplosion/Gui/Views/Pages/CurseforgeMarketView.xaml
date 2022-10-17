@@ -570,10 +570,11 @@
 
                     <ItemsControl ItemsSource="{Binding InstanceAddons}" />
                     <TextBlock
-                        HorizontalAlignment="Center"
                         Margin="0,150,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="23"
                         Foreground="White"
-                        VerticalAlignment="Center" FontSize="23"
                         Opacity="0.8"
                         Text="Ничего не найдено по вашему запросу."
                         Visibility="{Binding IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
