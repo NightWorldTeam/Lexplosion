@@ -209,7 +209,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="addnId">айдишник мода</param>
         /// <returns>Ключ по которому искать этот мод в _installingAddons. (формат: _modpackInfo.LocalId + addnId)</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string GetAddonKey(BaseInstanceData instanceData,int addnId)
+        private static string GetAddonKey(BaseInstanceData instanceData, int addnId)
         {
             return instanceData.LocalId + addnId;
         }
@@ -398,7 +398,7 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             Lexplosion.Runtime.TaskRun(delegate ()
                             {
-                                int modId = dependencie["modId"];  
+                                int modId = dependencie["modId"];
 
                                 Pointer<InstanceAddon> addonPointer = new Pointer<InstanceAddon>();
                                 addonPointer.Point = null;
@@ -432,7 +432,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                                 addonInstance.InstallLatestVersion(stateHandler, true);
                             });
-                        }             
+                        }
                     }
                 }
 
@@ -498,7 +498,7 @@ namespace Lexplosion.Logic.Management.Instances
                             Value1 = this,
                             Value2 = ressult.Value2
                         }, InstallAddonState.EndDownload);
-                    }             
+                    }
 
                     return;
                 }

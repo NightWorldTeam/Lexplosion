@@ -4,13 +4,13 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Lexplosion.Logic.Network
+namespace Lexplosion.Logic.Network.WebSockets
 {
     /// <summary>
-    /// Сервер Веб-советов, который обрабатывеат команды. 
+    /// Сервер Веб-сокетов, который обрабатывеат команды. 
     /// Работает подобно html серверам - принял запрос, получил данные, дал ответ, закрыл соединение.
     /// </summary>
-    class WebSocketServer
+    class WebSocketServer : WebSocket
     {
         Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
         private const string guid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
@@ -22,11 +22,15 @@ namespace Lexplosion.Logic.Network
         /// </summary>
         public event ReceivedDataDelegate ReceivedData;
 
-        public void Run()
+        public void Run(int port)
         {
-            serverSocket.Bind(new IPEndPoint(IPAddress.Any, 54352));
-            serverSocket.Listen(1);
-            serverSocket.BeginAccept(null, 0, OnAccept, null);
+            try
+            {
+                serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+                serverSocket.Listen(1);
+                serverSocket.BeginAccept(null, 0, OnAccept, null);
+            }
+            catch { }
         }
 
         private void OnAccept(IAsyncResult result)
@@ -47,25 +51,27 @@ namespace Lexplosion.Logic.Network
                 if (client != null)
                 {
                     var key = headerResponse.Replace("ey:", "`").Split('`')[1].Replace("\r", "").Split('\n')[0].Trim();
-                    var test1 = AcceptKey(ref key);
+                    var acceptKey = AcceptKey(ref key);
                     var newLine = "\r\n";
                     var response = "HTTP/1.1 101 Switching Protocols" + newLine
                          + "Upgrade: websocket" + newLine
                          + "Connection: Upgrade" + newLine
-                         + "Sec-WebSocket-Accept: " + test1 + newLine + newLine;
+                         + "Sec-WebSocket-Accept: " + acceptKey + newLine + newLine;
 
                     client.Send(System.Text.Encoding.UTF8.GetBytes(response));
 
                     int byteCount = client.Receive(buffer);
-
-                    byte[] decodedFrame = DecodeFrame(buffer);
-                    if (decodedFrame != null)
+                    if (byteCount > 0)
                     {
-                        string text = Encoding.UTF8.GetString(decodedFrame);
-                        string data = ReceivedData?.Invoke(text);
-                        if (data != null)
+                        byte[] decodedFrame = DecodeFrame(buffer);
+                        if (decodedFrame != null)
                         {
-                            client.Send(EncodeFrame(Encoding.UTF8.GetBytes(data)));
+                            string text = Encoding.UTF8.GetString(decodedFrame);
+                            string data = ReceivedData?.Invoke(text);
+                            if (data != null)
+                            {
+                                client.Send(EncodeFrame(Encoding.UTF8.GetBytes(data)));
+                            }
                         }
                     }
                 }
@@ -81,61 +87,12 @@ namespace Lexplosion.Logic.Network
 
             if (client != null)
             {
-                client.Send(new byte[2] { 136, 0 });
-                client.Close();
-            }
-        }
-
-        private byte[] EncodeFrame(byte[] payload)
-        {
-            byte[] data = new byte[payload.Length + 2];
-            data[0] = 129;
-            data[1] = (byte)payload.Length;
-            Array.Copy(payload, 0, data, 2, payload.Length);
-
-            return data;
-        }
-
-        private byte[] DecodeFrame(byte[] frame)
-        {
-            try
-            {
-                bool fin = (frame[0] & 0b10000000) != 0,
-                mask = (frame[1] & 0b10000000) != 0;
-
-                int opcode = frame[0] & 0b00001111,
-                    msglen = frame[1] - 128,
-                    offset = 2;
-
-                if (msglen == 126)
+                try
                 {
-                    msglen = BitConverter.ToUInt16(new byte[] { frame[3], frame[2] }, 0);
-                    offset = 4;
+                    client.Send(new byte[2] { 136, 0 });
+                    client.Close();
                 }
-                else if (msglen == 127)
-                {
-                    return null;
-                }
-
-                if (mask && msglen != 0)
-                {
-                    byte[] decoded = new byte[msglen];
-                    byte[] masks = new byte[4] { frame[offset], frame[offset + 1], frame[offset + 2], frame[offset + 3] };
-                    offset += 4;
-
-                    for (int i = 0; i < msglen; ++i)
-                        decoded[i] = (byte)(frame[offset + i] ^ masks[i % 4]);
-
-                    return decoded;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch
-            {
-                return null;
+                catch { }
             }
         }
 

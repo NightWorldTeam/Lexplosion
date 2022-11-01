@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Net;
+using Lexplosion.Global;
 
 namespace Lexplosion.Logic.Network
 {
+    using WebSockets;
+
     static class CommandReceiver
     {
         #region Events
@@ -19,6 +22,13 @@ namespace Lexplosion.Logic.Network
         {
             add => _microsoftAuthPassed += value;
             remove => _microsoftAuthPassed -= value;
+        }
+
+        private static Action _lexplosionOpened;
+        public static event Action LexplosionOpened
+        {
+            add => _lexplosionOpened += value;
+            remove => _lexplosionOpened -= value;
         }
 
         #endregion
@@ -63,6 +73,11 @@ namespace Lexplosion.Logic.Network
                     _microsoftAuthPassed?.Invoke(data, MicrosoftAuthRes.Successful);
                 }
             }
+            else if (text.StartsWith("$lexplosionOpened:"))
+            {
+                _lexplosionOpened?.Invoke();
+                return "OK";
+            }
 
             return null;
         }
@@ -75,7 +90,7 @@ namespace Lexplosion.Logic.Network
                 {
                     var ws = new WebSocketServer();
                     ws.ReceivedData += CommandHandler;
-                    ws.Run();
+                    ws.Run(LaunсherSettings.CommandServerPort);
                 });
             }
         }

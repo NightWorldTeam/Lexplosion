@@ -15,10 +15,11 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Logic.Network.WebSockets;
 
 /*
- * Лаунчер Lexplosion. Создано NightWorld Team в 2019 году.
- * Последнее обновление в октябре 2022 года
+ * Лаунчер Lexplosion. Разработано NightWorld Team.
+ * Никакие права не защищены.
  * Главный исполняемый файл лаунчера. Здесь людей ебут
  */
 
@@ -66,23 +67,14 @@ namespace Lexplosion
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
-            // получем процессы с таким же именем (то есть пытаемся получить уже запущенную копию лаунчера)
-            Process[] procs = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
-            CurrentProcess = Process.GetCurrentProcess();
-
-            // процессов больше одного. Знчит лаунечр уже запущен
-            if (procs.Length > 1)
+            // Проверяем запущен ли лаунчер. если порт сервера команд занят - значит лаунчер уже запущен.
+            if (!SocketExtensions.TcpPortIsAvailable(LaunсherSettings.CommandServerPort))
             {
-                // делаем окно уже запущенного лаунечра активным
-                foreach (Process proc in procs)
-                {
-                    if (proc.Id != CurrentProcess.Id)
-                    {
-                        NativeMethods.ShowProcessWindows(proc.MainWindowHandle);
-                    }
-                }
+                WebSocketClient ws = new WebSocketClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 54352));
+                //отправляем уже запущщеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается
+                ws.SendData("$lexplosionOpened:" + CurrentProcess.Id);
 
-                CurrentProcess.Kill(); //стопаем процесс
+                CurrentProcess.Kill(); //стопаем этот процесс
             }
 
             // Встраеваем стили
@@ -104,6 +96,9 @@ namespace Lexplosion
 
             InstanceClient.DefineInstalledInstances();
             CommandReceiver.StartCommandServer();
+
+            //подписываемся на эвент открытия второй копии лаунчера
+            CommandReceiver.LexplosionOpened += ShowMainWindow;
 
             LaunchGame.GameStartedEvent += delegate () //подписываемся на эвент запуска игры
             {
@@ -450,6 +445,10 @@ namespace Lexplosion
                         Top = topPos
                     };
                     app.MainWindow.Show();
+                }
+                else
+                {
+                    NativeMethods.ShowProcessWindows(CurrentProcess.MainWindowHandle);
                 }
             });
         }

@@ -295,7 +295,9 @@
     <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />
     <Compile Include="Logic\Network\Values.cs" />
-    <Compile Include="Logic\Network\WebSocketServer.cs" />
+    <Compile Include="Logic\Network\WebSockets\WebSocket.cs" />
+    <Compile Include="Logic\Network\WebSockets\WebSocketClient.cs" />
+    <Compile Include="Logic\Network\WebSockets\WebSocketServer.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
     <Compile Include="Tools\DynamicStateData.cs" />
     <Compile Include="Tools\EnumerateExtension.cs" />
@@ -308,6 +310,7 @@
     <Compile Include="Tools\Immutable\ImmutableArray.cs" />
     <Compile Include="Tools\Immutable\ImmutableList.cs" />
     <Compile Include="Tools\RuntimeTools.cs" />
+    <Compile Include="Tools\SocketExtensions.cs" />
     <Compile Include="Tools\TaskArgs.cs" />
     <Compile Include="Tools\RandomExtensions.cs" />
     <Compile Include="Tools\ResourceGetter.cs" />
