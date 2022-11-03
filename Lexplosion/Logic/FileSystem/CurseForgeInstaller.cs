@@ -439,10 +439,9 @@ namespace Lexplosion.Logic.FileSystem
                             AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
                         }
                     }
-
                 }
 
-                if (errors.Count == 0)
+                if (errors.Count == 0 && !cancelToken.IsCancellationRequested)
                 {
                     compliteDownload.FullClient = true;
                 }
@@ -454,7 +453,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch
             {
-                errors.Add("uncnowError");
+                errors.Add("uncnownError");
                 return null;
             }
         }
