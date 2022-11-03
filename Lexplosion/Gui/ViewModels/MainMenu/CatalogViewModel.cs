@@ -26,7 +26,16 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public Action<string, bool> SearchMethod { get; }
 
-        public ObservableCollection<CurseforgeCategory> Categories { get; private set; }
+        private ObservableCollection<CurseforgeCategory> _categories;
+        public ObservableCollection<CurseforgeCategory> Categories 
+        { 
+            get => _categories; 
+            set 
+            {
+                _categories = value;
+                OnPropertyChanged();
+            }
+        }
 
         public static List<string> CfSortToString { get; } = new List<string>()
         {

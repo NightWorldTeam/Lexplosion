@@ -237,7 +237,7 @@
                                 Width="290"
                                 ItemContainerStyle="{StaticResource CategoriesListBoxItem}"
                                 ItemTemplate="{StaticResource CurseforgeCategory}"
-                                ItemsSource="{Binding Categories}"
+                                ItemsSource="{Binding Categories, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedItem="{Binding SelectedCurseforgeCategory}"
                                 SelectionChanged="Filter_SelectionChanged"
                                 Style="{StaticResource CategoriesListBox}" />
