@@ -64,6 +64,8 @@ namespace Lexplosion
                 DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
             };
 
+            CurrentProcess = Process.GetCurrentProcess();
+
             // Подписываемся на эвент для загрузки всех строенных dll'ников
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
