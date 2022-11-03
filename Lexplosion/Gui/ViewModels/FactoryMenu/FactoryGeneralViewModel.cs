@@ -178,7 +178,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private void CreateInstance()
         {
             var instanceClient = InstanceClient.CreateClient(
-                Model.Name ?? "New Client",
+                Model.Name ?? _selectedOnlyVersion + " " + Model.ModloaderType,
                 InstanceSource.Local,
                 _selectedOnlyVersion,
                 Model.ModloaderType,
