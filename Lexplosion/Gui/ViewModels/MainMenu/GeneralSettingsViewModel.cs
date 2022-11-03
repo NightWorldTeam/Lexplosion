@@ -62,10 +62,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private void ChangedDirectory(string newPath)
         {
+            GeneralSettings.SystemPath = newPath;
+
             var dialogModal = new DialogViewModel(_mainViewModel);
             dialogModal.ShowDialog("Желаете ли вы полностью перенести директорию?", () =>
             {
-                GeneralSettings.SystemPath = newPath;
                 IsDirectoryChanged = false;
                 Lexplosion.Runtime.TaskRun(() =>
                 {
