@@ -228,7 +228,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 CurseforgeApi.GetCategories(CfProjectType.Modpacks)
             );
 
-            _selectedCurseforgeCategory = categories[0];
+            SelectedCurseforgeCategory = categories[0];
 
             return categories;
         }
