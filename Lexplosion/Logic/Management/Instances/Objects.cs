@@ -46,7 +46,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         private Dictionary<string, PathLevel> _unitsList;
         /// <summary>
-        /// Используется только если этот элемент является папкой (IsFile равно false) и если AllUnits имеет значение false. 
+        /// Используется только если этот элемент является папкой (IsFile равно false). 
         /// Содержит список вложенных элементов, которые должны быть экспортированы из этой папки.
         /// </summary>
         public Dictionary<string, PathLevel> UnitsList

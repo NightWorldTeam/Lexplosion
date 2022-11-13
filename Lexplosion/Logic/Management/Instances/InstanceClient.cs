@@ -26,6 +26,8 @@ namespace Lexplosion.Logic.Management.Instances
             public string Author;
             public ModloaderType ModloaderType;
             public string ModloaderVersion;
+            public AdditionalInstallerType? AdditionalInstallerType;
+            public string AdditionalInstallerVersion;
             public List<Category> Categories;
             public string Summary;
             public string LogoFileName;
@@ -254,8 +256,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="logoPath">Путь до логотипа. Если устанавливать не надо, то null.</param>
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string logoPath, string modloaderVersion = null)
+        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null)
         {
+            if (modloaderVersion == null) modloader = ModloaderType.Vanilla;
+
             var client = new InstanceClient(name, type, gameVersion)
             {
                 InLibrary = true,
@@ -273,7 +277,15 @@ namespace Lexplosion.Logic.Management.Instances
             }
             catch { }
 
-            client.CreateFileStruct(modloader, modloaderVersion);
+            AdditionalInstallerType? installer = null;
+            string installerVer = null;
+            if(optifineVersion != null)
+            {
+                installerVer = optifineVersion;
+                installer = AdditionalInstallerType.Optifine;
+            }
+
+            client.CreateFileStruct(modloader, modloaderVersion, installer, installerVer);
             client.SaveAssets();
 
             _installedInstances[client._localId] = client;
@@ -839,7 +851,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Создает необходимую структуру файлов для сборки при её добавлении в библиотеку (ну при создании локальной).
         /// </summary>
-        private void CreateFileStruct(ModloaderType modloader, string modloaderVersion)
+        /// <param name="modloader">Тип модлоадера</param>
+        /// <param name="modloaderVersion">Версия модлоадера</param>
+        /// <param name="optifineVersion">Версия оптифайна. null если не нужен</param>
+        private void CreateFileStruct(ModloaderType modloader, string modloaderVersion, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
         {
             Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + _localId);
 
@@ -852,6 +867,16 @@ namespace Lexplosion.Logic.Management.Instances
                     modloaderType = modloader
                 }
             };
+
+            if (additionalInstaller != null && additionalInstallerVer != null)
+            {
+                manifest.version.additionalInstaller = new AdditionalInstaller()
+                {
+                    type = additionalInstaller ?? AdditionalInstallerType.Optifine,
+                    installerVersion = additionalInstallerVer
+                };
+            }
+
             DataFilesManager.SaveManifest(_localId, manifest);
 
             if (Type != InstanceSource.Local)
@@ -878,6 +903,23 @@ namespace Lexplosion.Logic.Management.Instances
         public void SaveSettings(Settings settings)
         {
             DataFilesManager.SaveSettings(settings, _localId);
+        }
+
+        /// <summary>
+        /// Удаляет сборку к хуям.
+        /// </summary>
+        public void Delete()
+        {
+            WithDirectory.DeleteInstance(_localId);
+            _installedInstances.Remove(_localId);
+            if (_externalId != null)
+            {
+                _idsPairs.Remove(_externalId);
+            }
+            UpdateAvailable = false;
+            InLibrary = false;
+            IsInstalled = false;
+            SaveInstalledInstancesList();
         }
 
         /// <summary>
@@ -911,7 +953,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     foreach (var item in dir.GetFiles())
                     {
-                        if (path == "/" && item.Name != "installedAddons.json" && item.Name != "lastUpdates.json" && item.Name != "manifest.json" && item.Name != "instanceContent.json" && item.Name != "instancePlatformData.json")
+                        if (item.Name != "installedAddons.json" && item.Name != "lastUpdates.json" && item.Name != "manifest.json" && item.Name != "instanceContent.json" && item.Name != "instancePlatformData.json")
                             pathContent["/" + item.Name] = new PathLevel(item.Name, true, path + "/" + item.Name);
                     }
                 }
@@ -920,23 +962,6 @@ namespace Lexplosion.Logic.Management.Instances
             catch { }
 
             return pathContent;
-        }
-
-        /// <summary>
-        /// Удаляет сборку к хуям.
-        /// </summary>
-        public void Delete()
-        {
-            WithDirectory.DeleteInstance(_localId);
-            _installedInstances.Remove(_localId);
-            if (_externalId != null)
-            {
-                _idsPairs.Remove(_externalId);
-            }
-            UpdateAvailable = false;
-            InLibrary = false;
-            IsInstalled = false;
-            SaveInstalledInstancesList();
         }
 
         /// <summary>
@@ -949,7 +974,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             string dirPath = WithDirectory.DirectoryPath + "/instances/" + _localId;
 
-            void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList, string parentPath)
+            void ParsePathLevel(ref List<string> list, Dictionary<string, PathLevel> levelsList)
             {
                 foreach (string key in levelsList.Keys)
                 {
@@ -958,7 +983,7 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         if (elem.IsFile)
                         {
-                            list.Add(dirPath + key);
+                            list.Add(dirPath + levelsList[key].FullPath);
                         }
                         else
                         {
@@ -967,7 +992,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 string[] files;
                                 try
                                 {
-                                    files = Directory.GetFiles(dirPath + parentPath + key, "*", SearchOption.AllDirectories);
+                                    files = Directory.GetFiles(dirPath + levelsList[key].FullPath, "*", SearchOption.AllDirectories);
                                 }
                                 catch
                                 {
@@ -981,7 +1006,7 @@ namespace Lexplosion.Logic.Management.Instances
                             }
                             else
                             {
-                                ParsePathLevel(ref list, elem.UnitsList, key);
+                                ParsePathLevel(ref list, elem.UnitsList);
                             }
                         }
                     }
@@ -989,7 +1014,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             List<string> filesList = new List<string>();
-            ParsePathLevel(ref filesList, exportList, "");
+            ParsePathLevel(ref filesList, exportList);
 
             if (File.Exists(dirPath + "/installedAddons.json"))
             {
@@ -1009,7 +1034,10 @@ namespace Lexplosion.Logic.Management.Instances
                 Name = name ?? Name,
                 Categories = Categories,
                 Summary = Summary,
-                LogoFileName = (logoPath != null ? LogoFileName : null)
+                LogoFileName = (logoPath != null ? LogoFileName : null),
+                AdditionalInstallerType = instanceManifest?.version?.additionalInstaller?.type,
+                AdditionalInstallerVersion = instanceManifest?.version?.additionalInstaller?.installerVersion,
+
             };
 
             return WithDirectory.ExportInstance<ArchivedClientData>(_localId, filesList, exportFile, parameters, logoPath);
@@ -1055,7 +1083,7 @@ namespace Lexplosion.Logic.Management.Instances
                         Categories = parameters.Categories
                     };
 
-                    client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion);
+                    client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);
                     res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
 
                     if (res == ImportResult.Successful)

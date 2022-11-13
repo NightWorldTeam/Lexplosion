@@ -14,10 +14,13 @@ namespace Lexplosion.Logic.Network
 {
     static class NightWorldApi
     {
-        private class DataNInstanceManifest : NightWorldManifest //этот класс нужен для декодирования json в GetInstanceManifest
+        /// <summary>
+        /// этот класс нужен для декодирования json в GetInstanceManifest
+        /// </summary>
+        private class ProtectedNightWorldManifest : NightWorldManifest, ProtectedManifest 
         {
-            public string code;
-            public string str;
+            public string code { get; set; }
+            public string str { get; set; }
         }
 
         public class FullInstanceInfo : InstanceInfo
@@ -86,74 +89,24 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        // Функция получает манифест для NightWorld модпаков
+        /// <summary>
+        /// Получет манифест для NightWorld модпаков
+        /// </summary>
+        /// <param name="instanceId"></param>
         public static NightWorldManifest GetInstanceManifest(string instanceId) // TODO: одинаковые блоки кода в этих двух функция вынести в другую функцию
         {
-            Runtime.DebugWrite("GET MANIFEST " + instanceId);
-            string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
-            string str = "";
-            string str2 = "";
-            Random rnd = new Random();
+            var filesData = ToServer.ProtectedRequest<ProtectedNightWorldManifest>(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(instanceId) + "/manifest");
 
-            for (int i = 0; i < 32; i++)
+            if (filesData == null) return null;
+            
+            NightWorldManifest ret = new NightWorldManifest
             {
-                str += chars[rnd.Next(0, chars.Length)];
-                str2 += chars[rnd.Next(0, chars.Length)];
-            }
+                data = filesData.data,
+                version = filesData.version,
+                CustomVersion = filesData.CustomVersion
+            };
 
-            using (SHA1 sha = new SHA1Managed())
-            {
-                string key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str2 + ":" + LaunсherSettings.secretWord)));
-
-                int d = 32 - key.Length;
-                for (int i = 0; i < d; i++)
-                {
-                    key += str2[i];
-                }
-
-                Dictionary<string, string> data = new Dictionary<string, string>
-                {
-                    ["str"] = str,
-                    ["str2"] = str2,
-                    ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
-                };
-
-                try
-                {
-                    string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(instanceId) + "/manifest", data);
-
-                    if (answer != null)
-                    {
-                        answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
-                        DataNInstanceManifest filesData = JsonConvert.DeserializeObject<DataNInstanceManifest>(answer);
-
-                        if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
-                        {
-
-                            NightWorldManifest ret = new NightWorldManifest
-                            {
-                                data = filesData.data,
-                                version = filesData.version,
-                                CustomVersion = filesData.CustomVersion
-                            };
-
-                            return ret;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                catch
-                {
-                    return null;
-                }
-            }
+            return ret;
         }
 
         public static VersionManifest GetVersionManifest(string modpackId)
@@ -195,7 +148,7 @@ namespace Lexplosion.Logic.Network
                     {
                         answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
-                        DataVersionManifest filesData = JsonConvert.DeserializeObject<DataVersionManifest>(answer);
+                        ProtectedVersionManifest filesData = JsonConvert.DeserializeObject<ProtectedVersionManifest>(answer);
 
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {

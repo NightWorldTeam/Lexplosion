@@ -51,7 +51,12 @@ namespace Lexplosion.Logic.Management.Installers
                 return InstanceInit.VersionError;
             }
 
-            Manifest = ToServer.GetVersionManifest(Manifest.version.gameVersion, Manifest.version.modloaderType, Manifest.version.modloaderVersion);
+            var gameVersion = Manifest.version.gameVersion;
+            var modloaderType = Manifest.version.modloaderType;
+            var modloaderVersion = Manifest.version.modloaderVersion;
+            var optifineVersion = Manifest.version.additionalInstaller?.installerVersion;
+
+            Manifest = ToServer.GetVersionManifest(gameVersion, modloaderType, modloaderVersion, optifineVersion);
 
             if (Manifest != null)
             {

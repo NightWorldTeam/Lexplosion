@@ -22,7 +22,7 @@ namespace Lexplosion.Logic.Management.Authentication
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private User Execute(string login, ref string accessData, out AuthCode code)
         {
-            ToServer.AuthResult response = ToServer.Authorization(login, accessData, out int baseStatus);
+            AuthResult response = ToServer.Authorization(login, accessData, out int baseStatus);
             accessData = response.AccessID;
 
             ActivityStatus status = ActivityStatus.Online;

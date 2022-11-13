@@ -5,6 +5,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IO.Compression;
 using System.Threading;
+using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
@@ -68,6 +70,35 @@ namespace Lexplosion.Logic.FileSystem
         private int updatesCount = 0;
 
         /// <summary>
+        /// Получем версию либрариеса
+        /// </summary>
+        /// <param name="libName">Имя для файла. Должно быть получено через GetLibName</param>
+        /// <param name="folderName">Имя папки. Либо additionalLibraries, либо libraries</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private long GetLver(string libName, string folderName)
+        {
+            if (File.Exists(DirectoryPath + "/versions/" + folderName + "/lastUpdates/" + libName + ".lver"))
+            {
+                try
+                {
+                    string fileContent = GetFile(DirectoryPath + "/versions/" + folderName + "/lastUpdates/" + libName + ".lver"); //открываем файл с версией libraries
+                    long ver = 0;
+                    Int64.TryParse(fileContent, out ver);
+                    return ver;
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                SaveFile(DirectoryPath + "/versions/" + folderName + "/lastUpdates/" + libName + ".lver", "0");
+                return 0;
+            }
+        }
+
+        /// <summary>
         /// Проверяет основные файла клиента, недостающие файлы помещает во внуренний список на скачивание
         /// </summary>
         /// <returns>
@@ -127,30 +158,12 @@ namespace Lexplosion.Logic.FileSystem
 
                 //получаем версию libraries
                 string libName = manifest.version.GetLibName;
-                if (File.Exists(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver"))
-                {
-                    try
-                    {
-                        using (FileStream fstream = new FileStream(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", FileMode.OpenOrCreate, FileAccess.Read)) //открываем файл с версией libraries
-                        {
-                            byte[] fileBytes = new byte[fstream.Length];
-                            fstream.Read(fileBytes, 0, fileBytes.Length);
-                            fstream.Close();
+                updates["libraries"] = GetLver(libName, "libraries");
 
-                            long ver = 0;
-                            Int64.TryParse(Encoding.UTF8.GetString(fileBytes), out ver);
-                            updates["libraries"] = ver;
-                        }
-                    }
-                    catch
-                    {
-                        updates["libraries"] = 0;
-                    }
-                }
-                else
+                //получаем версию дополнительных либраиесов
+                if (manifest.version.additionalInstaller != null)
                 {
-                    SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", "0");
-                    updates["libraries"] = 0;
+                    updates["additionalLibraries"] = GetLver(manifest.version.additionalInstaller.GetLibName, "additionalLibraries");
                 }
 
                 //проверяем папку libraries
@@ -174,6 +187,18 @@ namespace Lexplosion.Logic.FileSystem
                     }
                     else
                     {
+                        if (manifest.version.additionalInstaller != null && manifest.version.additionalInstaller.librariesLastUpdate != updates["additionalLibraries"]) //если версия дополнительных libraries старая, то отправляем на обновления
+                        {
+                            foreach (string lib in manifest.libraries.Keys)
+                            {
+                                if (manifest.libraries[lib].additionalInstallerType != null)
+                                {
+                                    libraries[lib] = manifest.libraries[lib];
+                                    updatesCount++;
+                                }
+                            }
+                        }
+
                         // получем файл, в ктором хранятси список либрариесов, которые удачно скачались в прошлый раз
                         List<string> downloadedFiles = new List<string>();
                         string downloadedInfoAddr = DirectoryPath + "/versions/libraries/" + libName + "-downloaded.json";
@@ -271,7 +296,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <summary>
         /// Ффункция для скачивания файлов клиента в zip формате, без проверки хеша
         /// </summary>
-        /// <param name="url">Ссыллка на файл, охуеть, да? Без .zip в конце.</param>
+        /// <param name="url">Ссылка на файл, охуеть, да? Без .zip в конце.</param>
         /// <param name="file">Имя файла</param>
         /// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
         /// <param name="temp">Временная директория (без имени файла), должена заканчиваться на слеш.</param>
@@ -558,6 +583,12 @@ namespace Lexplosion.Logic.FileSystem
             if (libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
             {
                 SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", manifest.version.librariesLastUpdate.ToString());
+                if (manifest.version.additionalInstaller != null)
+                {
+                    string lName = manifest.version.additionalInstaller.GetLibName;
+                    string lastUpdate = manifest.version.additionalInstaller.librariesLastUpdate.ToString();
+                    SaveFile(DirectoryPath + "/versions/additionalLibraries/lastUpdates/" + lName + ".lver", lastUpdate);
+                }
             }
 
             string tempDir = CreateTempDir();
@@ -659,6 +690,7 @@ namespace Lexplosion.Logic.FileSystem
                     try
                     {
                         List<List<string>> obtainingMethod = libraries[lib].obtainingMethod; // получаем метод
+                        Dictionary<string, string> vars = new Dictionary<string, string>(); //здесь хранятся переменные этого метода
 
                         if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
                         {
@@ -669,60 +701,69 @@ namespace Lexplosion.Logic.FileSystem
                                 switch (obtainingMethod[i][0])
                                 {
                                     case "downloadFile":
-                                        Runtime.DebugWrite("download " + obtainingMethod[i][1]);
-
-                                        var taskArgs = new TaskArgs
                                         {
-                                            PercentHandler = delegate (int pr)
+                                            string fileName = obtainingMethod[i][2];
+                                            string downloadUrl = obtainingMethod[i][1];
+
+                                            foreach (string key in vars.Keys)
                                             {
-                                                _fileDownloadHandler?.Invoke(obtainingMethod[i][2], pr, DownloadFileProgress.PercentagesChanged);
-                                            },
-                                            CancelToken = cancelToken
-                                        };
+                                                fileName = fileName.Replace(key, vars[key]);
+                                                downloadUrl = downloadUrl.Replace(key, vars[key]);
+                                            }
 
-                                        if (obtainingMethod[i].Count > 1 && !DownloadFile(obtainingMethod[i][1], obtainingMethod[i][2], tempDir, taskArgs))
-                                        {
-                                            _fileDownloadHandler?.Invoke(obtainingMethod[i][2], 100, DownloadFileProgress.Error);
-                                            goto EndWhile; //возникла ошибка
+                                            var taskArgs = new TaskArgs
+                                            {
+                                                PercentHandler = delegate (int pr)
+                                                {
+                                                    _fileDownloadHandler?.Invoke(fileName, pr, DownloadFileProgress.PercentagesChanged);
+                                                },
+                                                CancelToken = cancelToken
+                                            };
+
+                                            if (!DownloadFile(downloadUrl, fileName, tempDir, taskArgs))
+                                            {
+                                                _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
+                                                goto EndWhile; //возникла ошибка
+                                            }
+
+                                            _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Successful);
                                         }
-
-                                        _fileDownloadHandler?.Invoke(obtainingMethod[i][2], 100, DownloadFileProgress.Successful);
-
                                         break;
                                     case "unzipFile":
                                         ZipFile.ExtractToDirectory(tempDir + obtainingMethod[i][1], tempDir + obtainingMethod[i][2]);
                                         break;
                                     case "startProcess":
-                                        Utils.ProcessExecutor executord;
-                                        string processExecutord = obtainingMethod[i][1];
-
-                                        if (processExecutord == "java")
                                         {
-                                            executord = Utils.ProcessExecutor.Java;
-                                        }
-                                        else if (processExecutord == "cmd")
-                                        {
-                                            executord = Utils.ProcessExecutor.Cmd;
-                                        }
-                                        else
-                                        {
-                                            goto EndWhile; //возникла ошибка
-                                        }
+                                            Utils.ProcessExecutor executord;
+                                            string processExecutord = obtainingMethod[i][1];
 
-                                        string command = obtainingMethod[i][2];
-                                        command = command.Replace("{DIR}", DirectoryPath);
-                                        command = command.Replace("{TEMP_DIR}", tempDir);
-                                        command = command.Replace("{MINECRAFT_JAR}", DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name);
+                                            if (processExecutord == "java")
+                                            {
+                                                executord = Utils.ProcessExecutor.Java;
+                                            }
+                                            else if (processExecutord == "cmd")
+                                            {
+                                                executord = Utils.ProcessExecutor.Cmd;
+                                            }
+                                            else
+                                            {
+                                                goto EndWhile; //возникла ошибка
+                                            }
 
-                                        Runtime.DebugWrite();
-                                        Runtime.DebugWrite(command);
+                                            string command = obtainingMethod[i][2];
+                                            command = command.Replace("{DIR}", DirectoryPath);
+                                            command = command.Replace("{TEMP_DIR}", tempDir);
+                                            command = command.Replace("{MINECRAFT_JAR}", DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name);
 
-                                        if (!Utils.StartProcess(command, executord, javaPath))
-                                        {
-                                            errors.Add("libraries/" + lib);
-                                            goto EndWhile; //возникла ошибка
+                                            Runtime.DebugWrite();
+                                            Runtime.DebugWrite(command);
+
+                                            if (!Utils.StartProcess(command, executord, javaPath))
+                                            {
+                                                errors.Add("libraries/" + lib);
+                                                goto EndWhile; //возникла ошибка
+                                            }
                                         }
-
                                         break;
 
                                     case "moveFile":
@@ -758,6 +799,17 @@ namespace Lexplosion.Logic.FileSystem
                                             }
 
                                             File.Copy(from, to);
+                                        }
+                                        break;
+                                    case "findOnPage":
+                                        {
+                                            string input = ToServer.HttpGet(obtainingMethod[i][1]); // получем содержимое страницы по url
+
+                                            //по регулярке из этого метода ищем нужную строку
+                                            Regex regex = new Regex(obtainingMethod[i][2]); 
+                                            var result = regex.Match(input);
+                                            //закидывеам полученное значение в список переменных
+                                            vars["{@" + obtainingMethod[i][3] + "}"] = result.Groups[1].ToString();    
                                         }
                                         break;
                                 }

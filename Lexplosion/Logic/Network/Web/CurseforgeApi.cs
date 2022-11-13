@@ -102,8 +102,14 @@ namespace Lexplosion.Logic.Network
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, ModloaderType modloader)
         {
+            string modloaderStr = "";
+            if (modloader != ModloaderType.Vanilla)
+            {
+                modloaderStr = "&modLoaderType=" + (int)modloader;
+            }
+
             // TODO: у курсфорджа ограничения на 50 файлов, поэтому нужный нам файл иногда может просто не найтись
-            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + "&modLoaderType=" + (int)modloader);
+            return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
         }
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)

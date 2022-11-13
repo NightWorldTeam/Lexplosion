@@ -76,6 +76,11 @@
         Quilt
     }
 
+    public enum AdditionalInstallerType
+    {
+        Optifine
+    }
+
     /// <summary>
     /// Типа аддонов с курсфорджа
     /// </summary>

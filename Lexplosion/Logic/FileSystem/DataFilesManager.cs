@@ -12,11 +12,6 @@ namespace Lexplosion.Logic.FileSystem
 {
     static class DataFilesManager
     {
-        private class LocalVersionManifest // нужен для декодирования json
-        {
-            public LocalVersionInfo version;
-        }
-
         public static void SaveAccount(string login, string accessData, AccountType accountType)
         {
             accessData = Convert.ToBase64String(AesСryp.Encode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
@@ -257,7 +252,31 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
+        /// <summary>
+        /// Получет и декодирует содержиоме JSON файла
+        /// </summary>
+        /// <typeparam name="T">Тип, к которому привести JSON</typeparam>
+        /// <param name="file">Путь до файла</param>
+        /// <returns>Декодированные данные</returns>
         public static T GetFile<T>(string file)
+        {
+            try
+            {
+                string fileContent = GetFile(file);
+                return JsonConvert.DeserializeObject<T>(fileContent);
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Получет содержимое текстового файла
+        /// </summary>
+        /// <param name="file">Путь до файла</param>
+        /// <returns>Текстовые данные</returns>
+        public static string GetFile(string file)
         {
             try
             {
@@ -269,11 +288,11 @@ namespace Lexplosion.Logic.FileSystem
                         fstream.Read(fileBytes, 0, fileBytes.Length);
                         fstream.Close();
 
-                        return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(fileBytes));
+                        return Encoding.UTF8.GetString(fileBytes);
                     }
                 }
 
-                return default;
+                return null;
             }
             catch
             {
@@ -282,42 +301,45 @@ namespace Lexplosion.Logic.FileSystem
                     File.Delete(file);
                 }
 
-                return default;
+                return null;
             }
         }
 
         public static void SaveManifest(string instanceId, VersionManifest data)
         {
-            string minecraftJar = "";
-            if (data.version.minecraftJar != null)
-            {
-                minecraftJar = data.version.minecraftJar.name;
-            }
-
-            LocalVersionManifest dataLocal = new LocalVersionManifest
-            {
-                version = new LocalVersionInfo()
-                {
-                    minecraftJar = new Dictionary<string, string>
-                    {
-                        ["name"] = minecraftJar
-                    },
-
-                    arguments = data.version.arguments,
-                    gameVersion = data.version.gameVersion,
-                    assetsVersion = data.version.assetsVersion,
-                    assetsIndexes = data.version.assetsIndexes,
-                    mainClass = data.version.mainClass,
-                    modloaderVersion = data.version.modloaderVersion,
-                    modloaderType = data.version.modloaderType,
-                    releaseIndex = data.version.releaseIndex
-                }
-            };
-
-            SaveFile(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(dataLocal));
+            SaveFile(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(data));
             if (data.libraries != null)
             {
-                SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
+                if (data.version.additionalInstaller != null)
+                {
+                    var baseLibs = new Dictionary<string, LibInfo>();
+                    var additionalLibs = new Dictionary<string, LibInfo>();
+
+                    // в этом цикле разъединяем либрариесы и дополнительный отправляем в отадельные файлы
+                    foreach (var key in data.libraries.Keys)
+                    {
+                        LibInfo value = data.libraries[key];
+                        if (value.additionalInstallerType == null)
+                        {
+                            baseLibs[key] = value;
+                        }
+                        else
+                        {
+                            additionalLibs[key] = value;
+                        }
+                    }
+
+                    SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(baseLibs));
+
+                    if (additionalLibs != null && additionalLibs.Count > 0)
+                    {
+                        SaveFile(DirectoryPath + "/versions/additionalLibraries/" + data.version.additionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
+                    }
+                }
+                else
+                {
+                    SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
+                }
             }
         }
 
@@ -331,10 +353,25 @@ namespace Lexplosion.Logic.FileSystem
 
             if (includingLibraries)
             {
-                Dictionary<string, LibInfo> librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json");
-                if (librariesData == null)
+                var librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json") ?? new Dictionary<string, LibInfo>();
+
+                var installer = data.version?.additionalInstaller;
+                if (installer != null)
                 {
-                    librariesData = new Dictionary<string, LibInfo>();
+                    var additionallibrarieData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/additionalLibraries/" + installer?.GetLibName + ".json");
+
+                    if (additionallibrarieData != null)
+                    {
+                        foreach (var lib in additionallibrarieData.Keys)
+                        {
+                            librariesData[lib] = additionallibrarieData[lib];
+                            librariesData[lib].additionalInstallerType = installer.type;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
 
                 data.libraries = librariesData;

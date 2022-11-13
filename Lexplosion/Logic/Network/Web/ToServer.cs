@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network
 {
@@ -106,22 +107,35 @@ namespace Lexplosion.Logic.Network
             {
                 return new List<string>();
             }
-
         }
 
-        //функция получает манифест для майкрафт версии
-        public static VersionManifest GetVersionManifest(string version, ModloaderType modloader, string modloaderVersion = "")
+        public static List<string> GetOptifineVersions(string gameVersion)
         {
-            string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
-            string str = "";
-            string str2 = "";
+            try
+            {
+                string answer = HttpGet(LaunсherSettings.URL.InstallersData + gameVersion + "/optifine");
+                if (answer != null)
+                {
+                    List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
+                    return data ?? new List<string>();
+                }
+                else
+                {
+                    return new List<string>();
+                }
+            }
+            catch
+            {
+                return new List<string>();
+            }
+        }
+
+        public static T ProtectedRequest<T>(string url) where T : ProtectedManifest
+        {
             Random rnd = new Random();
 
-            for (int i = 0; i < 32; i++)
-            {
-                str += chars[rnd.Next(0, chars.Length)];
-                str2 += chars[rnd.Next(0, chars.Length)];
-            }
+            string str = rnd.GenerateString(32);
+            string str2 = rnd.GenerateString(32);
 
             using (SHA1 sha = new SHA1Managed())
             {
@@ -142,83 +156,99 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string modloaderUrl = "";
-                    if (!string.IsNullOrEmpty(modloaderVersion))
-                    {
-                        if (modloader != ModloaderType.Vanilla)
-                        {
-                            modloaderUrl = "/" + modloader.ToString().ToLower() + "/";
-                            modloaderUrl += modloaderVersion;
-                        }
-                    }
-
-                    Runtime.DebugWrite("URL " + LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
-                    string answer = HttpPost(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl, data);
+                    Runtime.DebugWrite(url);
+                    string answer = HttpPost(url, data);
 
                     if (answer != null && answer != "")
                     {
                         answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
-                        DataVersionManifest filesData = JsonConvert.DeserializeObject<DataVersionManifest>(answer);
+                        T filesData = JsonConvert.DeserializeObject<T>(answer);
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
                         {
-                            Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
-                            foreach (string lib in filesData.libraries.Keys)
-                            {
-                                if (filesData.libraries[lib].os == null || filesData.libraries[lib].os.Contains("windows"))
-                                {
-                                    libraries[lib] = new LibInfo
-                                    {
-                                        notArchived = filesData.libraries[lib].notArchived,
-                                        url = filesData.libraries[lib].url,
-                                        obtainingMethod = filesData.libraries[lib].obtainingMethod,
-                                        isNative = filesData.libraries[lib].isNative,
-                                        activationConditions = filesData.libraries[lib].activationConditions,
-                                        notLaunch = filesData.libraries[lib].notLaunch
-                                    };
-                                }
-                            }
-
-                            VersionManifest ret = new VersionManifest
-                            {
-                                version = filesData.version,
-                                libraries = libraries
-                            };
-
-                            return ret;
+                            return filesData;
                         }
                         else
                         {
-                            return null;
+                            return default;
                         }
                     }
                     else
                     {
-                        return null;
+                        return default;
                     }
                 }
                 catch
                 {
-                    return null;
+                    return default;
                 }
             }
         }
 
-        public class AuthResult
+        //функция получает манифест для майкрафт версии
+        public static VersionManifest GetVersionManifest(string version, ModloaderType modloader, string modloaderVersion = null, string optifineVersion = null)
         {
-            public AuthCode Status;
-            public string Login;
-            public string UUID;
-            public string AccesToken;
-            public string SessionToken;
-            public string AccessID;
+            try
+            {
+                string modloaderUrl = "";
+                if (!string.IsNullOrEmpty(modloaderVersion))
+                {
+                    if (modloader != ModloaderType.Vanilla)
+                    {
+                        modloaderUrl = "/" + modloader.ToString().ToLower() + "/";
+                        modloaderUrl += modloaderVersion;
+                    }
+                }
+
+                var filesData = ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.VersionsData + WebUtility.UrlEncode(version) + modloaderUrl);
+                if (filesData != null)
+                {
+                    Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
+                    foreach (string lib in filesData.libraries.Keys)
+                    {
+                        if (filesData.libraries[lib].os == null || filesData.libraries[lib].os.Contains("windows"))
+                        {
+                            libraries[lib] = filesData.libraries[lib].GetLibInfo;
+                        }
+                    }
+
+                    VersionManifest manifest = new VersionManifest
+                    {
+                        version = filesData.version,
+                        libraries = libraries
+                    };
+
+                    if (optifineVersion != null)
+                    {
+                        var optifineData = ProtectedRequest<ProtectedInstallerManifest>(LaunсherSettings.URL.InstallersData + WebUtility.UrlEncode(version) + "/optifine/" + optifineVersion);
+                        if (optifineData != null)
+                        {
+                            foreach (string lib in optifineData.libraries.Keys)
+                            {
+                                if (optifineData.libraries[lib].os == null || optifineData.libraries[lib].os.Contains("windows"))
+                                {
+                                    libraries[lib] = optifineData.libraries[lib].GetLibInfo;
+                                    libraries[lib].additionalInstallerType = AdditionalInstallerType.Optifine;
+                                }
+                            }
+
+                            optifineData.version.installerVersion = optifineVersion;
+                            manifest.version.additionalInstaller = optifineData.version;
+                        }
+                    }
+
+                    return manifest;
+                }
+            }
+            catch { }
+
+            return null;
         }
 
         public static AuthResult Authorization(string login, string accessData, out int baseStatus)
         {
             baseStatus = 0;
 
-            string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
             string str = "";
             string str2 = "";
             string salt = "";
@@ -226,9 +256,9 @@ namespace Lexplosion.Logic.Network
 
             for (int i = 0; i < 32; i++)
             {
-                str += chars[rnd.Next(0, chars.Length)];
-                str2 += chars[rnd.Next(0, chars.Length)];
-                salt += chars[rnd.Next(0, chars.Length)];
+                str += rnd.GenerateString(1);
+                str2 += rnd.GenerateString(1);
+                salt += rnd.GenerateString(1);
             }
 
             using (SHA1 sha = new SHA1Managed())

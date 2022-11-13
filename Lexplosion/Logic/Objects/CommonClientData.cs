@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Objects.CommonClientData
 {
@@ -23,17 +24,46 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public bool isNative;
         public ActivationConditions activationConditions;
         public bool notLaunch;
+
+        /// <summary>
+        /// Эта залупа нужно чтобы просто пометить либрариес, что он относится к дополнительному инсталлеру, для того чтобы опотом их можно было сохранить отдельно.
+        /// Если он не относится к дополнительным, то эта хуйня будет null
+        /// </summary>
+        [JsonIgnore]
+        public AdditionalInstallerType? additionalInstallerType;
     }
 
+    /// <summary>
+    /// Манифест клиента. Имнно этот класс будет сохранен в manifest.json
+    /// </summary>
     public class VersionManifest
     {
         public VersionInfo version;
         public Dictionary<string, LibInfo> libraries;
+
+        /// <summary>
+        /// Т.к либрариесы хранятся в другом файле, то прописываем эту хуйню чтобы они не сереализовались в json и не торчали просто так в manifest.json
+        /// </summary>
+        public bool ShouldSerializelibraries() => false;
     }
 
-    public class VersionInfo : LocalVersionInfo
+    /// <summary>
+    /// Основная часть манифеста клиента
+    /// </summary>
+    public class VersionInfo
     {
-        public new FileInfo minecraftJar;
+        public FileInfo minecraftJar;
+        public bool isStatic;
+        public long releaseIndex;
+        public string arguments;
+        public string jvmArguments;
+        public string gameVersion;
+        public string assetsVersion;
+        public string assetsIndexes;
+        public string mainClass;
+        public string modloaderVersion;
+        public ModloaderType modloaderType;
+        public AdditionalInstaller additionalInstaller;
         public string CustomVersionName;
         public bool security;
         public long librariesLastUpdate;
@@ -42,6 +72,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         /// Это свойство возвращает имя для файла либрариесов (файлы .lver, что хранят версию либрариесов и файлы .json, которые хранят список либрариесов для конкретной версии игры).
         /// У каждой версии игры своё имя для файлов с информацией о либрариесах
         /// </summary>
+        [JsonIgnore]
         public string GetLibName
         {
             get
@@ -58,23 +89,43 @@ namespace Lexplosion.Logic.Objects.CommonClientData
                 return gameVersion + endName;
             }
         }
+
+        //Прописываем какие поля нужно проигнорировать
+        public bool ShouldSerializeCustomVersionName() => false;
+        public bool ShouldSerializesecurity() => false;
+        public bool ShouldSerializelibrariesLastUpdate() => false;
     }
 
     /// <summary>
-    /// Локальный манифест модпака, который хранится в файле manifest.json
+    /// Класс, описывающий дополнительынй инсталлер (вроде оптифайна)
     /// </summary>
-    public class LocalVersionInfo
+    public class AdditionalInstaller
     {
-        public Dictionary<string, string> minecraftJar;
-        public long releaseIndex;
         public string arguments;
         public string jvmArguments;
-        public string gameVersion;
-        public string assetsVersion;
-        public string assetsIndexes;
         public string mainClass;
-        public string modloaderVersion;
-        public ModloaderType modloaderType;
+        public AdditionalInstallerType type;
+        public string installerVersion;
+        public long librariesLastUpdate;
+        public string gameVersion;
+
+        /// <summary>
+        /// Аналогично GetLibName из VersionInfo.
+        /// </summary>
+        [JsonIgnore]
+        public string GetLibName
+        {
+            get
+            {
+                return gameVersion + "-" + type + "-" + installerVersion;
+            }
+        }
+    }
+
+    public class AdditionalInstallerManifest
+    {
+        public AdditionalInstaller version;
+        public Dictionary<string, LibInfo> libraries;
     }
 
     public class FileInfo
@@ -85,6 +136,12 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public long size;
         public long lastUpdate;
         public bool notArchived;
+
+        public bool ShouldSerializeurl() => false;
+        public bool ShouldSerializesha1() => false;
+        public bool ShouldSerializesize() => false;
+        public bool ShouldSerializelastUpdate() => false;
+        public bool ShouldSerializenotArchived() => false;
     }
 
     class InstancePlatformData

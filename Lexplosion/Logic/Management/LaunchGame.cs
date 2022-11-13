@@ -113,6 +113,29 @@ namespace Lexplosion.Logic.Management
 
             command += "\"" + versionPath + "\" ";
 
+            string mainClass = data.VersionFile.mainClass;
+
+            string additionalInstallerArgumentsBefore = "";
+            string additionalInstallerArgumentsAfter = " ";
+
+            var installer = data.VersionFile.additionalInstaller;
+            if (installer != null)
+            {
+                if (!string.IsNullOrEmpty(installer.jvmArguments))
+                {
+                    additionalInstallerArgumentsBefore += installer.jvmArguments + " ";
+                }
+
+                if (!string.IsNullOrEmpty(installer.arguments))
+                {
+                    additionalInstallerArgumentsAfter += installer.arguments + " ";
+                }
+
+                mainClass = installer.mainClass;
+            }
+
+            command += additionalInstallerArgumentsBefore;
+
             string jvmArgs = data.VersionFile.jvmArguments ?? "";
             jvmArgs = jvmArgs.Replace("${version_file}", data.VersionFile.minecraftJar.name);
             jvmArgs = jvmArgs.Replace("${library_directory}", _settings.GamePath + "/libraries");
@@ -121,13 +144,14 @@ namespace Lexplosion.Logic.Management
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-            command += data.VersionFile.mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.gameVersion;
+            command += mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.gameVersion;
             command += " --gameDir \"" + _settings.GamePath + "/instances/" + _instanceId + "\"";
             command += " --assetsDir \"" + _settings.GamePath + "/assets" + "\"";
             command += " --assetIndex " + data.VersionFile.assetsVersion;
             command += " --uuid " + GlobalData.User.UUID + " --accessToken " + GlobalData.User.AccessToken + " --userProperties [] --userType legacy ";
             command += data.VersionFile.arguments;
             command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
+            command += additionalInstallerArgumentsAfter;
 
             return command.Replace(@"\", "/");
         }
@@ -420,14 +444,15 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
-                if (ToServer.ServerIsOnline())
+                VersionManifest files = DataFilesManager.GetManifest(_instanceId, true);
+                bool versionIsStatic = files?.version?.isStatic == true;
+
+                if (!versionIsStatic && ToServer.ServerIsOnline())
                 {
-                    return Update(progressHandler, fileDownloadHandler, downloadStarted, null, (_settings.AutoUpdate == false));
+                    data = Update(progressHandler, fileDownloadHandler, downloadStarted, null, (_settings.AutoUpdate == false));
                 }
                 else
                 {
-                    VersionManifest files = DataFilesManager.GetManifest(_instanceId, true);
-
                     if (files?.version != null && files.libraries != null)
                     {
                         if (_settings.CustomJava == false)
