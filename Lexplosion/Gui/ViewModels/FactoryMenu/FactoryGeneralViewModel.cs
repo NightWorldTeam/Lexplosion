@@ -4,6 +4,7 @@ using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
@@ -58,12 +59,32 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private ObservableCollection<string> _optifineVersions;
+        public ObservableCollection<string> OptifineVersions
+        {
+            get => _optifineVersions; set
+            {
+                _optifineVersions = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _selectedModloaderVersion;
         public string SelectedModloaderVersion
         {
             get => _selectedModloaderVersion; set
             {
                 _selectedModloaderVersion = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _selectedOptifineVersion;
+        public string SelectedOptifineVersion 
+        {
+            get => _selectedOptifineVersion; set 
+            {
+                _selectedOptifineVersion = value;
                 OnPropertyChanged();
             }
         }
@@ -76,6 +97,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 _selectedVersion = value ?? GameVersions[0];
                 OnPropertyChanged();
                 ReselectVersionLoadModloaderVersions(_selectedVersion);
+                ReselectVersionLoadOptifine(_selectedVersion);
             }
         }
 
@@ -98,6 +120,16 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _hasSodiumInstall; set
             {
                 _hasSodiumInstall = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isOptifineInstalling;
+        public bool IsOptifineInstalling 
+        {
+            get => _isOptifineInstalling; set 
+            {
+                _isOptifineInstalling = value;
                 OnPropertyChanged();
             }
         }
@@ -183,7 +215,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 _selectedOnlyVersion,
                 Model.ModloaderType,
                 Model.LogoPath,
-                SelectedModloaderVersion
+                SelectedModloaderVersion,
+                SelectedOptifineVersion != null ? SelectedOptifineVersion : null
            );
 
             _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
@@ -225,6 +258,18 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                     ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(_selectedOnlyVersion, Model.ModloaderType));
 
                     if (ModloaderVersions.Count > 0) SelectedModloaderVersion = ModloaderVersions[0];
+                });
+            }
+        }
+
+        private void ReselectVersionLoadOptifine(string selectedVersion)
+        {
+            if (Model.ModloaderType == ModloaderType.Vanilla)
+            {
+                Lexplosion.Runtime.TaskRun(() =>
+                {
+                    OptifineVersions = new ObservableCollection<string>(ToServer.GetOptifineVersions(selectedVersion));
+                    if (OptifineVersions.Count > 0) SelectedOptifineVersion = OptifineVersions[0];
                 });
             }
         }

@@ -11,6 +11,8 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         public Dictionary<string, List<string>> ForgeVersions { get; }
         public Dictionary<string, List<string>> FabricVersions { get; }
 
+        public Dictionary<string, List<string>> OptifineVersios { get; }
+
         private bool _isAvaliableName;
         public bool IsAvaliableName
         {
