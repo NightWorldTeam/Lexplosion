@@ -166,7 +166,7 @@ namespace Lexplosion.Logic.Management
             {
                 lock (loocker)
                 {
-                    gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, "194.61.2.176", _settings.OnlineGameDirectConnection);
+                    gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, "194.61.2.176", GlobalData.GeneralSettings.OnlineGameDirectConnection);
                     removeImportantTaskMark = false;
                     Lexplosion.Runtime.AddImportantTask();
 
@@ -553,7 +553,7 @@ namespace Lexplosion.Logic.Management
                         }
                         catch { }
 
-                        _classInstance.gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, "194.61.2.176", _classInstance._settings.OnlineGameDirectConnection);
+                        _classInstance.gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, "194.61.2.176", GlobalData.GeneralSettings.OnlineGameDirectConnection);
                         _classInstance.gameGateway.Initialization(_classInstance.process.Id);
                     }
                 }

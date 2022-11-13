@@ -155,7 +155,6 @@ namespace Lexplosion.Logic.Objects.Curseforge
 
         public List<CurseforgeFileInfo> latestFiles;
         public List<GameVersionAddon> latestFilesIndexes;
-        //public ModloaderType Modloader;
     }
 
     public class CurseforgeFileInfo
