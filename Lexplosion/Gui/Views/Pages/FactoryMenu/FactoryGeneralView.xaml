@@ -46,7 +46,9 @@
         </Style>
     </UserControl.Resources>
 
-    <TabControl Width="360" Height="420"
+    <TabControl
+        Width="360"
+        Height="420"
         BorderThickness="0"
         ItemContainerStyle="{StaticResource ButtonItemStyle}"
         Style="{StaticResource TabControlStyle}">
@@ -101,9 +103,10 @@
                                 ItemsSource="{Binding GameVersions}"
                                 SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox
-                                    Margin="5,10,0,5"
-                                    HorizontalAlignment="Left" IsChecked="{Binding IsShowSnapshots}"
-                                    Content="Показывать снапшоты" />
+                                Margin="5,10,0,5"
+                                HorizontalAlignment="Left"
+                                Content="Показывать снапшоты"
+                                IsChecked="{Binding IsShowSnapshots}" />
                         </StackPanel>
 
                         <!--  Game Type  -->
@@ -148,6 +151,15 @@
                             </StackPanel>
                         </StackPanel>
 
+                        <StackPanel Margin="5,20,0,0" Visibility="{Binding IsModloaderSelected, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                            <CheckBox Content="Установить оптифайн" IsChecked="{Binding IsOptifineInstalling}" />
+                            <ComboBox
+                                Margin="0,10,0,0"
+                                ItemsSource="{Binding OptifineVersions}"
+                                SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding IsOptifineInstalling, Converter={StaticResource ConvertBoolToVisibility}}" />
+                        </StackPanel>
+
                         <!--  Modloader Version and some  -->
                         <StackPanel Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
                             <StackPanel Margin="0,15,0,0">
@@ -159,7 +171,9 @@
                             </StackPanel>
 
                             <!--<StackPanel Margin="0,15,0,0">
-                                --><!--<CheckBox Content="{DynamicResource installOptifine}" />--><!--
+                            -->
+                            <!--<CheckBox Content="{DynamicResource installOptifine}" />-->
+                            <!--
                                 <CheckBox
                                     Margin="0,2,0,0"
                                     Content="{DynamicResource installSodiumIris}"
