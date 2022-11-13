@@ -21,6 +21,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private readonly InstanceFormViewModel _instanceForm;
 
+        private readonly FactoryDLCVM _factoryDLCVM;
 
         #region Commands
 
@@ -81,6 +82,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             _selectedSettingsTabIndex = selectedSettingsTabIndex;
 
             _mainViewModel = mainViewModel;
+
+            _factoryDLCVM = new FactoryDLCVM(_mainViewModel, _instanceForm.Client);
+
             OnInstanceStateChanged();
 
             _instanceForm.Client.StateChanged += OnInstanceStateChanged;
@@ -91,6 +95,11 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
 
         #endregion Constructors
+
+
+        #region Public & Properties Methods
+
+        #endregion
 
 
         #region Private Methods
@@ -150,7 +159,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
 
             _settingsTabs.Add(new Tab<VMBase> { Id = 0, Header = ResourceGetter.GetString("settings"), Content = new InstanceSettingsViewModel(_instanceForm.Client) });
-            _settingsTabs.Add(new Tab<VMBase> { Id = 3, Header = ResourceGetter.GetString("dlc"), Content = new FactoryDLCVM(_mainViewModel, _instanceForm.Client) });
+            _settingsTabs.Add(new Tab<VMBase> { Id = 3, Header = ResourceGetter.GetString("dlc"), Content = _factoryDLCVM });
         }
 
 

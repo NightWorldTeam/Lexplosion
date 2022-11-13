@@ -8,20 +8,11 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #region Properities
 
-        public string Name { get; }
-        public int Id { get; }
-        public byte[] ImageBytes { get; private set; }
-        public bool HasSubCategories { get; }
 
-        private bool _hasSubcategies;
-        public bool HasSubcategories
-        {
-            get => _hasSubcategies; private set
-            {
-                _hasSubcategies = value;
-                OnPropertyChanged();
-            }
-        }
+        public string Name { get => _curseforgeCategory.name; }
+        public int Id { get => _curseforgeCategory.id; }
+        public byte[] ImageBytes { get; private set; }
+        public bool HasSubcategories { get => CfSubCategories != null; }
 
         private CfCategory[] _cfSubcategories;
         public CfCategory[] CfSubCategories
@@ -30,9 +21,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 _cfSubcategories = value;
                 OnPropertyChanged();
-                HasSubcategories = value != null;
+                OnPropertyChanged(nameof(HasSubcategories));
             }
         }
+
 
         #endregion Properities
 
@@ -41,13 +33,15 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         public CfCategory(CurseforgeCategory curseforgeCategory, CfCategory[] categories = null)
         {
             _curseforgeCategory = curseforgeCategory;
-            Name = curseforgeCategory.name;
-            Id = curseforgeCategory.id;
             ImageBytes = null;
-            HasSubCategories = categories != null;
             CfSubCategories = categories;
         }
 
         #endregion Constructors
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

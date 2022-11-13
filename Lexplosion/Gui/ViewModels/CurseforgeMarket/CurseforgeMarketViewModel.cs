@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
+﻿using Lexplosion.Gui.Models.InstanceFactory;
+using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
@@ -13,7 +14,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private readonly MainViewModel _mainViewModel;
         private readonly InstanceClient _instanceClient;
         private readonly CfProjectType _projectType;
-        private readonly ObservableCollection<InstanceAddon> _instanceAddons;
+        private readonly FactoryDLCModel _factoryDLCModel;
         private readonly BaseInstanceData _baseInstanceData;
         private readonly FactoryDLCVM _factoryDLCVM;
 
@@ -23,15 +24,15 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private static readonly Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>> InstallingAddons = new Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>>();
         private static object _installingAddonsLocker = new object();
-
-        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, ObservableCollection<InstanceAddon> installedAddons, FactoryDLCVM factoryDLCVM)
+        
+        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, FactoryDLCModel factoryDLCModel, FactoryDLCVM factoryDLCVM)
         {
             _mainViewModel = mainViewModel;
             _mainViewModel.UserProfile.IsShowInfoBar = false;
-
+            
             _instanceClient = instanceClient;
             _projectType = addonsType;
-            _instanceAddons = installedAddons;
+            _factoryDLCModel = factoryDLCModel;
             _baseInstanceData = instanceClient.GetBaseData;
             _factoryDLCVM = factoryDLCVM;
             // передача делегата загрузки при поиске по тексту
@@ -51,18 +52,15 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                 {
                     DownloadAddonFiles = new ObservableCollection<DownloadAddonFile>();
                 }
-            }       
+            }
 
             IsLoaded = false;
         }
 
-
         #region Properties
-
 
         public ObservableCollection<InstanceAddon> InstanceAddons { get; } = new ObservableCollection<InstanceAddon>();
         public ObservableCollection<DownloadAddonFile> DownloadAddonFiles { get; }
-
 
         #region Navigation
 
@@ -71,10 +69,10 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion Navigation
 
-
         #region Load fields
 
         private bool _isLoaded;
+
         public bool IsLoaded
         {
             get => _isLoaded; set
@@ -85,6 +83,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         }
 
         private bool _isEmptyList;
+
         /// <summary>
         /// <para>Отвечает на вопрос количество найденого контента равно 0?</para>
         /// </summary>
@@ -98,6 +97,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         }
 
         private bool _isPaginatorVisible = false;
+
         public bool IsPaginatorVisible
         {
             get => _isPaginatorVisible; set
@@ -107,10 +107,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }
         }
 
-        #endregion load fields
+        #endregion Load fields
 
-
-        #region Categories 
+        #region Categories
 
         public ObservableCollection<CfCategory> CfCategories { get; } = new ObservableCollection<CfCategory>();
 
@@ -121,7 +120,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             {
                 _selectedCategory = value;
                 OnPropertyChanged();
-                if (!_selectedCategory.HasSubCategories)
+                if (!_selectedCategory.HasSubcategories)
                     SubCategorySelected = null;
                 if (!_isInit)
                 {
@@ -146,16 +145,14 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion Categories
 
-
         public bool IsDownloadingSomething { get => DownloadAddonFiles.Count != 0; }
 
-
         #endregion Properties
-
 
         #region Commands
 
         private RelayCommand _closePageCommand;
+
         public RelayCommand ClosePageCommand
         {
             get => _closePageCommand ?? (_closePageCommand = new RelayCommand(obj =>
@@ -165,6 +162,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         }
 
         private RelayCommand _goToCurseforgeCommand;
+
         public RelayCommand GoToCurseforgeCommand
         {
             get => _goToCurseforgeCommand ?? (_goToCurseforgeCommand = new RelayCommand(obj =>
@@ -175,6 +173,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         }
 
         private RelayCommand _installAddonCommand;
+
         public RelayCommand InstallAddonCommand
         {
             get => _installAddonCommand ?? (_installAddonCommand = new RelayCommand(obj =>
@@ -183,8 +182,17 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             }));
         }
 
-        #endregion Commands
+        private RelayCommand _cancelAddonDownload;
 
+        public RelayCommand CancelAddonDownload 
+        {
+            get => _cancelAddonDownload ?? (_cancelAddonDownload = new RelayCommand(obj =>
+            {
+                ((InstanceAddon)obj).CancellDownload();
+            }));
+        }
+
+        #endregion Commands
 
         #region Private Methods
 
@@ -295,8 +303,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                         {
                             DownloadAddonFiles.Add(new DownloadAddonFile(addonInstance));
                             InstallingAddons[_instanceClient] = DownloadAddonFiles;
-                        } 
-                        
+                        }
+
                         OnPropertyChanged(nameof(IsDownloadingSomething));
                     }
                     else
@@ -315,7 +323,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                                 text = "Название: " + addonInstance.Name + ".\nНеобходим для " + instanceAddon.Name;
                             }
 
-                            _instanceAddons.Add(addonInstance);
+                            _factoryDLCModel.InstalledAddons.Add(addonInstance);
                             _factoryDLCVM.CurrentAddonModel.IsEmptyList = false;
                             MainViewModel.ShowToastMessage(title, text, TimeSpan.FromSeconds(5d));
                         }
@@ -336,9 +344,8 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                             if (DownloadAddonFiles.Count == 0)
                             {
                                 InstallingAddons.Remove(_instanceClient);
-                            }       
+                            }
                         }
-                        
 
                         OnPropertyChanged(nameof(IsDownloadingSomething));
                     }
@@ -370,11 +377,11 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var instances = InstanceAddon.GetAddonsCatalog(
-                    _baseInstanceData, 
-                    _pageSize, 
+                    _baseInstanceData,
+                    _pageSize,
                     PaginatorVM.PageIndex - 1,
-                    (AddonType)(int)_projectType, 
-                    SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id, 
+                    (AddonType)(int)_projectType,
+                    SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id,
                     searchText == null ? _previousSearch : searchText
                     );
 
@@ -406,6 +413,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
             });
         }
 
-        #endregion Private Methods   
+        #endregion Private Methods
+
     }
 }

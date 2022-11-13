@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
+using System;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
@@ -112,7 +113,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                     _mainViewModel, 
                     _instanceClient, 
                     ((FactoryDLCModel)obj).Type,
-                    CurrentAddonModel.InstalledAddons,
+                    CurrentAddonModel,
                     this
                 );
             }));

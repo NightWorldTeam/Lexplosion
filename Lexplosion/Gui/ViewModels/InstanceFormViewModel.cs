@@ -112,7 +112,7 @@ namespace Lexplosion.Gui.ViewModels
                     Model.DownloadModel.IsDownloadInProgress = true;
                     Model.UpdateLowerButton();
                 };
-
+                Model.UpperButton.ChangeFuncClose();
                 Model.LaunchModel.LaunchInstance();
             }
         }

@@ -10,7 +10,6 @@
     xmlns:instanceManagement="clr-namespace:Lexplosion.Logic.Management.Instances"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
-    d:DesignWidth="800"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -37,7 +36,6 @@
                                                     Fill="White"
                                                     Stretch="Fill" />
                                             </Viewbox>
-
                                         </Border>
 
                                         <ControlTemplate.Triggers>
@@ -53,7 +51,6 @@
                                                 </Setter>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
-
                                     </ControlTemplate>
                                 </CheckBox.Template>
                             </CheckBox>
@@ -79,46 +76,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <DataTemplate x:Key="CurseforgeCategory" DataType="{x:Type curseforgeMV:CfCategory}">
-            <Border
-                x:Name="Border"
-                Margin="3,2,0,0"
-                Padding="10,3,10,3"
-                BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                BorderThickness="1"
-                CornerRadius="10"
-                SnapsToDevicePixels="False">
-
-                <StackPanel
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-
-                    <!--  Catagory text  -->
-
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontFamily="{DynamicResource FuturaBookC}"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource BrandSolidColorBrush}"
-                        Text="{Binding Name}" />
-                </StackPanel>
-            </Border>
-
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
-                    <Setter TargetName="Border" Property="Background">
-                        <Setter.Value>
-                            <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
-                        </Setter.Value>
-                    </Setter>
-                    <Setter TargetName="Border" Property="BorderThickness" Value="2" />
-                </DataTrigger>
-            </DataTemplate.Triggers>
-
-        </DataTemplate>
 
         <DataTemplate DataType="{x:Type instanceManagement:InstanceAddon}">
             <Border
@@ -233,7 +190,6 @@
                                                 Text="{Binding Description}"
                                                 TextWrapping="WrapWithOverflow" />
                                         </ToolTip>
-
                                     </TextBlock.ToolTip>
                                 </TextBlock>
                             </Grid>
@@ -254,6 +210,8 @@
                                     Height="30"
                                     HorizontalContentAlignment="Left"
                                     VerticalContentAlignment="Center"
+                                    Command="{Binding DataContext.CancelAddonDownload, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
                                     IsEnabled="{Binding IsInstalled, Converter={StaticResource InverseBooleanConverter}}"
                                     Style="{StaticResource DefaultBrandColorButton}"
                                     Visibility="{Binding IsInstalled, Converter={StaticResource NegativeConvertBoolToVisibility}}">
@@ -486,75 +444,7 @@
                     <StackPanel
                         HorizontalAlignment="Center"
                         Background="Transparent"
-                        Orientation="Horizontal">
-                        <controls:DropdownMenu x:Name="FiltersDropdownMenu" Margin="5,10,5,0">
-                            <ScrollViewer MaxHeight="350" Margin="10,5,10,0">
-                                <StackPanel>
-                                    <!--  Header  -->
-                                    <StackPanel Margin="8,0,10,0">
-                                        <TextBlock
-                                            FontSize="18"
-                                            FontWeight="Medium"
-                                            Foreground="White"
-                                            Opacity="0.8"
-                                            Text="{DynamicResource filterByCategory}" />
-
-                                        <TextBlock
-                                            Margin="0,3,0,0"
-                                            FontFamily="{DynamicResource FuturaBookC}"
-                                            FontSize="14"
-                                            FontWeight="Medium"
-                                            Foreground="White"
-                                            Opacity="0.7"
-                                            Text="{DynamicResource canSelectOnlyOne}" />
-                                    </StackPanel>
-
-                                    <!--  SelectionChanged="FiltersItem_SelectionChanged"  -->
-
-                                    <ListBox
-                                        Width="290"
-                                        Margin="0,7,0,0"
-                                        ItemContainerStyle="{StaticResource CategoriesListBoxItem}"
-                                        ItemTemplate="{StaticResource CurseforgeCategory}"
-                                        ItemsSource="{Binding CfCategories}"
-                                        SelectedItem="{Binding SelectedCategory}"
-                                        SelectionChanged="Filter_SelectionChanged"
-                                        Style="{StaticResource CategoriesListBox}" />
-
-                                    <StackPanel Visibility="{Binding SelectedCategory.HasSubcategories, Converter={StaticResource ConvertBoolToVisibility}}">
-
-                                        <TextBlock
-                                            Margin="8,10,0,0"
-                                            FontSize="16"
-                                            FontWeight="Medium"
-                                            Foreground="White"
-                                            Opacity="0.8"
-                                            Text="Subcategories" />
-                                        <TextBlock
-                                            Width="270"
-                                            Margin="0,3,0,0"
-                                            FontFamily="{DynamicResource FuturaBookC}"
-                                            FontSize="14"
-                                            FontWeight="Medium"
-                                            Foreground="White"
-                                            Opacity="0.7"
-                                            Text="Для выбранной категории можно выбрать подкатегорию, для по более точно сортировки."
-                                            TextWrapping="WrapWithOverflow" />
-
-                                        <ListBox
-                                            Width="290"
-                                            Margin="0,7,0,0"
-                                            ItemContainerStyle="{StaticResource CategoriesListBoxItem}"
-                                            ItemTemplate="{StaticResource CurseforgeCategory}"
-                                            ItemsSource="{Binding SelectedCategory.CfSubCategories}"
-                                            SelectedItem="{Binding SubCategorySelected}"
-                                            SelectionChanged="Filter_SelectionChanged"
-                                            Style="{StaticResource CategoriesListBox}" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </controls:DropdownMenu>
-
+                        Orientation="Vertical">
                         <controls:SearchBox
                             Width="320"
                             Height="40"
@@ -566,6 +456,64 @@
                             Placeholder="{DynamicResource search}"
                             PlaceholderFontSize="14"
                             SearchAction="{Binding SearchMethod}" />
+
+                        <Border
+                            Width="655"
+                            Height="70"
+                            Margin="0,10,0,20"
+                            Background="#131313"
+                            CornerRadius="5">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel HorizontalAlignment="Left">
+                                    <TextBlock
+                                        Margin="10,5,0,0"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="White"
+                                        Text="Категории" />
+                                    <ComboBox
+                                        Height="30"
+                                        Margin="10,5,0,0"
+                                        ItemsSource="{Binding CfCategories}"
+                                        SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type curseforgeMV:CfCategory}">
+                                                <TextBlock Text="{Binding Name}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                </StackPanel>
+                                <StackPanel HorizontalAlignment="Left" Visibility="{Binding SelectedCategory.HasSubcategories, Converter={StaticResource ConvertBoolToVisibility}}">
+                                    <TextBlock
+                                        Margin="10,5,0,0"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="White"
+                                        Text="Подкатегории" />
+                                    <ComboBox
+                                        Height="30"
+                                        Margin="10,5,0,0"
+                                        ItemsSource="{Binding SelectedCategory.CfSubCategories}"
+                                        SelectedItem="{Binding SubCategorySelected}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type curseforgeMV:CfCategory}">
+                                                <TextBlock Text="{Binding Name}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel HorizontalAlignment="Left" Visibility="Collapsed">
+                                    <TextBlock
+                                        Margin="10,5,0,0"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="White"
+                                        Text="Сортировка" />
+                                    <ComboBox Height="30" Margin="10,5,0,0" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
 
                     <ItemsControl ItemsSource="{Binding InstanceAddons}" />

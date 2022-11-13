@@ -26,10 +26,5 @@ namespace Lexplosion.Gui.Views.Pages
 
             }
         }
-
-        private void Filter_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            FiltersDropdownMenu.IsOpen = false;
-        }
     }
 }

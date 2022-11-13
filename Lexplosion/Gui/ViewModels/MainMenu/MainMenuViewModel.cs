@@ -30,7 +30,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private readonly TabMenuViewModel _multiplayerTabMenu;
         private readonly TabMenuViewModel _settingsTabMenu;
         /* mainmenu fields */
-
+        private Dictionary<InstanceFormViewModel, InstanceMenuViewModel> InstanceMenuViewModels = new Dictionary<InstanceFormViewModel, InstanceMenuViewModel>();
 
         #region Commands
 
@@ -110,8 +110,20 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         /// <param name="viewModel">InstanceViewModel нужной сборки.</param>
         public void OpenModpackPage(InstanceFormViewModel viewModel)
         {
+            InstanceMenuViewModel instanceMenuViewModel;
+            if (InstanceMenuViewModels.ContainsKey(viewModel)) 
+            {
+                instanceMenuViewModel = InstanceMenuViewModels[viewModel];
+                instanceMenuViewModel.SetSelectedTabIndex(0);
+            }
+            else 
+            {
+                instanceMenuViewModel = new InstanceMenuViewModel(viewModel, _mainViewModel);
+                InstanceMenuViewModels.Add(viewModel, instanceMenuViewModel);
+            }
+
             NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel));
+                MainViewModel.NavigationStore, () => instanceMenuViewModel);
             NavigationShowCaseCommand?.Execute(null);
         }
 
@@ -131,8 +143,21 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 subIndex = viewModel.Client.Type == InstanceSource.Local ? 3 : 1;
             }
 
+            InstanceMenuViewModel instanceMenuViewModel;
+            if (InstanceMenuViewModels.ContainsKey(viewModel))
+            {
+                instanceMenuViewModel = InstanceMenuViewModels[viewModel];
+                instanceMenuViewModel.SetSelectedTabIndex(index);
+            }
+            else
+            {
+                instanceMenuViewModel = new InstanceMenuViewModel(viewModel, _mainViewModel, index, subIndex);
+                InstanceMenuViewModels.Add(viewModel, instanceMenuViewModel);
+            }
+
+
             NavigationShowCaseCommand = new NavigateCommand<InstanceMenuViewModel>(
-                MainViewModel.NavigationStore, () => new InstanceMenuViewModel(viewModel, _mainViewModel, index, subIndex));
+                MainViewModel.NavigationStore, () => instanceMenuViewModel);
             NavigationShowCaseCommand?.Execute(null);
         }
 

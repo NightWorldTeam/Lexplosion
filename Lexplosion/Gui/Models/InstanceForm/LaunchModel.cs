@@ -71,7 +71,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
 
                 _formModel.DownloadModel.IsDownloadInProgress = false;
-                _formModel.UpperButton.ChangeFuncClose();
             }
             else
             {

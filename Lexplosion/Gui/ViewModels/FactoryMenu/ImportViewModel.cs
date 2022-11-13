@@ -7,12 +7,21 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public sealed class ImportFile
+    public sealed class ImportFile : VMBase
     {
         private readonly ImportViewModel _importVM;
         public string Name { get; }
         public string Path { get; }
-        public bool IsImportFinished { get; set; }
+        private bool _isImportFinished;
+        public bool IsImportFinished 
+        { 
+            get => _isImportFinished; 
+            set 
+            {
+                _isImportFinished = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ImportFile(ImportViewModel importVM, string path)
         {
