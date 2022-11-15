@@ -14,6 +14,8 @@ namespace Lexplosion.Gui.Views.Windows
         private bool _isLastLineError;
         private LaunchGame _gameManager;
 
+        private static Console _classInstance;
+
 
         #region Constructor
 
@@ -23,16 +25,39 @@ namespace Lexplosion.Gui.Views.Windows
             MouseDown += delegate { try { DragMove(); } catch { } };
 
             _paragraph = new Paragraph();
-            _gameManager = gameManager;
-            gameManager.ProcessDataReceived += AddNewLine;
+            SetGameManager(gameManager);
 
             ConsoleOutput.Document.Blocks.Add(_paragraph);
         }
 
         #endregion Constructor
 
+        public static void SetWindow(LaunchGame gameManager)
+        {
+            if (_classInstance == null)
+            {
+                _classInstance = new Console(gameManager)
+                {
+                    Left = App.Current.MainWindow.Left + 322,
+                    Top = App.Current.MainWindow.Top + 89
+                };
+
+                _classInstance.Show();
+            }
+            else
+            {
+                _classInstance._gameManager.ProcessDataReceived -= _classInstance.AddNewLine;
+                _classInstance.SetGameManager(gameManager);
+            }
+        }
 
         #region Private Methods
+
+        private void SetGameManager(LaunchGame gameManager)
+        {
+            _gameManager = gameManager;
+            gameManager.ProcessDataReceived += AddNewLine;
+        }
 
         private Run GetRun(string text, string foregroundHex, string backgroundHex, double opacity = 0.3)
         {
@@ -105,6 +130,7 @@ namespace Lexplosion.Gui.Views.Windows
         /// </summary>
         internal void Exit(object sender, RoutedEventArgs e)
         {
+            _classInstance = null;
             _gameManager.ProcessDataReceived -= AddNewLine;
             ConsoleOutput.Document.Blocks.Clear();
             this.Close();

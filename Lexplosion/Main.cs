@@ -17,6 +17,8 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.WebSockets;
 
+using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
+
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
  * Никакие права не защищены.
@@ -29,6 +31,7 @@ namespace Lexplosion
     {
         private static App app = new App();
         private static SplashWindow _splashWindow;
+        private static ConsoleWindow _console;
 
         public static Process CurrentProcess { get; private set; }
 
@@ -118,13 +121,7 @@ namespace Lexplosion
                 {
                     app.Dispatcher.Invoke(() =>
                     {
-                        var console = new Gui.Views.Windows.Console(gameManager)
-                        {
-                            Left = app.MainWindow.Left - 322,
-                            Top = app.MainWindow.Top - 89
-                        };
-
-                        console.Show();
+                        ConsoleWindow.SetWindow(gameManager);
                     });
                 }
             };
@@ -145,7 +142,7 @@ namespace Lexplosion
                 nofityIcon = (TaskbarIcon)app.FindResource("NofityIcon");
                 app.MainWindow.Topmost = true;
 
-                var mainWindow = new Gui.Views.Windows.MainWindow()
+                var mainWindow = new MainWindow()
                 {
                     Left = app.MainWindow.Left - 322,
                     Top = app.MainWindow.Top - 89
