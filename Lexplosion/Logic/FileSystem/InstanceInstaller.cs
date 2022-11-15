@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 using System.IO.Compression;
 using System.Threading;
 using System.Text.RegularExpressions;
@@ -806,10 +805,10 @@ namespace Lexplosion.Logic.FileSystem
                                             string input = ToServer.HttpGet(obtainingMethod[i][1]); // получем содержимое страницы по url
 
                                             //по регулярке из этого метода ищем нужную строку
-                                            Regex regex = new Regex(obtainingMethod[i][2]); 
+                                            Regex regex = new Regex(obtainingMethod[i][2]);
                                             var result = regex.Match(input);
                                             //закидывеам полученное значение в список переменных
-                                            vars["{@" + obtainingMethod[i][3] + "}"] = result.Groups[1].ToString();    
+                                            vars["{@" + obtainingMethod[i][3] + "}"] = result.Groups[1].ToString();
                                         }
                                         break;
                                 }

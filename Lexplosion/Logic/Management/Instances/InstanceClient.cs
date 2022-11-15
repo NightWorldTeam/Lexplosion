@@ -279,7 +279,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             AdditionalInstallerType? installer = null;
             string installerVer = null;
-            if(optifineVersion != null)
+            if (optifineVersion != null)
             {
                 installerVer = optifineVersion;
                 installer = AdditionalInstallerType.Optifine;

@@ -31,7 +31,6 @@ namespace Lexplosion
     {
         private static App app = new App();
         private static SplashWindow _splashWindow;
-        private static ConsoleWindow _console;
 
         public static Process CurrentProcess { get; private set; }
 
@@ -119,10 +118,7 @@ namespace Lexplosion
             {
                 if (gameManager.ClientSettings.ShowConsole == true)
                 {
-                    app.Dispatcher.Invoke(() =>
-                    {
-                        ConsoleWindow.SetWindow(gameManager);
-                    });
+                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
                 }
             };
 

@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Network
         /// <summary>
         /// этот класс нужен для декодирования json в GetInstanceManifest
         /// </summary>
-        private class ProtectedNightWorldManifest : NightWorldManifest, ProtectedManifest 
+        private class ProtectedNightWorldManifest : NightWorldManifest, ProtectedManifest
         {
             public string code { get; set; }
             public string str { get; set; }
@@ -98,7 +98,7 @@ namespace Lexplosion.Logic.Network
             var filesData = ToServer.ProtectedRequest<ProtectedNightWorldManifest>(LaunсherSettings.URL.ModpacksData + WebUtility.UrlEncode(instanceId) + "/manifest");
 
             if (filesData == null) return null;
-            
+
             NightWorldManifest ret = new NightWorldManifest
             {
                 data = filesData.data,
