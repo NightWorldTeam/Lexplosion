@@ -217,7 +217,7 @@ namespace Lexplosion.Logic.Network
         {
             lock (_stopLosk)
             {
-                if (_isWork)
+                if (_isWork && IsWork)
                 {
                     Runtime.DebugWrite("SERVER STOP WORK METHOD");
                     base.StopWork();
@@ -226,11 +226,10 @@ namespace Lexplosion.Logic.Network
                     {
                         sock.Close();
                     }
+
+                    _isWork = false;
                 }
             }
-
-            _isWork = false;
-
         }
     }
 }
