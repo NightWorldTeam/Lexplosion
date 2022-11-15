@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
-using System;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
@@ -110,8 +109,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             {
                 MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
                 MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(
-                    _mainViewModel, 
-                    _instanceClient, 
+                    _mainViewModel,
+                    _instanceClient,
                     ((FactoryDLCModel)obj).Type,
                     CurrentAddonModel,
                     this
@@ -149,8 +148,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                     // моды
                     _models.Add(
                         new FactoryDLCModel(
-                            InstanceAddon.GetInstalledMods(instanceClient.GetBaseData), 
-                            CfProjectType.Mods, 
+                            InstanceAddon.GetInstalledMods(instanceClient.GetBaseData),
+                            CfProjectType.Mods,
                             ResourceGetter.GetString("noInstalledModification")
                             )
                         );
@@ -164,7 +163,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 // ресурспаки
                 _models.Add(
                     new FactoryDLCModel(
-                        InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData), 
+                        InstanceAddon.GetInstalledResourcepacks(instanceClient.GetBaseData),
                         CfProjectType.Resourcepacks,
                         ResourceGetter.GetString("noInstalledResourcepacks")
                         )

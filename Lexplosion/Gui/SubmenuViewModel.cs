@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui
 {
@@ -8,8 +7,8 @@ namespace Lexplosion.Gui
         public ObservableCollection<Tab<VMBase>> Tabs { get; protected set; } = new ObservableCollection<Tab<VMBase>>();
         private Tab<VMBase> _selectedTab = new Tab<VMBase>();
 
-        public Tab<VMBase> SelectedTab 
-        { 
+        public Tab<VMBase> SelectedTab
+        {
             get => _selectedTab;
             set
             {

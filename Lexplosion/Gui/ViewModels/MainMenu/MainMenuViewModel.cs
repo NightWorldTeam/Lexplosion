@@ -111,12 +111,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         public void OpenModpackPage(InstanceFormViewModel viewModel)
         {
             InstanceMenuViewModel instanceMenuViewModel;
-            if (InstanceMenuViewModels.ContainsKey(viewModel)) 
+            if (InstanceMenuViewModels.ContainsKey(viewModel))
             {
                 instanceMenuViewModel = InstanceMenuViewModels[viewModel];
                 instanceMenuViewModel.SetSelectedTabIndex(0);
             }
-            else 
+            else
             {
                 instanceMenuViewModel = new InstanceMenuViewModel(viewModel, _mainViewModel);
                 InstanceMenuViewModels.Add(viewModel, instanceMenuViewModel);

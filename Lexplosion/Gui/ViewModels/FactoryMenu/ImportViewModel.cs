@@ -13,10 +13,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public string Name { get; }
         public string Path { get; }
         private bool _isImportFinished;
-        public bool IsImportFinished 
-        { 
-            get => _isImportFinished; 
-            set 
+        public bool IsImportFinished
+        {
+            get => _isImportFinished;
+            set
             {
                 _isImportFinished = value;
                 OnPropertyChanged();

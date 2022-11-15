@@ -325,19 +325,19 @@ namespace Lexplosion.Gui.ViewModels
                         break;
                     }
                 case AuthCode.DataError:
-                    { 
+                    {
                         MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.NoConnect:
-                    { 
+                    {
                         MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.TokenError:
-                    { 
+                    {
                         MainViewModel.ShowToastMessage("Ошибка авторизации", "Ошибка с токеном.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                         FollowToMicrosoft();
                         IsAuthFinished = true;
@@ -350,7 +350,7 @@ namespace Lexplosion.Gui.ViewModels
                         break;
                     }
                 default:
-                    { 
+                    {
                         MainViewModel.ShowToastMessage("Ошибка. Что-то не так", authCode.ToString(), TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
                         IsAuthFinished = true;
                         break;

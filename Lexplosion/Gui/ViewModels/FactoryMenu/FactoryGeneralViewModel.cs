@@ -4,7 +4,6 @@ using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
@@ -80,9 +79,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
 
         private string _selectedOptifineVersion;
-        public string SelectedOptifineVersion 
+        public string SelectedOptifineVersion
         {
-            get => _selectedOptifineVersion; set 
+            get => _selectedOptifineVersion; set
             {
                 _selectedOptifineVersion = value;
                 OnPropertyChanged();
@@ -125,9 +124,9 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
 
         private bool _isOptifineInstalling;
-        public bool IsOptifineInstalling 
+        public bool IsOptifineInstalling
         {
-            get => _isOptifineInstalling; set 
+            get => _isOptifineInstalling; set
             {
                 _isOptifineInstalling = value;
                 OnPropertyChanged();

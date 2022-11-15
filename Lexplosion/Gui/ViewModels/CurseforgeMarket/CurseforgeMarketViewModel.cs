@@ -24,12 +24,12 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private static readonly Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>> InstallingAddons = new Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>>();
         private static object _installingAddonsLocker = new object();
-        
+
         public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, FactoryDLCModel factoryDLCModel, FactoryDLCVM factoryDLCVM)
         {
             _mainViewModel = mainViewModel;
             _mainViewModel.UserProfile.IsShowInfoBar = false;
-            
+
             _instanceClient = instanceClient;
             _projectType = addonsType;
             _factoryDLCModel = factoryDLCModel;
@@ -184,7 +184,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private RelayCommand _cancelAddonDownload;
 
-        public RelayCommand CancelAddonDownload 
+        public RelayCommand CancelAddonDownload
         {
             get => _cancelAddonDownload ?? (_cancelAddonDownload = new RelayCommand(obj =>
             {

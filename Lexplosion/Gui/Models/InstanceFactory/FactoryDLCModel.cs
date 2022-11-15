@@ -1,8 +1,6 @@
-﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
-using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Documents;
 
 namespace Lexplosion.Gui.Models.InstanceFactory
 {
@@ -33,9 +31,9 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         }
 
         private bool _isEmptyList;
-        public bool IsEmptyList 
+        public bool IsEmptyList
         {
-            get => _isEmptyList; set 
+            get => _isEmptyList; set
             {
                 _isEmptyList = value;
                 OnPropertyChanged();

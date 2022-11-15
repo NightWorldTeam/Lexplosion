@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Network
         const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
         readonly int Port;
 
-        private bool _isWork = true;
+        private bool _isWork;
         private object _stopLosk = new object();
         private object _abortLoocker = new object();
 
@@ -28,6 +28,7 @@ namespace Lexplosion.Logic.Network
             ClientsPoints = new ConcurrentDictionary<Socket, IPEndPoint>();
             Sockets = new List<Socket>();
             Port = localGamePort;
+            _isWork = true;
         }
 
         protected override void ClientAbort(IPEndPoint point)
@@ -225,10 +226,10 @@ namespace Lexplosion.Logic.Network
                     {
                         sock.Close();
                     }
-
-                    _isWork = false;
                 }
             }
+
+            _isWork = false;
 
         }
     }
