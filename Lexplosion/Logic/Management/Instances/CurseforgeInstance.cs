@@ -63,7 +63,11 @@ namespace Lexplosion.Logic.Management.Instances
                 }
             }
 
-            var projectFileId = data.latestFilesIndexes?[0]?.fileId;
+            int? projectFileId = null;
+            if (data.latestFilesIndexes?.Count > 0)
+            {
+                projectFileId = data.latestFilesIndexes[0]?.fileId;
+            }
 
             return new InstanceData
             {
