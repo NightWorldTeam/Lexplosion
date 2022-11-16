@@ -98,11 +98,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #endregion Constructors
 
 
-        #region Public & Properties Methods
-
-        #endregion
-
-
         #region Private Methods
 
 

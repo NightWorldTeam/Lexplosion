@@ -543,6 +543,7 @@
                 Background="Transparent"
                 BorderBrush="Transparent"
                 Command="{Binding ClosePageCommand}"
+                IsCancel="True"
                 Style="{StaticResource IconicButton}">
                 <Viewbox Width="30" Height="30">
                     <Path

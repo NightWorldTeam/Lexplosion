@@ -28,7 +28,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-
         #endregion Properties
 
 
@@ -71,7 +70,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(this);
             _mainViewModel.ModalWindowVM.IsOpen = true;
 
-            _title = title;
+            Title = title;
             _function = function;
         }
     }

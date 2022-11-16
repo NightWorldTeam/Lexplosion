@@ -115,7 +115,9 @@
                         FontSize="14"
                         IsChecked="{Binding IsFullExport, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
-                <Border Margin="0,10,0,0" Padding="5,5,0,5"
+                <Border
+                    Margin="0,10,0,0"
+                    Padding="5,5,0,5"
                     BorderBrush="{DynamicResource SepSolidColorBrush}"
                     BorderThickness="1"
                     CornerRadius="5">
@@ -123,8 +125,8 @@
                         Height="180"
                         Background="Transparent"
                         BorderBrush="Transparent"
-                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
                         ItemsSource="{Binding UnitsList}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
                         VirtualizingStackPanel.IsVirtualizing="True"
                         VirtualizingStackPanel.VirtualizationMode="Standard">
                         <TreeView.Resources>
@@ -292,6 +294,7 @@
                 Height="31.5"
                 Command="{Binding CloseModalWindowCommand}"
                 Content="Отмена"
+                IsCancel="True"
                 Style="{StaticResource DefaultCloseButton}" />
 
             <Button
@@ -300,6 +303,8 @@
                 Margin="10,0,0,0"
                 Command="{Binding ActionCommand}"
                 Content="Экспорт"
+                IsDefault="True"
+                IsEnabled="{Binding IsExportFinished}"
                 Style="{StaticResource DefaultBrandColorButton}" />
         </StackPanel>
 

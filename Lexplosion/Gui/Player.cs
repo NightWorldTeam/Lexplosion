@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui;
+using Lexplosion.Gui.ViewModels;
 
 namespace Lexplosion.Logic.Management
 {
@@ -8,7 +9,9 @@ namespace Lexplosion.Logic.Management
         {
             get => new RelayCommand(obj =>
             {
-                AccessChange();
+                var action = AccessChange();
+                if (action == UserAction.Unkick)
+                    MainViewModel.ShowToastMessage("Действие на игроком", "У игрока " + this.Nickname + " появилась возможность снова зайти на ваш сервер.");
             });
         }
     }

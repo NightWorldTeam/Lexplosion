@@ -191,6 +191,7 @@
                         Command="{Binding ActionCommand}"
                         Content="{DynamicResource create}"
                         FontSize="14"
+                        IsDefault="True"
                         Style="{StaticResource DefaultBrandColorButton}" />
 
                     <Button
@@ -200,6 +201,7 @@
                         Command="{Binding CloseModalWindowCommand}"
                         Content="{DynamicResource cancel}"
                         FontSize="14"
+                        IsCancel="True"
                         Style="{StaticResource DefaultCloseButton}" />
                 </StackPanel>
             </Grid>

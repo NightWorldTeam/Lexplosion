@@ -181,6 +181,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Command="{Binding CloseModalWindowCommand}"
+            IsCancel="True"
             Style="{StaticResource IconicButton}">
             <Viewbox Width="25" Height="25">
                 <Path

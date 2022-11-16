@@ -246,7 +246,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             };
         }
 
-
         #endregion Private Methods
     }
 }

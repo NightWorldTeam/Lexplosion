@@ -8,6 +8,12 @@ namespace Lexplosion.Logic.Management
 {
     public partial class Player : VMBase
     {
+        public enum UserAction
+        {
+            Kick,
+            Unkick
+        }
+
         public string UUID { get; }
         private Action<Player> _unkickedAction = null;
 
@@ -90,12 +96,18 @@ namespace Lexplosion.Logic.Management
         /// <summary>
         /// Вызывает метод Kick или Unkick взависимости от статуса пользователя.
         /// </summary>
-        private void AccessChange()
+        private UserAction AccessChange()
         {
             if (IsKicked)
+            {
                 Unkick();
-            else
+                return UserAction.Unkick;
+            }
+            else 
+            { 
                 Kick();
+                return UserAction.Kick;
+            }
         }
 
         /// <summary>

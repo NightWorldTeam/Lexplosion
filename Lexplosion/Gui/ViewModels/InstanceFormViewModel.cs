@@ -158,16 +158,16 @@ namespace Lexplosion.Gui.ViewModels
         internal void RemoveInstance(bool IsFromLibrary)
         {
             var dialog = new DialogViewModel(MainVM);
-            string message = "Вы действительно желеает удалить клиент?";
+            String message;
 
             if (IsFromLibrary)
             {
                 // TODO: LOCALIZATE
-                message = "Вы действительно желаете удалить " + Model.InstanceClient.Name + " из библиотеки?";
+                message = "Вы действительно желаете удалить  \"" + Model.InstanceClient.Name + "\"  из библиотеки?";
             }
             else
             {
-                message = "Вы действительно желаете удалить " + Model.InstanceClient.Name;
+                message = "Вы действительно желаете удалить  \"" + Model.InstanceClient.Name + "\"";
             }
 
             dialog.ShowDialog(message, RemoveInstance);

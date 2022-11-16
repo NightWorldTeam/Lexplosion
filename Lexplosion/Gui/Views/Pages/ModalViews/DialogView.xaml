@@ -27,6 +27,7 @@
                 Command="{Binding ActionCommand}"
                 Content="Да"
                 FontSize="16"
+                IsDefault="True"
                 Style="{StaticResource DefaultBrandColorButton}" />
             <Button
                 Width="80"
@@ -34,6 +35,7 @@
                 Command="{Binding CloseModalWindowCommand}"
                 Content="Нет"
                 FontSize="16"
+                IsCancel="True"
                 Style="{StaticResource DefaultCloseButton}" />
         </StackPanel>
     </Grid>

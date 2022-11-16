@@ -296,6 +296,7 @@
                                 Command="{Binding SignUpCommand}"
                                 Content="{DynamicResource singIn}"
                                 FontSize="20"
+                                IsDefault="True"
                                 Style="{StaticResource DefaultBrandColorButton}" />
                         </StackPanel>
 
@@ -308,16 +309,16 @@
                                 Background="{DynamicResource SepSolidColorBrush}"
                                 CornerRadius="5">
                                 <StackPanel>
-                                    <StackPanel Height="30" x:Name="HeaderStackPanel">
+                                    <StackPanel x:Name="HeaderStackPanel" Height="30">
                                         <TextBlock
-                                                x:Name="NicknameTextBlock"
-                                                Margin="5,10,0,0"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                FontFamily="{DynamicResource FuturaBookC}"
-                                                FontSize="16"
-                                                Foreground="White"
-                                                Text="{Binding Login}" />
+                                            x:Name="NicknameTextBlock"
+                                            Margin="5,10,0,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            FontFamily="{DynamicResource FuturaBookC}"
+                                            FontSize="16"
+                                            Foreground="White"
+                                            Text="{Binding Login}" />
                                     </StackPanel>
 
                                     <!--  Buttons  -->
@@ -525,6 +526,7 @@
             Margin="0,200,0,0"
             Command="{Binding CancelMicrosoftAuthCommand}"
             Content="Отмена"
+            IsCancel="True"
             Style="{StaticResource DefaultBrandColorButton}"
             Visibility="{Binding IsAuthFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
     </Grid>
