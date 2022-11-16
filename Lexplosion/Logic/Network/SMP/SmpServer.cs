@@ -88,7 +88,7 @@ namespace Lexplosion.Logic.Network.SMP
                     }
                     else
                     {
-                        data = null;
+                        data = new byte[0];
                         return null;
                     }
 
@@ -133,7 +133,7 @@ namespace Lexplosion.Logic.Network.SMP
             }
 
             Runtime.DebugWrite("SMP SERVER STOP WORK");
-            data = null;
+            data = new byte[0];
             return null;
         }
 

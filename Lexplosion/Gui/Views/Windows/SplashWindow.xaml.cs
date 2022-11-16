@@ -34,12 +34,12 @@ namespace Lexplosion.Gui.Views.Windows
             DoubleAnimation _oa = new DoubleAnimation();
             _oa.From = Opacity;
             _oa.To = 0.0;
-            _oa.Duration = new Duration(TimeSpan.FromMilliseconds(190d));
+            _oa.Duration = new Duration(TimeSpan.FromMilliseconds(220d));
             BeginAnimation(OpacityProperty, _oa);
 
             Lexplosion.Runtime.TaskRun(delegate ()
             {
-                Thread.Sleep(190);
+                Thread.Sleep(220);
                 App.Current.Dispatcher.Invoke(delegate ()
                 {
                     Close();

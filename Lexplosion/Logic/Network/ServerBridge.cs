@@ -217,7 +217,7 @@ namespace Lexplosion.Logic.Network
         {
             lock (_stopLosk)
             {
-                if (_isWork && IsWork)
+                if (_isWork)
                 {
                     Runtime.DebugWrite("SERVER STOP WORK METHOD");
                     base.StopWork();

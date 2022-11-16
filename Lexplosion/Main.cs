@@ -148,7 +148,7 @@ namespace Lexplosion
                 topPos = mainWindow.Top;
 
                 mainWindow.Show();
-                ((Gui.Views.Windows.SplashWindow)app.MainWindow).SmoothClosing();
+                ((SplashWindow)app.MainWindow).SmoothClosing();
                 app.MainWindow = mainWindow;
             });
 

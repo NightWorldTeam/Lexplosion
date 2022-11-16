@@ -123,6 +123,10 @@ namespace Lexplosion.Logic.Network
             client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60")); // TODO: try пихнуть
             client.Client.ReceiveTimeout = -1; // убираем таймоут, чтобы этот метод мог ждать бесконечно
 
+            int attemptCount = 0;
+            string _name = null;
+            int _port = 0;
+
             while (true)
             {
                 AutoResetEvent waitingInforming = new AutoResetEvent(false);
@@ -133,6 +137,16 @@ namespace Lexplosion.Logic.Network
                 {
                     return;
                 }
+
+                // пока сервер в процессе закрытия мы можем получить данные будто бы он открыт. поэтому проверяем 
+                if (_name == name && _port == port && attemptCount < 7)
+                {
+                    attemptCount++;
+                    Thread.Sleep(4000);
+                    continue;
+                }
+
+                attemptCount = 0; _name = name; _port = port;
 
                 InformingThread = new Thread(delegate ()
                 {
