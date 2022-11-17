@@ -14,10 +14,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             CurrentInstanceClient = instanceClient;
             BaseInstanceData = CurrentInstanceClient.GetBaseData;
             IsModloader = BaseInstanceData.Modloader != ModloaderType.Vanilla;
+            IsOptifine = string.IsNullOrEmpty(BaseInstanceData.OptifineVersion);
             ModloaderType = BaseInstanceData.Modloader;
             ModloaderVersion = BaseInstanceData.ModloaderVersion;
             GameVersion = BaseInstanceData.GameVersion ?? GameVersions[0];
             LogoBytes = CurrentInstanceClient.Logo;
+            OptifineVersion = BaseInstanceData.OptifineVersion;
         }
 
         /// <summary>
@@ -32,6 +34,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 if (IsModloader)
                 {
                     GetModloaderVersions(value, ModloaderType);
+                }
+                if (IsOptifine) 
+                {
+                    GetOptifineVersions(value);
                 }
 
                 OnPropertyChanged();
@@ -65,6 +71,17 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 OnPropertyChanged();
             }
         }
+
+        private ObservableCollection<string> _optifineVersions;
+        public ObservableCollection<string> OptifineVersions
+        {
+            get => _optifineVersions; set
+            {
+                _optifineVersions = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         /// <summary>
         /// Свойство содержит путь к выбранной картинке
@@ -105,6 +122,16 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
+        private bool _isOptifine;
+        public bool IsOptifine 
+        {
+            get => _isModloader; set 
+            {
+                _isModloader = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ModloaderType modloaderType;
         public ModloaderType ModloaderType
         {
@@ -131,6 +158,16 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             get => _modloaderVersion; set
             {
                 _modloaderVersion = BaseInstanceData.ModloaderVersion = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _optifineVersion;
+        public string OptifineVersion
+        {
+            get => _optifineVersion; set 
+            {
+                _optifineVersion = value;
                 OnPropertyChanged();
             }
         }
@@ -188,6 +225,16 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                         ModloaderVersion = ModloaderVersions[0];
                     Runtime.DebugWrite(gameVersion + " " + modloader);
                 }
+            });
+        }
+
+        private void GetOptifineVersions(string gameVersion, ModloaderType modloader)
+        {
+            Lexplosion.Runtime.TaskRun(() =>
+            {
+                OptifineVersions = new ObservableCollection<string>(ToServer.GetOptifineVersions(gameVersion));
+                if (modloader == ModloaderType.Vanilla)
+                    OptifineVersion = CurrentInstanceClient.GetBaseData.ModloaderVersion;
             });
         }
 
