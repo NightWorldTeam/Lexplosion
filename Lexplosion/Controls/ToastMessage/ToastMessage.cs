@@ -3,6 +3,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace Lexplosion.Controls
 {
@@ -50,13 +51,22 @@ namespace Lexplosion.Controls
 
                         App.Current.Dispatcher.Invoke(() =>
                         {
-                            obj.CloseCommand.Execute(null);
+                            var CollabsedAnimation = new DoubleAnimation()
+                            {
+                                From = 1.0,
+                                To = 0.0,
+                                Duration = TimeSpan.FromSeconds(0.4)
+                            };
+                            CollabsedAnimation.Completed += (object sender, EventArgs e) => 
+                            {
+                                obj.CloseCommand.Execute(null);
+                            };
+                            obj.BeginAnimation(FrameworkElement.OpacityProperty, CollabsedAnimation);
                         });
                     });
                 }
             }
         }
-
 
         #endregion DependencyProperty Register
 
