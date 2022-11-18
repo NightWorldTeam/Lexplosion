@@ -316,7 +316,8 @@ namespace Lexplosion.Logic.Management.Instances
                     Name = _name,
                     Summary = _summary,
                     ModloaderVersion = manifest?.version?.modloaderVersion ?? "",
-                    Modloader = manifest?.version.modloaderType ?? ModloaderType.Vanilla
+                    Modloader = manifest?.version.modloaderType ?? ModloaderType.Vanilla,
+                    OptifineVersion = manifest?.version?.additionalInstaller?.installerVersion
                 };
             }
         }
