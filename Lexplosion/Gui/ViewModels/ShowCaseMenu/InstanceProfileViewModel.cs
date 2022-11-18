@@ -37,7 +37,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 }
                 if (IsOptifine) 
                 {
-                    GetOptifineVersions(value);
+                    GetOptifineVersions(value, ModloaderType);
                 }
 
                 OnPropertyChanged();
