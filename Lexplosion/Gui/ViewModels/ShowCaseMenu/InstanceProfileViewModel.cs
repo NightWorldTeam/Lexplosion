@@ -14,7 +14,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             CurrentInstanceClient = instanceClient;
             BaseInstanceData = CurrentInstanceClient.GetBaseData;
             IsModloader = BaseInstanceData.Modloader != ModloaderType.Vanilla;
-            IsOptifine = string.IsNullOrEmpty(BaseInstanceData.OptifineVersion);
+            IsOptifine = !string.IsNullOrEmpty(BaseInstanceData.OptifineVersion);
             ModloaderType = BaseInstanceData.Modloader;
             ModloaderVersion = BaseInstanceData.ModloaderVersion;
             GameVersion = BaseInstanceData.GameVersion ?? GameVersions[0];
@@ -31,6 +31,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             get => _gameVersion; set
             {
                 _gameVersion = BaseInstanceData.GameVersion = value;
+                Console.WriteLine(IsOptifine);
                 if (IsModloader)
                 {
                     GetModloaderVersions(value, ModloaderType);
@@ -125,9 +126,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private bool _isOptifine;
         public bool IsOptifine 
         {
-            get => _isModloader; set 
+            get => _isOptifine; set 
             {
-                _isModloader = value;
+                _isOptifine = value;
                 OnPropertyChanged();
             }
         }
@@ -234,7 +235,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             {
                 OptifineVersions = new ObservableCollection<string>(ToServer.GetOptifineVersions(gameVersion));
                 if (modloader == ModloaderType.Vanilla)
-                    OptifineVersion = CurrentInstanceClient.GetBaseData.ModloaderVersion;
+                    OptifineVersion = CurrentInstanceClient.GetBaseData.OptifineVersion;
             });
         }
 

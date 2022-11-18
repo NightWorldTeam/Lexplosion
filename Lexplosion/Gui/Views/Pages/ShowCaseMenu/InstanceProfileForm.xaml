@@ -269,7 +269,7 @@
                                     <ComboBox
                                         Width="400"
                                         Height="40"
-                                        ItemsSource="{Binding OptifineVersion}"
+                                        ItemsSource="{Binding OptifineVersions}"
                                         SelectedValue="{Binding OptifineVersion}"
                                         Style="{StaticResource LighterDefaultComboBox}" />
                                 </StackPanel>
