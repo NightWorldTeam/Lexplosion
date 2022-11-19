@@ -26,9 +26,10 @@ namespace Lexplosion.Logic.Management
 
         private static LaunchGame _classInstance = null;
 
-        private bool removeImportantTaskMark = true;
-        private object removeImportantTaskLocker = new object();
+        private bool _removeImportantTaskMark = true;
+        private object _removeImportantTaskLocker = new object();
 
+        public string GameVersion { get; private set; } = null;
         public string GameClientName { get; private set; } = "";
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Lexplosion.Logic.Management
         /// <summary>
         /// Выполняется после GameStartEvent, когда у майкнрафт появляется окно.
         /// </summary>
-        public static event Action GameStartedEvent;
+        public static event Action<LaunchGame> GameStartedEvent;
         /// <summary>
         /// Выполняется при завершении процесса игры
         /// </summary>
@@ -159,6 +160,8 @@ namespace Lexplosion.Logic.Management
         public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
         {
             GameClientName = gameClientName;
+            GameVersion = data?.VersionFile?.gameVersion;
+
             string command = CreateCommand(data);
 
             process = new Process();
@@ -167,7 +170,7 @@ namespace Lexplosion.Logic.Management
                 lock (loocker)
                 {
                     gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, "194.61.2.176", GlobalData.GeneralSettings.OnlineGameDirectConnection);
-                    removeImportantTaskMark = false;
+                    _removeImportantTaskMark = false;
                     Lexplosion.Runtime.AddImportantTask();
 
                     gameGateway.ConnectingUser += delegate (string uuid)
@@ -247,11 +250,11 @@ namespace Lexplosion.Logic.Management
 
                     GameStopEvent?.Invoke(this);
 
-                    lock (removeImportantTaskLocker)
+                    lock (_removeImportantTaskLocker)
                     {
-                        if (!removeImportantTaskMark)
+                        if (!_removeImportantTaskMark)
                         {
-                            removeImportantTaskMark = true;
+                            _removeImportantTaskMark = true;
                             Lexplosion.Runtime.RemoveImportantTask();
                         }
                     }
@@ -283,7 +286,7 @@ namespace Lexplosion.Logic.Management
                             if (GuiIsExists(process.Id))
                             {
                                 ComplitedLaunch(_instanceId, true);
-                                GameStartedEvent?.Invoke();
+                                GameStartedEvent?.Invoke(this);
 
                                 gameVisible = true;
                                 break;
@@ -529,11 +532,11 @@ namespace Lexplosion.Logic.Management
             }
             catch { }
 
-            lock (removeImportantTaskLocker)
+            lock (_removeImportantTaskLocker)
             {
-                if (!removeImportantTaskMark)
+                if (!_removeImportantTaskMark)
                 {
-                    removeImportantTaskMark = true;
+                    _removeImportantTaskMark = true;
                     Lexplosion.Runtime.RemoveImportantTask();
                 }
             }

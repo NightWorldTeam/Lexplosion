@@ -7,15 +7,17 @@ using System.Windows;
 using System.Threading;
 using System.IO.Compression;
 using Hardcodet.Wpf.TaskbarNotification;
+using DiscordRPC;
+using DiscordRPC.Logging;
 using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.WebSockets;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network.WebSockets;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 
@@ -32,10 +34,11 @@ namespace Lexplosion
         private static App app = new App();
         private static SplashWindow _splashWindow;
 
+        private static TaskbarIcon _nofityIcon;
+
         public static Process CurrentProcess { get; private set; }
 
         public static event Action ExitEvent;
-
         public static event Action TrayMenuElementClicked;
 
         // TODO: сохранять координаты закрытого главного окна, использовать при открытии следующего
@@ -46,6 +49,9 @@ namespace Lexplosion
         [STAThread]
         static void Main()
         {
+            // Подписываемся на эвент для загрузки всех строенных dll'ников
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             app.Exit += BeforeExit;
 
@@ -67,9 +73,6 @@ namespace Lexplosion
             };
 
             CurrentProcess = Process.GetCurrentProcess();
-
-            // Подписываемся на эвент для загрузки всех строенных dll'ников
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             // Проверяем запущен ли лаунчер. если порт сервера команд занят - значит лаунчер уже запущен.
             if (!SocketExtensions.TcpPortIsAvailable(LaunсherSettings.CommandServerPort))
@@ -101,16 +104,28 @@ namespace Lexplosion
             InstanceClient.DefineInstalledInstances();
             CommandReceiver.StartCommandServer();
 
+            var discordClient = InitDiscordApp();
+
             //подписываемся на эвент открытия второй копии лаунчера
             CommandReceiver.LexplosionOpened += ShowMainWindow;
 
-            LaunchGame.GameStartedEvent += delegate () //подписываемся на эвент запуска игры
+            LaunchGame.GameStartedEvent += delegate (LaunchGame gameManager) //подписываемся на эвент запуска игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
                 if (GlobalData.GeneralSettings.HiddenMode == true)
                 {
                     CloseMainWindow();
                 }
+
+                discordClient?.SetPresence(new RichPresence()
+                {
+                    Details = "Minecraft " + gameManager.GameVersion + ": " + gameManager.GameClientName,
+                    Timestamps = Timestamps.Now,
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = "logo1"
+                    }
+                });
             };
 
             // подписываемся на запуск игры до запуска окна
@@ -129,13 +144,23 @@ namespace Lexplosion
                 {
                     ShowMainWindow();
                 }
+
+                discordClient?.SetPresence(new RichPresence()
+                {
+                    Details = "Minecraft не запущен",
+                    Timestamps = Timestamps.Now,
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = "logo1"
+                    }
+                });
             };
 
             Thread.Sleep(800);
 
             app.Dispatcher.Invoke(() =>
             {
-                nofityIcon = (TaskbarIcon)app.FindResource("NofityIcon");
+                _nofityIcon = (TaskbarIcon)app.FindResource("NofityIcon");
                 app.MainWindow.Topmost = true;
 
                 var mainWindow = new MainWindow()
@@ -247,6 +272,11 @@ namespace Lexplosion
                 return Assembly.Load(UnzipBytesArray(Resources.TaskbarNotification_zip));
             }
 
+            if (args.Name.Contains("DiscordRPC"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.DiscordRPC_zip));
+            }
+
             if (args.Name.Contains("System.IO.Compression"))
             {
                 return Assembly.Load(Resources.Compression);
@@ -315,45 +345,32 @@ namespace Lexplosion
             });
         }
 
+        private static DiscordRpcClient InitDiscordApp()
+        {
+            DiscordRpcClient client = new DiscordRpcClient(LaunсherSettings.DiscordAppID);
+
+            if (client.Initialize())
+            {
+                client.SetPresence(new RichPresence()
+                {
+                    Details = "Minecraft не запущен",
+                    Timestamps = Timestamps.Now,
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = "logo1"
+                    }
+                });
+
+                return client;
+            }
+
+            return null;
+        }
+
         public static void TrayMenuElementClickExecute()
         {
             TrayMenuElementClicked?.Invoke();
         }
-
-        private static int importantThreads = 0;
-        private static ManualResetEvent waitingClosing = new ManualResetEvent(true);
-        private static object locker = new object();
-
-        /// <summary>
-        /// Добавляет приоритетную задачу. При выключении лаунчер будет ждать завершения всех приоритетных задач.
-        /// </summary>
-        public static void AddImportantTask()
-        {
-            lock (locker)
-            {
-                importantThreads++;
-                waitingClosing.Reset();
-            }
-        }
-
-        /// <summary>
-        /// Сообщает что приоритетная задача выполнена.
-        /// </summary>
-        public static void RemoveImportantTask()
-        {
-            lock (locker)
-            {
-                importantThreads--;
-                if (importantThreads == 0)
-                {
-                    waitingClosing.Set();
-                }
-            }
-        }
-
-        private static bool _exitIsCanceled = false;
-        private static bool _inExited = false;
-        private static TaskbarIcon nofityIcon;
 
         /// <summary>
         /// убивает процесс лаунчера
@@ -415,7 +432,7 @@ namespace Lexplosion
             {
                 window.Close();
             }
-            nofityIcon.Dispose();
+            _nofityIcon.Dispose();
             ExitEvent?.Invoke();
         }
 

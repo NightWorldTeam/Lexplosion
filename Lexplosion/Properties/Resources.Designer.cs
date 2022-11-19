@@ -73,6 +73,16 @@ namespace Lexplosion.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        public static byte[] DiscordRPC_zip {
+            get {
+                object obj = ResourceManager.GetObject("DiscordRPC_zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         public static byte[] LumiSoftNet_zip {
             get {
                 object obj = ResourceManager.GetObject("LumiSoftNet_zip", resourceCulture);
