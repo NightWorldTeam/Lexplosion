@@ -119,7 +119,8 @@ namespace Lexplosion
 
                 discordClient?.SetPresence(new RichPresence()
                 {
-                    Details = "Minecraft " + gameManager.GameVersion + ": " + gameManager.GameClientName,
+                    State = "Minecraft " + gameManager.GameVersion,
+                    Details = "Сборка " +  gameManager.GameClientName,
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -147,7 +148,7 @@ namespace Lexplosion
 
                 discordClient?.SetPresence(new RichPresence()
                 {
-                    Details = "Minecraft не запущен",
+                    State = "Minecraft не запущен",
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -353,7 +354,7 @@ namespace Lexplosion
             {
                 client.SetPresence(new RichPresence()
                 {
-                    Details = "Minecraft не запущен",
+                    State = "Minecraft не запущен",
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
