@@ -46,7 +46,7 @@ namespace Lexplosion.Global
         public static string gamePath = Environment.ExpandEnvironmentVariables("%appdata%") + "/" + ".lexplosion";
         public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ";
         public const string passwordKey = "ZEmMJ0ZaXQXuHu8tUnfdaCLCQaFgRjOP";
-        public const int version = 1668551725;
+        public const int version = 1668882221;
         public const int CommandServerPort = 54352;
         public const string DiscordAppID = "839856058703806484";
     }
