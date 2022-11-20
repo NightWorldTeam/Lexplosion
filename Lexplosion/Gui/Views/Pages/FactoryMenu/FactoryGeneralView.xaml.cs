@@ -26,6 +26,16 @@ namespace Lexplosion.Gui.Views.Pages.FactoryMenu
 
         private void RadioButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
+            ScrollBottom();
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            ScrollBottom();
+        }
+
+        private void ScrollBottom()
+        {
             try
             {
                 scroll.ScrollToBottom();
