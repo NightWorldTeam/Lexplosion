@@ -290,6 +290,8 @@
     <Compile Include="Logic\Management\Authentication\MicrosoftAuth.cs" />
     <Compile Include="Logic\Management\Authentication\MojangAuth.cs" />
     <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
+    <Compile Include="Logic\Management\FileDistributor.cs" />
+    <Compile Include="Logic\Management\FileReceiver.cs" />
     <Compile Include="Logic\Management\InstalledAddons.cs" />
     <Compile Include="Logic\Management\Instances\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Instances\LocalInstance.cs" />

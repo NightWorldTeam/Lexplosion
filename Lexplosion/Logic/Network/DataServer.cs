@@ -29,7 +29,7 @@ namespace Lexplosion.Logic.Network
         const int Heap = 1400; //количество байт отправляемых за один раз
         const string serverType = "data-server"; // эта строка нужна при подключении к управляющему серверу
 
-        public DataServer(string uuid, bool directConnection, string server) : base(uuid, "", serverType, directConnection, server)
+        public DataServer(string uuid, string sessionToken, bool directConnection, string server) : base(uuid, sessionToken, serverType, directConnection, server)
         {
             SFilesList = new Dictionary<string, FileData>();
 
@@ -45,6 +45,7 @@ namespace Lexplosion.Logic.Network
         {
             AvailableConnections.Add(point);
             AcceptingBlock.Release();
+
             return true;
         }
 

@@ -8,7 +8,7 @@ namespace Lexplosion.Logic.Network.TURN
     {
         private Socket socket;
 
-        public bool Connect(string selfUUID, string hostUUID)
+        public bool Connect(string selfUUID, string hostUUID, string controlServerIp)
         {
             byte[] data = new byte[64];
             byte[] bselfUUID = Encoding.UTF8.GetBytes(selfUUID);
@@ -27,7 +27,7 @@ namespace Lexplosion.Logic.Network.TURN
             Runtime.DebugWrite(Encoding.UTF8.GetString(data));
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 9765));
+            socket.Connect(new IPEndPoint(IPAddress.Parse(controlServerIp), 9765));
             socket.Send(data);
 
             Runtime.DebugWrite("CONNECTED FDHSGFHDFH");

@@ -149,7 +149,6 @@ namespace Lexplosion
                 discordClient?.SetPresence(new RichPresence()
                 {
                     State = "Minecraft не запущен",
-                    Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
                         LargeImageKey = "logo1"
@@ -355,7 +354,6 @@ namespace Lexplosion
                 client.SetPresence(new RichPresence()
                 {
                     State = "Minecraft не запущен",
-                    Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
                         LargeImageKey = "logo1"

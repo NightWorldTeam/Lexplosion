@@ -49,5 +49,6 @@ namespace Lexplosion.Global
         public const int version = 1668882221;
         public const int CommandServerPort = 54352;
         public const string DiscordAppID = "839856058703806484";
+        public const string ServerIp = "194.61.2.176";
     }
 }

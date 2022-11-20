@@ -119,7 +119,7 @@ namespace Lexplosion.Logic.Network
                 else
                 {
                     Runtime.DebugWrite("FFHNHBGHJCMGCHM,VHJ,HJ,HJ");
-                    isConected = ((TurnBridgeClient)Bridge).Connect(UUID, serverUUID);
+                    isConected = ((TurnBridgeClient)Bridge).Connect(UUID, serverUUID, ControlServer);
                 }
 
                 if (isConected)
