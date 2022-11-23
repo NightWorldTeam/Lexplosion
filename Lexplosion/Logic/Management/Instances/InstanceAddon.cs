@@ -437,6 +437,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
 
                 var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", taskArgs);
+                FileName = Path.GetFileName(ressult.Value1.ActualPath);
                 IsInstalling = false;
 
                 ThreadPool.QueueUserWorkItem(delegate (object state)
@@ -514,7 +515,7 @@ namespace Lexplosion.Logic.Management.Instances
             }, InstallAddonState.EndDownload);
         }
 
-        private static CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo, BaseInstanceData instanceData)
+        private static CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo, AddonType? addonType, BaseInstanceData instanceData)
         {
             CurseforgeFileInfo file = null;
             if (addonInfo != null)
@@ -523,11 +524,10 @@ namespace Lexplosion.Logic.Management.Instances
                 foreach (var fileInfo in addonInfo)
                 {
 
-                    if (fileInfo.gameVersions != null && fileInfo.gameVersions.Contains(gameVersion) && fileInfo.gameVersions.Contains(instanceData.Modloader.ToString()) && maxId < fileInfo.id)
+                    if (fileInfo.gameVersions != null && maxId < fileInfo.id)
                     {
                         file = fileInfo;
                         maxId = fileInfo.id;
-                        break;
                     }
                 }
             }
@@ -538,10 +538,10 @@ namespace Lexplosion.Logic.Management.Instances
         public void InstallLatestVersion(DynamicStateHandler<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true)
         {
             IsInstalling = true;
-            var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles, _modpackInfo);
+            var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles, (AddonType)_modInfo?.classId, _modpackInfo);
             if (file == null)
             {
-                file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString(), _gameVersion, _modpackInfo.Modloader), _modpackInfo);
+                file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString(), _gameVersion, _modpackInfo.Modloader), (AddonType)_modInfo?.classId, _modpackInfo);
                 if (file != null)
                 {
                     InstallAddon(file, downloadDependencies, stateHandler);
@@ -629,7 +629,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 // проверяем наличие обновлений для мода
                                 if (modpackInfo.Type == InstanceSource.Local)
                                 {
-                                    CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles, modpackInfo);
+                                    CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles, (AddonType)addon.classId, modpackInfo);
                                     if (lastFile != null && lastFile.id > actualAddonsList[projectId].FileID)
                                     {
                                         obj.UpdateAvailable = true;
@@ -871,7 +871,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 // проверяем наличие обновлений для ресурпака
                                 if (modpackInfo.Type == InstanceSource.Local)
                                 {
-                                    CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles, modpackInfo);
+                                    CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles, (AddonType)addon.classId, modpackInfo);
                                     if (lastFile != null && lastFile.id > actualAddonsList[projectId].FileID)
                                     {
                                         obj.UpdateAvailable = true;
@@ -1032,7 +1032,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 // проверяем наличие обновлений для карты
                                 if (modpackInfo.Type == InstanceSource.Local)
                                 {
-                                    CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles, modpackInfo);
+                                    CurseforgeFileInfo lastFile = GetLastFile(modpackInfo.GameVersion, addon.latestFiles, (AddonType)addon.classId, modpackInfo);
                                     if (lastFile != null && lastFile.id > actualAddonsList[projectId].FileID)
                                     {
                                         obj.UpdateAvailable = true;

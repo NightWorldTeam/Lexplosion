@@ -147,4 +147,9 @@ namespace Lexplosion.Logic.Objects
     /// </summary>
     public class InstalledAddonsFormat : Dictionary<int, InstalledAddonInfo> { }
 
+    public class DistributionData
+    {
+        public string Name;
+    }
+
 }

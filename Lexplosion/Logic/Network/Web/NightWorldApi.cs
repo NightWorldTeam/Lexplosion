@@ -111,87 +111,30 @@ namespace Lexplosion.Logic.Network
 
         public static VersionManifest GetVersionManifest(string modpackId)
         {
-            string[] chars = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
-            string str = "";
-            string str2 = "";
-            Random rnd = new Random();
+            var filesData = ToServer.ProtectedRequest<ProtectedVersionManifest>(LaunсherSettings.URL.ModpacksData + modpackId + "/versionManifest");
 
-            for (int i = 0; i < 32; i++)
+            if (filesData == null) return null;
+
+            Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
+            foreach (string lib in filesData.libraries.Keys)
             {
-                str += chars[rnd.Next(0, chars.Length)];
-                str2 += chars[rnd.Next(0, chars.Length)];
+                if (filesData.libraries[lib].os == null || filesData.libraries[lib].os.Contains("windows"))
+                {
+                    libraries[lib] = new LibInfo
+                    {
+                        notArchived = filesData.libraries[lib].notArchived,
+                        url = filesData.libraries[lib].url,
+                        obtainingMethod = filesData.libraries[lib].obtainingMethod,
+                        isNative = filesData.libraries[lib].isNative
+                    };
+                }
             }
 
-            using (SHA1 sha = new SHA1Managed())
+            return new VersionManifest
             {
-                string key = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str2 + ":" + LaunсherSettings.secretWord)));
-
-                int d = 32 - key.Length;
-                for (int i = 0; i < d; i++)
-                {
-                    key += str2[i];
-                }
-
-                Dictionary<string, string> data = new Dictionary<string, string>
-                {
-                    ["str"] = str,
-                    ["str2"] = str2,
-                    ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
-                };
-
-                try
-                {
-                    Runtime.DebugWrite("URL " + LaunсherSettings.URL.ModpacksData + modpackId + "/versionManifest");
-                    string answer = ToServer.HttpPost(LaunсherSettings.URL.ModpacksData + modpackId + "/versionManifest", data);
-
-                    if (answer != null)
-                    {
-                        answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
-
-                        ProtectedVersionManifest filesData = JsonConvert.DeserializeObject<ProtectedVersionManifest>(answer);
-
-                        if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
-                        {
-                            Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
-                            foreach (string lib in filesData.libraries.Keys)
-                            {
-                                if (filesData.libraries[lib].os == null || filesData.libraries[lib].os.Contains("windows"))
-                                {
-                                    libraries[lib] = new LibInfo
-                                    {
-                                        notArchived = filesData.libraries[lib].notArchived,
-                                        url = filesData.libraries[lib].url,
-                                        obtainingMethod = filesData.libraries[lib].obtainingMethod,
-                                        isNative = filesData.libraries[lib].isNative
-                                    };
-                                }
-                            }
-
-                            VersionManifest ret = new VersionManifest
-                            {
-                                version = filesData.version,
-                                libraries = libraries
-                            };
-
-                            return ret;
-                        }
-                        else
-                        {
-                            MessageBox.Show("null1");
-                            return null;
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("null2");
-                        return null;
-                    }
-                }
-                catch
-                {
-                    return null;
-                }
-            }
+                version = filesData.version,
+                libraries = libraries
+            };
         }
 
         public static PlayerData GetPlayerData(string uuid)

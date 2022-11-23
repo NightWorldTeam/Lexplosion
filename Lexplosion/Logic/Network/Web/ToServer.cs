@@ -161,7 +161,7 @@ namespace Lexplosion.Logic.Network
 
                     if (answer != null && answer != "")
                     {
-                        answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                        answer = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
                         T filesData = JsonConvert.DeserializeObject<T>(answer);
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
@@ -273,7 +273,7 @@ namespace Lexplosion.Logic.Network
 
                 accessData = Convert.ToBase64String(Encoding.UTF8.GetBytes(accessData)) + ":" + str;
                 string planText = Convert.ToBase64String(Encoding.UTF8.GetBytes(accessData)) + ":" + salt;
-                byte[] encrypted = AesСryp.Encode(planText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                byte[] encrypted = Сryptography.AesEncode(planText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
                 Dictionary<string, string> data = new Dictionary<string, string>()
                 {
@@ -314,7 +314,7 @@ namespace Lexplosion.Logic.Network
                     }
                     else
                     {
-                        answer = AesСryp.Decode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                        answer = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
                         Dictionary<string, string> userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
 
                         if (userData["code"] == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(userData["str"] + ":" + LaunсherSettings.secretWord))))

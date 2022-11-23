@@ -19,10 +19,12 @@ namespace Lexplosion.Logic.Network
 
         private readonly AutoResetEvent resetEvent = new AutoResetEvent(false);
 
-        public DataClient(string server, string filename, string fileId_) : base(clientType, server)
+        private Thread _calculateThread;
+
+        public DataClient(string controlServer, string filename, string fileId) : base(clientType, controlServer)
         {
             _fstream = new FileStream(filename, FileMode.Create, FileAccess.Write);
-            _fileId = fileId_;
+            _fileId = fileId;
         }
 
         protected override void Sending()
@@ -50,10 +52,12 @@ namespace Lexplosion.Logic.Network
                     return;
                 }
 
-                new Thread(delegate ()
+                _calculateThread = new Thread(delegate ()
                 {
                     SpeedClaculate();
-                }).Start();
+                });
+
+                _calculateThread.Start();
 
                 long offset = 0;
                 _isWorking = Bridge.Receive(out data);
@@ -79,6 +83,8 @@ namespace Lexplosion.Logic.Network
 
             Bridge.Close();
             Close(null);
+
+            _calculateThread?.Abort();
         }
 
         private void SpeedClaculate()
@@ -87,10 +93,10 @@ namespace Lexplosion.Logic.Network
             {
                 resetEvent.WaitOne(5000); // ждём 5 секунд
 
-                long dataCount_ = _dataCount;
+                long dataCount = _dataCount;
                 _dataCount = 0;
 
-                double byteToMillSec = dataCount_ / 5000.0;
+                double byteToMillSec = dataCount / 5000.0;
                 double bitToSec = (byteToMillSec * 8) * 1000;
 
                 SpeedUpdate?.Invoke((bitToSec / (1024 * 1014)));
@@ -102,9 +108,10 @@ namespace Lexplosion.Logic.Network
             _fstream.Close();
         }
 
-        public delegate void ParametrUpdate(double value);
-
-        public event ParametrUpdate ProcentUpdate;
-        public event ParametrUpdate SpeedUpdate;
+        public event Action<double> ProcentUpdate;
+        /// <summary>
+        /// Обновление скорости передачи в Мбит/c. Обновляется каждые 5 секунд
+        /// </summary>
+        public event Action<double> SpeedUpdate;
     }
 }

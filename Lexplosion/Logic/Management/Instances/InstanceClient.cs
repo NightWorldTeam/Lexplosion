@@ -966,10 +966,44 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         /// <summary>
+        /// Раздать сборку друзьям
+        /// </summary>
+        /// <param name="exportList">Аналогично методу Export</param>
+        /// <returns>Экземпляр раздачи</returns>
+        public FileDistributor Share(Dictionary<string, PathLevel> exportList)
+        {
+            string shareDir = WithDirectory.DirectoryPath + "/shares/files/";
+            try
+            {
+                if (!Directory.Exists(shareDir))
+                {
+                    Directory.CreateDirectory(shareDir);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+            string zipFile = shareDir + _localId + ".zip";
+            ExportResult result = Export(exportList, zipFile, _name);
+
+            if (result == ExportResult.Successful)
+            {
+                return FileDistributor.CreateDistribution(zipFile);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Экспортирует модпак.
         /// </summary>
         /// <param name="exportList">Список файлов и папок на экспорт. Ключ - путь относительно папки модпака, значение - описание элемента директории.</param>
         /// <param name="exportFile">Полноый путь к архиву, в который будет производиться экспорт.</param>
+        /// <param name="name">Имя для экспорта.</param>
         /// <returns>Результат экспорта.</returns>
         public ExportResult Export(Dictionary<string, PathLevel> exportList, string exportFile, string name)
         {

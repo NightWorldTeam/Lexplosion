@@ -201,4 +201,10 @@
         NoXbox,
         Successful
     }
+
+    public enum DistributionState
+    {
+        InQueue,
+        InProcess
+    }
 }

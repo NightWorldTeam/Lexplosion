@@ -91,7 +91,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 var account = _accounts.Profiles[accountType];
 
                 login = account.Login;
-                accessData = AesСryp.Decode(Convert.FromBase64String(account.AccessData), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                accessData = Сryptography.AesDecode(Convert.FromBase64String(account.AccessData), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
 
                 user = authHandler.ReAuth(ref login, ref accessData, out result);
             }

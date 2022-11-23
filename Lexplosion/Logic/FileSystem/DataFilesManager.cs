@@ -14,7 +14,7 @@ namespace Lexplosion.Logic.FileSystem
     {
         public static void SaveAccount(string login, string accessData, AccountType accountType)
         {
-            accessData = Convert.ToBase64String(AesСryp.Encode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
+            accessData = Convert.ToBase64String(Сryptography.AesEncode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
 
             var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
             if (data != null && data.Profiles != null && data.Profiles.Count > 0)
@@ -69,7 +69,7 @@ namespace Lexplosion.Logic.FileSystem
                     if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.AccessData))
                     {
                         login = profile.Login;
-                        accessData = AesСryp.Decode(Convert.FromBase64String(profile.AccessData), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                        accessData = Сryptography.AesDecode(Convert.FromBase64String(profile.AccessData), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
                     }
                     else
                     {
