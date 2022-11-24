@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.Models;
 using Lexplosion.Logic.Management;
+using System;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
 {
@@ -21,6 +22,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
             get => _multiplayerRefresh ?? (_multiplayerRefresh = new RelayCommand(obj =>
             {
                 LaunchGame.RebootOnlineGame();
+                MainViewModel.ShowToastMessage("Успешно", "Сетевая игра перезапущена", TimeSpan.FromSeconds(5d));
             }));
         }
 
