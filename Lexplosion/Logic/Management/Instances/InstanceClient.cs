@@ -1137,5 +1137,11 @@ namespace Lexplosion.Logic.Management.Instances
 
             return res;
         }
+
+        public static ImportResult Import(FileReceiver reciver, out InstanceClient instanceClient)
+        {
+            WithDirectory.ReceiveFile(reciver, out string file);
+            return Import(file, out instanceClient);
+        }
     }
 }

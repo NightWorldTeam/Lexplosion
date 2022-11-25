@@ -442,6 +442,16 @@ namespace Lexplosion.Logic.FileSystem
             return ImportResult.Successful;
         }
 
+        public static FileRecvReult ReceiveFile(FileReceiver reciver, out string file)
+        {
+            string tempDir = CreateTempDir();
+            file = tempDir + "archive.zip";
+            reciver.StartDownload(file);
+
+            return FileRecvReult.Successful;
+
+        }
+
         public static bool DonwloadJava(string javaName, string bitDepth, TaskArgs taskArgs)
         {
             string tempDir = CreateTempDir();

@@ -9,7 +9,8 @@
         IsOfflineMode,
         MovingFilesError,
         ServerFilesError,
-        DirectoryCreateError
+        DirectoryCreateError,
+        ConnectionClose
     }
 
     public enum ExportResult
@@ -206,5 +207,12 @@
     {
         InQueue,
         InProcess
+    }
+
+    public enum FileRecvReult
+    {
+        Successful,
+        ConnectionClose,
+        UnknownError
     }
 }

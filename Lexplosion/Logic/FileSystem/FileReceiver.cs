@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    class FileReceiver
+    public class FileReceiver
     {
         #region staticData
         private class RecieverInfo
@@ -94,6 +94,7 @@ namespace Lexplosion.Logic.FileSystem
             _dataClient.ProcentUpdate += ProcentUpdate;
 
             _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
+            _dataClient.WorkWait();
         }
     }
 }

@@ -15,9 +15,10 @@ namespace Lexplosion.Logic.Network
         private long _fileSize = 0;
         private long _dataCount = 0;
 
-        private bool _isWorking;
+        private bool _isWorking = true;
 
-        private readonly AutoResetEvent resetEvent = new AutoResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);  
+        private readonly ManualResetEvent _workWait = new ManualResetEvent(false);
 
         private Thread _calculateThread;
 
@@ -62,7 +63,7 @@ namespace Lexplosion.Logic.Network
                 long offset = 0;
                 _isWorking = Bridge.Receive(out data);
 
-                while (_isWorking)
+                while (_isWorking && data.Length > 0)
                 {
                     offset += data.Length;
                     _dataCount += data.Length;
@@ -78,8 +79,12 @@ namespace Lexplosion.Logic.Network
                     _isWorking = Bridge.Receive(out data);
                 }
             }
-            catch { }
-            resetEvent.Set();
+            catch 
+            {
+                _isWorking = false;
+            }
+
+            _resetEvent.Set();
 
             Bridge.Close();
             Close(null);
@@ -91,7 +96,7 @@ namespace Lexplosion.Logic.Network
         {
             while (_isWorking)
             {
-                resetEvent.WaitOne(5000); // ждём 5 секунд
+                _resetEvent.WaitOne(5000); // ждём 5 секунд
 
                 long dataCount = _dataCount;
                 _dataCount = 0;
@@ -103,9 +108,16 @@ namespace Lexplosion.Logic.Network
             }
         }
 
+        public void WorkWait()
+        {
+            _workWait.WaitOne();
+            _workWait.Reset();
+        }
+
         protected override void Close(IPEndPoint point)
         {
             _fstream.Close();
+            _workWait.Set();
         }
 
         public event Action<double> ProcentUpdate;
