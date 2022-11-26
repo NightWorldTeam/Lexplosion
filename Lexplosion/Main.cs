@@ -359,6 +359,13 @@ namespace Lexplosion
                     Assets = new Assets()
                     {
                         LargeImageKey = "logo1"
+                    },
+                    Party = new Party()
+                    {
+                        ID = "Tedsfd",
+                        Max = 4,
+                        Size = 2,
+                        Privacy = Party.PrivacySetting.Public
                     }
                 });
 
