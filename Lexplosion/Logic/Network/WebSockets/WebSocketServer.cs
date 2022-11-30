@@ -17,6 +17,8 @@ namespace Lexplosion.Logic.Network.WebSockets
 
         public delegate string ReceivedDataDelegate(string text);
 
+        private bool _isClosed = false;
+
         /// <summary>
         /// Принимает строку - полученные данные. Возвращает тоже строку - данные которые нужно отправить.
         /// </summary>
@@ -29,6 +31,17 @@ namespace Lexplosion.Logic.Network.WebSockets
                 serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
                 serverSocket.Listen(1);
                 serverSocket.BeginAccept(null, 0, OnAccept, null);
+            }
+            catch { }
+        }
+
+        public void Stop()
+        {
+            try
+            {
+                _isClosed = true;
+                serverSocket.Close();
+                serverSocket.Dispose();
             }
             catch { }
         }
@@ -76,12 +89,23 @@ namespace Lexplosion.Logic.Network.WebSockets
                     }
                 }
             }
-            catch { }
+            catch  { }
             finally
             {
                 if (serverSocket != null && serverSocket.IsBound)
                 {
-                    serverSocket.BeginAccept(null, 0, OnAccept, null);
+                    if (!_isClosed)
+                    {
+                        try
+                        {
+                            serverSocket.BeginAccept(null, 0, OnAccept, null);
+                        }
+                        catch { }
+                    }
+                    else
+                    {
+                        client?.Close();
+                    }
                 }
             }
 

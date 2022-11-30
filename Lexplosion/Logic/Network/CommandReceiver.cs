@@ -33,6 +33,8 @@ namespace Lexplosion.Logic.Network
 
         #endregion
 
+        private static WebSocketServer _server;
+
         private static string CommandHandler(string text)
         {
             if (text.StartsWith("$openModpackPage:"))
@@ -88,11 +90,16 @@ namespace Lexplosion.Logic.Network
             {
                 Lexplosion.Runtime.TaskRun(delegate ()
                 {
-                    var ws = new WebSocketServer();
-                    ws.ReceivedData += CommandHandler;
-                    ws.Run(LaunсherSettings.CommandServerPort);
+                    _server = new WebSocketServer();
+                    _server.ReceivedData += CommandHandler;
+                    _server.Run(LaunсherSettings.CommandServerPort);
                 });
             }
+        }
+
+        public static void StopCommandServer()
+        {
+            _server?.Stop();
         }
     }
 }

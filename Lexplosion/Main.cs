@@ -440,8 +440,10 @@ namespace Lexplosion
             {
                 window.Close();
             }
+
             _nofityIcon.Dispose();
             ExitEvent?.Invoke();
+            CommandReceiver.StopCommandServer();
         }
 
         public static void ShowMainWindow()
