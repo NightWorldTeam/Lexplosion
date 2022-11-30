@@ -112,7 +112,7 @@ namespace Lexplosion
             LaunchGame.GameStartedEvent += delegate (LaunchGame gameManager) //подписываемся на эвент запуска игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
-                if (GlobalData.GeneralSettings.HiddenMode == true)
+                if (GlobalData.GeneralSettings.IsHiddenMode == true)
                 {
                     CloseMainWindow();
                 }
@@ -132,7 +132,7 @@ namespace Lexplosion
             // подписываемся на запуск игры до запуска окна
             LaunchGame.GameStartEvent += (LaunchGame gameManager) =>
             {
-                if (gameManager.ClientSettings.ShowConsole == true)
+                if (gameManager.ClientSettings.IsShowConsole == true)
                 {
                     app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
                 }
@@ -141,7 +141,7 @@ namespace Lexplosion
             LaunchGame.GameStopEvent += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
-                if (gameManager.ClientSettings.HiddenMode == true)
+                if (gameManager.ClientSettings.IsHiddenMode == true)
                 {
                     ShowMainWindow();
                 }
@@ -359,6 +359,13 @@ namespace Lexplosion
                     Assets = new Assets()
                     {
                         LargeImageKey = "logo1"
+                    },
+                    Party = new Party()
+                    {
+                        ID = "Tedsfd",
+                        Max = 4,
+                        Size = 2,
+                        Privacy = Party.PrivacySetting.Public
                     }
                 });
 

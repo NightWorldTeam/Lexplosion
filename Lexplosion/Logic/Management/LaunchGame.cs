@@ -202,7 +202,7 @@ namespace Lexplosion.Logic.Management
 
             GameStartEvent?.Invoke(this);
 
-            if (_settings.ShowConsole == true)
+            if (_settings.IsShowConsole == true)
             {
                 ProcessDataReceived?.Invoke("Выполняется запуск игры...");
                 ProcessDataReceived?.Invoke(command);
@@ -224,7 +224,7 @@ namespace Lexplosion.Logic.Management
                     ProcessDataReceived?.Invoke(e.Data);
                 }
 
-                if (_settings.ShowConsole == true)
+                if (_settings.IsShowConsole == true)
                     process.OutputDataReceived += ReadFromConsole;
 
                 process.Exited += (sender, ea) =>
@@ -356,7 +356,7 @@ namespace Lexplosion.Logic.Management
                 };
             }
 
-            if (_settings.CustomJava == false)
+            if (_settings.IsCustomJava == false)
             {
                 using (JavaChecker javaCheck = new JavaChecker(releaseIndex, _updateCancelToken))
                 {
@@ -452,13 +452,13 @@ namespace Lexplosion.Logic.Management
 
                 if (!versionIsStatic && ToServer.ServerIsOnline())
                 {
-                    data = Update(progressHandler, fileDownloadHandler, downloadStarted, null, (_settings.AutoUpdate == false));
+                    data = Update(progressHandler, fileDownloadHandler, downloadStarted, null, (_settings.IsAutoUpdate == false));
                 }
                 else
                 {
                     if (files?.version != null && files.libraries != null)
                     {
-                        if (_settings.CustomJava == false)
+                        if (_settings.IsCustomJava == false)
                         {
                             using (JavaChecker javaCheck = new JavaChecker(files.version.releaseIndex, _updateCancelToken, true))
                             {

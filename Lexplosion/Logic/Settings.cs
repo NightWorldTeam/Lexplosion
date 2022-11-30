@@ -10,15 +10,15 @@ namespace Lexplosion.Logic
     public class Settings
     {
         public string JavaPath = null;
-        public bool? CustomJava = null;
+        public bool? IsCustomJava = null;
         public string GamePath = null;
         public uint? Xmx = null;
         public uint? Xms = null;
         public uint? WindowWidth = null;
         public uint? WindowHeight = null;
-        public bool? ShowConsole = null;
-        public bool? HiddenMode = null;
-        public bool? AutoUpdate = null;
+        public bool? IsShowConsole = null;
+        public bool? IsHiddenMode = null;
+        public bool? IsAutoUpdate = null;
         public string GameArgs = null;
         /// <summary>
         /// Использовать ли в приоритете в сетевой игре прямое подключение.
@@ -30,30 +30,30 @@ namespace Lexplosion.Logic
             if (priority)
             {
                 if (JavaPath == null) JavaPath = settings.JavaPath;
-                if (CustomJava == null) CustomJava = settings.CustomJava;
+                if (IsCustomJava == null) IsCustomJava = settings.IsCustomJava;
                 if (GamePath == null) GamePath = settings.GamePath;
                 if (Xmx == null) Xmx = settings.Xmx;
                 if (Xms == null) Xms = settings.Xms;
                 if (WindowWidth == null) WindowWidth = settings.WindowWidth;
                 if (WindowHeight == null) WindowHeight = settings.WindowHeight;
-                if (ShowConsole == null) ShowConsole = settings.ShowConsole;
-                if (HiddenMode == null) HiddenMode = settings.HiddenMode;
-                if (AutoUpdate == null) AutoUpdate = settings.AutoUpdate;
+                if (IsShowConsole == null) IsShowConsole = settings.IsShowConsole;
+                if (IsHiddenMode == null) IsHiddenMode = settings.IsHiddenMode;
+                if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (GameArgs == null) GameArgs = settings.GameArgs;
                 OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
             }
             else
             {
                 if (settings.JavaPath != null) JavaPath = settings.JavaPath;
-                if (settings.CustomJava != null) CustomJava = settings.CustomJava;
+                if (settings.IsCustomJava != null) IsCustomJava = settings.IsCustomJava;
                 if (settings.GamePath != null) GamePath = settings.GamePath;
                 if (settings.Xmx != null) Xmx = settings.Xmx;
                 if (settings.Xms != null) Xms = settings.Xms;
                 if (settings.WindowWidth != null) WindowWidth = settings.WindowWidth;
                 if (settings.WindowHeight != null) WindowHeight = settings.WindowHeight;
-                if (settings.ShowConsole != null) ShowConsole = settings.ShowConsole;
-                if (settings.HiddenMode != null) HiddenMode = settings.HiddenMode;
-                if (settings.AutoUpdate != null) AutoUpdate = settings.AutoUpdate;
+                if (settings.IsShowConsole != null) IsShowConsole = settings.IsShowConsole;
+                if (settings.IsHiddenMode != null) IsHiddenMode = settings.IsHiddenMode;
+                if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
                 OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
             }
@@ -76,16 +76,16 @@ namespace Lexplosion.Logic
             return new Settings
             {
                 JavaPath = "",
-                CustomJava = false,
+                IsCustomJava = false,
                 GamePath = LaunсherSettings.gamePath,
                 Xmx = xmx,
                 Xms = 256,
                 WindowWidth = 854,
                 WindowHeight = 480,
-                ShowConsole = false,
-                HiddenMode = false,
+                IsShowConsole = false,
+                IsHiddenMode = false,
                 GameArgs = "",
-                AutoUpdate = false,
+                IsAutoUpdate = false,
                 OnlineGameDirectConnection = false
             };
         }

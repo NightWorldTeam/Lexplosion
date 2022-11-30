@@ -78,9 +78,9 @@ namespace Lexplosion.Gui.Models
 
         public bool? IsShowConsole
         {
-            get => GlobalData.GeneralSettings.ShowConsole; set
+            get => GlobalData.GeneralSettings.IsShowConsole; set
             {
-                GlobalData.GeneralSettings.ShowConsole = value;
+                GlobalData.GeneralSettings.IsShowConsole = value;
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
@@ -88,9 +88,9 @@ namespace Lexplosion.Gui.Models
 
         public bool? IsHiddenMode
         {
-            get => GlobalData.GeneralSettings.HiddenMode; set
+            get => GlobalData.GeneralSettings.IsHiddenMode; set
             {
-                GlobalData.GeneralSettings.HiddenMode = value;
+                GlobalData.GeneralSettings.IsHiddenMode = value;
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
@@ -98,9 +98,9 @@ namespace Lexplosion.Gui.Models
 
         public bool? IsAutoUpdate
         {
-            get => GlobalData.GeneralSettings.AutoUpdate; set
+            get => GlobalData.GeneralSettings.IsAutoUpdate; set
             {
-                GlobalData.GeneralSettings.AutoUpdate = value;
+                GlobalData.GeneralSettings.IsAutoUpdate = value;
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
@@ -114,9 +114,9 @@ namespace Lexplosion.Gui.Models
                 OnPropertyChanged();
 
                 if (value.Length == 0)
-                    GlobalData.GeneralSettings.CustomJava = false;
+                    GlobalData.GeneralSettings.IsCustomJava = false;
                 else
-                    GlobalData.GeneralSettings.CustomJava = true;
+                    GlobalData.GeneralSettings.IsCustomJava = true;
 
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }

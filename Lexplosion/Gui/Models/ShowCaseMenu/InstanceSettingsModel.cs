@@ -85,12 +85,12 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             }
         }
 
-        public bool? IsAutoUpdate
+        public bool IsAutoUpdate
         {
-            get => InstanceSettings.AutoUpdate; set
+            get => (bool)InstanceSettings.IsAutoUpdate; set
             {
-                InstanceSettings.AutoUpdate = value;
-                _instanceSettingsCopy.AutoUpdate = value;
+                InstanceSettings.IsAutoUpdate = value;
+                _instanceSettingsCopy.IsAutoUpdate = value;
                 OnPropertyChanged();
                 _instanceClient.SaveSettings(_instanceSettingsCopy);
             }
@@ -105,9 +105,9 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
                 OnPropertyChanged();
 
                 if (value.Length == 0)
-                    InstanceSettings.CustomJava = false;
+                    InstanceSettings.IsCustomJava = false;
                 else
-                    InstanceSettings.CustomJava = true;
+                    InstanceSettings.IsCustomJava = true;
 
                 _instanceClient.SaveSettings(_instanceSettingsCopy);
             }
@@ -119,6 +119,28 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             {
                 InstanceSettings.GameArgs = value;
                 _instanceSettingsCopy.JavaPath = value;
+                OnPropertyChanged();
+                _instanceClient.SaveSettings(_instanceSettingsCopy);
+            }
+        }
+
+        public bool IsHiddenMode
+        {
+            get => (bool)InstanceSettings.IsHiddenMode; set 
+            {
+                InstanceSettings.IsHiddenMode = value;
+                _instanceSettingsCopy.IsHiddenMode = value;
+                OnPropertyChanged();
+                _instanceClient.SaveSettings(_instanceSettingsCopy);
+            }
+        }
+
+        public bool IsShowConsole 
+        {
+            get => (bool)InstanceSettings.IsShowConsole; set 
+            {
+                InstanceSettings.IsShowConsole = value;
+                _instanceSettingsCopy.IsShowConsole = value;
                 OnPropertyChanged();
                 _instanceClient.SaveSettings(_instanceSettingsCopy);
             }
