@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Logic.Management;
+using System;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -23,6 +24,7 @@ namespace Lexplosion.Gui.Views.Windows
         {
             InitializeComponent();
             MouseDown += delegate { try { DragMove(); } catch { } };
+            Closed += CloseHandler;
 
             _paragraph = new Paragraph();
             SetGameManager(gameManager);
@@ -130,10 +132,14 @@ namespace Lexplosion.Gui.Views.Windows
         /// </summary>
         internal void Exit(object sender, RoutedEventArgs e)
         {
+            this.Close();
+        }
+
+        private void CloseHandler(object sender, EventArgs e)
+        {
             _classInstance = null;
             _gameManager.ProcessDataReceived -= AddNewLine;
             ConsoleOutput.Document.Blocks.Clear();
-            this.Close();
         }
 
         /// <summary>
