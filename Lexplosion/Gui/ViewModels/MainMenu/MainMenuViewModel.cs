@@ -3,8 +3,10 @@ using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
 using Lexplosion.Tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu
@@ -110,10 +112,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         /// <param name="viewModel">InstanceViewModel нужной сборки.</param>
         public void OpenModpackPage(InstanceFormViewModel viewModel)
         {
-            InstanceMenuViewModel instanceMenuViewModel;
-            if (InstanceMenuViewModels.ContainsKey(viewModel))
+            if (InstanceMenuViewModels.TryGetValue(viewModel, out InstanceMenuViewModel instanceMenuViewModel))
             {
-                instanceMenuViewModel = InstanceMenuViewModels[viewModel];
                 instanceMenuViewModel.SetSelectedTabIndex(0);
             }
             else
@@ -143,8 +143,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 subIndex = viewModel.Client.Type == InstanceSource.Local ? 3 : 1;
             }
 
-            InstanceMenuViewModel instanceMenuViewModel;
-            if (InstanceMenuViewModels.ContainsKey(viewModel))
+            if (InstanceMenuViewModels.TryGetValue(viewModel, out InstanceMenuViewModel instanceMenuViewModel))
             {
                 instanceMenuViewModel = InstanceMenuViewModels[viewModel];
                 instanceMenuViewModel.SetSelectedTabIndex(index);
@@ -170,7 +169,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private List<Tab<VMBase>> InitializeMultiplayerTabs()
         {
-            VMBase curtains = new DevСurtainViewModel() { Message = "Функции нашей сетевой игры доступны только при использовании аккаунта NightWorld" };
+            
+            VMBase curtains = new DevСurtainViewModel("Создать аккаунт", () => Process.Start(@"https://night-world.org/authentication")) { Message = "Функции нашей сетевой игры доступны только при использовании аккаунта NightWorld" };
 
             return new List<Tab<VMBase>>()
             {
