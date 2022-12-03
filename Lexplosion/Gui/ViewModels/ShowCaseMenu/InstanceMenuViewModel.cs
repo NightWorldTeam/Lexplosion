@@ -84,7 +84,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             _mainViewModel = mainViewModel;
 
             //if (instanceForm.Model.InstanceClient.IsInstalled)
-            _factoryDLCVM = new FactoryDLCVM(_mainViewModel, _instanceForm.Client);
+            if (instanceForm.Model.InstanceClient.InLibrary)
+                _factoryDLCVM = new FactoryDLCVM(_mainViewModel, _instanceForm.Client);
 
             OnInstanceStateChanged();
 

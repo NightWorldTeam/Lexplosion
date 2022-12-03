@@ -15,6 +15,11 @@ using System.Windows;
 using Lexplosion.Logic.Management;
 using System.Diagnostics;
 using Lexplosion.Global;
+using System.Windows.Forms;
+using Lexplosion.Gui.Views.Pages.MainMenu.Settings;
+using Lexplosion.Gui.ViewModels.MainMenu.Settings;
+using Lexplosion.Gui.Views.Pages.MainMenu;
+using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -22,6 +27,8 @@ namespace Lexplosion.Gui.ViewModels
     {
         #region Static Properties and Fields
 
+
+        public ICommand NavigationShowCaseCommand { get; private set; }
 
         public static readonly NavigationStore NavigationStore = new NavigationStore();
         public MainMenuViewModel MainMenuVM { get; private set; }
@@ -286,7 +293,7 @@ namespace Lexplosion.Gui.ViewModels
                 if (instanceFormViewModel != null)
                     TrayComponents.Add(new TrayButton(0, "Закрыть игру", ResourceGetter.GetString("ExtensionOff"), instanceFormViewModel.CloseInstance) { IsEnable = IsInstanceRunning });
 
-                TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
+                TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("OpenFull"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
                 TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
                 TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
                 TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
@@ -300,7 +307,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 TrayComponents.Clear();
 
-                TrayComponents.Add(new TrayButton(1, "Свернуть лаунчер", ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
+                TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
                 TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
                 TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
                 TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
@@ -353,6 +360,12 @@ namespace Lexplosion.Gui.ViewModels
                 releaseOnlyVersions.Clear();
                 allVersions.Clear();
             });
+        }
+
+        public void UpdateLang() 
+        {
+            InitTrayComponents();
+
         }
 
         public MainMenuViewModel InitMainMenuViewModel(MainMenuViewModel mainMenuViewModel)

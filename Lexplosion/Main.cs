@@ -20,6 +20,8 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
+using System.Runtime.CompilerServices;
+using System.Globalization;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -45,6 +47,16 @@ namespace Lexplosion
 
         private static double leftPos;
         private static double topPos;
+
+        const string AssetsPath = "pack://application:,,,/Assets/";
+        const string ResourcePath = "pack://application:,,,/Gui/Resources/";
+
+        public static readonly string[] Languages = new string[] 
+        {
+            "ru-RU", "en-US"
+        };
+
+        private static ResourceDictionary CurrentLangDict; 
 
         [STAThread]
         static void Main()
@@ -84,6 +96,8 @@ namespace Lexplosion
                 CurrentProcess.Kill(); //стопаем этот процесс
             }
 
+            // Выставляем язык
+            ChangeCurrentLanguage();
             // Встраеваем стили
             StylesInit();
 
@@ -286,55 +300,76 @@ namespace Lexplosion
             return null;
         }
 
+        public static void ChangeCurrentLanguage(string cultureName = "") 
+        {
+            const string langPath = AssetsPath + "langs/";
+
+            if (CurrentLangDict == null) CurrentLangDict = new ResourceDictionary();
+
+            if (cultureName.Length == 0)
+            {
+                try
+                {
+                    CurrentLangDict.Source = new Uri(langPath + Thread.CurrentThread.CurrentCulture.ToString() + ".xaml");
+                }
+                catch
+                {
+                    CurrentLangDict.Source = new Uri(langPath + "ru-RU.xaml");
+                }
+            }
+            else
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(cultureName);
+                app.Resources.MergedDictionaries.Remove(CurrentLangDict);
+                CurrentLangDict.Source = new Uri(langPath + cultureName + ".xaml");
+            }
+            app.Resources.MergedDictionaries.Add(CurrentLangDict);
+        }
+
         /// <summary>
         /// Иницализация стилей приложения.
         /// </summary>
         private static void StylesInit()
         {
-            const string resources = "pack://application:,,,/Gui/Resources/";
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri("pack://application:,,,/Assets/langs/" + "ru-RU.xaml")
+                Source = new Uri(ResourcePath + "Fonts.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "Fonts.xaml")
+                Source = new Uri(ResourcePath + "Colors.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "Colors.xaml")
+                Source = new Uri(ResourcePath + "Iconics.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "Iconics.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(resources + "Defaults.xaml")
+                Source = new Uri(ResourcePath + "Defaults.xaml")
             });
             App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "TextBoxStyles.xaml")
+                Source = new Uri(ResourcePath + "TextBoxStyles.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "TabControlStyles.xaml")
+                Source = new Uri(ResourcePath + "TabControlStyles.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "ButtonStyles.xaml")
+                Source = new Uri(ResourcePath + "ButtonStyles.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "ListboxStyles.xaml")
+                Source = new Uri(ResourcePath + "ListboxStyles.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "StylesDictionary.xaml")
+                Source = new Uri(ResourcePath + "StylesDictionary.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
-                Source = new Uri(resources + "ComboBoxStyles.xaml")
+                Source = new Uri(ResourcePath + "ComboBoxStyles.xaml")
             });
             Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {

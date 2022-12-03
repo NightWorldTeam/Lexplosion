@@ -3,7 +3,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace Lexplosion.Gui.Views.Pages.MainMenu
+namespace Lexplosion.Gui.Views.Pages.MainMenu.Settings
 {
     /// <summary>
     /// Логика взаимодействия для GeneralSettingsView.xaml

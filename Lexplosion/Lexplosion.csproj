@@ -172,12 +172,13 @@
     <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\CatalogViewModel.cs" />
-    <Compile Include="Gui\ViewModels\MainMenu\GeneralSettingsViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Settings\GeneralSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\LibraryViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\MainMenuViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\ChannelTabViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\FriendsTabViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Settings\LanguageSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\DialogViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\DownloadManagerViewModel.cs" />
@@ -224,7 +225,7 @@
     <Compile Include="Gui\Views\Pages\MainMenu\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Gui\Views\Pages\MainMenu\GeneralSettingsView.xaml.cs">
+    <Compile Include="Gui\Views\Pages\MainMenu\Settings\GeneralSettingsView.xaml.cs">
       <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\LibraryView.xaml.cs">
@@ -241,6 +242,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml.cs">
       <DependentUpon>GeneralMultiplayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Settings\LanguageSettingsView.xaml.cs">
+      <DependentUpon>LanguageSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ModalViews\DialogView.xaml.cs">
       <DependentUpon>DialogView.xaml</DependentUpon>
@@ -367,6 +371,10 @@
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\langs\en-US.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Assets\langs\ru-RU.xaml">
       <SubType>Designer</SubType>
@@ -504,7 +512,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gui\Views\Pages\MainMenu\GeneralSettingsView.xaml">
+    <Page Include="Gui\Views\Pages\MainMenu\Settings\GeneralSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -525,6 +533,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Settings\LanguageSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -648,7 +660,10 @@
   <ItemGroup>
     <Resource Include="Assets\images\icons\non_image.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\countries\en-US.png" />
+    <Resource Include="Assets\images\icons\countries\ru-RU.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net461.targets" Condition="Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net461.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

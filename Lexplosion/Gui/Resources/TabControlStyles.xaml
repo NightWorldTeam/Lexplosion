@@ -7,6 +7,30 @@
         <Setter Property="Background" Value="#191919" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TabPanel
+                            Grid.Row="0"
+                            Margin="10,0,0,0"
+                            Panel.ZIndex="1"
+                            Background="Transparent"
+                            IsItemsHost="True" />
+                        <Border
+                            Grid.Row="1"
+                            BorderBrush="#212326"
+                            BorderThickness="0,1,0,0">
+                            <ContentPresenter ContentSource="SelectedContent" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="SwitcherTabItem" TargetType="{x:Type TabItem}">
@@ -18,10 +42,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
-                    <Grid
-                        x:Name="Grid"
-                        MinWidth="125"
-                        Background="{DynamicResource PrimarySolidColorBrush}">
+                    <Grid x:Name="Grid" Background="{DynamicResource PrimarySolidColorBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30" />
                             <RowDefinition Height="3" />
@@ -29,16 +50,16 @@
 
                         <ContentPresenter
                             x:Name="ContentSite"
-                            Margin="10,0,0,0"
+                            Margin="20,0,20,0"
                             HorizontalAlignment="Center"
                             Content="{Binding Header}"
                             ContentSource="Header" />
                         <Border
                             x:Name="Border"
                             Grid.Row="1"
-                            Margin="10,0,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
+                            Background="Red"
                             BorderBrush="{DynamicResource BrandSolidColorBrush}"
                             BorderThickness="0,0,0,3"
                             Focusable="False">
@@ -117,9 +138,14 @@
                         <Border
                             x:Name="Border"
                             Grid.Column="0"
-                            BorderThickness="10,0,0,0" CornerRadius="2">
+                            BorderThickness="10,0,0,0"
+                            CornerRadius="2">
                             <Border.Effect>
-                                <DropShadowEffect Color="#167FCC" Direction="0" BlurRadius="40" ShadowDepth="10"/>
+                                <DropShadowEffect
+                                    BlurRadius="40"
+                                    Direction="0"
+                                    ShadowDepth="10"
+                                    Color="#167FCC" />
                             </Border.Effect>
                         </Border>
 

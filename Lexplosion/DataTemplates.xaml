@@ -9,6 +9,7 @@
     xmlns:pagemm="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu"
     xmlns:pagemultiplayer="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu.Multiplayer"
     xmlns:pages="clr-namespace:Lexplosion.Gui.Views.Pages"
+    xmlns:pagesettings="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu.Settings"
     xmlns:showcasemenu="clr-namespace:Lexplosion.Gui.ViewModels.ShowCaseMenu"
     xmlns:showcasepage="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
     xmlns:tb="http://www.hardcodet.net/taskbar"
@@ -18,6 +19,7 @@
     xmlns:vmfactorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu"
     xmlns:vmmainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu"
     xmlns:vmmultiplayer="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu.Multiplayer"
+    xmlns:vmsettings="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu.Settings"
     xmlns:сonverters="clr-namespace:Lexplosion.Gui.Converters">
 
     <viewmodels:MainViewModel x:Key="MainVM" />
@@ -62,8 +64,12 @@
     <DataTemplate DataType="{x:Type vmmainmenu:LibraryViewModel}">
         <pagemm:LibraryView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vmmainmenu:GeneralSettingsViewModel}">
-        <pagemm:GeneralSettingsView />
+    <!--  MainMenu Settings DataTemplate  -->
+    <DataTemplate DataType="{x:Type vmsettings:GeneralSettingsViewModel}">
+        <pagesettings:GeneralSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmsettings:LanguageSettingsViewModel}">
+        <pagesettings:LanguageSettingsView />
     </DataTemplate>
     <!--  MainMenu Multiplayer DataTemplate  -->
     <DataTemplate DataType="{x:Type vmmultiplayer:GeneralMultiplayerViewModel}">
@@ -130,8 +136,8 @@
     <tb:TaskbarIcon
         x:Key="NofityIcon"
         IconSource="/Assets/images/icons/logo.ico"
-        PopupActivation="RightClick"
-        LeftClickCommand="{Binding Source={StaticResource MainVM}, Path=ShowMainWindowCommand}">
+        LeftClickCommand="{Binding Source={StaticResource MainVM}, Path=ShowMainWindowCommand}"
+        PopupActivation="RightClick">
         <tb:TaskbarIcon.TrayPopup>
             <Border Padding="10" Background="#161819">
                 <Border.Resources>

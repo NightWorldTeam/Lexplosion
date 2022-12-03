@@ -10,7 +10,7 @@
     mc:Ignorable="d">
     <StackPanel Orientation="Vertical">
         <TextBlock
-            Margin="0,50,0,0"
+            Margin="0,50,0,20"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             FontSize="25"
@@ -21,8 +21,12 @@
             TextWrapping="WrapWithOverflow" />
 
         <Button
+            Width="200"
+            Padding="5"
             Command="{Binding ButtonActionCommand}"
             Content="{Binding ButtonContent}"
-            Style="{StaticResource DefaultBrandColorButton}" />
+            FontSize="14"
+            Style="{StaticResource DefaultBrandColorButton}"
+            Visibility="{Binding HasButton, Converter={StaticResource ConvertBoolToVisibility}}" />
     </StackPanel>
 </UserControl>

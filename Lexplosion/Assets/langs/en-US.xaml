@@ -4,23 +4,23 @@
     xmlns:s="clr-namespace:System;assembly=mscorlib">
 
     <!--  main left panel  -->
-    <s:String x:Key="catalog">Каталог</s:String>
-    <s:String x:Key="library">Библиотека</s:String>
-    <s:String x:Key="multiplayer">Сетевая игра</s:String>
-    <s:String x:Key="settings">Настройки</s:String>
+    <s:String x:Key="catalog">Catalog</s:String>
+    <s:String x:Key="library">Library</s:String>
+    <s:String x:Key="multiplayer">Multiplayer</s:String>
+    <s:String x:Key="settings">Settings</s:String>
 
     <!--  library  -->
-    <s:String x:Key="addInstance">Добавить сборку</s:String>
+    <s:String x:Key="addInstance">Add Instance</s:String>
 
     <!--  multiplayer  -->
-    <s:String x:Key="status">Статус</s:String>
+    <s:String x:Key="status">Status</s:String>
     <s:String x:Key="priorityConnetionMethod">Приоритетный метод подключения</s:String>
     <s:String x:Key="directConnetion">Прямое</s:String>
     <s:String x:Key="viaRepeater">Через ретранслятор</s:String>
     <s:String x:Key="connectedPlayers">Подключенные игроки</s:String>
     <s:String x:Key="noConnectedPlayers">Отсутсвуют подключенные игроки</s:String>
-    <s:String x:Key="kick">Выпнуть</s:String>
-    <s:String x:Key="unkick">Вернуть</s:String>
+    <s:String x:Key="kick">Kikc</s:String>
+    <s:String x:Key="unkick">Unkick</s:String>
     <s:String x:Key="rebootOnlineGame">Перезапустить сетевую игру</s:String>
     <s:String x:Key="offOnlineGame">Выключить сетевую игру</s:String>
     <!--  multiplayer status  -->
@@ -29,20 +29,20 @@
     <s:String x:Key="statusConnectedToUser">Подключен к серверу</s:String>
 
 
-    <s:String x:Key="general">Основное</s:String>
-    <s:String x:Key="friends">Друзья</s:String>
-    <s:String x:Key="channels">Комнаты</s:String>
+    <s:String x:Key="general">General</s:String>
+    <s:String x:Key="friends">Friends</s:String>
+    <s:String x:Key="channels">Channels</s:String>
 
     <!--  settings  -->
-    <s:String x:Key="generalTipText">Общие настройки. Настройки для конкретного клиента можно изменить на его странице</s:String>
+    <s:String x:Key="generalTipText">Общие настройки. Настройки для конкретного клиента можно изенить на его странице</s:String>
 
     <s:String x:Key="account">Учётная запись</s:String>
-    <s:String x:Key="about">О лаунчере</s:String>
+    <s:String x:Key="about">About us</s:String>
 
-    <s:String x:Key="width">Ширина</s:String>
-    <s:String x:Key="height">Высота</s:String>
-    <s:String x:Key="memory">ОЗУ</s:String>
-    <s:String x:Key="gamefolder">Папка с игрой</s:String>
+    <s:String x:Key="width">Width</s:String>
+    <s:String x:Key="height">Height</s:String>
+    <s:String x:Key="memory">RAM</s:String>
+    <s:String x:Key="gamefolder">Game folder</s:String>
     <s:String x:Key="javapath">Путь к Java</s:String>
     <s:String x:Key="defaultJavaPath">Стандартное</s:String>
     <s:String x:Key="review">Обзор</s:String>
@@ -72,34 +72,34 @@
 
     <!--  Overview  -->
     <s:String x:Key="notImage">Изображения отсутствуют</s:String>
-    <s:String x:Key="version">Версия</s:String>
-    <s:String x:Key="updated">Обновлено</s:String>
-    <s:String x:Key="totalDownloads">Скачивания</s:String>
-    <s:String x:Key="website">Вебсайт</s:String>
-    <s:String x:Key="description">Описание</s:String>
-    <s:String x:Key="categories">Категории</s:String>
-    <s:String x:Key="changelog">Журнал изменений</s:String>
-    <s:String x:Key="mods">Моды</s:String>
-    <s:String x:Key="modification">Модификации</s:String>
-    <s:String x:Key="overview">Обзор</s:String>
+    <s:String x:Key="version">Version</s:String>
+    <s:String x:Key="updated">Updated</s:String>
+    <s:String x:Key="totalDownloads">Total Downloads</s:String>
+    <s:String x:Key="website">Website</s:String>
+    <s:String x:Key="description">Description</s:String>
+    <s:String x:Key="categories">Categories</s:String>
+    <s:String x:Key="changelog">Changelog</s:String>
+    <s:String x:Key="mods">Mods</s:String>
+    <s:String x:Key="modification">Modification</s:String>
+    <s:String x:Key="overview">Overview</s:String>
 
     <!--  instance configuration  -->
-    <s:String x:Key="configuration">Конфигурация</s:String>
-    <s:String x:Key="instanceSettings">Настройки сборки</s:String>
+    <s:String x:Key="configuration">Configuration</s:String>
+    <s:String x:Key="instanceSettings">Instance Settings</s:String>
     <!--  instance profile  -->
     <s:String x:Key="avatar">Аватар</s:String>
     <s:String x:Key="selectedInstanceLogo">Выберите изображение для вашего модпака.</s:String>
     <s:String x:Key="uploadYourAvatar">Загрузить своё аватар</s:String>
     <s:String x:Key="uploadYourAvatarTip">Вы можете загрузить свой аватар, но видеть его будете только вы.</s:String>
     <s:String x:Key="shortDescription">Краткое Описание</s:String>
-    <s:String x:Key="aboutInstance">О сборке</s:String>
+    <s:String x:Key="aboutInstance">About Instance</s:String>
     <s:String x:Key="fullDescription">Полное Описание</s:String>
-    <s:String x:Key="save">Сохранить</s:String>
-    <s:String x:Key="dlc">Дополнения</s:String>
+    <s:String x:Key="save">Save</s:String>
+    <s:String x:Key="dlc">DLC</s:String>
     <s:String x:Key="instanceTitle">Название</s:String>
     <s:String x:Key="immutableParameter">(неизменяется)</s:String>
     <s:String x:Key="immutableVersionParameter">Версия (неизменяется)</s:String>
-    <s:String x:Key="generalUpperCase">ОСНОВНОЕ</s:String>
+    <s:String x:Key="generalUpperCase">GENERAL</s:String>
 
     <!--  Factory DLC  -->
     <s:String x:Key="author">Автор</s:String>
@@ -119,16 +119,16 @@
     <s:String x:Key="back">Назад</s:String>
 
     <!--  Auth  -->
-    <s:String x:Key="login">Логин</s:String>
-    <s:String x:Key="password">Пароль</s:String>
+    <s:String x:Key="login">Login</s:String>
+    <s:String x:Key="password">Password</s:String>
     <s:String x:Key="showPassword">Показать пароль</s:String>
-    <s:String x:Key="saveMe">Запомнить меня</s:String>
-    <s:String x:Key="singIn">Войти</s:String>
+    <s:String x:Key="saveMe">Remember Me</s:String>
+    <s:String x:Key="singIn">Sign In</s:String>
 
-    <s:String x:Key="accountNightWorld">Аккаунт NightWorld</s:String>
-    <s:String x:Key="accountMojang">Аккаунт Mojang</s:String>
-    <s:String x:Key="accountMicrosoft">Аккаунт Microsoft</s:String>
-    <s:String x:Key="noAccount">Игра без аккаунта</s:String>
+    <s:String x:Key="accountNightWorld">Account NightWorld</s:String>
+    <s:String x:Key="accountMojang">Account Mojang</s:String>
+    <s:String x:Key="accountMicrosoft">Account Microsoft</s:String>
+    <s:String x:Key="noAccount">No Account</s:String>
 
     <!--  catalog  -->
     <s:String x:Key="curseforgeDataLoading">Идёт загрузка данных с curseforge.com...</s:String>
@@ -146,14 +146,14 @@
 
     <!--  Upper Button  -->
 
-    <s:String x:Key="closeInstance">Закрыть игру</s:String>
-    <s:String x:Key="downloadInstance">Скачать сборку</s:String>
-    <s:String x:Key="playInstance">Играть</s:String>
-    <s:String x:Key="download">Скачать</s:String>
+    <s:String x:Key="closeInstance">Close Game</s:String>
+    <s:String x:Key="downloadInstance">Download Instance</s:String>
+    <s:String x:Key="playInstance">Play</s:String>
+    <s:String x:Key="download">Download</s:String>
 
     <!--  Lower Button  -->
     <s:String x:Key="removeInstance">Удалить сборку</s:String>
-    <s:String x:Key="export">Экспорт</s:String>
+    <s:String x:Key="export">Export</s:String>
     <s:String x:Key="cancelDownload">Отменить скачивание</s:String>
     <s:String x:Key="addToLibrary">Добавить в библиотеку</s:String>
     <s:String x:Key="removeFromLibrary">Удалить из библиотеки</s:String>
@@ -167,10 +167,10 @@
     <s:String x:Key="updateAvailable">Доступно обновление</s:String>
     <s:String x:Key="rebootSettings">Сбросить настройки</s:String>
 
-    <s:String x:Key="play">Играть</s:String>
+    <s:String x:Key="play">Play</s:String>
     <s:String x:Key="prepareRun">Идет запуск...</s:String>
-    <s:String x:Key="close">Закрыть</s:String>
-    <s:String x:Key="install">Установить</s:String>
+    <s:String x:Key="close">Close</s:String>
+    <s:String x:Key="install">Install</s:String>
 
     <s:String x:Key="importResult">Результат импорта</s:String>
     <s:String x:Key="importResultError">Импорт завершился с ошибкой</s:String>
@@ -187,9 +187,9 @@
 
     <s:String x:Key="filterByCategory">Фильтровать по категории.</s:String>
     <s:String x:Key="canSelectOnlyOne">Можно выбрать только одну категорию.</s:String>
-    <s:String x:Key="gameVersion">Версия игры</s:String>
-    <s:String x:Key="sortBy">Сортировать по</s:String>
-    <s:String x:Key="filters">Фильтры</s:String>
+    <s:String x:Key="gameVersion">Game Version</s:String>
+    <s:String x:Key="sortBy">Sort by</s:String>
+    <s:String x:Key="filters">Filters</s:String>
 
     <s:String x:Key="microsoftAuthInProgress">Ожидание окончания авторизации через Microsoft</s:String>
 
@@ -207,20 +207,19 @@
     <s:String x:Key="downloadFilesCountNof">Скачано {0}/{1} файлов</s:String>
     <s:String x:Key="gameRunning">Идёт запуск игры...</s:String>
     <s:String x:Key="allVersions">Все версии</s:String>
-    <s:String x:Key="search">Поиск</s:String>
+    <s:String x:Key="search">Search</s:String>
     <s:String x:Key="downloadCancelling">Отмена скачивания...</s:String>
     <s:String x:Key="directoryChanging">Идет процесс переноса файлов...</s:String>
 
-    <s:String x:Key="warningAboutMultiplayer">Функции нашей сетевой игры доступны только при использовании аккаунта NightWorld</s:String>
-    <s:String x:Key="registerNightWorldAccount">Создать аккаунт NightWorld</s:String>
+    <s:String x:Key="warningAboutMultiplayer">You can play "NightWorld Multiplayer" only use NightWorldAccount</s:String>
+    <s:String x:Key="registerNightWorldAccount">Create NightWorld Account</s:String>
 
     <s:String x:Key="appearance">Внешний вид</s:String>
-    <s:String x:Key="language">Язык</s:String>
-    <s:String x:Key="selectLanguage">Выберите язык</s:String>
+    <s:String x:Key="language">Language</s:String>
+    <s:String x:Key="selectLanguage">Select Language</s:String>
 
+    <s:String x:Key="en-US">English</s:String>
+    <s:String x:Key="ru-RU">Russian</s:String>
 
-    <s:String x:Key="en-US">Английский</s:String>
-    <s:String x:Key="ru-RU">Русский</s:String>
-
-    <s:String x:Key="trayHideLauncher">Свернуть лаунчер</s:String>
+    <s:String x:Key="trayHideLauncher">Hide Launcher</s:String>
 </ResourceDictionary>
