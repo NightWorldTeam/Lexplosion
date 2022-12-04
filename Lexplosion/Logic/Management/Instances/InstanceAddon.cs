@@ -344,20 +344,33 @@ namespace Lexplosion.Logic.Management.Instances
             StartDownload,
             EndDownload
         }
-
-        private void InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies, DynamicStateHandler<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler)
+        
+        /// <summary>
+        /// Проверяет не устанавливается ли аддон в данный момент
+        /// </summary>
+        /// <param name="_modpackInfo">Инфа о модпаке</param>
+        /// <param name="addonId">Айди</param>
+        /// <returns>true - устанавливается. Не устанавливается - false</returns>
+        private static bool CheckInstalling(BaseInstanceData modpackInfo, int addonId)
         {
-            string key = GetAddonKey(_modpackInfo, _projectId);
+            string key = GetAddonKey(modpackInfo, addonId);
             _installingSemaphore.WaitOne(key);
             if (_installingAddons.ContainsKey(key))
             {
                 _installingSemaphore.Release(key);
-                return;
+                return true;
             }
             else
             {
                 _installingSemaphore.Release(key);
+                return false;
             }
+        }
+
+        private void InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies, DynamicStateHandler<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie)
+        {
+            // если такой аддон уже скачивается - выходим нахуй
+            if (!isDependencie && CheckInstalling(_modpackInfo, _modInfo.id)) return;
 
             _cancelTokenSource = new CancellationTokenSource();
             stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>
@@ -409,6 +422,9 @@ namespace Lexplosion.Logic.Management.Instances
                             {
                                 int modId = dependencie["modId"];
 
+                                // если такой аддон уже скачивается - выходим нахуй
+                                if (CheckInstalling(_modpackInfo, modId)) return;
+
                                 Pointer<InstanceAddon> addonPointer = new Pointer<InstanceAddon>();
                                 addonPointer.Point = null;
                                 _chacheSemaphore.WaitOne();
@@ -439,7 +455,7 @@ namespace Lexplosion.Logic.Management.Instances
                                     addonInstance = addonPointer.Point;
                                 }
 
-                                addonInstance.InstallLatestVersion(stateHandler, true);
+                                addonInstance.InstallLatestVersion(stateHandler, true, true);
                             });
                         }
                     }
@@ -571,7 +587,7 @@ namespace Lexplosion.Logic.Management.Instances
             return file;
         }
 
-        public void InstallLatestVersion(DynamicStateHandler<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true)
+        public void InstallLatestVersion(DynamicStateHandler<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false)
         {
             IsInstalling = true;
             var file = GetLastFile(_modpackInfo.GameVersion, _modInfo?.latestFiles, _modInfo?.latestFilesIndexes, (AddonType)_modInfo?.classId, _modpackInfo);
@@ -580,7 +596,7 @@ namespace Lexplosion.Logic.Management.Instances
                 file = GetLastFile(_modpackInfo.GameVersion, CurseforgeApi.GetProjectFiles(_modInfo.id.ToString(), _gameVersion, _modpackInfo.Modloader), null, (AddonType)_modInfo?.classId, _modpackInfo);
                 if (file != null)
                 {
-                    InstallAddon(file, downloadDependencies, stateHandler);
+                    InstallAddon(file, downloadDependencies, stateHandler, isDependencie);
                 }
                 else
                 {
@@ -589,7 +605,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
             else
             {
-                InstallAddon(file, downloadDependencies, stateHandler);
+                InstallAddon(file, downloadDependencies, stateHandler, isDependencie);
             }
         }
 
