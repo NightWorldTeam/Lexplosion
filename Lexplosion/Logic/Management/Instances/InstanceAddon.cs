@@ -325,8 +325,8 @@ namespace Lexplosion.Logic.Management.Instances
             string instanceId = _modpackInfo.LocalId;
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
-                InstalledAddonInfo addon = installedAddons[_modInfo.id];
-                installedAddons.TryRemove(_modInfo.id);
+                InstalledAddonInfo addon = installedAddons[_projectId];
+                installedAddons.TryRemove(_projectId);
                 addon.RemoveFromDir(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/");
                 installedAddons.Save();
             }
@@ -350,6 +350,19 @@ namespace Lexplosion.Logic.Management.Instances
 
         private void InstallAddon(CurseforgeFileInfo addonInfo, bool downloadDependencies, DynamicStateHandler<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler)
         {
+            string key = GetAddonKey(_modpackInfo, _projectId);
+            _installingSemaphore.WaitOne(key);
+            if (_installingAddons.ContainsKey(key))
+            {
+                _installingSemaphore.Release(key);
+                return;
+            }
+            else
+            {
+                _installingSemaphore.Release(key);
+            }
+            
+            
             _cancelTokenSource = new CancellationTokenSource();
             stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>
             {
