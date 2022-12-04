@@ -172,6 +172,7 @@
     <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\CatalogViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Settings\ApperanceSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\Settings\GeneralSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\LibraryViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\MainMenuViewModel.cs" />
@@ -224,6 +225,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Settings\ApperanceSettingsView.xaml.cs">
+      <DependentUpon>ApperanceSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\Settings\GeneralSettingsView.xaml.cs">
       <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
@@ -308,6 +312,7 @@
     <Compile Include="Logic\Network\WebSockets\WebSocketClient.cs" />
     <Compile Include="Logic\Network\WebSockets\WebSocketServer.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
+    <Compile Include="Tools\ColorTools.cs" />
     <Compile Include="Tools\DynamicStateData.cs" />
     <Compile Include="Tools\EnumerateExtension.cs" />
     <Compile Include="Tools\ImageTools.cs" />
@@ -509,6 +514,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\MainMenu\CatalogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Settings\ApperanceSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

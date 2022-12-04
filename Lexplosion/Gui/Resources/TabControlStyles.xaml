@@ -151,7 +151,7 @@
                                     BlurRadius="40"
                                     Direction="0"
                                     ShadowDepth="10"
-                                    Color="#167FCC" />
+                                    Color="{DynamicResource ActivityColor}" />
                             </Border.Effect>
                         </Border>
 

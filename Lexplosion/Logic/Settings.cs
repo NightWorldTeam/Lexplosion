@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Windows.Media;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.AccessControl;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 
@@ -25,6 +27,7 @@ namespace Lexplosion.Logic
         /// </summary>
         public bool OnlineGameDirectConnection = false;
         public string LanguageId = "";
+        public string AccentColor = "";
 
         public void Merge(Settings settings, bool priority = false)
         {
@@ -43,6 +46,7 @@ namespace Lexplosion.Logic
                 if (GameArgs == null) GameArgs = settings.GameArgs;
                 OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
                 LanguageId = settings.LanguageId;
+                AccentColor = settings.AccentColor;
             }
             else
             {
@@ -59,6 +63,7 @@ namespace Lexplosion.Logic
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
                 OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
                 LanguageId = settings.LanguageId;
+                AccentColor = settings.AccentColor;
             }
         }
 

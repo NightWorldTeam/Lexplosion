@@ -22,6 +22,11 @@ using Lexplosion.Logic.Management.Instances;
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using System.Runtime.CompilerServices;
 using System.Globalization;
+using System.Windows.Media;
+using System.Windows.Documents;
+using System.Collections.Generic;
+using ColorConverter = System.Windows.Media.ColorConverter;
+using System.Linq;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -56,7 +61,10 @@ namespace Lexplosion
             "ru-RU", "en-US"
         };
 
-        private static ResourceDictionary CurrentLangDict; 
+        private static ResourceDictionary CurrentLangDict;
+
+        public static Color CurrentAccentColor => (Color)app.Resources["ActivityColor"];
+        public static Color[] AccentColors;
 
         [STAThread]
         static void Main()
@@ -339,55 +347,90 @@ namespace Lexplosion
         /// Иницализация стилей приложения.
         /// </summary>
         private static void StylesInit()
-        {
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+        {            
+            var colorDict = new ResourceDictionary() { Source = new Uri(ResourcePath + "Colors.xaml") };
+
+            var i = 0;
+            var isRightColor = false;
+            var accentColorsList = new List<Color>();
+            foreach (var resourceKey in colorDict.Keys)
+            {
+                var strResourceKey = (String)resourceKey;
+                if (strResourceKey.Contains("Accent"))
+                {
+                    var color = (Color)colorDict[resourceKey];
+                    accentColorsList.Add(color);
+                    Runtime.DebugWrite(color.ToString() + "   " + ((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor)).ToString());
+                    isRightColor = color.ToString() == ((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor)).ToString();
+                    i++;
+                }
+            }
+            AccentColors = accentColorsList.ToArray();
+
+            app.Resources.MergedDictionaries.Add(colorDict);
+
+
+            if (GlobalData.GeneralSettings.AccentColor.Length == 0 || !isRightColor)
+            { 
+                ChangeColorToColor((Color)app.Resources["ActivityColor"]);
+            }
+            else 
+            { 
+                ChangeColorToColor((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor));
+            }
+
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "Fonts.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri(ResourcePath + "Colors.xaml")
-            });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "Iconics.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "Defaults.xaml")
             });
-            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "TextBoxStyles.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "TabControlStyles.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "ButtonStyles.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "ListboxStyles.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "StylesDictionary.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "ComboBoxStyles.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri("pack://application:,,,/Controls/Controls.xaml")
             });
-            Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
+        }
+
+        public static void ChangeColorToColor(Color color) 
+        {
+            app.Resources["ActivityColor"] = color;
+            app.Resources["BrandSolidColorBrush"] = new SolidColorBrush(color);
+            GlobalData.GeneralSettings.AccentColor = ColorTools.FromRgbToHex(color.R, color.G, color.B);
+            DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
         }
 
         private static DiscordRpcClient InitDiscordApp()

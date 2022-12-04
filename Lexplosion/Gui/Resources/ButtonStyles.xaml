@@ -331,9 +331,9 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="ellipse" Property="Ellipse.Stroke" Value="{StaticResource BrandSolidColorBrush}" />
+                            <Setter TargetName="ellipse" Property="Ellipse.Stroke" Value="{DynamicResource BrandSolidColorBrush}" />
                             <Setter TargetName="ellipse" Property="HorizontalAlignment" Value="Left" />
-                            <Setter TargetName="rect" Property="Border.Background" Value="{StaticResource BrandSolidColorBrush}" />
+                            <Setter TargetName="rect" Property="Border.Background" Value="{DynamicResource BrandSolidColorBrush}" />
                             <Setter TargetName="rect" Property="Border.CornerRadius" Value="0,3,3,0" />
                             <Setter TargetName="rect" Property="HorizontalAlignment" Value="Right" />
                         </Trigger>
@@ -358,12 +358,13 @@
 
 
     <Style x:Key="DefaultCloseButton" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
                         x:Name="border"
-                        Background="{TemplateBinding Background}"
+                        Background="Transparent"
                         BorderBrush="#292929"
                         BorderThickness="1"
                         CornerRadius="5">

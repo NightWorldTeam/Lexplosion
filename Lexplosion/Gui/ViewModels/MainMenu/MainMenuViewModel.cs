@@ -218,7 +218,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("appearance"),
-                    Content = new DevСurtainViewModel()
+                    Content = new ApperanceSettingsViewModel()
                 },
                 new Tab<VMBase>
                 {
