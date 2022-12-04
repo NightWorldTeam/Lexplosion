@@ -126,7 +126,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
 
         public bool IsHiddenMode
         {
-            get => (bool)InstanceSettings.IsHiddenMode; set 
+            get => (bool)InstanceSettings.IsHiddenMode; set
             {
                 InstanceSettings.IsHiddenMode = value;
                 _instanceSettingsCopy.IsHiddenMode = value;
@@ -135,9 +135,9 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             }
         }
 
-        public bool IsShowConsole 
+        public bool IsShowConsole
         {
-            get => (bool)InstanceSettings.IsShowConsole; set 
+            get => (bool)InstanceSettings.IsShowConsole; set
             {
                 InstanceSettings.IsShowConsole = value;
                 _instanceSettingsCopy.IsShowConsole = value;

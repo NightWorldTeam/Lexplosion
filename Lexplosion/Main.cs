@@ -6,9 +6,10 @@ using System.Reflection;
 using System.Windows;
 using System.Threading;
 using System.IO.Compression;
+using System.Windows.Media;
+using System.Collections.Generic;
 using Hardcodet.Wpf.TaskbarNotification;
 using DiscordRPC;
-using DiscordRPC.Logging;
 using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
@@ -20,13 +21,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
-using System.Runtime.CompilerServices;
-using System.Globalization;
-using System.Windows.Media;
-using System.Windows.Documents;
-using System.Collections.Generic;
 using ColorConverter = System.Windows.Media.ColorConverter;
-using System.Linq;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -56,7 +51,7 @@ namespace Lexplosion
         const string AssetsPath = "pack://application:,,,/Assets/";
         const string ResourcePath = "pack://application:,,,/Gui/Resources/";
 
-        public static readonly string[] Languages = new string[] 
+        public static readonly string[] Languages = new string[]
         {
             "ru-RU", "en-US"
         };
@@ -142,7 +137,7 @@ namespace Lexplosion
                 discordClient?.SetPresence(new RichPresence()
                 {
                     State = "Minecraft " + gameManager.GameVersion,
-                    Details = "Сборка " +  gameManager.GameClientName,
+                    Details = "Сборка " + gameManager.GameClientName,
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -308,7 +303,7 @@ namespace Lexplosion
             return null;
         }
 
-        public static void ChangeCurrentLanguage(string cultureName = "", bool isRestart = false) 
+        public static void ChangeCurrentLanguage(string cultureName = "", bool isRestart = false)
         {
             const string langPath = AssetsPath + "langs/";
 
@@ -336,8 +331,8 @@ namespace Lexplosion
             }
             app.Resources.MergedDictionaries.Add(CurrentLangDict);
 
-            if (cultureName.Length != 0 && isRestart) 
-            { 
+            if (cultureName.Length != 0 && isRestart)
+            {
                 Process.Start(Application.ResourceAssembly.Location);
                 App.Current.Shutdown();
             }
@@ -347,7 +342,7 @@ namespace Lexplosion
         /// Иницализация стилей приложения.
         /// </summary>
         private static void StylesInit()
-        {            
+        {
             var colorDict = new ResourceDictionary() { Source = new Uri(ResourcePath + "Colors.xaml") };
 
             var i = 0;
@@ -375,11 +370,11 @@ namespace Lexplosion
 
 
             if (GlobalData.GeneralSettings.AccentColor.Length == 0 || !isRightColor)
-            { 
+            {
                 ChangeColorToColor((Color)app.Resources["ActivityColor"]);
             }
-            else 
-            { 
+            else
+            {
                 ChangeColorToColor((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor));
             }
 
@@ -429,7 +424,7 @@ namespace Lexplosion
             });
         }
 
-        public static void ChangeColorToColor(Color color) 
+        public static void ChangeColorToColor(Color color)
         {
             app.Resources["ActivityColor"] = color;
             app.Resources["BrandSolidColorBrush"] = new SolidColorBrush(color);

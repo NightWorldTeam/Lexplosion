@@ -15,10 +15,6 @@ using System.Windows;
 using Lexplosion.Logic.Management;
 using System.Diagnostics;
 using Lexplosion.Global;
-using System.Windows.Forms;
-using Lexplosion.Gui.Views.Pages.MainMenu.Settings;
-using Lexplosion.Gui.ViewModels.MainMenu.Settings;
-using Lexplosion.Gui.Views.Pages.MainMenu;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.ViewModels

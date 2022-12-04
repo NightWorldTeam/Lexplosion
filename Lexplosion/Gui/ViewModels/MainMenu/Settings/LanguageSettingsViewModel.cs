@@ -51,7 +51,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         private bool _isSelectedLanguage;
         public bool IsSelectedLanguage
         {
-            get => _isSelectedLanguage; set 
+            get => _isSelectedLanguage; set
             {
                 _isSelectedLanguage = value;
                 OnPropertyChanged();
@@ -67,7 +67,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         {
             Languages = new LanguageModel[Runtime.Languages.Length];
 
-            for (var i = 0; i < Runtime.Languages.Length; i++) 
+            for (var i = 0; i < Runtime.Languages.Length; i++)
             {
                 Languages[i] = new LanguageModel(Runtime.Languages[i], mainViewModel);
             }

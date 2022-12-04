@@ -57,7 +57,7 @@ namespace Lexplosion.Controls
                                 To = 0.0,
                                 Duration = TimeSpan.FromSeconds(0.4)
                             };
-                            CollabsedAnimation.Completed += (object sender, EventArgs e) => 
+                            CollabsedAnimation.Completed += (object sender, EventArgs e) =>
                             {
                                 obj.CloseCommand.Execute(null);
                             };

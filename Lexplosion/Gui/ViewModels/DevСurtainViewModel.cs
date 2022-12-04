@@ -24,11 +24,11 @@ namespace Lexplosion.Gui.ViewModels
         }
 
         private string _buttonContent;
-        public string ButtonContent 
+        public string ButtonContent
         {
-            get => _buttonContent; set 
+            get => _buttonContent; set
             {
-                _buttonContent = value; 
+                _buttonContent = value;
                 OnPropertyChanged();
             }
         }
@@ -36,16 +36,16 @@ namespace Lexplosion.Gui.ViewModels
         private RelayCommand _buttonActionCommand;
         public RelayCommand ButtonActionCommand
         {
-            get => _buttonActionCommand ?? (_buttonActionCommand = new RelayCommand(obj => 
+            get => _buttonActionCommand ?? (_buttonActionCommand = new RelayCommand(obj =>
             {
                 _buttonAction();
             }));
         }
 
         private bool _hasButton = false;
-        public bool HasButton 
+        public bool HasButton
         {
-            get => _hasButton; set 
+            get => _hasButton; set
             {
                 _hasButton = value;
                 OnPropertyChanged();
@@ -57,7 +57,7 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public DevСurtainViewModel(string buttonContent = "", Action buttonAction = null)
         {
-            if (buttonContent?.Length != 0 && buttonAction != null) 
+            if (buttonContent?.Length != 0 && buttonAction != null)
             {
                 HasButton = true;
                 ButtonContent = buttonContent;

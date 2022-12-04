@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Windows.Media;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.AccessControl;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 

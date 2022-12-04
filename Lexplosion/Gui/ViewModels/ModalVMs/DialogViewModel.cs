@@ -29,9 +29,9 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        public string Message 
+        public string Message
         {
-            get => _message; set 
+            get => _message; set
             {
                 _message = value;
                 OnPropertyChanged();

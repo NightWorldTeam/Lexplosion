@@ -103,8 +103,8 @@ namespace Lexplosion.Logic.Management
                 Unkick();
                 return UserAction.Unkick;
             }
-            else 
-            { 
+            else
+            {
                 Kick();
                 return UserAction.Kick;
             }

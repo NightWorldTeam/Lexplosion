@@ -157,16 +157,16 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => _createInstance ?? (new RelayCommand(obj =>
             {
-                if (Model.ModloaderType == ModloaderType.Vanilla) 
+                if (Model.ModloaderType == ModloaderType.Vanilla)
                 {
-                    if (IsOptifineInstalling && string.IsNullOrEmpty(SelectedOptifineVersion)) 
+                    if (IsOptifineInstalling && string.IsNullOrEmpty(SelectedOptifineVersion))
                     {
                         return;
                     }
                 }
-                else 
+                else
                 {
-                    if (string.IsNullOrEmpty(SelectedModloaderVersion)) 
+                    if (string.IsNullOrEmpty(SelectedModloaderVersion))
                     {
                         return;
                     }

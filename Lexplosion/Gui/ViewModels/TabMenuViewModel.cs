@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Forms;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -54,9 +53,9 @@ namespace Lexplosion.Gui.ViewModels
 
         private Action _buttonAction;
         private RelayCommand _buttonActionCommand;
-        public RelayCommand ButtonActionCommand 
+        public RelayCommand ButtonActionCommand
         {
-            get => _buttonActionCommand ?? (_buttonActionCommand = new RelayCommand(obj => 
+            get => _buttonActionCommand ?? (_buttonActionCommand = new RelayCommand(obj =>
             {
                 _buttonAction();
             }));
@@ -67,14 +66,14 @@ namespace Lexplosion.Gui.ViewModels
 
         public InstanceClient InstanceClient { get; private set; }
 
-        public void ShowButton(string content, Action action) 
+        public void ShowButton(string content, Action action)
         {
             _buttonAction = action;
             ButtonContent = content;
             IsEnableButton = true;
         }
 
-        public void HideButton() 
+        public void HideButton()
         {
             IsEnableButton = false;
         }

@@ -1,6 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
 using Lexplosion.Logic.Network;
 
 namespace Lexplosion.Logic.Management.Authentication

@@ -36,7 +36,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 {
                     GetModloaderVersions(value, ModloaderType);
                 }
-                if (IsOptifine) 
+                if (IsOptifine)
                 {
                     GetOptifineVersions(value, ModloaderType);
                 }
@@ -124,9 +124,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         }
 
         private bool _isOptifine;
-        public bool IsOptifine 
+        public bool IsOptifine
         {
-            get => _isOptifine; set 
+            get => _isOptifine; set
             {
                 _isOptifine = value;
                 OnPropertyChanged();
@@ -166,7 +166,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private string _optifineVersion;
         public string OptifineVersion
         {
-            get => _optifineVersion; set 
+            get => _optifineVersion; set
             {
                 _optifineVersion = value;
                 OnPropertyChanged();

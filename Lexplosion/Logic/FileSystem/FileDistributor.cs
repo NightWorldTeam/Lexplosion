@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Lexplosion.Logic.Network;
 using Lexplosion.Global;
 using System.IO;
-using System.Security.Cryptography;
 
 namespace Lexplosion.Logic.FileSystem
 {

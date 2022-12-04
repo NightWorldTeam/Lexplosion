@@ -156,7 +156,7 @@ namespace Lexplosion.Logic.Network
                 //подключаемся к управляющему серверу
                 _controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
 
-                string st = 
+                string st =
                     "{\"UUID\" : \"" + UUID + "\"," +
                     " \"type\": \"" + serverType + "\"," +
                     " \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"," +

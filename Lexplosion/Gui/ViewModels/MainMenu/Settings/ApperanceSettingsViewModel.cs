@@ -1,13 +1,4 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Windows.Media;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lexplosion.Global;
-using Lexplosion.Logic.FileSystem;
-using System.Globalization;
+﻿using System.Windows.Media;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 {
@@ -15,11 +6,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
     {
         public Brush AccentColorBrush { get; }
         public Color AccentColor { get; }
-        
+
         private bool _isSelected;
-        public bool IsSelected 
+        public bool IsSelected
         {
-            get => _isSelected; set 
+            get => _isSelected; set
             {
                 _isSelected = value;
                 OnPropertyChanged();
@@ -27,9 +18,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         }
 
         private RelayCommand _changeColorCommand;
-        public RelayCommand ChangeColorCommand 
+        public RelayCommand ChangeColorCommand
         {
-            get => _changeColorCommand ?? (_changeColorCommand = new RelayCommand(obj => 
+            get => _changeColorCommand ?? (_changeColorCommand = new RelayCommand(obj =>
             {
                 Runtime.ChangeColorToColor(AccentColor);
             }));
@@ -50,7 +41,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         public ApperanceSettingsViewModel()
         {
             AccentColors = new AccentColorModel[Runtime.AccentColors.Length];
-            for (var i = 0; i < AccentColors.Length; i++) 
+            for (var i = 0; i < AccentColors.Length; i++)
             {
                 AccentColors[i] = new AccentColorModel(Runtime.AccentColors[i]);
             }

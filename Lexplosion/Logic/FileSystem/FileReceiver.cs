@@ -1,14 +1,9 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Tools;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -76,8 +71,8 @@ namespace Lexplosion.Logic.FileSystem
 
         private FileReceiver(string ownerLogin, string ownerUUID, string fileId, DistributionData info)
         {
-            _ownerLogin = ownerLogin; 
-            _ownerUUID = ownerUUID; 
+            _ownerLogin = ownerLogin;
+            _ownerUUID = ownerUUID;
             _fileId = fileId;
 
             _state = DistributionState.InQueue;

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using System.Windows;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;

@@ -89,7 +89,7 @@ namespace Lexplosion.Logic.Network.WebSockets
                     }
                 }
             }
-            catch  { }
+            catch { }
             finally
             {
                 if (serverSocket != null && serverSocket.IsBound)

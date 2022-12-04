@@ -3,9 +3,7 @@ using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
 using Lexplosion.Gui.ViewModels.MainMenu.Settings;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
-using Lexplosion.Gui.Views.Pages;
 using Lexplosion.Tools;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -76,7 +74,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
             _multiplayerTabs = InitializeMultiplayerTabs();
             _multiplayerTabMenu = new TabMenuViewModel(_multiplayerTabs, ResourceGetter.GetString("multiplayer"));
-            if (GlobalData.User.AccountType == AccountType.NightWorld) 
+            if (GlobalData.User.AccountType == AccountType.NightWorld)
             {
                 _multiplayerTabMenu.ShowButton("Как играть по сети", () => Process.Start("https://night-world.org/faq"));
             }
@@ -175,11 +173,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         private List<Tab<VMBase>> InitializeMultiplayerTabs()
         {
-            
+
             VMBase curtains = new DevСurtainViewModel(
                 ResourceGetter.GetString("registerNightWorldAccount"),
                 () => Process.Start(@"https://night-world.org/authentication"
-            )) { Message = ResourceGetter.GetString("warningAboutMultiplayer") };
+            ))
+            { Message = ResourceGetter.GetString("warningAboutMultiplayer") };
 
             return new List<Tab<VMBase>>()
             {
@@ -225,7 +224,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     Header = ResourceGetter.GetString("account"),
                     Content = new DevСurtainViewModel()
                 },
-                new Tab<VMBase> 
+                new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("language"),
                     Content = new LanguageSettingsViewModel(_mainViewModel)

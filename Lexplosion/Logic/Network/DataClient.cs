@@ -17,7 +17,7 @@ namespace Lexplosion.Logic.Network
 
         private bool _isWorking = true;
 
-        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);  
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
         private readonly ManualResetEvent _workWait = new ManualResetEvent(false);
 
         private Thread _calculateThread;
@@ -79,7 +79,7 @@ namespace Lexplosion.Logic.Network
                     _isWorking = Bridge.Receive(out data);
                 }
             }
-            catch 
+            catch
             {
                 _isWorking = false;
             }
