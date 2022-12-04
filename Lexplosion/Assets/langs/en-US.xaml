@@ -223,4 +223,5 @@
 
     <s:String x:Key="trayHideLauncher">Hide Launcher</s:String>
     <s:String x:Key="changeLanguageWariningMessage">Restarting the launcher is required to change the language. Do you want to restart it right now?</s:String>
+    <s:String x:Key="chooseYourAccentColor">Choose your accent color</s:String>
 </ResourceDictionary>

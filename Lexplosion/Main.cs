@@ -360,7 +360,6 @@ namespace Lexplosion
                 {
                     var color = (Color)colorDict[resourceKey];
                     accentColorsList.Add(color);
-                    Runtime.DebugWrite(color.ToString() + "   " + ((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor)).ToString());
                     isRightColor = color.ToString() == ((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor)).ToString();
                     i++;
                 }

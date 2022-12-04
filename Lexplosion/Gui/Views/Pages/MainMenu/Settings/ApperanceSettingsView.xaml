@@ -68,7 +68,7 @@
                 FontSize="18"
                 Foreground="White"
                 Opacity="0.8"
-                Text="Choose your accent color" />
+                Text="{StaticResource chooseYourAccentColor}" />
 
             <ItemsControl ItemTemplate="{StaticResource ColorDataTemplate}" ItemsSource="{Binding AccentColors}">
                 <ItemsControl.ItemsPanel>
