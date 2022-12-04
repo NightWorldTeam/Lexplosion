@@ -43,7 +43,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
                 var dialog = new DialogViewModel(_mainViewModel);
                 var message = ResourceGetter.GetString("changeLanguageWariningMessage");
 
-                dialog.ShowDialog(message, () => Runtime.ChangeCurrentLanguage(lang.Id, true));
+                dialog.ShowDialog("Смена языка", message, () => Runtime.ChangeCurrentLanguage(lang.Id, true));
                 Runtime.ChangeCurrentLanguage(lang.Id, false);
             }));
         }

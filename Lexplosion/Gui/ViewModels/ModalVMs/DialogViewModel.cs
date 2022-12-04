@@ -8,9 +8,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         private readonly MainViewModel _mainViewModel;
         private Action _function;
         private string _title;
+        private string _message;
 
-        private const double _width = 300;
-        private const double _height = 250;
+        private readonly double _width = 300;
+        private readonly double _height = 200;
 
 
         #region Properties
@@ -24,6 +25,15 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             get => _title; set
             {
                 _title = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Message 
+        {
+            get => _message; set 
+            {
+                _message = value;
                 OnPropertyChanged();
             }
         }
@@ -55,22 +65,26 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #endregion Commands
 
 
-        public DialogViewModel(MainViewModel mainViewModel)
+        public DialogViewModel(MainViewModel mainViewModel, double modalWidth = 300, double modalHeight = 200)
         {
             _mainViewModel = mainViewModel;
+            _width = modalWidth;
+            _height = modalHeight;
         }
 
         /// <summary>
         /// Показывает диалоговое окно.
         /// </summary>
         /// <param name="title">Title - заголовк для dialog window</param>
+        /// <param name="title">Message - основной текст под заголовком для dialog window</param>
         /// <param name="function">Делегат который выполниться при нажатии пользователем кнопки "Да".</param>
-        public void ShowDialog(string title, Action function)
+        public void ShowDialog(string title, string message, Action function)
         {
             _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(this);
             _mainViewModel.ModalWindowVM.IsOpen = true;
 
             Title = title;
+            Message = message;
             _function = function;
         }
     }

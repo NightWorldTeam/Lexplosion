@@ -7,7 +7,86 @@
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid>
+
+    <UserControl.Resources>
+        <Style x:Key="OkeyButton" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border
+        Width="300"
+        Height="200"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="#191919"
+        CornerRadius="5">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="20">
+                <TextBlock
+                    Margin="0,0,0,5"
+                    FontSize="20"
+                    Foreground="White"
+                    Text="{Binding Title}" />
+                <TextBlock
+                    Margin="0,0,0,40"
+                    FontSize="14"
+                    Foreground="White"
+                    Opacity="0.8"
+                    Text="{Binding Message}"
+                    TextWrapping="WrapWithOverflow" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Row="1"
+                Margin="20,0,20,20"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <Button
+                    Width="80"
+                    Height="30"
+                    Background="#167FCC"
+                    Command="{Binding ActionCommand}"
+                    Content="Хорошо"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    IsDefault="True"
+                    Style="{StaticResource OkeyButton}" />
+                <Button
+                    Width="80"
+                    Height="30"
+                    Margin="10,0,0,0"
+                    Background="Transparent"
+                    Command="{Binding CloseModalWindowCommand}"
+                    Content="Нет"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    IsCancel="True"
+                    Style="{StaticResource DefaultCloseButton}" />
+            </StackPanel>
+        </Grid>
+    </Border>
+
+    <!--<Grid>
         <TextBlock
             Margin="0,40,0,0"
             Padding="10,0,10,10"
@@ -38,5 +117,5 @@
                 IsCancel="True"
                 Style="{StaticResource DefaultCloseButton}" />
         </StackPanel>
-    </Grid>
+    </Grid>-->
 </UserControl>

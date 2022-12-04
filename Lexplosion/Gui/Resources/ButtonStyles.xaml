@@ -357,25 +357,21 @@
     </Style>
 
 
-    <Style
-        x:Key="DefaultCloseButton"
-        BasedOn="{StaticResource Pattern}"
-        TargetType="{x:Type Button}">
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontWeight" Value="Medium" />
+    <Style x:Key="DefaultCloseButton" TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
                         x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="#292929"
                         BorderThickness="1"
                         CornerRadius="5">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#232527" />
-                            <Setter TargetName="border" Property="BorderBrush" Value="#272727" />
+                            <Setter TargetName="border" Property="Background" Value="#292929" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

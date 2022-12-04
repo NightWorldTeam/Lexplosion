@@ -170,7 +170,7 @@ namespace Lexplosion.Gui.ViewModels
                 message = "Вы действительно желаете удалить  \"" + Model.InstanceClient.Name + "\"";
             }
 
-            dialog.ShowDialog(message, RemoveInstance);
+            dialog.ShowDialog("Удаление сборки", message, RemoveInstance);
         }
 
         /// <summary>
