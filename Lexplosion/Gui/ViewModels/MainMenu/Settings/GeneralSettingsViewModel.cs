@@ -65,7 +65,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
             GeneralSettings.SystemPath = newPath;
 
             var dialogModal = new DialogViewModel(_mainViewModel);
-            dialogModal.ShowDialog("Test", "Желаете ли вы полностью перенести директорию?", () =>
+            dialogModal.ShowDialog("Перенос директории", "Желаете ли вы полностью перенести директорию?", () =>
             {
                 IsDirectoryChanged = false;
                 Lexplosion.Runtime.TaskRun(() =>
