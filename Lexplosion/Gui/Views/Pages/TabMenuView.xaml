@@ -51,8 +51,6 @@
         <TabControl
             Grid.Row="1"
             Background="{DynamicResource PrimarySolidColorBrush}"
-            BorderBrush="#212326"
-            BorderThickness="0,1,0,0"
             IsTabStop="False"
             ItemsSource="{Binding Tabs}"
             SelectedValue="{Binding SelectedTab}"

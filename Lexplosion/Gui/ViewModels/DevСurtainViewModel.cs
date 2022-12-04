@@ -42,12 +42,12 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
-        private bool _isButtonEnable = false;
-        public bool IsButtonEnable 
+        private bool _hasButton = false;
+        public bool HasButton 
         {
-            get => _isButtonEnable; set 
+            get => _hasButton; set 
             {
-                _isButtonEnable = value;
+                _hasButton = value;
                 OnPropertyChanged();
             }
         }
@@ -59,7 +59,9 @@ namespace Lexplosion.Gui.ViewModels
         {
             if (buttonContent?.Length != 0 && buttonAction != null) 
             {
-                IsButtonEnable = true;
+                HasButton = true;
+                ButtonContent = buttonContent;
+                _buttonAction = buttonAction;
             }
 
             _defaultMessage = ResourceGetter.GetString("devCurtainMessage");

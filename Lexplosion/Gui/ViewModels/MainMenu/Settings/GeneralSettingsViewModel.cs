@@ -4,7 +4,7 @@ using Lexplosion.Logic.FileSystem;
 using System;
 using System.Windows.Forms;
 
-namespace Lexplosion.Gui.ViewModels.MainMenu
+namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 {
     public class GeneralSettingsViewModel : VMBase
     {

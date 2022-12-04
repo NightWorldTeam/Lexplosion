@@ -1,7 +1,9 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu.Multiplayer;
+using Lexplosion.Gui.ViewModels.MainMenu.Settings;
 using Lexplosion.Gui.ViewModels.ShowCaseMenu;
+using Lexplosion.Gui.Views.Pages;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -170,7 +172,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private List<Tab<VMBase>> InitializeMultiplayerTabs()
         {
             
-            VMBase curtains = new DevСurtainViewModel("Создать аккаунт", () => Process.Start(@"https://night-world.org/authentication")) { Message = "Функции нашей сетевой игры доступны только при использовании аккаунта NightWorld" };
+            VMBase curtains = new DevСurtainViewModel(
+                ResourceGetter.GetString("registerNightWorldAccount"),
+                () => Process.Start(@"https://night-world.org/authentication"
+            )) { Message = ResourceGetter.GetString("warningAboutMultiplayer") };
 
             return new List<Tab<VMBase>>()
             {
@@ -208,14 +213,24 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 },
                 new Tab<VMBase>
                 {
+                    Header = ResourceGetter.GetString("appearance"),
+                    Content = new DevСurtainViewModel()
+                },
+                new Tab<VMBase>
+                {
                     Header = ResourceGetter.GetString("account"),
                     Content = new DevСurtainViewModel()
+                },
+                new Tab<VMBase> 
+                {
+                    Header = ResourceGetter.GetString("language"),
+                    Content = new LanguageSettingsViewModel(_mainViewModel)
                 },
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("about"),
                     Content = new DevСurtainViewModel()
-                }
+                },
             };
         }
 
