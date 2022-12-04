@@ -362,7 +362,7 @@ namespace Lexplosion
                     accentColorsList.Add(color);
                     try
                     {
-                        if (GlobalData.GeneralSettings.AccentColor.Length == 7)
+                        if (GlobalData.GeneralSettings.AccentColor.Length == 7 && !isRightColor)
                             isRightColor = color.ToString() == ((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor)).ToString();
                     }
                     catch { }

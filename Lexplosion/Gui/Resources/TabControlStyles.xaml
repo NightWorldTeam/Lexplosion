@@ -27,6 +27,7 @@
                             Panel.ZIndex="1"
                             Background="Transparent"
                             IsItemsHost="True" />
+
                         <Border
                             Grid.Row="1"
                             BorderBrush="#212326"
@@ -65,10 +66,17 @@
                             Grid.Row="1"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Background="Red"
                             BorderBrush="{DynamicResource BrandSolidColorBrush}"
                             BorderThickness="0,0,0,3"
+                            CornerRadius="0"
                             Focusable="False">
+                            <!--<Border.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="30"
+                                    Direction="90"
+                                    ShadowDepth="10"
+                                    Color="{DynamicResource ActivityColor}" />
+                            </Border.Effect>-->
                             <Border.RenderTransform>
                                 <ScaleTransform x:Name="ScaleTransform" ScaleX="0" ScaleY="1" />
                             </Border.RenderTransform>
@@ -145,7 +153,7 @@
                             x:Name="Border"
                             Grid.Column="0"
                             BorderThickness="10,0,0,0"
-                            CornerRadius="2">
+                            CornerRadius="0">
                             <Border.Effect>
                                 <DropShadowEffect
                                     BlurRadius="40"
