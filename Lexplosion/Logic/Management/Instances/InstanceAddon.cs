@@ -144,10 +144,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public bool IsUrlExist
         {
-            get
-            {
-                return !string.IsNullOrEmpty(_websiteUrl);
-            }
+            get => !string.IsNullOrEmpty(_websiteUrl);
         }
 
         #endregion
@@ -255,13 +252,13 @@ namespace Lexplosion.Logic.Management.Instances
                     int addonId = addon.id;
                     bool isInstalled = (installedAddons.ContainsKey(addonId) && installedAddons[addonId].IsExists(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/"));
 
-                    int lastFileID = 0;
+                    int lastFileID = -1;
                     if (isInstalled)
                     {
                         // ищем последнюю версию аддона
                         foreach (var addonVersion in addon.latestFilesIndexes)
                         {
-                            if (addonVersion.gameVersion == modpackInfo.GameVersion)
+                            if (addonVersion.gameVersion == modpackInfo.GameVersion && lastFileID < addonVersion.fileId)
                             {
                                 lastFileID = addonVersion.fileId;
                                 break;
@@ -361,7 +358,6 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _installingSemaphore.Release(key);
             }
-
 
             _cancelTokenSource = new CancellationTokenSource();
             stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>
@@ -540,7 +536,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     foreach (var fileInfo in supportAddonInfo)
                     {
-                        if (fileInfo.gameVersion != null && maxId < fileInfo.fileId)
+                        if (fileInfo.gameVersion == gameVersion && maxId < fileInfo.fileId)
                         {
                             maxId = fileInfo.fileId;
                             versionIsFound = true;
