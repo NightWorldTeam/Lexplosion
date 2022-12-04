@@ -524,7 +524,7 @@ namespace Lexplosion.Logic.Management.Instances
                 foreach (var fileInfo in addonInfo)
                 {
 
-                    if (fileInfo.gameVersions != null && maxId < fileInfo.id)
+                    if (fileInfo.gameVersions != null && maxId < fileInfo.id && fileInfo.gameVersions.Contains(gameVersion))
                     {
                         file = fileInfo;
                         maxId = fileInfo.id;
