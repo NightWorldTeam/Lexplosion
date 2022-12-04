@@ -54,7 +54,7 @@
             IsTabStop="False"
             ItemsSource="{Binding Tabs}"
             SelectedValue="{Binding SelectedTab}"
-            Style="{StaticResource TabControlStyle}">
+            Style="{StaticResource TabControlStyleTop}">
 
             <TabControl.Resources>
                 <Style BasedOn="{StaticResource SwitcherTabItem}" TargetType="{x:Type TabItem}" />

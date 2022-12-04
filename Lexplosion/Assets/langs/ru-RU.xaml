@@ -223,4 +223,5 @@
     <s:String x:Key="ru-RU">Русский</s:String>
 
     <s:String x:Key="trayHideLauncher">Свернуть лаунчер</s:String>
+    <s:String x:Key="changeLanguageWariningMessage">Для смены языка требуется перезапуск лаунчера. Хотите перезапустить его прямо сейчас?</s:String>
 </ResourceDictionary>

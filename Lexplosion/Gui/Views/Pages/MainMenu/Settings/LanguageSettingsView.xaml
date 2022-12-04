@@ -66,6 +66,7 @@
                 Command="{Binding LanguageSelectorCommand}"
                 CommandParameter="{Binding}"
                 GroupName="Lang"
+                IsChecked="{Binding IsSelectedLanguage}"
                 Style="{StaticResource LanguageSelectorButton}">
                 <Grid Width="620">
                     <Grid.ColumnDefinitions>
@@ -105,7 +106,6 @@
                 Foreground="White"
                 Opacity="0.8"
                 Text="{StaticResource selectLanguage}" />
-
             <ItemsControl ItemTemplate="{StaticResource LanguageSelectorButtonTemplate}" ItemsSource="{Binding Languages}" />
         </StackPanel>
     </Grid>

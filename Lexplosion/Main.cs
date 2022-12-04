@@ -96,14 +96,14 @@ namespace Lexplosion
                 CurrentProcess.Kill(); //стопаем этот процесс
             }
 
+            // инициализация
+            GlobalData.InitSetting();
+            WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
+
             // Выставляем язык
             ChangeCurrentLanguage();
             // Встраеваем стили
             StylesInit();
-
-            // инициализация
-            GlobalData.InitSetting();
-            WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
 
             int version = ToServer.CheckLauncherUpdates();
             if (version != -1)
@@ -300,7 +300,7 @@ namespace Lexplosion
             return null;
         }
 
-        public static void ChangeCurrentLanguage(string cultureName = "") 
+        public static void ChangeCurrentLanguage(string cultureName = "", bool isRestart = false) 
         {
             const string langPath = AssetsPath + "langs/";
 
@@ -310,20 +310,29 @@ namespace Lexplosion
             {
                 try
                 {
-                    CurrentLangDict.Source = new Uri(langPath + Thread.CurrentThread.CurrentCulture.ToString() + ".xaml");
+                    if (GlobalData.GeneralSettings.LanguageId.Length == 0)
+                    {
+                        var currentCultureName = Thread.CurrentThread.CurrentCulture.ToString();
+                        //switch () тут код для стран cis
+                        CurrentLangDict.Source = new Uri(langPath + currentCultureName + ".xaml");
+                    }
+                    else
+                    {
+                        CurrentLangDict.Source = new Uri(langPath + GlobalData.GeneralSettings.LanguageId + ".xaml");
+                    }
                 }
                 catch
                 {
                     CurrentLangDict.Source = new Uri(langPath + "ru-RU.xaml");
                 }
             }
-            else
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(cultureName);
-                app.Resources.MergedDictionaries.Remove(CurrentLangDict);
-                CurrentLangDict.Source = new Uri(langPath + cultureName + ".xaml");
-            }
             app.Resources.MergedDictionaries.Add(CurrentLangDict);
+
+            if (cultureName.Length != 0 && isRestart) 
+            { 
+                Process.Start(Application.ResourceAssembly.Location);
+                App.Current.Shutdown();
+            }
         }
 
         /// <summary>

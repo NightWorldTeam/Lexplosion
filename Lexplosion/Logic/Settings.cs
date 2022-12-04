@@ -24,6 +24,7 @@ namespace Lexplosion.Logic
         /// Использовать ли в приоритете в сетевой игре прямое подключение.
         /// </summary>
         public bool OnlineGameDirectConnection = false;
+        public string LanguageId = "";
 
         public void Merge(Settings settings, bool priority = false)
         {
@@ -41,6 +42,7 @@ namespace Lexplosion.Logic
                 if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (GameArgs == null) GameArgs = settings.GameArgs;
                 OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
+                LanguageId = settings.LanguageId;
             }
             else
             {
@@ -56,6 +58,7 @@ namespace Lexplosion.Logic
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
                 OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
+                LanguageId = settings.LanguageId;
             }
         }
 

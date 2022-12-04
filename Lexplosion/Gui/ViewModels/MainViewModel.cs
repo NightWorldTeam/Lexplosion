@@ -362,12 +362,6 @@ namespace Lexplosion.Gui.ViewModels
             });
         }
 
-        public void UpdateLang() 
-        {
-            InitTrayComponents();
-
-        }
-
         public MainMenuViewModel InitMainMenuViewModel(MainMenuViewModel mainMenuViewModel)
         {
             if (MainMenuVM == null)

@@ -267,7 +267,8 @@ namespace Lexplosion.Controls
 
         #endregion Constructors
 
-
+        // TODO WARNING HERE NEEDS IMPORTANT FIX.
+        // When one instance ran, all kind of this button has the same state.
         public override void OnApplyTemplate()
         {
             _downloadButton = Template.FindName(PART_DOWNLOAD_BUTTON, this) as Border;
