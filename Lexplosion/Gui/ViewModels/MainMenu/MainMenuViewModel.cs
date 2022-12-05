@@ -76,7 +76,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             _multiplayerTabMenu = new TabMenuViewModel(_multiplayerTabs, ResourceGetter.GetString("multiplayer"));
             if (GlobalData.User.AccountType == AccountType.NightWorld)
             {
-                _multiplayerTabMenu.ShowButton("Как играть по сети", () => Process.Start("https://night-world.org/faq"));
+                _multiplayerTabMenu.ShowButton("Как играть по сети", () => Process.Start("https://night-world.org/faq#onlineGame"));
             }
 
 
