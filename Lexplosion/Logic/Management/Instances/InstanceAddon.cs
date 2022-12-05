@@ -344,7 +344,7 @@ namespace Lexplosion.Logic.Management.Instances
             StartDownload,
             EndDownload
         }
-        
+
         /// <summary>
         /// Проверяет не устанавливается ли аддон в данный момент
         /// </summary>
@@ -462,6 +462,17 @@ namespace Lexplosion.Logic.Management.Instances
                 }
 
                 var ressult = CurseforgeApi.DownloadAddon(addonInfo, (AddonType)_modInfo.classId, "instances/" + instanceId + "/", taskArgs);
+                if (ressult.Value2 != DownloadAddonRes.Successful)
+                {
+                    stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>
+                    {
+                        Value1 = this,
+                        Value2 = ressult.Value2
+                    }, InstallAddonState.EndDownload);
+
+                    return;
+                }
+
                 FileName = Path.GetFileName(ressult.Value1.ActualPath);
                 IsInstalling = false;
 
