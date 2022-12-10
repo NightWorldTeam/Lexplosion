@@ -230,7 +230,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 Model.ModloaderType,
                 Model.LogoPath,
                 SelectedModloaderVersion,
-                SelectedOptifineVersion != null ? SelectedOptifineVersion : null
+                _isOptifineInstalling ? SelectedOptifineVersion : null
            );
 
             _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
