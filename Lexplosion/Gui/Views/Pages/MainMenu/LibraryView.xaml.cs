@@ -27,6 +27,15 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
         private void LibraryItemsControl_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             var viewer = (ScrollViewer)sender;
+            if (viewer.VerticalOffset >= 48)
+            {
+                UpButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                UpButton.Visibility = Visibility.Collapsed;
+            }
+
             try
             {
                 var onScrollCommand = Lexplosion.Gui.Extension.ScrollViewer.GetOnScrollCommand(viewer);
@@ -36,6 +45,11 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
             {
 
             }
+        }
+
+        private void UpButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContainerPage_ScrollViewer.ScrollToTop();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
     /// </summary>
     public partial class CatalogView : UserControl
     {
+
         public CatalogView()
         {
             InitializeComponent();
@@ -27,6 +28,15 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
         private void ContainerPage_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             var viewer = (ScrollViewer)sender;
+            if (viewer.VerticalOffset >= 96)
+            {
+                UpButton.Visibility = Visibility.Visible;
+            }
+            else 
+            {
+                UpButton.Visibility = Visibility.Collapsed;
+            }
+
             try
             {
                 var onScrollCommand = Lexplosion.Gui.Extension.ScrollViewer.GetOnScrollCommand(viewer);
@@ -41,6 +51,11 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
         private void Filter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             FiltersDropdownMenu.IsOpen = false;
+        }
+
+        private void UpButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContainerPage_ScrollViewer.ScrollToTop();
         }
     }
 }

@@ -300,6 +300,38 @@
             </StackPanel>
         </ScrollViewer>
 
+        <Button
+            x:Name="UpButton"
+            Margin="0,0,20,20"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Click="UpButton_Click"
+            Style="{StaticResource IconicButton}">
+            <Border
+                Width="40"
+                Height="40"
+                Background="Transparent"
+                BorderBrush="White"
+                BorderThickness="2"
+                CornerRadius="50">
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="10"
+                        ShadowDepth="0"
+                        Color="{DynamicResource ActivityColor}" />
+                </Border.Effect>
+                <Viewbox
+                    Width="20"
+                    Height="20"
+                    Stretch="Fill">
+                    <Path
+                        Data="M22.5 40V13.7L10.1 26.1 8 24 24 8l16 16-2.1 2.1-12.4-12.4V40Z"
+                        Fill="White"
+                        Stretch="Fill" />
+                </Viewbox>
+            </Border>
+        </Button>
+
         <controls:LoadingBoard
             BackgroundColor="#18191b"
             BackgroundOpacity="0.9"

@@ -153,7 +153,7 @@
                             x:Name="Border"
                             Grid.Column="0"
                             BorderThickness="10,0,0,0"
-                            CornerRadius="0">
+                            CornerRadius="2">
                             <Border.Effect>
                                 <DropShadowEffect
                                     BlurRadius="40"
