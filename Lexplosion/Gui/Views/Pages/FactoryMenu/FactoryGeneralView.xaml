@@ -151,7 +151,7 @@
                             </StackPanel>
                         </StackPanel>
 
-                        <StackPanel Margin="5,20,0,0" Visibility="{Binding IsModloaderSelected, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                        <StackPanel Margin="5,20,0,0" Visibility="{Binding IsOptifineSelected, Converter={StaticResource ConvertBoolToVisibility}}">
                             <CheckBox
                                 Click="CheckBox_Click"
                                 Content="Установить оптифайн"

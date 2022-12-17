@@ -38,6 +38,16 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private bool _isOptifineSelected = false;
+        public bool IsOptifineSelected
+        {
+            get => _isOptifineSelected; set
+            {
+                _isOptifineSelected = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string[] _gameVersions;
         public string[] GameVersions
         {
@@ -241,8 +251,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             Model.ModloaderType = modloaderType;
 
-            IsModloaderSelected = Model.ModloaderType != ModloaderType.Vanilla;
-
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var versions = ToServer.GetModloadersList(_selectedOnlyVersion, Model.ModloaderType);
@@ -252,6 +260,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 if (ModloaderVersions.Count > 0)
                     SelectedModloaderVersion = ModloaderVersions[0];
             });
+
+
         }
 
         private void ReselectVersionLoadModloaderVersions(string selectedVersion)
@@ -284,6 +294,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 {
                     OptifineVersions = new ObservableCollection<string>(ToServer.GetOptifineVersions(selectedVersion));
                     if (OptifineVersions.Count > 0) SelectedOptifineVersion = OptifineVersions[0];
+                    IsOptifineSelected = !IsModloaderSelected && OptifineVersions.Count > 0;
                 });
             }
         }

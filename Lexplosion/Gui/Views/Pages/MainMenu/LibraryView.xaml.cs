@@ -49,7 +49,10 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
 
         private void UpButton_Click(object sender, RoutedEventArgs e)
         {
-            ContainerPage_ScrollViewer.ScrollToTop();
+            Lexplosion.Gui.Extension.ScrollViewer.ScroollToPosAnimated(
+                ContainerPage_ScrollViewer,
+                Lexplosion.Gui.Extension.ScrollViewer.GetScrollBar(ContainerPage_ScrollViewer).Minimum
+            );
         }
     }
 }
