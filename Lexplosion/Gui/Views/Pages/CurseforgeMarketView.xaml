@@ -258,7 +258,7 @@
                                     </WrapPanel>
                                     <Button.ToolTip>
                                         <ToolTip
-                                            Content="Установить модификацию"
+                                            Content="{DynamicResource installModification}"
                                             HorizontalOffset="-60"
                                             Style="{StaticResource CustomTipTool}"
                                             VerticalOffset="-27" />
@@ -287,7 +287,7 @@
                                 </WrapPanel>
                                 <Button.ToolTip>
                                     <ToolTip
-                                        Content="Перейти на curseforge"
+                                        Content="{DynamicResource curseforgePage}"
                                         HorizontalOffset="-60"
                                         Style="{StaticResource CustomTipTool}"
                                         VerticalOffset="-27" />
@@ -406,7 +406,7 @@
                         FontFamily="{DynamicResource FuturaBookC}"
                         FontSize="18"
                         Foreground="White"
-                        Text="Активные скачивания" />
+                        Text="{DynamicResource activeDownloads}" />
                     <Border
                         Height="450"
                         Margin="5"
@@ -419,7 +419,7 @@
                                 FontSize="14"
                                 FontWeight="Medium"
                                 Foreground="White"
-                                Text="Сейчас ничего не скачивается"
+                                Text="{DynamicResource nothingDownloading}"
                                 Visibility="{Binding IsDownloadingSomething, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                             <ItemsControl ItemsSource="{Binding DownloadAddonFiles}" />
                         </Grid>
@@ -470,7 +470,7 @@
                                         FontSize="14"
                                         FontWeight="Medium"
                                         Foreground="White"
-                                        Text="Категории" />
+                                        Text="{DynamicResource categories}" />
                                     <ComboBox
                                         Height="30"
                                         Margin="10,5,0,0"

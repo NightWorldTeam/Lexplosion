@@ -41,9 +41,9 @@
 
     <s:String x:Key="width">Ширина</s:String>
     <s:String x:Key="height">Высота</s:String>
-    <s:String x:Key="memory">ОЗУ</s:String>
+    <s:String x:Key="ram">ОЗУ</s:String>
     <s:String x:Key="gamefolder">Папка с игрой</s:String>
-    <s:String x:Key="javapath">Путь к Java</s:String>
+    <s:String x:Key="javaPath">Путь к Java</s:String>
     <s:String x:Key="defaultJavaPath">Стандартное</s:String>
     <s:String x:Key="review">Обзор</s:String>
     <s:String x:Key="autoUpdateInstance">Обновлять сборки автоматически</s:String>
@@ -237,4 +237,9 @@
     <s:String x:Key="doNotDisturb">Не беспокоить</s:String>
     <s:String x:Key="invisible">Невидимый</s:String>
 
+    <s:String x:Key="defaultJava">Использовать встроенную Java</s:String>
+    <s:String x:Key="optifineVersion">Версия Optifine</s:String>
+    <s:String x:Key="activeDownloads">Активные скачивания</s:String>
+    <s:String x:Key="nothingDownloading">Сейчас ничего не скачивается</s:String>
+    <s:String x:Key="installModification">Установить модификацию</s:String>
 </ResourceDictionary>

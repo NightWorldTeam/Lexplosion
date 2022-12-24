@@ -265,7 +265,7 @@
                                         Foreground="White"
                                         Opacity="0.8"
                                         Style="{StaticResource Tex}"
-                                        Text="Версия Optifine" />
+                                        Text="{DynamicResource optifineVersion}" />
                                     <ComboBox
                                         Width="400"
                                         Height="40"

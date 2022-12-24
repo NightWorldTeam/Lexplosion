@@ -24,7 +24,7 @@
             FontSize="14"
             FontWeight="Bold"
             Foreground="White"
-            Text="Изображения отсутствуют"
+            Text="{DynamicResource notImage}"
             Visibility="{Binding Model.GalleryVM.IsNoneImages, Converter={StaticResource ConvertBoolToVisibility}}" />
 
         <Border

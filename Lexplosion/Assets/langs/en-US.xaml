@@ -41,9 +41,9 @@
 
     <s:String x:Key="width">Width</s:String>
     <s:String x:Key="height">Height</s:String>
-    <s:String x:Key="memory">RAM</s:String>
+    <s:String x:Key="ram">RAM</s:String>
     <s:String x:Key="gamefolder">Game folder</s:String>
-    <s:String x:Key="javapath">Java Path</s:String>
+    <s:String x:Key="javaPath">Java Path</s:String>
     <s:String x:Key="defaultJavaPath">Default</s:String>
     <s:String x:Key="review">Review</s:String>
     <s:String x:Key="autoUpdateInstance">Update assemblies automatically</s:String>
@@ -235,4 +235,11 @@
     <s:String x:Key="online">Online</s:String>
     <s:String x:Key="doNotDisturb">Do Not Disturb</s:String>
     <s:String x:Key="invisible">Invisible</s:String>
+
+    <s:String x:Key="defaultJava">Use launcher Java</s:String>
+    <s:String x:Key="optifineVersion">Optifine Version</s:String>
+
+    <s:String x:Key="activeDownloads">Active Downloads</s:String>
+    <s:String x:Key="nothingDownloading">Nothing is downloading right now.</s:String>
+    <s:String x:Key="installModification">Install Modification</s:String>
 </ResourceDictionary>
