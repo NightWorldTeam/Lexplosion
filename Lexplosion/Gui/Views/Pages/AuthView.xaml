@@ -157,7 +157,7 @@
                                     FontFamily="{DynamicResource FuturaBookC}"
                                     FontSize="14"
                                     Foreground="White"
-                                    Text="Сменить аккаунт" />
+                                    Text="{DynamicResource changeAccount}" />
                             </StackPanel>
                         </Border>
 
@@ -224,7 +224,7 @@
                                 FontSize="16"
                                 Foreground="White"
                                 Opacity="0.9"
-                                Text="Для игры без аккаунта введите желаемый ник в поле логин."
+                                Text="{DynamicResource withoutAccountNeeds}"
                                 TextAlignment="Center"
                                 TextWrapping="WrapWithOverflow"
                                 Visibility="{Binding NoAccountAuth, Converter={StaticResource ConvertBoolToVisibility}}" />
@@ -525,7 +525,7 @@
             Height="30"
             Margin="0,200,0,0"
             Command="{Binding CancelMicrosoftAuthCommand}"
-            Content="Отмена"
+            Content="{DynamicResource cancel}"
             IsCancel="True"
             Style="{StaticResource DefaultBrandColorButton}"
             Visibility="{Binding IsAuthFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />

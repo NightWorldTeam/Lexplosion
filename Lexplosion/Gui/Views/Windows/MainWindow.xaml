@@ -203,7 +203,7 @@
                                                                                 Height="11"
                                                                                 Fill="#131313" />
                                                                             <Ellipse
-                                                                                Width="10"
+                                                                                Width="10"П
                                                                                 Height="10"
                                                                                 HorizontalAlignment="Center"
                                                                                 VerticalAlignment="Center"
@@ -224,11 +224,11 @@
                                             </StackPanel.Resources>
 
                                             <Button
-                                                Background="#0097c5"
+                                                Background="#167FFC"
                                                 Click="ChangeStatusButtonClick"
                                                 Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Online"
-                                                Content="В сети"
+                                                Content="{DynamicResource online}"
                                                 FontSize="14"
                                                 Foreground="White" />
 
@@ -237,7 +237,7 @@
                                                 Click="ChangeStatusButtonClick"
                                                 Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="NotDisturb"
-                                                Content="Не беспокоить"
+                                                Content="{DynamicResource doNotDisturb}"
                                                 FontSize="14"
                                                 Foreground="White" />
 
@@ -246,7 +246,7 @@
                                                 Click="ChangeStatusButtonClick"
                                                 Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Offline"
-                                                Content="Невидимый"
+                                                Content="{DynamicResource invisible}"
                                                 FontSize="14"
                                                 Foreground="White" />
 
@@ -320,7 +320,7 @@
                             <TextBlock
                                 FontSize="12"
                                 Foreground="White"
-                                Text="Связаться с поддержкой" />
+                                Text="{DynamicResource contactSupport}" />
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>

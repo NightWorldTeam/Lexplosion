@@ -225,4 +225,16 @@
     <s:String x:Key="trayHideLauncher">Свернуть лаунчер</s:String>
     <s:String x:Key="changeLanguageWariningMessage">Для смены языка требуется перезапуск лаунчера. Хотите перезапустить его прямо сейчас?</s:String>
     <s:String x:Key="chooseYourAccentColor">Выберите цвет акцента</s:String>
+    <s:String x:Key="loading">Идет загрузка...</s:String>
+    <s:String x:Key="updating">Идет обновление...</s:String>
+
+    <s:String x:Key="changeAccount">Сменить аккаунт</s:String>
+    <s:String x:Key="withoutAccountNeeds">Для игры без аккаунта введите желаемый ник в поле логин.</s:String>
+    <s:String x:Key="maximizeLauncher">Развернуть лаунчер</s:String>
+    <s:String x:Key="contactSupport">Связаться с поддержкой</s:String>
+
+    <s:String x:Key="online">В сети</s:String>
+    <s:String x:Key="doNotDisturb">Не беспокоить</s:String>
+    <s:String x:Key="invisible">Невидимый</s:String>
+
 </ResourceDictionary>

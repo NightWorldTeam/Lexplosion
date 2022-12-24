@@ -22,6 +22,7 @@ using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using ColorConverter = System.Windows.Media.ColorConverter;
+using System.Globalization;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.

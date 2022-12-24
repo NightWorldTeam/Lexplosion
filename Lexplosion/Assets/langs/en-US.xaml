@@ -14,19 +14,19 @@
 
     <!--  multiplayer  -->
     <s:String x:Key="status">Status</s:String>
-    <s:String x:Key="priorityConnetionMethod">Приоритетный метод подключения</s:String>
-    <s:String x:Key="directConnetion">Прямое</s:String>
-    <s:String x:Key="viaRepeater">Через ретранслятор</s:String>
-    <s:String x:Key="connectedPlayers">Подключенные игроки</s:String>
-    <s:String x:Key="noConnectedPlayers">Отсутсвуют подключенные игроки</s:String>
-    <s:String x:Key="kick">Kikc</s:String>
+    <s:String x:Key="priorityConnetionMethod">Priority Connection Method</s:String>
+    <s:String x:Key="directConnetion">Direct Connection</s:String>
+    <s:String x:Key="viaRepeater">Via Repeater</s:String>
+    <s:String x:Key="connectedPlayers">Connected Players</s:String>
+    <s:String x:Key="noConnectedPlayers">No Connected Players</s:String>
+    <s:String x:Key="kick">Kick</s:String>
     <s:String x:Key="unkick">Unkick</s:String>
-    <s:String x:Key="rebootOnlineGame">Перезапустить сетевую игру</s:String>
-    <s:String x:Key="offOnlineGame">Выключить сетевую игру</s:String>
+    <s:String x:Key="rebootOnlineGame">Reboot OnlineGame</s:String>
+    <s:String x:Key="offOnlineGame">Off OnlineGame</s:String>
     <!--  multiplayer status  -->
-    <s:String x:Key="statusNone">Нет открытых миров</s:String>
-    <s:String x:Key="statusOpenWorld">Открыт для подключения</s:String>
-    <s:String x:Key="statusConnectedToUser">Подключен к серверу</s:String>
+    <s:String x:Key="statusNone">No open worlds</s:String>
+    <s:String x:Key="statusOpenWorld">Open for connection</s:String>
+    <s:String x:Key="statusConnectedToUser">Playing on the server</s:String>
 
 
     <s:String x:Key="general">General</s:String>
@@ -34,44 +34,44 @@
     <s:String x:Key="channels">Channels</s:String>
 
     <!--  settings  -->
-    <s:String x:Key="generalTipText">Общие настройки. Настройки для конкретного клиента можно изенить на его странице</s:String>
+    <s:String x:Key="generalTipText">General settings. Settings for a specific client can be changed on its page</s:String>
 
-    <s:String x:Key="account">Учётная запись</s:String>
+    <s:String x:Key="account">Account</s:String>
     <s:String x:Key="about">About us</s:String>
 
     <s:String x:Key="width">Width</s:String>
     <s:String x:Key="height">Height</s:String>
     <s:String x:Key="memory">RAM</s:String>
     <s:String x:Key="gamefolder">Game folder</s:String>
-    <s:String x:Key="javapath">Путь к Java</s:String>
-    <s:String x:Key="defaultJavaPath">Стандартное</s:String>
-    <s:String x:Key="review">Обзор</s:String>
-    <s:String x:Key="autoUpdateInstance">Обновлять сборки автоматически</s:String>
-    <s:String x:Key="autoUpdateClient">Обновлять автоматически</s:String>
-    <s:String x:Key="hideLauncher">Скрывать лаунчер при запуске игры</s:String>
-    <s:String x:Key="showConsole">Показывать консоль</s:String>
-    <s:String x:Key="reboot">Сбросить</s:String>
+    <s:String x:Key="javapath">Java Path</s:String>
+    <s:String x:Key="defaultJavaPath">Default</s:String>
+    <s:String x:Key="review">Review</s:String>
+    <s:String x:Key="autoUpdateInstance">Update assemblies automatically</s:String>
+    <s:String x:Key="autoUpdateClient">Update automatically</s:String>
+    <s:String x:Key="hideLauncher">Hide launcher when starting a game</s:String>
+    <s:String x:Key="showConsole">Show Console</s:String>
+    <s:String x:Key="reboot">Reset</s:String>
 
     <!--  Factory General View  -->
-    <s:String x:Key="instanceName">Название сборки</s:String>
-    <s:String x:Key="minecraftVersion">Версия Minecraft</s:String>
-    <s:String x:Key="gameType">Тип игры</s:String>
-    <s:String x:Key="modloaderVersion">Версия Modloader</s:String>
-    <s:String x:Key="installOptifine">Установить optifine</s:String>
-    <s:String x:Key="installSodiumIris">Установить iris + sodium</s:String>
-    <s:String x:Key="create">Создать</s:String>
-    <s:String x:Key="cancel">Отмена</s:String>
-    <s:String x:Key="import">Импорт</s:String>
-    <s:String x:Key="creation">Создание</s:String>
+    <s:String x:Key="instanceName">Instance Name</s:String>
+    <s:String x:Key="minecraftVersion">Minecraft Version</s:String>
+    <s:String x:Key="gameType">Game Type</s:String>
+    <s:String x:Key="modloaderVersion">Modloader Version</s:String>
+    <s:String x:Key="installOptifine">Install Optifine</s:String>
+    <s:String x:Key="installSodiumIris">Install iris + sodium</s:String>
+    <s:String x:Key="create">Create</s:String>
+    <s:String x:Key="cancel">Cancel</s:String>
+    <s:String x:Key="import">Import</s:String>
+    <s:String x:Key="creation">Creation</s:String>
     <!--  Import  -->
-    <s:String x:Key="uploadYourInstance">Загрузите свою сборку</s:String>
-    <s:String x:Key="onlyZipAllowed">разрешенны только .zip</s:String>
-    <s:String x:Key="dragToStartUpload">Перетащите архив со сборкой, чтобы начать загрузку.</s:String>
-    <s:String x:Key="instanceImportFinished">Сборка успешно импортирована.</s:String>
-    <s:String x:Key="youNotUploadedAnythink">Вы ещё ничего не загрузили.</s:String>
+    <s:String x:Key="uploadYourInstance">Upload Your Instance</s:String>
+    <s:String x:Key="onlyZipAllowed">only .zip allowed</s:String>
+    <s:String x:Key="dragToStartUpload">Drag and drop .zip file with instance to start upload.</s:String>
+    <s:String x:Key="instanceImportFinished">Instance successfully imported.</s:String>
+    <s:String x:Key="youNotUploadedAnythink">You haven't uploaded anything yet.</s:String>
 
     <!--  Overview  -->
-    <s:String x:Key="notImage">Изображения отсутствуют</s:String>
+    <s:String x:Key="notImage">No Image</s:String>
     <s:String x:Key="version">Version</s:String>
     <s:String x:Key="updated">Updated</s:String>
     <s:String x:Key="totalDownloads">Total Downloads</s:String>
@@ -87,41 +87,41 @@
     <s:String x:Key="configuration">Configuration</s:String>
     <s:String x:Key="instanceSettings">Instance Settings</s:String>
     <!--  instance profile  -->
-    <s:String x:Key="avatar">Аватар</s:String>
-    <s:String x:Key="selectedInstanceLogo">Выберите изображение для вашего модпака.</s:String>
-    <s:String x:Key="uploadYourAvatar">Загрузить своё аватар</s:String>
-    <s:String x:Key="uploadYourAvatarTip">Вы можете загрузить свой аватар, но видеть его будете только вы.</s:String>
-    <s:String x:Key="shortDescription">Краткое Описание</s:String>
+    <s:String x:Key="avatar">Avatar</s:String>
+    <s:String x:Key="selectedInstanceLogo">Choose an image for your modpack.</s:String>
+    <s:String x:Key="uploadYourAvatar">Upload Your Avatar</s:String>
+    <s:String x:Key="uploadYourAvatarTip">You can upload your avatar, but only you can see it.</s:String>
+    <s:String x:Key="shortDescription">Short Description</s:String>
     <s:String x:Key="aboutInstance">About Instance</s:String>
-    <s:String x:Key="fullDescription">Полное Описание</s:String>
+    <s:String x:Key="fullDescription">Description</s:String>
     <s:String x:Key="save">Save</s:String>
     <s:String x:Key="dlc">DLC</s:String>
-    <s:String x:Key="instanceTitle">Название</s:String>
-    <s:String x:Key="immutableParameter">(неизменяется)</s:String>
-    <s:String x:Key="immutableVersionParameter">Версия (неизменяется)</s:String>
+    <s:String x:Key="instanceTitle">Title</s:String>
+    <s:String x:Key="immutableParameter">(immutable)</s:String>
+    <s:String x:Key="immutableVersionParameter">Version (immutable)</s:String>
     <s:String x:Key="generalUpperCase">GENERAL</s:String>
 
     <!--  Factory DLC  -->
-    <s:String x:Key="author">Автор</s:String>
-    <s:String x:Key="addModification">Добавить модификацию</s:String>
-    <s:String x:Key="openfolder">Открыть папку</s:String>
-    <s:String x:Key="startModification">Запускать модификацию</s:String>
-    <s:String x:Key="curseforgePage">Страница на Curseforge</s:String>
-    <s:String x:Key="update">Обновить</s:String>
-    <s:String x:Key="delete">Удалить</s:String>
-    <s:String x:Key="noInstalledModification">Отсутвуют установленные модификации.</s:String>
-    <s:String x:Key="noInstalledResourcepacks">Отсутвуют установленные ресурспаки.</s:String>
-    <s:String x:Key="noInstalledMaps">Отсутвуют установленные карты.</s:String>
-    <s:String x:Key="loadingInstanceDLC">Идет загрузка дополнений сборки...</s:String>
-    <s:String x:Key="resourcepacks">Ресурспаки</s:String>
-    <s:String x:Key="worlds">Карты</s:String>
+    <s:String x:Key="author">Author</s:String>
+    <s:String x:Key="addModification">Add Modification</s:String>
+    <s:String x:Key="openfolder">Open Folder</s:String>
+    <s:String x:Key="startModification">Run modification</s:String>
+    <s:String x:Key="curseforgePage">Curseforge Page</s:String>
+    <s:String x:Key="update">Update</s:String>
+    <s:String x:Key="delete">Delete</s:String>
+    <s:String x:Key="noInstalledModification">No Installed Mods.</s:String>
+    <s:String x:Key="noInstalledResourcepacks">No Installed Resourcepacks.</s:String>
+    <s:String x:Key="noInstalledMaps">No Installed Worlds.</s:String>
+    <s:String x:Key="loadingInstanceDLC">Loading Instance DLC...</s:String>
+    <s:String x:Key="resourcepacks">Resourcepacks</s:String>
+    <s:String x:Key="worlds">Worlds</s:String>
 
-    <s:String x:Key="back">Назад</s:String>
+    <s:String x:Key="back">Back</s:String>
 
     <!--  Auth  -->
     <s:String x:Key="login">Login</s:String>
     <s:String x:Key="password">Password</s:String>
-    <s:String x:Key="showPassword">Показать пароль</s:String>
+    <s:String x:Key="showPassword">Show Password</s:String>
     <s:String x:Key="saveMe">Remember Me</s:String>
     <s:String x:Key="singIn">Sign In</s:String>
 
@@ -131,18 +131,18 @@
     <s:String x:Key="noAccount">No Account</s:String>
 
     <!--  catalog  -->
-    <s:String x:Key="curseforgeDataLoading">Идёт загрузка данных с curseforge.com...</s:String>
-    <s:String x:Key="nothingHere">Мы ничего не нашли по вашему запросу.</s:String>
+    <s:String x:Key="curseforgeDataLoading">Loading data from curseforge.com...</s:String>
+    <s:String x:Key="nothingHere">We did not find anything for your request.</s:String>
 
     <!--  instance form  -->
     <s:String x:Key="more">Больше</s:String>
-    <s:String x:Key="javaInstalling">Идёт скачивание Java...</s:String>
-    <s:String x:Key="runPrepare">Идёт подготовка к запуску...</s:String>
-    <s:String x:Key="instanceLoading">Идёт скачивание... Этап</s:String>
+    <s:String x:Key="javaInstalling">Java is downloading...</s:String>
+    <s:String x:Key="runPrepare">Getting ready to launch...</s:String>
+    <s:String x:Key="instanceLoading">Instance is downloading... Stage</s:String>
 
-    <s:String x:Key="runSuccessfulNotification">Игра успешно запущена.</s:String>
-    <s:String x:Key="runUnsuccessfulNotification">Не удалось запустить игру.</s:String>
-    <s:String x:Key="loadingProgressTip">Скачивание завершено на</s:String>
+    <s:String x:Key="runSuccessfulNotification">Game launched successfully.</s:String>
+    <s:String x:Key="runUnsuccessfulNotification">Failed to start the game.</s:String>
+    <s:String x:Key="loadingProgressTip">Download completed at</s:String>
 
     <!--  Upper Button  -->
 
@@ -152,69 +152,69 @@
     <s:String x:Key="download">Download</s:String>
 
     <!--  Lower Button  -->
-    <s:String x:Key="removeInstance">Удалить сборку</s:String>
+    <s:String x:Key="removeInstance">Delete Instance</s:String>
     <s:String x:Key="export">Export</s:String>
-    <s:String x:Key="cancelDownload">Отменить скачивание</s:String>
-    <s:String x:Key="addToLibrary">Добавить в библиотеку</s:String>
-    <s:String x:Key="removeFromLibrary">Удалить из библиотеки</s:String>
-    <s:String x:Key="visitCurseforge">Перейти на Curseforge</s:String>
-    <s:String x:Key="visitNightWorld">Перейти на NightWorld</s:String>
-    <s:String x:Key="openFolder">Открыть папку</s:String>
+    <s:String x:Key="cancelDownload">Cancel Donwload</s:String>
+    <s:String x:Key="addToLibrary">Add to the Library</s:String>
+    <s:String x:Key="removeFromLibrary">Remove from the library</s:String>
+    <s:String x:Key="visitCurseforge">Visit Curseforge</s:String>
+    <s:String x:Key="visitNightWorld">Visit NightWorld</s:String>
+    <s:String x:Key="openFolder">Open Folder</s:String>
 
 
-    <s:String x:Key="devCurtainMessage">/* Данный раздел находиться в разработке. */</s:String>
-    <s:String x:Key="devCurtainsMessage1">/* Раздел {0} находиться в разработке. */</s:String>
-    <s:String x:Key="updateAvailable">Доступно обновление</s:String>
-    <s:String x:Key="rebootSettings">Сбросить настройки</s:String>
+    <s:String x:Key="devCurtainMessage">/* This page is under development. */</s:String>
+    <s:String x:Key="devCurtainsMessage1">/* This page {0} is under development. */</s:String>
+    <s:String x:Key="updateAvailable">Update available</s:String>
+    <s:String x:Key="rebootSettings">Reset Settings</s:String>
 
     <s:String x:Key="play">Play</s:String>
-    <s:String x:Key="prepareRun">Идет запуск...</s:String>
+    <s:String x:Key="prepareRun">Launch in progress...</s:String>
     <s:String x:Key="close">Close</s:String>
     <s:String x:Key="install">Install</s:String>
 
-    <s:String x:Key="importResult">Результат импорта</s:String>
-    <s:String x:Key="importResultError">Импорт завершился с ошибкой</s:String>
-    <s:String x:Key="importResultSuccessfulWannaPlay">Импорт завершился успешно, хотите запустить сборку?</s:String>
+    <s:String x:Key="importResult">Import result</s:String>
+    <s:String x:Key="importResultError">Import failed</s:String>
+    <s:String x:Key="importResultSuccessfulWannaPlay">The import completed successfully, do you want to run the Instance?</s:String>
 
-    <s:String x:Key="exportInProgress">Идет экспорт...</s:String>
-    <s:String x:Key="instanceExport">Экспорт сборки</s:String>
-    <s:String x:Key="instanceExportSuccessfulOpenFolder">Экспорт сборки {0} был успешно завершён. Открыть папку с файлом?</s:String>
-    <s:String x:Key="instanceExportUnsuccessful">Экспорт сборки {0} был завершён с ошибкой?</s:String>
+    <s:String x:Key="exportInProgress">Export in progress...</s:String>
+    <s:String x:Key="instanceExport">Instance Export</s:String>
+    <s:String x:Key="instanceExportSuccessfulOpenFolder">Instance export {0} completed successfully. Open file folder?</s:String>
+    <s:String x:Key="instanceExportUnsuccessful">Instance export {0} failed</s:String>
 
-    <s:String x:Key="minimizeWindow">Свернуть окно</s:String>
+    <s:String x:Key="minimizeWindow">Minimize Window</s:String>
 
-    <s:String x:Key="instanceDLC">Дополнения</s:String>
+    <s:String x:Key="instanceDLC">Instance DLC</s:String>
 
-    <s:String x:Key="filterByCategory">Фильтровать по категории.</s:String>
-    <s:String x:Key="canSelectOnlyOne">Можно выбрать только одну категорию.</s:String>
+    <s:String x:Key="filterByCategory">Filter by category.</s:String>
+    <s:String x:Key="canSelectOnlyOne">Only one category can be selected.</s:String>
     <s:String x:Key="gameVersion">Game Version</s:String>
     <s:String x:Key="sortBy">Sort by</s:String>
     <s:String x:Key="filters">Filters</s:String>
 
-    <s:String x:Key="microsoftAuthInProgress">Ожидание окончания авторизации через Microsoft</s:String>
+    <s:String x:Key="microsoftAuthInProgress">Waiting for authorization to complete Microsoft</s:String>
 
-    <s:String x:Key="dateCreatedSortBy">дате создания</s:String>
-    <s:String x:Key="lastUpdatedSortBy">обновлению</s:String>
-    <s:String x:Key="nameSortBy">названию</s:String>
-    <s:String x:Key="popularitySortBy">популярности</s:String>
-    <s:String x:Key="totalDownloadsFlSortBy">скачиваниям</s:String>
-    <s:String x:Key="featuredSortBy">признакам</s:String>
-    <s:String x:Key="categorySortBy">категории</s:String>
-    <s:String x:Key="authorSortBy">автору</s:String>
-    <s:String x:Key="gameVersionSortBy">версии игры</s:String>
+    <s:String x:Key="dateCreatedSortBy">date created</s:String>
+    <s:String x:Key="lastUpdatedSortBy">update</s:String>
+    <s:String x:Key="nameSortBy">name</s:String>
+    <s:String x:Key="popularitySortBy">popularity</s:String>
+    <s:String x:Key="totalDownloadsFlSortBy">totalDownloads</s:String>
+    <s:String x:Key="featuredSortBy">featured</s:String>
+    <s:String x:Key="categorySortBy">category</s:String>
+    <s:String x:Key="authorSortBy">author</s:String>
+    <s:String x:Key="gameVersionSortBy">game version</s:String>
 
 
-    <s:String x:Key="downloadFilesCountNof">Скачано {0}/{1} файлов</s:String>
-    <s:String x:Key="gameRunning">Идёт запуск игры...</s:String>
-    <s:String x:Key="allVersions">Все версии</s:String>
+    <s:String x:Key="downloadFilesCountNof">Donwloaded {0}/{1} files</s:String>
+    <s:String x:Key="gameRunning">Game is running...</s:String>
+    <s:String x:Key="allVersions">All Versions</s:String>
     <s:String x:Key="search">Search</s:String>
-    <s:String x:Key="downloadCancelling">Отмена скачивания...</s:String>
-    <s:String x:Key="directoryChanging">Идет процесс переноса файлов...</s:String>
+    <s:String x:Key="downloadCancelling">Cancel donwload...</s:String>
+    <s:String x:Key="directoryChanging">File transfer in progress...</s:String>
 
     <s:String x:Key="warningAboutMultiplayer">You can play "NightWorld Multiplayer" only use NightWorldAccount</s:String>
     <s:String x:Key="registerNightWorldAccount">Create NightWorld Account</s:String>
 
-    <s:String x:Key="appearance">Внешний вид</s:String>
+    <s:String x:Key="appearance">Appearance</s:String>
     <s:String x:Key="language">Language</s:String>
     <s:String x:Key="selectLanguage">Select Language</s:String>
 
@@ -224,4 +224,15 @@
     <s:String x:Key="trayHideLauncher">Hide Launcher</s:String>
     <s:String x:Key="changeLanguageWariningMessage">Restarting the launcher is required to change the language. Do you want to restart it right now?</s:String>
     <s:String x:Key="chooseYourAccentColor">Choose your accent color</s:String>
+    <s:String x:Key="loading">Loading...</s:String>
+    <s:String x:Key="updating">Updating...</s:String>
+
+    <s:String x:Key="changeAccount">Change Account</s:String>
+    <s:String x:Key="withoutAccountNeeds">To play without an account, enter the desired nickname in the login field.</s:String>
+    <s:String x:Key="maximizeLauncher">Maximize Launcher</s:String>
+    <s:String x:Key="contactSupport">Contact Support</s:String>
+
+    <s:String x:Key="online">Online</s:String>
+    <s:String x:Key="doNotDisturb">Do Not Disturb</s:String>
+    <s:String x:Key="invisible">Invisible</s:String>
 </ResourceDictionary>

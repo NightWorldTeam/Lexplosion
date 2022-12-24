@@ -287,13 +287,13 @@ namespace Lexplosion.Gui.ViewModels
                 TrayComponents.Clear();
 
                 if (instanceFormViewModel != null)
-                    TrayComponents.Add(new TrayButton(0, "Закрыть игру", ResourceGetter.GetString("ExtensionOff"), instanceFormViewModel.CloseInstance) { IsEnable = IsInstanceRunning });
+                    TrayComponents.Add(new TrayButton(0, ResourceGetter.GetString("closeInstance"), ResourceGetter.GetString("ExtensionOff"), instanceFormViewModel.CloseInstance) { IsEnable = IsInstanceRunning });
 
-                TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("OpenFull"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
-                TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("OpenFull"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
-                TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
-                TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
-                TrayComponents.Add(new TrayButton(5, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
+                TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
+                TrayComponents.Add(new TrayButton(3, ResourceGetter.GetString("rebootOnlineGame"), ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+                TrayComponents.Add(new TrayButton(4, ResourceGetter.GetString("contactSupport"), ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(5, ResourceGetter.GetString("close"), ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
             });
         }
 
@@ -304,10 +304,10 @@ namespace Lexplosion.Gui.ViewModels
                 TrayComponents.Clear();
 
                 TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
-                TrayComponents.Add(new TrayButton(2, "Развернуть лаунчер", ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
-                TrayComponents.Add(new TrayButton(3, "Перезапустить сетевую игру", ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
-                TrayComponents.Add(new TrayButton(4, "Связаться с поддержкой", ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
-                TrayComponents.Add(new TrayButton(5, "Закрыть", ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
+                TrayComponents.Add(new TrayButton(3, ResourceGetter.GetString("rebootOnlineGame"), ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+                TrayComponents.Add(new TrayButton(4, ResourceGetter.GetString("contactSupport"), ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(5, ResourceGetter.GetString("close"), ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
             });
         }
 

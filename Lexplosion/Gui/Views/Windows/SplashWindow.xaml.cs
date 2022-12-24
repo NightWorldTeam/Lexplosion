@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Lexplosion.Tools;
+using System;
+using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Animation;
@@ -10,9 +12,9 @@ namespace Lexplosion.Gui.Views.Windows
     /// </summary>
     public partial class SplashWindow : Window
     {
-        private const string loadingPlaceholder = "Идет загрузка...";
-        private const string updatePlaceholder = "Идет обновление...";
-
+        private string loadingPlaceholder = CultureInfo.CurrentCulture.Name == "ru-RU" ? "Идет загрузка..." : "Loading...";
+        private string updatePlaceholder = CultureInfo.CurrentCulture.Name == "ru-RU" ? "Идет обновление..." : "Updating...";
+        
         public SplashWindow()
         {
             InitializeComponent();
