@@ -5,6 +5,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using System;
 using System.Globalization;
+using System.Threading;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 {
@@ -23,7 +24,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
             _mainViewModel = mainViewModel;
             _cultureInfo = new CultureInfo(cultureId);
             NativeName = (char.ToUpper(_cultureInfo.NativeName[0]) + _cultureInfo.NativeName.Substring(1)).Split(' ')[0];
-            CurrentLangName = (char.ToUpper(_cultureInfo.DisplayName[0]) + _cultureInfo.DisplayName.Substring(1)).Split(' ')[0];
+            CurrentLangName = ResourceGetter.GetString(_cultureInfo.Name);
             ImagePath = "pack://application:,,,/Assets/images/icons/countries/" + _cultureInfo.Name + ".png";
             IsSelectedLanguage = GlobalData.GeneralSettings.LanguageId == _cultureInfo.Name;
         }
