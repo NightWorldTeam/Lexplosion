@@ -34,6 +34,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
             else
             {
                 UpButton.Visibility = Visibility.Collapsed;
+                Console.WriteLine(UpButton.Visibility.ToString());
             }
 
             try
@@ -43,7 +44,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
             }
             catch
             {
-
+                Console.WriteLine("tes12");
             }
         }
 

@@ -242,4 +242,6 @@
     <s:String x:Key="activeDownloads">Active Downloads</s:String>
     <s:String x:Key="nothingDownloading">Nothing is downloading right now.</s:String>
     <s:String x:Key="installModification">Install Modification</s:String>
+
+    <s:String x:Key="howToPlayMultiplayer">Playing Guide</s:String>
 </ResourceDictionary>

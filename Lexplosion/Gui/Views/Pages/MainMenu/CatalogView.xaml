@@ -67,6 +67,11 @@
     </UserControl.Background>
 
     <Grid x:Name="MainGrid">
+        <Grid.Background>
+            <!--  #1313131 0.8  -->
+            <!--  "Black" 0.64  -->
+            <SolidColorBrush Opacity="0.84" Color="{DynamicResource PrimaryColor}" />
+        </Grid.Background>
         <ScrollViewer
             x:Name="ContainerPage_ScrollViewer"
             extension:ScrollViewer.ChildItemsUpdated="{Binding IsLoaded}"
@@ -74,12 +79,6 @@
             IsTabStop="False"
             ScrollChanged="ContainerPage_ScrollChanged"
             VerticalScrollBarVisibility="Auto">
-
-            <ScrollViewer.Background>
-                <!--  #1313131 0.8  -->
-                <!--  "Black" 0.64  -->
-                <SolidColorBrush Opacity="0.84" Color="{DynamicResource PrimaryColor}" />
-            </ScrollViewer.Background>
 
             <StackPanel>
 
@@ -310,16 +309,10 @@
             <Border
                 Width="40"
                 Height="40"
-                Background="Transparent"
-                BorderBrush="White"
-                BorderThickness="2"
+                Background="{DynamicResource BrandSolidColorBrush}"
+                BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                BorderThickness="0"
                 CornerRadius="50">
-                <Border.Effect>
-                    <DropShadowEffect
-                        BlurRadius="10"
-                        ShadowDepth="0"
-                        Color="{DynamicResource ActivityColor}" />
-                </Border.Effect>
                 <Viewbox
                     Width="20"
                     Height="20"

@@ -242,4 +242,6 @@
     <s:String x:Key="activeDownloads">Активные скачивания</s:String>
     <s:String x:Key="nothingDownloading">Сейчас ничего не скачивается</s:String>
     <s:String x:Key="installModification">Установить модификацию</s:String>
+
+    <s:String x:Key="howToPlayMultiplayer">Как играть по сети</s:String>
 </ResourceDictionary>

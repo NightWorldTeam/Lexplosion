@@ -58,36 +58,76 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <Button
-            x:Name="UpButton"
+        <StackPanel
             Margin="0,0,20,20"
             HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Click="UpButton_Click"
-            Style="{StaticResource IconicButton}">
-            <Border
-                Width="40"
-                Height="40"
-                Background="Transparent"
-                BorderBrush="White"
-                BorderThickness="2"
-                CornerRadius="50">
-                <Border.Effect>
-                    <DropShadowEffect
-                        BlurRadius="10"
-                        ShadowDepth="0"
-                        Color="{DynamicResource ActivityColor}" />
-                </Border.Effect>
-                <Viewbox
-                    Width="20"
-                    Height="20"
-                    Stretch="Fill">
-                    <Path
-                        Data="M22.5 40V13.7L10.1 26.1 8 24 24 8l16 16-2.1 2.1-12.4-12.4V40Z"
-                        Fill="White"
-                        Stretch="Fill" />
-                </Viewbox>
-            </Border>
-        </Button>
+            VerticalAlignment="Bottom">
+            <Button
+                x:Name="AddButton"
+                Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                Style="{StaticResource IconicButton}">
+                <Border
+                    Width="40"
+                    Height="40"
+                    Background="#131313"
+                    BorderThickness="0"
+                    CornerRadius="50">
+                    <Border.Effect>
+                        <DropShadowEffect
+                            BlurRadius="10"
+                            ShadowDepth="0"
+                            Color="{DynamicResource ActivityColor}" />
+                    </Border.Effect>
+                    <Viewbox
+                        Width="20"
+                        Height="20"
+                        Stretch="Fill">
+                        <Path
+                            Data="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"
+                            Fill="{DynamicResource BrandSolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
+                <Button.ToolTip>
+                    <ToolTip
+                        Background="Black"
+                        BorderThickness="0"
+                        FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                        HorizontalOffset="-90"
+                        Placement="Relative"
+                        VerticalOffset="-10">
+                        <TextBlock
+                            MaxWidth="400"
+                            Foreground="White"
+                            Text="{DynamicResource addInstance}"
+                            TextWrapping="WrapWithOverflow" />
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+
+            <Button
+                x:Name="UpButton"
+                Margin="0,10,0,0"
+                Click="UpButton_Click"
+                Style="{StaticResource IconicButton}">
+                <Border
+                    Width="40"
+                    Height="40"
+                    Background="{DynamicResource BrandSolidColorBrush}"
+                    BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                    BorderThickness="0"
+                    CornerRadius="50">
+                    <Viewbox
+                        Width="20"
+                        Height="20"
+                        Stretch="Fill">
+                        <Path
+                            Data="M22.5 40V13.7L10.1 26.1 8 24 24 8l16 16-2.1 2.1-12.4-12.4V40Z"
+                            Fill="White"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
+            </Button>
+        </StackPanel>
     </Grid>
 </UserControl>
