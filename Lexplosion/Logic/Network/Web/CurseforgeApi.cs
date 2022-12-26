@@ -213,7 +213,7 @@ namespace Lexplosion.Logic.Network
                     return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
-                        Value2 = DownloadAddonRes.DownloadError
+                        Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
                     };
                 }
 
@@ -227,7 +227,7 @@ namespace Lexplosion.Logic.Network
                     return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
-                        Value2 = DownloadAddonRes.DownloadError
+                        Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
                     };
                 }
 
