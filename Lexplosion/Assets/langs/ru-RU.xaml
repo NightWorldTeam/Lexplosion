@@ -217,6 +217,7 @@
     <s:String x:Key="appearance">Внешний вид</s:String>
     <s:String x:Key="language">Язык</s:String>
     <s:String x:Key="selectLanguage">Выберите язык</s:String>
+    <s:String x:Key="langChange">Смена языка</s:String>
 
 
     <s:String x:Key="en-US">Английский</s:String>
@@ -244,4 +245,9 @@
     <s:String x:Key="installModification">Установить модификацию</s:String>
 
     <s:String x:Key="howToPlayMultiplayer">Как играть по сети</s:String>
+    <s:String x:Key="yep">Хорошо</s:String>
+    <s:String x:Key="no">Нет</s:String>
+
+    <s:String x:Key="foldersAndFiles">Папки и файлы</s:String>
+    <s:String x:Key="fullExport">Полный экспорт</s:String>
 </ResourceDictionary>

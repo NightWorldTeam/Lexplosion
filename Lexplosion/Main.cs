@@ -51,6 +51,7 @@ namespace Lexplosion
 
         const string AssetsPath = "pack://application:,,,/Assets/";
         const string ResourcePath = "pack://application:,,,/Gui/Resources/";
+        public const string LangPath = AssetsPath + "langs/";
 
         public static readonly string[] Languages = new string[]
         {
@@ -306,8 +307,6 @@ namespace Lexplosion
 
         public static void ChangeCurrentLanguage(string cultureName = "", bool isRestart = false)
         {
-            const string langPath = AssetsPath + "langs/";
-
             if (CurrentLangDict == null) CurrentLangDict = new ResourceDictionary();
 
             if (cultureName.Length == 0)
@@ -318,16 +317,20 @@ namespace Lexplosion
                     {
                         var currentCultureName = Thread.CurrentThread.CurrentCulture.ToString();
                         //switch () тут код для стран cis
-                        CurrentLangDict.Source = new Uri(langPath + currentCultureName + ".xaml");
+                        CurrentLangDict.Source = new Uri(LangPath + currentCultureName + ".xaml");
+                        GlobalData.GeneralSettings.LanguageId = currentCultureName;
+                        DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                     }
                     else
                     {
-                        CurrentLangDict.Source = new Uri(langPath + GlobalData.GeneralSettings.LanguageId + ".xaml");
+                        CurrentLangDict.Source = new Uri(LangPath + GlobalData.GeneralSettings.LanguageId + ".xaml");
                     }
                 }
                 catch
                 {
-                    CurrentLangDict.Source = new Uri(langPath + "ru-RU.xaml");
+                    CurrentLangDict.Source = new Uri(LangPath + "ru-RU.xaml");
+                    GlobalData.GeneralSettings.LanguageId = "ru-RU";
+                    DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                 }
             }
             app.Resources.MergedDictionaries.Add(CurrentLangDict);

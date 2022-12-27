@@ -7,6 +7,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
     {
         private readonly MainViewModel _mainViewModel;
         private Action _function;
+        private Action _function1;
         private string _title;
         private string _message;
 
@@ -58,6 +59,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         {
             get => _closeButtonCommand ?? (_closeButtonCommand = new RelayCommand(obj =>
             {
+                _function1?.Invoke();
                 _mainViewModel.ModalWindowVM.IsOpen = false;
             }));
         }
@@ -78,7 +80,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// <param name="title">Title - заголовк для dialog window</param>
         /// <param name="title">Message - основной текст под заголовком для dialog window</param>
         /// <param name="function">Делегат который выполниться при нажатии пользователем кнопки "Да".</param>
-        public void ShowDialog(string title, string message, Action function)
+        /// <param name="function">Делегат который выполниться при нажатии пользователем кнопки "Нет".</param>
+        public void ShowDialog(string title, string message, Action function, Action function1 = null)
         {
             _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(this);
             _mainViewModel.ModalWindowVM.IsOpen = true;
@@ -86,6 +89,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             Title = title;
             Message = message;
             _function = function;
+            _function1 = function1;
         }
     }
 }

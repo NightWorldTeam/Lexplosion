@@ -62,7 +62,7 @@
     <s:String x:Key="create">Create</s:String>
     <s:String x:Key="cancel">Cancel</s:String>
     <s:String x:Key="import">Import</s:String>
-    <s:String x:Key="creation">Creation</s:String>
+    <s:String x:Key="creation">Create</s:String>
     <!--  Import  -->
     <s:String x:Key="uploadYourInstance">Upload Your Instance</s:String>
     <s:String x:Key="onlyZipAllowed">only .zip allowed</s:String>
@@ -217,6 +217,7 @@
     <s:String x:Key="appearance">Appearance</s:String>
     <s:String x:Key="language">Language</s:String>
     <s:String x:Key="selectLanguage">Select Language</s:String>
+    <s:String x:Key="langChange">Language Change</s:String>
 
     <s:String x:Key="en-US">English</s:String>
     <s:String x:Key="ru-RU">Russian</s:String>
@@ -244,4 +245,9 @@
     <s:String x:Key="installModification">Install Modification</s:String>
 
     <s:String x:Key="howToPlayMultiplayer">Playing Guide</s:String>
+    <s:String x:Key="yep">Yep!!!</s:String>
+    <s:String x:Key="no">No</s:String>
+
+    <s:String x:Key="foldersAndFiles">Folders and Files</s:String>
+    <s:String x:Key="fullExport">Full Export</s:String>
 </ResourceDictionary>

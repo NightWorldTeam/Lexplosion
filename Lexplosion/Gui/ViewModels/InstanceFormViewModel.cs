@@ -204,12 +204,18 @@ namespace Lexplosion.Gui.ViewModels
             MainVM.ExportViewModel = new ExportViewModel(MainVM)
             {
                 InstanceName = Client.Name,
-                IsFullExport = true,
+                IsFullExport = false,
                 InstanceClient = Client,
                 UnitsList = Client.GetPathContent()
             };
 
-            MainVM.ModalWindowVM.ChangeCurrentModalContent(MainVM.ExportViewModel);
+            MainVM.ModalWindowVM.ChangeCurrentModalContent(new CustomTabsMenuViewModel(
+                new List<CustomTab>() 
+                {
+                    new CustomTab("Export", "M11 40q-1.2 0-2.1-.9Q8 38.2 8 37v-7.15h3V37h26v-7.15h3V37q0 1.2-.9 2.1-.9.9-2.1.9Zm13-7.65-9.65-9.65 2.15-2.15 6 6V8h3v18.55l6-6 2.15 2.15Z", MainVM.ExportViewModel),
+                    new CustomTab("Share", "M6.54 55.08a1.91 1.91 0 0 1-.62-.1 2 2 0 0 1-1.38-2c0-.3 2.06-29.34 31.18-31.62V10.92a2 2 0 0 1 3.43-1.4l19.74 20.16a2 2 0 0 1 0 2.8L39.15 52.64a2 2 0 0 1-3.43-1.4V41c-19.44.74-27.41 13-27.49 13.15a2 2 0 0 1-1.69.93Zm33.18-39.26v7.41a2 2 0 0 1-1.93 2c-18.84.69-25.58 13.24-28 21.31 5-4.32 13.91-9.6 27.81-9.6h.09a2 2 0 0 1 2 2v7.41l15-15.26Z", MainVM.ExportViewModel)
+                }
+                ));
         }
 
         #endregion Public & Protected Methods

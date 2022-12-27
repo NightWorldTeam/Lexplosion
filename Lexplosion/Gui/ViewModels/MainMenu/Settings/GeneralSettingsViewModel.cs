@@ -28,7 +28,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
             {
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
-                    dialog.SelectedPath = GeneralSettings.SystemPath.Replace("/", @"\");
+                    dialog.SelectedPath = GeneralSettings.SystemPath.Replace('/', '\\');
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
                         ChangedDirectory(dialog.SelectedPath);
@@ -43,7 +43,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
             {
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
-                    dialog.SelectedPath = GeneralSettings.JavaPath.Replace("/", @"\");
+                    dialog.SelectedPath = GeneralSettings.JavaPath.Replace('/', '\\');
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
                         GeneralSettings.JavaPath = dialog.SelectedPath;

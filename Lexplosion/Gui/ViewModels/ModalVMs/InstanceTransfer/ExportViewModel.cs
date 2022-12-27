@@ -10,6 +10,15 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
     public sealed class ExportViewModel : ModalVMBase
     {
+        #region ModalProperties
+
+        public override double Width => 620;
+
+        public override double Height => 420;
+
+        #endregion ModalProperties
+
+
         /// <summary>
         /// Список хранит в себе загруженные директории [string].
         /// </summary>

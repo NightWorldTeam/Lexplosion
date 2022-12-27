@@ -4,7 +4,9 @@ using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
@@ -14,10 +16,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         private readonly CultureInfo _cultureInfo;
         private readonly MainViewModel _mainViewModel;
 
+        //private Dictionary<string, string> 
+
         public string Id { get => _cultureInfo.Name; }
         public string ImagePath { get; }
         public string NativeName { get; }
         public string CurrentLangName { get; }
+        public static LanguageModel SelectedLanguage { get; private set; }
+        public static LanguageModel PrevSelectedLanguage { get; private set; }
 
         public LanguageModel(String cultureId, MainViewModel mainViewModel)
         {
@@ -44,7 +50,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
                 var dialog = new DialogViewModel(_mainViewModel);
                 var message = ResourceGetter.GetString("changeLanguageWariningMessage");
 
-                dialog.ShowDialog("Смена языка", message, () => Runtime.ChangeCurrentLanguage(lang.Id, true));
+                dialog.ShowDialog(ResourceGetter.GetString("langChange"), message, () => Runtime.ChangeCurrentLanguage(lang.Id, true));
                 Runtime.ChangeCurrentLanguage(lang.Id, false);
             }));
         }

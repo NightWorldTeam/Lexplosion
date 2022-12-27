@@ -123,6 +123,9 @@
 
 
     <!--  Content for modal  -->
+    <DataTemplate DataType="{x:Type viewmodels:CustomTabsMenuViewModel}">
+        <pages:CustomTabMenu />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type modalvms:ExportViewModel}">
         <modalviews:ModalExportView />
     </DataTemplate>

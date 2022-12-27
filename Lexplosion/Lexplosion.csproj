@@ -181,12 +181,15 @@
     <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\Settings\LanguageSettingsViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainViewModel.cs" />
+    <Compile Include="Gui\ViewModels\CustomTabsMenuViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\DialogViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\DownloadManagerViewModel.cs" />
-    <Compile Include="Gui\ViewModels\ModalVMs\ExportViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ExportViewModel.cs" />
     <Compile Include="Gui\ViewModels\DevСurtainViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\InstanceDownloadProcess.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\InstanceFile.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\InstanceTransferViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ShareViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ModalWindowViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\ChangelogViewModel.cs" />
@@ -213,6 +216,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\CurseforgeMarketView.xaml.cs">
       <DependentUpon>CurseforgeMarketView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\CustomTabMenu.xaml.cs">
+      <DependentUpon>CustomTabMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\FactoryMenu\FactoryDLCView.xaml.cs">
       <DependentUpon>FactoryDLCView.xaml</DependentUpon>
@@ -498,6 +504,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\CurseforgeMarketView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\CustomTabMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

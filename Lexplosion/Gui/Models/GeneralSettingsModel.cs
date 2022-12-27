@@ -7,9 +7,9 @@ namespace Lexplosion.Gui.Models
     {
         public string SystemPath
         {
-            get => GlobalData.GeneralSettings.GamePath.Replace(@"\", "/"); set
+            get => GlobalData.GeneralSettings.GamePath.Replace('\\', '/'); set
             {
-                GlobalData.GeneralSettings.GamePath = value.Replace(@"\", "/");
+                GlobalData.GeneralSettings.GamePath = value.Replace('\\', '/');
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
@@ -39,7 +39,7 @@ namespace Lexplosion.Gui.Models
         {
             get => WindowWidth.ToString() + "x" + WindowHeight.ToString(); set
             {
-                var resolution = value.ToString().Split('x');
+                var resolution = value.Split('x');
 
                 WindowWidth = uint.Parse(resolution[0]);
                 WindowHeight = uint.Parse(resolution[1]);
