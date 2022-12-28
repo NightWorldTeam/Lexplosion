@@ -334,19 +334,21 @@ namespace Lexplosion.Logic.Network
                             }
                             else
                             {
-                                return null;
+                                response.Status = AuthCode.NoConnect;
+                                return response;
                             }
-
                         }
                         else
                         {
-                            return null;
+                            response.Status = AuthCode.NoConnect;
+                            return response; ;
                         }
                     }
                 }
                 catch
                 {
-                    return null;
+                    response.Status = AuthCode.NoConnect;
+                    return response;
                 }
             }
         }
