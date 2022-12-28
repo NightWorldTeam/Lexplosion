@@ -107,6 +107,7 @@
 
             <Button
                 x:Name="UpButton"
+                Visibility="Collapsed"
                 Margin="0,10,0,0"
                 Click="UpButton_Click"
                 Style="{StaticResource IconicButton}">

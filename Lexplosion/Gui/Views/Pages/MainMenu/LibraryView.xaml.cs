@@ -26,15 +26,61 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
 
         private void LibraryItemsControl_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            const double animationTime = 0.3;
+
             var viewer = (ScrollViewer)sender;
             if (viewer.VerticalOffset >= 48)
             {
-                UpButton.Visibility = Visibility.Visible;
+                if (UpButton.Visibility != Visibility.Visible)
+                {
+                    UpButton.Visibility = Visibility.Visible;
+
+                    DoubleAnimation doubleAnimation = new DoubleAnimation()
+                    {
+                        From = 0.0,
+                        To = 1.0,
+                        Duration = TimeSpan.FromSeconds(animationTime)
+                    };
+
+                    ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                    {
+                        From = new Thickness(0, 10, 0, -40),
+                        To = new Thickness(0, 10, 0, 0),
+                        Duration = TimeSpan.FromSeconds(animationTime)
+                    };
+
+                    UpButton.BeginAnimation(FrameworkElement.MarginProperty, thicknessAnimation);
+                    UpButton.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+                }
             }
             else
             {
-                UpButton.Visibility = Visibility.Collapsed;
-                Console.WriteLine(UpButton.Visibility.ToString());
+                Runtime.DebugWrite(UpButton.Visibility.ToString());
+
+                if (UpButton.Visibility == Visibility.Visible)
+                {
+                    DoubleAnimation doubleAnimation = new DoubleAnimation()
+                    {
+                        From = 1.0,
+                        To = 0.0,
+                        Duration = TimeSpan.FromSeconds(animationTime)
+                    };
+
+                    ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                    {
+                        From = new Thickness(0, 10, 0, 0),
+                        To = new Thickness(0, 10, 0, -40),
+                        Duration = TimeSpan.FromSeconds(animationTime)
+                    };
+
+                    thicknessAnimation.Completed += delegate (object sender, EventArgs e)
+                    {
+                        UpButton.Visibility = Visibility.Collapsed;
+                    };
+
+                    UpButton.BeginAnimation(FrameworkElement.MarginProperty, thicknessAnimation);
+                    UpButton.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+                }
             }
 
             try
@@ -44,7 +90,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
             }
             catch
             {
-                Console.WriteLine("tes12");
+                Runtime.DebugWrite("tes12");
             }
         }
 
