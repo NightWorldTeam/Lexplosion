@@ -18,12 +18,14 @@ namespace Lexplosion.Gui.ViewModels
         public string Text { get; }
         public string Icon { get; }
         public VMBase Page { get; }
+        public bool IsEnable { get; }
 
-        public CustomTab(string text, string icon, VMBase page)
+        public CustomTab(string text, string icon, VMBase page, bool isEnable = true)
         {
             Text = text;
             Icon = icon;
             Page = page;
+            IsEnable = isEnable;
         }
 
         public CustomTab(CustomTab tab, CustomTabsMenuViewModel customTabsMenu) 
@@ -34,7 +36,7 @@ namespace Lexplosion.Gui.ViewModels
             Text = tab.Text;
             Icon = tab.Icon;
             Page = tab.Page;
-            IsSelected = Id == 0;
+            IsEnable = tab.IsEnable;
         }
 
         private bool _isSelected;
@@ -43,10 +45,12 @@ namespace Lexplosion.Gui.ViewModels
             get => _isSelected; set
             {
                 _isSelected = value;
-                _menu.CurrentPage = Page;
+                if (value) _menu.CurrentPage = Page;
                 OnPropertyChanged();
             }
         }
+
+        
     }
 
     public class CustomTabsMenuViewModel : ModalVMBase
@@ -60,7 +64,15 @@ namespace Lexplosion.Gui.ViewModels
 
         public List<CustomTab> Tabs { get; } = new List<CustomTab>();
 
-        public VMBase CurrentPage { get; set; } 
+        private VMBase _currentPage;
+        public VMBase CurrentPage 
+        { 
+            get => _currentPage; set 
+            {
+                _currentPage = value;
+                OnPropertyChanged();
+            } 
+        } 
 
         public CustomTabsMenuViewModel(List<CustomTab> tabs)
         {
@@ -68,6 +80,7 @@ namespace Lexplosion.Gui.ViewModels
             {
                 Tabs.Add(new CustomTab(tab, this));
             }
+            Tabs[0].IsSelected = true;
         }
     }
 }

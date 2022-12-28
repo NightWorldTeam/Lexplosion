@@ -129,6 +129,9 @@
     <DataTemplate DataType="{x:Type modalvms:ExportViewModel}">
         <modalviews:ModalExportView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvms:ShareInstanceViewModel}">
+        <modalviews:ModalShareInstanceView />
+    </DataTemplate>
 
     <DataTemplate DataType="{x:Type modalvms:DownloadManagerViewModel}">
         <modalviews:DownloadManagerView />

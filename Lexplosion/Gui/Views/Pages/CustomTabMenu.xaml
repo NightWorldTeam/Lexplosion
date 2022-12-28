@@ -13,6 +13,7 @@
     <UserControl.Resources>
         <Style x:Key="TabRadioButton" TargetType="{x:Type RadioButton}">
             <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="IsTabStop" Value="False" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RadioButton}">
@@ -39,9 +40,47 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="False">
+                                <!--<Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="00:00:00.2" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="Tab"
+                                                Storyboard.TargetProperty="Opacity"
+                                                To="0.6"
+                                                Duration="00:00:00.5" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>-->
                                 <Setter TargetName="Border" Property="Visibility" Value="Collapsed" />
                                 <Setter TargetName="Tab" Property="Opacity" Value="0.6" />
                             </Trigger>
+
+                            <!--<Trigger Property="IsChecked" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="00:00:00.3" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="Tab"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0.6"
+                                                To="0.8"
+                                                Duration="00:00:00.5" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>-->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -50,9 +89,9 @@
 
         <DataTemplate DataType="{x:Type vm:CustomTab}">
             <RadioButton
-                Command="{Binding}"
                 GroupName="Tabs"
                 IsChecked="{Binding IsSelected}"
+                IsEnabled="{Binding IsEnable}"
                 Style="{StaticResource TabRadioButton}">
                 <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
                     <Viewbox
@@ -98,15 +137,19 @@
                     <!--  Custom Tab Panel  -->
                     <ItemsControl ItemsSource="{Binding Tabs}" />
                 </Border>
-
-                <Border
+                <ScrollViewer
                     Grid.Column="1"
-                    Padding="20,10,20,10"
-                    Background="#131313"
-                    BorderBrush="#202020"
-                    BorderThickness="1,0,0,0">
-                    <ContentControl Content="{Binding CurrentPage}" />
-                </Border>
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+
+                    <Border
+                        Padding="20,10,20,10"
+                        Background="#131313"
+                        BorderBrush="#202020"
+                        BorderThickness="1,0,0,0">
+                        <ContentControl Content="{Binding CurrentPage}" />
+                    </Border>
+                </ScrollViewer>
             </Grid>
         </Border>
     </Grid>

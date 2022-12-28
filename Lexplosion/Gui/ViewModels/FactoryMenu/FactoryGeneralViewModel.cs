@@ -1,9 +1,11 @@
 ﻿using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.ViewModels.ModalVMs;
+using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
@@ -155,6 +157,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => _switchModloaderType ?? (_switchModloaderType = new RelayCommand(obj =>
             {
+                Runtime.DebugWrite(obj);
                 ChangeModloaderType((ModloaderType)obj);
             }));
         }
@@ -207,7 +210,6 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         #endregion Commands
 
 
-
         public FactoryGeneralViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
@@ -250,6 +252,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private void ChangeModloaderType(ModloaderType modloaderType)
         {
             Model.ModloaderType = modloaderType;
+            IsModloaderSelected = Model.ModloaderType != ModloaderType.Vanilla;
 
             Lexplosion.Runtime.TaskRun(() =>
             {

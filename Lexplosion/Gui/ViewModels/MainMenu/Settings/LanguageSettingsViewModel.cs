@@ -1,13 +1,9 @@
 ﻿using Lexplosion.Global;
-using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 {
@@ -43,9 +39,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
                 var lang = (LanguageModel)obj;
                 GlobalData.GeneralSettings.LanguageId = _cultureInfo.Name;
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
-
-                _mainViewModel.ModalWindowVM.IsOpen = true;
-                _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(new FactoryGeneralViewModel(_mainViewModel));
 
                 var dialog = new DialogViewModel(_mainViewModel);
                 var message = ResourceGetter.GetString("changeLanguageWariningMessage");

@@ -189,7 +189,7 @@
     <Compile Include="Gui\ViewModels\ModalVMs\InstanceDownloadProcess.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\InstanceFile.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\InstanceTransferViewModel.cs" />
-    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ShareViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ShareInstanceViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\ModalWindowViewModel.cs" />
     <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
     <Compile Include="Gui\ViewModels\ShowCaseMenu\ChangelogViewModel.cs" />
@@ -267,6 +267,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\DevCurtainView.xaml.cs">
       <DependentUpon>DevCurtainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ModalViews\ModalShareInstanceView.xaml.cs">
+      <DependentUpon>ModalShareInstanceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\ShowCaseMenu\ChangelogView.xaml.cs">
       <DependentUpon>ChangelogView.xaml</DependentUpon>
@@ -572,6 +575,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\DevCurtainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ModalViews\ModalShareInstanceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

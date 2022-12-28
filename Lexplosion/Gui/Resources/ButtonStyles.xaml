@@ -482,4 +482,115 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="ToggleSwitch" TargetType="{x:Type ToggleButton}">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border
+                        x:Name="Border"
+                        Width="40"
+                        Height="20"
+                        Padding="3"
+                        Background="Transparent"
+                        BorderBrush="#7e8382"
+                        BorderThickness="2"
+                        CornerRadius="10">
+                        <Border
+                            x:Name="c"
+                            Width="10"
+                            Height="10"
+                            Margin="0"
+                            HorizontalAlignment="Left"
+                            Background="#7e8382"
+                            CornerRadius="12" />
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ThicknessAnimation
+                                            Storyboard.TargetName="c"
+                                            Storyboard.TargetProperty="Margin"
+                                            From="0"
+                                            To="20,0,0,0"
+                                            Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked">
+                                    <Storyboard>
+                                        <ThicknessAnimation
+                                            Storyboard.TargetName="c"
+                                            Storyboard.TargetProperty="Margin"
+                                            From="20,0,0,0"
+                                            To="0,0,0,0"
+                                            Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                            <Setter TargetName="c" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#7e8382" />
+                            <Setter TargetName="c" Property="Background" Value="#7e8382" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="HighlightRadioButton" TargetType="{x:Type RadioButton}">
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <Border
+                        x:Name="border"
+                        Height="30"
+                        Padding="7,0,7,0"
+                        Background="{DynamicResource SepSolidColorBrush}"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="7">
+                        <ContentPresenter
+                            x:Name="contentPresenter"
+                            Margin="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="border" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.1" Color="#167FFC" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrandSolidColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="contentPresenter" Property="Opacity" Value="0.6" />
+                            <Setter TargetName="border" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="Transparent" />
+                                </Setter.Value>
+                            </Setter>
+
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

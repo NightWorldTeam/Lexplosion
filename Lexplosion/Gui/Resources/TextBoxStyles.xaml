@@ -350,4 +350,29 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="DarkTextBox" TargetType="{x:Type TextBox}">
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+        <Setter Property="CaretBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border
+                        x:Name="Border"
+                        Padding="5"
+                        Background="{DynamicResource TextBoxSolidColorBrush}"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="0" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

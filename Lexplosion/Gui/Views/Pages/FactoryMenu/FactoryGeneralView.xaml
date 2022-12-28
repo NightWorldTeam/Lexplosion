@@ -6,211 +6,244 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion"
-    d:DesignHeight="420"
-    d:DesignWidth="360"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <!--  TextBlock  -->
-        <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="Padding" Value="5,0,0,0" />
-        </Style>
 
-        <Style x:Key="LogoButton" TargetType="{x:Type Button}">
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border x:Name="border" BorderThickness="3">
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="36" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                            <Border.Background>
-                                <SolidColorBrush Opacity="0.1" Color="#131313" />
-                            </Border.Background>
+            <!--  Header  -->
+            <Border
+                Height="36"
+                BorderBrush="#202020"
+                BorderThickness="0,0,0,1">
+                <Grid>
+                    <TextBlock
+                        FontSize="18"
+                        FontWeight="Medium"
+                        Foreground="White"
+                        Opacity="0.9"
+                        Text="Instance Properties" />
 
-                            <Border.BorderBrush>
-                                <SolidColorBrush Opacity="0.3" Color="Black" />
-                            </Border.BorderBrush>
+                    <Button
+                        Margin="0,3,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Command="{Binding CloseModalWindowCommand}"
+                        IsCancel="True"
+                        Style="{StaticResource IconicButton}">
+                        <Viewbox
+                            Width="20"
+                            Height="20"
+                            Opacity="0.9"
+                            Stretch="Fill">
+                            <Path
+                                Width="20"
+                                Height="20"
+                                Data="m6.021 15.854-1.854-1.875L8.125 10 4.167 6.021l1.854-1.896L10 8.104l3.979-3.979 1.854 1.896L11.875 10l3.958 3.979-1.854 1.875L10 11.875Z"
+                                Fill="White" />
+                        </Viewbox>
+                        <Button.ToolTip>
+                            <ToolTip
+                                Background="Black"
+                                BorderThickness="0"
+                                FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                                HorizontalOffset="15"
+                                Placement="Relative"
+                                VerticalOffset="-20">
+                                <TextBlock
+                                    MaxWidth="400"
+                                    Foreground="White"
+                                    Text="{DynamicResource close}"
+                                    TextWrapping="WrapWithOverflow" />
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                </Grid>
+            </Border>
 
-                            <Grid>
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
+            <StackPanel Grid.Row="1">
+                <Border
+                    Margin="0,10,0,10"
+                    Padding="5,0,5,10"
+                    BorderBrush="#202020"
+                    BorderThickness="0,0,0,1">
+                    <Grid>
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="White"
+                            Opacity="0.8"
+                            Text="Instance Name" />
 
-    <TabControl
-        Width="360"
-        Height="420"
-        BorderThickness="0"
-        ItemContainerStyle="{StaticResource ButtonItemStyle}"
-        Style="{StaticResource TabControlStyle}">
+                        <!--<TextBox
+                            Grid.Column="1"
+                            Width="200"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Opacity="0.8"
+                            Style="{StaticResource DarkTextBox}"
+                            Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />-->
 
-        <TabControl.Resources>
-            <Style TargetType="{x:Type TabPanel}">
-                <Setter Property="HorizontalAlignment" Value="Center" />
-            </Style>
-        </TabControl.Resources>
+                        <controls:PlaceholderTextBox
+                            Grid.Column="1"
+                            Width="200"
+                            HorizontalAlignment="Right"
+                            VerticalContentAlignment="Center"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Opacity="0.8"
+                            Placeholder="1.19.3 Vanilla"
+                            Style="{StaticResource DarkPlaceholderTextBox}"
+                            Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Border>
 
-        <TabItem BorderBrush="Transparent" Header="{DynamicResource creation}">
-            <Grid>
+                <Border
+                    Margin="0,0,0,10"
+                    Padding="5,0,5,10"
+                    BorderBrush="#202020"
+                    BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,10">
+                            <StackPanel>
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="White"
+                                    Opacity="0.8"
+                                    Text="Minecraft Version" />
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="330" />
-                    <RowDefinition Height="50" />
-                </Grid.RowDefinitions>
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="White"
+                                    Opacity="0.6"
+                                    Text="Show Snapshots" />
+                            </StackPanel>
 
-                <ScrollViewer x:Name="scroll">
-                    <StackPanel Margin="20" Orientation="Vertical">
-
-                        <!--  Name  -->
-                        <StackPanel
-                            Width="313"
-                            Margin="0,0,0,15"
-                            HorizontalAlignment="Left"
-                            Orientation="Vertical">
-                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource instanceName}" />
-                            <controls:PlaceholderTextBox
-                                Height="40"
-                                Margin="0,5,0,0"
-                                Padding="5,0,0,0"
-                                VerticalContentAlignment="Center"
-                                Background="#1f1f1f"
-                                BorderBrush="#121212"
-                                BorderThickness="1"
-                                FontSize="16"
-                                FontWeight="Regular"
+                            <ToggleButton
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding IsShowSnapshots}"
+                                Style="{StaticResource ToggleSwitch}" />
+                        </Grid>
+                        <Grid>
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                FontWeight="Medium"
                                 Foreground="White"
-                                Placeholder="{DynamicResource instanceName}"
-                                PlaceholderColor="White"
-                                PlaceholderFontSize="16"
-                                PlaceholderOpacity="0.8"
-                                Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
+                                Opacity="0.8"
+                                Text="{DynamicResource gameVersion}" />
 
-                        <!--  Minecraft Version  -->
-                        <StackPanel>
-                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource minecraftVersion}" />
                             <ComboBox
-                                Margin="0,5,0,0"
+                                Grid.Column="1"
+                                Width="200"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                FontSize="14"
+                                FontWeight="Medium"
                                 ItemsSource="{Binding GameVersions}"
-                                SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}" />
-                            <CheckBox
-                                Margin="5,10,0,5"
-                                HorizontalAlignment="Left"
-                                Content="Показывать снапшоты"
-                                IsChecked="{Binding IsShowSnapshots}" />
-                        </StackPanel>
+                                Opacity="0.8"
+                                SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource LighterDefaultComboBox}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
 
-                        <!--  Game Type  -->
-                        <StackPanel Margin="0,10,0,0" Orientation="Vertical">
-                            <TextBlock HorizontalAlignment="Left" Text="{DynamicResource gameType}" />
-                            <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
+                <Border
+                    Margin="0,0,0,10"
+                    Padding="5,0,5,10"
+                    BorderBrush="#202020"
+                    BorderThickness="0,0,0,1">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,0">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="White"
+                                Opacity="0.8"
+                                Text="Game Type" />
+
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                 <RadioButton
-                                    Checked="RadioButton_Checked"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Vanilla}"
                                     Content="Vanilla"
-                                    FontSize="16"
-                                    GroupName="GameType"
-                                    IsChecked="True" />
+                                    IsChecked="True"
+                                    Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
-                                    Margin="10,0,0,0"
-                                    Checked="RadioButton_Checked"
+                                    Margin="3,0,0,0"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Forge}"
                                     Content="Forge"
-                                    FontSize="16"
-                                    GroupName="GameType" />
-                            </StackPanel>
-
-                            <StackPanel Margin="5,10,0,0" Orientation="Horizontal">
+                                    Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
-                                    Checked="RadioButton_Checked"
+                                    Margin="3,0,0,0"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Fabric}"
                                     Content="Fabric"
-                                    FontSize="16 "
-                                    GroupName="GameType" />
-
+                                    Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
-                                    Margin="15,0,0,0"
-                                    Checked="RadioButton_Checked"
+                                    Margin="3,0,0,0"
                                     Command="{Binding SwitchModloaderType}"
                                     CommandParameter="{x:Static objects:ModloaderType.Quilt}"
                                     Content="Quilt"
-                                    FontSize="16 "
-                                    GroupName="GameType" />
+                                    Style="{StaticResource HighlightRadioButton}" />
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
 
-                        <StackPanel Margin="5,20,0,0" Visibility="{Binding IsOptifineSelected, Converter={StaticResource ConvertBoolToVisibility}}">
-                            <CheckBox
-                                Click="CheckBox_Click"
-                                Content="Установить оптифайн"
-                                IsChecked="{Binding IsOptifineInstalling}" />
+                        <Grid Margin="0,10,0,0" Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="White"
+                                Opacity="0.8"
+                                Text="{DynamicResource modloaderVersion}" />
+
                             <ComboBox
-                                Margin="0,10,0,0"
-                                ItemsSource="{Binding OptifineVersions}"
-                                SelectedValue="{Binding SelectedOptifineVersion, UpdateSourceTrigger=PropertyChanged}"
-                                Visibility="{Binding IsOptifineInstalling, Converter={StaticResource ConvertBoolToVisibility}}" />
-                        </StackPanel>
-
-                        <!--  Modloader Version and some  -->
-                        <StackPanel Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
-                            <StackPanel Margin="0,15,0,0">
-                                <TextBlock HorizontalAlignment="Left" Text="{DynamicResource modloaderVersion}" />
-                                <ComboBox
-                                    Margin="0,5,0,0"
-                                    ItemsSource="{Binding ModloaderVersions}"
-                                    SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-
-                            <!--<StackPanel Margin="0,15,0,0">
-                            -->
-                            <!--<CheckBox Content="{DynamicResource installOptifine}" />-->
-                            <!--
-                                <CheckBox
-                                    Margin="0,2,0,0"
-                                    Content="{DynamicResource installSodiumIris}"
-                                    IsChecked="{Binding HasSodiumInstall}" />
-                            </StackPanel>-->
-                        </StackPanel>
+                                Grid.Column="1"
+                                Width="200"
+                                HorizontalAlignment="Right"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                ItemsSource="{Binding ModloaderVersions}"
+                                Opacity="0.8"
+                                SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource LighterDefaultComboBox}" />
+                        </Grid>
                     </StackPanel>
-                </ScrollViewer>
+                </Border>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Margin="10,0,0,0"
-                        Command="{Binding ActionCommand}"
-                        Content="{DynamicResource create}"
-                        FontSize="14"
-                        IsDefault="True"
-                        Style="{StaticResource DefaultBrandColorButton}" />
+                <Border
+                    Margin="0,0,0,10"
+                    Padding="5,0,5,0"
+                    BorderBrush="#202020"
+                    BorderThickness="0,0,0,1"
+                    Visibility="Collapsed" />
 
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Margin="10,0,0,0"
-                        Command="{Binding CloseModalWindowCommand}"
-                        Content="{DynamicResource cancel}"
-                        FontSize="14"
-                        IsCancel="True"
-                        Style="{StaticResource DefaultCloseButton}" />
-                </StackPanel>
-            </Grid>
-        </TabItem>
-        <TabItem Header="{DynamicResource import}">
-            <ContentControl Margin="0" Content="{Binding ImportVM}" />
-        </TabItem>
-    </TabControl>
+                <Button
+                    Width="410"
+                    Height="30"
+                    Margin="0,80,0,0"
+                    Background="{DynamicResource SecondarySolidColorBrush}"
+                    Command="{Binding ActionCommand}"
+                    Content="Create Instance"
+                    FontWeight="Medium"
+                    IsDefault="True"
+                    IsEnabled="{Binding IsExportFinished}"
+                    Style="{StaticResource DefaultBrandColorButton}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>

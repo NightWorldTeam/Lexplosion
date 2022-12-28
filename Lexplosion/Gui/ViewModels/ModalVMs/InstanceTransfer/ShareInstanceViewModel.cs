@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexplosion.Gui.ViewModels.ModalVMs.InstanceTransfer
+namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public class ShareViewModel : VMBase
+    public class ShareInstanceViewModel : VMBase
     {
     }
 }

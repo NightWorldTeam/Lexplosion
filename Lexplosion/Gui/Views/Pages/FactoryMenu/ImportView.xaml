@@ -11,18 +11,18 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-
         <DataTemplate DataType="{x:Type source:ImportFile}">
             <Border
-                Width="280"
                 Height="50"
+                Margin="0,0,0,7"
+                Padding="3,7,3,7"
                 Background="#252525"
                 CornerRadius="5">
                 <Grid ShowGridLines="False">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
-                        <ColumnDefinition Width="230" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <Viewbox Width="35" Height="35">
@@ -34,11 +34,12 @@
 
                     <StackPanel
                         Grid.Column="1"
-                        Margin="0,5,0,0"
+                        Margin="5,0,0,0"
                         Orientation="Vertical">
                         <Grid>
                             <TextBlock
                                 HorizontalAlignment="Left"
+                                FontWeight="Medium"
                                 Foreground="White"
                                 Text="{Binding Name}" />
 
@@ -78,16 +79,17 @@
 
                         <!--  IsImportFinished - False  -->
                         <ProgressBar
-                            Height="5"
-                            Margin="0,8,10,0"
+                            Height="6"
+                            Margin="0,10,10,0"
                             Foreground="{DynamicResource BrandSolidColorBrush}"
                             IsIndeterminate="True"
                             Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
 
                         <!--  IsImportFinished - True  -->
                         <TextBlock
+                            Margin="0,2,10,0"
                             HorizontalAlignment="Left"
-                            FontSize="11"
+                            FontSize="12"
                             FontWeight="Medium"
                             Foreground="White"
                             Opacity="0.8"
@@ -98,122 +100,141 @@
                 </Grid>
             </Border>
         </DataTemplate>
-
     </UserControl.Resources>
 
-    <Grid Width="360">
-
+    <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="36" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="40" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer>
-            <StackPanel
-                MinHeight="250"
-                Margin="17,10,10,20"
-                HorizontalAlignment="Center"
-                ScrollViewer.VerticalScrollBarVisibility="Auto">
-
+        <!--  Header  -->
+        <Border
+            Height="36"
+            BorderBrush="#202020"
+            BorderThickness="0,0,0,1">
+            <Grid>
                 <TextBlock
-                    Margin="0,0,0,0"
-                    FontSize="20"
-                    Text="{DynamicResource uploadYourInstance}" />
+                    FontSize="18"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Opacity="0.9"
+                    Text="Import Properties" />
 
-                <TextBlock
-                    Margin="0,5,0,20"
-                    FontSize="14"
-                    Opacity="0.8"
-                    Text="{DynamicResource onlyZipAllowed}" />
-
-                <controls:DragDropBoard
-                    Width="310"
-                    Height="200"
-                    AllowDrop="True"
-                    Background="Transparent"
-                    ImportAction="{Binding ImportAction}">
-                    <Border
-                        Width="310"
-                        Height="200"
-                        AllowDrop="True"
-                        BorderThickness="1,1,1,1"
-                        CornerRadius="5">
-                        <Border.BorderBrush>
-                            <DrawingBrush
-                                TileMode="Tile"
-                                Viewport="0,0,8,8"
-                                ViewportUnits="Absolute">
-                                <DrawingBrush.Drawing>
-                                    <DrawingGroup>
-                                        <GeometryDrawing Brush="#505050">
-                                            <GeometryDrawing.Geometry>
-                                                <GeometryGroup>
-                                                    <RectangleGeometry Rect="0,0,50,50" />
-                                                    <RectangleGeometry Rect="50,50,50,50" />
-                                                </GeometryGroup>
-                                            </GeometryDrawing.Geometry>
-                                        </GeometryDrawing>
-                                    </DrawingGroup>
-                                </DrawingBrush.Drawing>
-                            </DrawingBrush>
-                        </Border.BorderBrush>
-
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <StackPanel>
-                                <Viewbox
-                                    Width="48"
-                                    Height="48"
-                                    Opacity="0.8">
-                                    <Path Data="M7 40q-1.15 0-2.075-.925Q4 38.15 4 37V11q0-1.15.925-2.075Q5.85 8 7 8h14l3 3h17q1.15 0 2.075.925Q44 12.85 44 14v23q0 1.15-.925 2.075Q42.15 40 41 40Zm25-3h9V14h-9v4.6h4.6v4.6H32v4.6h4.6v4.6H32ZM7 37h20.4v-4.6H32v-4.6h-4.6v-4.6H32v-4.6h-4.6V14h-4.65l-3-3H7v26Zm0-23v-3 26-23Z" Fill="White" />
-                                </Viewbox>
-
-                                <TextBlock
-                                    Margin="10"
-                                    FontSize="14"
-                                    Opacity="0.8"
-                                    Text="{DynamicResource dragToStartUpload}"
-                                    TextWrapping="WrapWithOverflow" />
-
-                                <Button
-                                    Width="80"
-                                    Height="30"
-                                    Margin="0,10,0,0"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Command="{Binding ImportCommand}"
-                                    Content="{DynamicResource review}"
-                                    Style="{StaticResource DefaultBrandColorButton}" />
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </controls:DragDropBoard>
-
-                <StackPanel Margin="0,10,0,0">
-                    <TextBlock
-                        Margin="0,10,0,0"
-                        Opacity="0.8"
-                        Text="{DynamicResource youNotUploadedAnythink}"
-                        Visibility="{Binding IsEmptyUploadedFiles, Converter={StaticResource ConvertBoolToVisibility}}" />
-
-                    <!--  Instance File  -->
-                    <ItemsControl ItemsSource="{Binding UploadedFiles}" Visibility="{Binding IsEmptyUploadedFiles, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
-                </StackPanel>
-            </StackPanel>
-        </ScrollViewer>
-
-        <Border Grid.Row="1" BorderThickness="0,1,0,0">
-
-            <Button
-                Width="80"
-                Height="30"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Command="{Binding FactoryGeneralViewModel.CloseModalWindowCommand}"
-                Content="{DynamicResource cancel}"
-                FontSize="16"
-                FontWeight="Normal"
-                IsTabStop="False"
-                Style="{StaticResource DefaultCloseButton}" />
+                <Button
+                    Margin="0,3,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Command="{Binding CloseModalWindowCommand}"
+                    IsCancel="True"
+                    Style="{StaticResource IconicButton}">
+                    <Viewbox
+                        Width="20"
+                        Height="20"
+                        Opacity="0.9"
+                        Stretch="Fill">
+                        <Path
+                            Width="20"
+                            Height="20"
+                            Data="m6.021 15.854-1.854-1.875L8.125 10 4.167 6.021l1.854-1.896L10 8.104l3.979-3.979 1.854 1.896L11.875 10l3.958 3.979-1.854 1.875L10 11.875Z"
+                            Fill="White" />
+                    </Viewbox>
+                    <Button.ToolTip>
+                        <ToolTip
+                            Background="Black"
+                            BorderThickness="0"
+                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                            HorizontalOffset="15"
+                            Placement="Relative"
+                            VerticalOffset="-20">
+                            <TextBlock
+                                MaxWidth="400"
+                                Foreground="White"
+                                Text="{DynamicResource close}"
+                                TextWrapping="WrapWithOverflow" />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+            </Grid>
         </Border>
+
+        <StackPanel Grid.Row="1">
+            <Border
+                Margin="0,10,0,10"
+                Padding="5,0,5,10"
+                BorderBrush="#202020"
+                BorderThickness="0,0,0,1">
+                <StackPanel>
+
+                    <controls:DragDropBoard
+                        Width="410"
+                        Height="250"
+                        AllowDrop="True"
+                        Background="Transparent"
+                        ImportAction="{Binding ImportAction}">
+                        <Border
+                            Width="400"
+                            Height="250"
+                            AllowDrop="True"
+                            BorderThickness="2,2,2,2"
+                            CornerRadius="5">
+                            <Border.BorderBrush>
+                                <DrawingBrush
+                                    TileMode="Tile"
+                                    Viewport="0,0,12,13"
+                                    ViewportUnits="Absolute">
+                                    <DrawingBrush.Drawing>
+                                        <DrawingGroup>
+                                            <GeometryDrawing Brush="{DynamicResource BrandSolidColorBrush}">
+                                                <GeometryDrawing.Geometry>
+                                                    <GeometryGroup>
+                                                        <RectangleGeometry Rect="0,0,50,50" />
+                                                        <RectangleGeometry Rect="50,50,50,50" />
+                                                    </GeometryGroup>
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                        </DrawingGroup>
+                                    </DrawingBrush.Drawing>
+                                </DrawingBrush>
+                            </Border.BorderBrush>
+
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel>
+                                    <Viewbox
+                                        Width="48"
+                                        Height="48"
+                                        Opacity="0.8">
+                                        <Path Data="M7 40q-1.15 0-2.075-.925Q4 38.15 4 37V11q0-1.15.925-2.075Q5.85 8 7 8h14l3 3h17q1.15 0 2.075.925Q44 12.85 44 14v23q0 1.15-.925 2.075Q42.15 40 41 40Zm25-3h9V14h-9v4.6h4.6v4.6H32v4.6h4.6v4.6H32ZM7 37h20.4v-4.6H32v-4.6h-4.6v-4.6H32v-4.6h-4.6V14h-4.65l-3-3H7v26Zm0-23v-3 26-23Z" Fill="White" />
+                                    </Viewbox>
+
+                                    <TextBlock
+                                        Width="250"
+                                        Margin="10"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="White"
+                                        Opacity="0.8"
+                                        Text="{DynamicResource dragToStartUpload}"
+                                        TextAlignment="Center"
+                                        TextWrapping="WrapWithOverflow" />
+
+                                    <Button
+                                        Width="80"
+                                        Height="30"
+                                        Margin="0,10,0,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding ImportCommand}"
+                                        Content="{DynamicResource review}"
+                                        Style="{StaticResource DefaultBrandColorButton}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </controls:DragDropBoard>
+                </StackPanel>
+            </Border>
+
+            <ItemsControl ItemsSource="{Binding UploadedFiles}" Visibility="{Binding IsEmptyUploadedFiles, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+        </StackPanel>
     </Grid>
 </UserControl>

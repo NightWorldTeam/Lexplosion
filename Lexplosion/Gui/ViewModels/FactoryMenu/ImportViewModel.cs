@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.ViewModels.FactoryMenu;
+﻿using Lexplosion.Gui.ModalWindow;
+using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
@@ -47,7 +48,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         }
     }
 
-    public sealed class ImportViewModel : VMBase
+    public sealed class ImportViewModel : ModalVMBase
     {
         private readonly MainViewModel _mainViewModel;
         public FactoryGeneralViewModel FactoryGeneralViewModel { get; }
@@ -94,6 +95,19 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             get => _importCommand ?? (_importCommand ?? new RelayCommand(obj =>
             {
                 ShowOpenFileDialogForImport();
+            }));
+        }
+
+        private RelayCommand _closeModalWindowCommand;
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
+        /// Отменяет экспорт, скрывает popup меню.
+        /// </summary>
+        public override RelayCommand CloseModalWindowCommand
+        {
+            get => _closeModalWindowCommand ?? (_closeModalWindowCommand = new RelayCommand(obj =>
+            {
+                _mainViewModel.ModalWindowVM.IsOpen = false;
             }));
         }
 
@@ -164,6 +178,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             };
 
             UploadedFiles = new ObservableCollection<ImportFile>();
+            //{
+            //    new ImportFile(this, "C:\\Users\\HelJo\\Downloads\\git-lfs-windows-v3.3.0.exe")
+            //};
+            //UploadedFiles[0].IsImportFinished = true;
         }
 
 

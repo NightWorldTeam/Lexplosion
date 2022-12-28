@@ -24,23 +24,23 @@ namespace Lexplosion.Gui.Views.Pages.FactoryMenu
             this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
         }
 
-        private void RadioButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ScrollBottom();
-        }
+        //private void RadioButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        //{
+        //   //ScrollBottom();
+        //}
 
-        private void CheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            ScrollBottom();
-        }
+        //private void CheckBox_Click(object sender, RoutedEventArgs e)
+        //{
+        //    //ScrollBottom();
+        //}
 
-        private void ScrollBottom()
-        {
-            try
-            {
-                scroll.ScrollToBottom();
-            }
-            catch { }
-        }
+        //private void ScrollBottom()
+        //{
+        //    try
+        //    {
+        //        scroll.ScrollToBottom();
+        //    }
+        //    catch { }
+        //}
     }
 }
