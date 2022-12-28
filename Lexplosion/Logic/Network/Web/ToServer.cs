@@ -341,7 +341,7 @@ namespace Lexplosion.Logic.Network
                         else
                         {
                             response.Status = AuthCode.NoConnect;
-                            return response; ;
+                            return response;
                         }
                     }
                 }

@@ -39,14 +39,22 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
                     {
                         From = 0.0,
                         To = 1.0,
-                        Duration = TimeSpan.FromSeconds(animationTime)
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseIn
+                        }
                     };
 
                     ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
                     {
                         From = new Thickness(0, 10, 0, -40),
                         To = new Thickness(0, 10, 0, 0),
-                        Duration = TimeSpan.FromSeconds(animationTime)
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseIn
+                        }
                     };
 
                     UpButton.BeginAnimation(FrameworkElement.MarginProperty, thicknessAnimation);
@@ -63,14 +71,22 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
                     {
                         From = 1.0,
                         To = 0.0,
-                        Duration = TimeSpan.FromSeconds(animationTime)
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseOut
+                        }
                     };
 
                     ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
                     {
                         From = new Thickness(0, 10, 0, 0),
                         To = new Thickness(0, 10, 0, -40),
-                        Duration = TimeSpan.FromSeconds(animationTime)
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseOut
+                        }
                     };
 
                     thicknessAnimation.Completed += delegate (object sender, EventArgs e)
