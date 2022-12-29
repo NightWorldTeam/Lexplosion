@@ -85,7 +85,7 @@ namespace Lexplosion.Logic.Network
             Socket listener = (Socket)data.AsyncState;
 
             // если майкнрафт клиент уже подключен то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
-            if (IsConnected)
+            if (IsConnected || !AvailableServers.ContainsKey(listener))
             {
                 AcceptingBlock.Release();
                 Socket sock = listener.EndAccept(data);
