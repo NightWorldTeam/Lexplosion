@@ -63,8 +63,6 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
             }
             else
             {
-                Runtime.DebugWrite(UpButton.Visibility.ToString());
-
                 if (UpButton.Visibility == Visibility.Visible)
                 {
                     DoubleAnimation doubleAnimation = new DoubleAnimation()

@@ -19,14 +19,13 @@ namespace Lexplosion.Gui.Views.Pages.FactoryMenu
             {
                 From = 0.0,
                 To = 1.0,
-                Duration = TimeSpan.FromSeconds(0.4)
+                Duration = TimeSpan.FromSeconds(0.3)
             };
             this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void DlcContainer_Loaded(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }
