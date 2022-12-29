@@ -184,7 +184,7 @@
                         FontSize="16"
                         FontWeight="Medium"
                         Foreground="#ddd"
-                        Text="{DynamicResource memory}" />
+                        Text="{DynamicResource ram}" />
 
                     <TextBox
                         Grid.Row="1"
@@ -262,7 +262,7 @@
                         FontSize="16"
                         FontWeight="Medium"
                         Foreground="#ddd"
-                        Text="{DynamicResource javapath}" />
+                        Text="{DynamicResource javaPath}" />
 
                     <Grid Grid.Row="1">
 

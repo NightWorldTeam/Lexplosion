@@ -137,7 +137,16 @@
                     Margin="10,0,0,10"
                     Style="{StaticResource DLCInfo}"
                     Text="{Binding Name}"
-                    TextWrapping="WrapWithOverflow" />
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap">
+                    <TextBlock.ToolTip>
+                        <ToolTip
+                            Content="{Binding Name}"
+                            HorizontalOffset="0"
+                            Style="{StaticResource CustomTipTool}"
+                            VerticalOffset="-27" />
+                    </TextBlock.ToolTip>
+                </TextBlock>
 
                 <!--  File Name  -->
                 <TextBlock
@@ -308,7 +317,7 @@
                     <TabControl.ContentTemplate>
                         <!--  this is the body of the TabItem template  -->
                         <DataTemplate>
-                            <StackPanel>
+                            <StackPanel x:Name="DlcContainer" Loaded="DlcContainer_Loaded">
                                 <ListBox
                                     ItemsSource="{Binding Content.CurrentAddonModel.InstalledAddons}"
                                     Tag="{Binding BindsDirectlyToSource=True}"
