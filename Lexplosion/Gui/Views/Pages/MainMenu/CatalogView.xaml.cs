@@ -10,7 +10,6 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
     /// </summary>
     public partial class CatalogView : UserControl
     {
-
         public CatalogView()
         {
             InitializeComponent();
@@ -27,14 +26,75 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
 
         private void ContainerPage_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            const double animationTime = 0.3;
+
             var viewer = (ScrollViewer)sender;
             if (viewer.VerticalOffset >= 96)
             {
-                UpButton.Visibility = Visibility.Visible;
+                if (UpButton.Visibility != Visibility.Visible)
+                {
+                    UpButton.Visibility = Visibility.Visible;
+
+                    DoubleAnimation doubleAnimation = new DoubleAnimation()
+                    {
+                        From = 0.0,
+                        To = 1.0,
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseIn
+                        }
+                    };
+
+                    ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                    {
+                        From = new Thickness(0, 0, 20, -20),
+                        To = new Thickness(0, 0, 20, 20),
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseIn
+                        }
+                    };
+
+                    UpButton.BeginAnimation(FrameworkElement.MarginProperty, thicknessAnimation);
+                    UpButton.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+                }
             }
-            else 
+            else
             {
-                UpButton.Visibility = Visibility.Collapsed;
+                if (UpButton.Visibility == Visibility.Visible)
+                {
+                    DoubleAnimation doubleAnimation = new DoubleAnimation()
+                    {
+                        From = 1.0,
+                        To = 0.0,
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseOut
+                        }
+                    };
+
+                    ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                    {
+                        From = new Thickness(0, 0, 20, 20),
+                        To = new Thickness(0, 0, 20, -20),
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseOut
+                        }
+                    };
+
+                    thicknessAnimation.Completed += delegate (object sender, EventArgs e)
+                    {
+                        UpButton.Visibility = Visibility.Collapsed;
+                    };
+
+                    UpButton.BeginAnimation(FrameworkElement.MarginProperty, thicknessAnimation);
+                    UpButton.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+                }
             }
 
             try

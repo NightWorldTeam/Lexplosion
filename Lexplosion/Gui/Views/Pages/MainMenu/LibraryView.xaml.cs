@@ -48,7 +48,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
 
                     ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
                     {
-                        From = new Thickness(0, 10, 0, -40),
+                        From = new Thickness(0, 10, 0, -50),
                         To = new Thickness(0, 10, 0, 0),
                         Duration = TimeSpan.FromSeconds(animationTime),
                         EasingFunction = new SineEase()
@@ -79,7 +79,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
                     ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
                     {
                         From = new Thickness(0, 10, 0, 0),
-                        To = new Thickness(0, 10, 0, -40),
+                        To = new Thickness(0, 10, 0, -50),
                         Duration = TimeSpan.FromSeconds(animationTime),
                         EasingFunction = new SineEase()
                         {
