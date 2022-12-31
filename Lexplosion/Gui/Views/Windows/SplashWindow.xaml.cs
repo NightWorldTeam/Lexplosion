@@ -19,6 +19,8 @@ namespace Lexplosion.Gui.Views.Windows
         {
             InitializeComponent();
             MouseDown += delegate { DragMove(); };
+
+            this.LoadingBoard.Placeholder = loadingPlaceholder;
         }
 
         public void ChangeLoadingBoardPlaceholder(bool isUpdate = false)

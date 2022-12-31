@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -6,7 +7,7 @@ namespace Lexplosion.Logic.Network.WebSockets
 {
     /// <summary>
     /// Клиент Веб-сокетов. Эта хуяня нужна только чтобы отправлять данные на WebSocketServer.
-    /// Устноавить нормальное вебсокет соединение особо не выйдет, ведь они оба рботают подобно html соединению.
+    /// Устноавить нормальное вебсокет соединение особо не выйдет, ведь они оба работают подобно html соединению.
     /// </summary>
     class WebSocketClient : WebSocket
     {
@@ -17,6 +18,7 @@ namespace Lexplosion.Logic.Network.WebSockets
         {
             _host = host;
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.ReceiveTimeout = 500;
         }
 
         public bool Connect()
@@ -81,7 +83,7 @@ namespace Lexplosion.Logic.Network.WebSockets
             return false;
         }
 
-        public void SendData(string data)
+        public byte[] SendData(string data)
         {
             try
             {
@@ -90,14 +92,17 @@ namespace Lexplosion.Logic.Network.WebSockets
                     byte[] frame = EncodeFrame(Encoding.UTF8.GetBytes(data));
                     _socket.Send(frame);
 
-                    _socket.ReceiveTimeout = 5000;
-                    byte[] _ = new byte[1];
-                    _socket.Receive(_);
+                    byte[] recievedData = new byte[1024 * 1024];
+                    int dataCount = _socket.Receive(recievedData);
                     _socket.Close();
+
+                    Array.Resize(ref recievedData, dataCount);
+                    return DecodeFrame(recievedData);
                 }
             }
             catch { }
 
+            return null;
         }
     }
 }

@@ -182,6 +182,8 @@ namespace Lexplosion.Logic.Network
                 Server.DisconnectedUser += DisconnectedUser;
                 StateChanged?.Invoke(OnlineGameStatus.OpenWorld, "");
 
+                try { InformingThread.Abort(); } catch { }
+
                 while (true)
                 {
                     // проверяем имеется ли этот порт. Если имеется - значит сервер запущен

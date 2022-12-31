@@ -84,17 +84,16 @@ namespace Lexplosion.Logic.Network
             return null;
         }
 
-        public static void StartCommandServer()
+        public static bool StartCommandServer()
         {
             if (HttpListener.IsSupported)
             {
-                Lexplosion.Runtime.TaskRun(delegate ()
-                {
-                    _server = new WebSocketServer();
-                    _server.ReceivedData += CommandHandler;
-                    _server.Run(LaunсherSettings.CommandServerPort);
-                });
+                _server = new WebSocketServer();
+                _server.ReceivedData += CommandHandler;
+                return _server.Run(LaunсherSettings.CommandServerPort);
             }
+
+            return false;
         }
 
         public static void StopCommandServer()

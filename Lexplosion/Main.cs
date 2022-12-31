@@ -8,6 +8,7 @@ using System.Threading;
 using System.IO.Compression;
 using System.Windows.Media;
 using System.Collections.Generic;
+using System.Text;
 using Hardcodet.Wpf.TaskbarNotification;
 using DiscordRPC;
 using Lexplosion.Properties;
@@ -22,7 +23,6 @@ using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using ColorConverter = System.Windows.Media.ColorConverter;
-using System.Globalization;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -80,6 +80,43 @@ namespace Lexplosion
             app.Run(_splashWindow);
         }
 
+        private static void SetMainWindow()
+        {
+            _nofityIcon = (TaskbarIcon)app.FindResource("NofityIcon");
+            app.MainWindow.Topmost = true;
+
+            var mainWindow = new MainWindow()
+            {
+                Left = app.MainWindow.Left - 322,
+                Top = app.MainWindow.Top - 89
+            };
+
+            leftPos = mainWindow.Left;
+            topPos = mainWindow.Top;
+
+            mainWindow.Show();
+            ((SplashWindow)app.MainWindow).SmoothClosing();
+            app.MainWindow = mainWindow;
+        }
+
+        private static Mutex? InstanceCheckMutex;
+
+        /// <summary>
+        /// Проверяет запущен ли уже лаунчер.
+        /// </summary>
+        /// <returns>true - нет запущенного экземпляра. false - есть</returns>
+        private static bool InstanceCheck()
+        {
+            bool isNew;
+            var mutex = new Mutex(true, "NW-Lexplosion_Is_launched", out isNew);
+            if (isNew)
+                InstanceCheckMutex = mutex;
+            else
+                mutex.Dispose();
+
+            return isNew;
+        }
+
         private static void InitializedSystem()
         {
             //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
@@ -89,18 +126,6 @@ namespace Lexplosion
                 DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
             };
 
-            CurrentProcess = Process.GetCurrentProcess();
-
-            // Проверяем запущен ли лаунчер. если порт сервера команд занят - значит лаунчер уже запущен.
-            if (!SocketExtensions.TcpPortIsAvailable(LaunсherSettings.CommandServerPort))
-            {
-                WebSocketClient ws = new WebSocketClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 54352));
-                //отправляем уже запущщеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается
-                ws.SendData("$lexplosionOpened:" + CurrentProcess.Id);
-
-                CurrentProcess.Kill(); //стопаем этот процесс
-            }
-
             // инициализация
             GlobalData.InitSetting();
             WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
@@ -108,7 +133,18 @@ namespace Lexplosion
             // Выставляем язык
             ChangeCurrentLanguage();
             // Встраеваем стили
-            StylesInit();
+            app.Dispatcher.Invoke(StylesInit);
+
+            CurrentProcess = Process.GetCurrentProcess();
+
+            // Проверяем запущен ли лаунчер.
+            if (!InstanceCheck())
+            {
+                WebSocketClient ws = new WebSocketClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 54352));
+                //отправляем уже запущщеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается
+                ws.SendData("$lexplosionOpened:" + CurrentProcess.Id);
+                CurrentProcess.Kill(); //стопаем этот процесс
+            }
 
             int version = ToServer.CheckLauncherUpdates();
             if (version != -1)
@@ -121,7 +157,21 @@ namespace Lexplosion
             }
 
             InstanceClient.DefineInstalledInstances();
-            CommandReceiver.StartCommandServer();
+
+            bool isStarted = CommandReceiver.StartCommandServer();
+            if (!isStarted)
+            {
+                TaskRun(() =>
+                {
+                    bool isWorld;
+                    do
+                    {
+                        isWorld = !CommandReceiver.StartCommandServer();
+                        Thread.Sleep(2000);
+                    }
+                    while (isWorld);
+                });
+            }
 
             var discordClient = InitDiscordApp();
 
@@ -178,25 +228,7 @@ namespace Lexplosion
 
             Thread.Sleep(800);
 
-            app.Dispatcher.Invoke(() =>
-            {
-                _nofityIcon = (TaskbarIcon)app.FindResource("NofityIcon");
-                app.MainWindow.Topmost = true;
-
-                var mainWindow = new MainWindow()
-                {
-                    Left = app.MainWindow.Left - 322,
-                    Top = app.MainWindow.Top - 89
-                };
-
-                leftPos = mainWindow.Left;
-                topPos = mainWindow.Top;
-
-                mainWindow.Show();
-                ((SplashWindow)app.MainWindow).SmoothClosing();
-                app.MainWindow = mainWindow;
-            });
-
+            app.Dispatcher.Invoke(SetMainWindow);
             _splashWindow = null;
         }
 

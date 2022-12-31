@@ -24,15 +24,20 @@ namespace Lexplosion.Logic.Network.WebSockets
         /// </summary>
         public event ReceivedDataDelegate ReceivedData;
 
-        public void Run(int port)
+        public bool Run(int port)
         {
             try
             {
                 serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
                 serverSocket.Listen(1);
                 serverSocket.BeginAccept(null, 0, OnAccept, null);
+
+                return true;
             }
-            catch { }
+            catch 
+            {
+                return false;
+            }
         }
 
         public void Stop()
