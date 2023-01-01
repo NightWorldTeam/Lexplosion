@@ -182,8 +182,6 @@ namespace Lexplosion.Logic.Network
                 Server.DisconnectedUser += DisconnectedUser;
                 StateChanged?.Invoke(OnlineGameStatus.OpenWorld, "");
 
-                try { InformingThread.Abort(); } catch { }
-
                 while (true)
                 {
                     // проверяем имеется ли этот порт. Если имеется - значит сервер запущен
@@ -197,6 +195,7 @@ namespace Lexplosion.Logic.Network
 
                 StateChanged?.Invoke(OnlineGameStatus.None, "");
                 waitingInforming.Set(); // высвобождаем поток InformingThread чтобы он не ждал лишнее время
+                try { InformingThread.Abort(); } catch { }
                 Server.StopWork();
             }
         }
