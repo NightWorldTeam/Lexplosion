@@ -67,7 +67,7 @@ namespace Lexplosion.Logic.Network
                     AvailableServers[sock] = server_uuid;
 
                     ports[server_uuid] = ((IPEndPoint)sock.LocalEndPoint).Port; //добавояем порт сокета в список
-                    sock.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), sock); // запусакаем асинхронный асепт
+                    sock.BeginAccept(null, 0, AcceptHandler, sock); // запусакаем асинхронный асепт
                 }
             }
 
@@ -84,14 +84,27 @@ namespace Lexplosion.Logic.Network
 
             Socket listener = (Socket)data.AsyncState;
 
-            // если майкнрафт клиент уже подключен то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
-            if (IsConnected || !AvailableServers.ContainsKey(listener))
+            // если майкнрафт клиент уже подключен или же сокет закрыт то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
+            bool socketClosed;
+            try
+            {
+                socketClosed = listener.Poll(50, SelectMode.SelectRead) && listener.Available == 0;
+            }
+            catch
+            {
+                socketClosed = true;
+            }
+
+            if (IsConnected || socketClosed || !AvailableServers.ContainsKey(listener))
             {
                 AcceptingBlock.Release();
-                Socket sock = listener.EndAccept(data);
-                sock.Close();
+                if (!socketClosed)
+                {
+                    Socket sock = listener.EndAccept(data);
+                    sock.Close();
+                    listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
+                }
                 Runtime.DebugWrite("AcceptHandler1.1");
-                listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
 
                 return;
             }
@@ -117,6 +130,7 @@ namespace Lexplosion.Logic.Network
                 {
                     if (AvailableServers[sock] != serverUUID)
                     {
+                        Runtime.DebugWrite("Remove socket ");
                         AvailableServers.Remove(sock);
                         sock.Close();
                     }
