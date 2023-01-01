@@ -416,186 +416,192 @@ namespace Lexplosion.Logic.Network.SMP
             while (IsConnected)
             {
                 sendingCycleDetector.Reset();
-                // ждём появления сообщений в буфере
-                while (sendingBuffer.Count == 0)
+
+                try
                 {
-                    waitSendData.WaitOne();
-                }
-
-                sendBlock.WaitOne();
-
-                var packages = new SortedDictionary<ushort, byte[]>();
-                sendingBuffer.TryPeek(out List<Package> packagesHeap); // получаем кучу пакетов
-
-                int lastPackageId_ = packagesHeap.Count + sendingPointer - 1;
-                ushort lastPackageId = (ushort)(lastPackageId_ > 65535 ? 65535 : lastPackageId_); // id последнего пакета в этом сегменте отправки
-                int i = 0;
-                // проходимся по всем пакетам
-                foreach (Package packageInfo in packagesHeap)
-                {
-                    byte[] package = new byte[packageInfo.Size];
-
-                    byte[] id = BitConverter.GetBytes(sendingPointer);
-                    package[HeaderPositions.Code] = 0x03; //код пакета
-                    package[HeaderPositions.Id_1] = id[0]; //первая часть его айдишника
-                    package[HeaderPositions.Id_2] = id[1]; //вторая
-
-                    id = BitConverter.GetBytes(lastPackageId);
-                    package[HeaderPositions.LastId_1] = id[0]; // первая часть id последнего пакета
-                    package[HeaderPositions.LastId_2] = id[1]; // вторая часть
-                    package[HeaderPositions.AttemptsCounts] = 0; // этот байт отвечает за номер попытки отправки
-
-                    int offset = HeaderPositions.FirstDataByte;
-                    int lastFlagIndex = 0;
-                    // проходимся по каждому сегменту
-                    foreach (byte[] payload in packageInfo.Segments)
+                    // ждём появления сообщений в буфере
+                    while (sendingBuffer.Count == 0)
                     {
-                        package[offset] = DataFlags.None; // это флаг данного сегмента данных. 0 - значит нихуя не делать
-                        lastFlagIndex = offset;
-
-                        int payloadSize = payload.Length;
-                        byte[] size = BitConverter.GetBytes(payloadSize);
-                        package[offset + 1] = size[0]; // первая часть размера сегмента данных
-                        package[offset + 2] = size[1]; // вторая часть
-                        offset += 3;
-
-                        Array.Copy(payload, 0, package, offset, payloadSize);
-                        offset += payloadSize;
+                        waitSendData.WaitOne();
                     }
 
-                    if (!packageInfo.lastSegmentIsFull) // последний сегмент данных не полный и надо поставить флаг что его необходимо склеить
+                    sendBlock.WaitOne();
+
+                    var packages = new SortedDictionary<ushort, byte[]>();
+                    sendingBuffer.TryPeek(out List<Package> packagesHeap); // получаем кучу пакетов
+
+                    int lastPackageId_ = packagesHeap.Count + sendingPointer - 1;
+                    ushort lastPackageId = (ushort)(lastPackageId_ > 65535 ? 65535 : lastPackageId_); // id последнего пакета в этом сегменте отправки
+                    int i = 0;
+                    // проходимся по всем пакетам
+                    foreach (Package packageInfo in packagesHeap)
                     {
-                        package[lastFlagIndex] = DataFlags.NotFull;
-                    }
+                        byte[] package = new byte[packageInfo.Size];
 
-                    packages[sendingPointer] = package;
-                    sendingPointer++;
-                    i++;
+                        byte[] id = BitConverter.GetBytes(sendingPointer);
+                        package[HeaderPositions.Code] = 0x03; //код пакета
+                        package[HeaderPositions.Id_1] = id[0]; //первая часть его айдишника
+                        package[HeaderPositions.Id_2] = id[1]; //вторая
 
-                    if (sendingPointer == 0)
-                    {
-                        break;
-                    }
-                }
+                        id = BitConverter.GetBytes(lastPackageId);
+                        package[HeaderPositions.LastId_1] = id[0]; // первая часть id последнего пакета
+                        package[HeaderPositions.LastId_2] = id[1]; // вторая часть
+                        package[HeaderPositions.AttemptsCounts] = 0; // этот байт отвечает за номер попытки отправки
 
-                if (packagesHeap.Count == i) // если все пакеты из кучи были поставлены на отправку, то убираем эту кучу из буфера
-                {
-                    sendingBuffer.TryDequeue(out _);
-                }
-                else // если нет, то тогда убираем из кучи поставленные на отправку пакеты. Оставшиеся пакеты отправим на следующей итерации
-                {
-                    for (int j = 0; j < i; j++)
-                    {
-                        packagesHeap.RemoveAt(0);
-                    }
-                }
-
-                sendBlock.Release();
-
-                repeatDeliveryBlock.WaitOne();
-                lastPackage = lastPackageId;
-                deliveryWait.Reset();
-                repeatDeliveryBlock.Release();
-
-                byte attemptCount = 0;
-                int delay = (int)(_rtt + _rtt / 10);
-                long lastTime = 0;
-                bool repeated = false;
-
-                // цикл отправки
-                while (IsConnected && attemptCount < 15)
-                {
-#if DEBUG
-                    if (attemptCount > 0)
-                    {
-                        Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt);
-                    }
-#endif
-
-                    foreach (ushort id in packages.Keys)
-                    {
-                        packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
-                        socket.Send(packages[id], packages[id].Length);
-                    }
-
-                    _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                    if (attemptCount == 0 || repeated)
-                    {
-                        lastTime = _lastTime;
-                        repeated = false;
-                    }
-
-                Begin:
-                    if (!deliveryWait.WaitOne(delay)) // истекло время ожидания
-                    {
-                        delay *= _delayMultipliers[attemptCount];
-                        attemptCount++;
-                    }
-                    else // либо пришло подтверждение доставки, либо пришел запрос на повторную доставку
-                    {
-                        repeatDeliveryBlock.WaitOne();
-                        if (repeatDeliveryList == null) // пакеты удачно доставлены
+                        int offset = HeaderPositions.FirstDataByte;
+                        int lastFlagIndex = 0;
+                        // проходимся по каждому сегменту
+                        foreach (byte[] payload in packageInfo.Segments)
                         {
-                            //рассчитываем задержку
-                            long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
-                            _rttCalculator.AddDelta(deltaTime);
-                            _rtt = _rttCalculator.GetRtt;
+                            package[offset] = DataFlags.None; // это флаг данного сегмента данных. 0 - значит нихуя не делать
+                            lastFlagIndex = offset;
 
-                            repeatDeliveryBlock.Release();
+                            int payloadSize = payload.Length;
+                            byte[] size = BitConverter.GetBytes(payloadSize);
+                            package[offset + 1] = size[0]; // первая часть размера сегмента данных
+                            package[offset + 2] = size[1]; // вторая часть
+                            offset += 3;
+
+                            Array.Copy(payload, 0, package, offset, payloadSize);
+                            offset += payloadSize;
+                        }
+
+                        if (!packageInfo.lastSegmentIsFull) // последний сегмент данных не полный и надо поставить флаг что его необходимо склеить
+                        {
+                            package[lastFlagIndex] = DataFlags.NotFull;
+                        }
+
+                        packages[sendingPointer] = package;
+                        sendingPointer++;
+                        i++;
+
+                        if (sendingPointer == 0)
+                        {
                             break;
                         }
-                        else // хост просит повторить отправку некоторых пакетов
+                    }
+
+                    if (packagesHeap.Count == i) // если все пакеты из кучи были поставлены на отправку, то убираем эту кучу из буфера
+                    {
+                        sendingBuffer.TryDequeue(out _);
+                    }
+                    else // если нет, то тогда убираем из кучи поставленные на отправку пакеты. Оставшиеся пакеты отправим на следующей итерации
+                    {
+                        for (int j = 0; j < i; j++)
                         {
-                            // оставляем в списке только те айдишники, которые надо повторить
-                            SortedDictionary<ushort, byte[]> packages_ = new SortedDictionary<ushort, byte[]>();
-                            bool isValid = true;
-                            ushort maxId = 0;
-                            foreach (ushort repeatId in repeatDeliveryList)
+                            packagesHeap.RemoveAt(0);
+                        }
+                    }
+
+                    sendBlock.Release();
+
+                    repeatDeliveryBlock.WaitOne();
+                    lastPackage = lastPackageId;
+                    deliveryWait.Reset();
+                    repeatDeliveryBlock.Release();
+
+                    byte attemptCount = 0;
+                    int delay = (int)(_rtt + _rtt / 10);
+                    long lastTime = 0;
+                    bool repeated = false;
+
+                    // цикл отправки
+                    while (IsConnected && attemptCount < 15)
+                    {
+#if DEBUG
+                        if (attemptCount > 0)
+                        {
+                            Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt);
+                        }
+#endif
+
+                        foreach (ushort id in packages.Keys)
+                        {
+                            packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
+                            socket.Send(packages[id], packages[id].Length);
+                        }
+
+                        _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                        if (attemptCount == 0 || repeated)
+                        {
+                            lastTime = _lastTime;
+                            repeated = false;
+                        }
+
+                    Begin:
+                        if (!deliveryWait.WaitOne(delay)) // истекло время ожидания
+                        {
+                            delay *= _delayMultipliers[attemptCount];
+                            attemptCount++;
+                        }
+                        else // либо пришло подтверждение доставки, либо пришел запрос на повторную доставку
+                        {
+                            repeatDeliveryBlock.WaitOne();
+                            if (repeatDeliveryList == null) // пакеты удачно доставлены
                             {
-                                if (packages.ContainsKey(repeatId))
+                                //рассчитываем задержку
+                                long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
+                                _rttCalculator.AddDelta(deltaTime);
+                                _rtt = _rttCalculator.GetRtt;
+
+                                repeatDeliveryBlock.Release();
+                                break;
+                            }
+                            else // хост просит повторить отправку некоторых пакетов
+                            {
+                                // оставляем в списке только те айдишники, которые надо повторить
+                                SortedDictionary<ushort, byte[]> packages_ = new SortedDictionary<ushort, byte[]>();
+                                bool isValid = true;
+                                ushort maxId = 0;
+                                foreach (ushort repeatId in repeatDeliveryList)
                                 {
-                                    maxId = repeatId;
-                                    packages_[repeatId] = packages[repeatId];
+                                    if (packages.ContainsKey(repeatId))
+                                    {
+                                        maxId = repeatId;
+                                        packages_[repeatId] = packages[repeatId];
+                                    }
+                                    else
+                                    {
+                                        isValid = false;
+                                        break;
+                                    }
+                                }
+
+                                if (isValid)
+                                {
+                                    packages_[maxId][HeaderPositions.Flag] = Flags.NeedConfirm;
+
+                                    repeated = true;
+                                    packages = packages_;
+
+                                    repeatDeliveryList = null;
+                                    repeatDeliveryBlock.Release();
                                 }
                                 else
                                 {
-                                    isValid = false;
-                                    break;
+                                    repeatDeliveryBlock.Release();
+                                    goto Begin;
                                 }
-                            }
-
-                            if (isValid)
-                            {
-                                packages_[maxId][HeaderPositions.Flag] = Flags.NeedConfirm;
-
-                                repeated = true;
-                                packages = packages_;
-
-                                repeatDeliveryList = null;
-                                repeatDeliveryBlock.Release();
-                            }
-                            else
-                            {
-                                repeatDeliveryBlock.Release();
-                                goto Begin;
                             }
                         }
                     }
-                }
 
-                if (attemptCount == 15)
-                {
-                    Runtime.DebugWrite("PIZDETS!!!!");
-                    new Thread(delegate ()
+                    if (attemptCount == 15)
                     {
-                        Close();
-                        ClientClosing?.Invoke(point);
-                    }).Start();
+                        Runtime.DebugWrite("PIZDETS!!!!");
+                        new Thread(delegate ()
+                        {
+                            Close();
+                            ClientClosing?.Invoke(point);
+                        }).Start();
+                    }
+
+                    lastPackage = -1;
                 }
-
-                lastPackage = -1;
-
-                sendingCycleDetector.Set();
+                finally
+                {
+                    sendingCycleDetector.Set();
+                }
             }
         }
 
@@ -900,12 +906,8 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Send(byte[] inputData)
         {
-            if (inStopping)
-            {
-                return;
-            }
-
-        Begin: sendBlock.WaitOne();
+            if (inStopping || !IsConnected) return;
+            Begin: sendBlock.WaitOne();
 
             int mtu = _mtu;
             int maxPackagesCount = _maxPackagesCount;
@@ -917,6 +919,8 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     sendBlock.Release();
                     sendingCycleDetector.WaitOne();
+
+                    if (inStopping || !IsConnected) return;
                     goto Begin;
                 }
 
@@ -1009,6 +1013,8 @@ namespace Lexplosion.Logic.Network.SMP
                         {
                             sendBlock.Release();
                             sendingCycleDetector.WaitOne();
+
+                            if (inStopping || !IsConnected) return;
                             goto Begin;
                         }
                     }

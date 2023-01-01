@@ -322,7 +322,7 @@ namespace Lexplosion.Logic.Network
                             }
                         }
                     }
-                    catch { }
+                    catch  { }
                 }
 
                 if (needRepeat)
