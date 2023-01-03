@@ -133,7 +133,7 @@
                         FontSize="22"
                         FontWeight="Bold"
                         Foreground="White"
-                        Text="{DynamicResource More}"
+                        Text="{DynamicResource more}"
                         Visibility="Collapsed" />
 
                     <Grid Background="Transparent">

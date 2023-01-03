@@ -31,7 +31,6 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             get => _gameVersion; set
             {
                 _gameVersion = BaseInstanceData.GameVersion = value;
-                Console.WriteLine(IsOptifine);
                 if (IsModloader)
                 {
                     GetModloaderVersions(value, ModloaderType);

@@ -11,8 +11,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
     public sealed class ImportFile : VMBase
     {
         private readonly ImportViewModel _importVM;
+
         public string Name { get; }
         public string Path { get; }
+
         private bool _isImportFinished;
         public bool IsImportFinished
         {

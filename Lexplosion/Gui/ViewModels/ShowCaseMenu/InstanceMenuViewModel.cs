@@ -113,6 +113,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         private void UpdateShowCaseMenu()
         {
+            _showCaseTabMenu.Clear();
+
             _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("general"), Content = new OverviewViewModel(_instanceForm.Client, this) });
             _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
             _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("version"), Content = new InstancePreviousVersionsViewModel(_instanceForm) });

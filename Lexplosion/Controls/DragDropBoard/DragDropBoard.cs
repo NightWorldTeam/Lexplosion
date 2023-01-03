@@ -28,7 +28,7 @@ namespace Lexplosion.Controls
 
         protected override void OnDrop(DragEventArgs e)
         {
-            //Console.WriteLine("----------Method OnDrop Started----------");
+            //----------Method OnDrop Started----------;
             if (this.ImportAction != null)
             {
                 var allowedFiles = new List<string>();
@@ -39,7 +39,6 @@ namespace Lexplosion.Controls
 
                     foreach (var file in files)
                     {
-                        //Console.WriteLine(file + " <-- Allowed file? --> " + file.Contains(".zip"));
                         if (file.Contains(".zip"))
                         {
                             allowedFiles.Add(file);
@@ -51,7 +50,7 @@ namespace Lexplosion.Controls
             }
             base.OnDrop(e);
 
-            //Console.WriteLine("----------Method OnDrop finished----------");
+            //----------Method OnDrop finished----------;
         }
     }
 }
