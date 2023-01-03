@@ -58,6 +58,8 @@ namespace Lexplosion.Logic.Network
 
         protected override bool BeforeConnect(IPEndPoint point)
         {
+            Runtime.DebugWrite("Before connect method");
+
             bool value = true;
             Socket bridge = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
@@ -75,7 +77,10 @@ namespace Lexplosion.Logic.Network
                 if (ClientsPoints.ContainsKey(bridge))
                     ClientsPoints.TryRemove(bridge, out _);
             }
+
+            Runtime.DebugWrite("Before connect method 1");
             AcceptingBlock.Release();
+            Runtime.DebugWrite("Before connect method 2");
 
             if (value)
             {
@@ -84,6 +89,8 @@ namespace Lexplosion.Logic.Network
                 Sockets.Add(bridge);
                 ConnectSemaphore.Release();
             }
+
+            Runtime.DebugWrite("Before connect method end");
 
             return value;
         }
@@ -110,6 +117,8 @@ namespace Lexplosion.Logic.Network
                 {
                     SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
+
+                    Runtime.DebugWrite("SendingWait End");
 
                     continue;
                 }
@@ -211,6 +220,8 @@ namespace Lexplosion.Logic.Network
                     ClientAbort(point);
                 }
             }
+
+            Runtime.DebugWrite("READING METHOD END");
         }
 
         public override void StopWork()

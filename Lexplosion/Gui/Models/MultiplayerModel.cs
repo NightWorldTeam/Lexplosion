@@ -89,8 +89,11 @@ namespace Lexplosion.Gui.Models
         {
             App.Current.Dispatcher.Invoke(delegate ()
             {
-                Players.Add(player);
-                IsEmptyPlayers = Players.Count == 0;
+                if (player != null)
+                {
+                    Players.Add(player);
+                    IsEmptyPlayers = Players.Count == 0;
+                }
             });
         }
 
@@ -98,12 +101,14 @@ namespace Lexplosion.Gui.Models
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                if (!player.IsKicked)
-                    Players.Remove(player);
-                player.SetUnkickedAction(RemoveObjFromList);
-                IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
+                if (player != null)
+                {
+                    if (!player.IsKicked)
+                        Players.Remove(player);
+                    player.SetUnkickedAction(RemoveObjFromList);
+                    IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
+                }
             });
-
         }
 
 

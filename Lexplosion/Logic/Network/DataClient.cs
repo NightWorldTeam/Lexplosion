@@ -53,17 +53,13 @@ namespace Lexplosion.Logic.Network
                     return;
                 }
 
-                _calculateThread = new Thread(delegate ()
-                {
-                    SpeedClaculate();
-                });
-
+                _calculateThread = new Thread(SpeedClaculate);
                 _calculateThread.Start();
 
                 long offset = 0;
                 _isWorking = Bridge.Receive(out data);
 
-                while (_isWorking && data.Length > 0)
+                while (_isWorking && data.Length > 0 && offset < _fileSize)
                 {
                     offset += data.Length;
                     _dataCount += data.Length;

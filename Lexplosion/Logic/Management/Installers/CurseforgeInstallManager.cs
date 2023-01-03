@@ -198,44 +198,47 @@ namespace Lexplosion.Logic.Management.Installers
                     Procents = 0
                 });
 
+                //определяем приоритетную версию модлоадера
+                string modLoaderVersion = "";
+                ModloaderType modloader = ModloaderType.Vanilla;
+                foreach (var loader in manifest.minecraft.modLoaders)
+                {
+                    if (loader.primary)
+                    {
+                        modLoaderVersion = loader.id;
+                        break;
+                    }
+                }
+
+                if (modLoaderVersion != "")
+                {
+                    if (modLoaderVersion.Contains("forge-"))
+                    {
+                        modloader = ModloaderType.Forge;
+                        modLoaderVersion = modLoaderVersion.Replace("forge-", "");
+                    }
+                    else if (modLoaderVersion.Contains("fabric-"))
+                    {
+                        modloader = ModloaderType.Fabric;
+                        modLoaderVersion = modLoaderVersion.Replace("fabric-", "");
+                    }
+                    else if (modLoaderVersion.Contains("fabric-"))
+                    {
+                        modloader = ModloaderType.Quilt;
+                        modLoaderVersion = modLoaderVersion.Replace("quilt-", "");
+                    }
+                }
+
+                Runtime.DebugWrite("modLoaderVersion " + modLoaderVersion);
+
+                var versionData = Manifest?.version;
+                bool baseFFilesIsUpdates = modLoaderVersion != versionData?.modloaderVersion || modloader != versionData?.modloaderType || manifest.minecraft.version != versionData?.gameVersion;
+
                 // Скачиваем основные файлы майкнрафта
 
-                // если BaseFilesIsCheckd равно true, то это значтт что в манифесте уже была версия форджа
-                if (!BaseFilesIsCheckd) // в данном случае в манифесте версии форджа не была и нам надо её получить
+                // если BaseFilesIsCheckd равно true, то это значит что в манифесте уже была версия форджа
+                if (!BaseFilesIsCheckd || baseFFilesIsUpdates) // в данном случае в манифесте версии форджа не была и нам надо её получить. Или же были измнения в модлоадере или версии игры
                 {
-                    //определяем приоритетную версию модлоадера
-                    string modLoaderVersion = "";
-                    ModloaderType modloader = ModloaderType.Vanilla;
-                    foreach (var loader in manifest.minecraft.modLoaders)
-                    {
-                        if (loader.primary)
-                        {
-                            modLoaderVersion = loader.id;
-                            break;
-                        }
-                    }
-
-                    if (modLoaderVersion != "")
-                    {
-                        if (modLoaderVersion.Contains("forge-"))
-                        {
-                            modloader = ModloaderType.Forge;
-                            modLoaderVersion = modLoaderVersion.Replace("forge-", "");
-                        }
-                        else if (modLoaderVersion.Contains("fabric-"))
-                        {
-                            modloader = ModloaderType.Fabric;
-                            modLoaderVersion = modLoaderVersion.Replace("fabric-", "");
-                        }
-                        else if (modLoaderVersion.Contains("fabric-"))
-                        {
-                            modloader = ModloaderType.Quilt;
-                            modLoaderVersion = modLoaderVersion.Replace("quilt-", "");
-                        }
-                    }
-
-                    Runtime.DebugWrite("modLoaderVersion " + modLoaderVersion);
-
                     Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modloader, modLoaderVersion);
 
                     if (Manifest != null)
