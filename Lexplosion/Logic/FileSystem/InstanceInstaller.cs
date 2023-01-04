@@ -61,12 +61,21 @@ namespace Lexplosion.Logic.FileSystem
 
         public event ProcentUpdate BaseDownloadEvent;
 
-        private Dictionary<string, LibInfo> libraries = new Dictionary<string, LibInfo>();
-        private bool minecraftJar = false;
-        private bool assetsIndexes = false;
-        private Assets assets;
+        private Dictionary<string, LibInfo> _libraries;
+        private bool _minecraftJar;
+        private bool _assetsIndexes;
+        private Assets _assets;
 
-        private int updatesCount = 0;
+        private int _updatesCount = 0;
+
+        private void ResetUpdatesList()
+        {
+            _libraries = new Dictionary<string, LibInfo>();
+            _minecraftJar = false;
+            _assetsIndexes = false;
+            _assets.objects = null;
+            _updatesCount = 0;
+        }
 
         /// <summary>
         /// Получем версию либрариеса
@@ -107,14 +116,16 @@ namespace Lexplosion.Logic.FileSystem
         {
             try
             {
+                ResetUpdatesList();
+
                 string gameVersionName = manifest.version.CustomVersionName ?? manifest.version.gameVersion;
 
                 //проверяем файл версии
                 if (!Directory.Exists(DirectoryPath + "/instances/" + instanceId + "/version"))
                 {
                     Directory.CreateDirectory(DirectoryPath + "/instances/" + instanceId + "/version"); //создаем папку versions если её нет
-                    minecraftJar = true; //сразу же добавляем minecraftJar в обновления
-                    updatesCount++;
+                    _minecraftJar = true; //сразу же добавляем minecraftJar в обновления
+                    _updatesCount++;
                 }
                 else
                 {
@@ -136,8 +147,8 @@ namespace Lexplosion.Logic.FileSystem
                                         if (Convert.ToBase64String(sha.ComputeHash(bytes)) != manifest.version.minecraftJar.sha1 || bytes.Length != manifest.version.minecraftJar.size)
                                         {
                                             File.Delete(minecraftJarFile); //удаляем файл, если не сходится хэш или размер
-                                            minecraftJar = true;
-                                            updatesCount++;
+                                            _minecraftJar = true;
+                                            _updatesCount++;
                                         }
                                     }
                                 }
@@ -150,8 +161,8 @@ namespace Lexplosion.Logic.FileSystem
                     }
                     else
                     {
-                        minecraftJar = true;
-                        updatesCount++;
+                        _minecraftJar = true;
+                        _updatesCount++;
                     }
                 }
 
@@ -170,8 +181,8 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     foreach (string lib in manifest.libraries.Keys)
                     {
-                        libraries[lib] = manifest.libraries[lib];
-                        updatesCount++;
+                        _libraries[lib] = manifest.libraries[lib];
+                        _updatesCount++;
                     }
                 }
                 else
@@ -180,8 +191,8 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         foreach (string lib in manifest.libraries.Keys)
                         {
-                            libraries[lib] = manifest.libraries[lib];
-                            updatesCount++;
+                            _libraries[lib] = manifest.libraries[lib];
+                            _updatesCount++;
                         }
                     }
                     else
@@ -192,8 +203,8 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 if (manifest.libraries[lib].additionalInstallerType != null)
                                 {
-                                    libraries[lib] = manifest.libraries[lib];
-                                    updatesCount++;
+                                    _libraries[lib] = manifest.libraries[lib];
+                                    _updatesCount++;
                                 }
                             }
                         }
@@ -213,8 +224,8 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if ((downloadedFiles == null && fileExided) || !File.Exists(DirectoryPath + "/libraries/" + lib) || (fileExided && downloadedFiles != null && !downloadedFiles.Contains(lib)))
                             {
-                                libraries[lib] = manifest.libraries[lib];
-                                updatesCount++;
+                                _libraries[lib] = manifest.libraries[lib];
+                                _updatesCount++;
                             }
                         }
                     }
@@ -226,8 +237,8 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         if (manifest.libraries[lib].isNative)
                         {
-                            libraries[lib] = manifest.libraries[lib];
-                            updatesCount++;
+                            _libraries[lib] = manifest.libraries[lib];
+                            _updatesCount++;
                         }
                     }
                 }
@@ -240,8 +251,8 @@ namespace Lexplosion.Logic.FileSystem
                 // Файла нет, или он битый. Получаем асетсы с сервера
                 if (asstes.objects == null)
                 {
-                    assetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
-                    updatesCount++;
+                    _assetsIndexes = true; //устанавливаем флаг что нужно скачать json файл
+                    _updatesCount++;
 
                     if (!File.Exists(DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json"))
                     {
@@ -256,7 +267,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (asstes.objects != null) // проверяем не возникла ли ошибка
                 {
-                    assets.objects = new Dictionary<string, Assets.AssetFile>();
+                    _assets.objects = new Dictionary<string, Assets.AssetFile>();
 
                     foreach (string asset in asstes.objects.Keys)
                     {
@@ -267,21 +278,21 @@ namespace Lexplosion.Logic.FileSystem
                             string assetPath = "/" + assetHash.Substring(0, 2);
                             if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                             {
-                                assets.objects[asset] = asstes.objects[asset];
-                                updatesCount++;
+                                _assets.objects[asset] = asstes.objects[asset];
+                                _updatesCount++;
                             }
                         }
                         else
                         {
                             // С этим файлом возникла ошибка. Добавляем его в список на обновление. Метод обновления законет его в список ошибок
-                            assets.objects[asset] = asstes.objects[asset];
-                            updatesCount++;
+                            _assets.objects[asset] = asstes.objects[asset];
+                            _updatesCount++;
                         }
                     }
                 }
                 else
                 {
-                    assets.objects = null;
+                    _assets.objects = null;
                 }
             }
             catch
@@ -289,7 +300,7 @@ namespace Lexplosion.Logic.FileSystem
                 return 0;
             }
 
-            return updatesCount;
+            return _updatesCount;
         }
 
         /// <summary>
@@ -505,10 +516,10 @@ namespace Lexplosion.Logic.FileSystem
             List<string> errors = new List<string>();
             string temp = CreateTempDir();
 
-            BaseDownloadEvent?.Invoke(updatesCount, 0);
+            BaseDownloadEvent?.Invoke(_updatesCount, 0);
 
             //скачивание файла версии
-            if (minecraftJar)
+            if (_minecraftJar)
             {
                 Objects.CommonClientData.FileInfo minecraftJar = manifest.version.minecraftJar;
                 if (minecraftJar.url == null)
@@ -559,7 +570,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 updated++;
                 _fileDownloadHandler?.Invoke(minecraftJar.name, 100, downloadResult);
-                BaseDownloadEvent?.Invoke(updatesCount, updated);
+                BaseDownloadEvent?.Invoke(_updatesCount, updated);
 
                 if (downloadResult == DownloadFileProgress.Error)
                 {
@@ -579,7 +590,7 @@ namespace Lexplosion.Logic.FileSystem
             if (downloadedLibs == null) downloadedLibs = new List<string>();
             int startDownloadedLibsCount = downloadedLibs.Count;
 
-            if (libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
+            if (_libraries.Count > 0) //сохраняем версию либририесов если в списке на обновление(updateList.Libraries) есть хотя бы один либрариес
             {
                 SaveFile(DirectoryPath + "/versions/libraries/lastUpdates/" + libName + ".lver", manifest.version.librariesLastUpdate.ToString());
                 if (manifest.version.additionalInstaller != null)
@@ -591,19 +602,19 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             string tempDir = CreateTempDir();
-            foreach (string lib in libraries.Keys)
+            foreach (string lib in _libraries.Keys)
             {
                 if (cancelToken.IsCancellationRequested) return errors;
 
-                if (libraries[lib].obtainingMethod == null)
+                if (_libraries[lib].obtainingMethod == null)
                 {
-                    if (libraries[lib].url == null)
+                    if (_libraries[lib].url == null)
                     {
                         addr = LaunсherSettings.URL.Upload + "libraries/";
                     }
                     else
                     {
-                        addr = libraries[lib].url;
+                        addr = _libraries[lib].url;
                     }
 
                     string[] folders = lib.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -627,7 +638,7 @@ namespace Lexplosion.Logic.FileSystem
                         CancelToken = cancelToken
                     };
 
-                    if (libraries[lib].notArchived)
+                    if (_libraries[lib].notArchived)
                     {
                         isDownload = UnsafeDownloadJar(addr, fileDir, name, tempDir, taskArgs);
                     }
@@ -640,7 +651,7 @@ namespace Lexplosion.Logic.FileSystem
 
                     _fileDownloadHandler?.Invoke(name, 100, isDownload ? DownloadFileProgress.Successful : DownloadFileProgress.Error);
 
-                    if (libraries[lib].isNative && isDownload)
+                    if (_libraries[lib].isNative && isDownload)
                     {
                         try
                         {
@@ -682,13 +693,13 @@ namespace Lexplosion.Logic.FileSystem
                     }
 
                     updated++;
-                    BaseDownloadEvent?.Invoke(updatesCount, updated);
+                    BaseDownloadEvent?.Invoke(_updatesCount, updated);
                 }
                 else
                 {
                     try
                     {
-                        List<List<string>> obtainingMethod = libraries[lib].obtainingMethod; // получаем метод
+                        List<List<string>> obtainingMethod = _libraries[lib].obtainingMethod; // получаем метод
                         Dictionary<string, string> vars = new Dictionary<string, string>(); //здесь хранятся переменные этого метода
 
                         if (!executedMethods.Contains(obtainingMethod[0][0])) //проверяем был ли этот метод уже выполнен
@@ -836,7 +847,7 @@ namespace Lexplosion.Logic.FileSystem
                     }
 
                     updated++;
-                    BaseDownloadEvent?.Invoke(updatesCount, updated);
+                    BaseDownloadEvent?.Invoke(_updatesCount, updated);
                 }
             }
 
@@ -851,7 +862,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch { }
 
-            if (downloadedLibs.Count - startDownloadedLibsCount == libraries.Count)
+            if (downloadedLibs.Count - startDownloadedLibsCount == _libraries.Count)
             {
                 //все либрариесы скачались удачно. Удаляем файл
                 DelFile(downloadedLibsAddr);
@@ -863,9 +874,9 @@ namespace Lexplosion.Logic.FileSystem
             _assetsBlock.WaitOne(gameVersionName);
 
             // скачиваем файлы objects
-            if (assets.objects != null)
+            if (_assets.objects != null)
             {
-                int assetsCount = assets.objects.Count;
+                int assetsCount = _assets.objects.Count;
 
                 TasksPerfomer perfomer = null;
                 if (assetsCount > 0)
@@ -878,11 +889,11 @@ namespace Lexplosion.Logic.FileSystem
                 };
 
                 int i = 0;
-                foreach (string asset in assets.objects.Keys)
+                foreach (string asset in _assets.objects.Keys)
                 {
                     perfomer.ExecuteTask(delegate ()
                     {
-                        string assetHash = assets.objects[asset].hash;
+                        string assetHash = _assets.objects[asset].hash;
                         if (assetHash != null)
                         {
                             string assetPath = "/" + assetHash.Substring(0, 2);
@@ -907,7 +918,7 @@ namespace Lexplosion.Logic.FileSystem
                                 }
 
                                 updated++;
-                                BaseDownloadEvent?.Invoke(updatesCount, updated);
+                                BaseDownloadEvent?.Invoke(_updatesCount, updated);
                             }
                         }
                         else
@@ -932,7 +943,7 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             //скачиваем json файл
-            if (assetsIndexes)
+            if (_assetsIndexes)
             {
                 if (!File.Exists(DirectoryPath + "/assets/indexes/" + manifest.version.assetsVersion + ".json"))
                 {
