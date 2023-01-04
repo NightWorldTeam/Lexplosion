@@ -91,6 +91,9 @@ namespace Lexplosion.Gui.Models
             {
                 if (player != null)
                 {
+                    if (Players.Contains(player))
+                        Players.Remove(player);
+
                     Players.Add(player);
                     IsEmptyPlayers = Players.Count == 0;
                 }
@@ -141,7 +144,9 @@ namespace Lexplosion.Gui.Models
             {
                 GameStatus = status;
                 if (GameStatus == OnlineGameStatus.None)
-                    Players.Clear();
+                    Players?.Clear();
+
+                IsEmptyPlayers = true;
             });
         }
 
