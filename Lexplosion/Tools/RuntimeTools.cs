@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -44,10 +46,13 @@ namespace Lexplosion
         public static void TaskRun(ThreadStart threadFunc) => new Thread(threadFunc).Start();
 
         [Conditional("DEBUG")]
-        public static void DebugWrite<T>(T line)
+        public static void DebugWrite<T>(T line, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
         {
 #if DEBUG
-            System.Console.WriteLine(line);
+            string prefix = "[" + Path.GetFileName(sourceFilePath) + ":" + memberName + ":" + sourceLineNumber + "]";
+            var nowTime = DateTimeOffset.Now;
+            string time = " [" + nowTime.Hour + ":" + nowTime.Minute + ":" + nowTime.Second + "." + nowTime.Millisecond + "] ";
+            Console.WriteLine(prefix + time + line);
 #endif
         }
 
@@ -55,7 +60,7 @@ namespace Lexplosion
         public static void DebugWrite()
         {
 #if DEBUG
-            System.Console.WriteLine();
+            Console.WriteLine();
 #endif
         }
     }

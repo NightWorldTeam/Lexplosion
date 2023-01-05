@@ -414,12 +414,22 @@ namespace Lexplosion.Logic.Network
 
             try
             {
-                DisconnectedUser?.Invoke(clientUuid);
+                ThreadPool.QueueUserWorkItem((object obj) =>
+                {
+                    DisconnectedUser?.Invoke(clientUuid);
+                });
             }
             catch { }
         }
 
-        protected abstract bool BeforeConnect(IPEndPoint point); // это метод который запускается после установления соединения
+        /// <summary>
+        /// это метод который запускается после установления соединения
+        /// </summary>
+        protected virtual bool BeforeConnect(IPEndPoint point)
+        {
+            AcceptingBlock.Release();
+            return true;
+        }
 
         protected abstract void Sending(); // тут получаем данные от клиентов
 

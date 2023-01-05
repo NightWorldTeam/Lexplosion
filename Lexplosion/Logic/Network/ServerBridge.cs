@@ -39,14 +39,13 @@ namespace Lexplosion.Logic.Network
                 {
                     Runtime.DebugWrite("clientAbort");
                     AcceptingBlock.WaitOne();
+                    Connections.TryRemove(point, out Socket sock);
+                    sock.Close(); //зыкрываем соединение с майнкрафтом.
                     SendingBlock.WaitOne();
 
                     //удаляем клиента везде
-                    Sockets.Remove(Connections[point]);
-                    ClientsPoints.TryRemove(Connections[point], out _);
-                    Connections.TryRemove(point, out Socket sock);
-                    sock.Close(); //зыкрываем соединение
-
+                    Sockets.Remove(sock);
+                    ClientsPoints.TryRemove(sock, out _);
                     base.ClientAbort(point);
 
                     AcceptingBlock.Release();
@@ -79,7 +78,7 @@ namespace Lexplosion.Logic.Network
             }
 
             Runtime.DebugWrite("Before connect method 1");
-            AcceptingBlock.Release();
+            base.BeforeConnect(point);
             Runtime.DebugWrite("Before connect method 2");
 
             if (value)
