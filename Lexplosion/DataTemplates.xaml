@@ -74,6 +74,9 @@
     <DataTemplate DataType="{x:Type vmsettings:ApperanceSettingsViewModel}">
         <pagesettings:ApperanceSettingsView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vmsettings:AboutUsViewModel}">
+        <pagesettings:AboutUsView />
+    </DataTemplate>
     <!--  MainMenu Multiplayer DataTemplate  -->
     <DataTemplate DataType="{x:Type vmmultiplayer:GeneralMultiplayerViewModel}">
         <pagemultiplayer:GeneralMultiplayerView />
@@ -140,7 +143,6 @@
     <DataTemplate DataType="{x:Type modalvms:DialogViewModel}">
         <modalviews:DialogView />
     </DataTemplate>
-
 
     <tb:TaskbarIcon
         x:Key="NofityIcon"

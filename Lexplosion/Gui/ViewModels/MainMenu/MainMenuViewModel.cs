@@ -20,6 +20,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private GeneralMultiplayerViewModel _generalMultiplayerViewModel = new GeneralMultiplayerViewModel();
         private FriendsTabViewModel _friendsTabViewModel = new FriendsTabViewModel();
         private ChannelTabViewModel _channelTabViewModel = new ChannelTabViewModel();
+        private AboutUsViewModel _aboutUsViewModel = new AboutUsViewModel();
         /* multiplayer fields */
 
         /* settings fields*/
@@ -232,7 +233,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("about"),
-                    Content = new DevСurtainViewModel()
+                    Content = new AboutUsViewModel()
                 },
             };
         }
