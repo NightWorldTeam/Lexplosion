@@ -232,7 +232,7 @@
                         Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                         CommandParameter="{Binding}"
                         Style="{StaticResource IconicButton}"
-                        Visibility="{Binding UpdateAvailable, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                        Visibility="{Binding UpdateAvailable, Converter={StaticResource ConvertBoolToVisibility}}">
                         <Viewbox Width="20" Height="20">
                             <Path
                                 VerticalAlignment="Bottom"
