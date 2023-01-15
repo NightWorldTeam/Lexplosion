@@ -43,8 +43,8 @@ namespace Lexplosion.Logic.Network
         public event Action<string> ConnectingUser;
         public event Action<string> DisconnectedUser;
 
-        protected ConcurrentDictionary<string, IPEndPoint> UuidPointPair;
-        protected ConcurrentDictionary<IPEndPoint, string> PointUuidPair;
+        private ConcurrentDictionary<string, IPEndPoint> _uuidPointPair;
+        private ConcurrentDictionary<IPEndPoint, string> _pointUuidPair;
 
         protected HashSet<string> KickedClients; //тут хранятся выкинутые клиенты
 
@@ -65,8 +65,8 @@ namespace Lexplosion.Logic.Network
             KickedClients = new HashSet<string>();
 
             // тут хранится список клиентов. В одном соответсвие uuid и ip, в другом наоборот
-            UuidPointPair = new ConcurrentDictionary<string, IPEndPoint>();
-            PointUuidPair = new ConcurrentDictionary<IPEndPoint, string>();
+            _uuidPointPair = new ConcurrentDictionary<string, IPEndPoint>();
+            _pointUuidPair = new ConcurrentDictionary<IPEndPoint, string>();
 
             _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -196,7 +196,7 @@ namespace Lexplosion.Logic.Network
                                 Runtime.DebugWrite("ControlServerEndRecv");
                             }
 
-                            if (bytes > 1 && data[0] == ControlSrverCodes.A) // data[0] == 97 значит поступил запрос на поделючение
+                            if (bytes > 1 && data[0] == ControlSrverCodes.A) // data[0] == 97 значит поступил запрос на подключение
                             {
                                 clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
 
@@ -208,6 +208,16 @@ namespace Lexplosion.Logic.Network
                                         _controlConnection.Send(new byte[1] { ControlSrverCodes.E }); //отправляем серверу отказ
                                         continue;
                                     }
+                                }
+
+                                // такой клиент уже подключен. Значит обрываем прошлое соединение
+                                if (_uuidPointPair.ContainsKey(clientUUID))
+                                {
+                                    _uuidPointPair.TryGetValue(clientUUID, out IPEndPoint point);
+                                    if (point != null)
+                                    {
+                                        ClientAbort(point);
+                                    }           
                                 }
 
                                 _controlConnection.Send(new byte[1] { ControlSrverCodes.A }); //отправляем серверу соглашение
@@ -297,8 +307,8 @@ namespace Lexplosion.Logic.Network
                                 Runtime.DebugWrite("КОННЕКТ!!!");
                                 if (BeforeConnect(point))
                                 {
-                                    UuidPointPair[clientUUID] = point;
-                                    PointUuidPair[point] = clientUUID;
+                                    _uuidPointPair[clientUUID] = point;
+                                    _pointUuidPair[point] = clientUUID;
 
                                     try
                                     {
@@ -322,7 +332,7 @@ namespace Lexplosion.Logic.Network
                             }
                         }
                     }
-                    catch  { }
+                    catch { }
                 }
 
                 if (needRepeat)
@@ -372,7 +382,7 @@ namespace Lexplosion.Logic.Network
                         KickedClients.Add(uuid);
                     }
 
-                    IPEndPoint point = UuidPointPair[uuid];
+                    IPEndPoint point = _uuidPointPair[uuid];
                     ClientAbort(point);
                 }
             }
@@ -409,15 +419,18 @@ namespace Lexplosion.Logic.Network
 
         protected virtual void ClientAbort(IPEndPoint point) // мeтод который вызывается при обрыве соединения
         {
-            PointUuidPair.TryRemove(point, out string clientUuid);
-            UuidPointPair.TryRemove(clientUuid, out _);
+            _pointUuidPair.TryRemove(point, out string clientUuid);
+            _uuidPointPair.TryRemove(clientUuid, out _);
 
             try
             {
-                ThreadPool.QueueUserWorkItem((object obj) =>
+                if (clientUuid != null)
                 {
-                    DisconnectedUser?.Invoke(clientUuid);
-                });
+                    ThreadPool.QueueUserWorkItem((object obj) =>
+                    {
+                        DisconnectedUser?.Invoke(clientUuid);
+                    });
+                }
             }
             catch { }
         }

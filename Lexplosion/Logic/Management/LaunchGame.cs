@@ -48,6 +48,18 @@ namespace Lexplosion.Logic.Management
         /// Отрабатывает когда поялвяются данные из консоли майкрафта.
         /// </summary>
         public event Action<string> ProcessDataReceived;
+        /// <summary>
+        /// Отрабатывает когда к сетевой игре подключается игрок
+        /// </summary>
+        public static event Action<Player> UserConnected;
+        /// <summary>
+        /// Отрабатывает когда игрок отлючается от сетевой игры
+        /// </summary>
+        public static event Action<Player> UserDisconnected;
+        /// <summary>
+        /// Отрабатывает когда сетевая игра меняет свой статус
+        /// </summary>
+        public static event Action<OnlineGameStatus, string> StateChanged;
 
         private static object loocker = new object();
 
@@ -71,10 +83,6 @@ namespace Lexplosion.Logic.Management
 
             _updateCancelToken = updateCancelToken;
         }
-
-        public static event Action<Player> UserConnected;
-        public static event Action<Player> UserDisconnected;
-        public static event Action<OnlineGameStatus, string> StateChanged;
 
         private ConcurrentDictionary<string, Player> _connectedPlayers = new ConcurrentDictionary<string, Player>();
 
@@ -560,7 +568,9 @@ namespace Lexplosion.Logic.Management
                         _classInstance.gameGateway.Initialization(_classInstance.process.Id);
                     }
                 }
+                StateChanged?.Invoke(OnlineGameStatus.None, "");
             }
+
         }
     }
 }

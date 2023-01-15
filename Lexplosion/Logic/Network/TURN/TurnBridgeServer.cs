@@ -1,19 +1,21 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Windows.Markup;
 
 namespace Lexplosion.Logic.Network.TURN
 {
     class TurnBridgeServer : IServerTransmitter
     {
-        private ConcurrentDictionary<IPEndPoint, Socket> pointsSockets = new ConcurrentDictionary<IPEndPoint, Socket>();
-        private List<Socket> sockets = new List<Socket>();
+        private ConcurrentDictionary<IPEndPoint, Socket> _pointsSockets = new ConcurrentDictionary<IPEndPoint, Socket>();
+        private List<Socket> _sockets = new List<Socket>();
 
         private object _waitDeletingLoocker = new object();
-        private ManualResetEvent WaitConnections = new ManualResetEvent(false); // блокировка метода Receive, если нет клиентов
+        private ManualResetEvent _waitConnections = new ManualResetEvent(false); // блокировка метода Receive, если нет клиентов
 
         private bool IsWork = true;
 
@@ -41,11 +43,11 @@ namespace Lexplosion.Logic.Network.TURN
 
                 lock (_waitDeletingLoocker)
                 {
-                    pointsSockets[(IPEndPoint)sock.LocalEndPoint] = sock;
-                    sockets.Add(sock);
+                    _pointsSockets[(IPEndPoint)sock.LocalEndPoint] = sock;
+                    _sockets.Add(sock);
                 }
 
-                WaitConnections.Set();
+                _waitConnections.Set();
 
                 point = (IPEndPoint)sock.LocalEndPoint;
 
@@ -64,11 +66,11 @@ namespace Lexplosion.Logic.Network.TURN
         {
             while (IsWork)
             {
-                WaitConnections.WaitOne(); // тут метод остановится, если нет ни одного клиента
+                _waitConnections.WaitOne(); // тут метод остановится, если нет ни одного клиента
 
                 List<Socket> sockets_;
                 lock (_waitDeletingLoocker)
-                    sockets_ = new List<Socket>(sockets);
+                    sockets_ = new List<Socket>(_sockets);
 
                 Socket.Select(sockets_, null, null, -1);
                 Socket sock = sockets_[0];
@@ -103,7 +105,7 @@ namespace Lexplosion.Logic.Network.TURN
 
         public void Send(byte[] inputData, IPEndPoint ip)
         {
-            pointsSockets[ip].Send(inputData);
+            _pointsSockets[ip].Send(inputData);
         }
 
         public void StopWork()
@@ -111,7 +113,7 @@ namespace Lexplosion.Logic.Network.TURN
             IsWork = false;
             lock (_waitDeletingLoocker)
             {
-                foreach (var socket in sockets)
+                foreach (var socket in _sockets)
                 {
                     socket.Close();
                 }
@@ -124,14 +126,14 @@ namespace Lexplosion.Logic.Network.TURN
             lock (_waitDeletingLoocker)
             {
                 // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
-                if (IsWork && pointsSockets.ContainsKey(point))
+                if (IsWork && _pointsSockets.ContainsKey(point))
                 {
                     Runtime.DebugWrite("TRUN CLOSE GSFSDGF");
-                    pointsSockets.TryRemove(point, out Socket sock);
-                    sockets.Remove(sock);
-                    if (sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
+                    _pointsSockets.TryRemove(point, out Socket sock);
+                    _sockets.Remove(sock);
+                    if (_sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
                     {
-                        WaitConnections.Reset();
+                        _waitConnections.Reset();
                     }
                     sock.Close();
                 }

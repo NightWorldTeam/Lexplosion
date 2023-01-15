@@ -39,14 +39,19 @@ namespace Lexplosion.Logic.Network
                 {
                     Runtime.DebugWrite("clientAbort");
                     AcceptingBlock.WaitOne();
+                    Runtime.DebugWrite("clientAbort1");
                     Connections.TryRemove(point, out Socket sock);
                     sock.Close(); //зыкрываем соединение с майнкрафтом.
+                    Runtime.DebugWrite("clientAbort2");
                     SendingBlock.WaitOne();
+                    Runtime.DebugWrite("clientAbort3");
 
                     //удаляем клиента везде
                     Sockets.Remove(sock);
                     ClientsPoints.TryRemove(sock, out _);
+                    Runtime.DebugWrite("clientAbort4");
                     base.ClientAbort(point);
+                    Runtime.DebugWrite("clientAbort5");
 
                     AcceptingBlock.Release();
                     SendingBlock.Release();
@@ -106,14 +111,17 @@ namespace Lexplosion.Logic.Network
 
                 ConnectSemaphore.WaitOne();
                 List<Socket> listeningSokets = new List<Socket>(Sockets);
+                List<Socket> errorSokets = new List<Socket>(Sockets);
                 ConnectSemaphore.Release();
 
                 try
                 {
-                    Socket.Select(listeningSokets, null, null, -1); //слушаем все сокеты
+                    Socket.Select(listeningSokets, null, errorSokets, -1); //слушаем все сокеты
                 }
                 catch (ArgumentNullException)
                 {
+                    Runtime.DebugWrite("SendingWait Start");
+
                     SendingWait.WaitOne(); //ждём первого подключения
                     SendingBlock.Release();
 
@@ -121,14 +129,19 @@ namespace Lexplosion.Logic.Network
 
                     continue;
                 }
-                catch (SocketException)
+                catch (SocketException e)
                 {
                     // TODO: тут что-то придумать
+                    Runtime.DebugWrite("Sending exeption " + e);
+                    SendingBlock.Release();
                     continue;
                 }
                 catch (Exception e)
                 {
+                    Runtime.DebugWrite("Sending exeption " + e);
                     // TODO: какое-то странное исключение, выходим
+                    SendingBlock.Release();
+                    continue;
                 }
 
                 foreach (Socket sock in listeningSokets)
@@ -152,13 +165,20 @@ namespace Lexplosion.Logic.Network
                             data_[i] = data[i];
                         }
 
-                        Server.Send(data_, ClientsPoints[sock]);
+                        var point = ClientsPoints[sock];
+
+                        Server.Send(data_, point);
                     }
                     catch (Exception e)
                     {
                         Runtime.DebugWrite("sending1 " + e);
                         isDisconected.Add(ClientsPoints[sock]); //добавляем клиента в список чтобы потом отключить
                     }
+                }
+
+                foreach (Socket sock in errorSokets)
+                {
+                    Runtime.DebugWrite("GGHT " + sock);
                 }
 
                 SendingBlock.Release();

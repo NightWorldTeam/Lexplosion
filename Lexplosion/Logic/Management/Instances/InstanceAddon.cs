@@ -21,7 +21,8 @@ namespace Lexplosion.Logic.Management.Instances
 
     public class InstanceAddon : VMBase
     {
-        private const string UnknownName = "Без названия";
+        private const string UNKNOWN_NAME = "Без названия";
+        private const string DISABLE_FILE_EXTENSION = ".disable";
 
         class McmodInfo
         {
@@ -51,7 +52,6 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; private set; } = "";
         public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
-        public string FileName { get; private set; } = "";
         public string Version { get; private set; } = "";
         public int DownloadCount { get; private set; } = 0;
         public string LastUpdated { get; private set; } = "";
@@ -63,6 +63,17 @@ namespace Lexplosion.Logic.Management.Instances
             private set
             {
                 _updateAvailable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _fileName = "";
+        public string FileName
+        {
+            get => _fileName;
+            private set
+            {
+                _fileName = value;
                 OnPropertyChanged();
             }
         }
@@ -502,19 +513,35 @@ namespace Lexplosion.Logic.Management.Instances
                     }
 
                     // удаляем старый файл
-                    if (installedAddons[addonInfo.modId] != null && installedAddons[addonInfo.modId].ActualPath != ressult.Value1.ActualPath)
+                    if (installedAddons[addonInfo.modId] != null)
                     {
-                        try
+                        if (installedAddons[addonInfo.modId].ActualPath != ressult.Value1.ActualPath)
                         {
-                            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
-                            InstalledAddonInfo installedAddon = installedAddons[addonInfo.modId];
-                            if (installedAddon.IsExists(path))
+                            try
                             {
-                                installedAddon.RemoveFromDir(path);
+                                string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
+                                InstalledAddonInfo installedAddon = installedAddons[addonInfo.modId];
+                                if (installedAddon.IsExists(path))
+                                {
+                                    installedAddon.RemoveFromDir(path);
+                                }
                             }
+                            catch { }
                         }
-                        catch { }
-                    }
+
+                        if (installedAddons[addonInfo.modId].IsDisable)
+                        {
+                            try
+                            {
+                                string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
+                                File.Move(dir + ressult.Value1.ActualPath, dir + ressult.Value1.Path + DISABLE_FILE_EXTENSION);
+                                ressult.Value1.IsDisable = true;
+
+                                FileName = Path.GetFileName(ressult.Value1.ActualPath);
+                            }
+                            catch { }
+                        }
+                    }     
 
                     installedAddons[addonInfo.modId] = ressult.Value1;
                 }
@@ -727,7 +754,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     string fileAddr_ = fileAddr.Replace('\\', '/');
                     string extension = Path.GetExtension(fileAddr_);
-                    bool isJar = (extension == ".jar"), isDisable = (extension == ".disable");
+                    bool isJar = (extension == ".jar"), isDisable = (extension == DISABLE_FILE_EXTENSION);
                     if (isJar || isDisable)
                     {
                         string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
@@ -744,7 +771,7 @@ namespace Lexplosion.Logic.Management.Instances
                         bool notContains = !existsAddons.ContainsKey(xyi);
                         if (notContains || existsAddons[xyi].Value1 == null)
                         {
-                            string displayName = UnknownName, authors = "", version = "", description = "", modId = "";
+                            string displayName = UNKNOWN_NAME, authors = "", version = "", description = "", modId = "";
 
                             // тут пытаемся получить инфу о моде
                             try
@@ -969,7 +996,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     string fileAddr_ = fileAddr.Replace('\\', '/');
                     string extension = Path.GetExtension(fileAddr_);
-                    bool isZip = (extension == ".zip"), isDisable = (extension == ".disable");
+                    bool isZip = (extension == ".zip"), isDisable = (extension == DISABLE_FILE_EXTENSION);
                     if (isZip || isDisable)
                     {
                         string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
@@ -986,7 +1013,7 @@ namespace Lexplosion.Logic.Management.Instances
                         bool notContains = !existsAddons.ContainsKey(xyi);
                         if (notContains || existsAddons[xyi].Value1 == null)
                         {
-                            string displayName = UnknownName, authors = "", version = "", description = "", modId = "";
+                            string displayName = UNKNOWN_NAME, authors = "", version = "", description = "", modId = "";
 
                             // определяем айдишник
                             int addonId;
@@ -1156,7 +1183,7 @@ namespace Lexplosion.Logic.Management.Instances
                         string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
                         if (data.IsExists(dir))
                         {
-                            File.Move(dir + data.Path + ".disable", dir + data.Path);
+                            File.Move(dir + data.Path + DISABLE_FILE_EXTENSION, dir + data.Path);
                         }
                     }
                     catch { }
@@ -1168,11 +1195,13 @@ namespace Lexplosion.Logic.Management.Instances
                         string dir = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/";
                         if (data.IsExists(dir))
                         {
-                            File.Move(dir + data.Path, dir + data.Path + ".disable");
+                            File.Move(dir + data.Path, dir + data.Path + DISABLE_FILE_EXTENSION);
                         }
                     }
                     catch { }
                 });
+
+                FileName = Path.GetFileName(addons[projectID]?.ActualPath);
 
                 addons.Save();
             }

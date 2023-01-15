@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Global;
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
 using Lexplosion.Tools;
+using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -96,7 +96,6 @@ namespace Lexplosion.Logic.FileSystem
             {
                 return null;
             }
-
         }
 
         public static bool InstallZipContent(string url, string fileName, string path, TaskArgs taskArgs)

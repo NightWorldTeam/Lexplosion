@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects
@@ -35,6 +36,7 @@ namespace Lexplosion.Logic.Objects
         public string Path;
         public bool IsDisable = false;
 
+        [JsonIgnore]
         public string ActualPath
         {
             get
