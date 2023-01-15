@@ -6,7 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4DF9C4D2-E828-456F-872D-622EFD405D44}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Lexplosion</RootNamespace>
     <AssemblyName>Lexplosion</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
