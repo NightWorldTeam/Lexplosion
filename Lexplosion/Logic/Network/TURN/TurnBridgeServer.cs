@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.Network.TURN
             public Thread SendThread;
         }
 
-        private const int MAX_BUFFER_SIZE = 1024 * 1024;
+        private const int MAX_BUFFER_SIZE = 10 * 1024 * 1024;
 
         private ConcurrentDictionary<IPEndPoint, Socket> _pointsSockets = new ConcurrentDictionary<IPEndPoint, Socket>();
         private List<Socket> _sockets = new List<Socket>();
@@ -54,16 +54,18 @@ namespace Lexplosion.Logic.Network.TURN
                 sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 9765));
                 sock.Send(data);
 
+                point = (IPEndPoint)sock.LocalEndPoint;
+
                 lock (_waitDeletingLoocker)
                 {
-                    _pointsSockets[(IPEndPoint)sock.LocalEndPoint] = sock;
+                    _pointsSockets[point] = sock;
                     _sockets.Add(sock);
                 }
 
                 var clientData = new ClientData()
                 {
                     Sock = sock,
-                    Point = (IPEndPoint)sock.LocalEndPoint
+                    Point = point
                 };
 
                 var sendThread = new Thread(delegate ()
@@ -72,11 +74,10 @@ namespace Lexplosion.Logic.Network.TURN
                 });
 
                 clientData.SendThread = sendThread;
+                _clients[point] = clientData;
                 sendThread.Start();
 
                 _waitConnections.Set();
-
-                point = (IPEndPoint)sock.LocalEndPoint;
 
                 Runtime.DebugWrite("CONNECTED FGDSGFSD");
             }
@@ -105,6 +106,7 @@ namespace Lexplosion.Logic.Network.TURN
                     {
                         buffer.TryDequeue(out byte[] package);
                         sock.Send(package);
+                        data.BufferSize -= package.Length;
                     }
                 }
                 catch (ThreadAbortException)
