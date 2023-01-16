@@ -902,7 +902,7 @@ namespace Lexplosion.Logic.FileSystem
                                 bool flag = false;
                                 for (int i = 0; i < 3; i++) // 3 попытки делаем
                                 {
-                                    if (InstallFile("http://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs))
+                                    if (InstallFile("https://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs))
                                     {
                                         flag = true;
                                         break;
@@ -915,6 +915,7 @@ namespace Lexplosion.Logic.FileSystem
                                 {
                                     _fileDownloadHandler?.Invoke("asstes: " + asset, 100, DownloadFileProgress.Error);
                                     errors.Add("asstes: " + asset);
+                                    Runtime.DebugWrite("Download error " + asset);
                                 }
 
                                 updated++;

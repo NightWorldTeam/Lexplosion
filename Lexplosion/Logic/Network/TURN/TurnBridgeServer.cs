@@ -11,11 +11,24 @@ namespace Lexplosion.Logic.Network.TURN
 {
     class TurnBridgeServer : IServerTransmitter
     {
+        class ClientData
+        {
+            public AutoResetEvent SendDataEvent = new AutoResetEvent(false);
+            public Socket Sock;
+            public int BufferSize = 0;
+            public ConcurrentQueue<byte[]> Buffer = new ConcurrentQueue<byte[]>();
+            public IPEndPoint Point;
+            public Thread SendThread;
+        }
+
+        private const int MAX_BUFFER_SIZE = 1024 * 1024;
+
         private ConcurrentDictionary<IPEndPoint, Socket> _pointsSockets = new ConcurrentDictionary<IPEndPoint, Socket>();
         private List<Socket> _sockets = new List<Socket>();
 
         private object _waitDeletingLoocker = new object();
         private ManualResetEvent _waitConnections = new ManualResetEvent(false); // блокировка метода Receive, если нет клиентов
+        private ConcurrentDictionary<IPEndPoint, ClientData> _clients = new ConcurrentDictionary<IPEndPoint, ClientData>();
 
         private bool IsWork = true;
 
@@ -47,6 +60,20 @@ namespace Lexplosion.Logic.Network.TURN
                     _sockets.Add(sock);
                 }
 
+                var clientData = new ClientData()
+                {
+                    Sock = sock,
+                    Point = (IPEndPoint)sock.LocalEndPoint
+                };
+
+                var sendThread = new Thread(delegate ()
+                {
+                    ServiceSend(clientData);
+                });
+
+                clientData.SendThread = sendThread;
+                sendThread.Start();
+
                 _waitConnections.Set();
 
                 point = (IPEndPoint)sock.LocalEndPoint;
@@ -60,6 +87,39 @@ namespace Lexplosion.Logic.Network.TURN
             }
 
             return true;
+        }
+
+        private void ServiceSend(ClientData data)
+        {
+            AutoResetEvent sendDataEvent = data.SendDataEvent;
+            Socket sock = data.Sock;
+            ConcurrentQueue<byte[]> buffer = data.Buffer;
+            IPEndPoint point = data.Point;
+
+            while (IsWork)
+            {
+                try
+                {
+                    sendDataEvent.WaitOne();
+                    while (buffer.Count > 0 && IsWork)
+                    {
+                        buffer.TryDequeue(out byte[] package);
+                        sock.Send(package);
+                    }
+                }
+                catch (ThreadAbortException)
+                {
+                    break;
+                }
+                catch
+                {
+                    ThreadPool.QueueUserWorkItem(delegate (object state)
+                    {
+                        Close(point);
+                        ClientClosing?.Invoke(point);
+                    });
+                }
+            }
         }
 
         public IPEndPoint Receive(out byte[] data)
@@ -105,7 +165,23 @@ namespace Lexplosion.Logic.Network.TURN
 
         public void Send(byte[] inputData, IPEndPoint ip)
         {
-            _pointsSockets[ip].Send(inputData);
+            ClientData clientData = _clients[ip];
+            int dataLenght = inputData.Length;
+
+            if (clientData.BufferSize + dataLenght <= MAX_BUFFER_SIZE)
+            {
+                clientData.Buffer.Enqueue(inputData);
+                clientData.BufferSize += dataLenght;
+                clientData.SendDataEvent.Set();
+            }
+            else
+            {
+                ThreadPool.QueueUserWorkItem(delegate (object state)
+                {
+                    Close(ip);
+                    ClientClosing?.Invoke(ip);
+                });
+            }
         }
 
         public void StopWork()
@@ -113,6 +189,15 @@ namespace Lexplosion.Logic.Network.TURN
             IsWork = false;
             lock (_waitDeletingLoocker)
             {
+                foreach (var client in _clients.Values)
+                {
+                    try
+                    {
+                        client.SendThread.Abort();
+                    }
+                    catch { }
+                }
+
                 foreach (var socket in _sockets)
                 {
                     socket.Close();
@@ -130,11 +215,20 @@ namespace Lexplosion.Logic.Network.TURN
                 {
                     Runtime.DebugWrite("TRUN CLOSE GSFSDGF");
                     _pointsSockets.TryRemove(point, out Socket sock);
+                    _clients.TryRemove(point, out ClientData clientData);
                     _sockets.Remove(sock);
+
                     if (_sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
                     {
                         _waitConnections.Reset();
                     }
+
+                    try
+                    {
+                        clientData.SendThread.Abort();
+                    }
+                    catch { }
+
                     sock.Close();
                 }
             }
