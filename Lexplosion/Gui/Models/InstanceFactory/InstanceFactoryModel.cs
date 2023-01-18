@@ -6,29 +6,27 @@ namespace Lexplosion.Gui.Models.InstanceFactory
     {
         #region Properities
 
+        private string _defaultName = "1.19.3 Vanilla";
+        public string DefaultName 
+        { 
+            get => _defaultName; 
+            private set 
+            {   
+                _defaultName = value;
+                OnPropertyChanged();
+            }
+        }
 
         public List<string> UnavailableNames { get; } = new List<string>();
         public Dictionary<string, List<string>> ForgeVersions { get; }
         public Dictionary<string, List<string>> FabricVersions { get; }
-
         public Dictionary<string, List<string>> OptifineVersios { get; }
-
-        private bool _isAvaliableName;
-        public bool IsAvaliableName
-        {
-            get => _isAvaliableName; set
-            {
-                _isAvaliableName = value;
-                OnPropertyChanged();
-            }
-        }
 
         private string _name;
         public string Name
         {
             get => _name; set
             {
-                IsAvaliableName = !UnavailableNames.Contains(value);
                 _name = value;
                 OnPropertyChanged();
             }
@@ -40,6 +38,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             get => _selectedVersion; set
             {
                 _selectedVersion = value;
+                DefaultName = _selectedVersion + " " + ModloaderType;
                 OnPropertyChanged();
             }
         }

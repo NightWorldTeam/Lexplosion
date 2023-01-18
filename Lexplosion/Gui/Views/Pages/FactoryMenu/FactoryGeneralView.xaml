@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion"
     mc:Ignorable="d">
@@ -99,7 +100,7 @@
                             FontSize="14"
                             FontWeight="Medium"
                             Opacity="0.8"
-                            Placeholder="1.19.3 Vanilla"
+                            Placeholder="{Binding x.DefaultName, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource DarkPlaceholderTextBox}"
                             Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
@@ -160,12 +161,12 @@
                 </Border>
 
                 <Border
-                    Margin="0,0,0,10"
+                    Margin="0,0,0,0"
                     Padding="5,0,5,10"
                     BorderBrush="#202020"
                     BorderThickness="0,0,0,1">
                     <StackPanel>
-                        <Grid Margin="0,0,0,0">
+                        <Grid Margin="0,0,0,20">
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontSize="14"
@@ -202,7 +203,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <Grid Margin="0,10,0,0" Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
+                        <Grid Margin="0,0,0,20" Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontSize="14"
@@ -222,28 +223,63 @@
                                 SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource LighterDefaultComboBox}" />
                         </Grid>
+
+                        <StackPanel>
+                            <StackPanel.Style>
+                                <Style TargetType="{x:Type StackPanel}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Model.ModloaderType}" Value="{x:Static enum:ModloaderType.Vanilla}" />
+                                                <Condition Binding="{Binding IsOptifineAvaliable}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Grid Margin="0,0,0,20">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="White"
+                                    Opacity="0.8"
+                                    Text="Optifine" />
+
+                                <ToggleButton
+                                    HorizontalAlignment="Right"
+                                    IsChecked="{Binding IsOptifineInstalling}"
+                                    Style="{StaticResource ToggleSwitch}" />
+                            </Grid>
+                            <ComboBox ItemsSource="{Binding OptifineVersions}" SelectedItem="{Binding SelectedOptifineVersion}" />
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <Border
                     Margin="0,0,0,10"
-                    Padding="5,0,5,0"
+                    Padding="5,0,5,10"
                     BorderBrush="#202020"
                     BorderThickness="0,0,0,1"
                     Visibility="Collapsed" />
-
-                <Button
-                    Width="410"
-                    Height="30"
-                    Margin="0,80,0,0"
-                    Background="{DynamicResource SecondarySolidColorBrush}"
-                    Command="{Binding ActionCommand}"
-                    Content="Create Instance"
-                    FontWeight="Medium"
-                    IsDefault="True"
-                    IsEnabled="{Binding IsExportFinished}"
-                    Style="{StaticResource DefaultBrandColorButton}" />
             </StackPanel>
+            <Button
+                Grid.Row="1"
+                Width="410"
+                Height="30"
+                Margin="0,80,0,0"
+                VerticalAlignment="Bottom"
+                Background="{DynamicResource SecondarySolidColorBrush}"
+                Command="{Binding ActionCommand}"
+                Content="Create Instance"
+                FontWeight="Medium"
+                IsDefault="True"
+                IsEnabled="{Binding IsExportFinished}"
+                Style="{StaticResource DefaultBrandColorButton}" />
         </Grid>
     </Grid>
 </UserControl>

@@ -40,6 +40,17 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+        private bool _isOptifineAvaliable;
+        public bool IsOptifineAvaliable
+        {
+            get => _isOptifineAvaliable;
+            set 
+            {
+                _isOptifineAvaliable = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _isOptifineSelected = false;
         public bool IsOptifineSelected
         {
@@ -76,6 +87,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             get => _optifineVersions; set
             {
                 _optifineVersions = value;
+                IsOptifineAvaliable = value.Count > 0;
                 OnPropertyChanged();
             }
         }
