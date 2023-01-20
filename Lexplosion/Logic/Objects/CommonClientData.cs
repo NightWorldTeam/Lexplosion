@@ -62,7 +62,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public string assetsIndexes;
         public string mainClass;
         public string modloaderVersion;
-        public ModloaderType modloaderType;
+        public ClientType modloaderType;
         public AdditionalInstaller additionalInstaller;
         public string CustomVersionName;
         public bool security;
@@ -81,7 +81,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
                     return CustomVersionName;
 
                 string endName = "";
-                if (modloaderType != ModloaderType.Vanilla)
+                if (modloaderType != ClientType.Vanilla)
                 {
                     endName = "-" + modloaderType.ToString() + "-" + modloaderVersion;
                 }

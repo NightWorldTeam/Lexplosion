@@ -77,7 +77,7 @@ namespace Lexplosion.Logic.Network
             return GetApiData<List<CurseforgeInstanceInfo>>(url);
         }
 
-        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, int category, ModloaderType modloader, string searchFilter = "", string gameVersion = "")
+        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, int category, ClientType modloader, string searchFilter = "", string gameVersion = "")
         {
             if (gameVersion != "")
             {
@@ -100,10 +100,10 @@ namespace Lexplosion.Logic.Network
             return GetApiData<List<CurseforgeAddonInfo>>(url);
         }
 
-        public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, ModloaderType modloader)
+        public static List<CurseforgeFileInfo> GetProjectFiles(string projectId, string gameVersion, ClientType modloader)
         {
             string modloaderStr = "";
-            if (modloader != ModloaderType.Vanilla)
+            if (modloader != ClientType.Vanilla)
             {
                 modloaderStr = "&modLoaderType=" + (int)modloader;
             }

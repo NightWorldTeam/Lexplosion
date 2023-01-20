@@ -24,7 +24,7 @@ namespace Lexplosion.Logic.Management.Instances
             public string Name;
             public string Description;
             public string Author;
-            public ModloaderType ModloaderType;
+            public ClientType ModloaderType;
             public string ModloaderVersion;
             public AdditionalInstallerType? AdditionalInstallerType;
             public string AdditionalInstallerVersion;
@@ -256,9 +256,9 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="logoPath">Путь до логотипа. Если устанавливать не надо, то null.</param>
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ModloaderType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null)
+        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ClientType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null)
         {
-            if (modloaderVersion == null) modloader = ModloaderType.Vanilla;
+            if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
             var client = new InstanceClient(name, type, gameVersion)
             {
@@ -316,7 +316,7 @@ namespace Lexplosion.Logic.Management.Instances
                     Name = _name,
                     Summary = _summary,
                     ModloaderVersion = manifest?.version?.modloaderVersion ?? "",
-                    Modloader = manifest?.version.modloaderType ?? ModloaderType.Vanilla,
+                    Modloader = manifest?.version.modloaderType ?? ClientType.Vanilla,
                     OptifineVersion = manifest?.version?.additionalInstaller?.installerVersion
                 };
             }
@@ -713,7 +713,7 @@ namespace Lexplosion.Logic.Management.Instances
             if (!InLibrary)
             {
                 _localId = GenerateInstanceId();
-                CreateFileStruct(ModloaderType.Vanilla, "");
+                CreateFileStruct(ClientType.Vanilla, "");
                 _installedInstances[_localId] = this;
                 _idsPairs[_externalId] = _localId;
                 SaveInstalledInstancesList();
@@ -855,7 +855,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="modloaderVersion">Версия модлоадера</param>
         /// <param name="optifineVersion">Версия оптифайна. null если не нужен</param>
-        private void CreateFileStruct(ModloaderType modloader, string modloaderVersion, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
+        private void CreateFileStruct(ClientType modloader, string modloaderVersion, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
         {
             Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + _localId);
 
@@ -1064,7 +1064,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Author = Author,
                 Description = Description,
                 GameVersion = instanceManifest?.version?.gameVersion,
-                ModloaderType = instanceManifest?.version?.modloaderType ?? ModloaderType.Vanilla,
+                ModloaderType = instanceManifest?.version?.modloaderType ?? ClientType.Vanilla,
                 ModloaderVersion = instanceManifest?.version?.modloaderVersion,
                 Name = name ?? Name,
                 Categories = Categories,

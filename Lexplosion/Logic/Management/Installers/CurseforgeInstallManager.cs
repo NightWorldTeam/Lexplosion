@@ -72,7 +72,7 @@ namespace Lexplosion.Logic.Management.Installers
                 return InstanceInit.VersionError;
             }
 
-            if (Manifest.version.modloaderVersion != null && Manifest.version.modloaderVersion != "" && Manifest.version.modloaderType != ModloaderType.Vanilla)
+            if (Manifest.version.modloaderVersion != null && Manifest.version.modloaderVersion != "" && Manifest.version.modloaderType != ClientType.Vanilla)
             {
                 BaseFilesIsCheckd = true;
 
@@ -200,7 +200,7 @@ namespace Lexplosion.Logic.Management.Installers
 
                 //определяем приоритетную версию модлоадера
                 string modLoaderVersion = "";
-                ModloaderType modloader = ModloaderType.Vanilla;
+                ClientType modloader = ClientType.Vanilla;
                 foreach (var loader in manifest.minecraft.modLoaders)
                 {
                     if (loader.primary)
@@ -214,17 +214,17 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     if (modLoaderVersion.Contains("forge-"))
                     {
-                        modloader = ModloaderType.Forge;
+                        modloader = ClientType.Forge;
                         modLoaderVersion = modLoaderVersion.Replace("forge-", "");
                     }
                     else if (modLoaderVersion.Contains("fabric-"))
                     {
-                        modloader = ModloaderType.Fabric;
+                        modloader = ClientType.Fabric;
                         modLoaderVersion = modLoaderVersion.Replace("fabric-", "");
                     }
                     else if (modLoaderVersion.Contains("fabric-"))
                     {
-                        modloader = ModloaderType.Quilt;
+                        modloader = ClientType.Quilt;
                         modLoaderVersion = modLoaderVersion.Replace("quilt-", "");
                     }
                 }

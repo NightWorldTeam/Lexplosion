@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.Network
             public string WebsiteUrl;
             public List<string> Images;
             public long LastUpdate;
-            public ModloaderType Modloader;
+            public ClientType Modloader;
         }
 
         public class InstanceInfo

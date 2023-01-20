@@ -104,7 +104,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Summary { get; set; }
         public List<Category> Categories { get; set; }
         public string Author { get; set; }
-        public ModloaderType Modloader { get; set; }
+        public ClientType Modloader { get; set; }
         public string ModloaderVersion { get; set; }
         public string OptifineVersion { get; set; } = null;
 

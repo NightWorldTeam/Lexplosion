@@ -101,31 +101,31 @@ namespace Lexplosion.Logic.Objects.Curseforge
         /// <summary>
         /// Эта хуйня возвращает тип модлоадера. При каждом вызове тип вычисляется заново, поэтому лучше этот геттер несколько раз не вызывать.
         /// </summary>
-        public ModloaderType ModloaderType
+        public ClientType ModloaderType
         {
             get
             {
-                ModloaderType modloaderType = ModloaderType.Vanilla;
+                ClientType modloaderType = ClientType.Vanilla;
                 if (latestFiles != null && latestFiles.Count > 0)
                 {
                     long maxId = latestFiles[0].id;
                     foreach (var value in latestFiles)
                     {
-                        if (value.id > maxId || modloaderType == ModloaderType.Vanilla)
+                        if (value.id > maxId || modloaderType == ClientType.Vanilla)
                         {
                             if (value.gameVersions != null)
                             {
                                 if (value.gameVersions.Contains("Forge"))
                                 {
-                                    modloaderType = ModloaderType.Forge;
+                                    modloaderType = ClientType.Forge;
                                 }
                                 else if (value.gameVersions.Contains("Fabric"))
                                 {
-                                    modloaderType = ModloaderType.Fabric;
+                                    modloaderType = ClientType.Fabric;
                                 }
                                 else if (value.gameVersions.Contains("Quilt"))
                                 {
-                                    modloaderType = ModloaderType.Quilt;
+                                    modloaderType = ClientType.Quilt;
                                 }
                             }
 

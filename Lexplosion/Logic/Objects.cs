@@ -113,7 +113,7 @@ namespace Lexplosion.Logic.Objects
         public string GameVersion { get; set; }
         public string LastUpdate { get; set; }
         public long TotalDownloads { get; set; }
-        public ModloaderType Modloader { get; set; }
+        public ClientType Modloader { get; set; }
         public string Description { get; set; }
         public List<Category> Categories { get; set; }
         public List<byte[]> Images { get; set; }

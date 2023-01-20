@@ -22,7 +22,7 @@ namespace Lexplosion.Logic.Objects.Nightworld
         public class Version
         {
             public string modloaderVersion;
-            public ModloaderType modloaderType;
+            public ClientType modloaderType;
             public string gameVersion;
             public bool security;
         }

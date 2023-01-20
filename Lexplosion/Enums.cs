@@ -69,7 +69,7 @@
         UnknownError
     }
 
-    public enum ModloaderType
+    public enum ClientType
     {
         Vanilla,
         Forge,

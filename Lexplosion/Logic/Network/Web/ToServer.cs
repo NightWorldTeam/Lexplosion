@@ -78,10 +78,10 @@ namespace Lexplosion.Logic.Network
             return HttpPost(LaunсherSettings.URL.Base + "/api/onlineStatus") == "online";
         }
 
-        public static List<string> GetModloadersList(string gameVersion, ModloaderType modloaderType)
+        public static List<string> GetModloadersList(string gameVersion, ClientType modloaderType)
         {
             string modloader;
-            if (modloaderType != ModloaderType.Vanilla)
+            if (modloaderType != ClientType.Vanilla)
             {
                 modloader = "/" + modloaderType.ToString().ToLower() + "/";
             }
@@ -186,14 +186,14 @@ namespace Lexplosion.Logic.Network
         }
 
         //функция получает манифест для майкрафт версии
-        public static VersionManifest GetVersionManifest(string version, ModloaderType modloader, string modloaderVersion = null, string optifineVersion = null)
+        public static VersionManifest GetVersionManifest(string version, ClientType modloader, string modloaderVersion = null, string optifineVersion = null)
         {
             try
             {
                 string modloaderUrl = "";
                 if (!string.IsNullOrEmpty(modloaderVersion))
                 {
-                    if (modloader != ModloaderType.Vanilla)
+                    if (modloader != ClientType.Vanilla)
                     {
                         modloaderUrl = "/" + modloader.ToString().ToLower() + "/";
                         modloaderUrl += modloaderVersion;
