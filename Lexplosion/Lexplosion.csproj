@@ -153,6 +153,8 @@
     <Compile Include="Gui\Models\InstanceForm\LowerButton.cs" />
     <Compile Include="Gui\Models\InstanceForm\ButtonModel.cs" />
     <Compile Include="Gui\Models\InstanceForm\UpperButton.cs" />
+    <Compile Include="Gui\Models\MainMenu\CatalogModel.cs" />
+    <Compile Include="Gui\Models\MainMenu\LibraryModel.cs" />
     <Compile Include="Gui\Models\MainModel.cs" />
     <Compile Include="Gui\Models\MultiplayerModel.cs" />
     <Compile Include="Gui\Models\ShowCaseMenu\InstanceSettingsModel.cs" />
@@ -167,9 +169,9 @@
     <Compile Include="Gui\ViewModels\CurseforgeMarket\CfCategory.cs" />
     <Compile Include="Gui\ViewModels\CurseforgeMarket\CurseforgeMarketViewModel.cs" />
     <Compile Include="Gui\ViewModels\CurseforgeMarket\DownloadAddonFile.cs" />
-    <Compile Include="Gui\ViewModels\FactoryMenu\FactoryDLCVM.cs" />
-    <Compile Include="Gui\ViewModels\FactoryMenu\FactoryGeneralViewModel.cs" />
-    <Compile Include="Gui\ViewModels\FactoryMenu\ImportViewModel.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFactoryMenu\FactoryDLCVM.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFactoryMenu\FactoryGeneralViewModel.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFactoryMenu\ImportViewModel.cs" />
     <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\CatalogViewModel.cs" />

@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             CurrentInstanceClient = instanceClient;
             BaseInstanceData = CurrentInstanceClient.GetBaseData;
-            IsModloader = BaseInstanceData.Modloader != ModloaderType.Vanilla;
+            IsModloader = BaseInstanceData.Modloader != ClientType.Vanilla;
             IsOptifine = !string.IsNullOrEmpty(BaseInstanceData.OptifineVersion);
             ModloaderType = BaseInstanceData.Modloader;
             ModloaderVersion = BaseInstanceData.ModloaderVersion;
@@ -132,15 +132,15 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             }
         }
 
-        private ModloaderType modloaderType;
-        public ModloaderType ModloaderType
+        private ClientType modloaderType;
+        public ClientType ModloaderType
         {
             get => modloaderType; set
             {
                 modloaderType = BaseInstanceData.Modloader = value;
 
                 // проверяем выбран ли modloader
-                IsModloader = modloaderType != ModloaderType.Vanilla;
+                IsModloader = modloaderType != ClientType.Vanilla;
 
                 // загружаем версии modloader для конкретной версии.
                 GetModloaderVersions(BaseInstanceData.GameVersion, value);
@@ -210,12 +210,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
         #region methods
 
-        private void GetModloaderVersions(string gameVersion, ModloaderType modloader)
+        private void GetModloaderVersions(string gameVersion, ClientType modloader)
         {
             Lexplosion.Runtime.TaskRun(() =>
             {
                 ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(gameVersion, modloader));
-                if (CurrentInstanceClient.GetBaseData.Modloader != ModloaderType.Vanilla)
+                if (CurrentInstanceClient.GetBaseData.Modloader != ClientType.Vanilla)
                 {
                     ModloaderVersion = CurrentInstanceClient.GetBaseData.ModloaderVersion;
                 }
@@ -228,12 +228,12 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             });
         }
 
-        private void GetOptifineVersions(string gameVersion, ModloaderType modloader)
+        private void GetOptifineVersions(string gameVersion, ClientType modloader)
         {
             Lexplosion.Runtime.TaskRun(() =>
             {
                 OptifineVersions = new ObservableCollection<string>(ToServer.GetOptifineVersions(gameVersion));
-                if (modloader == ModloaderType.Vanilla)
+                if (modloader == ClientType.Vanilla)
                     OptifineVersion = CurrentInstanceClient.GetBaseData.OptifineVersion;
             });
         }

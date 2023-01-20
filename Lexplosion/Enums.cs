@@ -82,6 +82,27 @@
         Optifine
     }
 
+    public enum GameType
+    {
+        Vanilla,
+        Modded
+    }
+
+    public enum Modloader
+    {
+        Forge = 1,
+        Fabric = 4,
+        Quilt = 3
+    }
+
+    public enum GameExtension
+    {
+        Optifine,
+        Forge,
+        Fabric = 4,
+        Quilt
+    }
+
     /// <summary>
     /// Типа аддонов с курсфорджа
     /// </summary>

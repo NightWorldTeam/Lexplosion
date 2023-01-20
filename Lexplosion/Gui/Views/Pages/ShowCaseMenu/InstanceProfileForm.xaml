@@ -69,7 +69,7 @@
             MethodName="GetValues"
             ObjectType="{x:Type System:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="lexplosion:ModloaderType" />
+                <x:Type TypeName="lexplosion:ClientType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 

@@ -37,7 +37,7 @@
             <ItemsControl x:Name="LibraryItemsControl" ScrollViewer.VerticalScrollBarVisibility="Auto">
 
                 <ItemsControl.Resources>
-                    <CollectionViewSource x:Key="InstanceCollection" Source="{Binding MainVM.Model.LibraryInstances}" />
+                    <CollectionViewSource x:Key="InstanceCollection" Source="{Binding Model.MainViewModel.Model.LibraryInstances}" />
                 </ItemsControl.Resources>
 
                 <ItemsControl.ItemsSource>
@@ -107,10 +107,10 @@
 
             <Button
                 x:Name="UpButton"
-                Visibility="Collapsed"
                 Margin="0,10,0,0"
                 Click="UpButton_Click"
-                Style="{StaticResource IconicButton}">
+                Style="{StaticResource IconicButton}"
+                Visibility="Collapsed">
                 <Border
                     Width="40"
                     Height="40"

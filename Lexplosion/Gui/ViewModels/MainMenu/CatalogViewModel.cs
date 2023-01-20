@@ -258,7 +258,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             IsLoaded = false;
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var gameVersion = SelectedVersionIndex == 0 ? "" : _mainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
+                var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
 
                 var instances = InstanceClient.GetOutsideInstances(
                     SelectedInstanceSource,

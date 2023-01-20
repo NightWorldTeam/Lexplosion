@@ -133,7 +133,7 @@
 
                             <ToggleButton
                                 HorizontalAlignment="Right"
-                                IsChecked="{Binding IsShowSnapshots}"
+                                IsChecked="{Binding Model.IsShowSnapshots}"
                                 Style="{StaticResource ToggleSwitch}" />
                         </Grid>
                         <Grid>
@@ -152,9 +152,9 @@
                                 VerticalAlignment="Top"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                ItemsSource="{Binding GameVersions}"
+                                ItemsSource="{Binding Model.GameVersions}"
                                 Opacity="0.8"
-                                SelectedValue="{Binding SelectedVersion, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValue="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource LighterDefaultComboBox}" />
                         </Grid>
                     </StackPanel>
@@ -166,7 +166,7 @@
                     BorderBrush="#202020"
                     BorderThickness="0,0,0,1">
                     <StackPanel>
-                        <Grid Margin="0,0,0,20">
+                        <Grid Margin="0,0,0,10">
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontSize="14"
@@ -177,33 +177,50 @@
 
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                 <RadioButton
-                                    Command="{Binding SwitchModloaderType}"
-                                    CommandParameter="{x:Static objects:ModloaderType.Vanilla}"
+                                    Command="{Binding SwitchClientType}"
+                                    CommandParameter="{x:Static objects:ClientType.Vanilla}"
                                     Content="Vanilla"
-                                    IsChecked="True"
+                                    GroupName="ClientType"
+                                    IsChecked="{Binding IsVanilla}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
-                                    Command="{Binding SwitchModloaderType}"
-                                    CommandParameter="{x:Static objects:ModloaderType.Forge}"
+                                    Command="{Binding SwitchClientType}"
+                                    CommandParameter="{x:Static objects:ClientType.Forge}"
                                     Content="Forge"
+                                    GroupName="ClientType"
+                                    IsChecked="{Binding IsForge}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
-                                    Command="{Binding SwitchModloaderType}"
-                                    CommandParameter="{x:Static objects:ModloaderType.Fabric}"
+                                    Command="{Binding SwitchClientType}"
+                                    CommandParameter="{x:Static objects:ClientType.Fabric}"
                                     Content="Fabric"
+                                    GroupName="ClientType"
+                                    IsChecked="{Binding IsFabric}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
-                                    Command="{Binding SwitchModloaderType}"
-                                    CommandParameter="{x:Static objects:ModloaderType.Quilt}"
+                                    Command="{Binding SwitchClientType}"
+                                    CommandParameter="{x:Static objects:ClientType.Quilt}"
                                     Content="Quilt"
+                                    GroupName="ClientType"
+                                    IsChecked="{Binding IsQuilt}"
                                     Style="{StaticResource HighlightRadioButton}" />
                             </StackPanel>
                         </Grid>
 
-                        <Grid Margin="0,0,0,20" Visibility="{Binding IsModloaderSelected, Converter={StaticResource ConvertBoolToVisibility}}">
+                        <Grid Margin="0,10,0,20">
+                            <Grid.Style>
+                                <Style TargetType="{x:Type Grid}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Model.GameType}" Value="{x:Static enum:GameType.Modded}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontSize="14"
@@ -218,9 +235,9 @@
                                 HorizontalAlignment="Right"
                                 FontSize="14"
                                 FontWeight="Medium"
-                                ItemsSource="{Binding ModloaderVersions}"
+                                ItemsSource="{Binding Model.ModloaderModel.Versions}"
                                 Opacity="0.8"
-                                SelectedValue="{Binding SelectedModloaderVersion, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValue="{Binding Model.ModloaderModel.Version, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource LighterDefaultComboBox}" />
                         </Grid>
 
@@ -231,8 +248,8 @@
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding Model.ModloaderType}" Value="{x:Static enum:ModloaderType.Vanilla}" />
-                                                <Condition Binding="{Binding IsOptifineAvaliable}" Value="True" />
+                                                <Condition Binding="{Binding Model.GameType}" Value="{x:Static enum:GameType.Vanilla}" />
+                                                <Condition Binding="{Binding Model.OptifineModel.IsAvaliable}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility" Value="Visible" />
@@ -252,10 +269,10 @@
 
                                 <ToggleButton
                                     HorizontalAlignment="Right"
-                                    IsChecked="{Binding IsOptifineInstalling}"
+                                    IsChecked="{Binding Model.OptifineModel.IsEnable}"
                                     Style="{StaticResource ToggleSwitch}" />
                             </Grid>
-                            <ComboBox ItemsSource="{Binding OptifineVersions}" SelectedItem="{Binding SelectedOptifineVersion}" />
+                            <ComboBox ItemsSource="{Binding Model.OptifineModel.Versions}" SelectedItem="{Binding Model.OptifineModel.Version}" />
                         </StackPanel>
                     </StackPanel>
                 </Border>

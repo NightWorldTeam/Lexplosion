@@ -141,7 +141,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
             Lexplosion.Runtime.TaskRun(() =>
             {
-                IsVanillaGameType = _instanceClient.GetBaseData.Modloader == ModloaderType.Vanilla;
+                IsVanillaGameType = _instanceClient.GetBaseData.Modloader == ClientType.Vanilla;
 
                 if (!IsVanillaGameType)
                 {
