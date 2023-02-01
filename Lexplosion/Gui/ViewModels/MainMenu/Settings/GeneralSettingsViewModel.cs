@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Models;
+﻿using Lexplosion.Global;
+using Lexplosion.Gui.Models;
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.FileSystem;
 using System;
@@ -62,6 +63,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 
         private void ChangedDirectory(string newPath)
         {
+            newPath = newPath + "/" + LaunсherSettings.GAME_FOLDER_NAME;
             GeneralSettings.SystemPath = newPath;
 
             var dialogModal = new DialogViewModel(_mainViewModel);

@@ -10,6 +10,8 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
+using System.Runtime.CompilerServices;
+using System.Management.Instrumentation;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -735,28 +737,34 @@ namespace Lexplosion.Logic.Management.Instances
             return;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool ForbiddenIsCharsExists(string str)
+        {
+            str = str.Replace("_", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "").Replace(" ", "").Replace(".", "");
+            return Regex.IsMatch(str, @"[^a-zA-Z0-9]");
+        }
+
         private string GenerateInstanceId()
         {
-            string instanceId = Name;
-            instanceId = instanceId.Replace(" ", "_");
+            string instanceId = Name.ToLower();
 
             // переводим русские символы в транслит
-            string[] lat_up = { "A", "B", "V", "G", "D", "E", "Yo", "Zh", "Z", "I", "Y", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "Kh", "Ts", "Ch", "Sh", "Shch", "\"", "Y", "'", "E", "Yu", "Ya" };
             string[] lat_low = { "a", "b", "v", "g", "d", "e", "yo", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "\"", "y", "'", "e", "yu", "ya" };
             string[] rus_up = { "А", "Б", "В", "Г", "Д", "Е", "Ё", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я" };
             string[] rus_low = { "а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я" };
             for (int i = 0; i <= 32; i++)
             {
-                instanceId = instanceId.Replace(rus_up[i], lat_up[i]);
-                instanceId = instanceId.Replace(rus_low[i], lat_low[i]);
+                instanceId = instanceId.Replace(rus_up[i], lat_low[i]).Replace(rus_low[i], lat_low[i]);
             }
 
-            if (Regex.IsMatch(instanceId.Replace("_", ""), @"[^a-zA-Z0-9]"))
+            instanceId = instanceId.Replace("&", "AND");
+
+            if (ForbiddenIsCharsExists(instanceId))
             {
                 int j = 0;
                 while (j < instanceId.Length)
                 {
-                    if (Regex.IsMatch(instanceId[j].ToString(), @"[^a-zA-Z0-9]") && instanceId[j] != '_')
+                    if (ForbiddenIsCharsExists(instanceId[j].ToString()))
                     {
                         instanceId = instanceId.Replace(instanceId[j], '_');
                     }
@@ -771,7 +779,7 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         if (i > 0)
                         {
-                            instanceId_ = instanceId + "__" + i;
+                            instanceId_ = instanceId + " (" + i + ")";
                         }
                         i++;
                     }
