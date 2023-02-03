@@ -37,10 +37,8 @@ namespace Lexplosion.Logic.Network
             {
                 if (point != null && Connections.ContainsKey(point)) // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
                 {
-#if DEBUG
-                    var stackTrace = new System.Diagnostics.StackTrace();
-                    Runtime.DebugWrite("clientAbort. StackTrace: " + stackTrace);    
-#endif
+                    Runtime.DebugWrite("clientAbort. StackTrace: " + new System.Diagnostics.StackTrace());    
+
                     AcceptingBlock.WaitOne();
                     Connections.TryRemove(point, out Socket sock);
                     sock.Close(); //зыкрываем соединение с майнкрафтом.
