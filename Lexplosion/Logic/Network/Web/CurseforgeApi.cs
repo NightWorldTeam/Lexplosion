@@ -38,11 +38,11 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
+                var headers = new Dictionary<string, string>() {
+                    ["x-api-key"] = Token
+                };
 
-                List<KeyValuePair<string, string>> headers = new List<KeyValuePair<string, string>>();
-                headers.Add(new KeyValuePair<string, string>("x-api-key", Token));
                 string answer = ToServer.HttpGet(url, headers);
-
                 if (answer != null)
                 {
                     var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer).data;

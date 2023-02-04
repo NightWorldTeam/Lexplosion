@@ -249,17 +249,11 @@ namespace Lexplosion.Logic.Network
         {
             baseStatus = 0;
 
-            string str = "";
-            string str2 = "";
-            string salt = "";
             Random rnd = new Random();
 
-            for (int i = 0; i < 32; i++)
-            {
-                str += rnd.GenerateString(1);
-                str2 += rnd.GenerateString(1);
-                salt += rnd.GenerateString(1);
-            }
+            string str = rnd.GenerateString(32);
+            string str2 = rnd.GenerateString(32);
+            string salt = rnd.GenerateString(32);
 
             using (SHA1 sha = new SHA1Managed())
             {
@@ -359,7 +353,6 @@ namespace Lexplosion.Logic.Network
             {
                 WebRequest request = WebRequest.Create(url);
                 request.Method = "POST";
-                //request.Timeout = 1000;
                 string dataS = "";
 
                 if (data != null)
@@ -400,7 +393,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static string HttpGet(string url, List<KeyValuePair<string, string>> headers = null)
+        public static string HttpGet(string url, Dictionary<string, string> headers = null)
         {
             try
             {
