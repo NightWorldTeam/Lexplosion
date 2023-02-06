@@ -42,9 +42,6 @@ namespace Lexplosion.Logic
                 if (IsHiddenMode == null) IsHiddenMode = settings.IsHiddenMode;
                 if (IsAutoUpdate == null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (GameArgs == null) GameArgs = settings.GameArgs;
-                OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
-                LanguageId = settings.LanguageId;
-                AccentColor = settings.AccentColor;
             }
             else
             {
@@ -59,10 +56,11 @@ namespace Lexplosion.Logic
                 if (settings.IsHiddenMode != null) IsHiddenMode = settings.IsHiddenMode;
                 if (settings.IsAutoUpdate != null) IsAutoUpdate = settings.IsAutoUpdate;
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
-                OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
-                LanguageId = settings.LanguageId;
-                AccentColor = settings.AccentColor;
             }
+
+            OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
+            LanguageId = settings.LanguageId;
+            AccentColor = settings.AccentColor;
         }
 
         public Settings Copy()

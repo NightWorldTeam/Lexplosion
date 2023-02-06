@@ -40,14 +40,31 @@ namespace Lexplosion.Logic.FileSystem
             string oldDir = DirectoryPath;
             Create(path);
 
+            bool suuccessfull = false;
+
             try
             {
                 foreach (string dirPath in Directory.GetDirectories(oldDir, "*", SearchOption.AllDirectories))
+                {
                     Directory.CreateDirectory(dirPath.Replace(oldDir, path));
-
+                }
+                    
                 foreach (string newPath in Directory.GetFiles(oldDir, "*.*", SearchOption.AllDirectories))
+                {
                     File.Copy(newPath, newPath.Replace(oldDir, path), true);
+                }       
 
+                suuccessfull = true;
+
+            }
+            catch { }
+
+            try
+            {
+                if (suuccessfull)
+                {
+                    Directory.Delete(oldDir, true);
+                }
             }
             catch { }
         }
@@ -169,13 +186,15 @@ namespace Lexplosion.Logic.FileSystem
                     return false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 if (tempDir != null)
                 {
                     DelFile(tempDir + fileName);
                     DelFile(DirectoryPath + "/" + path + "/" + fileName);
                 }
+
+                Runtime.DebugWrite("Download error " + fileName + " " + url + " " + ex);
 
                 return false;
             }
@@ -206,8 +225,9 @@ namespace Lexplosion.Logic.FileSystem
 
                     return result;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Runtime.DebugWrite("Download error " + fileName + " " + url + " " + ex);
                     return false;
                 }
             }

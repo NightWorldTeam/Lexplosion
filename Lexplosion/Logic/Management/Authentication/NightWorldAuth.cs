@@ -33,38 +33,32 @@ namespace Lexplosion.Logic.Management.Authentication
                 status = ActivityStatus.NotDisturb;
             }
 
-            if (response != null)
+            if (response.Status == AuthCode.Successfully)
             {
-                if (response.Status == AuthCode.Successfully)
+                User user = new User(response.Login,
+                    response.UUID,
+                    response.AccesToken,
+                    response.SessionToken,
+                    AccountType.NightWorld,
+                    status);
+
+                LaunchGame.GameStartEvent += delegate (LaunchGame gameManager)
                 {
-                    User user = new User(response.Login,
-                        response.UUID,
-                        response.AccesToken,
-                        response.SessionToken,
-                        AccountType.NightWorld,
-                        status);
+                    user.GameStart(gameManager.GameClientName);
+                };
 
-                    LaunchGame.GameStartEvent += delegate (LaunchGame gameManager)
-                    {
-                        user.GameStart(gameManager.GameClientName);
-                    };
+                LaunchGame.GameStopEvent += delegate (LaunchGame gameManager)
+                {
+                    user.GameStop(gameManager.GameClientName);
+                };
 
-                    LaunchGame.GameStopEvent += delegate (LaunchGame gameManager)
-                    {
-                        user.GameStop(gameManager.GameClientName);
-                    };
+                Lexplosion.Runtime.ExitEvent += user.Exit;
 
-                    Lexplosion.Runtime.ExitEvent += user.Exit;
-
-                    code = AuthCode.Successfully;
-                    return user;
-                }
-
-                code = response.Status;
-                return null;
+                code = AuthCode.Successfully;
+                return user;
             }
 
-            code = AuthCode.NoConnect;
+            code = response.Status;
             return null;
         }
     }

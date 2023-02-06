@@ -147,7 +147,7 @@ namespace Lexplosion.Logic.Management
 
             string jvmArgs = data.VersionFile.jvmArguments ?? "";
             jvmArgs = jvmArgs.Replace("${version_file}", data.VersionFile.minecraftJar.name);
-            jvmArgs = jvmArgs.Replace("${library_directory}", _settings.GamePath + "/libraries");
+            jvmArgs = jvmArgs.Replace("${library_directory}", "\"" + _settings.GamePath + "/libraries\"");
 
             command += jvmArgs;
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";

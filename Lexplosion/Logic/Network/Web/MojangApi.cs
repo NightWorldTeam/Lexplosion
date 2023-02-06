@@ -221,13 +221,9 @@ namespace Lexplosion.Logic.Network.Web
         {
             try
             {
-                string answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new List<KeyValuePair<string, string>>()
+                string answer = ToServer.HttpGet("https://api.minecraftservices.com/minecraft/profile", new Dictionary<string, string>()
                 {
-                    new KeyValuePair<string, string>
-                    (
-                        "Authorization",
-                        "Bearer " + token
-                    )
+                    ["Authorization"] = "Bearer " + token
                 });
 
                 if (answer == null)
