@@ -204,7 +204,7 @@ namespace Lexplosion.Logic.Management
                         UserDisconnected?.Invoke(player);
                     };
 
-                    gameGateway.StateChanged += StateChanged;
+                    gameGateway.StatusChanged += StateChanged;
                 }
             }
 

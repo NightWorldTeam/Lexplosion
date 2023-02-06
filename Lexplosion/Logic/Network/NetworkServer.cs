@@ -137,7 +137,27 @@ namespace Lexplosion.Logic.Network
             return result;
         }
 
-        protected void Accepting(string serverType) // TODO: нужно избегать повторного подключения
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void PrepeareRepeat()
+        {
+            ControlConnectionBlock.WaitOne();
+
+            try
+            {
+                _controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
+            }
+            finally
+            {
+                _controlConnection.Close();
+            }
+
+            _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            Runtime.DebugWrite("Repeat connection to control server");
+            DirectConnection = false;
+        }
+
+        protected void Accepting(string serverType)
         {
             // если стоит парметр установки прямого соединения, то проверяем, возможно ли его вообще установить. если нет - переходим на TURN
             if (DirectConnection)
@@ -154,16 +174,34 @@ namespace Lexplosion.Logic.Network
                 bool needRepeat = false;
 
                 //подключаемся к управляющему серверу
-                _controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
+                try
+                {
+                    _controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
+                }
+                catch
+                {
+                    //при ошибке ждем 30 секунд и пытаемся повторить
+                    Thread.Sleep(30000);
+                    continue;
+                }
 
-                string st =
+                try
+                {
+                    string st =
                     "{\"UUID\" : \"" + UUID + "\"," +
                     " \"type\": \"" + serverType + "\"," +
                     " \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"," +
                     " \"sessionToken\" : \"" + _sessionToken + "\"}";
 
-                byte[] sendData = Encoding.UTF8.GetBytes(st);
-                _controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
+                    byte[] sendData = Encoding.UTF8.GetBytes(st);
+                    _controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
+                }
+                catch
+                {
+                    PrepeareRepeat();
+                    continue;
+                }
+
                 MaintainingThread.Start();
                 Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD");
 
@@ -217,7 +255,7 @@ namespace Lexplosion.Logic.Network
                                     if (point != null)
                                     {
                                         ClientAbort(point);
-                                    }           
+                                    }
                                 }
 
                                 _controlConnection.Send(new byte[1] { ControlSrverCodes.A }); //отправляем серверу соглашение
@@ -262,14 +300,14 @@ namespace Lexplosion.Logic.Network
                                 }
                                 else
                                 {
-                                    // TODO: опять же произошло что-то с сервером
-                                    continue;
+                                    needRepeat = true;
+                                    break;
                                 }
                             }
                             else
                             {
-                                // TODO: что-то странное произошло. сервер должен 1 байт вернуть и отправить запрос на подключени
-                                continue;
+                                needRepeat = true;
+                                break;
                             }
                         }
 
@@ -337,13 +375,7 @@ namespace Lexplosion.Logic.Network
 
                 if (needRepeat)
                 {
-                    ControlConnectionBlock.WaitOne();
-                    _controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
-                    _controlConnection.Close();
-                    _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                    Runtime.DebugWrite("Repeat connection to control server");
-                    DirectConnection = false;
+                    PrepeareRepeat();
                 }
                 else
                 {

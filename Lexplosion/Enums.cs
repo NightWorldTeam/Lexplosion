@@ -148,13 +148,6 @@
         Microsoft
     }
 
-    public enum OnlineGameStatus
-    {
-        None,
-        OpenWorld,
-        ConnectedToUser
-    }
-
     public enum InstanceChangelog
     {
         Fixes,

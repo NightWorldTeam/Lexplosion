@@ -323,6 +323,7 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />
+    <Compile Include="Logic\Network\Enums.cs" />
     <Compile Include="Logic\Network\Values.cs" />
     <Compile Include="Logic\Network\WebSockets\WebSocket.cs" />
     <Compile Include="Logic\Network\WebSockets\WebSocketClient.cs" />
