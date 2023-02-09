@@ -87,7 +87,8 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             GameVersion = gameVersion;
             Lexplosion.Runtime.TaskRun(() => {
                 Runtime.DebugWrite(extension);
-                Versions =  LoadExtensionVersions(extension, gameVersion).Result;
+                GameExtension = extension;
+                Versions = LoadExtensionVersions(extension, gameVersion).Result;
                 if (Versions.Count > 0)
                 {
                     IsAvaliable = true;
@@ -128,18 +129,17 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         }
     }
 
-    public class OptifineModel : ExtensionModel
+    public sealed class OptifineModel : ExtensionModel
     {
         public OptifineModel(GameExtension extension, string gameVersion) : base(extension, gameVersion)
         {
         }
     }
 
-    public class ModloaderModel : ExtensionModel
+    public sealed class ModloaderModel : ExtensionModel
     {
         public ModloaderModel(GameExtension extension, string gameVersion) : base(extension, gameVersion)
         {
-
         }
     }
 
@@ -172,10 +172,11 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             {
                 _version = value;
                 if (ModloaderModel != null) 
-                { 
+                {
+                    Runtime.DebugWrite(ModloaderModel.GameExtension);
                     ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version);
                 }
-                if (OptifineModel != null ) 
+                if (OptifineModel != null) 
                 { 
                     OptifineModel = new OptifineModel(GameExtension.Optifine, _version);
                 }
@@ -317,8 +318,9 @@ namespace Lexplosion.Gui.Models.InstanceFactory
                 return;
             }
 
-            
-            ModloaderModel = new ModloaderModel(extension, Version);
+            if (extension != GameExtension.Optifine) { 
+                ModloaderModel = new ModloaderModel(extension, Version);
+            }
         }
 
         public void CreateInstance() 
