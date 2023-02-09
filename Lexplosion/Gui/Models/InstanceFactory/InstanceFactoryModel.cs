@@ -5,6 +5,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Tools.Immutable;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.Models.InstanceFactory
@@ -173,7 +174,6 @@ namespace Lexplosion.Gui.Models.InstanceFactory
                 _version = value;
                 if (ModloaderModel != null) 
                 {
-                    Runtime.DebugWrite(ModloaderModel.GameExtension);
                     ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version);
                 }
                 if (OptifineModel != null) 
@@ -218,6 +218,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             get => _isShowSnapshots; set 
             {
                 _isShowSnapshots = value;
+                UpdateVersions();
                 OnPropertyChanged();
             }
         }
@@ -299,12 +300,15 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 
         private void UpdateVersions()
         {
+            string[] gameVersions;
             if (IsShowSnapshots)
             {
-                GameVersions = MainViewModel.AllGameVersions.ToArray();
+                gameVersions = MainViewModel.AllGameVersions.ToArray();
             }
-            else GameVersions = MainViewModel.ReleaseGameVersions.ToArray();
-            Version = GameVersions[0];
+            else gameVersions = MainViewModel.ReleaseGameVersions.ToArray();
+            Version = gameVersions[0];
+            GameVersions = gameVersions;
+            Version = gameVersions[0];
         }
 
         #endregion Private Methods
@@ -365,12 +369,14 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 
         public static void CreateLocalInstance(MainViewModel mainViewModel, InstanceFactoryModel model)
         {
+            var instanceVersion = model.Version.Replace("snapshot ", "").Replace("release ", "");
+
             if (model.GameType == GameType.Vanilla)
             {
                 CreateLocalInstance(
                     mainViewModel,
-                    name: model.Name ?? model.Version + " " + model.ModloaderModel.GameExtension,
-                    version: model.Version,
+                    name: model.Name ?? model.Version,
+                    version: instanceVersion,
                     logoPath: model.LogoPath,
                     ClientType.Vanilla,
                     //modloaderVersion: model.ModloaderVersion,
@@ -382,7 +388,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
                 CreateLocalInstance(
                     mainViewModel,
                     name: model.Name ?? model.Version + " " + model.ModloaderModel.GameExtension,
-                    version: model.Version,
+                    version: instanceVersion,
                     logoPath: model.LogoPath,
                     (ClientType)model.ModloaderModel.GameExtension,
                     modloaderVersion: model.ModloaderModel.Version

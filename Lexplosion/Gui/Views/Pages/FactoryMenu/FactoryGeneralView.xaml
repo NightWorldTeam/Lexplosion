@@ -215,9 +215,15 @@
                                 <Style TargetType="{x:Type Grid}">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Model.GameType}" Value="{x:Static enum:GameType.Modded}">
-                                            <Setter Property="Visibility" Value="Visible" />
-                                        </DataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Model.GameType}" Value="{x:Static enum:GameType.Modded}" />
+                                                <Condition Binding="{Binding Model.ModloaderModel.IsAvaliable}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Grid.Style>
