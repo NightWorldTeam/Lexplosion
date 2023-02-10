@@ -30,7 +30,7 @@ namespace Lexplosion.Logic.Network
         /// <summary>
         /// Проверяет есть ли на сервере новая версия лаунчера
         /// </summary>
-        /// <returns>Возвращает версию нового лаунчера. И -1, если новых версий нет.</returns>
+        /// <returns>Возвращает версию нового лаунчера. -1 если новых версий нет.</returns>
         public static int CheckLauncherUpdates()
         {
             try
@@ -185,17 +185,23 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        //функция получает манифест для майкрафт версии
-        public static VersionManifest GetVersionManifest(string version, ClientType modloader, string modloaderVersion = null, string optifineVersion = null)
+        /// <summary>
+        /// Получает маниест для майкрафт версии
+        /// </summary>
+        /// <param name="version">Версия майнкрафта</param>
+        /// <param name="clientType">тип клиента</param>
+        /// <param name="modloaderVersion">Версия модлоадера, если он передан в clientType</param>
+        /// <param name="optifineVersion">Версия оптифайна, если он не нужен то null</param>
+        public static VersionManifest GetVersionManifest(string version, ClientType clientType, string modloaderVersion = null, string optifineVersion = null)
         {
             try
             {
                 string modloaderUrl = "";
                 if (!string.IsNullOrEmpty(modloaderVersion))
                 {
-                    if (modloader != ClientType.Vanilla)
+                    if (clientType != ClientType.Vanilla)
                     {
-                        modloaderUrl = "/" + modloader.ToString().ToLower() + "/";
+                        modloaderUrl = "/" + clientType.ToString().ToLower() + "/";
                         modloaderUrl += modloaderVersion;
                     }
                 }
@@ -245,10 +251,16 @@ namespace Lexplosion.Logic.Network
             return null;
         }
 
-        public static AuthResult Authorization(string login, string accessData, out int baseStatus)
+        /// <summary>
+        /// Защищенный запрос для передачи данных пользователя (регистрация, авторизация).
+        /// </summary>
+        /// <typeparam name="T">Возвращаемый тип</typeparam>
+        /// <param name="url">url</param>
+        /// <param name="data">Данные</param>
+        /// <param name="errorResult">Если сервер вернул ошибку, то ее код будет помещен сюда. В случае успеха будет null </param>
+        /// <returns>Вернет базовое значение при ошибке, поместив код ошибки в errorResult (если он есть).</returns>
+        public static T ProtectedUserRequest<T>(string url, string data, out string errorResult) where T : ProtectedManifest
         {
-            baseStatus = 0;
-
             Random rnd = new Random();
 
             string str = rnd.GenerateString(32);
@@ -265,14 +277,13 @@ namespace Lexplosion.Logic.Network
                     key += str2[i];
                 }
 
-                accessData = Convert.ToBase64String(Encoding.UTF8.GetBytes(accessData)) + ":" + str;
-                string planText = Convert.ToBase64String(Encoding.UTF8.GetBytes(accessData)) + ":" + salt;
+                data = Convert.ToBase64String(Encoding.UTF8.GetBytes(data)) + ":" + str;
+                string planText = Convert.ToBase64String(Encoding.UTF8.GetBytes(data)) + ":" + salt;
                 byte[] encrypted = Сryptography.AesEncode(planText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
-                Dictionary<string, string> data = new Dictionary<string, string>()
+                var fullData = new Dictionary<string, string>()
                 {
-                    ["login"] = login,
-                    ["accessData"] = Convert.ToBase64String(encrypted),
+                    ["data"] = Convert.ToBase64String(encrypted),
                     ["str"] = str,
                     ["str2"] = str2,
                     ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
@@ -283,71 +294,45 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    answer = HttpPost(LaunсherSettings.URL.Account + "auth", data);
+                    answer = HttpPost(url, fullData);
+                    Runtime.DebugWrite(answer);
 
                     if (answer == null)
                     {
-                        response.Status = AuthCode.NoConnect;
-                        return response;
-
+                        errorResult = null;
+                        return default;
                     }
-                    else if (answer == "ERROR:0")
+                    else if (answer.StartsWith("ERROR:")) // если результат является кодом ошибки, то возращаем его не декодируя
                     {
-                        response.Status = AuthCode.NoConnect;
-                        return response;
-                    }
-                    else if (answer == "ERROR:1")
-                    {
-                        response.Status = AuthCode.DataError;
-                        return response;
-                    }
-                    else if (answer == "ERROR:2")
-                    {
-                        response.Status = AuthCode.SessionExpired;
-                        return response;
+                        errorResult = answer;
+                        return default;
                     }
                     else
                     {
                         answer = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
-                        Dictionary<string, string> userData = JsonConvert.DeserializeObject<Dictionary<string, string>>(answer);
+                        T answerData = JsonConvert.DeserializeObject<T>(answer);
 
-                        if (userData["code"] == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(userData["str"] + ":" + LaunсherSettings.secretWord))))
+                        if (answerData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(answerData.str + ":" + LaunсherSettings.secretWord))))
                         {
-                            if (userData.ContainsKey("login") && userData.ContainsKey("UUID") && userData.ContainsKey("accesToken"))
-                            {
-                                response.Status = AuthCode.Successfully;
-                                response.Login = userData["login"];
-                                response.UUID = userData["UUID"];
-                                response.AccesToken = userData["accesToken"];
-                                response.SessionToken = userData["sessionToken"];
-                                response.AccessID = userData["accessID"];
-
-                                Int32.TryParse(userData["baseStatus"], out baseStatus);
-
-                                return response;
-                            }
-                            else
-                            {
-                                response.Status = AuthCode.NoConnect;
-                                return response;
-                            }
+                            errorResult = null;
+                            return answerData;
                         }
                         else
                         {
-                            response.Status = AuthCode.NoConnect;
-                            return response;
+                            errorResult = null;
+                            return default;
                         }
                     }
                 }
                 catch
                 {
-                    response.Status = AuthCode.NoConnect;
-                    return response;
+                    errorResult = null;
+                    return default;
                 }
             }
         }
 
-        public static string HttpPost(string url, Dictionary<string, string> data = null) // TODO: List<string> заменить на массив
+        public static string HttpPost(string url, Dictionary<string, string> data = null)
         {
             try
             {

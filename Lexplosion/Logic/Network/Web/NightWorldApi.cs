@@ -41,6 +41,82 @@ namespace Lexplosion.Logic.Network
             public string GameVersion;
         }
 
+        public struct AuthData
+        {
+            public struct AccessData
+            {
+                public string type;
+                public string data;
+            }
+
+            public AccessData accessData;
+            public string login;
+        }
+
+        public class AuthManifest : ProtectedManifest
+        {
+            public string login;
+            public string UUID;
+            public string accesToken;
+            public string sessionToken;
+            public string accessID;
+            public int baseStatus;
+            public string code { get; set; }
+            public string str { get; set; }
+        }
+
+        public static AuthResult Authorization(AuthData authData, out int baseStatus)
+        {
+            baseStatus = 0;
+
+            string data = JsonConvert.SerializeObject(authData);
+            //LaunсherSettings.URL.Account
+            var manifest = ToServer.ProtectedUserRequest<AuthManifest>("http://nw-prod/api/account/" + "auth", data, out string notComplitedResult);
+
+            if (notComplitedResult != null)
+            {
+                AuthResult response = new AuthResult();
+                if (notComplitedResult == "ERROR:1")
+                {
+                    response.Status = AuthCode.DataError;
+                    return response;
+                }
+                else if (notComplitedResult == "ERROR:2")
+                {
+                    response.Status = AuthCode.SessionExpired;
+                    return response;
+                }
+                else
+                {
+                    response.Status = AuthCode.NoConnect;
+                    return response;
+                }
+            }
+            else if (manifest == null)
+            {
+                return new AuthResult()
+                {
+                    Status = AuthCode.NoConnect
+                };
+            }
+            else
+            {
+                AuthResult response = new AuthResult()
+                {
+                    Status = AuthCode.Successfully,
+                    Login = manifest.login,
+                    UUID = manifest.UUID,
+                    AccesToken = manifest.accesToken,
+                    SessionToken = manifest.sessionToken,
+                    AccessID = manifest.accessID,
+                };
+
+                baseStatus = manifest.baseStatus;
+
+                return response;
+            }
+        }
+
         public static Dictionary<string, InstanceInfo> GetInstancesList()
         {
             try

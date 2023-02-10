@@ -263,82 +263,54 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             MainViewModel.ShowToastMessage("Не удалось скачать некоторые файлы", files, Controls.ToastMessageState.Error);
                         }
                         break;
+                    case InstanceInit.CursforgeIdError:
                     case InstanceInit.NightworldIdError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors ?? new List<string>())
-                            {
-                                MainViewModel.ShowToastMessage("Nightworld Id Error", de, Controls.ToastMessageState.Error);
-                            }
-                        }
-                        break;
-                    case InstanceInit.CursforgeIdError:
-                        {
-                            IsDownloadInProgress = false;
-                            _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            if (downloadErrors != null)
-                                foreach (var de in downloadErrors ?? new List<string>())
-                                {
-                                    MainViewModel.ShowToastMessage("Curseforge Id Error", de, Controls.ToastMessageState.Error);
-                                }
+                            MainViewModel.ShowToastMessage("Id Error", "Внешний id сборки некорректен.", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.ServerError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Server Error", "Не удалось получить данные с сервера.\nИгорёша просто не хочет дописывать парсер.\nПростите)))", Controls.ToastMessageState.Error);
+                            MainViewModel.ShowToastMessage("Server Error", "Не удалось получить данные с сервера.", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.GuardError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors ?? new List<string>())
-                            {
-                                MainViewModel.ShowToastMessage("Guard Error", de, Controls.ToastMessageState.Error);
-                            }
+                            MainViewModel.ShowToastMessage("Guard Error", "Не удолось выполнить проверку файла.", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.VersionError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors ?? new List<string>())
-                            {
-                                MainViewModel.ShowToastMessage("Version Error", de, Controls.ToastMessageState.Error);
-                            }
+                            MainViewModel.ShowToastMessage("Version Error", "Не удалось определить версию игры.", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.ForgeVersionError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors ?? new List<string>())
-                            {
-                                MainViewModel.ShowToastMessage("Forge Version Error", de, Controls.ToastMessageState.Error);
-                            }
+                            MainViewModel.ShowToastMessage("Forge Version Error", "Не удалось определить версию модлоадера.", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.GamePathError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors ?? new List<string>())
-                            {
-                                MainViewModel.ShowToastMessage("Game Path Error", de, Controls.ToastMessageState.Error);
-                            }
+                            MainViewModel.ShowToastMessage("Game Path Error", "Недействительная директория игры.", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.ManifestError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors ?? new List<string>())
-                            {
-                                MainViewModel.ShowToastMessage("Manifest Error", de, Controls.ToastMessageState.Error);
-                            }
+                            MainViewModel.ShowToastMessage("Manifest Error", "Не удалось загрузить манифест сборки.", Controls.ToastMessageState.Error);
                         }
                         break;
                     case InstanceInit.JavaDownloadError:
@@ -359,10 +331,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            foreach (var de in downloadErrors ?? new List<string>())
-                            {
-                                MainViewModel.ShowToastMessage("Unknown Error", de, Controls.ToastMessageState.Error);
-                            }
+                            MainViewModel.ShowToastMessage("Unknown Error", "Что-то непонятное произошло... Советуем выключить и включить.", Controls.ToastMessageState.Error);
                         }
                         break;
 

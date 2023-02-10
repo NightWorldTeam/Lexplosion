@@ -48,7 +48,7 @@ namespace Lexplosion.Logic.Management.Installers
 
             if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
             {
-                return InstanceInit.VersionError;
+                return InstanceInit.ManifestError;
             }
 
             var gameVersion = Manifest.version.gameVersion;
@@ -79,7 +79,7 @@ namespace Lexplosion.Logic.Management.Installers
             }
             else
             {
-                return InstanceInit.Successful;
+                return InstanceInit.ManifestError;
             }
         }
 
