@@ -70,8 +70,7 @@ namespace Lexplosion.Logic.Network
             baseStatus = 0;
 
             string data = JsonConvert.SerializeObject(authData);
-            //LaunсherSettings.URL.Account
-            var manifest = ToServer.ProtectedUserRequest<AuthManifest>("http://nw-prod/api/account/" + "auth", data, out string notComplitedResult);
+            var manifest = ToServer.ProtectedUserRequest<AuthManifest>(LaunсherSettings.URL.Account + "auth", data, out string notComplitedResult);
 
             if (notComplitedResult != null)
             {

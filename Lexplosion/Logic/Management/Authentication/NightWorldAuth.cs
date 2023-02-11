@@ -8,7 +8,6 @@ namespace Lexplosion.Logic.Management.Authentication
     {
         public User Auth(ref string login, ref string accessData, out AuthCode code)
         {
-            //accessData = "{\"type\":\"password\",\"data\":\"" + Сryptography.Sha256(accessData + login) + "\"}";
             var data = new AuthData
             {
                 login = login,
@@ -23,7 +22,6 @@ namespace Lexplosion.Logic.Management.Authentication
 
         public User ReAuth(ref string login, ref string accessData, out AuthCode code)
         {
-            //accessData = "{\"type\":\"accessID\",\"data\":\"" + accessData + "\"}";
             var data = new AuthData
             {
                 login = login,
