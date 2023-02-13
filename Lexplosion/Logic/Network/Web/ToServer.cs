@@ -289,9 +289,7 @@ namespace Lexplosion.Logic.Network
                     ["code"] = Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(str + ":" + LaunсherSettings.secretWord)))
                 };
 
-                AuthResult response = new AuthResult();
                 string answer;
-
                 try
                 {
                     answer = HttpPost(url, fullData);

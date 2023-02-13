@@ -8,7 +8,7 @@ namespace Lexplosion.Logic.Network.Web
 {
     static class MojangApi
     {
-        class AuthAnswer
+        private class AuthAnswer
         {
             public class SelectedProfile
             {
@@ -21,18 +21,9 @@ namespace Lexplosion.Logic.Network.Web
             public SelectedProfile selectedProfile;
         }
 
-        public class AuthResult
-        {
-            public AuthCode Status;
-            public string Login;
-            public string UUID;
-            public string AccesToken;
-            public string ClientToken;
-        }
-
         private static Random random = new Random();
 
-        public static AuthResult Auth(string username, string password)
+        public static MojangAuthResult Auth(string username, string password)
         {
             try
             {
@@ -53,7 +44,7 @@ namespace Lexplosion.Logic.Network.Web
                 {
                     if (statusCode == null)
                     {
-                        return new AuthResult
+                        return new MojangAuthResult
                         {
                             Status = AuthCode.NoConnect
                         };
@@ -61,7 +52,7 @@ namespace Lexplosion.Logic.Network.Web
 
                     if (statusCode == HttpStatusCode.Gone)
                     {
-                        return new AuthResult
+                        return new MojangAuthResult
                         {
                             Status = AuthCode.NeedMicrosoftAuth
                         };
@@ -69,7 +60,7 @@ namespace Lexplosion.Logic.Network.Web
                     }
                     else if (statusCode == HttpStatusCode.Unauthorized || statusCode == HttpStatusCode.Forbidden)
                     {
-                        return new AuthResult
+                        return new MojangAuthResult
                         {
                             Status = AuthCode.DataError
                         };
@@ -82,7 +73,7 @@ namespace Lexplosion.Logic.Network.Web
                 if (data != null && !string.IsNullOrEmpty(data.accessToken) && data.selectedProfile != null
                     && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
                 {
-                    return new AuthResult
+                    return new MojangAuthResult
                     {
                         Status = AuthCode.Successfully,
                         Login = data.selectedProfile.name,
@@ -94,13 +85,13 @@ namespace Lexplosion.Logic.Network.Web
             }
             catch { }
 
-            return new AuthResult
+            return new MojangAuthResult
             {
                 Status = AuthCode.NoConnect
             };
         }
 
-        public static AuthResult Refresh(string username, string accessToken, string clientToken)
+        public static MojangAuthResult Refresh(string username, string accessToken, string clientToken)
         {
             try
             {
@@ -116,7 +107,7 @@ namespace Lexplosion.Logic.Network.Web
                 {
                     if (statusCode == null)
                     {
-                        return new AuthResult
+                        return new MojangAuthResult
                         {
                             Status = AuthCode.NoConnect
                         };
@@ -124,7 +115,7 @@ namespace Lexplosion.Logic.Network.Web
 
                     if (statusCode == HttpStatusCode.Gone)
                     {
-                        return new AuthResult
+                        return new MojangAuthResult
                         {
                             Status = AuthCode.NeedMicrosoftAuth
                         };
@@ -132,7 +123,7 @@ namespace Lexplosion.Logic.Network.Web
                     }
                     else if (statusCode == HttpStatusCode.Unauthorized || statusCode == HttpStatusCode.Forbidden)
                     {
-                        return new AuthResult
+                        return new MojangAuthResult
                         {
                             Status = AuthCode.SessionExpired
                         };
@@ -145,7 +136,7 @@ namespace Lexplosion.Logic.Network.Web
                 if (data != null && !string.IsNullOrEmpty(data.accessToken) && !string.IsNullOrEmpty(data.clientToken)
                     && data.selectedProfile != null && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
                 {
-                    return new AuthResult
+                    return new MojangAuthResult
                     {
                         Status = AuthCode.Successfully,
                         Login = data.selectedProfile.name,
@@ -157,7 +148,7 @@ namespace Lexplosion.Logic.Network.Web
             }
             catch { }
 
-            return new AuthResult
+            return new MojangAuthResult
             {
                 Status = AuthCode.SessionExpired
             };
@@ -217,7 +208,7 @@ namespace Lexplosion.Logic.Network.Web
         /// </summary>
         /// <param name="token">Сам токен. Получить можно в GetToken.</param>
         /// <returns>Результат.</returns>
-        public static AuthResult AuthFromToken(string token)
+        public static MojangAuthResult AuthFromToken(string token)
         {
             try
             {
@@ -228,7 +219,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 if (answer == null)
                 {
-                    return new AuthResult
+                    return new MojangAuthResult
                     {
                         Status = AuthCode.DataError
                     };
@@ -236,7 +227,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 var profile = JsonConvert.DeserializeObject<MojangProfile>(answer);
 
-                return new AuthResult
+                return new MojangAuthResult
                 {
                     Status = AuthCode.Successfully,
                     Login = profile.name,
@@ -247,7 +238,7 @@ namespace Lexplosion.Logic.Network.Web
             catch { }
 
 
-            return new AuthResult
+            return new MojangAuthResult
             {
                 Status = AuthCode.DataError
             };

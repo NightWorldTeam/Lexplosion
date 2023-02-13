@@ -39,7 +39,7 @@ namespace Lexplosion.Logic
                 {
                     while (true)
                     {
-                        ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
+                        ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=" + (int)Status + "&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + _gameClientName);
                         Thread.Sleep(54000); // Ждём 9 минут
                     }
                 });
@@ -54,7 +54,7 @@ namespace Lexplosion.Logic
             {
                 _gameClientName = clientName_;
                 Status = ActivityStatus.InGame;
-                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=2&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + clientName_);
+                ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=2&UUID=" + UUID + "&sessionToken=" + SessionToken + "&gameClientName=" + clientName_);
             }
         }
 
@@ -63,13 +63,13 @@ namespace Lexplosion.Logic
             if (Status == ActivityStatus.InGame)
             {
                 Status = ActivityStatus.Online;
-                ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=1&UUID=" + UUID + "&sessionToken=" + SessionToken);
+                ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=1&UUID=" + UUID + "&sessionToken=" + SessionToken);
             }
         }
 
         public void Exit()
         {
-            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setActivity?status=0&UUID=" + UUID + "&sessionToken=" + SessionToken);
+            ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setActivity?status=0&UUID=" + UUID + "&sessionToken=" + SessionToken);
         }
 
         public void ChangeBaseStatus(ActivityStatus status)
@@ -84,7 +84,7 @@ namespace Lexplosion.Logic
                 statusInt = 2;
             }
 
-            ToServer.HttpGet(LaunсherSettings.URL.LogicScripts + "setBaseStatus?activityStatus=" + statusInt + "&UUID=" + UUID + "&sessionToken=" + SessionToken);
+            ToServer.HttpGet(LaunсherSettings.URL.UserApi + "setBaseStatus?activityStatus=" + statusInt + "&UUID=" + UUID + "&sessionToken=" + SessionToken);
             Status = status;
         }
     }

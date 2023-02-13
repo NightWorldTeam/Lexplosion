@@ -30,6 +30,12 @@ namespace Lexplosion.Logic.Network
         }
     }
 
+    interface ProtectedManifest
+    {
+        public string code { get; set; }
+        public string str { get; set; }
+    }
+
     /// <summary>
     /// Этот класс нужен для декодирования json в методе GetVersionManifest в классах ToServer и NightWorldApi
     /// </summary>
@@ -47,12 +53,6 @@ namespace Lexplosion.Logic.Network
         public string str { get; set; }
     }
 
-    interface ProtectedManifest
-    {
-        public string code { get; set; }
-        public string str { get; set; }
-    }
-
     /// <summary>
     /// Результат инцеста(зачеркнуто) авторизации.
     /// </summary>
@@ -61,8 +61,18 @@ namespace Lexplosion.Logic.Network
         public AuthCode Status;
         public string Login;
         public string UUID;
-        public string AccesToken;
+        public string AccesToken;        
+    }
+
+    public class NwAuthResult : AuthResult
+    {
+        public int BaseStatus;
         public string SessionToken;
         public string AccessID;
+    }
+
+    public class MojangAuthResult: AuthResult
+    {
+        public string ClientToken;
     }
 }

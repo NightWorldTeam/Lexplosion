@@ -23,7 +23,7 @@ namespace Lexplosion.Logic.FileSystem
         public static List<FileReceiver> GetDistributors()
         {
             var data = new List<FileReceiver>();
-            string anwer = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "getFileDistributions", new Dictionary<string, string>
+            string anwer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getFileDistributions", new Dictionary<string, string>
             {
                 ["UUID"] = GlobalData.User.UUID,
                 ["sessionToken"] = GlobalData.User.SessionToken

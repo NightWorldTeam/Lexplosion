@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Logic.Management.Authentication
@@ -13,7 +14,7 @@ namespace Lexplosion.Logic.Management.Authentication
 
         public User Auth(ref string login, ref string accessData, out AuthCode code)
         {
-            MojangApi.AuthResult response = MojangApi.Auth(login, accessData);
+            MojangAuthResult response = MojangApi.Auth(login, accessData);
 
             if (response != null)
             {
@@ -47,7 +48,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 if (data != null && !string.IsNullOrEmpty(data.AccessToken) && !string.IsNullOrEmpty(data.ClientToken))
                 {
                     Runtime.DebugWrite(accessData);
-                    MojangApi.AuthResult response = MojangApi.Refresh(login, data.AccessToken, data.ClientToken);
+                    MojangAuthResult response = MojangApi.Refresh(login, data.AccessToken, data.ClientToken);
 
                     if (response.Status == AuthCode.Successfully)
                     {

@@ -31,7 +31,7 @@ namespace Lexplosion.Logic.FileSystem
                 hash = Сryptography.Sha256(fileBytes);
             }
 
-            string answer = ToServer.HttpPost(LaunсherSettings.URL.LogicScripts + "setFileDistribution", new Dictionary<string, string>
+            string answer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
             {
                 ["UUID"] = GlobalData.User.UUID,
                 ["sessionToken"] = GlobalData.User.SessionToken,

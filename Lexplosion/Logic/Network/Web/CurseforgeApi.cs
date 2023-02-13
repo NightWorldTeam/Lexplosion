@@ -17,18 +17,6 @@ namespace Lexplosion.Logic.Network
     {
         private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
 
-        private class ProjectTypeInfo
-        {
-            public class LatestFile
-            {
-                public long id;
-                public List<string> gameVersions;
-            }
-
-            public int classId;
-            public List<LatestFile> latestFiles;
-        }
-
         class DataContainer<T>
         {
             public T data;

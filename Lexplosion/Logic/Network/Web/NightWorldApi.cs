@@ -65,16 +65,19 @@ namespace Lexplosion.Logic.Network
             public string str { get; set; }
         }
 
-        public static AuthResult Authorization(AuthData authData, out int baseStatus)
-        {
-            baseStatus = 0;
+        //public AuthManifest Registration(string login, string password, string email)
+        //{
 
+        //}
+
+        public static NwAuthResult Authorization(AuthData authData)
+        {
             string data = JsonConvert.SerializeObject(authData);
             var manifest = ToServer.ProtectedUserRequest<AuthManifest>(LaunсherSettings.URL.Account + "auth", data, out string notComplitedResult);
 
             if (notComplitedResult != null)
             {
-                AuthResult response = new AuthResult();
+                var response = new NwAuthResult();
                 if (notComplitedResult == "ERROR:1")
                 {
                     response.Status = AuthCode.DataError;
@@ -93,14 +96,14 @@ namespace Lexplosion.Logic.Network
             }
             else if (manifest == null)
             {
-                return new AuthResult()
+                return new NwAuthResult()
                 {
                     Status = AuthCode.NoConnect
                 };
             }
             else
             {
-                AuthResult response = new AuthResult()
+                var response = new NwAuthResult()
                 {
                     Status = AuthCode.Successfully,
                     Login = manifest.login,
@@ -108,9 +111,8 @@ namespace Lexplosion.Logic.Network
                     AccesToken = manifest.accesToken,
                     SessionToken = manifest.sessionToken,
                     AccessID = manifest.accessID,
+                    BaseStatus = manifest.baseStatus,
                 };
-
-                baseStatus = manifest.baseStatus;
 
                 return response;
             }

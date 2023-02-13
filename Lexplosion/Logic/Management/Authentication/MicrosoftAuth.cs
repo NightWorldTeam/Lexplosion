@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Network.Web;
+﻿using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Logic.Management.Authentication
 {
@@ -13,7 +14,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 return null;
             }
 
-            MojangApi.AuthResult response = MojangApi.AuthFromToken(token);
+            MojangAuthResult response = MojangApi.AuthFromToken(token);
             if (response.Status == AuthCode.Successfully)
             {
                 code = AuthCode.Successfully;

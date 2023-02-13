@@ -4,6 +4,7 @@ using Lexplosion.Logic.Network;
 namespace Lexplosion.Logic.Management.Authentication
 {
     using AuthData = NightWorldApi.AuthData;
+
     internal class NightWorldAuth : IAuthHandler
     {
         public User Auth(ref string login, ref string accessData, out AuthCode code)
@@ -37,21 +38,22 @@ namespace Lexplosion.Logic.Management.Authentication
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private User Execute(AuthData authData, ref string accessData, out AuthCode code)
         {
-            AuthResult response = NightWorldApi.Authorization(authData, out int baseStatus);
+            NwAuthResult response = NightWorldApi.Authorization(authData);
             accessData = response.AccessID;
 
             ActivityStatus status = ActivityStatus.Online;
-            if (baseStatus == 1)
-            {
-                status = ActivityStatus.Offline;
-            }
-            else if (baseStatus == 2)
-            {
-                status = ActivityStatus.NotDisturb;
-            }
 
             if (response.Status == AuthCode.Successfully)
             {
+                if (response.BaseStatus == 1)
+                {
+                    status = ActivityStatus.Offline;
+                }
+                else if (response.BaseStatus == 2)
+                {
+                    status = ActivityStatus.NotDisturb;
+                }
+
                 User user = new User(response.Login,
                     response.UUID,
                     response.AccesToken,
