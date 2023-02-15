@@ -294,7 +294,7 @@ namespace Lexplosion.Logic.Management.Instances
             client.SaveAssets();
 
             _installedInstances[client._localId] = client;
-            client.SaveInstalledInstancesList();
+            SaveInstalledInstancesList();
 
             return client;
         }
@@ -330,7 +330,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Сохраняем список установленных сборок (библиотеку) в файл instanesList.json.
         /// </summary>
-        private void SaveInstalledInstancesList()
+        public static void SaveInstalledInstancesList()
         {
             // деаем список всех установленных сборок
             var list = new InstalledInstancesFormat();
@@ -364,7 +364,7 @@ namespace Lexplosion.Logic.Management.Instances
                         (instanceManifest != null && instanceManifest.version != null && instanceManifest.version.gameVersion != null);
 
                     //проверяем имеется ли манифест, не содержит ли его id запрещенных символов
-                    if (manifestIsCorrect && !Regex.IsMatch(localId.Replace("_", ""), @"[^a-zA-Z0-9]"))
+                    if (manifestIsCorrect && !ForbiddenIsCharsExists(localId))
                     {
                         string externalID = null;
                         string instanceVersion = null;
@@ -741,7 +741,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool ForbiddenIsCharsExists(string str)
+        private static bool ForbiddenIsCharsExists(string str)
         {
             str = str.Replace("_", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "").Replace(" ", "").Replace(".", "");
             return Regex.IsMatch(str, @"[^a-zA-Z0-9]");
@@ -1136,7 +1136,7 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         client.SaveAssets();
                         _installedInstances[client._localId] = client;
-                        client.SaveInstalledInstancesList();
+                        SaveInstalledInstancesList();
                         instanceClient = client;
                     }
                     else
