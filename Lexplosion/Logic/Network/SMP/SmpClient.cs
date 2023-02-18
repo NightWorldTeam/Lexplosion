@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Lexplosion.Logic.Network.SMP
@@ -22,6 +24,9 @@ namespace Lexplosion.Logic.Network.SMP
             public const byte NeedConfirm = 1;
         }
 
+        /// <summary>
+        /// Позиции в заголовке пакета данных.
+        /// </summary>
         private struct HeaderPositions
         {
             public const byte Code = 0; // Код пакета
@@ -33,6 +38,22 @@ namespace Lexplosion.Logic.Network.SMP
             public const byte AttemptsCounts = 6; // Количество попыток отправки данного пакета
 
             public const byte FirstDataByte = AttemptsCounts + 1; // Позиция первого байта вне заголовка и соотвественно размер хэадера
+        }
+
+        private struct PackgeCodes
+        {
+            public const byte MtuRequest = 0x00;
+            public const byte PingRequest = 0x01;
+            public const byte PingResponse = 0x02;
+            public const byte Data = 0x03;
+            public const byte ConfirmDataDelivery = 0x04;
+            public const byte ConnectionClose = 0x05;
+            public const byte FailedList = 0x06;
+            public const byte MtuResponse = 0x07;
+            public const byte MtuInfo = 0x08;
+            public const byte MtuInfoConfirm = 0x09;
+            public const byte ConnectRequest = 0x0a;
+            public const byte ConnectAnswer = 0x0b;
         }
 
         private class Package
@@ -178,34 +199,53 @@ namespace Lexplosion.Logic.Network.SMP
             socket.Client.IOControl(sioUdpConnectionReset, inValue, outValue);
         }
 
-        public bool Connect(IPEndPoint remoteIp)
+        public bool Connect(IPEndPoint remoteIp, byte[] connectCode)
         {
-            socket.Connect(remoteIp);
+            var connectionWait = new AutoResetEvent(false);
 
             var thread = new Thread(delegate ()
             {
                 byte[] data = null;
+                bool pointDefined = false;
 
                 while (!IsConnected)
                 {
                     try
                     {
-                        data = socket.Receive(ref remoteIp);
+                        IPEndPoint senderPoint = null;
+                        data = socket.Receive(ref senderPoint);
                         if (data.Length > 0)
                         {
-                            if (data[0] == 0x00 || data[0] == 0x01 || data[0] == 0x03 || data[0] == 0x02) //если пришел пинг, ответ на пинг, пакет данных или пакет с кодом вычисления mtu то isConnected делаем true
+                            if (data[0] == PackgeCodes.MtuRequest && data.Length > 2) // если это пакет с вычислением mtu - отвечаем на него
                             {
-                                if (data[0] == 0x00 && data.Length > 2) // если это пакет с вычислением mtu - отвечаем на него
+                                socket.Send(new byte[2] { PackgeCodes.MtuResponse, data[1] }, 2);
+                            }
+                            else if (data[0] == PackgeCodes.PingRequest) // если это пакет пинга то отвечаем на него
+                            {
+                                socket.Send(new byte[2] { PackgeCodes.PingResponse, data[1] }, 2);
+                            }
+                            else if (data[0] == PackgeCodes.PingResponse) // если это ответ на пинг, то обрабатываем его
+                            {
+                                PingProcessing(data);
+                            }
+                            else if (data[0] == PackgeCodes.ConnectRequest && data.Length > 2)
+                            {
+                                byte codeSize = data[1];
+                                if (codeSize + 2 == data.Length)
                                 {
-                                    socket.Send(new byte[2] { 0x07, data[1] }, 2);
-                                }
-                                else if (data[0] == 0x01) // если это пакет пинга то отвечаем на него
-                                {
-                                    socket.Send(new byte[2] { 0x02, data[1] }, 2);
-                                }
-                                else if (data[0] == 0x02) // если это ответ на пинг, то отвечаем на него
-                                {
-                                    PingProcessing(data);
+                                    byte[] recivedCode = new byte[codeSize];
+                                    Array.Copy(data, 2, recivedCode, 0, codeSize);
+                                    if (connectCode.SequenceEqual(recivedCode))
+                                    {
+                                        if (!pointDefined)
+                                        {
+                                            remoteIp = senderPoint;
+                                            pointDefined = true;
+                                            connectionWait.Set();
+                                        }
+
+                                        socket.Send(new byte[] { PackgeCodes.ConnectAnswer }, 1, senderPoint);
+                                    }
                                 }
                             }
                         }
@@ -215,6 +255,29 @@ namespace Lexplosion.Logic.Network.SMP
 
             });
             thread.Start();
+
+            //формируем пакет запроса подключения
+            byte[] connectPackage = new byte[connectCode.Length + 2];
+            connectPackage[0] = PackgeCodes.ConnectRequest;
+            connectPackage[1] = (byte)connectCode.Length; //вставлям размер кода подключения. Он не может быть больше 256 байт
+            Array.Copy(connectCode, 0, connectPackage, 2, (byte)connectCode.Length); //копируем код подключения в пакет подключения
+
+            int i = 0;
+            bool successfulConnect = false;
+            while (!successfulConnect && i < 20)
+            {
+                socket.Send(connectPackage, connectPackage.Length, remoteIp);
+                i++;
+
+                successfulConnect = connectionWait.WaitOne(200);
+            }
+
+            if (!successfulConnect)
+            {
+                return false;
+            }
+
+            socket.Connect(remoteIp);
 
             _rtt = CalculateRTT(); //измеряем rtt
             _rttCalculator = new RttCalculator(_rtt);
@@ -281,6 +344,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                 _mtuPackageId = packageId;
                 byte[] data = new byte[thisData];
+                data[0] = PackgeCodes.MtuRequest;
                 data[1] = packageId;
 
                 int j;
@@ -325,7 +389,7 @@ namespace Lexplosion.Logic.Network.SMP
             byte[] data = new byte[3];
 
             Array.Copy(payload, 0, data, 1, 2);
-            data[0] = 0x08;
+            data[0] = PackgeCodes.MtuInfo;
 
             for (int j = 0; j < 5; j++) // пробуем отправить 5 раз
             {
@@ -358,7 +422,7 @@ namespace Lexplosion.Logic.Network.SMP
                     {
                         _times[i] = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                         Runtime.DebugWrite("SEND");
-                        socket.Send(new byte[2] { 0x01, i }, 2);
+                        socket.Send(new byte[2] { PackgeCodes.PingRequest, i }, 2);
                         i++;
 
                         successful = _pingWait.WaitOne(200);
@@ -383,6 +447,7 @@ namespace Lexplosion.Logic.Network.SMP
             return (rttSum / 5) + 1;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PingProcessing(byte[] data)
         {
             if (data.Length == 2 && data[1] < 21 && _workPing)
@@ -439,7 +504,7 @@ namespace Lexplosion.Logic.Network.SMP
                         byte[] package = new byte[packageInfo.Size];
 
                         byte[] id = BitConverter.GetBytes(sendingPointer);
-                        package[HeaderPositions.Code] = 0x03; //код пакета
+                        package[HeaderPositions.Code] = PackgeCodes.Data; //код пакета
                         package[HeaderPositions.Id_1] = id[0]; //первая часть его айдишника
                         package[HeaderPositions.Id_2] = id[1]; //вторая
 
@@ -605,34 +670,208 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
-        private void ServiceReceive()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void AddToReceivingBuffer(byte[] package)
         {
-            void addPackage(byte[] package)
+            int offset = HeaderPositions.FirstDataByte;
+            while (offset < package.Length - 3)
             {
-                int offset = HeaderPositions.FirstDataByte;
-                while (offset < package.Length - 3)
+                byte flag = package[offset];
+                ushort size = BitConverter.ToUInt16(new byte[2] { package[offset + 1], package[offset + 2] }, 0);
+                offset += 3;
+
+                byte[] payload = new byte[size];
+                Array.Copy(package, offset, payload, 0, size);
+                offset += size;
+
+                bool isFull = (flag == DataFlags.None);
+
+
+                receivingBuffer.Enqueue(new Message
                 {
-                    byte flag = package[offset];
-                    ushort size = BitConverter.ToUInt16(new byte[2] { package[offset + 1], package[offset + 2] }, 0);
-                    offset += 3;
+                    data = payload,
+                    IsFull = isFull
+                });
 
-                    byte[] payload = new byte[size];
-                    Array.Copy(package, offset, payload, 0, size);
-                    offset += size;
+                MessageReceived?.Invoke(isFull);
+            }
+        }
 
-                    bool isFull = (flag == DataFlags.None);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void DataPackcageProcessing(byte[] data, ref int waitingLastPackage, ref int attemptSendCounts, ref ushort lastMissedPacket)
+        {
+            if (data.Length > 5)
+            {
+                ushort id = BitConverter.ToUInt16(new byte[2] 
+                {
+                    data[HeaderPositions.Id_1],
+                    data[HeaderPositions.Id_2]
+                }, 0);
 
+                ushort lastId = BitConverter.ToUInt16(new byte[2] 
+                {
+                    data[HeaderPositions.LastId_1],
+                    data[HeaderPositions.LastId_2]
+                }, 0);
 
-                    receivingBuffer.Enqueue(new Message
+                if (id >= receivingPointer && id - receivingPointer < _maxPackagesCount)
+                {
+                    waitingLastPackage = lastId;
+
+                    if (id == receivingPointer)
                     {
-                        data = payload,
-                        IsFull = isFull
-                    });
+                        AddToReceivingBuffer(data);
+                        packagesBuffer.TryRemove(receivingPointer, out _);
+                        receiveWait.Set();
 
-                    MessageReceived?.Invoke(isFull);
+                        receivingPointer++;
+                    }
+                    else
+                    {
+                        packagesBuffer[id] = data;
+                    }
+
+                    // проходимся по буферу в поисках пакетов, которые мы уже получили. Если пакет найден - пихаем  в буфер
+                    while (packagesBuffer.ContainsKey(receivingPointer))
+                    {
+                        AddToReceivingBuffer(packagesBuffer[receivingPointer]);
+                        packagesBuffer.TryRemove(receivingPointer, out _);
+                        receiveWait.Set();
+
+                        receivingPointer++;
+                    }
+
+                    // проверяем все ли пакеты были получены
+                    if (receivingPointer == (ushort)(lastId + 1))
+                    {
+                        // отправляем подтверждение
+                        byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
+                        socket.Send(new byte[3] 
+                        {
+                            PackgeCodes.ConfirmDataDelivery,
+                            neEbyKakNazvat[0],
+                            neEbyKakNazvat[1]
+                        }, 3);
+                        attemptSendCounts = -1;
+                        waitingLastPackage = -1;
+                    }
+                    else
+                    {
+                        bool needRepeat = false;
+                        for (int i = receivingPointer; i <= lastId; i++)
+                        {
+                            if (packagesBuffer.ContainsKey((ushort)i))
+                            {
+                                needRepeat = true;
+                                break;
+                            }
+                        }
+
+                        if (needRepeat)
+                        {
+                            var package = new List<byte> 
+                            {
+                                PackgeCodes.FailedList,
+                                data[HeaderPositions.LastId_1],
+                                data[HeaderPositions.LastId_2]
+                            };
+
+                            bool flag = true;
+                            for (int i = receivingPointer; i <= lastId; i++)
+                            {
+                                if (!packagesBuffer.ContainsKey((ushort)i))
+                                {
+                                    if (i == lastMissedPacket && data[HeaderPositions.AttemptsCounts] <= attemptSendCounts)
+                                    {
+                                        needRepeat = false;
+                                        break;
+                                    }
+
+                                    if (flag)
+                                    {
+                                        lastMissedPacket = (ushort)i;
+                                        flag = false;
+                                    }
+
+                                    byte[] packageId = BitConverter.GetBytes((ushort)i);
+                                    package.Add(packageId[0]);
+                                    package.Add(packageId[1]);
+                                }
+                            }
+
+                            if (needRepeat)
+                            {
+                                byte[] array = package.ToArray();
+                                socket.Send(array, array.Length);
+                                for (int h = 3; h < array.Length - 1; h += 2)
+                                {
+                                    var idg = BitConverter.ToUInt16(new byte[2] {
+                                        array[h],
+                                        array[h + 1]
+                                    },
+                                    0);
+                                }
+                            }
+
+                            attemptSendCounts = data[HeaderPositions.AttemptsCounts];
+                        }
+                    }
+                }
+                else
+                {
+                    if (waitingLastPackage == lastId && data[HeaderPositions.AttemptsCounts] > attemptSendCounts)
+                    {
+                        var package = new List<byte> 
+                        {
+                            PackgeCodes.FailedList,
+                            data[HeaderPositions.LastId_1],
+                            data[HeaderPositions.LastId_2]
+                        };
+
+                        for (int i = receivingPointer; i <= lastId; i++)
+                        {
+                            if (!packagesBuffer.ContainsKey((ushort)i))
+                            {
+                                byte[] packageId = BitConverter.GetBytes((ushort)i);
+                                package.Add(packageId[0]);
+                                package.Add(packageId[1]);
+                            }
+                        }
+
+                        if (package.Count > 3)
+                        {
+                            byte[] array = package.ToArray();
+                            socket.Send(array, array.Length);
+                        }
+                        else
+                        {
+                            byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
+                            socket.Send(new byte[3] 
+                            {
+                                PackgeCodes.ConfirmDataDelivery,
+                                neEbyKakNazvat[0],
+                                neEbyKakNazvat[1]
+                            }, 3);
+                        }
+
+                        attemptSendCounts = data[HeaderPositions.AttemptsCounts];
+                    }
+                    else if (id == lastId || data[HeaderPositions.Flag] == Flags.NeedConfirm)
+                    {
+                        byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
+                        socket.Send(new byte[3] 
+                        {
+                            PackgeCodes.ConfirmDataDelivery,
+                            neEbyKakNazvat[0],
+                            neEbyKakNazvat[1]
+                        }, 3);
+                    }
                 }
             }
+        }
 
+        private void ServiceReceive()
+        {
             int waitingLastPackage = -1;
             int attemptSendCounts = -1;
             ushort lastMissedPacket = 0;
@@ -643,265 +882,172 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     byte[] data = socket.Receive(ref point);
 
-                    if (data.Length > 0)
+                    if (data.Length < 1)
                     {
-                        _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                        continue;
+                    }
 
-                        switch (data[0])
-                        {
-                            case 0: // пришел пакет с вычислением mtu
-                                if (data.Length > 2)
+                    _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+                    switch (data[0])
+                    {
+                        case PackgeCodes.ConnectRequest:
+                            {
+                                //здесь уже не проверяем код подключения, ведь он был уже проверен в методе connect и ip отправителя зафиксирован
+                                if (data[0] == PackgeCodes.ConnectRequest && data.Length > 2)
                                 {
-                                    socket.Send(new byte[2] { 0x07, data[1] }, 2);
+                                    socket.Send(new byte[] { PackgeCodes.ConnectAnswer }, 1);
                                 }
-                                break;
-                            case 1: //пришел пакет с пингом
-                                if (data.Length == 2)
+                            }
+                            break;
+                        case PackgeCodes.MtuRequest: // пришел пакет с вычислением mtu
+                            if (data.Length > 2)
+                            {
+                                socket.Send(new byte[2] { PackgeCodes.MtuResponse, data[1] }, 2);
+                            }
+                            break;
+                        case PackgeCodes.PingRequest: //пришел пакет с пингом
+                            if (data.Length == 2)
+                            {
+                                socket.Send(new byte[2] { PackgeCodes.PingResponse, data[1] }, 2);
+                            }
+                            break;
+                        case PackgeCodes.PingResponse: //пришел ответ на пинг
+                            PingProcessing(data);
+                            break;
+                        case PackgeCodes.Data: //пришел пакет данных
+                            DataPackcageProcessing(data, ref waitingLastPackage, ref attemptSendCounts, ref lastMissedPacket);
+                            break;
+                        case PackgeCodes.ConfirmDataDelivery: // пришло подтверждение доставки пакета
+                            if (data.Length == 3)
+                            {
+                                ushort id = BitConverter.ToUInt16(new byte[2] 
                                 {
-                                    socket.Send(new byte[2] { 0x02, data[1] }, 2);
-                                }
-                                break;
-                            case 2: //пришел ответ на пинг
-                                PingProcessing(data);
-                                break;
-                            case 3: //пришел пакет данных
-                                if (data.Length > 5)
-                                {
-                                    ushort id = BitConverter.ToUInt16(new byte[2] {
-                                    data[HeaderPositions.Id_1],
-                                    data[HeaderPositions.Id_2]
+                                    data[1],
+                                    data[2]
                                 }, 0);
 
-                                    ushort lastId = BitConverter.ToUInt16(new byte[2] {
-                                    data[HeaderPositions.LastId_1],
-                                    data[HeaderPositions.LastId_2]
-                                }, 0);
-
-                                    if (id >= receivingPointer && id - receivingPointer < _maxPackagesCount)
-                                    {
-                                        waitingLastPackage = lastId;
-
-                                        if (id == receivingPointer)
-                                        {
-                                            addPackage(data);
-                                            packagesBuffer.TryRemove(receivingPointer, out _);
-                                            receiveWait.Set();
-
-                                            receivingPointer++;
-                                        }
-                                        else
-                                        {
-                                            packagesBuffer[id] = data;
-                                        }
-
-                                        // проходимся по буферу в поисках пакетов, которые мы уже получили. Если пакет найден - пихаем  в буфер
-                                        while (packagesBuffer.ContainsKey(receivingPointer))
-                                        {
-                                            addPackage(packagesBuffer[receivingPointer]);
-                                            packagesBuffer.TryRemove(receivingPointer, out _);
-                                            receiveWait.Set();
-
-                                            receivingPointer++;
-                                        }
-
-                                        // проверяем все ли пакеты были получены
-                                        if (receivingPointer == (ushort)(lastId + 1))
-                                        {
-                                            // отправляем подтверждение
-                                            byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                                            socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
-                                            attemptSendCounts = -1;
-                                            waitingLastPackage = -1;
-                                        }
-                                        else
-                                        {
-                                            bool needRepeat = false;
-                                            for (int i = receivingPointer; i <= lastId; i++)
-                                            {
-                                                if (packagesBuffer.ContainsKey((ushort)i))
-                                                {
-                                                    needRepeat = true;
-                                                    break;
-                                                }
-                                            }
-
-                                            if (needRepeat)
-                                            {
-                                                var package = new List<byte>
-                                            {
-                                                0x06,
-                                                data[HeaderPositions.LastId_1],
-                                                data[HeaderPositions.LastId_2]
-                                            };
-
-                                                bool flag = true;
-                                                for (int i = receivingPointer; i <= lastId; i++)
-                                                {
-                                                    if (!packagesBuffer.ContainsKey((ushort)i))
-                                                    {
-                                                        if (i == lastMissedPacket && data[HeaderPositions.AttemptsCounts] <= attemptSendCounts)
-                                                        {
-                                                            needRepeat = false;
-                                                            break;
-                                                        }
-
-                                                        if (flag)
-                                                        {
-                                                            lastMissedPacket = (ushort)i;
-                                                            flag = false;
-                                                        }
-
-                                                        byte[] packageId = BitConverter.GetBytes((ushort)i);
-                                                        package.Add(packageId[0]);
-                                                        package.Add(packageId[1]);
-                                                    }
-                                                }
-
-                                                if (needRepeat)
-                                                {
-                                                    byte[] array = package.ToArray();
-                                                    socket.Send(array, array.Length);
-                                                    string str = "";
-                                                    for (int h = 3; h < array.Length - 1; h += 2)
-                                                    {
-                                                        var idg = BitConverter.ToUInt16(new byte[2] { array[h], array[h + 1] }, 0);
-                                                        str += idg + ", ";
-                                                    }
-                                                }
-
-                                                attemptSendCounts = data[HeaderPositions.AttemptsCounts];
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (waitingLastPackage == lastId && data[HeaderPositions.AttemptsCounts] > attemptSendCounts)
-                                        {
-                                            var package = new List<byte> {
-                                                0x06,
-                                                data[HeaderPositions.LastId_1],
-                                                data[HeaderPositions.LastId_2]
-                                            };
-
-                                            for (int i = receivingPointer; i <= lastId; i++)
-                                            {
-                                                if (!packagesBuffer.ContainsKey((ushort)i))
-                                                {
-                                                    byte[] packageId = BitConverter.GetBytes((ushort)i);
-                                                    package.Add(packageId[0]);
-                                                    package.Add(packageId[1]);
-                                                }
-                                            }
-
-                                            if (package.Count > 3)
-                                            {
-                                                byte[] array = package.ToArray();
-                                                socket.Send(array, array.Length);
-                                            }
-                                            else
-                                            {
-                                                byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                                                socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
-                                            }
-
-                                            attemptSendCounts = data[HeaderPositions.AttemptsCounts];
-                                        }
-                                        else if (id == lastId || data[HeaderPositions.Flag] == Flags.NeedConfirm)
-                                        {
-                                            byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                                            socket.Send(new byte[3] { 0x04, neEbyKakNazvat[0], neEbyKakNazvat[1] }, 3);
-                                        }
-                                    }
-
-                                }
-                                break;
-                            case 4: // пришло подтверждение доставки пакета
-                                if (data.Length == 3)
+                                repeatDeliveryBlock.WaitOne();
+                                if (id == lastPackage)
                                 {
-                                    ushort id = BitConverter.ToUInt16(new byte[2] {
-                                        data[1],
-                                        data[2]
-                                    }, 0);
-
-                                    repeatDeliveryBlock.WaitOne();
-                                    if (id == lastPackage)
-                                    {
-                                        repeatDeliveryList = null;
-                                        deliveryWait.Set();
-                                    }
-                                    repeatDeliveryBlock.Release();
+                                    repeatDeliveryList = null;
+                                    deliveryWait.Set();
                                 }
 
-                                break;
-                            case 5: // обрыв соединения
-                                Runtime.DebugWrite("StopWork!!!!");
-                                new Thread(delegate ()
+                                repeatDeliveryBlock.Release();
+                            }
+                            break;
+                        case PackgeCodes.ConnectionClose: // обрыв соединения
+                            Runtime.DebugWrite("StopWork!!!!");
+                            new Thread(delegate ()
+                            {
+                                StopWork();
+                                ClientClosing?.Invoke(point);
+                            }).Start();
+                            break;
+                        case PackgeCodes.FailedList: // пришел пакет со списком пакетов, которые нужно переотправить
+                                                     //проверяем валидность этого пакета. пакет должен содержать список айдишников. каждый id занимает 2 байта. первый байт - код.
+                            if (data.Length > 3 && ((data.Length - 1) % 2 == 0))
+                            {
+                                repeatDeliveryBlock.WaitOne();
+                                ushort packageId = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
+                                if (packageId == lastPackage) // проверяем не старый ли это запрос на повторную отправку
                                 {
-                                    StopWork();
-                                    ClientClosing?.Invoke(point);
-                                }).Start();
-                                break;
-                            case 6: // пришел пакет со списком пакетов, которые нужно переотправить
-                                    //проверяем валидность этого пакета. пакет должен содержать список айдишников. каждый id занимает 2 байта. первый байт - код.
-                                if (data.Length > 3 && ((data.Length - 1) % 2 == 0))
-                                {
-                                    repeatDeliveryBlock.WaitOne();
-                                    ushort packageId = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
-                                    if (packageId == lastPackage) // проверяем не старый ли это запрос на повторную отправку
+                                    List<ushort> ids = new List<ushort>();
+                                    int i = 3;
+                                    while (i < data.Length)
                                     {
-                                        List<ushort> ids = new List<ushort>();
-                                        int i = 3;
-                                        while (i < data.Length)
-                                        {
-                                            ushort id = BitConverter.ToUInt16(new byte[2] { data[i], data[i + 1] }, 0);
-                                            ids.Add(id);
-                                            i += 2;
-                                        }
-
-                                        repeatDeliveryList = ids;
-                                        deliveryWait.Set();
+                                        ushort id = BitConverter.ToUInt16(new byte[2] { data[i], data[i + 1] }, 0);
+                                        ids.Add(id);
+                                        i += 2;
                                     }
-                                    repeatDeliveryBlock.Release();
+
+                                    repeatDeliveryList = ids;
+                                    deliveryWait.Set();
                                 }
-                                break;
-                            case 7: // пришел ответ на вычисление mtu
-                                if (data.Length == 2)
+                                repeatDeliveryBlock.Release();
+                            }
+                            break;
+                        case PackgeCodes.MtuResponse: // пришел ответ на вычисление mtu
+                            if (data.Length == 2)
+                            {
+                                _mtuPackageId = data[1];
+                                _mtuWait.Set();
+                            }
+                            break;
+                        case PackgeCodes.MtuInfo: // пришёл пакет с инфой об mtu
+                            if (data.Length == 3)
+                            {
+                                ushort hostMtu_ = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
+                                socket.Send(new byte[1] { PackgeCodes.MtuInfoConfirm }, 1);
+
+                                calculateMtuBlock.WaitOne();
+                                if (_hostMtu == -1) // метод Connect ещё не отработал
                                 {
-                                    _mtuPackageId = data[1];
-                                    _mtuWait.Set();
+                                    _hostMtu = hostMtu_;
                                 }
-                                break;
-                            case 8: // пришёл пакет с инфой об mtu
-                                if (data.Length == 3)
+                                else // connect уже отработал, можно обновлять mtu
                                 {
-                                    ushort hostMtu_ = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
-                                    socket.Send(new byte[1] { 0x09 }, 1);
-
-                                    calculateMtuBlock.WaitOne();
-                                    if (_hostMtu == -1) // метод Connect ещё не отработал
+                                    // если mtu, отправленный хостом меньше, который вычислили мы, то обновляем его
+                                    if (hostMtu_ < _mtu)
                                     {
-                                        _hostMtu = hostMtu_;
+                                        _mtu = hostMtu_;
                                     }
-                                    else // connect уже отработал, можно обновлять mtu
-                                    {
-                                        // если mtu, отправленный хостом меньше, который вычислили мы, то обновляем его
-                                        if (hostMtu_ < _mtu)
-                                        {
-                                            _mtu = hostMtu_;
-                                        }
-                                    }
-                                    calculateMtuBlock.Release();
                                 }
-                                break;
-                            case 9: // пришёл ответ на пакет с инфой об mtu
-                                mtuInfoWait.Set();
-                                break;
+                                calculateMtuBlock.Release();
+                            }
+                            break;
+                        case PackgeCodes.MtuInfoConfirm: // пришёл ответ на пакет с инфой об mtu
+                            mtuInfoWait.Set();
+                            break;
 
-                        }
                     }
                 }
             }
             catch { }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void CreatePackagesHeap(byte[] inputData, ref List<Package> packagesHeap, ref int mtu, ref int maxPackagesCount)
+        {
+            if (inputData.Length + 10 <= mtu)
+            {
+                Package package = new Package
+                {
+                    Size = inputData.Length + 10
+                };
+                package.Segments.Add(inputData);
+                packagesHeap.Add(package);
+            }
+            else
+            {
+                int offset = 0;
+                while (offset < inputData.Length)
+                {
+                    int lenght = (inputData.Length - offset) > (mtu - 10) ? mtu - 10 : inputData.Length - offset;
+                    byte[] part = new byte[lenght];
+                    Array.Copy(inputData, offset, part, 0, lenght);
+
+                    Package package = new Package
+                    {
+                        Size = lenght + 10,
+                        lastSegmentIsFull = false
+                    };
+                    package.Segments.Add(part);
+
+                    if (packagesHeap.Count >= maxPackagesCount)
+                    {
+                        packagesHeap = new List<Package>();
+                        sendingBuffer.Enqueue(packagesHeap);
+                    }
+
+                    packagesHeap.Add(package);
+
+                    offset += lenght;
+                }
+
+                packagesHeap[packagesHeap.Count - 1].lastSegmentIsFull = true;
+            }
         }
 
         public void Send(byte[] inputData)
@@ -912,7 +1058,7 @@ namespace Lexplosion.Logic.Network.SMP
             int mtu = _mtu;
             int maxPackagesCount = _maxPackagesCount;
 
-            List<Package> packages;
+            List<Package> packagesHeap;
             if (sendingBuffer.Count > 0)
             {
                 if (sendingBuffer.Count > 1)
@@ -924,61 +1070,19 @@ namespace Lexplosion.Logic.Network.SMP
                     goto Begin;
                 }
 
-                sendingBuffer.TryPeek(out packages);
+                sendingBuffer.TryPeek(out packagesHeap);
             }
             else
             {
-                packages = new List<Package>();
-                sendingBuffer.Enqueue(packages);
+                packagesHeap = new List<Package>();
+                sendingBuffer.Enqueue(packagesHeap);
             }
 
-            void createPackage(byte[] inputData_)
+            if (packagesHeap.Count <= maxPackagesCount)
             {
-                if (inputData_.Length + 10 <= mtu)
+                if (packagesHeap.Count > 0)
                 {
-                    Package package = new Package
-                    {
-                        Size = inputData_.Length + 10
-                    };
-                    package.Segments.Add(inputData_);
-                    packages.Add(package);
-                }
-                else
-                {
-                    int offset = 0;
-                    while (offset < inputData_.Length)
-                    {
-                        int lenght = (inputData_.Length - offset) > (mtu - 10) ? mtu - 10 : inputData_.Length - offset;
-                        byte[] part = new byte[lenght];
-                        Array.Copy(inputData_, offset, part, 0, lenght);
-
-                        Package package = new Package
-                        {
-                            Size = lenght + 10,
-                            lastSegmentIsFull = false
-                        };
-                        package.Segments.Add(part);
-
-                        if (packages.Count >= maxPackagesCount)
-                        {
-                            packages = new List<Package>();
-                            sendingBuffer.Enqueue(packages);
-                        }
-
-                        packages.Add(package);
-
-                        offset += lenght;
-                    }
-
-                    packages[packages.Count - 1].lastSegmentIsFull = true;
-                }
-            }
-
-            if (packages.Count <= maxPackagesCount)
-            {
-                if (packages.Count > 0)
-                {
-                    Package lastElement = packages[packages.Count - 1];
+                    Package lastElement = packagesHeap[packagesHeap.Count - 1];
                     if (lastElement.Size + inputData.Length + 3 <= mtu)
                     {
                         lastElement.Segments.Add(inputData);
@@ -986,7 +1090,7 @@ namespace Lexplosion.Logic.Network.SMP
                     }
                     else
                     {
-                        if (packages.Count < maxPackagesCount)
+                        if (packagesHeap.Count < maxPackagesCount)
                         {
                             int freeSpace = mtu - lastElement.Size - 3;
                             if (freeSpace > 0)
@@ -1002,11 +1106,11 @@ namespace Lexplosion.Logic.Network.SMP
                                 part = new byte[partSize];
                                 Array.Copy(inputData, freeSpace, part, 0, partSize);
 
-                                createPackage(part);
+                                CreatePackagesHeap(part, ref packagesHeap, ref mtu, ref maxPackagesCount);
                             }
                             else
                             {
-                                createPackage(inputData);
+                                CreatePackagesHeap(inputData, ref packagesHeap, ref mtu, ref maxPackagesCount);
                             }
                         }
                         else
@@ -1021,7 +1125,7 @@ namespace Lexplosion.Logic.Network.SMP
                 }
                 else
                 {
-                    createPackage(inputData);
+                    CreatePackagesHeap(inputData, ref packagesHeap, ref mtu, ref maxPackagesCount);
                 }
             }
             else
@@ -1035,44 +1139,44 @@ namespace Lexplosion.Logic.Network.SMP
             sendBlock.Release();
         }
 
-        public bool Receive(out byte[] data)
+        private void FormingMessage(out byte[] data)
         {
-            void FormingData(out byte[] _data)
+            List<byte[]> buffer = new List<byte[]>();
+            int messageSize = 0;
+
+            receivingBuffer.TryDequeue(out Message segment);
+            buffer.Add(segment.data);
+            messageSize += segment.data.Length;
+
+            while (!segment.IsFull && WaitFullPackage && (IsConnected || receivingBuffer.Count > 0))
             {
-                List<byte[]> buffer = new List<byte[]>();
-                int messageSize = 0;
-
-                receivingBuffer.TryDequeue(out Message segment);
-                buffer.Add(segment.data);
-                messageSize += segment.data.Length;
-
-                while (!segment.IsFull && WaitFullPackage && (IsConnected || receivingBuffer.Count > 0))
+                if (receivingBuffer.Count > 0)
                 {
-                    if (receivingBuffer.Count > 0)
-                    {
-                        receivingBuffer.TryDequeue(out segment);
-                        buffer.Add(segment.data);
-                        messageSize += segment.data.Length;
-                    }
-                    else
-                    {
-                        receiveWait.WaitOne(); //этот поток возобновится когда появятся новые пакеты
-                    }
+                    receivingBuffer.TryDequeue(out segment);
+                    buffer.Add(segment.data);
+                    messageSize += segment.data.Length;
                 }
-
-                _data = new byte[messageSize];
-                int offset = 0;
-                foreach (byte[] segmentBytes in buffer)
+                else
                 {
-                    int len = segmentBytes.Length;
-                    Array.Copy(segmentBytes, 0, _data, offset, len);
-                    offset += len;
+                    receiveWait.WaitOne(); //этот поток возобновится когда появятся новые пакеты
                 }
             }
 
+            data = new byte[messageSize];
+            int offset = 0;
+            foreach (byte[] segmentBytes in buffer)
+            {
+                int len = segmentBytes.Length;
+                Array.Copy(segmentBytes, 0, data, offset, len);
+                offset += len;
+            }
+        }
+
+        public bool Receive(out byte[] data)
+        {
             if (receivingBuffer.Count > 0)
             {
-                FormingData(out data);
+                FormingMessage(out data);
                 return true;
             }
             else //буфер пуст
@@ -1083,7 +1187,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     if (receivingBuffer.Count > 0) //если clientQueue.Count == 0 значит что прошлый пакет был принят блоком кода выше. Поэтому threadReset сохранило свое состояние, а пакет был извелчен
                     {
-                        FormingData(out data);
+                        FormingMessage(out data);
                         return true;
                     }
                 }
@@ -1123,7 +1227,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     for (int i = 0; i < 20; i++) //отправляем 20 запросов на разрыв соединения
                     {
-                        socket.Send(new byte[1] { 0x05 }, 1); // TODO: было исключение доступ к ликвидированному объекту запрещен
+                        socket.Send(new byte[1] { PackgeCodes.ConnectionClose }, 1); // TODO: было исключение доступ к ликвидированному объекту запрещен
                     }
 
                     StopWork();
