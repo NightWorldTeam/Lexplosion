@@ -64,7 +64,7 @@ namespace Lexplosion.Logic.Network.SMP
                 ClientClosing?.Invoke(ip);
             };
 
-            if (client.Connect(remoteIp))
+            if (client.Connect(remoteIp, new byte[] { 1, 2, 3, 4 }))
             {
                 clients[remoteIp] = client;
                 return true;
