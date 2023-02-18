@@ -109,7 +109,7 @@ namespace Lexplosion.Logic.Network
                         string hostIp = str.Replace(":" + hostPort, "");
 
                         Runtime.DebugWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
-                        isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
+                        isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)), new byte[] {1,2,3,4});
                     }
                     catch
                     {
