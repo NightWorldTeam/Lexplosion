@@ -175,6 +175,8 @@ namespace Lexplosion.Logic.Network.SMP
         { 2, 2, 2, 2, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1 };      //Ключ - номер неуспешной попытки отправки. Будет сипользовано на следующий итерации.
                                                               //То есть если на нулевой итеарции не получилось доставить, то rtt будет домножен на нулвой множитель и полученное число будет использоваться как задержка на первой итерации.
 
+        private byte[] _connectAnswerPackage;
+
         public bool IsConnected { get; private set; } = false;
 
         public bool WaitFullPackage { get; set; } = true;
@@ -203,6 +205,11 @@ namespace Lexplosion.Logic.Network.SMP
         {
             var connectionWait = new AutoResetEvent(false);
 
+            byte[] _connectAnswerPackage = new byte[connectCode.Length + 2];
+            _connectAnswerPackage[0] = PackgeCodes.ConnectAnswer;
+            _connectAnswerPackage[1] = (byte)connectCode.Length; //вставлям размер кода подключения. Он не может быть больше 256 байт
+            Array.Copy(connectCode, 0, _connectAnswerPackage, 2, (byte)connectCode.Length); //копируем код подключения в пакет подключения
+
             var thread = new Thread(delegate ()
             {
                 byte[] data = null;
@@ -216,6 +223,7 @@ namespace Lexplosion.Logic.Network.SMP
                         data = socket.Receive(ref senderPoint);
                         if (data.Length > 0)
                         {
+                            Runtime.DebugWrite("Packcage " + String.Join(", ", data));
                             if (data[0] == PackgeCodes.MtuRequest && data.Length > 2) // если это пакет с вычислением mtu - отвечаем на него
                             {
                                 socket.Send(new byte[2] { PackgeCodes.MtuResponse, data[1] }, 2);
@@ -230,15 +238,19 @@ namespace Lexplosion.Logic.Network.SMP
                             }
                             else if (data[0] == PackgeCodes.ConnectRequest && data.Length > 2)
                             {
+                                Runtime.DebugWrite("Connectfds A ");
                                 byte codeSize = data[1];
                                 if (codeSize + 2 == data.Length)
                                 {
+                                    Runtime.DebugWrite("Connectfds B ");
                                     byte[] recivedCode = new byte[codeSize];
                                     Array.Copy(data, 2, recivedCode, 0, codeSize);
                                     if (connectCode.SequenceEqual(recivedCode))
                                     {
+                                        Runtime.DebugWrite("Connectfds C ");
                                         if (!pointDefined)
                                         {
+                                            Runtime.DebugWrite("Connectfds D ");
                                             remoteIp = senderPoint;
                                             pointDefined = true;
                                             connectionWait.Set();
@@ -266,6 +278,7 @@ namespace Lexplosion.Logic.Network.SMP
             bool successfulConnect = false;
             while (!successfulConnect && i < 20)
             {
+                Runtime.DebugWrite("Send connection package");
                 socket.Send(connectPackage, connectPackage.Length, remoteIp);
                 i++;
 
@@ -274,8 +287,11 @@ namespace Lexplosion.Logic.Network.SMP
 
             if (!successfulConnect)
             {
+                Runtime.DebugWrite("Point error");
                 return false;
             }
+
+            Runtime.DebugWrite("Point is defined");
 
             socket.Connect(remoteIp);
 
