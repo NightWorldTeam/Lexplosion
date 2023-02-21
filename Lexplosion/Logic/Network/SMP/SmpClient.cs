@@ -236,27 +236,24 @@ namespace Lexplosion.Logic.Network.SMP
                             {
                                 PingProcessing(data);
                             }
-                            else if (data[0] == PackgeCodes.ConnectRequest && data.Length > 2)
+                            else if ((data[0] == PackgeCodes.ConnectRequest || data[0] == PackgeCodes.ConnectAnswer) && data.Length > 2)
                             {
-                                Runtime.DebugWrite("Connectfds A ");
                                 byte codeSize = data[1];
                                 if (codeSize + 2 == data.Length)
                                 {
-                                    Runtime.DebugWrite("Connectfds B ");
                                     byte[] recivedCode = new byte[codeSize];
                                     Array.Copy(data, 2, recivedCode, 0, codeSize);
                                     if (connectCode.SequenceEqual(recivedCode))
                                     {
-                                        Runtime.DebugWrite("Connectfds C ");
                                         if (!pointDefined)
                                         {
-                                            Runtime.DebugWrite("Connectfds D ");
                                             remoteIp = senderPoint;
                                             pointDefined = true;
                                             connectionWait.Set();
                                         }
 
-                                        socket.Send(new byte[] { PackgeCodes.ConnectAnswer }, 1, senderPoint);
+                                        if (data[0] == PackgeCodes.ConnectRequest)
+                                            socket.Send(_connectAnswerPackage, _connectAnswerPackage.Length, senderPoint);
                                     }
                                 }
                             }
@@ -264,7 +261,6 @@ namespace Lexplosion.Logic.Network.SMP
                     }
                     catch { }
                 }
-
             });
             thread.Start();
 
@@ -718,13 +714,13 @@ namespace Lexplosion.Logic.Network.SMP
         {
             if (data.Length > 5)
             {
-                ushort id = BitConverter.ToUInt16(new byte[2] 
+                ushort id = BitConverter.ToUInt16(new byte[2]
                 {
                     data[HeaderPositions.Id_1],
                     data[HeaderPositions.Id_2]
                 }, 0);
 
-                ushort lastId = BitConverter.ToUInt16(new byte[2] 
+                ushort lastId = BitConverter.ToUInt16(new byte[2]
                 {
                     data[HeaderPositions.LastId_1],
                     data[HeaderPositions.LastId_2]
@@ -762,7 +758,7 @@ namespace Lexplosion.Logic.Network.SMP
                     {
                         // отправляем подтверждение
                         byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                        socket.Send(new byte[3] 
+                        socket.Send(new byte[3]
                         {
                             PackgeCodes.ConfirmDataDelivery,
                             neEbyKakNazvat[0],
@@ -785,7 +781,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                         if (needRepeat)
                         {
-                            var package = new List<byte> 
+                            var package = new List<byte>
                             {
                                 PackgeCodes.FailedList,
                                 data[HeaderPositions.LastId_1],
@@ -837,7 +833,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     if (waitingLastPackage == lastId && data[HeaderPositions.AttemptsCounts] > attemptSendCounts)
                     {
-                        var package = new List<byte> 
+                        var package = new List<byte>
                         {
                             PackgeCodes.FailedList,
                             data[HeaderPositions.LastId_1],
@@ -862,7 +858,7 @@ namespace Lexplosion.Logic.Network.SMP
                         else
                         {
                             byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                            socket.Send(new byte[3] 
+                            socket.Send(new byte[3]
                             {
                                 PackgeCodes.ConfirmDataDelivery,
                                 neEbyKakNazvat[0],
@@ -875,7 +871,7 @@ namespace Lexplosion.Logic.Network.SMP
                     else if (id == lastId || data[HeaderPositions.Flag] == Flags.NeedConfirm)
                     {
                         byte[] neEbyKakNazvat = BitConverter.GetBytes(lastId);
-                        socket.Send(new byte[3] 
+                        socket.Send(new byte[3]
                         {
                             PackgeCodes.ConfirmDataDelivery,
                             neEbyKakNazvat[0],
@@ -912,7 +908,7 @@ namespace Lexplosion.Logic.Network.SMP
                                 //здесь уже не проверяем код подключения, ведь он был уже проверен в методе connect и ip отправителя зафиксирован
                                 if (data[0] == PackgeCodes.ConnectRequest && data.Length > 2)
                                 {
-                                    socket.Send(new byte[] { PackgeCodes.ConnectAnswer }, 1);
+                                    socket.Send(_connectAnswerPackage, _connectAnswerPackage.Length);
                                 }
                             }
                             break;
@@ -937,7 +933,7 @@ namespace Lexplosion.Logic.Network.SMP
                         case PackgeCodes.ConfirmDataDelivery: // пришло подтверждение доставки пакета
                             if (data.Length == 3)
                             {
-                                ushort id = BitConverter.ToUInt16(new byte[2] 
+                                ushort id = BitConverter.ToUInt16(new byte[2]
                                 {
                                     data[1],
                                     data[2]
