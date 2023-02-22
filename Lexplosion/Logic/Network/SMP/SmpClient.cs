@@ -261,6 +261,7 @@ namespace Lexplosion.Logic.Network.SMP
                                             remoteIp = senderPoint;
                                             pointDefined = true;
                                             _hostSessionId = data[data.Length - 1]; // устанавливаем id сессии хоста
+                                            Runtime.DebugWrite("_hostSessionId " + _hostSessionId);
                                             connectionWait.Set();
                                         }
 
@@ -299,12 +300,6 @@ namespace Lexplosion.Logic.Network.SMP
                 Runtime.DebugWrite("Point error");
                 return false;
             }
-
-            /*if ((new Random()).Next(0, 10) % 2 == 0)
-            {
-                Runtime.DebugWrite("Random exit");
-                return false;
-            }*/
 
             Runtime.DebugWrite("Point is defined");
 
@@ -972,6 +967,7 @@ namespace Lexplosion.Logic.Network.SMP
                             Runtime.DebugWrite("StopWork!!!!");
                             if (data.Length == 2 && data[1] == _hostSessionId)
                             {
+                                Runtime.DebugWrite("StopWork, _hostSessionId: " + _hostSessionId);
                                 ThreadPool.QueueUserWorkItem(delegate (object state)
                                 {
                                     StopWork();

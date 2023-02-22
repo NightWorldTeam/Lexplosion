@@ -8,6 +8,7 @@ using LumiSoft.Net.STUN.Client;
 namespace Lexplosion.Logic.Network
 {
     using SMP;
+    using System.Security.Cryptography;
     using TURN;
 
     abstract class NetworkClient // TODO: вложенные потоки нужно сделать нефоновыми. ну чтобы они давали программе закрыться
@@ -109,10 +110,14 @@ namespace Lexplosion.Logic.Network
                         string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
                         string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                         string hostIp = str.Replace(":" + hostPort, "");
-
                         Runtime.DebugWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
-                        byte[] connectionCode = Encoding.UTF8.GetBytes(str + ", " + myPoint);
-                        isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)), connectionCode);
+
+                        using (SHA1 sha = new SHA1Managed())
+                        {
+                            Runtime.DebugWrite("Connection code: " + str + ", " + myPoint);
+                            byte[] connectionCode = Encoding.UTF8.GetBytes(str + ", " + myPoint);
+                            isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)), sha.ComputeHash(connectionCode));
+                        }
                     }
                     catch
                     {

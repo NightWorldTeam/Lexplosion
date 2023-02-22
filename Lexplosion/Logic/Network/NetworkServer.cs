@@ -337,6 +337,7 @@ namespace Lexplosion.Logic.Network
 
                                 using (SHA1 sha = new SHA1Managed())
                                 {
+                                    Runtime.DebugWrite("Connection code: " + myPoint + ", " + str);
                                     byte[] connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
                                     isConected = ((SmpServer)Server).Connect(point, connectionCode);
                                 }
