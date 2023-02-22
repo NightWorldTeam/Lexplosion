@@ -138,7 +138,7 @@ namespace Lexplosion
             CurrentProcess = Process.GetCurrentProcess();
 
             // Проверяем запущен ли лаунчер.
-            if (!InstanceCheck())
+            if (false & !InstanceCheck())
             {
                 WebSocketClient ws = new WebSocketClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 54352));
                 //отправляем уже запущщеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается

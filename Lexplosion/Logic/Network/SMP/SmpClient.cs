@@ -287,6 +287,12 @@ namespace Lexplosion.Logic.Network.SMP
                 return false;
             }
 
+            /*if ((new Random()).Next(0, 10) % 2 == 0)
+            {
+                Runtime.DebugWrite("Random exit");
+                return false;
+            }*/
+
             Runtime.DebugWrite("Point is defined");
 
             socket.Connect(remoteIp);

@@ -44,7 +44,7 @@ namespace Lexplosion.Logic.Network.SMP
             localPoint = point_;
         }
 
-        public bool Connect(IPEndPoint remoteIp)
+        public bool Connect(IPEndPoint remoteIp, byte[] connectionCode)
         {
             SmpClient client = new SmpClient(localPoint, true);
 
@@ -64,7 +64,7 @@ namespace Lexplosion.Logic.Network.SMP
                 ClientClosing?.Invoke(ip);
             };
 
-            if (client.Connect(remoteIp, new byte[] { 1, 2, 3, 4 }))
+            if (client.Connect(remoteIp, connectionCode))
             {
                 clients[remoteIp] = client;
                 return true;

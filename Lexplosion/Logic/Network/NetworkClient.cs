@@ -55,6 +55,7 @@ namespace Lexplosion.Logic.Network
 
                             STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, udpSocket);
                             Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
+                            Runtime.DebugWrite("Nat type " + result.NetType);
 
                             var point = (IPEndPoint)udpSocket.LocalEndPoint;
                             udpSocket.Close();
@@ -99,7 +100,6 @@ namespace Lexplosion.Logic.Network
                 }
 
                 bool isConected;
-
                 if (DirectConnection)
                 {
                     try

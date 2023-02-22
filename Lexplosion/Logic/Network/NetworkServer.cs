@@ -11,6 +11,7 @@ namespace Lexplosion.Logic.Network
 {
     using SMP;
     using System.Runtime.CompilerServices;
+    using System.Security.Cryptography;
     using TURN;
 
     abstract class NetworkServer
@@ -331,7 +332,12 @@ namespace Lexplosion.Logic.Network
 
                                 point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
                                 Runtime.DebugWrite("Host EndPoint " + point);
-                                isConected = ((SmpServer)Server).Connect(point);
+
+                                using (SHA1 sha = new SHA1Managed())
+                                {
+                                    byte[] connectionCode = sha.ComputeHash(resp);
+                                    isConected = ((SmpServer)Server).Connect(point, connectionCode);
+                                }
                             }
                             else
                             {
