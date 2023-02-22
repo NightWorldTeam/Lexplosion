@@ -9,6 +9,12 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Network.SMP
 {
+
+    /// <summary>
+    /// Клиент Stream Messages Protocol. Работает на udp. 
+    /// Устанавливает соединение, контролириует доставку пакетов. Заточен для работы с Udp hole pushing.
+    /// Может соединяться только с одним хостом.
+    /// </summary>
     class SmpClient : IClientTransmitter
     {
         /* Я и из будующего, предлагаю тебе пойти нахуй, я не собираюсь комментировать код, мне лень */
@@ -37,7 +43,7 @@ namespace Lexplosion.Logic.Network.SMP
             public const byte LastId_2 = 5; // Вторая часть
             public const byte AttemptsCounts = 6; // Количество попыток отправки данного пакета
 
-            public const byte FirstDataByte = AttemptsCounts + 1; // Позиция первого байта вне заголовка и соотвественно размер хэадера
+            public const byte FirstDataByte = AttemptsCounts + 1; // Позиция первого байта вне заголовка и соотвественно размер ебучего хэадера
         }
 
         private struct PackgeCodes
@@ -143,8 +149,10 @@ namespace Lexplosion.Logic.Network.SMP
 
         private int _maxPackagesCount = 100;
         private long _rtt = -1; // пинг в обе стороны (время ожидание ответа)
-        private int _mtu = 68;
+        private int _mtu = 68; // максимальный размер пакета
         private int _hostMtu = -1; // mtu удалённого хоста
+        private byte _selfSessionId = 0; // наш id сессии. Его мы задаем при подключении и будем отправлять при отключении
+        private byte _hostSessionId = 0; //id сесии хоста. Его мы будем проверять, если хост отправит запрос на отключение
 
         private RttCalculator _rttCalculator;
 
@@ -163,13 +171,13 @@ namespace Lexplosion.Logic.Network.SMP
         private readonly AutoResetEvent _mtuWait = new AutoResetEvent(false); // ожидание ответа при вычислении mtu
         private int _mtuPackageId = -1; // айди mtu пакета
 
-        private readonly AutoResetEvent mtuInfoWait = new AutoResetEvent(false); // ожидание ответа при отправке своего mtu
-        private readonly Semaphore calculateMtuBlock = new Semaphore(1, 1);
+        private readonly AutoResetEvent _mtuInfoWait = new AutoResetEvent(false); // ожидание ответа при отправке своего mtu
+        private readonly Semaphore _calculateMtuBlock = new Semaphore(1, 1);
 
         public delegate void ReceiveHandle(bool isFull);
         public event ReceiveHandle MessageReceived;
 
-        private bool inStopping = false; // это флаг чтобы в процессе закрытия соединения нельзя было вызвать метод send
+        private bool _inStopping = false; // это флаг чтобы в процессе закрытия соединения нельзя было вызвать метод send
         private long _lastTime = 0; //время отправки последнего пакета
         private readonly int[] _delayMultipliers = new int[15] //этот массив хранит множители rtt при отправке сообщений.
         { 2, 2, 2, 2, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1 };      //Ключ - номер неуспешной попытки отправки. Будет сипользовано на следующий итерации.
@@ -205,9 +213,12 @@ namespace Lexplosion.Logic.Network.SMP
         {
             var connectionWait = new AutoResetEvent(false);
 
-            byte[] _connectAnswerPackage = new byte[connectCode.Length + 2];
+            _selfSessionId = (byte)(new Random()).Next(0, 0xff);
+
+            byte[] _connectAnswerPackage = new byte[connectCode.Length + 3];
             _connectAnswerPackage[0] = PackgeCodes.ConnectAnswer;
             _connectAnswerPackage[1] = (byte)connectCode.Length; //вставлям размер кода подключения. Он не может быть больше 256 байт
+            _connectAnswerPackage[_connectAnswerPackage.Length - 1] = _selfSessionId; //вставляем наш id сессии.
             Array.Copy(connectCode, 0, _connectAnswerPackage, 2, (byte)connectCode.Length); //копируем код подключения в пакет подключения
 
             var thread = new Thread(delegate ()
@@ -236,10 +247,10 @@ namespace Lexplosion.Logic.Network.SMP
                             {
                                 PingProcessing(data);
                             }
-                            else if ((data[0] == PackgeCodes.ConnectRequest || data[0] == PackgeCodes.ConnectAnswer) && data.Length > 2)
+                            else if ((data[0] == PackgeCodes.ConnectRequest || data[0] == PackgeCodes.ConnectAnswer) && data.Length > 3)
                             {
                                 byte codeSize = data[1];
-                                if (codeSize + 2 == data.Length)
+                                if (codeSize + 3 == data.Length)
                                 {
                                     byte[] recivedCode = new byte[codeSize];
                                     Array.Copy(data, 2, recivedCode, 0, codeSize);
@@ -249,6 +260,7 @@ namespace Lexplosion.Logic.Network.SMP
                                         {
                                             remoteIp = senderPoint;
                                             pointDefined = true;
+                                            _hostSessionId = data[data.Length - 1]; // устанавливаем id сессии хоста
                                             connectionWait.Set();
                                         }
 
@@ -265,9 +277,10 @@ namespace Lexplosion.Logic.Network.SMP
             thread.Start();
 
             //формируем пакет запроса подключения
-            byte[] connectPackage = new byte[connectCode.Length + 2];
+            byte[] connectPackage = new byte[connectCode.Length + 3];
             connectPackage[0] = PackgeCodes.ConnectRequest;
             connectPackage[1] = (byte)connectCode.Length; //вставлям размер кода подключения. Он не может быть больше 256 байт
+            connectPackage[connectPackage.Length - 1] = _selfSessionId; //херачим id для сессии.
             Array.Copy(connectCode, 0, connectPackage, 2, (byte)connectCode.Length); //копируем код подключения в пакет подключения
 
             int i = 0;
@@ -315,7 +328,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                 _mtu = CalculateMTU(); // измеряем mtu
                 SendMTUInfo(); // отправляем наш mtu хосту
-                calculateMtuBlock.WaitOne();
+                _calculateMtuBlock.WaitOne();
                 if (_hostMtu != -1) // пакет с инфой об mtu хоста уже был получен
                 {
                     // если mtu хоста меньше, то обновляем наш mtu
@@ -328,7 +341,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     _hostMtu = -2; // устанавливаем -2 чтобы при получении пакета с инфой наш mtu был обновлён
                 }
-                calculateMtuBlock.Release();
+                _calculateMtuBlock.Release();
 
                 socket.Client.ReceiveBufferSize = _maxPackagesCount * _mtu;
 
@@ -415,7 +428,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     socket.Send(data, data.Length);
 
-                    if (mtuInfoWait.WaitOne((int)_rtt))
+                    if (_mtuInfoWait.WaitOne((int)_rtt))
                     {
                         break;
                     }
@@ -672,11 +685,11 @@ namespace Lexplosion.Logic.Network.SMP
                     if (attemptCount == 15)
                     {
                         Runtime.DebugWrite("PIZDETS!!!!");
-                        new Thread(delegate ()
+                        ThreadPool.QueueUserWorkItem(delegate (object state)
                         {
                             Close();
                             ClientClosing?.Invoke(point);
-                        }).Start();
+                        });
                     }
 
                     lastPackage = -1;
@@ -912,7 +925,7 @@ namespace Lexplosion.Logic.Network.SMP
                         case PackgeCodes.ConnectRequest:
                             {
                                 //здесь уже не проверяем код подключения, ведь он был уже проверен в методе connect и ip отправителя зафиксирован
-                                if (data[0] == PackgeCodes.ConnectRequest && data.Length > 2)
+                                if (data[0] == PackgeCodes.ConnectRequest && data.Length > 3)
                                 {
                                     socket.Send(_connectAnswerPackage, _connectAnswerPackage.Length);
                                 }
@@ -957,15 +970,18 @@ namespace Lexplosion.Logic.Network.SMP
                             break;
                         case PackgeCodes.ConnectionClose: // обрыв соединения
                             Runtime.DebugWrite("StopWork!!!!");
-                            new Thread(delegate ()
+                            if (data.Length == 2 && data[1] == _hostSessionId)
                             {
-                                StopWork();
-                                ClientClosing?.Invoke(point);
-                            }).Start();
+                                ThreadPool.QueueUserWorkItem(delegate (object state)
+                                {
+                                    StopWork();
+                                    ClientClosing?.Invoke(point);
+                                });
+                            }
                             break;
                         case PackgeCodes.FailedList: // пришел пакет со списком пакетов, которые нужно переотправить
-                                                     //проверяем валидность этого пакета. пакет должен содержать список айдишников. каждый id занимает 2 байта. первый байт - код.
-                            if (data.Length > 3 && ((data.Length - 1) % 2 == 0))
+                            //проверяем валидность этого пакета. пакет должен содержать список айдишников. каждый id занимает 2 байта. первый байт - код. то есть размер должен быть нечетным
+                            if (data.Length > 4 && ((data.Length & 1) == 1))
                             {
                                 repeatDeliveryBlock.WaitOne();
                                 ushort packageId = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
@@ -999,7 +1015,7 @@ namespace Lexplosion.Logic.Network.SMP
                                 ushort hostMtu_ = BitConverter.ToUInt16(new byte[2] { data[1], data[2] }, 0);
                                 socket.Send(new byte[1] { PackgeCodes.MtuInfoConfirm }, 1);
 
-                                calculateMtuBlock.WaitOne();
+                                _calculateMtuBlock.WaitOne();
                                 if (_hostMtu == -1) // метод Connect ещё не отработал
                                 {
                                     _hostMtu = hostMtu_;
@@ -1012,11 +1028,11 @@ namespace Lexplosion.Logic.Network.SMP
                                         _mtu = hostMtu_;
                                     }
                                 }
-                                calculateMtuBlock.Release();
+                                _calculateMtuBlock.Release();
                             }
                             break;
                         case PackgeCodes.MtuInfoConfirm: // пришёл ответ на пакет с инфой об mtu
-                            mtuInfoWait.Set();
+                            _mtuInfoWait.Set();
                             break;
 
                     }
@@ -1070,7 +1086,7 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Send(byte[] inputData)
         {
-            if (inStopping || !IsConnected) return;
+            if (_inStopping || !IsConnected) return;
             Begin: sendBlock.WaitOne();
 
             int mtu = _mtu;
@@ -1084,7 +1100,7 @@ namespace Lexplosion.Logic.Network.SMP
                     sendBlock.Release();
                     sendingCycleDetector.WaitOne();
 
-                    if (inStopping || !IsConnected) return;
+                    if (_inStopping || !IsConnected) return;
                     goto Begin;
                 }
 
@@ -1136,7 +1152,7 @@ namespace Lexplosion.Logic.Network.SMP
                             sendBlock.Release();
                             sendingCycleDetector.WaitOne();
 
-                            if (inStopping || !IsConnected) return;
+                            if (_inStopping || !IsConnected) return;
                             goto Begin;
                         }
                     }
@@ -1235,7 +1251,7 @@ namespace Lexplosion.Logic.Network.SMP
                 if (IsConnected)
                 {
                     sendBlock.WaitOne();
-                    inStopping = true; // ставим флаг чтобы send нельзя было вызвать ещё раз
+                    _inStopping = true; // ставим флаг чтобы send нельзя было вызвать ещё раз
                     sendBlock.Release();
 
                     while (sendingBuffer.Count != 0) // ждём когда все пакеты из буфера будут доставлены
@@ -1245,7 +1261,7 @@ namespace Lexplosion.Logic.Network.SMP
 
                     for (int i = 0; i < 20; i++) //отправляем 20 запросов на разрыв соединения
                     {
-                        socket.Send(new byte[1] { PackgeCodes.ConnectionClose }, 1); // TODO: было исключение доступ к ликвидированному объекту запрещен
+                        socket.Send(new byte[2] { PackgeCodes.ConnectionClose, _selfSessionId }, 2); // TODO: было исключение доступ к ликвидированному объекту запрещен
                     }
 
                     StopWork();

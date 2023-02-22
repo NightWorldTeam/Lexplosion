@@ -4,6 +4,10 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Network.SMP
 {
+
+    /// <summary>
+    /// Ндастройка над SmpClient для возможности соединения сразу с несколькими хостами.
+    /// </summary>
     class SmpServer : IServerTransmitter
     {
         private class Message

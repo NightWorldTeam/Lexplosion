@@ -41,6 +41,8 @@ namespace Lexplosion.Logic.Network
                 stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
                 Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);
 
+                string myPoint = null;
+
                 {
                     byte[] buf = new byte[2];
                     int bytes = stream.Read(buf, 0, buf.Length);
@@ -62,8 +64,8 @@ namespace Lexplosion.Logic.Network
                             Bridge = new SmpClient(point);
 
                             //парсим и получаем порт
-                            string externalPort = result.PublicEndPoint.ToString();
-                            externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
+                            myPoint = result.PublicEndPoint.ToString();
+                            string externalPort = myPoint.Substring(myPoint.IndexOf(":") + 1, myPoint.Length - myPoint.IndexOf(":") - 1).Trim();
                             portData = Encoding.UTF8.GetBytes(externalPort);
 
                             DirectConnection = true;
@@ -109,7 +111,8 @@ namespace Lexplosion.Logic.Network
                         string hostIp = str.Replace(":" + hostPort, "");
 
                         Runtime.DebugWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
-                        isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)), new byte[] {1,2,3,4});
+                        byte[] connectionCode = Encoding.UTF8.GetBytes(str + ", " + myPoint);
+                        isConected = ((SmpClient)Bridge).Connect(new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)), connectionCode);
                     }
                     catch
                     {

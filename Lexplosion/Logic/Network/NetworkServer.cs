@@ -211,6 +211,8 @@ namespace Lexplosion.Logic.Network
                     try
                     {
                         string clientUUID;
+                        string myPoint = null;
+
                         {
                             byte[] data = new byte[33];
 
@@ -280,8 +282,8 @@ namespace Lexplosion.Logic.Network
                                         string externalPort;
                                         if (result.PublicEndPoint != null)
                                         {
-                                            externalPort = result.PublicEndPoint.ToString();
-                                            externalPort = externalPort.Substring(externalPort.IndexOf(":") + 1, externalPort.Length - externalPort.IndexOf(":") - 1).Trim();
+                                            myPoint = result.PublicEndPoint.ToString();
+                                            externalPort = myPoint.Substring(myPoint.IndexOf(":") + 1, myPoint.Length - myPoint.IndexOf(":") - 1).Trim();
                                             portData = Encoding.UTF8.GetBytes(externalPort.ToString());
                                         }
                                         else // опять какая-то хуйня. Пробуем переподключиться к управляющему серверу
@@ -335,7 +337,7 @@ namespace Lexplosion.Logic.Network
 
                                 using (SHA1 sha = new SHA1Managed())
                                 {
-                                    byte[] connectionCode = sha.ComputeHash(resp);
+                                    byte[] connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
                                     isConected = ((SmpServer)Server).Connect(point, connectionCode);
                                 }
                             }
