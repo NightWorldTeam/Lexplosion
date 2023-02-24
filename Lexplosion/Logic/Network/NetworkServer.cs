@@ -37,8 +37,6 @@ namespace Lexplosion.Logic.Network
         protected bool DirectConnection;
         protected string ControlServer;
 
-        private readonly IPEndPoint _udpSocketPoint;
-        private Socket _udpSocket;
         private Socket _controlConnection;
 
         public event Action<string> ConnectingUser;
@@ -71,18 +69,7 @@ namespace Lexplosion.Logic.Network
 
             _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            if (DirectConnection)
-            {
-                CreateUdpSocket(new IPEndPoint(IPAddress.Any, 0));
-                _udpSocketPoint = (IPEndPoint)_udpSocket.LocalEndPoint;
-
-                Server = new SmpServer(_udpSocketPoint);
-            }
-            else
-            {
-                Server = new TurnBridgeServer();
-            }
-
+            Server = DirectConnection ? new SmpServer() : new TurnBridgeServer();
             Server.ClientClosing += ClientAbort;
 
             ReadingThread = new Thread(delegate () //этот поток читает сообщения от клиента
@@ -111,34 +98,6 @@ namespace Lexplosion.Logic.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void CreateUdpSocket(IPEndPoint point)
-        {
-            _udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            _udpSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            _udpSocket.Bind(point);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private STUN_Result StunQuery()
-        {
-            if (_udpSocket == null) CreateUdpSocket(_udpSocketPoint);
-
-            STUN_Result result = null;
-            try
-            {
-                // TODO: сделать получения списка stun серверов с нашего сервера
-                result = STUN_Client.Query("stun.l.google.com", 19305, _udpSocket); //получем наш внешний адрес
-                Runtime.DebugWrite("NatType " + result.NetType.ToString());
-            }
-            catch { }
-
-            _udpSocket.Close();
-            _udpSocket = null;
-
-            return result;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PrepeareRepeat()
         {
             ControlConnectionBlock.WaitOne();
@@ -163,7 +122,15 @@ namespace Lexplosion.Logic.Network
             // если стоит парметр установки прямого соединения, то проверяем, возможно ли его вообще установить. если нет - переходим на TURN
             if (DirectConnection)
             {
-                STUN_Result result = StunQuery();
+                STUN_Result result = null;
+                try
+                {
+                    // TODO: сделать получения списка stun серверов с нашего сервера
+                    result = STUN_Client.Query("stun.l.google.com", 19305, new IPEndPoint(IPAddress.Any, 0)); //получем наш внешний адрес
+                    Runtime.DebugWrite("NatType " + result.NetType.ToString());
+                }
+                catch { }
+
                 if (result == null || result.NetType == STUN_NetType.UdpBlocked || result.NetType == STUN_NetType.Symmetric || result.NetType == STUN_NetType.SymmetricUdpFirewall)
                 {
                     DirectConnection = false;
@@ -212,6 +179,7 @@ namespace Lexplosion.Logic.Network
                     {
                         string clientUUID;
                         string myPoint = null;
+                        IPEndPoint localPoint = null;
 
                         {
                             byte[] data = new byte[33];
@@ -269,7 +237,19 @@ namespace Lexplosion.Logic.Network
                                     byte[] portData;
                                     if (DirectConnection)
                                     {
-                                        STUN_Result result = StunQuery();
+                                        var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                                        
+                                        STUN_Result result = null;
+                                        try
+                                        {
+                                            // TODO: сделать получения списка stun серверов с нашего сервера
+                                            result = STUN_Client.Query("stun.l.google.com", 19305, udpSocket); //получем наш внешний адрес
+                                            Runtime.DebugWrite("NatType " + result.NetType.ToString());
+                                        }
+                                        catch { }
+
+                                        localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
+                                        udpSocket.Close();
 
                                         // какая-то хуйня. Пробуем переподключиться к управляющему серверу
                                         if (result == null)
@@ -339,7 +319,7 @@ namespace Lexplosion.Logic.Network
                                 {
                                     Runtime.DebugWrite("Connection code: " + myPoint + ", " + str);
                                     byte[] connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
-                                    isConected = ((SmpServer)Server).Connect(point, connectionCode);
+                                    isConected = ((SmpServer)Server).Connect(localPoint, point, connectionCode);
                                 }
                             }
                             else

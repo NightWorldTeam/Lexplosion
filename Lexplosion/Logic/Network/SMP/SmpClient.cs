@@ -197,10 +197,9 @@ namespace Lexplosion.Logic.Network.SMP
             }
         }
 
-        public SmpClient(IPEndPoint point, bool multiSocket = false)
+        public SmpClient(IPEndPoint point)
         {
             socket = new UdpClient();
-            if (multiSocket) socket.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             socket.Client.Bind(point);
 
             var sioUdpConnectionReset = -1744830452;

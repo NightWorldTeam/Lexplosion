@@ -6,7 +6,7 @@ namespace Lexplosion.Logic.Network.SMP
 {
 
     /// <summary>
-    /// Ндастройка над SmpClient для возможности соединения сразу с несколькими хостами.
+    /// Надстройка над SmpClient для возможности соединения сразу с несколькими хостами.
     /// </summary>
     class SmpServer : IServerTransmitter
     {
@@ -36,27 +36,21 @@ namespace Lexplosion.Logic.Network.SMP
 
         private bool waitFullPackage = true;
 
-        private readonly IPEndPoint localPoint;
         private readonly ConcurrentDictionary<IPEndPoint, SmpClient> clients = new ConcurrentDictionary<IPEndPoint, SmpClient>();
         private readonly ConcurrentQueue<Message> receivingQueue = new ConcurrentQueue<Message>();
 
         private readonly AutoResetEvent receiveWait = new AutoResetEvent(false);
         private readonly Semaphore cloaseBlock = new Semaphore(1, 1);
 
-        public SmpServer(IPEndPoint point_)
+        public bool Connect(IPEndPoint localPoint, IPEndPoint remotePoint, byte[] connectionCode)
         {
-            localPoint = point_;
-        }
-
-        public bool Connect(IPEndPoint remoteIp, byte[] connectionCode)
-        {
-            SmpClient client = new SmpClient(localPoint, true);
+            var client = new SmpClient(localPoint);
 
             client.MessageReceived += delegate (bool isFull)
             {
                 receivingQueue.Enqueue(new Message
                 {
-                    Point = remoteIp,
+                    Point = remotePoint,
                     IsFull = isFull
                 });
 
@@ -68,9 +62,9 @@ namespace Lexplosion.Logic.Network.SMP
                 ClientClosing?.Invoke(ip);
             };
 
-            if (client.Connect(remoteIp, connectionCode))
+            if (client.Connect(remotePoint, connectionCode))
             {
-                clients[remoteIp] = client;
+                clients[remotePoint] = client;
                 return true;
             }
 
