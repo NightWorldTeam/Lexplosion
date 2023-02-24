@@ -75,7 +75,7 @@ namespace Lexplosion.Logic.Network
 
         public static bool ServerIsOnline()
         {
-            return HttpPost(LaunсherSettings.URL.Base + "/api/onlineStatus") == "online";
+            return HttpPost(LaunсherSettings.URL.Base + "api/onlineStatus") == "online";
         }
 
         public static List<string> GetModloadersList(string gameVersion, ClientType modloaderType)
