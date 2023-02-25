@@ -236,15 +236,18 @@ namespace Lexplosion.Logic.Network.SMP
                             Runtime.DebugWrite("Packcage " + String.Join(", ", data));
                             if (data[0] == PackgeCodes.MtuRequest && data.Length > 2) // если это пакет с вычислением mtu - отвечаем на него
                             {
-                                socket.Send(new byte[2] { PackgeCodes.MtuResponse, data[1] }, 2);
+                                if (pointDefined || senderPoint?.Equals(remoteIp) == true)
+                                    socket.Send(new byte[2] { PackgeCodes.MtuResponse, data[1] }, 2);
                             }
                             else if (data[0] == PackgeCodes.PingRequest) // если это пакет пинга то отвечаем на него
                             {
-                                socket.Send(new byte[2] { PackgeCodes.PingResponse, data[1] }, 2);
+                                if (pointDefined || senderPoint?.Equals(remoteIp) == true)
+                                    socket.Send(new byte[2] { PackgeCodes.PingResponse, data[1] }, 2);
                             }
                             else if (data[0] == PackgeCodes.PingResponse) // если это ответ на пинг, то обрабатываем его
                             {
-                                PingProcessing(data);
+                                if (pointDefined)
+                                    PingProcessing(data);
                             }
                             else if ((data[0] == PackgeCodes.ConnectRequest || data[0] == PackgeCodes.ConnectAnswer) && data.Length > 3)
                             {
@@ -318,33 +321,35 @@ namespace Lexplosion.Logic.Network.SMP
                 serviceReceive = new Thread(ServiceReceive);
                 connectionControl = new Thread(ConnectionControl);
 
+                _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() + 10000;
+
                 serviceReceive.Start();
-
-                _mtu = CalculateMTU(); // измеряем mtu
-                SendMTUInfo(); // отправляем наш mtu хосту
-                _calculateMtuBlock.WaitOne();
-                if (_hostMtu != -1) // пакет с инфой об mtu хоста уже был получен
-                {
-                    // если mtu хоста меньше, то обновляем наш mtu
-                    if (_hostMtu < _mtu)
-                    {
-                        _mtu = _hostMtu;
-                    }
-                }
-                else
-                {
-                    _hostMtu = -2; // устанавливаем -2 чтобы при получении пакета с инфой наш mtu был обновлён
-                }
-                _calculateMtuBlock.Release();
-
-                socket.Client.ReceiveBufferSize = _maxPackagesCount * _mtu;
-
                 serviceSend.Start();
                 connectionControl.Start();
 
-                _lastTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() + 10000;
+                ThreadPool.QueueUserWorkItem(delegate (object state)
+                {
+                    _mtu = CalculateMTU(); // измеряем mtu
+                    SendMTUInfo(); // отправляем наш mtu хосту
+                    _calculateMtuBlock.WaitOne();
+                    if (_hostMtu != -1) // пакет с инфой об mtu хоста уже был получен
+                    {
+                        // если mtu хоста меньше, то обновляем наш mtu
+                        if (_hostMtu < _mtu)
+                        {
+                            _mtu = _hostMtu;
+                        }
+                    }
+                    else
+                    {
+                        _hostMtu = -2; // устанавливаем -2 чтобы при получении пакета с инфой наш mtu был обновлён
+                    }
+                    _calculateMtuBlock.Release();
 
-                Runtime.DebugWrite("MTU " + _mtu);
+                    socket.Client.ReceiveBufferSize = _maxPackagesCount * _mtu;
+
+                    Runtime.DebugWrite("MTU " + _mtu);
+                });
 
                 return true;
             }
@@ -356,8 +361,6 @@ namespace Lexplosion.Logic.Network.SMP
 
         private int CalculateMTU()
         {
-            socket.Client.DontFragment = true;
-
             int thisData = 10;
             int lostData = 1500;
 
@@ -377,7 +380,9 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     try
                     {
+                        socket.Client.DontFragment = true;
                         socket.Send(data, thisData);
+                        socket.Client.DontFragment = false;
 
                         if (_mtuWait.WaitOne((int)_rtt * 2) && _mtuPackageId == packageId)
                         {
@@ -404,7 +409,6 @@ namespace Lexplosion.Logic.Network.SMP
 
             _mtuPackageId = -1;
 
-            socket.Client.DontFragment = false;
             return thisData;
         }
 
