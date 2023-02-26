@@ -75,6 +75,15 @@ namespace Lexplosion.Gui.ViewModels
             }));
         }
 
+        private RelayCommand _manualInputMicrosoftDataFormCloseCommand;
+        public RelayCommand ManualInputMicrosoftDataFormCloseCommand
+        {
+            get => _manualInputMicrosoftDataFormCloseCommand ?? (_manualInputMicrosoftDataFormCloseCommand = new RelayCommand(obj =>
+            {
+                IsManualInput = false;
+            }));
+        }
+
         private RelayCommand _manualInputMicrosoftDataCommand;
         public RelayCommand ManualInputMicrosoftDataCommand
         {
