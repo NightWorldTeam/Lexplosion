@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Threading;
 
@@ -10,52 +11,58 @@ namespace Lexplosion.Logic.Network.SMP
     /// </summary>
     class SmpServer : IServerTransmitter
     {
-        private class Message
-        {
-            public IPEndPoint Point;
-            public bool IsFull;
-        }
-
         public bool IsWork { get; private set; } = true;
-        public bool WaitFullPackage
-        {
-            get
-            {
-                return waitFullPackage;
-            }
-
-            set
-            {
-                waitFullPackage = value;
-                foreach (SmpClient client in clients.Values)
-                {
-                    client.WaitFullPackage = value;
-                }
-            }
-        }
-
-        private bool waitFullPackage = true;
 
         private readonly ConcurrentDictionary<IPEndPoint, SmpClient> clients = new ConcurrentDictionary<IPEndPoint, SmpClient>();
-        private readonly ConcurrentQueue<Message> receivingQueue = new ConcurrentQueue<Message>();
+        private readonly ConcurrentQueue<IPEndPoint> receivingQueue = new ConcurrentQueue<IPEndPoint>();
 
         private readonly AutoResetEvent receiveWait = new AutoResetEvent(false);
         private readonly Semaphore cloaseBlock = new Semaphore(1, 1);
 
         public bool Connect(IPEndPoint localPoint, IPEndPoint remotePoint, byte[] connectionCode)
         {
+            var connectedEvent = new ManualResetEvent(false);
             var client = new SmpClient(localPoint);
 
-            client.MessageReceived += delegate (bool isFull)
-            {
-                receivingQueue.Enqueue(new Message
-                {
-                    Point = remotePoint,
-                    IsFull = isFull
-                });
+            bool connected = false;
 
-                receiveWait.Set();
+            Action messageReceived = null;
+            messageReceived = delegate ()
+            {
+                //ThreadPool.QueueUserWorkItem(delegate (object state)
+                //{
+                //    connectedEvent.WaitOne();
+                //    receivingQueue.Enqueue(remotePoint);
+                //    receiveWait.Set();
+                //});
+
+                //if (connected)
+                //{
+                //    client.MessageReceived -= messageReceived;
+                //    client.MessageReceived += delegate ()
+                //    {
+                //        receivingQueue.Enqueue(remotePoint);
+                //        receiveWait.Set();
+                //    };
+                //}
+
+                if (connected)
+                {
+                    receivingQueue.Enqueue(remotePoint);
+                    receiveWait.Set();
+                }
+                else
+                {
+                    ThreadPool.QueueUserWorkItem(delegate (object state)
+                    {
+                        connectedEvent.WaitOne();
+                        receivingQueue.Enqueue(remotePoint);
+                        receiveWait.Set();
+                    });
+                }
             };
+
+            client.MessageReceived += messageReceived;
 
             client.ClientClosing += delegate (IPEndPoint ip)
             {
@@ -65,6 +72,9 @@ namespace Lexplosion.Logic.Network.SMP
             if (client.Connect(remotePoint, connectionCode))
             {
                 clients[remotePoint] = client;
+                connected = true;
+                connectedEvent.Set();
+
                 return true;
             }
 
@@ -75,29 +85,26 @@ namespace Lexplosion.Logic.Network.SMP
         {
             if (receivingQueue.Count > 0)
             {
-                receivingQueue.TryDequeue(out Message message);
+                receivingQueue.TryDequeue(out IPEndPoint point);
 
-                if ((WaitFullPackage && message.IsFull) || !WaitFullPackage)
+                SmpClient client;
+                if (clients.ContainsKey(point))
                 {
-                    SmpClient client;
-                    if (clients.ContainsKey(message.Point))
-                    {
-                        client = clients[message.Point];
-                    }
-                    else
-                    {
-                        data = new byte[0];
-                        return null;
-                    }
+                    client = clients[point];
+                }
+                else
+                {
+                    data = new byte[0];
+                    return null;
+                }
 
-                    if (client.Receive(out data))
-                    {
-                        return message.Point;
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                if (client.Receive(out data))
+                {
+                    return point;
+                }
+                else
+                {
+                    return null;
                 }
             }
             else //буфер пуст
@@ -108,23 +115,19 @@ namespace Lexplosion.Logic.Network.SMP
 
                     if (receivingQueue.Count > 0) //если clientQueue.Count == 0 значит что прошлый пакет был принят блоком кода выше. Поэтому threadReset сохранило свое состояние, а пакет был извелчен
                     {
-                        receivingQueue.TryDequeue(out Message message);
+                        receivingQueue.TryDequeue(out IPEndPoint point);
 
-                        if ((WaitFullPackage && message.IsFull) || !WaitFullPackage)
+                        if (clients.ContainsKey(point))
                         {
-                            if (clients.ContainsKey(message.Point))
+                            SmpClient client = clients[point];
+                            if (client.Receive(out data))
                             {
-                                SmpClient client = clients[message.Point];
-                                if (client.Receive(out data))
-                                {
-                                    return message.Point;
-                                }
-                                else
-                                {
-                                    return null;
-                                }
+                                return point;
                             }
-
+                            else
+                            {
+                                return null;
+                            }
                         }
                     }
                 }

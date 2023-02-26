@@ -174,8 +174,7 @@ namespace Lexplosion.Logic.Network.SMP
         private readonly AutoResetEvent _mtuInfoWait = new AutoResetEvent(false); // ожидание ответа при отправке своего mtu
         private readonly Semaphore _calculateMtuBlock = new Semaphore(1, 1);
 
-        public delegate void ReceiveHandle(bool isFull);
-        public event ReceiveHandle MessageReceived;
+        public event Action MessageReceived;
 
         private bool _inStopping = false; // это флаг чтобы в процессе закрытия соединения нельзя было вызвать метод send
         private long _lastTime = 0; //время отправки последнего пакета
@@ -186,8 +185,6 @@ namespace Lexplosion.Logic.Network.SMP
         private byte[] _connectAnswerPackage;
 
         public bool IsConnected { get; private set; } = false;
-
-        public bool WaitFullPackage { get; set; } = true;
 
         public long Ping
         {
@@ -233,7 +230,6 @@ namespace Lexplosion.Logic.Network.SMP
                         data = socket.Receive(ref senderPoint);
                         if (data.Length > 0)
                         {
-                            Runtime.DebugWrite("Packcage " + String.Join(", ", data));
                             if (data[0] == PackgeCodes.MtuRequest && data.Length > 2) // если это пакет с вычислением mtu - отвечаем на него
                             {
                                 if (pointDefined || senderPoint?.Equals(remoteIp) == true)
@@ -366,7 +362,7 @@ namespace Lexplosion.Logic.Network.SMP
 
             byte packageId = 0;
             int difference = 1490;
-            while (difference > 1)
+            while (difference > 1 && thisData > 0)
             {
                 difference = lostData - thisData;
 
@@ -392,7 +388,7 @@ namespace Lexplosion.Logic.Network.SMP
                     catch { }
                 }
 
-                if (j == 5) // пакет не дошёл 
+                if (j == 5 || thisData < 1) // пакет не дошёл 
                 {
                     // TODO: если первый пакет не дойдёт, то наверное закрывать соединение
                     int thisData_ = thisData;
@@ -608,7 +604,6 @@ namespace Lexplosion.Logic.Network.SMP
                             Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt);
                         }
 #endif
-
                         foreach (ushort id in packages.Keys)
                         {
                             packages[id][HeaderPositions.AttemptsCounts] = attemptCount; // увставляем номер попытки
@@ -714,15 +709,17 @@ namespace Lexplosion.Logic.Network.SMP
                 offset += size;
 
                 bool isFull = (flag == DataFlags.None);
-
-
                 receivingBuffer.Enqueue(new Message
                 {
                     data = payload,
                     IsFull = isFull
                 });
 
-                MessageReceived?.Invoke(isFull);
+
+                if (isFull)
+                {
+                    MessageReceived?.Invoke();
+                }     
             }
         }
 
@@ -1181,7 +1178,7 @@ namespace Lexplosion.Logic.Network.SMP
             buffer.Add(segment.data);
             messageSize += segment.data.Length;
 
-            while (!segment.IsFull && WaitFullPackage && (IsConnected || receivingBuffer.Count > 0))
+            while (!segment.IsFull && (IsConnected || receivingBuffer.Count > 0))
             {
                 if (receivingBuffer.Count > 0)
                 {
