@@ -250,4 +250,6 @@
 
     <s:String x:Key="foldersAndFiles">Folders and Files</s:String>
     <s:String x:Key="fullExport">Full Export</s:String>
+    <s:String x:Key="defaultInstanceName">Instance</s:String>
+    <s:String x:Key="manualInput">Manual Input</s:String>
 </ResourceDictionary>

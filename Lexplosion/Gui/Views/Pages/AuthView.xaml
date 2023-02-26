@@ -214,7 +214,7 @@
                     <Grid>
 
                         <!--  Auth fields [All except Microsoft OAuth2]  -->
-                        <StackPanel Margin="0,60,0,0" Visibility="{Binding IsMicrosoftAccountManager, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                        <StackPanel Margin="0,60,0,0" Visibility="{Binding Model.IsMicrosoftAccountManager, Converter={StaticResource NegativeConvertBoolToVisibility}}">
 
                             <TextBlock
                                 Width="220"
@@ -227,7 +227,7 @@
                                 Text="{DynamicResource withoutAccountNeeds}"
                                 TextAlignment="Center"
                                 TextWrapping="WrapWithOverflow"
-                                Visibility="{Binding NoAccountAuth, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                Visibility="{Binding Model.NoAccountAuth, Converter={StaticResource ConvertBoolToVisibility}}" />
 
                             <controls:PlaceholderTextBox
                                 Width="145"
@@ -239,14 +239,14 @@
                                 Placeholder="{DynamicResource login}"
                                 PlaceholderFontSize="16"
                                 Style="{StaticResource AuthPlaceholerTextBox}"
-                                Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
+                                Text="{Binding Model.Login, UpdateSourceTrigger=PropertyChanged}" />
 
                             <!--  Password area  -->
                             <StackPanel
                                 Margin="0,0,0,23"
                                 HorizontalAlignment="Center"
                                 Orientation="Horizontal"
-                                Visibility="{Binding NoAccountAuth, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                                Visibility="{Binding Model.NoAccountAuth, Converter={StaticResource NegativeConvertBoolToVisibility}}">
 
                                 <!--  password box  -->
                                 <Grid Width="145">
@@ -255,28 +255,17 @@
                                         Height="30"
                                         HorizontalContentAlignment="Center"
                                         Style="{StaticResource AuthTextBox}"
-                                        Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                                        Text="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}"
                                         Visibility="Hidden" />
                                     <PasswordBox
                                         Width="145"
                                         Height="30"
                                         HorizontalAlignment="Center"
                                         extension:PasswordBox.Attach="True"
-                                        extension:PasswordBox.IsPasswordSaved="{Binding IsAccountSaved}"
-                                        extension:PasswordBox.Password="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        extension:PasswordBox.IsPasswordSaved="{Binding Model.IsAccountSaved}"
+                                        extension:PasswordBox.Password="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         Style="{StaticResource CustomPasswordBox}" />
                                 </Grid>
-
-                                <!--<ToggleButton
-                                    x:Name="ShowPassword"
-                                    Grid.Column="2"
-                                    Width="20"
-                                    Height="20"
-                                    Margin="10"
-                                    HorizontalAlignment="Left"
-                                    IsChecked="True"
-                                    Style="{StaticResource SPS}" />-->
-                                <!--  Click="ShowPassword_Click"  -->
                             </StackPanel>
 
                             <!--  Save AuthData checkBox  -->
@@ -286,7 +275,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Content="{DynamicResource saveMe}"
-                                IsChecked="{Binding IsSaveMe}" />
+                                IsChecked="{Binding Model.IsSaveMe}" />
 
                             <!--  SignUpCommand  -->
                             <Button
@@ -302,7 +291,7 @@
 
                         <!--  For Microsoft Auth  -->
                         <!--  Border size 120-150  -->
-                        <StackPanel Margin="0,60,0,0" Visibility="{Binding IsMicrosoftAccountManager, Converter={StaticResource ConvertBoolToVisibility}}">
+                        <StackPanel Margin="0,60,0,0" Visibility="{Binding Model.IsMicrosoftAccountManager, Converter={StaticResource ConvertBoolToVisibility}}">
                             <Border
                                 Width="200"
                                 Height="120"
@@ -318,7 +307,7 @@
                                             FontFamily="{DynamicResource FuturaBookC}"
                                             FontSize="16"
                                             Foreground="White"
-                                            Text="{Binding Login}" />
+                                            Text="{Binding Model.Login}" />
                                     </StackPanel>
 
                                     <!--  Buttons  -->
@@ -493,7 +482,7 @@
                     <ComboBox
                         Height="30"
                         HorizontalAlignment="Center"
-                        SelectedIndex="{Binding AccountTypeSelectedIndex, UpdateSourceTrigger=PropertyChanged}">
+                        SelectedIndex="{Binding Model.AccountTypeSelectedIndex, UpdateSourceTrigger=PropertyChanged}">
                         <ComboBoxItem>
                             <TextBlock Text="{DynamicResource noAccount}" />
                         </ComboBoxItem>
@@ -517,16 +506,69 @@
         <controls:LoadingBoard
             BackgroundColor="Black"
             BackgroundOpacity="0.7"
-            IsLoadingFinished="{Binding IsAuthFinished}"
-            Placeholder="{Binding LoadingBoardPlaceholder}" />
+            IsLoadingFinished="{Binding Model.IsAuthFinished}"
+            Placeholder="{DynamicResource microsoftAuthInProgress}" />
 
-        <Button
-            Height="30"
-            Margin="0,200,0,0"
-            Command="{Binding CancelMicrosoftAuthCommand}"
-            Content="{DynamicResource cancel}"
-            IsCancel="True"
-            Style="{StaticResource DefaultBrandColorButton}"
-            Visibility="{Binding IsAuthFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+        <StackPanel
+            Margin="0,225,0,0"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                Padding="16,8,16,8"
+                Command="{Binding ManualInputMicrosoftDataFormOpenCommand}"
+                Content="{DynamicResource manualInput}"
+                Style="{StaticResource DefaultBrandColorButton}"
+                Visibility="{Binding Model.IsAuthFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+
+            <Button
+                Height="36"
+                Margin="10,0,0,0"
+                Padding="16,8,16,8"
+                Command="{Binding CancelMicrosoftAuthCommand}"
+                Content="{DynamicResource cancel}"
+                IsCancel="True"
+                Style="{StaticResource DefaultCloseButton}"
+                Visibility="{Binding Model.IsAuthFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+        </StackPanel>
+
+        <Border
+            Width="600"
+            Height="400"
+            Padding="20,10,20,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Background="{DynamicResource PrimarySolidColorBrush}"
+            Visibility="{Binding IsManualInput, Converter={StaticResource ConvertBoolToVisibility}}">
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,10"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Text="Код авторизации" />
+                <TextBox
+                    Height="300"
+                    Margin="0,0,0,10"
+                    AcceptsReturn="True"
+                    Focusable="True"
+                    FontSize="14"
+                    Style="{StaticResource DarkTextBox}"
+                    Text="{Binding Model.ManualInputedMicrosoftData, UpdateSourceTrigger=PropertyChanged}"
+                    TextWrapping="Wrap" />
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button
+                        Padding="16,8,16,8"
+                        Command="{Binding ManualInputMicrosoftDataCommand}"
+                        Content="Подтвердить"
+                        Style="{StaticResource DefaultBrandColorButton}" />
+                    <Button
+                        Margin="10,0,0,0"
+                        Padding="16,8,16,8"
+                        Command="{Binding CancelMicrosoftAuthCommand}"
+                        Content="Отмена"
+                        Style="{StaticResource DefaultCloseButton}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

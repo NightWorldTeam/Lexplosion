@@ -25,11 +25,21 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 
         #region Properties
 
-        public bool IsEnable { get; set; }
         public string GameVersion { get; }
-
         public GameExtension GameExtension { get; set; }
 
+        /// <summary>
+        /// Включен ли модлоадер
+        /// </summary>
+        private bool _isEnable;
+        public bool IsEnable
+        {
+            get => _isEnable; set
+            {
+                _isEnable = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Доступно ли расшерение на эту версию игры.

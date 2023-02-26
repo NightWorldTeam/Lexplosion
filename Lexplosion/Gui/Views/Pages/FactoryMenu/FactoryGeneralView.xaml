@@ -100,7 +100,7 @@
                             FontSize="14"
                             FontWeight="Medium"
                             Opacity="0.8"
-                            Placeholder="{Binding x.DefaultName, UpdateSourceTrigger=PropertyChanged}"
+                            Placeholder="{DynamicResource defaultInstanceName}"
                             Style="{StaticResource DarkPlaceholderTextBox}"
                             Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
@@ -278,7 +278,10 @@
                                     IsChecked="{Binding Model.OptifineModel.IsEnable}"
                                     Style="{StaticResource ToggleSwitch}" />
                             </Grid>
-                            <ComboBox ItemsSource="{Binding Model.OptifineModel.Versions}" SelectedItem="{Binding Model.OptifineModel.Version}" />
+                            <ComboBox
+                                ItemsSource="{Binding Model.OptifineModel.Versions}"
+                                SelectedItem="{Binding Model.OptifineModel.Version}"
+                                Visibility="{Binding Model.OptifineModel.IsEnable, Converter={StaticResource ConvertBoolToVisibility}}" />
                         </StackPanel>
                     </StackPanel>
                 </Border>

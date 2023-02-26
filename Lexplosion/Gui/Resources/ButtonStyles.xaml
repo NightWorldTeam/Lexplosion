@@ -365,12 +365,15 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
                         x:Name="border"
+                        Padding="10,5,10,5"
                         Background="Transparent"
                         BorderBrush="#292929"
-                        Padding="10,5,10,5"
                         BorderThickness="1"
                         CornerRadius="5">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" />
+                        <ContentPresenter
+                            Margin="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -487,6 +490,7 @@
 
     <Style x:Key="ToggleSwitch" TargetType="{x:Type ToggleButton}">
         <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">

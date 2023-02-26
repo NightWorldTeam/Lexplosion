@@ -250,4 +250,7 @@
 
     <s:String x:Key="foldersAndFiles">Папки и файлы</s:String>
     <s:String x:Key="fullExport">Полный экспорт</s:String>
+    <s:String x:Key="defaultInstanceName">Сборка</s:String>
+
+    <s:String x:Key="manualInput">Ручной ввод</s:String>
 </ResourceDictionary>
