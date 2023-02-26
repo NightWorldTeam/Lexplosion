@@ -564,7 +564,7 @@
                     <Button
                         Margin="10,0,0,0"
                         Padding="16,8,16,8"
-                        Command="{Binding CancelMicrosoftAuthCommand}"
+                        Command="{Binding ManualInputMicrosoftDataFormCloseCommand}"
                         Content="Отмена"
                         Style="{StaticResource DefaultCloseButton}" />
                 </StackPanel>
