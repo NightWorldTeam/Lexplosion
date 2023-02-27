@@ -96,9 +96,10 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         protected ExtensionModel(GameExtension extension, string gameVersion)
         {
             GameVersion = gameVersion;
-            Lexplosion.Runtime.TaskRun(() => {
-                Runtime.DebugWrite(extension);
-                GameExtension = extension;
+            GameExtension = extension;
+            Runtime.DebugWrite(extension);
+
+            Lexplosion.Runtime.TaskRun(() => { 
                 Versions = LoadExtensionVersions(extension, gameVersion).Result;
                 if (Versions.Count > 0)
                 {
@@ -174,6 +175,26 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         }
 
         /// <summary>
+        /// Текст плейсхолдера.
+        /// </summary>
+        public string Placeholder
+        {
+            get
+            {
+                if (_name != null) return _name;
+
+                if (GameType == GameType.Vanilla)
+                {
+                    return Version + " Vanilla";
+                }
+                else
+                {
+                    return Version + " " + ModloaderModel.GameExtension;
+                }
+            }
+        }
+
+        /// <summary>
         /// Версия игры.
         /// </summary>
         private string _version;
@@ -191,6 +212,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
                     OptifineModel = new OptifineModel(GameExtension.Optifine, _version);
                 }
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Placeholder));
             }
         }
 
@@ -215,6 +237,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
                     OptifineModel.IsEnable = true;
                 }
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Placeholder));
             }
         }
 
@@ -270,6 +293,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             {
                 _modloaderModel = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Placeholder));
             }
         }
 

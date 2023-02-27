@@ -100,7 +100,7 @@
                             FontSize="14"
                             FontWeight="Medium"
                             Opacity="0.8"
-                            Placeholder="{DynamicResource defaultInstanceName}"
+                            Placeholder="{Binding Model.Placeholder, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource DarkPlaceholderTextBox}"
                             Text="{Binding Model.Name, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
