@@ -184,6 +184,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         #endregion
 
+        #region events
         public event ProgressHandlerCallback ProgressHandler;
         public event ComplitedDownloadCallback ComplitedDownload;
         public event ComplitedLaunchCallback ComplitedLaunch;
@@ -192,6 +193,8 @@ namespace Lexplosion.Logic.Management.Instances
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
         public event Action DownloadStartedEvent;
         public event Action DownloadCanselledEvent;
+        public static event Action WasCreated;
+        #endregion
 
         /// <summary>
         /// Базовый конструктор, от него должны наследоваться все остальные
@@ -295,6 +298,8 @@ namespace Lexplosion.Logic.Management.Instances
 
             _installedInstances[client._localId] = client;
             SaveInstalledInstancesList();
+
+            WasCreated?.Invoke();
 
             return client;
         }
@@ -604,6 +609,16 @@ namespace Lexplosion.Logic.Management.Instances
                 manifest.version.modloaderType = data.Modloader;
                 manifest.version.modloaderVersion = data.ModloaderVersion;
                 manifest.version.gameVersion = data.GameVersion;
+
+                if (manifest.version.modloaderType == ClientType.Vanilla && data.OptifineVersion != null)
+                {
+                    manifest.version.additionalInstaller = new AdditionalInstaller()
+                    {
+                        type = AdditionalInstallerType.Optifine,
+                        installerVersion = data.OptifineVersion
+                    };
+                }
+
                 DataFilesManager.SaveManifest(_localId, manifest);
             }
 
