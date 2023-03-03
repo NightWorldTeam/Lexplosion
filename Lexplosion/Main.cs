@@ -23,6 +23,8 @@ using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using ColorConverter = System.Windows.Media.ColorConverter;
+using Lexplosion.Gui.Models;
+using Lexplosion.Gui.Models.ShowCaseMenu;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -198,9 +200,13 @@ namespace Lexplosion
                 });
             };
 
+            LaunchGame activeGameManager = null;
+
             // подписываемся на запуск игры до запуска окна
             LaunchGame.GameStartEvent += (LaunchGame gameManager) =>
             {
+                activeGameManager = gameManager;
+
                 if (gameManager.ClientSettings.IsShowConsole == true)
                 {
                     app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
@@ -209,6 +215,8 @@ namespace Lexplosion
 
             LaunchGame.GameStopEvent += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
             {
+                activeGameManager = null;
+
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
                 if (gameManager.ClientSettings.IsHiddenMode == true)
                 {
@@ -224,6 +232,22 @@ namespace Lexplosion
                         LargeImageKey = "logo1"
                     }
                 });
+            };
+
+            GeneralSettingsModel.ConsoleParameterChanged += delegate (bool isShow)
+            {
+                if (isShow && activeGameManager != null)
+                {
+                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(activeGameManager));
+                }
+            };
+
+            InstanceSettingsModel.ConsoleParameterChanged += delegate (bool isShow, string instanceId)
+            {
+                if (isShow && activeGameManager != null && activeGameManager.InstanceId == instanceId)
+                {
+                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(activeGameManager));
+                }
             };
 
             Thread.Sleep(800);
@@ -302,7 +326,7 @@ namespace Lexplosion
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            Runtime.DebugWrite("DLL LOAD " + string.Join(", ", args.Name));
+            Runtime.DebugWrite("Assembly LOAD " + string.Join(", ", args.Name));
 
             if (args.Name.Contains("Newtonsoft.Json"))
             {
@@ -403,7 +427,6 @@ namespace Lexplosion
             AccentColors = accentColorsList.ToArray();
 
             app.Resources.MergedDictionaries.Add(colorDict);
-
 
             if (GlobalData.GeneralSettings.AccentColor.Length == 0 || !isRightColor)
             {

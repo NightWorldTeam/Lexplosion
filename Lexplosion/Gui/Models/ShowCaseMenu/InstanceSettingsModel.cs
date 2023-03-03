@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic;
 using Lexplosion.Logic.Management.Instances;
+using System;
 
 namespace Lexplosion.Gui.Models.ShowCaseMenu
 {
@@ -9,6 +10,8 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
         private InstanceClient _instanceClient;
         private Settings _instanceSettings;
         private Settings _instanceSettingsCopy;
+
+        public static event Action<bool, string> ConsoleParameterChanged;
 
         public Settings InstanceSettings
         {
@@ -143,6 +146,8 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
                 _instanceSettingsCopy.IsShowConsole = value;
                 OnPropertyChanged();
                 _instanceClient.SaveSettings(_instanceSettingsCopy);
+
+                ConsoleParameterChanged?.Invoke(value == true, _instanceClient.LocalId);
             }
         }
 

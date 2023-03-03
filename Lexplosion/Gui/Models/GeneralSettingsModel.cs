@@ -1,10 +1,13 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
+using System;
 
 namespace Lexplosion.Gui.Models
 {
     public class GeneralSettingsModel : VMBase
     {
+        public static event Action<bool> ConsoleParameterChanged;
+
         public string SystemPath
         {
             get => GlobalData.GeneralSettings.GamePath.Replace('\\', '/'); set
@@ -83,6 +86,8 @@ namespace Lexplosion.Gui.Models
                 GlobalData.GeneralSettings.IsShowConsole = value;
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+
+                ConsoleParameterChanged?.Invoke(value == true);
             }
         }
 

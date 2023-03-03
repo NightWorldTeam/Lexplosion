@@ -10,9 +10,12 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
     /// </summary>
     public partial class LibraryView : UserControl
     {
+        private static double _scrollValue = 0;
+
         public LibraryView()
         {
             InitializeComponent();
+            ContainerPage_ScrollViewer.ScrollToVerticalOffset(_scrollValue);
             this.Opacity = 0.0;
             this.Visibility = Visibility.Visible;
             DoubleAnimation doubleAnimation = new DoubleAnimation()
@@ -29,6 +32,8 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
             const double animationTime = 0.3;
 
             var viewer = (ScrollViewer)sender;
+            _scrollValue = viewer.VerticalOffset;
+
             if (viewer.VerticalOffset >= 48)
             {
                 if (UpButton.Visibility != Visibility.Visible)

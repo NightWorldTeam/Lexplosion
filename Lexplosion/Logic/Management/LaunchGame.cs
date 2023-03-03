@@ -15,8 +15,8 @@ namespace Lexplosion.Logic.Management
 {
     public class LaunchGame
     {
-        private Process process = null;
-        private Gateway gameGateway = null;
+        private Process _process = null;
+        private Gateway _gameGateway = null;
 
         private string _instanceId;
         private Settings _settings;
@@ -32,6 +32,11 @@ namespace Lexplosion.Logic.Management
         public string GameVersion { get; private set; } = null;
         public string GameClientName { get; private set; } = "";
 
+        private static object loocker = new object();
+
+        private CancellationToken _updateCancelToken;
+
+        #region events
         /// <summary>
         /// Выполняется при запуске процесса игры
         /// </summary>
@@ -44,10 +49,34 @@ namespace Lexplosion.Logic.Management
         /// Выполняется при завершении процесса игры
         /// </summary>
         public static event Action<LaunchGame> GameStopEvent;
+
+        private Action<string> _processDataReceived;
+
         /// <summary>
         /// Отрабатывает когда поялвяются данные из консоли майкрафта.
         /// </summary>
-        public event Action<string> ProcessDataReceived;
+        public event Action<string> ProcessDataReceived
+        {
+            add
+            {
+                if (_processDataReceived == null && _process != null)
+                {
+                    _process.OutputDataReceived += ProcessDataHandle;
+                }
+
+                _processDataReceived += value;
+            }
+            remove
+            {
+                _processDataReceived -= value;
+
+                if (_processDataReceived == null && _process != null)
+                {
+                    _process.OutputDataReceived -= ProcessDataHandle;
+                }
+            }
+        }
+
         /// <summary>
         /// Отрабатывает когда к сетевой игре подключается игрок
         /// </summary>
@@ -61,13 +90,16 @@ namespace Lexplosion.Logic.Management
         /// </summary>
         public static event Action<OnlineGameStatus, string> StateChanged;
 
-        private static object loocker = new object();
-
-        private CancellationToken _updateCancelToken;
+        #endregion
 
         public Settings ClientSettings
         {
             get => _settings;
+        }
+
+        public string InstanceId
+        {
+            get => _instanceId;
         }
 
         public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type, CancellationToken updateCancelToken)
@@ -85,6 +117,11 @@ namespace Lexplosion.Logic.Management
         }
 
         private ConcurrentDictionary<string, Player> _connectedPlayers = new ConcurrentDictionary<string, Player>();
+
+        private void ProcessDataHandle(object s, DataReceivedEventArgs e)
+        {
+            _processDataReceived?.Invoke(e.Data);
+        }
 
         private static bool GuiIsExists(int processId)
         {
@@ -172,25 +209,25 @@ namespace Lexplosion.Logic.Management
 
             string command = CreateCommand(data);
 
-            process = new Process();
+            _process = new Process();
             if (onlineGame)
             {
                 lock (loocker)
                 {
-                    gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, LaunсherSettings.ServerIp, GlobalData.GeneralSettings.OnlineGameDirectConnection);
+                    _gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, LaunсherSettings.ServerIp, GlobalData.GeneralSettings.OnlineGameDirectConnection);
                     _removeImportantTaskMark = false;
                     Lexplosion.Runtime.AddImportantTask();
 
-                    gameGateway.ConnectingUser += delegate (string uuid)
+                    _gameGateway.ConnectingUser += delegate (string uuid)
                     {
                         var player = new Player(uuid,
                             delegate
                             {
-                                this.gameGateway?.KickClient(uuid);
+                                this._gameGateway?.KickClient(uuid);
                             },
                             delegate
                             {
-                                this.gameGateway?.UnkickClient(uuid);
+                                this._gameGateway?.UnkickClient(uuid);
                             }
                         );
 
@@ -198,50 +235,39 @@ namespace Lexplosion.Logic.Management
                         UserConnected?.Invoke(player);
                     };
 
-                    gameGateway.DisconnectedUser += delegate (string uuid)
+                    _gameGateway.DisconnectedUser += delegate (string uuid)
                     {
                         _connectedPlayers.TryRemove(uuid, out Player player);
                         UserDisconnected?.Invoke(player);
                     };
 
-                    gameGateway.StatusChanged += StateChanged;
+                    _gameGateway.StatusChanged += StateChanged;
                 }
             }
 
             GameStartEvent?.Invoke(this);
 
-            if (_settings.IsShowConsole == true)
-            {
-                ProcessDataReceived?.Invoke("Выполняется запуск игры...");
-                ProcessDataReceived?.Invoke(command);
-            }
+            _processDataReceived?.Invoke("Выполняется запуск игры...");
+            _processDataReceived?.Invoke(command);
 
             bool gameVisible = false;
 
             try
             {
-                process.StartInfo.FileName = _javaPath;
-                process.StartInfo.WorkingDirectory = _settings.GamePath + "/instances/" + _instanceId;
-                process.StartInfo.Arguments = command;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.UseShellExecute = false;
-                process.EnableRaisingEvents = true;
+                _process.StartInfo.FileName = _javaPath;
+                _process.StartInfo.WorkingDirectory = _settings.GamePath + "/instances/" + _instanceId;
+                _process.StartInfo.Arguments = command;
+                _process.StartInfo.RedirectStandardOutput = true;
+                _process.StartInfo.UseShellExecute = false;
+                _process.EnableRaisingEvents = true;
 
-                void ReadFromConsole(object s, DataReceivedEventArgs e)
-                {
-                    ProcessDataReceived?.Invoke(e.Data);
-                }
-
-                if (_settings.IsShowConsole == true)
-                    process.OutputDataReceived += ReadFromConsole;
-
-                process.Exited += (sender, ea) =>
+                _process.Exited += (sender, ea) =>
                 {
                     _processIsWork = false;
 
                     try
                     {
-                        process.Dispose();
+                        _process.Dispose();
                     }
                     catch { }
 
@@ -249,8 +275,8 @@ namespace Lexplosion.Logic.Management
                     {
                         lock (loocker)
                         {
-                            gameGateway?.StopWork();
-                            gameGateway = null;
+                            _gameGateway?.StopWork();
+                            _gameGateway = null;
                         }
                         //StateChanged?.Invoke(OnlineGameStatus.None, "");
                     }
@@ -279,8 +305,8 @@ namespace Lexplosion.Logic.Management
                     GameExited(_instanceId);
                 };
 
-                _processIsWork = process.Start();
-                process.BeginOutputReadLine();
+                _processIsWork = _process.Start();
+                _process.BeginOutputReadLine();
 
                 // отслеживаем появление окна
                 Lexplosion.Runtime.TaskRun(delegate ()
@@ -291,7 +317,7 @@ namespace Lexplosion.Logic.Management
 
                         try
                         {
-                            if (GuiIsExists(process.Id))
+                            if (GuiIsExists(_process.Id))
                             {
                                 ComplitedLaunch(_instanceId, true);
                                 GameStartedEvent?.Invoke(this);
@@ -309,7 +335,7 @@ namespace Lexplosion.Logic.Management
 
                 lock (loocker)
                 {
-                    gameGateway?.Initialization(process.Id);
+                    _gameGateway?.Initialization(_process.Id);
                 }
 
                 return true;
@@ -524,8 +550,8 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-                process.Kill(); // TODO: тут иногда крашится (ввроде если ошибка скачивания была)
-                process.Dispose();
+                _process.Kill(); // TODO: тут иногда крашится (ввроде если ошибка скачивания была)
+                _process.Dispose();
             }
             catch { }
 
@@ -533,8 +559,8 @@ namespace Lexplosion.Logic.Management
             {
                 lock (loocker)
                 {
-                    gameGateway?.StopWork();
-                    gameGateway = null;
+                    _gameGateway?.StopWork();
+                    _gameGateway = null;
                 }
                 StateChanged?.Invoke(OnlineGameStatus.None, "");
             }
@@ -556,16 +582,16 @@ namespace Lexplosion.Logic.Management
             {
                 lock (loocker)
                 {
-                    if (_classInstance.gameGateway != null)
+                    if (_classInstance._gameGateway != null)
                     {
                         try
                         {
-                            _classInstance.gameGateway.StopWork();
+                            _classInstance._gameGateway.StopWork();
                         }
                         catch { }
 
-                        _classInstance.gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, LaunсherSettings.ServerIp, GlobalData.GeneralSettings.OnlineGameDirectConnection);
-                        _classInstance.gameGateway.Initialization(_classInstance.process.Id);
+                        _classInstance._gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, LaunсherSettings.ServerIp, GlobalData.GeneralSettings.OnlineGameDirectConnection);
+                        _classInstance._gameGateway.Initialization(_classInstance._process.Id);
                     }
                 }
                 StateChanged?.Invoke(OnlineGameStatus.None, "");
