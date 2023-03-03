@@ -1,163 +1,15 @@
-﻿using Lexplosion.Gui.ViewModels;
-using Lexplosion.Gui.Views.Windows;
+﻿using Lexplosion.Gui.Models.GameExtensions;
+using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network;
-using Lexplosion.Tools.Immutable;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using System;
+using System.Data;
 
 namespace Lexplosion.Gui.Models.InstanceFactory
 {
-    interface IExtensionModel
-    {
-        public string GameVersion { get; }
-        public GameExtension GameExtension { get; }
-        public bool IsAvaliable { get; }
-        public string Version { get; set; }
-        public ImmutableArray<string> Versions { get; }
-    }
-
-    public abstract class ExtensionModel : VMBase, IExtensionModel
-    {
-        private static readonly Dictionary<GameExtension, ConcurrentDictionary<string, ImmutableArray<string>>> _extensionVersions;
-
-        #region Properties
-
-        public string GameVersion { get; }
-        public GameExtension GameExtension { get; set; }
-
-        /// <summary>
-        /// Включен ли модлоадер
-        /// </summary>
-        private bool _isEnable;
-        public bool IsEnable
-        {
-            get => _isEnable; set
-            {
-                _isEnable = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Доступно ли расшерение на эту версию игры.
-        /// </summary>
-        private bool _isAvaliable;
-        public bool IsAvaliable
-        {
-            get => _isAvaliable; private set
-            {
-                _isAvaliable = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Версия расширения;
-        /// </summary>
-        private string _version;
-        public string Version
-        {
-            get => _version; set
-            {
-                _version = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Массив с версиями расширения
-        /// </summary>
-        private ImmutableArray<string> _versions;
-        public ImmutableArray<string> Versions
-        {
-            get => _versions; private set
-            {
-                _versions = value;
-                OnPropertyChanged();
-            }
-        }
-
-        #endregion Properties
-
-        static ExtensionModel() 
-        {
-            _extensionVersions = new Dictionary<GameExtension, ConcurrentDictionary<string, ImmutableArray<string>>>()
-            {
-                { GameExtension.Optifine, new ConcurrentDictionary<string, ImmutableArray<string>>() },
-                { GameExtension.Forge, new ConcurrentDictionary<string, ImmutableArray<string>>() },
-                { GameExtension.Fabric, new ConcurrentDictionary<string, ImmutableArray<string>>() },
-                { GameExtension.Quilt, new ConcurrentDictionary<string, ImmutableArray<string>>() },
-            };
-        } 
-
-        protected ExtensionModel(GameExtension extension, string gameVersion)
-        {
-            GameVersion = gameVersion;
-            GameExtension = extension;
-            Runtime.DebugWrite(extension);
-
-            Lexplosion.Runtime.TaskRun(() => { 
-                Versions = LoadExtensionVersions(extension, gameVersion).Result;
-                if (Versions.Count > 0)
-                {
-                    IsAvaliable = true;
-                    Version = Versions[0];
-                }
-                else
-                {
-                    IsAvaliable = false;
-                }
-            });
-        }
-
-        /// <summary>
-        /// Возвращает неизменяемый массив с версиями расширениями.
-        /// Также сохраняет массив в словарь.
-        /// </summary>
-        /// <param name="GameExtension"></param>
-        /// <param name="gameVersion"></param>
-        /// <returns></returns>
-        public async static Task<ImmutableArray<string>> LoadExtensionVersions(GameExtension extension, string gameVersion)
-        {
-            return await Task.Run(() =>
-            {
-                Runtime.DebugWrite(extension);
-                if (_extensionVersions[extension].ContainsKey(gameVersion))
-                    return _extensionVersions[extension][gameVersion];
-
-                if (GameExtension.Optifine == extension)
-                {
-                    _extensionVersions[extension].TryAdd(gameVersion, new ImmutableArray<string>(ToServer.GetOptifineVersions(gameVersion)));
-                }
-                else 
-                { 
-                    _extensionVersions[extension].TryAdd(gameVersion, new ImmutableArray<string>(ToServer.GetModloadersList(gameVersion, (ClientType)extension)));
-                }
-                return _extensionVersions[extension][gameVersion];
-            });
-        }
-    }
-
-    public sealed class OptifineModel : ExtensionModel
-    {
-        public OptifineModel(GameExtension extension, string gameVersion) : base(extension, gameVersion)
-        {
-        }
-    }
-
-    public sealed class ModloaderModel : ExtensionModel
-    {
-        public ModloaderModel(GameExtension extension, string gameVersion) : base(extension, gameVersion)
-        {
-        }
-    }
-
     public class InstanceFactoryModel : VMBase
     {
         private readonly MainViewModel _mainViewModel;
+
 
         #region Property
 
@@ -200,17 +52,20 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         private string _version;
         public string Version 
         {
-            get => _version; set 
+            get => _version; set
             {
                 _version = value;
-                if (ModloaderModel != null) 
+                if (ModloaderModel != null)
                 {
                     ModloaderModel = new ModloaderModel(ModloaderModel.GameExtension, _version);
                 }
-                if (OptifineModel != null) 
-                { 
+                if (OptifineModel != null)
+                {
                     OptifineModel = new OptifineModel(GameExtension.Optifine, _version);
                 }
+
+                var splitedValue = value.Split('.');
+
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Placeholder));
             }
@@ -222,8 +77,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
         private GameType _gameType;
         public GameType GameType 
         { 
-            get => _gameType;
-            set
+            get => _gameType; set
             {
                 _gameType = value;
                 if (_gameType == GameType.Vanilla)
@@ -347,6 +201,10 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 
         #endregion Private Methods
 
+
+        #region Public & Protected Methods
+
+
         public void ChangeClientType(GameType gameType, GameExtension extension) 
         {
             GameType = gameType;
@@ -380,6 +238,10 @@ namespace Lexplosion.Gui.Models.InstanceFactory
 
             CreateLocalInstance(_mainViewModel, this);
         }
+
+
+        #endregion Public & Private Methods
+
 
         #region Public Static Methods
 

@@ -173,7 +173,7 @@
                                 FontWeight="Medium"
                                 Foreground="White"
                                 Opacity="0.8"
-                                Text="Game Type" />
+                                Text="{DynamicResource gameType}" />
 
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                 <RadioButton
@@ -190,6 +190,7 @@
                                     Content="Forge"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsForge}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
@@ -198,6 +199,7 @@
                                     Content="Fabric"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsFabric}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
@@ -206,6 +208,7 @@
                                     Content="Quilt"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsQuilt}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
                                     Style="{StaticResource HighlightRadioButton}" />
                             </StackPanel>
                         </Grid>

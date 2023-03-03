@@ -3,4 +3,5 @@
     <FontFamily x:Key="FuturaBookC">pack://application:,,,/Assets/fonts/#FuturaBookC</FontFamily>
     <FontFamily x:Key="Montserrat">pack://application:,,,/Assets/fonts/#Montserrat</FontFamily>
     <FontFamily x:Key="Passdots">pack://application:,,,/Assets/fonts/#Password Dots</FontFamily>
+    <FontFamily x:Key="Inner">pack://application:,,,/Assets/fonts/#Inner</FontFamily>
 </ResourceDictionary>

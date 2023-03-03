@@ -1,178 +1,28 @@
-﻿using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network;
-using Lexplosion.Tools;
+﻿using Lexplosion.Gui.Models.ShowCaseMenu;
+using Lexplosion.Logic.Management.Instances;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
-    public class InstanceProfileViewModel : VMBase
+    public sealed class InstanceProfileViewModel : VMBase
     {
+        public InstanceProfileModel Model { get; }
+
         public InstanceProfileViewModel(InstanceClient instanceClient)
         {
-            CurrentInstanceClient = instanceClient;
-            BaseInstanceData = CurrentInstanceClient.GetBaseData;
-            IsModloader = BaseInstanceData.Modloader != ClientType.Vanilla;
-            IsOptifine = !string.IsNullOrEmpty(BaseInstanceData.OptifineVersion);
-            ModloaderType = BaseInstanceData.Modloader;
-            ModloaderVersion = BaseInstanceData.ModloaderVersion;
-            GameVersion = BaseInstanceData.GameVersion ?? GameVersions[0];
-            LogoBytes = CurrentInstanceClient.Logo;
-            OptifineVersion = BaseInstanceData.OptifineVersion;
-        }
-
-        /// <summary>
-        /// Версия игры.
-        /// </summary>
-        private string _gameVersion;
-        public string GameVersion
-        {
-            get => _gameVersion; set
+            Model = new InstanceProfileModel(instanceClient);
+            switch (Model.GetInstanceExtenstion()) 
             {
-                _gameVersion = BaseInstanceData.GameVersion = value;
-                if (IsModloader)
-                {
-                    GetModloaderVersions(value, ModloaderType);
-                }
-                if (IsOptifine)
-                {
-                    GetOptifineVersions(value, ModloaderType);
-                }
-
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Ссылка на изменяемую сборку.
-        /// </summary>
-        public InstanceClient CurrentInstanceClient { get; }
-
-        /// <summary>
-        /// Основная информация об изменяемой сборке.
-        /// </summary>
-        public BaseInstanceData BaseInstanceData { get; }
-
-        /// <summary>
-        /// Список версий майнкрафта.
-        /// </summary>
-        public List<string> GameVersions { get; } = MainViewModel.AllGameVersions.ToList();
-
-        /// <summary>
-        /// Список версий конкретного modloader, для конкретной версии.
-        /// </summary>
-        private ObservableCollection<string> _modloaderVersions;
-        public ObservableCollection<string> ModloaderVersions
-        {
-            get => _modloaderVersions; set
-            {
-                _modloaderVersions = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<string> _optifineVersions;
-        public ObservableCollection<string> OptifineVersions
-        {
-            get => _optifineVersions; set
-            {
-                _optifineVersions = value;
-                OnPropertyChanged();
+                case ClientType.Vanilla: IsVanilla = true; break;
+                case ClientType.Forge: IsForge = true; break;
+                case ClientType.Fabric: IsFabric = true; break;
+                case ClientType.Quilt: IsQuilt = true; break;
             }
         }
 
 
-        /// <summary>
-        /// Свойство содержит путь к выбранной картинке
-        /// </summary>
-        private string _logoPath;
-        public string LogoPath
-        {
-            get => _logoPath; set
-            {
-                _logoPath = value;
-                LogoBytes = ImageTools.GetImageBytes(value);
-                OnPropertyChanged();
-            }
-        }
+        #region Commands
 
-        private byte[] _logoBytes;
-        public byte[] LogoBytes
-        {
-            get => _logoBytes; set
-            {
-                _logoBytes = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Свойство которое содержит результат проверки наличия modloader'a
-        /// Используется для скрытия поля версии modloader'a, если он отсутствует.
-        /// </summary>
-
-        private bool _isModloader;
-        public bool IsModloader
-        {
-            get => _isModloader; set
-            {
-                _isModloader = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _isOptifine;
-        public bool IsOptifine
-        {
-            get => _isOptifine; set
-            {
-                _isOptifine = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ClientType modloaderType;
-        public ClientType ModloaderType
-        {
-            get => modloaderType; set
-            {
-                modloaderType = BaseInstanceData.Modloader = value;
-
-                // проверяем выбран ли modloader
-                IsModloader = modloaderType != ClientType.Vanilla;
-
-                // загружаем версии modloader для конкретной версии.
-                GetModloaderVersions(BaseInstanceData.GameVersion, value);
-
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Выбранная версия modloader
-        /// </summary>
-        private string _modloaderVersion;
-        public string ModloaderVersion
-        {
-            get => _modloaderVersion; set
-            {
-                _modloaderVersion = BaseInstanceData.ModloaderVersion = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _optifineVersion;
-        public string OptifineVersion
-        {
-            get => _optifineVersion; set
-            {
-                _optifineVersion = value;
-                OnPropertyChanged();
-            }
-        }
-
-        #region commands
 
         /// <summary>
         /// Команда выполняющаяся при нажатии кнопки "Сохранить"
@@ -182,7 +32,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             get => new RelayCommand(obj =>
             {
                 MainViewModel.ShowToastMessage("Всё прекрасно!", "Настройки сохранены! Ура-а-а!", TimeSpan.FromSeconds(5d));
-                CurrentInstanceClient.ChangeParameters(BaseInstanceData, LogoPath);
+                Model.Save();
             });
         }
 
@@ -193,51 +43,110 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => new RelayCommand(obj =>
             {
-                using (var dialog = new System.Windows.Forms.OpenFileDialog())
-                {
-                    dialog.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
-
-                    // Process open file dialog box results
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        LogoPath = dialog.FileName;
-                    }
-                }
+                OpenDialogWindowForUploadLogo();
             });
         }
 
-        #endregion commands
-
-        #region methods
-
-        private void GetModloaderVersions(string gameVersion, ClientType modloader)
+        /// <summary>
+        /// Переключение типа модлоадера
+        /// </summary>
+        private RelayCommand _switchClientType;
+        public RelayCommand SwitchClientType
         {
-            Lexplosion.Runtime.TaskRun(() =>
+            get => _switchClientType ?? (_switchClientType = new RelayCommand(obj =>
             {
-                ModloaderVersions = new ObservableCollection<string>(ToServer.GetModloadersList(gameVersion, modloader));
-                if (CurrentInstanceClient.GetBaseData.Modloader != ClientType.Vanilla)
+                if ((ClientType)obj != ClientType.Vanilla)
                 {
-                    ModloaderVersion = CurrentInstanceClient.GetBaseData.ModloaderVersion;
+                    Model.ChangeClientType(GameType.Modded, (GameExtension)obj);
                 }
                 else
                 {
-                    if (ModloaderVersions.Count > 0)
-                        ModloaderVersion = ModloaderVersions[0];
-                    Runtime.DebugWrite(gameVersion + " " + modloader);
+                    Model.ChangeClientType(GameType.Vanilla, GameExtension.Optifine);
                 }
-            });
+            }));
         }
 
-        private void GetOptifineVersions(string gameVersion, ClientType modloader)
+        #endregion Commands
+
+
+        #region Properties
+
+
+        private bool _isSavedProperties;
+        public bool IsSavedProperties
         {
-            Lexplosion.Runtime.TaskRun(() =>
+            get => _isSavedProperties; set 
             {
-                OptifineVersions = new ObservableCollection<string>(ToServer.GetOptifineVersions(gameVersion));
-                if (modloader == ClientType.Vanilla)
-                    OptifineVersion = CurrentInstanceClient.GetBaseData.OptifineVersion;
-            });
+                _isSavedProperties = value;
+
+
+                OnPropertyChanged();
+            }
         }
 
-        #endregion
+        // Нужно для того, чтобы не сбивались radiobutton
+        private bool _isVanilla = true;
+        public bool IsVanilla
+        {
+            get => _isVanilla; set
+            {
+                _isVanilla = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isForge;
+        public bool IsForge
+        {
+            get => _isForge; set
+            {
+                _isForge = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isFabric;
+        public bool IsFabric
+        {
+            get => _isFabric; set
+            {
+                _isFabric = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isQuilt;
+        public bool IsQuilt
+        {
+            get => _isQuilt; set
+            {
+                _isQuilt = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion Properties
+
+
+        #region Public & Protected Methods
+
+
+        public void OpenDialogWindowForUploadLogo()
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Filter = "Image files|*.bmp;*.jpg;*.gif;*.png;*.tif|All files|*.*";
+
+                // Process open file dialog box results
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    Model.UploadLogo(dialog.FileName);
+                    IsSavedProperties = true;
+                }
+            }
+        }
+
+
+        #endregion Public & Protected Methods
     }
 }
