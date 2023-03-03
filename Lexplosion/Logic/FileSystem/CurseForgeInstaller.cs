@@ -42,7 +42,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         data.InstalledAddons = new InstalledAddonsFormat();
 
-                        foreach (int addonId in content.InstalledAddons)
+                        foreach (string addonId in content.InstalledAddons)
                         {
                             if (installedAddons.ContainsKey(addonId))
                             {
@@ -67,7 +67,7 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     FullClient = content.FullClient,
                     Files = content.Files,
-                    InstalledAddons = new List<int>(content.InstalledAddons.Keys.ToArray())
+                    InstalledAddons = new List<string>(content.InstalledAddons.Keys.ToArray())
                 }));
 
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
@@ -244,7 +244,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (installedAddons != null)
                 {
-                    List<int> tempList = new List<int>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
+                    var tempList = new List<string>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
                     foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
                     {
                         if (!installedAddons.ContainsKey(file.projectID)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
@@ -256,7 +256,7 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
 
-                            if (installedAddons[file.projectID].FileID < file.fileID || !installedAddons[file.projectID].IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
+                            if (installedAddons[file.projectID].FileID.ToInt32() < file.fileID.ToInt32() || !installedAddons[file.projectID].IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
                             {
                                 test++;
                                 downloadList.Add(file);
@@ -264,7 +264,7 @@ namespace Lexplosion.Logic.FileSystem
                         }
                     }
 
-                    foreach (int addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
+                    foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
                     {
                         if (!tempList.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа. Поэтому удаляем
                         {
@@ -294,7 +294,7 @@ namespace Lexplosion.Logic.FileSystem
                     object fileBlock = new object(); // этот объект блокировщик нужен что бы синхронизировать работу с json файлами
 
                     // формируем список айдишников
-                    int[] ids = new int[filesCount];
+                    var ids = new string[filesCount];
                     int j = 0;
                     foreach (InstanceManifest.FileData file in downloadList)
                     {
@@ -310,7 +310,7 @@ namespace Lexplosion.Logic.FileSystem
                         addnos_ = CurseforgeApi.GetAddonsInfo(ids);
                     }
                     //преобразовываем эту хуйню в нормальный спсиок
-                    Dictionary<int, CurseforgeAddonInfo> addons = new Dictionary<int, CurseforgeAddonInfo>();
+                    var addons = new Dictionary<string, CurseforgeAddonInfo>();
                     if (addnos_ != null)
                     {
                         foreach (CurseforgeAddonInfo addon in addnos_)
@@ -339,7 +339,7 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else
                             {
-                                addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                                addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
                             }
 
                             var taskArgs = new TaskArgs
@@ -388,7 +388,7 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if (cancelToken.IsCancellationRequested) break;
 
-                            CurseforgeAddonInfo addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                            CurseforgeAddonInfo addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
                             if (addonInfo.latestFiles == null && addons.ContainsKey(file.projectID))
                             {
                                 addonInfo = addons[file.projectID];
@@ -410,7 +410,7 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 Thread.Sleep(1000);
                                 Runtime.DebugWrite("REPEAT DOWNLOAD " + addonInfo.id);
-                                addonInfo = CurseforgeApi.GetAddonInfo(file.projectID.ToString());
+                                addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
                                 result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
 
                                 count++;

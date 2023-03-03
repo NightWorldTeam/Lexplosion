@@ -115,7 +115,7 @@ namespace Lexplosion.Logic.Network
             return GetApiData<CurseforgeAddonInfo>("https://api.curseforge.com/v1/mods/" + id + "/");
         }
 
-        public static List<CurseforgeAddonInfo> GetAddonsInfo(int[] ids)
+        public static List<CurseforgeAddonInfo> GetAddonsInfo(string[] ids)
         {
             // TODO: заменить это на ToServer.HttpPostJson
             string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
@@ -192,7 +192,7 @@ namespace Lexplosion.Logic.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ValuePair<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, int projectID, int fileID, TaskArgs taskArgs)
+        private static ValuePair<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, TaskArgs taskArgs)
         {
             if (addonType != AddonType.Maps)
             {
@@ -229,7 +229,9 @@ namespace Lexplosion.Logic.Network
                     ProjectID = projectID,
                     FileID = fileID,
                     Path = (addonType != AddonType.Maps) ? (folderName + "/" + fileName) : (folderName + "/"),
-                    Type = addonType
+                    Type = addonType,
+                    Source = ProjectSource.Curseforge
+                    
                 },
                 Value2 = DownloadAddonRes.Successful
             };
@@ -238,8 +240,8 @@ namespace Lexplosion.Logic.Network
         public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, TaskArgs taskArgs)
         {
             Runtime.DebugWrite("PR ID " + addonInfo.id);
-            int projectID = addonInfo.modId;
-            int fileID = addonInfo.id;
+            string projectID = addonInfo.modId.ToString();
+            string fileID = addonInfo.id.ToString();
             try
             {
                 Runtime.DebugWrite("fileData " + addonInfo.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
@@ -305,11 +307,11 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, int fileID, string path, TaskArgs taskArgs)
+        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
         {
             try
             {
-                int projectID = addonInfo.id;
+                string projectID = addonInfo.id.ToString();
                 Runtime.DebugWrite("");
                 Runtime.DebugWrite("PR ID " + projectID);
 
@@ -327,7 +329,7 @@ namespace Lexplosion.Logic.Network
                 //ищем нужный файл
                 foreach (CurseforgeFileInfo data in addonInfo.latestFiles)
                 {
-                    if (data.id == fileID)
+                    if (data.id.ToString() == fileID)
                     {
                         fileData = data;
                         break;

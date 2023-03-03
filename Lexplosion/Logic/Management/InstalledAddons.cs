@@ -41,7 +41,7 @@ namespace Lexplosion.Logic.Management
             return data;
         }
 
-        public InstalledAddonInfo this[int key]
+        public InstalledAddonInfo this[string key]
         {
             get
             {
@@ -62,7 +62,13 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public Dictionary<int, InstalledAddonInfo>.KeyCollection Keys
+        public InstalledAddonInfo this[int key]
+        {
+            get => this[key.ToString()];
+            set => this[key.ToString()] = value;
+        }
+
+        public Dictionary<string, InstalledAddonInfo>.KeyCollection Keys
         {
             get
             {
@@ -70,12 +76,12 @@ namespace Lexplosion.Logic.Management
             }
         }
 
-        public bool ContainsKey(int addonId)
+        public bool ContainsKey(string addonId)
         {
             return _data.ContainsKey(addonId);
         }
 
-        public void TryRemove(int key)
+        public void TryRemove(string key)
         {
             _semaphore.WaitOne(_instanceId);
             if (_data.ContainsKey(key))
@@ -85,7 +91,7 @@ namespace Lexplosion.Logic.Management
             _semaphore.Release(_instanceId);
         }
 
-        public void DisableAddon(int addonId, bool isDisable, Action<InstalledAddonInfo> onFunction, Action<InstalledAddonInfo> offFunction)
+        public void DisableAddon(string addonId, bool isDisable, Action<InstalledAddonInfo> onFunction, Action<InstalledAddonInfo> offFunction)
         {
             _semaphore.WaitOne(_instanceId);
             if (_data.ContainsKey(addonId))

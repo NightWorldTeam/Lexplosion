@@ -81,7 +81,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Modloader = data.ModloaderType,
                 Images = images,
                 WebsiteUrl = data.links?.websiteUrl,
-                Changelog = (projectFileId != null) ? (CurseforgeApi.GetProjectChangelog(externalId, projectFileId.ToString()) ?? "") : ""
+                Changelog = (projectFileId != null) ? (CurseforgeApi.GetProjectChangelog(externalId, projectFileId?.ToString()) ?? "") : ""
             };
         }
 
@@ -153,7 +153,7 @@ namespace Lexplosion.Logic.Management.Instances
                         GameVersion = instance.latestFilesIndexes[0].gameVersion,
                         WebsiteUrl = instance.links?.websiteUrl,
                         LogoUrl = instance.logo?.url,
-                        ExternalId = instance.id.ToString()
+                        ExternalId = instance.id
                     });
                 }
             }

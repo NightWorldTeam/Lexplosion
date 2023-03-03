@@ -31,12 +31,12 @@ namespace Lexplosion.Logic.FileSystem
         /// Возвращает список всех дополнений сборки.
         /// </summary>
         /// <returns>Список дополнений. Ключ - путь относительно корня папки сборки, значение - айдишник.</returns>
-        public Dictionary<string, int> GetInstanceContent()
+        public Dictionary<string, string> GetInstanceContent()
         {
-            var result = new Dictionary<string, int>();
+            var result = new Dictionary<string, string>();
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
             {
-                foreach (int key in installedAddons.Keys)
+                foreach (string key in installedAddons.Keys)
                 {
                     InstalledAddonInfo addon = installedAddons[key];
                     if (addon != null)
@@ -55,7 +55,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает количество файлов, которые нужно обновить. -1 в случае неудачи (возможно только если включена защита целосности клиента). 
         /// </returns>
-        public int CheckInstance(NightWorldManifest filesInfo, ref LastUpdates updates, Dictionary<string, int> content)
+        public int CheckInstance(NightWorldManifest filesInfo, ref LastUpdates updates, Dictionary<string, string> content)
         {
             string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
             using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
@@ -285,7 +285,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <returns>
         /// Возвращает список файлов, скачивание которых закончилось ошибкой
         /// </returns>
-        public List<string> UpdateInstance(NightWorldManifest filesList, string externalId, ref LastUpdates updates, Dictionary<string, int> content, CancellationToken cancelToken)
+        public List<string> UpdateInstance(NightWorldManifest filesList, string externalId, ref LastUpdates updates, Dictionary<string, string> content, CancellationToken cancelToken)
         {
             int updated = 0;
             WebClient wc = new WebClient();
@@ -435,7 +435,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <summary>
         /// Проверяет все ли файлы клиента присутсвуют
         /// </summary>
-        public bool InvalidStruct(LastUpdates updates, Dictionary<string, int> content)
+        public bool InvalidStruct(LastUpdates updates, Dictionary<string, string> content)
         {
             string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
 

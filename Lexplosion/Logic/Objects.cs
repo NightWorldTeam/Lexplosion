@@ -30,9 +30,10 @@ namespace Lexplosion.Logic.Objects
     /// </summary>
     public class InstalledAddonInfo
     {
-        public int ProjectID;
-        public int FileID;
+        public string ProjectID;
+        public string FileID;
         public AddonType Type;
+        public ProjectSource Source;
         public string Path;
         public bool IsDisable = false;
 
@@ -147,7 +148,7 @@ namespace Lexplosion.Logic.Objects
     /// Структура файла, в котором хранятся установленные аддоны (installedAddons.json)
     /// Ключ - курсфордж id.
     /// </summary>
-    public class InstalledAddonsFormat : Dictionary<int, InstalledAddonInfo> { }
+    public class InstalledAddonsFormat : Dictionary<string, InstalledAddonInfo> { }
 
     public class DistributionData
     {

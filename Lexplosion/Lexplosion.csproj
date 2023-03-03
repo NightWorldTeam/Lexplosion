@@ -309,6 +309,9 @@
     <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Management\Addons\AddonDependencie.cs" />
+    <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
+    <Compile Include="Logic\Management\Addons\IPrototypeAddon.cs" />
     <Compile Include="Logic\Management\Authentication\Authentication.cs" />
     <Compile Include="Logic\Management\Authentication\IAuthHandler.cs" />
     <Compile Include="Logic\Management\Authentication\LocalAuth.cs" />
@@ -343,6 +346,7 @@
     <Compile Include="Tools\Immutable\ImmutableList.cs" />
     <Compile Include="Tools\RuntimeTools.cs" />
     <Compile Include="Tools\SocketExtensions.cs" />
+    <Compile Include="Tools\StringExtensions.cs" />
     <Compile Include="Tools\TaskArgs.cs" />
     <Compile Include="Tools\RandomExtensions.cs" />
     <Compile Include="Tools\ResourceGetter.cs" />
@@ -357,7 +361,7 @@
     <Compile Include="Tools\KeySemaphore.cs" />
     <Compile Include="Logic\Management\Installers\CurseforgeInstallManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
-    <Compile Include="Logic\Management\Instances\InstanceAddon.cs" />
+    <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
     <Compile Include="Logic\Management\Instances\InstanceClient.cs" />
     <Compile Include="Logic\Management\Instances\Objects.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />

@@ -40,6 +40,13 @@
         None
     }
 
+    public enum ProjectSource
+    {
+        Curseforge,
+        Modrinth,
+        None = 255
+    }
+
     public enum CfSortField
     {
         Featured = 1,

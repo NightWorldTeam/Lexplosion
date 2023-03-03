@@ -19,7 +19,7 @@ namespace Lexplosion.Logic.Management.Installers
         private NightWorldManifest nightworldManifest = null;
         private VersionManifest manifest = null;
         private LastUpdates Updates;
-        private Dictionary<string, int> _instanceContent;
+        private Dictionary<string, string> _instanceContent;
         private NightWorldInstaller installer;
         private CancellationToken _cancelToken;
 

@@ -41,7 +41,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
             public string sourceUrl;
         }
 
-        public int id; // TODO: подобные поля потом нужно на long заменить
+        public string id;
         public string name;
         public int? classId;
         public string summary;
@@ -160,10 +160,10 @@ namespace Lexplosion.Logic.Objects.Curseforge
     public class CurseforgeFileInfo
     {
         public int id;
-        public int modId;
+        public string modId;
         public string fileName;
         public string displayName;
-        public List<Dictionary<string, int>> dependencies;
+        public List<Dictionary<string, string>> dependencies;
         public List<string> gameVersions;
         public string fileDate;
         public int releaseType;
@@ -214,8 +214,8 @@ namespace Lexplosion.Logic.Objects.Curseforge
 
         public class FileData
         {
-            public int projectID;
-            public int fileID;
+            public string projectID;
+            public string fileID;
         }
 
         public McVersionInfo minecraft;
@@ -234,7 +234,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
 
     public class InstanceContentFile
     {
-        public List<int> InstalledAddons;
+        public List<string> InstalledAddons;
         public List<string> Files { get; set; }
         public bool FullClient = false;
     }
