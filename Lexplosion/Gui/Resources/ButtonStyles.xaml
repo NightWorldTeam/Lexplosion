@@ -91,35 +91,24 @@
 
 
     <Style x:Key="TagStyle" TargetType="{x:Type Button}">
-        <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="TextBlock.SnapsToDevicePixels" Value="True" />
-        <Setter Property="Height" Value="25" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="FontWeight" Value="Medium" />
-        <Setter Property="Margin" Value="2,0,2,3" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
         <Setter Property="Focusable" Value="False" />
-        <Setter Property="FontFamily" Value="{DynamicResource FuturaBookC}" />
+        <Setter Property="FontFamily" Value="{DynamicResource Inner}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
+                        Padding="8,4,8,4"
                         Background="{DynamicResource TagSolidColorBrush}"
                         BorderBrush="Transparent"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="4">
                         <ContentPresenter
-                            Margin="10,0,10,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             RecognizesAccessKey="True" />
-                        <Border.Effect>
-                            <DropShadowEffect
-                                BlurRadius="5"
-                                Opacity="0.10"
-                                Color="Black" />
-                        </Border.Effect>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

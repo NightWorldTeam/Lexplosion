@@ -145,6 +145,10 @@
     <Compile Include="Gui\ISubmenu.cs" />
     <Compile Include="Gui\ModalWindow\ModalVMBase.cs" />
     <Compile Include="Gui\Models\AuthModel.cs" />
+    <Compile Include="Gui\Models\GameExtensions\ExtensionModel.cs" />
+    <Compile Include="Gui\Models\GameExtensions\IExtensionModel.cs" />
+    <Compile Include="Gui\Models\GameExtensions\ModloaderModel.cs" />
+    <Compile Include="Gui\Models\GameExtensions\OptifineModel.cs" />
     <Compile Include="Gui\Models\GeneralSettingsModel.cs" />
     <Compile Include="Gui\Models\InstanceFactory\FactoryDLCModel.cs" />
     <Compile Include="Gui\Models\InstanceFactory\InstanceFactoryModel.cs" />
@@ -158,6 +162,7 @@
     <Compile Include="Gui\Models\MainMenu\LibraryModel.cs" />
     <Compile Include="Gui\Models\MainModel.cs" />
     <Compile Include="Gui\Models\MultiplayerModel.cs" />
+    <Compile Include="Gui\Models\ShowCaseMenu\InstanceProfileModel.cs" />
     <Compile Include="Gui\Models\ShowCaseMenu\InstanceSettingsModel.cs" />
     <Compile Include="Gui\Models\ShowCaseMenu\OverviewModel.cs" />
     <Compile Include="Gui\Converters\MultiBindingConverter.cs" />
@@ -663,6 +668,7 @@
     <None Include="App.config" />
     <Resource Include="Assets\fonts\Montserrat.ttf" />
     <Resource Include="Assets\fonts\PassDots.ttf" />
+    <Resource Include="Assets\fonts\Inner.ttf" />
     <None Include="DLL\DiscordRPC.zip" />
     <None Include="DLL\LumiSoft.Net.zip" />
     <None Include="DLL\NewtonsoftJson.zip" />

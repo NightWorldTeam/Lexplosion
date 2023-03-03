@@ -2,28 +2,20 @@
     x:Class="Lexplosion.Gui.Views.Pages.ShowCaseMenu.InstanceProfileForm"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
     xmlns:lexplosion="clr-namespace:Lexplosion"
-    xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
-
-        <Style x:Key="Tex" TargetType="{x:Type TextBlock}">
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Padding" Value="5,0,0,0" />
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="#ffffff" />
         </Style>
 
         <Style x:Key="Menenei" TargetType="{x:Type TabItem}">
             <Setter Property="Width" Value="150" />
             <Setter Property="Height" Value="30" />
-            <Setter Property="TextElement.FontSize" Value="18" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
@@ -37,7 +29,8 @@
                                 Margin="5,0,0,0"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                ContentSource="Header" />
+                                ContentSource="Header"
+                                TextBlock.FontSize="18" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
@@ -63,24 +56,11 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <ObjectDataProvider
-            x:Key="ModloaderType"
-            MethodName="GetValues"
-            ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="lexplosion:ClientType" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-
     </UserControl.Resources>
 
     <Grid>
-
         <ScrollViewer>
-
             <Grid Margin="0,10,0,0">
-
                 <TabControl
                     Background="Transparent"
                     BorderThickness="0"
@@ -105,7 +85,7 @@
                                     <TextBlock
                                         HorizontalAlignment="Left"
                                         FontSize="16"
-                                        Style="{StaticResource Tex}"
+                                        Foreground="White"
                                         Text="{DynamicResource generalUpperCase}" />
                                 </Border>
 
@@ -120,14 +100,13 @@
                                         FontSize="14"
                                         Foreground="White"
                                         Opacity="0.8"
-                                        Style="{StaticResource Tex}"
                                         Text="{DynamicResource instanceTitle}" />
                                     <TextBox
                                         Width="400"
                                         Height="40"
                                         Background="#1f1f1f"
                                         FontSize="14"
-                                        Text="{Binding BaseInstanceData.Name, UpdateSourceTrigger=PropertyChanged}" />
+                                        Text="{Binding Model.BaseInstanceData.Name, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
 
                                 <!--  Game Version  -->
@@ -142,136 +121,166 @@
                                         FontSize="14"
                                         Foreground="White"
                                         Opacity="0.8"
-                                        Style="{StaticResource Tex}"
-                                        Text="{DynamicResource immutableVersionParameter}" />
+                                        Text="{DynamicResource version}" />
 
-                                    <TextBox
-                                        Width="400"
-                                        Height="40"
-                                        Background="#1f1f1f"
-                                        FontSize="14"
-                                        IsEnabled="False"
-                                        Text="{Binding GameVersion}" />
+                                    <Grid Margin="0,0,0,10">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="13"
+                                            FontWeight="Medium"
+                                            Foreground="White"
+                                            Opacity="0.6"
+                                            Text="Show Snapshots" />
+                                        <ToggleButton
+                                            HorizontalAlignment="Right"
+                                            IsChecked="{Binding Model.IsShowSnapshots}"
+                                            Style="{StaticResource ToggleSwitch}" />
+                                    </Grid>
 
-                                    <!--<ComboBox
+                                    <ComboBox
                                         Width="400"
                                         Height="40"
                                         HorizontalContentAlignment="Left"
-                                        IsEnabled="False"
-                                        ItemsSource="{Binding GameVersions}"
-                                        SelectedValue="{Binding GameVersion, UpdateSourceTrigger=PropertyChanged}"
-                                        Style="{StaticResource LighterDefaultComboBox}" />-->
+                                        ItemsSource="{Binding Model.GameVersions}"
+                                        SelectedValue="{Binding Model.Version, UpdateSourceTrigger=PropertyChanged}"
+                                        Style="{StaticResource LighterDefaultComboBox}" />
                                 </StackPanel>
 
                                 <!--  Modloader  -->
                                 <StackPanel
+                                    Width="400"
+                                    Margin="30,0,30,30"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top">
+                                    <TextBlock
+                                        Margin="0,0,0,5"
+                                        HorizontalAlignment="Left"
+                                        FontSize="14"
+                                        Foreground="White"
+                                        Opacity="0.8"
+                                        Text="{DynamicResource gameType}" />
+
+                                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                        <RadioButton
+                                            Command="{Binding SwitchClientType}"
+                                            CommandParameter="{x:Static lexplosion:ClientType.Vanilla}"
+                                            Content="Vanilla"
+                                            GroupName="ClientType"
+                                            IsChecked="{Binding IsVanilla}"
+                                            Style="{StaticResource HighlightRadioButton}" />
+                                        <RadioButton
+                                            Margin="3,0,0,0"
+                                            Command="{Binding SwitchClientType}"
+                                            CommandParameter="{x:Static lexplosion:ClientType.Forge}"
+                                            Content="Forge"
+                                            GroupName="ClientType"
+                                            IsChecked="{Binding IsForge}"
+                                            IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                            Style="{StaticResource HighlightRadioButton}" />
+                                        <RadioButton
+                                            Margin="3,0,0,0"
+                                            Command="{Binding SwitchClientType}"
+                                            CommandParameter="{x:Static lexplosion:ClientType.Fabric}"
+                                            Content="Fabric"
+                                            GroupName="ClientType"
+                                            IsChecked="{Binding IsFabric}"
+                                            IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                            Style="{StaticResource HighlightRadioButton}" />
+                                        <RadioButton
+                                            Margin="3,0,0,0"
+                                            Command="{Binding SwitchClientType}"
+                                            CommandParameter="{x:Static lexplosion:ClientType.Quilt}"
+                                            Content="Quilt"
+                                            GroupName="ClientType"
+                                            IsChecked="{Binding IsQuilt}"
+                                            IsEnabled="{Binding Model.ModloaderModel.IsAvaliable}"
+                                            Style="{StaticResource HighlightRadioButton}" />
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,10,0,20">
+
+                                        <StackPanel.Style>
+                                            <Style TargetType="{x:Type StackPanel}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding Model.GameType}" Value="{x:Static lexplosion:GameType.Modded}" />
+                                                            <Condition Binding="{Binding Model.ModloaderModel.IsAvaliable}" Value="True" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.Setters>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger.Setters>
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+
+                                        <TextBlock
+                                            Margin="0,0,0,5"
+                                            VerticalAlignment="Center"
+                                            FontSize="14"
+                                            Foreground="White"
+                                            Opacity="0.8"
+                                            Text="{DynamicResource modloaderVersion}" />
+
+                                        <ComboBox
+                                            Width="400"
+                                            Height="40"
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Left"
+                                            FontSize="14"
+                                            FontWeight="Medium"
+                                            ItemsSource="{Binding Model.ModloaderModel.Versions}"
+                                            Opacity="0.8"
+                                            SelectedValue="{Binding Model.ModloaderModel.Version, UpdateSourceTrigger=PropertyChanged}"
+                                            Style="{StaticResource LighterDefaultComboBox}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!--  Optifine  -->
+                                <StackPanel
                                     Margin="30,0,30,30"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Top">
-                                    <StackPanel Orientation="Horizontal">
+
+                                    <StackPanel.Style>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Model.GameType}" Value="{x:Static lexplosion:GameType.Vanilla}" />
+                                                        <Condition Binding="{Binding Model.OptifineModel.IsAvaliable}" Value="True" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+
+                                    <Grid Width="400" Margin="0,0,0,10">
                                         <TextBlock
-                                            Margin="0,0,0,5"
-                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
                                             FontSize="14"
                                             Foreground="White"
                                             Opacity="0.8"
-                                            Style="{StaticResource Tex}"
-                                            Text="{DynamicResource gameType}" />
+                                            Text="Optifine" />
 
-                                        <TextBlock
-                                            Margin="3,0,0,5"
-                                            HorizontalAlignment="Left"
-                                            FontSize="14"
-                                            Foreground="White"
-                                            Opacity="0.8"
-                                            Text="{DynamicResource immutableParameter}" />
-                                        <Border Background="Transparent">
-                                            <Viewbox
-                                                Width="15"
-                                                Height="15"
-                                                Margin="5,0,0,2">
-                                                <Path
-                                                    extension:PathExtension.StringData="{StaticResource Question}"
-                                                    Fill="White"
-                                                    Stretch="Fill" />
-                                            </Viewbox>
-
-                                            <Border.ToolTip>
-                                                <ToolTip
-                                                    Width="250"
-                                                    Padding="5"
-                                                    HorizontalOffset="-80"
-                                                    Style="{StaticResource CustomTipTool}"
-                                                    VerticalOffset="-60">
-                                                    <StackPanel>
-                                                        <TextBlock Text="Вы не можете изменить установленный modloader. Вы можете только изменить vanilla на какой-либо modloader." TextWrapping="WrapWithOverflow" />
-                                                    </StackPanel>
-                                                </ToolTip>
-                                            </Border.ToolTip>
-                                        </Border>
-                                    </StackPanel>
-
-                                    <TextBox
-                                        Width="400"
-                                        Height="40"
-                                        Background="#1f1f1f"
-                                        FontSize="14"
-                                        IsEnabled="False"
-                                        Text="{Binding ModloaderType}"
-                                        Visibility="{Binding IsModloader, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                        <ToggleButton
+                                            HorizontalAlignment="Right"
+                                            IsChecked="{Binding Model.OptifineModel.IsEnable}"
+                                            Style="{StaticResource ToggleSwitch}" />
+                                    </Grid>
 
                                     <ComboBox
                                         Width="400"
                                         Height="40"
-                                        HorizontalContentAlignment="Left"
-                                        IsEnabled="{Binding IsModloader, Converter={StaticResource InverseBooleanConverter}}"
-                                        ItemsSource="{Binding Source={StaticResource ModloaderType}}"
-                                        SelectedValue="{Binding ModloaderType}"
-                                        Style="{StaticResource LighterDefaultComboBox}"
-                                        Visibility="{Binding IsModloader, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
-                                </StackPanel>
-
-                                <!--  Modloader Version  -->
-                                <StackPanel
-                                    Margin="30,0,30,30"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    Visibility="{Binding IsModloader, Converter={StaticResource ConvertBoolToVisibility}}">
-                                    <TextBlock
-                                        Margin="0,0,0,5"
-                                        HorizontalAlignment="Left"
-                                        FontSize="14"
-                                        Foreground="White"
-                                        Opacity="0.8"
-                                        Style="{StaticResource Tex}"
-                                        Text="Версия Modloader" />
-                                    <ComboBox
-                                        Width="400"
-                                        Height="40"
-                                        ItemsSource="{Binding ModloaderVersions}"
-                                        SelectedValue="{Binding ModloaderVersion}"
-                                        Style="{StaticResource LighterDefaultComboBox}" />
-                                </StackPanel>
-
-                                <StackPanel
-                                    Margin="30,0,30,30"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    Visibility="{Binding IsOptifine, Converter={StaticResource ConvertBoolToVisibility}}">
-                                    <TextBlock
-                                        Margin="0,0,0,5"
-                                        HorizontalAlignment="Left"
-                                        FontSize="14"
-                                        Foreground="White"
-                                        Opacity="0.8"
-                                        Style="{StaticResource Tex}"
-                                        Text="{DynamicResource optifineVersion}" />
-                                    <ComboBox
-                                        Width="400"
-                                        Height="40"
-                                        ItemsSource="{Binding OptifineVersions}"
-                                        SelectedValue="{Binding OptifineVersion}"
-                                        Style="{StaticResource LighterDefaultComboBox}" />
+                                        ItemsSource="{Binding Model.OptifineModel.Versions}"
+                                        SelectedItem="{Binding Model.OptifineModel.Version}"
+                                        Visibility="{Binding Model.OptifineModel.IsEnable, Converter={StaticResource ConvertBoolToVisibility}}" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -299,13 +308,11 @@
                                         <TextBlock
                                             HorizontalAlignment="Left"
                                             FontSize="18"
-                                            Style="{StaticResource Tex}"
                                             Text="{DynamicResource avatar}" />
                                         <TextBlock
                                             HorizontalAlignment="Left"
                                             FontSize="14"
                                             Opacity="0.8"
-                                            Style="{StaticResource Tex}"
                                             Text="{DynamicResource selectedInstanceLogo}" />
 
                                         <StackPanel Orientation="Horizontal">
@@ -315,7 +322,7 @@
                                                 Margin="5"
                                                 VerticalAlignment="Bottom">
                                                 <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                                                    <ImageBrush ImageSource="{Binding Model.LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
                                                 </Border.Background>
                                             </Border>
                                             <Border
@@ -324,7 +331,7 @@
                                                 Margin="5"
                                                 VerticalAlignment="Bottom">
                                                 <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                                                    <ImageBrush ImageSource="{Binding Model.LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
                                                 </Border.Background>
                                             </Border>
                                             <Border
@@ -333,7 +340,7 @@
                                                 Margin="5"
                                                 VerticalAlignment="Bottom">
                                                 <Border.Background>
-                                                    <ImageBrush ImageSource="{Binding LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
+                                                    <ImageBrush ImageSource="{Binding Model.LogoBytes, Converter={StaticResource BytesToBitmapImageConverter}}" />
                                                 </Border.Background>
                                             </Border>
                                         </StackPanel>
@@ -353,7 +360,6 @@
                                         <!--<TextBlock
                                             Margin="11,5,0,0"
                                             FontSize="14"
-                                            Style="{StaticResource Tex}"
                                             Text="{DynamicResource uploadYourAvatarTip}"
                                             TextAlignment="Left"
                                             TextWrapping="WrapWithOverflow" />-->
@@ -378,9 +384,8 @@
                                         HorizontalAlignment="Left"
                                         FontSize="15"
                                         Opacity="0.8"
-                                        Style="{StaticResource Tex}"
                                         Text="{DynamicResource shortDescription}" />
-                                    <TextBox FontSize="14" Text="{Binding BaseInstanceData.Summary, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox FontSize="14" Text="{Binding Model.BaseInstanceData.Summary, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
 
                                 <!--  Description  -->
@@ -390,14 +395,13 @@
                                         HorizontalAlignment="Left"
                                         FontSize="16"
                                         Opacity="0.8"
-                                        Style="{StaticResource Tex}"
                                         Text="{DynamicResource fullDescription}" />
                                     <TextBox
                                         Height="150"
                                         VerticalContentAlignment="Top"
                                         AcceptsReturn="True"
                                         FontSize="15"
-                                        Text="{Binding BaseInstanceData.Description, UpdateSourceTrigger=PropertyChanged}"
+                                        Text="{Binding Model.BaseInstanceData.Description, UpdateSourceTrigger=PropertyChanged}"
                                         TextWrapping="Wrap"
                                         VerticalScrollBarVisibility="Auto" />
                                 </StackPanel>
@@ -409,7 +413,6 @@
                                         HorizontalAlignment="Left"
                                         FontSize="16"
                                         Opacity="0.8"
-                                        Style="{StaticResource Tex}"
                                         Text="Теги" />
                                     <ListBox
                                         Background="#272727"
@@ -465,7 +468,6 @@
                                                     VerticalAlignment="Center"
                                                     FontSize="12"
                                                     Foreground="#f2f2f3"
-                                                    Style="{StaticResource Tex}"
                                                     Text="{Binding}" />
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>

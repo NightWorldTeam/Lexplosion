@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.Gui.Views.Pages.MainMenu
 {
@@ -25,6 +26,15 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
                 Duration = TimeSpan.FromSeconds(0.4)
             };
             this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+            InstanceClient.WasCreated += OnCreatedInstance;
+        }
+
+        private void OnCreatedInstance()
+        {
+            Lexplosion.Gui.Extension.ScrollViewer.ScroollToPosAnimated(
+                ContainerPage_ScrollViewer,
+                Lexplosion.Gui.Extension.ScrollViewer.GetScrollBar(ContainerPage_ScrollViewer).Maximum
+            );
         }
 
         private void LibraryItemsControl_ScrollChanged(object sender, ScrollChangedEventArgs e)

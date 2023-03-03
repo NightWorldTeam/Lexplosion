@@ -45,13 +45,13 @@
                         <CollectionContainer Collection="{Binding Source={StaticResource InstanceCollection}}" />
 
                         <!--  Library Instance Added  -->
-                        <Button
+                        <!--<Button
                             Width="620"
                             Height="120"
                             Margin="30,15,30,30"
                             Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             Content="Добавить сборку"
-                            Style="{StaticResource LibraryAddBtn}" />
+                            Style="{StaticResource LibraryAddBtn}" />-->
 
                     </CompositeCollection>
                 </ItemsControl.ItemsSource>

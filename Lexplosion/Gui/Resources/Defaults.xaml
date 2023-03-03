@@ -115,9 +115,9 @@
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="IsTabStop" Value="True" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontWeight" Value="Medium" />
-        <Setter Property="FontSize" Value="15" />
-        <Setter Property="FontFamily" Value="{StaticResource FuturaBookC}" />
+        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="{StaticResource Inner}" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
