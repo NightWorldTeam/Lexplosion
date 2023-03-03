@@ -91,7 +91,7 @@ namespace Lexplosion.Logic.Management.Addons
             {
                 var list = new List<AddonDependencie>();
 
-                if (_versionInfo.dependencies != null)
+                if (_versionInfo?.dependencies != null)
                 {
                     foreach (var dependencie in _versionInfo.dependencies)
                     {

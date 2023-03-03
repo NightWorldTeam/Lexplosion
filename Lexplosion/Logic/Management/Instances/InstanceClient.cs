@@ -919,7 +919,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public string GetDirectoryPath()
         {
-            return WithDirectory.DirectoryPath.Replace("//", @"\").Replace("/", @"\") + @"\instances\" + _localId;
+            return (WithDirectory.DirectoryPath.Replace("/", @"\") + @"\instances\" + _localId).Replace(@"\\", @"\");
         }
 
         public Settings GetSettings()

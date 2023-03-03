@@ -18,6 +18,11 @@ namespace Lexplosion.Logic.Management.Addons
 
         ValuePair<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs);
 
+        /// <summary>
+        /// Сравнивает самую последнюю версию версию файла аддона с переданной.
+        /// </summary>
+        /// <param name="addonFileId">Айдишник файла аддона</param>
+        /// <returns>true - если последняя версия новее преденной.</returns>
         bool CompareVersions(string addonFileId);
 
         string ProjectId { get; }
