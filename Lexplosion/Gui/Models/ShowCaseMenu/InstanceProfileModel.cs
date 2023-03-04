@@ -27,7 +27,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             }
 
             GameType = BaseInstanceData.Modloader == ClientType.Vanilla ? GameType.Vanilla : GameType.Modded;
-            Runtime.DebugWrite(GameType);
+
             LogoBytes = CurrentInstanceClient.Logo;
             if (BaseInstanceData.OptifineVersion != null) 
             { 
@@ -172,7 +172,6 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             get => _gameType; set 
             {
                 _gameType = value;
-                BaseInstanceData.Modloader = (ClientType)value;
                 if (_gameType == GameType.Vanilla)
                 {
                     ModloaderModel.IsEnable = false;
@@ -211,6 +210,16 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
 
         public void Save()
         {
+            if (GameType == GameType.Vanilla)
+            {
+                BaseInstanceData.Modloader = ClientType.Vanilla;
+                BaseInstanceData.OptifineVersion = OptifineModel.IsEnable ? OptifineModel.Version : null;
+            }
+            else 
+            {
+                BaseInstanceData.Modloader = (ClientType)ModloaderModel.GameExtension;
+                BaseInstanceData.ModloaderVersion = ModloaderModel.Version;
+            }
             CurrentInstanceClient.ChangeParameters(BaseInstanceData, LogoPath);
         }
 
