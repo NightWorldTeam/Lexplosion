@@ -31,6 +31,7 @@
         <!--  ListBox - ScrollViewer.CanContentScroll="False" создаёт плавный скролл.  -->
         <ScrollViewer
             x:Name="ContainerPage_ScrollViewer"
+            Margin="0,0,0,30"
             extension:ScrollViewer.OnScrollCommand="{Binding OnScrollCommand}"
             IsTabStop="False"
             ScrollChanged="LibraryItemsControl_ScrollChanged">
