@@ -37,7 +37,8 @@
         Nightworld,
         Curseforge,
         Local,
-        None
+        Modrinth,
+        None = 255
     }
 
     public enum ProjectSource

@@ -211,7 +211,6 @@ namespace Lexplosion.Logic.Network
             {
                 if (!WithDirectory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs))
                 {
-
                     return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
@@ -240,7 +239,7 @@ namespace Lexplosion.Logic.Network
         public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, TaskArgs taskArgs)
         {
             Runtime.DebugWrite("PR ID " + addonInfo.id);
-            string projectID = addonInfo.modId.ToString();
+            string projectID = addonInfo.modId;
             string fileID = addonInfo.id.ToString();
             try
             {
@@ -311,7 +310,7 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                string projectID = addonInfo.id.ToString();
+                string projectID = addonInfo.id;
                 Runtime.DebugWrite("");
                 Runtime.DebugWrite("PR ID " + projectID);
 

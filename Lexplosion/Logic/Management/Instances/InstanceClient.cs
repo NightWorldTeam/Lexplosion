@@ -59,7 +59,6 @@ namespace Lexplosion.Logic.Management.Instances
         private static Dictionary<string, string> _idsPairs = new Dictionary<string, string>();
 
         #region info
-
         public string LocalId
         {
             get
@@ -209,6 +208,9 @@ namespace Lexplosion.Logic.Management.Instances
                     break;
                 case InstanceSource.Curseforge:
                     _dataManager = new CurseforgeInstance();
+                    break;
+                case InstanceSource.Modrinth:
+                    _dataManager = new ModrinthInstance();
                     break;
                 default:
                     _dataManager = new LocalInstance();
@@ -468,6 +470,7 @@ namespace Lexplosion.Logic.Management.Instances
         public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
         {
             Runtime.DebugWrite("UploadInstances " + pageIndex);
+            //type = InstanceSource.Modrinth;
 
             var instances = new List<InstanceClient>();
             List<PrototypeInstance.Info> catalog = PrototypeInstance.GetCatalog(type, pageSize, pageIndex, categoriy, searchFilter, sortField, gameVersion);

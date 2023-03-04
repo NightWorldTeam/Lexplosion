@@ -328,6 +328,7 @@
     <Compile Include="Logic\Management\InstalledAddons.cs" />
     <Compile Include="Logic\Management\Instances\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Instances\LocalInstance.cs" />
+    <Compile Include="Logic\Management\Instances\ModrinthInstance.cs" />
     <Compile Include="Logic\Management\Instances\NightworldInstance.cs" />
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\Player.cs" />
@@ -337,7 +338,9 @@
     <Compile Include="Logic\Network\WebSockets\WebSocket.cs" />
     <Compile Include="Logic\Network\WebSockets\WebSocketClient.cs" />
     <Compile Include="Logic\Network\WebSockets\WebSocketServer.cs" />
+    <Compile Include="Logic\Network\Web\ModrinthApi.cs" />
     <Compile Include="Logic\Network\Web\MojangApi.cs" />
+    <Compile Include="Logic\Objects\Modrinth.cs" />
     <Compile Include="Tools\ColorTools.cs" />
     <Compile Include="Tools\DynamicStateData.cs" />
     <Compile Include="Tools\EnumerateExtension.cs" />

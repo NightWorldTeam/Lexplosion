@@ -33,6 +33,8 @@ namespace Lexplosion.Logic.Management.Instances
                     return NightworldInstance.GetCatalog(pageSize, pageIndex);
                 case InstanceSource.Curseforge:
                     return CurseforgeInstance.GetCatalog(pageSize, pageIndex, categoriy, searchFilter, sortField, gameVersion);
+                case InstanceSource.Modrinth:
+                    return ModrinthInstance.GetCatalog(pageSize, pageIndex, categoriy, searchFilter, "", gameVersion);
                 default:
                     return null;
             }
@@ -44,8 +46,6 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 case InstanceSource.Nightworld:
                     return NightworldInstance.GetInstance(instanceId);
-                case InstanceSource.Curseforge:
-                    return null;
                 default:
                     return null;
             }
