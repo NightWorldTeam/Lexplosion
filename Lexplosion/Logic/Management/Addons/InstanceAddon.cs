@@ -20,7 +20,6 @@ using Lexplosion.Logic.Objects.Modrinth;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-
     public class InstanceAddon : VMBase
     {
         private const string UNKNOWN_NAME = "Без названия";
@@ -578,6 +577,34 @@ namespace Lexplosion.Logic.Management.Instances
             IsInstalling = false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void CreateAddonData(IPrototypeAddon prototypeAddon, string projectId, Dictionary<string, ValuePair<InstanceAddon, string, ProjectSource>> existsAddons, List<InstanceAddon> addons, InstalledAddonsFormat actualAddonsList, BaseInstanceData modpackInfo, ProjectSource addonSourse)
+        {
+            InstalledAddonInfo info = actualAddonsList[projectId];
+            var obj = new InstanceAddon(prototypeAddon, modpackInfo)
+            {
+                Version = ""
+            };
+
+            // проверяем наличие обновлений для мода
+            if (modpackInfo.Type == InstanceSource.Local)
+            {
+                if (prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID))
+                {
+                    obj.UpdateAvailable = true;
+                }
+            }
+
+            existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
+            {
+                Value1 = obj,
+                Value2 = projectId,
+                Value3 = addonSourse
+            };
+
+            addons.Add(obj);
+        }
+
         private delegate void IternalAddonInfo(string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -644,7 +671,6 @@ namespace Lexplosion.Logic.Management.Instances
                 if (existsCfMods.Count > 0)
                 {
                     List<CurseforgeAddonInfo> cfData = CurseforgeApi.GetAddonsInfo(existsCfMods.ToArray());
-
                     if (cfData != null)
                     {
                         foreach (CurseforgeAddonInfo addon in cfData)
@@ -653,35 +679,12 @@ namespace Lexplosion.Logic.Management.Instances
                             if (existsCfMods.Contains(projectId))
                             {
                                 IPrototypeAddon prototypeAddon = new CurseforgeAddon(modpackInfo, addon);
-
-                                InstalledAddonInfo info = actualAddonsList[projectId];
-                                var obj = new InstanceAddon(prototypeAddon, modpackInfo)
-                                {
-                                    Version = ""
-                                };
-
-                                // проверяем наличие обновлений для мода
-                                if (modpackInfo.Type == InstanceSource.Local)
-                                {
-                                    if (prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID))
-                                    {
-                                        obj.UpdateAvailable = true;
-                                    }
-                                }
-
-                                existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
-                                {
-                                    Value1 = obj,
-                                    Value2 = projectId,
-                                    Value3 = ProjectSource.Curseforge
-                                };
-
-                                addons.Add(obj);
+                                CreateAddonData(prototypeAddon, projectId, existsAddons, addons, actualAddonsList, modpackInfo, ProjectSource.Curseforge);
                             }
                         }
                     }
                 }
-
+                // теперь получаем инфу об известных нам модов с модринфа
                 if (existsMdMods.Count > 0)
                 {
                     List<ModrinthProjectInfo> mdData = ModrinthApi.GetProjects(existsMdMods.ToArray());
@@ -692,30 +695,7 @@ namespace Lexplosion.Logic.Management.Instances
                         if (existsMdMods.Contains(projectId))
                         {
                             IPrototypeAddon prototypeAddon = new ModrinthAddon(modpackInfo, addon);
-
-                            InstalledAddonInfo info = actualAddonsList[projectId];
-                            var obj = new InstanceAddon(prototypeAddon, modpackInfo)
-                            {
-                                Version = ""
-                            };
-
-                            // проверяем наличие обновлений для мода
-                            if (modpackInfo.Type == InstanceSource.Local)
-                            {
-                                if (prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID))
-                                {
-                                    obj.UpdateAvailable = true;
-                                }
-                            }
-
-                            existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
-                            {
-                                Value1 = obj,
-                                Value2 = projectId,
-                                Value3 = ProjectSource.Modrinth
-                            };
-
-                            addons.Add(obj);
+                            CreateAddonData(prototypeAddon, projectId, existsAddons, addons, actualAddonsList, modpackInfo, ProjectSource.Modrinth);
                         }
                     }
                 }
@@ -1029,7 +1009,6 @@ namespace Lexplosion.Logic.Management.Instances
                     {
                         using (var webClient = new WebClient())
                         {
-
                             Logo = ImageTools.ResizeImage(webClient.DownloadData(url), 80, 80);
                         }
                     }
