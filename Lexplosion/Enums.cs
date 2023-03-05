@@ -119,7 +119,8 @@
         Unknown,
         Mods = 6,
         Resourcepacks = 12,
-        Maps = 17
+        Maps = 17,
+        Shaders = 4546
     }
 
     /// <summary>

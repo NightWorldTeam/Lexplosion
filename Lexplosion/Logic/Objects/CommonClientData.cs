@@ -147,7 +147,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
     class InstancePlatformData
     {
         public string id;
-        public int instanceVersion;
+        public string instanceVersion;
     }
 
     /// <summary>
@@ -167,5 +167,24 @@ namespace Lexplosion.Logic.Objects.CommonClientData
     {
         public string type { get; set; }
         public string id { get; set; }
+    }
+
+    public class InstanceContent
+    {
+        public InstalledAddonsFormat InstalledAddons;
+        public List<string> Files { get; set; }
+        public bool FullClient = false;
+    }
+
+    /// <summary>
+    /// Используется для хранения класса InstanceContent в файле. 
+    /// Нужно это чтобы не хранить в файле информацию из InstanceContent, которая нужна только в рантайме.
+    /// Есть толь ко у сборок Curseforge и Modrinth
+    /// </summary>
+    public class InstanceContentFile
+    {
+        public List<string> InstalledAddons;
+        public List<string> Files { get; set; }
+        public bool FullClient = false;
     }
 }

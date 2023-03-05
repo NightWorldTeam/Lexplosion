@@ -263,7 +263,7 @@ namespace Lexplosion.Logic.FileSystem
             try
             {
                 string fileContent = GetFile(file);
-                return JsonConvert.DeserializeObject<T>(fileContent);
+                return fileContent != null ? JsonConvert.DeserializeObject<T>(fileContent) : default;
             }
             catch
             {

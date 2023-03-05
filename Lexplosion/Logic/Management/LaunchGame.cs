@@ -364,6 +364,9 @@ namespace Lexplosion.Logic.Management
                 case InstanceSource.Curseforge:
                     instance = new CurseforgeInstallManager(_instanceId, onlyBase, _updateCancelToken);
                     break;
+                case InstanceSource.Modrinth:
+                    instance = new ModrinthInstallManager(_instanceId, onlyBase, _updateCancelToken);
+                    break;
                 default:
                     instance = null;
                     break;

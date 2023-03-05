@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Logic.Objects.Curseforge;
-using Lexplosion.Tools;
+using Lexplosion.Logic.Objects.Modrinth;
 using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    class CurseforgeInstallManager : IInstallManager
+    class ModrinthInstallManager : IInstallManager
     {
         private VersionManifest Manifest;
         private LastUpdates Updates;
-        private CurseforgeFileInfo Info = null;
-        private CurseforgeInstaller installer;
+        private ModrinthProjectFile Info = null;
+        private ModrinthInstaller installer;
 
         private string InstanceId;
         private InstancePlatformData InfoData;
@@ -40,12 +40,12 @@ namespace Lexplosion.Logic.Management.Installers
 
         public event Action DownloadStarted;
 
-        public CurseforgeInstallManager(string instanceid, bool onlyBase_, CancellationToken cancelToken)
+        public ModrinthInstallManager(string instanceid, bool onlyBase_, CancellationToken cancelToken)
         {
             InstanceId = instanceid;
             onlyBase = onlyBase_;
             _cancelToken = cancelToken;
-            installer = new CurseforgeInstaller(instanceid);
+            installer = new ModrinthInstaller(instanceid);
         }
 
         private bool _downloadStartedIsCalled = false;
@@ -62,7 +62,7 @@ namespace Lexplosion.Logic.Management.Installers
             Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
-            if (InfoData == null || InfoData.id == null || !Int32.TryParse(InfoData.id, out _))
+            if (InfoData == null || InfoData.id == null)
             {
                 return InstanceInit.CursforgeIdError;
             }
@@ -101,25 +101,23 @@ namespace Lexplosion.Logic.Management.Installers
 
             if (instanceVersion != null)
             {
-                CurseforgeFileInfo ver = CurseforgeApi.GetProjectFile(InfoData.id, instanceVersion);
+                ModrinthProjectFile ver = ModrinthApi.GetProjectFile(instanceVersion);
                 if (ver != null)
                 {
-                    InfoData.instanceVersion = ver.id.ToString();
+                    InfoData.instanceVersion = ver.FileId;
                     Info = ver;
                 }
             }
             else if (!onlyBase)
             {
-                List<CurseforgeFileInfo> instanceVersionsInfo = CurseforgeApi.GetProjectFiles(InfoData.id); //получем информацию об этом модпаке
+                ModrinthProjectInfo instanceInfo = ModrinthApi.GetProject(InfoData.id); //получем информацию об этом модпаке
 
                 //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии
-                foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
+                bool isValid = instanceInfo.Versions != null && instanceInfo.Versions.Count > 0;
+                if (isValid && instanceInfo.Versions[instanceInfo.Versions.Count - 1] != InfoData.instanceVersion)
                 {
-                    if (ver.id > InfoData.instanceVersion.ToInt32())
-                    {
-                        InfoData.instanceVersion = ver.id.ToString();
-                        Info = ver;
-                    }
+                    InfoData.instanceVersion = instanceInfo.Versions[instanceInfo.Versions.Count - 1];
+                    Info = ModrinthApi.GetProjectFile(InfoData.instanceVersion);
                 }
             }
 
@@ -140,9 +138,9 @@ namespace Lexplosion.Logic.Management.Installers
 
                 if (Info == null)
                 {
-                    Info = CurseforgeApi.GetProjectFile(InfoData.id, InfoData.instanceVersion); //получем информацию об этом модпаке
+                    Info = ModrinthApi.GetProjectFile(InfoData.instanceVersion); //получем информацию об этом модпаке
 
-                    if (Info == null || Info.downloadUrl == null || Info.fileName == null)
+                    if (Info?.Files == null || Info.Files.Count == 0 || Info.Files[0].Filename == null || Info.Files[0].Url == null)
                     {
                         return new InitData
                         {
@@ -172,7 +170,7 @@ namespace Lexplosion.Logic.Management.Installers
                 }
 
                 // скачиваем архив модпака и из него получаем манифест
-                var manifest = installer.DownloadInstance(Info.downloadUrl, Info.fileName, ref localFiles, _cancelToken);
+                var manifest = installer.DownloadInstance(Info.Files[0].Url, Info.Files[0].Filename, ref localFiles, _cancelToken);
 
                 if (_cancelToken.IsCancellationRequested)
                 {
@@ -182,13 +180,13 @@ namespace Lexplosion.Logic.Management.Installers
                     };
                 }
 
-                if (manifest == null || manifest.minecraft == null || manifest.minecraft.modLoaders == null || manifest.minecraft.version == null)
+                if (manifest?.files == null || manifest.dependencies == null || !manifest.dependencies.ContainsKey("minecraft"))
                 {
                     return new InitData
                     {
                         InitResult = InstanceInit.ManifestError,
                         UpdatesAvailable = true,
-                        ClientVersion = Info.id.ToString()
+                        ClientVersion = Info.ProjectId
                     };
                 }
 
@@ -202,45 +200,39 @@ namespace Lexplosion.Logic.Management.Installers
                 //определяем приоритетную версию модлоадера
                 string modLoaderVersion = "";
                 ClientType modloader = ClientType.Vanilla;
-                foreach (var loader in manifest.minecraft.modLoaders)
-                {
-                    if (loader.primary)
-                    {
-                        modLoaderVersion = loader.id;
-                        break;
-                    }
-                }
 
-                if (modLoaderVersion != "")
+                if (manifest.dependencies.ContainsKey("forge"))
                 {
-                    if (modLoaderVersion.Contains("forge-"))
-                    {
-                        modloader = ClientType.Forge;
-                        modLoaderVersion = modLoaderVersion.Replace("forge-", "");
-                    }
-                    else if (modLoaderVersion.Contains("fabric-"))
-                    {
-                        modloader = ClientType.Fabric;
-                        modLoaderVersion = modLoaderVersion.Replace("fabric-", "");
-                    }
-                    else if (modLoaderVersion.Contains("fabric-"))
-                    {
-                        modloader = ClientType.Quilt;
-                        modLoaderVersion = modLoaderVersion.Replace("quilt-", "");
-                    }
+                    modLoaderVersion = manifest.dependencies["forge"];
+                    modloader = ClientType.Forge;
+                }
+                else if (manifest.dependencies.ContainsKey("forge-loader"))
+                {
+                    modLoaderVersion = manifest.dependencies["forge-loader"];
+                    modloader = ClientType.Forge;
+                }
+                else if (manifest.dependencies.ContainsKey("quilt-loader"))
+                {
+                    modLoaderVersion = manifest.dependencies["quilt-loader"];
+                    modloader = ClientType.Quilt;
+                }
+                else if (manifest.dependencies.ContainsKey("fabric-loader"))
+                {
+                    modLoaderVersion = manifest.dependencies["fabric-loader"];
+                    modloader = ClientType.Fabric;
                 }
 
                 Runtime.DebugWrite("modLoaderVersion " + modLoaderVersion);
 
                 var versionData = Manifest?.version;
-                bool baseFFilesIsUpdates = modLoaderVersion != versionData?.modloaderVersion || modloader != versionData?.modloaderType || manifest.minecraft.version != versionData?.gameVersion;
+                bool baseFFilesIsUpdates = modLoaderVersion != versionData?.modloaderVersion || modloader != versionData?.modloaderType || manifest.dependencies["minecraft"] != versionData?.gameVersion;
 
                 // Скачиваем основные файлы майкнрафта
 
                 // если BaseFilesIsCheckd равно true, то это значит что в манифесте уже была версия форджа
                 if (!BaseFilesIsCheckd || baseFFilesIsUpdates) // в данном случае в манифесте версии форджа не была и нам надо её получить. Или же были измнения в модлоадере или версии игры
                 {
-                    Manifest = ToServer.GetVersionManifest(manifest.minecraft.version, modloader, modLoaderVersion);
+                    Manifest = ToServer.GetVersionManifest(manifest.dependencies["minecraft"], modloader, modLoaderVersion);
 
                     if (Manifest != null)
                     {
@@ -263,7 +255,7 @@ namespace Lexplosion.Logic.Management.Installers
                             {
                                 InitResult = InstanceInit.GuardError,
                                 UpdatesAvailable = true,
-                                ClientVersion = Info.id.ToString()
+                                ClientVersion = Info.ProjectId
                             };
                         }
                     }
@@ -273,7 +265,7 @@ namespace Lexplosion.Logic.Management.Installers
                         {
                             InitResult = InstanceInit.ServerError,
                             UpdatesAvailable = true,
-                            ClientVersion = Info.id.ToString()
+                            ClientVersion = Info.ProjectId
                         };
                     }
                 }
@@ -336,7 +328,7 @@ namespace Lexplosion.Logic.Management.Installers
                         InitResult = InstanceInit.DownloadFilesError,
                         DownloadErrors = errors,
                         UpdatesAvailable = true,
-                        ClientVersion = Info.id.ToString()
+                        ClientVersion = Info.ProjectId
                     };
                 }
 
@@ -404,7 +396,7 @@ namespace Lexplosion.Logic.Management.Installers
                         InitResult = InstanceInit.DownloadFilesError,
                         DownloadErrors = errors,
                         UpdatesAvailable = true,
-                        ClientVersion = Info.id.ToString()
+                        ClientVersion = Info.ProjectId
                     };
                 }
             }
@@ -466,7 +458,7 @@ namespace Lexplosion.Logic.Management.Installers
                             InitResult = InstanceInit.DownloadFilesError,
                             DownloadErrors = errors,
                             UpdatesAvailable = true,
-                            ClientVersion = Info?.id.ToString() ?? ""
+                            ClientVersion = Info?.ProjectId ?? ""
                         };
                     }
                 }
@@ -476,7 +468,7 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         InitResult = InstanceInit.ForgeVersionError,
                         UpdatesAvailable = true,
-                        ClientVersion = Info?.id.ToString() ?? ""
+                        ClientVersion = Info?.ProjectId ?? ""
                     };
                 }
             }
@@ -489,7 +481,7 @@ namespace Lexplosion.Logic.Management.Installers
                 VersionFile = Manifest.version,
                 Libraries = Manifest.libraries,
                 UpdatesAvailable = false,
-                ClientVersion = Info?.id.ToString() ?? ""
+                ClientVersion = Info?.ProjectId ?? ""
             };
         }
     }

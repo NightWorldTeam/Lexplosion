@@ -5,6 +5,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -13,7 +14,7 @@ namespace Lexplosion.Logic.Management.Instances
         public override bool CheckUpdates(InstancePlatformData infoData, string localId)
         {
             int version = NightWorldApi.GetInstanceVersion(infoData.id);
-            return (infoData.instanceVersion < version);
+            return (infoData.instanceVersion.ToInt32() < version);
         }
 
         public override InstanceData GetFullInfo(string localId, string externalId)

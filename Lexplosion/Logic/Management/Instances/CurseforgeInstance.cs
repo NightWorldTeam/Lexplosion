@@ -6,6 +6,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -29,7 +30,7 @@ namespace Lexplosion.Logic.Management.Instances
             //проходимся по каждой версии модпака, ищем самый большой id. Это будет последняя версия. Причем этот id должен быть больше, чем id уже установленной версии 
             foreach (CurseforgeFileInfo ver in instanceVersionsInfo)
             {
-                if (ver.id > infoData.instanceVersion)
+                if (ver.id > infoData.instanceVersion.ToInt32())
                 {
                     return true;
                 }

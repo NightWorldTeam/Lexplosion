@@ -30,6 +30,11 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.Delete(DirectoryPath + "/temp", true);
                 }
 
+                if (DirectoryPath[DirectoryPath.Length - 1] == '/')
+                {
+                    DirectoryPath.TrimEnd('/');
+                }
+
                 Directory.CreateDirectory(DirectoryPath + "/temp");
             }
             catch { }
@@ -48,11 +53,11 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     Directory.CreateDirectory(dirPath.Replace(oldDir, path));
                 }
-                    
+
                 foreach (string newPath in Directory.GetFiles(oldDir, "*.*", SearchOption.AllDirectories))
                 {
                     File.Copy(newPath, newPath.Replace(oldDir, path), true);
-                }       
+                }
 
                 suuccessfull = true;
 
@@ -85,7 +90,7 @@ namespace Lexplosion.Logic.FileSystem
 
             Directory.CreateDirectory(dirName_);
 
-            return dirName_ + "/";
+            return (dirName_ + "/").Replace("//", "/");
         }
 
         /// <summary>

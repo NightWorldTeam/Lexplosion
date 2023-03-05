@@ -22,6 +22,7 @@ namespace Lexplosion.Logic.Network
             public T data;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static T GetApiData<T>(string url) where T : new()
         {
             try
@@ -243,7 +244,7 @@ namespace Lexplosion.Logic.Network
             string fileID = addonInfo.id.ToString();
             try
             {
-                Runtime.DebugWrite("fileData " + addonInfo.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
+                Runtime.DebugWrite("fileData " + addonInfo.downloadUrl + " " + projectID + " " + fileID);
 
                 string fileUrl = addonInfo.downloadUrl;
                 string fileName = addonInfo.fileName;
@@ -285,7 +286,7 @@ namespace Lexplosion.Logic.Network
                     case AddonType.Resourcepacks:
                         folderName = "resourcepacks";
                         break;
-                    case AddonType.Unknown:
+                    default:
                         return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
@@ -337,16 +338,16 @@ namespace Lexplosion.Logic.Network
                 //не нашли, делаем дополнительный запрос и получаем его
                 if (fileData == null)
                 {
-                    fileData = GetProjectFile(projectID.ToString(), fileID.ToString());
+                    fileData = GetProjectFile(projectID, fileID);
                 }
 
-                Runtime.DebugWrite("fileData " + fileData.downloadUrl + " " + projectID.ToString() + " " + fileID.ToString());
+                Runtime.DebugWrite("fileData " + fileData.downloadUrl + " " + projectID + " " + fileID);
 
                 string fileUrl = fileData.downloadUrl;
                 if (String.IsNullOrWhiteSpace(fileUrl))
                 {
                     // пробуем второй раз
-                    fileData = GetProjectFile(projectID.ToString(), fileID.ToString());
+                    fileData = GetProjectFile(projectID, fileID);
                     if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
                     {
                         Runtime.DebugWrite("URL ERROR - " + fileData.downloadUrl + " - " + fileData.fileName);
@@ -377,7 +378,7 @@ namespace Lexplosion.Logic.Network
 
                 // определяем папку в которую будет установлен данный аддон
                 string folderName = "";
-                AddonType addonType = (AddonType)addonInfo.classId;
+                AddonType addonType = (AddonType)(addonInfo.classId ?? 0);
                 switch (addonType)
                 {
                     case AddonType.Mods:
@@ -389,7 +390,7 @@ namespace Lexplosion.Logic.Network
                     case AddonType.Resourcepacks:
                         folderName = "resourcepacks";
                         break;
-                    case AddonType.Unknown:
+                    default:
                         return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,

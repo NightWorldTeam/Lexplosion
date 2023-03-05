@@ -18,6 +18,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -32,7 +33,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -314,6 +314,7 @@
     <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Logic\FileSystem\ModrinthInstaller.cs" />
     <Compile Include="Logic\Management\Addons\AddonDependencie.cs" />
     <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
     <Compile Include="Logic\Management\Addons\IPrototypeAddon.cs" />
@@ -326,6 +327,7 @@
     <Compile Include="Logic\FileSystem\FileDistributor.cs" />
     <Compile Include="Logic\FileSystem\FileReceiver.cs" />
     <Compile Include="Logic\Management\InstalledAddons.cs" />
+    <Compile Include="Logic\Management\Installers\ModrinthInstallManager.cs" />
     <Compile Include="Logic\Management\Instances\CurseforgeInstance.cs" />
     <Compile Include="Logic\Management\Instances\LocalInstance.cs" />
     <Compile Include="Logic\Management\Instances\ModrinthInstance.cs" />

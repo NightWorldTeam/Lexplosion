@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Objects.Modrinth;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -37,7 +38,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public override InstanceData GetFullInfo(string localId, string externalId)
         {
-            var data = ModrinthApi.GetInstance(externalId);
+            var data = ModrinthApi.GetProject(externalId);
 
             if (data == null)
             {

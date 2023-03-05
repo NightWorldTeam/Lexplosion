@@ -6,6 +6,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -77,7 +78,7 @@ namespace Lexplosion.Logic.Management.Installers
             if (!_onlyBase)
             {
                 version = NightWorldApi.GetInstanceVersion(InfoData.id);
-                _requiresUpdates = version > InfoData.instanceVersion;
+                _requiresUpdates = version > InfoData.instanceVersion.ToInt32();
                 actualVersion = version;
             }
             else
@@ -405,7 +406,7 @@ namespace Lexplosion.Logic.Management.Installers
                 result = InstanceInit.Successful;
                 if (actualVersion != -1)
                 {
-                    InfoData.instanceVersion = actualVersion;
+                    InfoData.instanceVersion = actualVersion.ToString();
                 }
 
                 DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json", JsonConvert.SerializeObject(InfoData));

@@ -224,18 +224,4 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public string author;
         public List<FileData> files;
     }
-
-    public class InstanceContent
-    {
-        public InstalledAddonsFormat InstalledAddons;
-        public List<string> Files { get; set; }
-        public bool FullClient = false;
-    }
-
-    public class InstanceContentFile
-    {
-        public List<string> InstalledAddons;
-        public List<string> Files { get; set; }
-        public bool FullClient = false;
-    }
 }

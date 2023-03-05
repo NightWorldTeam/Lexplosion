@@ -5,8 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexplosion.Logic.Objects
+namespace Lexplosion.Logic.Objects.Modrinth
 {
+    public enum ModrinthProjectType
+    {
+        Unknown,
+        Mod,
+        Modpack,
+        Resourcepack,
+        Shader
+    }
+
     public abstract class ModrinthProject
     {
         [JsonProperty("project_id")]
@@ -16,7 +25,7 @@ namespace Lexplosion.Logic.Objects
         public List<string> Loaders;
 
         [JsonProperty("project_type")]
-        public string ProjectType;
+        public string Type;//mod, modpack, resourcepack, shader
     }
 
     public class ModrinthCtalogUnit : ModrinthProject
@@ -65,6 +74,9 @@ namespace Lexplosion.Logic.Objects
 
         [JsonProperty("slug")]
         public string Slug;
+
+        [JsonProperty("versions")]
+        public List<string> Versions;
     }
 
     public class ModrinthAddonInfo : ModrinthProject
@@ -116,5 +128,21 @@ namespace Lexplosion.Logic.Objects
 
         [JsonProperty("dependencies")]
         public List<Dependencie> Dependencies;
+    }
+
+    public class InstanceManifest
+    {
+        public class FileData
+        {
+            public string path;
+            public int fileSize;
+            public List<string> downloads;
+            public Dictionary<string, string> hashes;
+        }
+
+        public string name;
+        public string versionId;
+        public List<FileData> files;
+        public Dictionary<string, string> dependencies;
     }
 }

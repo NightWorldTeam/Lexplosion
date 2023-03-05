@@ -9,16 +9,17 @@ using Lexplosion.Tools;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Objects.Modrinth;
+using Lexplosion.Logic.Network.Web;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    class CurseforgeInstaller : InstanceInstaller
+    class ModrinthInstaller : InstanceInstaller
     {
-        public CurseforgeInstaller(string instanceId) : base(instanceId) { }
+        public ModrinthInstaller(string instanceId) : base(instanceId) { }
 
         public delegate void Procent(int procent);
 
@@ -177,7 +178,7 @@ namespace Lexplosion.Logic.FileSystem
                 ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
                 DelFile(tempDir + fileName);
 
-                var data = GetFile<InstanceManifest>(tempDir + "dataDownload/manifest.json");
+                var data = GetFile<InstanceManifest>(tempDir + "dataDownload/modrinth.index.json");
 
                 // тут переосим нужные файлы из этого архива
 
@@ -239,26 +240,50 @@ namespace Lexplosion.Logic.FileSystem
                     Files = localFiles.Files
                 };
 
-                List<InstanceManifest.FileData> downloadList = new List<InstanceManifest.FileData>();
+                // проходимя по весм файлам из манифеста и формируем список с хэшами.
+                var filesHashes = new Dictionary<int, string>(); // Ключ - номер файла в спике - значение хэш
+                int i = 0;
+                foreach (InstanceManifest.FileData file in data.files)
+                {
+                    if (file.hashes != null && file.hashes.ContainsKey("sha512"))
+                    {
+                        filesHashes[i] = file.hashes["sha512"];
+                    }
+
+                    i++;
+                }
+
+                Dictionary<string, ModrinthProjectFile> projectFiles = ModrinthApi.GetFilesFromHashes(filesHashes.Values.ToList());
+
+                var downloadList = new List<InstanceManifest.FileData>();
 
                 if (installedAddons != null)
                 {
                     var tempList = new List<string>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
+                    int j = 0;
                     foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
                     {
-                        if (!installedAddons.ContainsKey(file.projectID)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
+                        if (filesHashes.ContainsKey(j) && projectFiles.ContainsKey(filesHashes[i]))
                         {
-                            downloadList.Add(file);
-                        }
-                        else
-                        {
-                            tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
-
-                            if (installedAddons[file.projectID].FileID != file.fileID || !installedAddons[file.projectID].IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
+                            string projectId = projectFiles[filesHashes[i]].ProjectId;
+                            if (!installedAddons.ContainsKey(projectId)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
                             {
                                 downloadList.Add(file);
                             }
+                            else
+                            {
+                                tempList.Add(projectId); // Аддон есть в списке установленых. Добавляем его айдишник в список
+
+                                InstalledAddonInfo addonInfo = installedAddons[projectId];
+                                bool isValidProject = (file.hashes?.ContainsKey("sha512") ?? false) && projectFiles.ContainsKey(file.hashes["sha512"]);
+                                if (isValidProject && addonInfo.FileID != projectFiles[file.hashes["sha512"]].FileId || !addonInfo.IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
+                                {
+                                    downloadList.Add(file);
+                                }
+                            }
                         }
+
+                        j++;
                     }
 
                     foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
@@ -290,32 +315,6 @@ namespace Lexplosion.Logic.FileSystem
 
                     object fileBlock = new object(); // этот объект блокировщик нужен что бы синхронизировать работу с json файлами
 
-                    // формируем список айдишников
-                    var ids = new string[filesCount];
-                    int j = 0;
-                    foreach (InstanceManifest.FileData file in downloadList)
-                    {
-                        ids[j] = file.projectID;
-                        j++;
-                    }
-
-                    // получем инфу о всех аддонах
-                    List<CurseforgeAddonInfo> addnos_ = CurseforgeApi.GetAddonsInfo(ids);
-                    if (addnos_ == null) // у этих долбаебов просто по  приколу может упасть соединение во время запроса. пробуем второй раз
-                    {
-                        Thread.Sleep(5000);
-                        addnos_ = CurseforgeApi.GetAddonsInfo(ids);
-                    }
-                    //преобразовываем эту хуйню в нормальный спсиок
-                    var addons = new Dictionary<string, CurseforgeAddonInfo>();
-                    if (addnos_ != null)
-                    {
-                        foreach (CurseforgeAddonInfo addon in addnos_)
-                        {
-                            addons[addon.id] = addon;
-                        }
-                    }
-
                     TasksPerfomer perfomer = null;
                     if (filesCount > 0)
                         perfomer = new TasksPerfomer(10, filesCount);
@@ -329,48 +328,70 @@ namespace Lexplosion.Logic.FileSystem
                         perfomer.ExecuteTask(delegate ()
                         {
                             Runtime.DebugWrite("ADD MOD TO PERFOMER");
-                            CurseforgeAddonInfo addonInfo;
-                            if (addons.ContainsKey(file.projectID))
+
+                            if (file.path == null || file.downloads == null || file.downloads.Count() == 0)
                             {
-                                addonInfo = addons[file.projectID];
-                            }
-                            else
-                            {
-                                addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
+                                //ошибку возвращать
                             }
 
                             var taskArgs = new TaskArgs
                             {
                                 PercentHandler = delegate (int percent)
                                 {
-                                    _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
+                                    _fileDownloadHandler?.Invoke(file.path, percent, DownloadFileProgress.PercentagesChanged);
                                 },
                                 CancelToken = cancelToken
                             };
 
-                            var result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
-
-                            _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
-
-                            if (result.Value2 == DownloadAddonRes.Successful)
+                            if (file.hashes != null && file.hashes.ContainsKey("sha512") && projectFiles.ContainsKey(file.hashes["sha512"]))
                             {
-                                downloadedCount++;
-                                AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
-                            }
-                            else //скачивание мода не удалось.
-                            {
-                                Runtime.DebugWrite("ERROR " + result.Value2 + " " + result.Value1);
-                                noDownloaded.Add(file);
-                            }
+                                ModrinthProjectFile projectFile = projectFiles[file.hashes["sha512"]];
+                                ModrinthProjectType addontype;
+                                if (file.path.StartsWith("mods/"))
+                                {
+                                    addontype = ModrinthProjectType.Mod;
+                                }
+                                else if (file.path.StartsWith("resourcepacks/"))
+                                {
+                                    addontype = ModrinthProjectType.Resourcepack;
+                                }
+                                else if (file.path.StartsWith("shaders/"))
+                                {
+                                    addontype = ModrinthProjectType.Shader;
+                                }
+                                else
+                                {
+                                    addontype = ModrinthProjectType.Unknown;
+                                }
 
-                            lock (fileBlock)
-                            {
-                                compliteDownload.InstalledAddons[file.projectID] = result.Value1;
-                                Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
-                                SaveInstanceContent(compliteDownload);
-                            }
+                                var result = ModrinthApi.DownloadAddon(projectFiles[file.hashes["sha512"]], addontype, "/instances/" + instanceId + "/", taskArgs);
 
-                            Runtime.DebugWrite("EXIT PERFOMER");
+                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Successful);
+
+                                if (result.Value2 == DownloadAddonRes.Successful)
+                                {
+                                    downloadedCount++;
+                                    AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
+                                }
+                                else //скачивание мода не удалось.
+                                {
+                                    Runtime.DebugWrite("ERROR " + result.Value2 + " " + result.Value1);
+                                    noDownloaded.Add(file);
+                                }
+
+                                lock (fileBlock)
+                                {
+                                    compliteDownload.InstalledAddons[projectFile.ProjectId] = result.Value1;
+                                    Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
+                                    SaveInstanceContent(compliteDownload);
+                                }
+
+                                Runtime.DebugWrite("EXIT PERFOMER");
+                            }
+                            else
+                            {
+                                // ошибку возвращать
+                            }              
                         });
 
                         if (cancelToken.IsCancellationRequested) break;
@@ -385,51 +406,55 @@ namespace Lexplosion.Logic.FileSystem
                         {
                             if (cancelToken.IsCancellationRequested) break;
 
-                            CurseforgeAddonInfo addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
-                            if (addonInfo.latestFiles == null && addons.ContainsKey(file.projectID))
-                            {
-                                addonInfo = addons[file.projectID];
-                            }
-
                             var taskArgs = new TaskArgs
                             {
                                 PercentHandler = delegate (int percent)
                                 {
-                                    _fileDownloadHandler?.Invoke(addonInfo.name, percent, DownloadFileProgress.PercentagesChanged);
+                                    _fileDownloadHandler?.Invoke(file.path, percent, DownloadFileProgress.PercentagesChanged);
                                 },
                                 CancelToken = cancelToken
                             };
 
+                            ModrinthProjectType addontype;
+                            if (file.path.StartsWith("mods/"))
+                            {
+                                addontype = ModrinthProjectType.Mod;
+                            }
+                            else if (file.path.StartsWith("resourcepacks/"))
+                            {
+                                addontype = ModrinthProjectType.Resourcepack;
+                            }
+                            else if (file.path.StartsWith("shaders/"))
+                            {
+                                addontype = ModrinthProjectType.Shader;
+                            }
+                            else
+                            {
+                                addontype = ModrinthProjectType.Unknown;
+                            }
+
                             int count = 0;
-                            ValuePair<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
+                            ValuePair<InstalledAddonInfo, DownloadAddonRes> result = ModrinthApi.DownloadAddon(projectFiles[file.hashes["sha512"]], addontype, "/instances/" + instanceId + "/", taskArgs);
 
                             while (count < 4 && result.Value2 != DownloadAddonRes.Successful && !cancelToken.IsCancellationRequested)
                             {
                                 Thread.Sleep(1000);
-                                Runtime.DebugWrite("REPEAT DOWNLOAD " + addonInfo.id);
-                                addonInfo = CurseforgeApi.GetAddonInfo(file.projectID);
-                                result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
+                                Runtime.DebugWrite("REPEAT DOWNLOAD " + file.path);
+                                result = ModrinthApi.DownloadAddon(projectFiles[file.hashes["sha512"]], addontype, "/instances/" + instanceId + "/", taskArgs);
 
                                 count++;
                             }
 
                             if (result.Value2 != DownloadAddonRes.Successful)
                             {
-                                Runtime.DebugWrite("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.projectID + " " + result.Value2);
-                                if (addonInfo != null)
-                                {
-                                    errors.Add(addonInfo.name + ", File id: " + file.fileID);
-                                }
-                                else
-                                {
-                                    errors.Add("Project Id: " + file.projectID + ", File id: " + file.fileID);
-                                }
+                                Runtime.DebugWrite("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.path + " " + result.Value2);
+                                errors.Add("File: " + file.path);
 
-                                _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Error);
+                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
                             }
                             else
                             {
-                                _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
+                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Successful);
                             }
 
                             downloadedCount++;
