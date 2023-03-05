@@ -103,7 +103,10 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             var childWidth = 0.0;
             foreach (var item in _overviewModel.InstanceData.Categories)
             {
-                childWidth += Constants.TagSizes[item.name];
+                if (Constants.TagSizes.ContainsKey(item.name)) 
+                { 
+                    childWidth += Constants.TagSizes[item.name];
+                }
             }
 
             if (childWidth < 326.5)

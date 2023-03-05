@@ -7,6 +7,7 @@
     xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
+    xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Lexplosion.Gui.ViewModels"
@@ -89,7 +90,6 @@
 
                     <!--  Filters  -->
                     <controls:DropdownMenu x:Name="FiltersDropdownMenu" Margin="5,0,5,0">
-
                         <controls:DropdownMenu.Style>
                             <Style TargetType="{x:Type controls:DropdownMenu}">
                                 <Setter Property="Focusable" Value="False" />
@@ -159,6 +159,11 @@
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedInstanceSource}" Value="{x:Static lexplosion:InstanceSource.Modrinth}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
                             </Style>
                         </controls:DropdownMenu.Style>
 
@@ -265,6 +270,7 @@
                         Style="{StaticResource DarkCombobox}">
                         <ComboBoxItem>NightWorld</ComboBoxItem>
                         <ComboBoxItem>CurseForge</ComboBoxItem>
+                        <ComboBoxItem>Modrinth</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
 

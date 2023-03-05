@@ -240,6 +240,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 SelectedInstanceSource = InstanceSource.Nightworld;
             else if (value == 1)
                 SelectedInstanceSource = InstanceSource.Curseforge;
+            else if (value == 2)
+                SelectedInstanceSource = InstanceSource.Modrinth;
         }
 
         private void InstancesPageLoading(string searchText = "", bool isPaginatorInvoke = false)
