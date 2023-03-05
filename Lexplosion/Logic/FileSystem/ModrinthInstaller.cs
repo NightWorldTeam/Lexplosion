@@ -219,6 +219,12 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
+        private struct AddonInstallingInfo
+        {
+            public ModrinthProjectType Type;
+            public string FileName;
+        }
+
         /// <summary>
         /// Скачивает все аддоны модпака из спика
         /// </summary>
@@ -241,49 +247,127 @@ namespace Lexplosion.Logic.FileSystem
                 };
 
                 // проходимя по весм файлам из манифеста и формируем список с хэшами.
-                var filesHashes = new Dictionary<int, string>(); // Ключ - номер файла в спике - значение хэш
-                int i = 0;
+                var filesHashes = new List<string>();
                 foreach (InstanceManifest.FileData file in data.files)
                 {
                     if (file.hashes != null && file.hashes.ContainsKey("sha512"))
                     {
-                        filesHashes[i] = file.hashes["sha512"];
+                        filesHashes.Add(file.hashes["sha512"]);
                     }
-
-                    i++;
                 }
 
-                Dictionary<string, ModrinthProjectFile> projectFiles = ModrinthApi.GetFilesFromHashes(filesHashes.Values.ToList());
-
-                var downloadList = new List<InstanceManifest.FileData>();
-
-                if (installedAddons != null)
+                var notableProjects = new Dictionary<InstanceManifest.FileData, ValuePair<ModrinthProjectFile, AddonInstallingInfo>>();
+                var unknownProjects = new List<InstanceManifest.FileData>(); // тут харним неизтные аддоны, которые потом установим по прямой ссылке
                 {
-                    var tempList = new List<string>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
-                    int j = 0;
-                    foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
+                    // получем спсиок с проектами по списоку хэшэй
+                    Dictionary<string, ModrinthProjectFile> projectFiles = ModrinthApi.GetFilesFromHashes(filesHashes);
+
+                    foreach (InstanceManifest.FileData file in data.files)
                     {
-                        if (filesHashes.ContainsKey(j) && projectFiles.ContainsKey(filesHashes[i]))
+                        if ((file.hashes?.ContainsKey("sha512") ?? false) && projectFiles.ContainsKey(file.hashes["sha512"]))
                         {
-                            string projectId = projectFiles[filesHashes[i]].ProjectId;
-                            if (!installedAddons.ContainsKey(projectId)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
+                            // проверяем path файла
+                            if (file.path != null)
                             {
-                                downloadList.Add(file);
+                                string[] segments = file.path.Split('/');
+                                if (segments.Length == 2) // path должен быть в виде: имя_папки/имя_файла
+                                {
+                                    // проверяем имя файла на валидность
+                                    if (Path.GetInvalidFileNameChars().Any(s => segments[1].Contains(s))) // если имя файла на валидно возращаем ошибку
+                                    {
+                                        // тут ошибка
+                                    }
+
+                                    string folderName = segments[0];
+                                    // определяем тип аддона по папке, в которой он должен лежать.
+                                    ModrinthProjectType addontype;
+                                    switch (folderName)
+                                    {
+                                        case "mods":
+                                            addontype = ModrinthProjectType.Mod;
+                                            break;
+                                        case "resourcepacks":
+                                            addontype = ModrinthProjectType.Resourcepack;
+                                            break;
+                                        case "shaderpacks":
+                                            addontype = ModrinthProjectType.Shader;
+                                            break;
+                                        default:
+                                            // неизвестный тип аддона.
+                                            unknownProjects.Add(file);
+                                            continue;
+                                    }
+
+                                    notableProjects[file] = new ValuePair<ModrinthProjectFile, AddonInstallingInfo>
+                                    {
+                                        Value1 = projectFiles[file.hashes["sha512"]],
+                                        Value2 = new AddonInstallingInfo
+                                        {
+                                            Type = addontype,
+                                            FileName = segments[1]
+                                        }
+                                    };
+                                }
+                                else
+                                {
+                                    unknownProjects.Add(file);
+                                }
                             }
                             else
                             {
-                                tempList.Add(projectId); // Аддон есть в списке установленых. Добавляем его айдишник в список
-
-                                InstalledAddonInfo addonInfo = installedAddons[projectId];
-                                bool isValidProject = (file.hashes?.ContainsKey("sha512") ?? false) && projectFiles.ContainsKey(file.hashes["sha512"]);
-                                if (isValidProject && addonInfo.FileID != projectFiles[file.hashes["sha512"]].FileId || !addonInfo.IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
-                                {
-                                    downloadList.Add(file);
-                                }
+                                // тут ошибка
                             }
                         }
+                        else
+                        {
+                            bool fileNameIsValid = false;
 
-                        j++;
+                            try
+                            {
+                                if (file.path != null)
+                                {
+                                    string fileName = Path.GetFileName(file.path);
+                                    fileNameIsValid = !Path.GetInvalidFileNameChars().Any(s => fileName.Contains(s));
+                                }
+                            }
+                            catch { }
+
+                            if (fileNameIsValid && file.downloads != null && file.downloads.Count() > 0)
+                            {
+                                unknownProjects.Add(file);
+                            }
+                            else
+                            {
+                                //тут ошибка
+                            }
+                        }
+                    }
+                }
+
+                var downloadList = new List<ValuePair<ModrinthProjectFile, AddonInstallingInfo>>();
+                if (installedAddons != null)
+                {
+                    var tempList = new List<string>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
+                    foreach (var file in notableProjects) // проходимся по списку адднов, полученному с курсфорджа
+                    {
+                        ValuePair<ModrinthProjectFile, AddonInstallingInfo> addonData = file.Value;
+                        InstanceManifest.FileData key = file.Key;
+
+                        string projectId = addonData.Value1.ProjectId;
+                        if (!installedAddons.ContainsKey(projectId)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
+                        {
+                            downloadList.Add(addonData);
+                        }
+                        else
+                        {
+                            tempList.Add(projectId); // Аддон есть в списке установленых. Добавляем его айдишник в список
+
+                            InstalledAddonInfo addonInfo = installedAddons[projectId];
+                            if (addonInfo.FileID != addonData.Value1.FileId || !addonInfo.IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
+                            {
+                                downloadList.Add(addonData);
+                            }
+                        }
                     }
 
                     foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
@@ -303,11 +387,14 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 else
                 {
-                    downloadList = data.files;
+                    downloadList = notableProjects.Values.ToList();
                 }
 
                 int filesCount = downloadList.Count;
-                AddonsDownloadEvent?.Invoke(filesCount, 0);
+                int downloadedCount = 0;
+                int totalFilesCount = filesCount + unknownProjects.Count;
+
+                AddonsDownloadEvent?.Invoke(totalFilesCount, 0);
 
                 if (filesCount != 0)
                 {
@@ -319,65 +406,33 @@ namespace Lexplosion.Logic.FileSystem
                     if (filesCount > 0)
                         perfomer = new TasksPerfomer(10, filesCount);
 
-                    var noDownloaded = new ConcurrentBag<InstanceManifest.FileData>();
-                    int downloadedCount = 0;
+                    var noDownloaded = new List<ValuePair<ModrinthProjectFile, AddonInstallingInfo>>();
 
                     Runtime.DebugWrite("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
-                    foreach (InstanceManifest.FileData file in downloadList)
+                    foreach (ValuePair<ModrinthProjectFile, AddonInstallingInfo> addonData in downloadList)
                     {
                         perfomer.ExecuteTask(delegate ()
                         {
                             Runtime.DebugWrite("ADD MOD TO PERFOMER");
 
-                            if (file.path == null || file.downloads == null || file.downloads.Count() == 0)
-                            {
-                                //ошибку возвращать
-                            }
-
                             var taskArgs = new TaskArgs
                             {
                                 PercentHandler = delegate (int percent)
                                 {
-                                    _fileDownloadHandler?.Invoke(file.path, percent, DownloadFileProgress.PercentagesChanged);
+                                    _fileDownloadHandler?.Invoke(addonData.Value2.FileName, percent, DownloadFileProgress.PercentagesChanged);
                                 },
                                 CancelToken = cancelToken
                             };
 
-                            if (file.hashes != null && file.hashes.ContainsKey("sha512") && projectFiles.ContainsKey(file.hashes["sha512"]))
+                            ModrinthProjectFile projectFile = addonData.Value1;
+                            var result = ModrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, taskArgs);
+
+                            _fileDownloadHandler?.Invoke(addonData.Value2.FileName, 100, DownloadFileProgress.Successful);
+
+                            if (result.Value2 == DownloadAddonRes.Successful)
                             {
-                                ModrinthProjectFile projectFile = projectFiles[file.hashes["sha512"]];
-                                ModrinthProjectType addontype;
-                                if (file.path.StartsWith("mods/"))
-                                {
-                                    addontype = ModrinthProjectType.Mod;
-                                }
-                                else if (file.path.StartsWith("resourcepacks/"))
-                                {
-                                    addontype = ModrinthProjectType.Resourcepack;
-                                }
-                                else if (file.path.StartsWith("shaders/"))
-                                {
-                                    addontype = ModrinthProjectType.Shader;
-                                }
-                                else
-                                {
-                                    addontype = ModrinthProjectType.Unknown;
-                                }
-
-                                var result = ModrinthApi.DownloadAddon(projectFiles[file.hashes["sha512"]], addontype, "/instances/" + instanceId + "/", taskArgs);
-
-                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Successful);
-
-                                if (result.Value2 == DownloadAddonRes.Successful)
-                                {
-                                    downloadedCount++;
-                                    AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
-                                }
-                                else //скачивание мода не удалось.
-                                {
-                                    Runtime.DebugWrite("ERROR " + result.Value2 + " " + result.Value1);
-                                    noDownloaded.Add(file);
-                                }
+                                downloadedCount++;
+                                AddonsDownloadEvent?.Invoke(totalFilesCount, downloadedCount);
 
                                 lock (fileBlock)
                                 {
@@ -385,13 +440,14 @@ namespace Lexplosion.Logic.FileSystem
                                     Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
                                     SaveInstanceContent(compliteDownload);
                                 }
-
-                                Runtime.DebugWrite("EXIT PERFOMER");
                             }
-                            else
+                            else //скачивание мода не удалось.
                             {
-                                // ошибку возвращать
-                            }              
+                                Runtime.DebugWrite("ERROR " + result.Value2 + " " + result.Value1);
+                                noDownloaded.Add(addonData);
+                            }
+
+                            Runtime.DebugWrite("EXIT PERFOMER");
                         });
 
                         if (cancelToken.IsCancellationRequested) break;
@@ -402,7 +458,7 @@ namespace Lexplosion.Logic.FileSystem
                         perfomer?.WaitEnd();
 
                         Runtime.DebugWrite("ДОКАЧИВАЕМ " + noDownloaded.Count);
-                        foreach (InstanceManifest.FileData file in noDownloaded)
+                        foreach (ValuePair<ModrinthProjectFile, AddonInstallingInfo> addonData in noDownloaded)
                         {
                             if (cancelToken.IsCancellationRequested) break;
 
@@ -410,57 +466,83 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 PercentHandler = delegate (int percent)
                                 {
-                                    _fileDownloadHandler?.Invoke(file.path, percent, DownloadFileProgress.PercentagesChanged);
+                                    _fileDownloadHandler?.Invoke(addonData.Value2.FileName, percent, DownloadFileProgress.PercentagesChanged);
                                 },
                                 CancelToken = cancelToken
                             };
 
-                            ModrinthProjectType addontype;
-                            if (file.path.StartsWith("mods/"))
-                            {
-                                addontype = ModrinthProjectType.Mod;
-                            }
-                            else if (file.path.StartsWith("resourcepacks/"))
-                            {
-                                addontype = ModrinthProjectType.Resourcepack;
-                            }
-                            else if (file.path.StartsWith("shaders/"))
-                            {
-                                addontype = ModrinthProjectType.Shader;
-                            }
-                            else
-                            {
-                                addontype = ModrinthProjectType.Unknown;
-                            }
-
                             int count = 0;
-                            ValuePair<InstalledAddonInfo, DownloadAddonRes> result = ModrinthApi.DownloadAddon(projectFiles[file.hashes["sha512"]], addontype, "/instances/" + instanceId + "/", taskArgs);
+
+                            ModrinthProjectFile projectFile = addonData.Value1;
+                            ValuePair<InstalledAddonInfo, DownloadAddonRes> result = ModrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, taskArgs);
 
                             while (count < 4 && result.Value2 != DownloadAddonRes.Successful && !cancelToken.IsCancellationRequested)
                             {
                                 Thread.Sleep(1000);
-                                Runtime.DebugWrite("REPEAT DOWNLOAD " + file.path);
-                                result = ModrinthApi.DownloadAddon(projectFiles[file.hashes["sha512"]], addontype, "/instances/" + instanceId + "/", taskArgs);
+                                Runtime.DebugWrite("REPEAT DOWNLOAD " + addonData.Value2.FileName);
+                                result = ModrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, taskArgs);
 
                                 count++;
                             }
 
                             if (result.Value2 != DownloadAddonRes.Successful)
                             {
-                                Runtime.DebugWrite("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + file.path + " " + result.Value2);
-                                errors.Add("File: " + file.path);
+                                Runtime.DebugWrite("ХУЙНЯ, НЕ СКАЧАЛОСЬ " + addonData.Value2.FileName + " " + result.Value2);
+                                errors.Add("File: " + addonData.Value2.FileName);
 
-                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
+                                _fileDownloadHandler?.Invoke(addonData.Value2.FileName, 100, DownloadFileProgress.Error);
                             }
                             else
                             {
-                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Successful);
+                                compliteDownload.InstalledAddons[projectFile.ProjectId] = result.Value1;
+                                SaveInstanceContent(compliteDownload);
+
+                                _fileDownloadHandler?.Invoke(addonData.Value2.FileName, 100, DownloadFileProgress.Successful);
                             }
 
                             downloadedCount++;
-                            AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
+                            AddonsDownloadEvent?.Invoke(totalFilesCount, downloadedCount);
                         }
                     }
+                }
+
+                var existsFiles = new HashSet<string>(compliteDownload.Files);
+                foreach (InstanceManifest.FileData fileData in unknownProjects)
+                {
+                    if (cancelToken.IsCancellationRequested) break;
+
+                    string fileName = Path.GetFileName(fileData.path);
+                    string folderName = "/instances/" + instanceId + "/" + Path.GetDirectoryName(fileData.path) + "/";
+
+                    var taskArgs = new TaskArgs
+                    {
+                        PercentHandler = delegate (int percent)
+                        {
+                            _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
+                        },
+                        CancelToken = cancelToken
+                    };
+
+                    if (WithDirectory.InstallFile(fileData.downloads[0], fileName, folderName, taskArgs))
+                    {
+                        string filePath = "/" + fileData.path;
+                        if (!existsFiles.Contains(filePath))
+                        {
+                            compliteDownload.Files.Add(filePath);
+
+                            Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
+                            SaveInstanceContent(compliteDownload);
+                        }
+                    }
+                    else
+                    {
+                        errors.Add("File: " + fileName);
+                        Runtime.DebugWrite("ERROR " + fileName);
+                    }
+
+                    downloadedCount++;
+                    AddonsDownloadEvent?.Invoke(totalFilesCount, downloadedCount);
+                    _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Successful);
                 }
 
                 if (errors.Count == 0 && !cancelToken.IsCancellationRequested)

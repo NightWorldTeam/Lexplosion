@@ -356,18 +356,18 @@ namespace Lexplosion.Logic.FileSystem
                             {
                                 downloadedCount++;
                                 AddonsDownloadEvent?.Invoke(filesCount, downloadedCount);
+
+                                lock (fileBlock)
+                                {
+                                    compliteDownload.InstalledAddons[file.projectID] = result.Value1;
+                                    Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
+                                    SaveInstanceContent(compliteDownload);
+                                }
                             }
                             else //скачивание мода не удалось.
                             {
                                 Runtime.DebugWrite("ERROR " + result.Value2 + " " + result.Value1);
                                 noDownloaded.Add(file);
-                            }
-
-                            lock (fileBlock)
-                            {
-                                compliteDownload.InstalledAddons[file.projectID] = result.Value1;
-                                Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
-                                SaveInstanceContent(compliteDownload);
                             }
 
                             Runtime.DebugWrite("EXIT PERFOMER");
@@ -429,6 +429,9 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else
                             {
+                                compliteDownload.InstalledAddons[file.projectID] = result.Value1;
+                                SaveInstanceContent(compliteDownload);
+
                                 _fileDownloadHandler?.Invoke(addonInfo.name, 100, DownloadFileProgress.Successful);
                             }
 
