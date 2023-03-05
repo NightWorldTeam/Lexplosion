@@ -11,7 +11,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
 
-namespace Lexplosion.Logic.Network
+namespace Lexplosion.Logic.Network.Web
 {
     static class CurseforgeApi
     {

@@ -1,7 +1,7 @@
 ﻿using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;

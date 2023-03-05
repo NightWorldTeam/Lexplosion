@@ -88,7 +88,7 @@ namespace Lexplosion.Logic.Management.Instances
                 LastUpdate = "",
                 Modloader = clientType,
                 Images = new List<byte[]>(),
-                WebsiteUrl = "https://modrinth.com/modpack/" + data.Slug,
+                WebsiteUrl = data.WebsiteUrl,
                 Changelog = ""
             };
         }

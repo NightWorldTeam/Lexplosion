@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;

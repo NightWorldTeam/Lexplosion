@@ -1,5 +1,5 @@
 ﻿using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
 using System;

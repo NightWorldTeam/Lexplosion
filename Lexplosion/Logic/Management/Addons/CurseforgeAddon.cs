@@ -1,4 +1,4 @@
-﻿using Lexplosion.Logic.Network;
+﻿using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
@@ -49,7 +49,7 @@ namespace Lexplosion.Logic.Management.Addons
                 }
 
                 var addonData = CurseforgeApi.GetAddonInfo(_projectId);
-                return addonData?.links?.websiteUrl;
+                return addonData?.links?.websiteUrl ?? "";
             }
         }
 
@@ -57,7 +57,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             get
             {
-                return _addonInfo?.GetAuthorName;
+                return _addonInfo?.GetAuthorName ?? "";
             }
         }
 
@@ -65,7 +65,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             get
             {
-                return _addonInfo?.summary;
+                return _addonInfo?.summary ?? "";
             }
         }
 
@@ -73,7 +73,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             get
             {
-                return _addonInfo?.name;
+                return _addonInfo?.name ?? "";
             }
         }
 
@@ -81,7 +81,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             get
             {
-                return _addonInfo?.logo?.url;
+                return _addonInfo?.logo?.url ?? "";
             }
         }
 

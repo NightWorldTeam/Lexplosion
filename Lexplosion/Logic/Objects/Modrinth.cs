@@ -18,8 +18,8 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
     public abstract class ModrinthProject
     {
-        [JsonProperty("project_id")]
-        public string ProjectId;
+        [JsonProperty("title")]
+        public string Title;
 
         [JsonProperty("loaders")]
         public List<string> Loaders;
@@ -30,6 +30,9 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
     public class ModrinthCtalogUnit : ModrinthProject
     {
+        [JsonProperty("project_id")]
+        public string ProjectId;
+
         [JsonProperty("slug")]
         public string Slug;
 
@@ -38,9 +41,6 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("categories")]
         public List<string> Categories;
-
-        [JsonProperty("title")]
-        public string Title;
 
         [JsonProperty("updated")]
         public string Updated;
@@ -60,6 +60,9 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
     public class ModrinthProjectInfo : ModrinthProject
     {
+        [JsonProperty("id")]
+        public string ProjectId;
+
         [JsonProperty("description")]
         public string Summary;
 
@@ -77,15 +80,14 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("versions")]
         public List<string> Versions;
-    }
 
-    public class ModrinthAddonInfo : ModrinthProject
-    {
-        [JsonProperty("game_versions")]
-        public List<string> GameVersions;
+        [JsonProperty("icon_url")]
+        public string LogoUrl;
 
-        [JsonProperty("versions")]
-        public List<string> Versions;
+        public string WebsiteUrl
+        {
+            get => "https://modrinth.com/modpack/" + Slug;
+        }
     }
 
     public class ModrinthProjectFile

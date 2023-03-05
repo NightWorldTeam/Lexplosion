@@ -318,6 +318,7 @@
     <Compile Include="Logic\Management\Addons\AddonDependencie.cs" />
     <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
     <Compile Include="Logic\Management\Addons\IPrototypeAddon.cs" />
+    <Compile Include="Logic\Management\Addons\ModrinthAddon.cs" />
     <Compile Include="Logic\Management\Authentication\Authentication.cs" />
     <Compile Include="Logic\Management\Authentication\IAuthHandler.cs" />
     <Compile Include="Logic\Management\Authentication\LocalAuth.cs" />

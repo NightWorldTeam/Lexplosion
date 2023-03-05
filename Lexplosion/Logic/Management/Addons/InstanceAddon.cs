@@ -14,8 +14,9 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management.Addons;
-using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Curseforge;
+using Lexplosion.Logic.Objects.Modrinth;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -577,98 +578,18 @@ namespace Lexplosion.Logic.Management.Instances
             IsInstalling = false;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void test(InstalledAddons installedAddons, InstalledAddonsFormat actualAddonsList, Dictionary<string, ValuePair<InstanceAddon, string>> existsAddons, BaseInstanceData modpackInfo, List<InstanceAddon> addons, string clientPath, AddonType addonType)
-        {
-            var existsCfMods = new HashSet<string>(); // айдишники модов которые действителньо существуют (есть и в списке и в папке) и скачаны с курсфорджа
-
-            // Составляем список известных нам аддонов. То есть читаем спсиок аддонов из файла, проходимся по каждому
-            // если он существует, то добавляем в existsAddons и actualAddonsList.
-            foreach (string installedAddonId in installedAddons.Keys)
-            {
-                InstalledAddonInfo installedAddon = installedAddons[installedAddonId];
-                if (installedAddon.Type == addonType) // с модами нужно поебаться и проверить
-                {
-                    // Пока что пихаем только скачанные с курсфорджа моды. если айдишник больше -1, то аддон скачан с курсфорджа
-                    if (installedAddon.IsExists(clientPath) && installedAddon.Source == ProjectSource.Curseforge)
-                    {
-                        if (installedAddonId.ToInt32() > 0)
-                        {
-                            existsCfMods.Add(installedAddonId);
-                            actualAddonsList[installedAddonId] = installedAddon;
-                            existsAddons[installedAddon.ActualPath] = new ValuePair<InstanceAddon, string>
-                            {
-                                Value1 = null,
-                                Value2 = installedAddonId
-                            };
-                        }
-                        else // айдишник кривой и не может соотвествовать курсфорджу
-                        {
-                            installedAddons[installedAddonId].Source = ProjectSource.None;
-                        }
-
-                    }
-                }
-                else //всё остальное не тогаем. Просто перекидывеам в новый список
-                {
-                    actualAddonsList[installedAddonId] = installedAddon;
-                }
-            }
-
-            // теперь получаем инфу об известных нам модов с курсфорджа
-            if (existsCfMods.Count > 0)
-            {
-                List<CurseforgeAddonInfo> cfData = CurseforgeApi.GetAddonsInfo(existsCfMods.ToArray());
-
-                if (cfData != null)
-                {
-                    foreach (CurseforgeAddonInfo addon in cfData)
-                    {
-                        string projectId = addon.id;
-                        if (existsCfMods.Contains(projectId))
-                        {
-                            IPrototypeAddon prototypeAddon = new CurseforgeAddon(modpackInfo, addon);
-
-                            InstalledAddonInfo info = actualAddonsList[projectId];
-                            var obj = new InstanceAddon(prototypeAddon, modpackInfo)
-                            {
-                                Version = ""
-                            };
-
-                            // проверяем наличие обновлений для мода
-                            if (modpackInfo.Type == InstanceSource.Local)
-                            {
-                                if (prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID))
-                                {
-                                    obj.UpdateAvailable = true;
-                                }
-                            }
-
-                            existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
-                            {
-                                Value1 = obj,
-                                Value2 = projectId
-                            };
-
-                            addons.Add(obj);
-                        }
-                    }
-                }
-            }
-        }
-
         private delegate void IternalAddonInfo(string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static List<InstanceAddon> InstalledAddonsHandle(BaseInstanceData modpackInfo, AddonType addonType, string folderName,string fileExtension, IternalAddonInfo infoHandler)
+        private static List<InstanceAddon> InstalledAddonsHandle(BaseInstanceData modpackInfo, AddonType addonType, string folderName, string fileExtension, IternalAddonInfo infoHandler)
         {
-
             string clientPath = WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/";
             List<InstanceAddon> addons = new List<InstanceAddon>();
 
             InstalledAddonsFormat actualAddonsList = new InstalledAddonsFormat(); //актуальный список аддонов, то есть те аддоны которы действительно существуют и есть в списке. В конце именно этот спсиок будет сохранен в файл
             var existsCfMods = new HashSet<string>(); // айдишники модов которые действителньо существуют (есть и в списке и в папке) и скачаны с курсфорджа
-            var existsAddons = new Dictionary<string, ValuePair<InstanceAddon, string>>(); // ключ - имя файла, значение - экзмепляр и айдишник. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
+            var existsMdMods = new HashSet<string>(); // аналогично existsCfMods, но для модринфа
+            var existsAddons = new Dictionary<string, ValuePair<InstanceAddon, string, ProjectSource>>(); // ключ - имя файла, значение - экзмепляр,айдишник и источник проекта. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
 
             using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))
             {
@@ -680,23 +601,37 @@ namespace Lexplosion.Logic.Management.Instances
                     if (installedAddon.Type == addonType) // с модами нужно поебаться и проверить
                     {
                         // Пока что пихаем только скачанные с курсфорджа моды. если айдишник больше -1, то аддон скачан с курсфорджа
-                        if (installedAddon.IsExists(clientPath) && installedAddon.Source == ProjectSource.Curseforge)
+                        if (installedAddon.IsExists(clientPath))
                         {
-                            if (installedAddonId.ToInt32() > 0)
+                            if (installedAddon.Source == ProjectSource.Curseforge)
                             {
-                                existsCfMods.Add(installedAddonId);
+                                if (installedAddonId.ToInt32() > 0)
+                                {
+                                    existsCfMods.Add(installedAddonId);
+                                    actualAddonsList[installedAddonId] = installedAddon;
+                                    existsAddons[installedAddon.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource>
+                                    {
+                                        Value1 = null,
+                                        Value2 = installedAddonId,
+                                        Value3 = ProjectSource.Curseforge
+                                    };
+                                }
+                                else // айдишник кривой и не может соотвествовать курсфорджу
+                                {
+                                    installedAddons[installedAddonId].Source = ProjectSource.None;
+                                }
+                            }
+                            else if (installedAddon.Source == ProjectSource.Modrinth)
+                            {
+                                existsMdMods.Add(installedAddonId);
                                 actualAddonsList[installedAddonId] = installedAddon;
-                                existsAddons[installedAddon.ActualPath] = new ValuePair<InstanceAddon, string>
+                                existsAddons[installedAddon.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource>
                                 {
                                     Value1 = null,
-                                    Value2 = installedAddonId
+                                    Value2 = installedAddonId,
+                                    Value3 = ProjectSource.Modrinth
                                 };
                             }
-                            else // айдишник кривой и не может соотвествовать курсфорджу
-                            {
-                                installedAddons[installedAddonId].Source = ProjectSource.None;
-                            }
-
                         }
                     }
                     else //всё остальное не тогаем. Просто перекидывеам в новый список
@@ -734,14 +669,53 @@ namespace Lexplosion.Logic.Management.Instances
                                     }
                                 }
 
-                                existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
+                                existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
                                 {
                                     Value1 = obj,
-                                    Value2 = projectId
+                                    Value2 = projectId,
+                                    Value3 = ProjectSource.Curseforge
                                 };
 
                                 addons.Add(obj);
                             }
+                        }
+                    }
+                }
+
+                if (existsMdMods.Count > 0)
+                {
+                    List<ModrinthProjectInfo> mdData = ModrinthApi.GetProjects(existsMdMods.ToArray());
+
+                    foreach (ModrinthProjectInfo addon in mdData)
+                    {
+                        string projectId = addon.ProjectId;
+                        if (existsMdMods.Contains(projectId))
+                        {
+                            IPrototypeAddon prototypeAddon = new ModrinthAddon(modpackInfo, addon);
+
+                            InstalledAddonInfo info = actualAddonsList[projectId];
+                            var obj = new InstanceAddon(prototypeAddon, modpackInfo)
+                            {
+                                Version = ""
+                            };
+
+                            // проверяем наличие обновлений для мода
+                            if (modpackInfo.Type == InstanceSource.Local)
+                            {
+                                if (prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID))
+                                {
+                                    obj.UpdateAvailable = true;
+                                }
+                            }
+
+                            existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
+                            {
+                                Value1 = obj,
+                                Value2 = projectId,
+                                Value3 = ProjectSource.Modrinth
+                            };
+
+                            addons.Add(obj);
                         }
                     }
                 }
@@ -808,7 +782,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Type = addonType,
                                 IsDisable = isDisable,
                                 Path = isAddonExtension ? xyi : xyi.Remove(xyi.Length - 8), // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
-                                Source = ProjectSource.None
+                                Source = notContains ? ProjectSource.None : existsAddons[xyi].Value3
                             };
 
                             addons.Add(new InstanceAddon(addonId, modpackInfo)
@@ -823,8 +797,14 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         else
                         {
-                            existsAddons[xyi].Value1.FileName = filename;
-                            existsAddons[xyi].Value1._isEnable = isAddonExtension;
+                            // тут пытаемся получить инфу о моде
+                            //infoHandler(fileAddr_, out string displayName, out string authors, out string version, out string description, out string modId);
+                            InstanceAddon obj = existsAddons[xyi].Value1;
+                            obj.FileName = filename;
+                            obj._isEnable = isAddonExtension;
+                            //obj.Version = version;
+                            //if (string.IsNullOrEmpty(obj.Author)) obj.Author = authors;
+
                         }
                     }
                 }
@@ -854,10 +834,10 @@ namespace Lexplosion.Logic.Management.Instances
 
             IternalAddonInfo addonInfo = delegate (string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId)
             {
-                displayName = UNKNOWN_NAME; 
-                authors = ""; 
-                version = ""; 
-                description = ""; 
+                displayName = UNKNOWN_NAME;
+                authors = "";
+                version = "";
+                description = "";
                 modId = "";
 
                 // тут пытаемся получить инфу о моде

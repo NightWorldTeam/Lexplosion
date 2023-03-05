@@ -7,7 +7,7 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Network;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Objects.CommonClientData;

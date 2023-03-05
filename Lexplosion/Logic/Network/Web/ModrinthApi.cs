@@ -107,18 +107,19 @@ namespace Lexplosion.Logic.Network.Web
             });
         }
 
-        public static List<ModrinthProjectFile> GetFiles(List<string> filesId)
+        public static List<ModrinthProjectInfo> GetProjects(string[] filesId)
         {
-            var files = new List<ModrinthProjectFile>();
+            var files = new List<ModrinthProjectInfo>();
 
             StringBuilder str = new StringBuilder(1950);
-            for (int i = 0; i < filesId.Count; i++)
+            for (int i = 0; i < filesId.Length; i++)
             {
                 str.Append(filesId[i]);
 
-                if (i == filesId.Count - 1|| str.Length + 3 + filesId[i + 1].Length > 1950)
+                if (i == filesId.Length - 1|| str.Length + 3 + filesId[i + 1].Length > 1950)
                 {
-                    var data = GetApiData<List<ModrinthProjectFile>>("https://api.modrinth.com/v2/versions?ids=[\"" + str.ToString() + "\"]");
+                    var data = GetApiData<List<ModrinthProjectInfo>>("https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]");
+                    var tes = "https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]";
                     files.AddRange(data);
 
                     str = new StringBuilder(1950);
@@ -313,7 +314,7 @@ namespace Lexplosion.Logic.Network.Web
             return type;
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthAddonInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
+        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
         {
             ModrinthProjectFile fileInfo = GetProjectFile(fileID);
             return DownloadAddon(fileInfo, StrProjectTypToEnum(addonInfo.Type), path, taskArgs);
