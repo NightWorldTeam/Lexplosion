@@ -327,6 +327,7 @@
     <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\FileSystem\FileDistributor.cs" />
     <Compile Include="Logic\FileSystem\FileReceiver.cs" />
+    <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\InstalledAddons.cs" />
     <Compile Include="Logic\Management\Installers\ModrinthInstallManager.cs" />
     <Compile Include="Logic\Management\Instances\CurseforgeInstance.cs" />
@@ -668,6 +669,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Resource Include="Assets\fonts\Casper.ttf" />
     <Resource Include="Assets\fonts\Arkhip.ttf" />

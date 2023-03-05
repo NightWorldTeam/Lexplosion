@@ -70,6 +70,16 @@ namespace Lexplosion.Logic.Management.Instances
                 projectFileId = data.latestFilesIndexes[0]?.fileId;
             }
 
+            string date;
+            try
+            {
+                date = (data.dateModified != null) ? DateTime.Parse(data.dateModified).ToString("dd MMM yyyy") : "";
+            }
+            catch
+            {
+                date = "";
+            }
+
             return new InstanceData
             {
                 Source = InstanceSource.Curseforge,
@@ -78,7 +88,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Summary = data.summary,
                 TotalDownloads = (long)data.downloadCount,
                 GameVersion = (data.latestFilesIndexes != null && data.latestFilesIndexes.Count > 0) ? data.latestFilesIndexes[0].gameVersion : "",
-                LastUpdate = (data.dateModified != null) ? DateTime.Parse(data.dateModified).ToString("dd MMM yyyy") : "",
+                LastUpdate = date,
                 Modloader = data.ModloaderType,
                 Images = images,
                 WebsiteUrl = data.links?.websiteUrl,
@@ -128,9 +138,9 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        public static List<Info> GetCatalog(int pageSize, int pageIndex, int categoriy, string searchFilter, CfSortField sortField, string gameVersion)
+        public static List<Info> GetCatalog(int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, CfSortField sortField, string gameVersion)
         {
-            List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, categoriy, sortField, searchFilter, gameVersion);
+            List<CurseforgeInstanceInfo> curseforgeInstances = CurseforgeApi.GetInstances(pageSize, pageIndex * pageSize, categoriy.Id, sortField, searchFilter, gameVersion);
             var result = new List<Info>();
 
             foreach (var instance in curseforgeInstances)

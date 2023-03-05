@@ -33,7 +33,7 @@ namespace Lexplosion.Logic.Management.Instances
             public string ModloaderVersion;
             public AdditionalInstallerType? AdditionalInstallerType;
             public string AdditionalInstallerVersion;
-            public List<Category> Categories;
+            //TODO: public List<ICategory> Categories;
             public string Summary;
             public string LogoFileName;
         }
@@ -108,8 +108,8 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private List<Category> _categories = null;
-        public List<Category> Categories
+        private IEnumerable<IProjectCategory> _categories = null;
+        public IEnumerable<IProjectCategory> Categories
         {
             get => _categories;
             private set
@@ -414,7 +414,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Summary = assetsData.Summary ?? NoDescription,
                                 Author = assetsData.Author ?? UnknownAuthor,
                                 Description = assetsData.Description ?? NoDescription,
-                                Categories = assetsData.Categories ?? new List<Category>(),
+                                Categories = assetsData.Categories ?? new List<IProjectCategory>(),
                                 GameVersion = instanceManifest.version?.gameVersion,
                                 Logo = logo,
                                 _profileVersion = instanceVersion
@@ -428,7 +428,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Summary = NoDescription,
                                 Author = UnknownAuthor,
                                 Description = NoDescription,
-                                Categories = new List<Category>(),
+                                Categories = new List<IProjectCategory>(),
                                 GameVersion = instanceManifest.version?.gameVersion,
                                 Logo = logo,
                                 _profileVersion = instanceVersion
@@ -467,7 +467,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// Возвращает список модпаков для каталога.
         /// </summary>
         /// <returns>Список внешних модпаков.</returns>
-        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
+        public static List<InstanceClient> GetOutsideInstances(InstanceSource type, int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter = "", CfSortField sortField = CfSortField.Featured, string gameVersion = "")
         {
             Runtime.DebugWrite("UploadInstances " + pageIndex);
 
@@ -1095,7 +1095,7 @@ namespace Lexplosion.Logic.Management.Instances
                 ModloaderType = instanceManifest?.version?.modloaderType ?? ClientType.Vanilla,
                 ModloaderVersion = instanceManifest?.version?.modloaderVersion,
                 Name = name ?? Name,
-                Categories = Categories,
+                //Categories = Categories,
                 Summary = Summary,
                 LogoFileName = (logoPath != null ? LogoFileName : null),
                 AdditionalInstallerType = instanceManifest?.version?.additionalInstaller?.type,
@@ -1143,7 +1143,7 @@ namespace Lexplosion.Logic.Management.Instances
                         Description = parameters.Description,
                         Summary = parameters.Summary,
                         Logo = logo,
-                        Categories = parameters.Categories
+                        //Categories = parameters.Categories
                     };
 
                     client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);

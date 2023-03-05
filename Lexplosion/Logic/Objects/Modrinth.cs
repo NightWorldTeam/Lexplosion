@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,6 +85,8 @@ namespace Lexplosion.Logic.Objects.Modrinth
         [JsonProperty("icon_url")]
         public string LogoUrl;
 
+        public string Updated;
+
         public string WebsiteUrl
         {
             get => "https://modrinth.com/modpack/" + Slug;
@@ -146,5 +149,28 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public string versionId;
         public List<FileData> files;
         public Dictionary<string, string> dependencies;
+    }
+
+    public class ModrinthCategory : IProjectCategory
+    {
+        [JsonProperty("name")]
+        public string Id { get; set; }
+
+        [JsonIgnore]
+        public string Name
+        {
+            get
+            {
+                return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Id.Replace("-", " "));
+            }
+            set { }
+        }
+
+        [JsonProperty("project_type")]
+        public string ClassId { get; set; }
+
+
+        [JsonProperty("header")]
+        public string ParentCategoryId { get; set; }
     }
 }

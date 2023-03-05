@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Objects.Curseforge
@@ -49,7 +50,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public string dateModified;
         public Links links;
         //public List<Attachment> attachments;
-        public List<Category> categories;
+        public List<CurseforgeCategory> categories;
         public List<Author> authors;
         public Logo logo;
 
@@ -62,20 +63,19 @@ namespace Lexplosion.Logic.Objects.Curseforge
         }
     }
 
-    public class CurseforgeCategory
+    public class CurseforgeCategory : IProjectCategory
     {
-        public int id;
-        public string name { get; set; }
-        public string iconUrl { get; set; }
-        /// <summary>
-        /// Id типа аддона.
-        /// </summary>
-        public int classId;
-        /// <summary>
-        /// Id родительской категории, 
-        /// Если не содержит родительскую категорию, содержит classId
-        /// </summary>
-        public int parentCategoryId;
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("classId")]
+        public string ClassId { get; set; }
+
+        [JsonProperty("parentCategoryId")]
+        public string ParentCategoryId { get; set; }
     }
 
     /// <summary>

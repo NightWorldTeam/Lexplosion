@@ -245,7 +245,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="category">Категория. По умолчанию -1 (при -1 все категории)</param>
         /// <param name="searchFilter">Поиск названия</param>
         /// <returns>Собстна список аддонов.</returns>
-        public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, int category = -1, string searchFilter = "")
+        public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, string category = "-1", string searchFilter = "")
         {
             _addonsCatalogChache = new Dictionary<string, InstanceAddon>();
 

@@ -66,6 +66,11 @@ namespace Lexplosion.Logic.Network.Web
             }
         }
 
+        public static List<ModrinthCategory> GetCategories()
+        {
+            return GetApiData<List<ModrinthCategory>>("https://api.modrinth.com/v2/tag/category");
+        }
+
         public static ModrinthProjectInfo GetProject(string projectId)
         {
             return GetApiData<ModrinthProjectInfo>("https://api.modrinth.com/v2/project/" + projectId);
@@ -116,7 +121,7 @@ namespace Lexplosion.Logic.Network.Web
             {
                 str.Append(filesId[i]);
 
-                if (i == filesId.Length - 1|| str.Length + 3 + filesId[i + 1].Length > 1950)
+                if (i == filesId.Length - 1 || str.Length + 3 + filesId[i + 1].Length > 1950)
                 {
                     var data = GetApiData<List<ModrinthProjectInfo>>("https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]");
                     var tes = "https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]";
@@ -133,9 +138,25 @@ namespace Lexplosion.Logic.Network.Web
             return files;
         }
 
-        public static List<ModrinthCtalogUnit> GetInstances(int pageSize, int index, int categoriy, string sortField, string searchFilter, string gameVersion)
+        public static List<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IProjectCategory categoriy, string sortField, string searchFilter, string gameVersion)
         {
-            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:modpack%22]]&offset=" + (index * pageSize) + "&limit" + pageSize + "&index=" + sortField + "&query=" + WebUtility.UrlEncode(searchFilter);
+            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:modpack%22]]&offset=" + (index * pageSize) + "&limit" + pageSize;
+
+            if (!string.IsNullOrEmpty(sortField))
+            {
+                url += "&index=" + sortField;
+            }
+
+            if (!string.IsNullOrEmpty(searchFilter))
+            {
+                url += "&query=" + WebUtility.UrlEncode(searchFilter);
+            }
+
+            if (categoriy.Id != "-1")
+            {
+                url += "&filters=categories=\"" + categoriy.Id + "\"";
+            }
+
             return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();
         }
 

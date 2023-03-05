@@ -15,15 +15,15 @@ namespace Lexplosion.Logic.Objects
         public List<string> Images;
         public string Xmx;
         public string Xms;
-        public List<Category> Categories;
+        public IEnumerable<IProjectCategory> Categories;
         public string Summary;
     }
 
-    public class Category
+    /*public class Category
     {
         public int categoryId;
         public string name { get; set; }
-    }
+    }*/
 
     /// <summary>
     /// Этот класс хранят инфу об установленном с курсфорджа аддоне
@@ -116,7 +116,7 @@ namespace Lexplosion.Logic.Objects
         public long TotalDownloads { get; set; }
         public ClientType Modloader { get; set; }
         public string Description { get; set; }
-        public List<Category> Categories { get; set; }
+        public IEnumerable<IProjectCategory> Categories { get; set; }
         public List<byte[]> Images { get; set; }
         public string WebsiteUrl { get; set; }
         public string Summary { get; set; }
@@ -153,6 +153,36 @@ namespace Lexplosion.Logic.Objects
     public class DistributionData
     {
         public string Name;
+    }
+
+    public interface IProjectCategory
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        /// <summary>
+        /// Id типа аддона.
+        /// </summary>
+        public string ClassId { get; set; }//TODO: на нулл проверку намутить
+        /// <summary>
+        /// Id родительской категории, 
+        /// Если не содержит родительскую категорию, содержит classId
+        /// </summary>
+        public string ParentCategoryId { get; set; } //TODO: на нулл проверку намутить
+    }
+
+    public class SimpleCategory : IProjectCategory
+    {
+        public string Id
+        {
+            get
+            {
+                return Name;
+            }
+            set { }
+        }
+        public string Name { get; set; }
+        public string ClassId { get; set; }
+        public string ParentCategoryId { get; set; }
     }
 
 }

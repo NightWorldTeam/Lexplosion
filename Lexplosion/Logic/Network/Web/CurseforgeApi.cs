@@ -27,7 +27,8 @@ namespace Lexplosion.Logic.Network.Web
         {
             try
             {
-                var headers = new Dictionary<string, string>() {
+                var headers = new Dictionary<string, string>()
+                {
                     ["x-api-key"] = Token
                 };
 
@@ -46,27 +47,28 @@ namespace Lexplosion.Logic.Network.Web
             }
         }
 
-        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, int categoriy, CfSortField sortField, string searchFilter, string gameVersion)
+        public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, string categoriy, CfSortField sortField, string searchFilter, string gameVersion)
         {
+            Runtime.DebugWrite(categoriy);
             if (gameVersion != "")
             {
                 gameVersion = "&gameVersion=" + gameVersion;
             }
 
             string url;
-            if (categoriy == -1)
+            if (categoriy == "-1")
             {
                 url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             }
             else
             {
-                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField + "&categoryId=" + ((int)categoriy) + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField + "&categoryId=" + categoriy + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
             }
 
             return GetApiData<List<CurseforgeInstanceInfo>>(url);
         }
 
-        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, int category, ClientType modloader, string searchFilter = "", string gameVersion = "")
+        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, string category, ClientType modloader, string searchFilter = "", string gameVersion = "")
         {
             if (gameVersion != "")
             {
@@ -74,7 +76,7 @@ namespace Lexplosion.Logic.Network.Web
             }
 
             string categoryStr = "";
-            if (category != -1)
+            if (category != "-1")
             {
                 categoryStr = "&categoryId=" + category;
             }
@@ -182,11 +184,10 @@ namespace Lexplosion.Logic.Network.Web
             List<CurseforgeCategory> categories = GetApiData<List<CurseforgeCategory>>("https://api.curseforge.com/v1/categories?gameId=432&classId=" + (int)type);
             categories.Insert(0, new CurseforgeCategory
             {
-                id = -1,
-                name = "All",
-                iconUrl = null,
-                classId = (int)type,
-                parentCategoryId = (int)type
+                Id = "-1",
+                Name = "All",
+                ClassId = ((int)type).ToString(),
+                ParentCategoryId = ((int)type).ToString()
             });
 
             return categories;
@@ -231,7 +232,7 @@ namespace Lexplosion.Logic.Network.Web
                     Path = (addonType != AddonType.Maps) ? (folderName + "/" + fileName) : (folderName + "/"),
                     Type = addonType,
                     Source = ProjectSource.Curseforge
-                    
+
                 },
                 Value2 = DownloadAddonRes.Successful
             };

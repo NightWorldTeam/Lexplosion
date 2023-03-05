@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Objects.Nightworld
 {
@@ -35,5 +36,22 @@ namespace Lexplosion.Logic.Objects.Nightworld
         public string Nickname;
         public string AvatarUrl;
         public string ProfileUrl;
+    }
+
+    class NightWorldCategory : IProjectCategory
+    {
+        [JsonProperty("categoryId")]
+        public string Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        /// <summary>
+        /// Id типа аддона.
+        /// </summary>
+        public string ClassId { get; set; }//TODO: на нулл проверку намутить
+        /// <summary>
+        /// Id родительской категории, 
+        /// Если не содержит родительскую категорию, содержит classId
+        /// </summary>
+        public string ParentCategoryId { get; set; } //TODO: на нулл проверку намутить
     }
 }

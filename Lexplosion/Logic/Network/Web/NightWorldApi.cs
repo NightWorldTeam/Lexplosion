@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Network
             public long Version;
             public string Description;
             public string Summary;
-            public List<Category> Categories;
+            public List<NightWorldCategory> Categories;
             public string GameVersion;
         }
 

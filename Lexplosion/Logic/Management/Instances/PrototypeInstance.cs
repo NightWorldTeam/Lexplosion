@@ -10,7 +10,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             public string Name;
             public string Author;
-            public List<Category> Categories;
+            public IEnumerable<IProjectCategory> Categories;
             public string Summary;
             public string Description;
             public string GameVersion;
@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public abstract List<InstanceVersion> GetVersions(string externalId);
 
-        public static List<Info> GetCatalog(InstanceSource type, int pageSize, int pageIndex, int categoriy, string searchFilter, CfSortField sortField, string gameVersion)
+        public static List<Info> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, CfSortField sortField, string gameVersion)
         {
             switch (type)
             {

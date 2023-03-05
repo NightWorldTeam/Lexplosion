@@ -18,18 +18,20 @@ namespace Lexplosion.Logic.Management.Instances
             return false;
         }
 
-        private static List<Category> ParseCategories(List<string> data)
+        private static List<ModrinthCategory> ParseCategories(List<string> data)
         {
-            var categories = new List<Category>();
+            var categories = new List<ModrinthCategory>();
             if (data != null)
             {
                 foreach (string category in data)
                 {
-                    categories.Add(new Category
+                    if (!string.IsNullOrEmpty(category))
                     {
-                        categoryId = 0,
-                        name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(category.Replace("-", " "))
-                    });
+                        categories.Add(new ModrinthCategory
+                        {
+                            Id = category
+                        });
+                    }        
                 }
             }
 
@@ -77,6 +79,16 @@ namespace Lexplosion.Logic.Management.Instances
 
             var categories = ParseCategories(data.Categories);
 
+            string date;
+            try
+            {
+                date = (data.Updated != null) ? DateTime.Parse(data.Updated).ToString("dd MMM yyyy") : "";
+            }
+            catch
+            {
+                date = "";
+            }
+
             return new InstanceData
             {
                 Source = InstanceSource.Modrinth,
@@ -85,7 +97,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Summary = data.Summary,
                 TotalDownloads = data.Downloads,
                 GameVersion = data.GameVersions[data.GameVersions.Count - 1],
-                LastUpdate = "",
+                LastUpdate = date,
                 Modloader = clientType,
                 Images = new List<byte[]>(),
                 WebsiteUrl = data.WebsiteUrl,
@@ -98,7 +110,7 @@ namespace Lexplosion.Logic.Management.Instances
             return new List<InstanceVersion>();
         }
 
-        public static List<Info> GetCatalog(int pageSize, int pageIndex, int categoriy, string searchFilter, string sortField, string gameVersion)
+        public static List<Info> GetCatalog(int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, string sortField, string gameVersion)
         {
             sortField = ModrinthApi.SearchFilters.Relevance;
             List<ModrinthCtalogUnit> curseforgeInstances = ModrinthApi.GetInstances(pageSize, pageIndex, categoriy, sortField, searchFilter, gameVersion);
