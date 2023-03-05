@@ -196,7 +196,7 @@
                                     <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Resourcepacks}">
                                         <Setter Property="Border.Visibility" Value="Collapsed" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Resourcepacks}">
+                                    <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Maps}">
                                         <Setter Property="Border.Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
