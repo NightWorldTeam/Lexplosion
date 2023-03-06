@@ -207,17 +207,17 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    var sortedByIdCategories = new Dictionary<int, List<CfCategory>>();
+                    var sortedByIdCategories = new Dictionary<string, List<CfCategory>>();
 
                     foreach (var cfc in curseforgeCategories)
                     {
-                        if (!sortedByIdCategories.ContainsKey(cfc.parentCategoryId))
+                        if (!sortedByIdCategories.ContainsKey(cfc.ParentCategoryId))
                         {
-                            sortedByIdCategories.Add(cfc.parentCategoryId, new List<CfCategory> { new CfCategory(cfc) });
+                            sortedByIdCategories.Add(cfc.ParentCategoryId, new List<CfCategory> { new CfCategory(cfc) });
                         }
                         else
                         {
-                            sortedByIdCategories[cfc.parentCategoryId].Add(new CfCategory(cfc));
+                            sortedByIdCategories[cfc.ParentCategoryId].Add(new CfCategory(cfc));
                         }
                     }
 
@@ -225,7 +225,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                     foreach (var cfc in sortedByIdCategories.Keys)
                     {
                         // cfc == 6 -> Mods not Subcategory
-                        if (cfc == (int)_projectType)
+                        if (cfc == _projectType.ToString())
                         {
                             foreach (var category in sortedByIdCategories[cfc])
                             {

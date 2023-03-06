@@ -1,5 +1,7 @@
-﻿using Lexplosion.Logic.Management.Instances;
+﻿using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
 using System;
@@ -26,8 +28,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public Action<string, bool> SearchMethod { get; }
 
-        private ObservableCollection<CurseforgeCategory> _categories;
-        public ObservableCollection<CurseforgeCategory> Categories
+        private ObservableCollection<IProjectCategory> _categories;
+        public ObservableCollection<IProjectCategory> Categories
         {
             get => _categories;
             set
@@ -93,12 +95,12 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }
         }
 
-        private CurseforgeCategory _selectedCurseforgeCategory;
-        public CurseforgeCategory SelectedCurseforgeCategory
+        private IProjectCategory _selectedCategory;
+        public IProjectCategory SelectedCurseforgeCategory
         {
-            get => _selectedCurseforgeCategory; set
+            get => _selectedCategory; set
             {
-                _selectedCurseforgeCategory = value;
+                _selectedCategory = value;
                 OnPropertyChanged();
                 if (!_isInit) SearchMethod?.Invoke(null, false);
             }
@@ -222,10 +224,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         #region Private Methods
 
-        private ObservableCollection<CurseforgeCategory> PrepareCategories()
+        private ObservableCollection<IProjectCategory> PrepareCategories()
         {
-            var categories = new ObservableCollection<CurseforgeCategory>(
-                CurseforgeApi.GetCategories(CfProjectType.Modpacks)
+            var categories = new ObservableCollection<IProjectCategory>(
+                CategoriesManager.GetModpackCategories(ProjectSource.Modrinth)
             );
 
             SelectedCurseforgeCategory = categories[0];
@@ -266,7 +268,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     SelectedInstanceSource,
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
-                    SelectedCurseforgeCategory.id,
+                    SelectedCurseforgeCategory,
                     searchText == null ? _previousSearch : searchText,
                     SelectedCfSortBy,
                     gameVersion

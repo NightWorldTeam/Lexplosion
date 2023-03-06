@@ -151,13 +151,13 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public Dictionary<string, string> dependencies;
     }
 
-    public class ModrinthCategory : IProjectCategory
+    public class ModrinthCategory : CategoryBase
     {
         [JsonProperty("name")]
-        public string Id { get; set; }
+        public override string Id { get; set; }
 
         [JsonIgnore]
-        public string Name
+        public override string Name
         {
             get
             {
@@ -167,10 +167,10 @@ namespace Lexplosion.Logic.Objects.Modrinth
         }
 
         [JsonProperty("project_type")]
-        public string ClassId { get; set; }
+        public override string ClassId { get; set; }
 
 
         [JsonProperty("header")]
-        public string ParentCategoryId { get; set; }
+        public override string ParentCategoryId { get; set; }
     }
 }

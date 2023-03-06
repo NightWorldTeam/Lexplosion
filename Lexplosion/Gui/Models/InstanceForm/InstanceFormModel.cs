@@ -15,7 +15,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private MainViewModel _mainViewModel;
         public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
-        public List<Category> Categories { get; } = new List<Category>();
+        public List<IProjectCategory> Categories { get; } = new List<IProjectCategory>();
         public InstanceClient InstanceClient { get; }
         public DownloadModel DownloadModel { get; }
         public LaunchModel LaunchModel { get; }
@@ -170,12 +170,15 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Private Methods
 
 
+        /// <summary>
+        /// Загружаем категории
+        /// </summary>
         private void LoadingCategories()
         {
             // set categories to list
             // add game version like category
-            Categories.Add(new Category { name = InstanceClient.GameVersion });
-            if (InstanceClient.Categories != null && InstanceClient.Categories.Count > 0)
+            Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
+            if (InstanceClient.Categories != null)
             {
                 foreach (var category in InstanceClient.Categories)
                 {

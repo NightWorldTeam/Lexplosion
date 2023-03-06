@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Lexplosion
 {
-    public class VMBase : INotifyPropertyChanged
+    public abstract class VMBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

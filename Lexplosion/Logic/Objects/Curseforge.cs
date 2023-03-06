@@ -63,19 +63,19 @@ namespace Lexplosion.Logic.Objects.Curseforge
         }
     }
 
-    public class CurseforgeCategory : IProjectCategory
+    public class CurseforgeCategory : CategoryBase
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public override string Id { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
 
         [JsonProperty("classId")]
-        public string ClassId { get; set; }
+        public override string ClassId { get; set; }
 
         [JsonProperty("parentCategoryId")]
-        public string ParentCategoryId { get; set; }
+        public override string ParentCategoryId { get; set; }
     }
 
     /// <summary>

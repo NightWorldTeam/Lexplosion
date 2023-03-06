@@ -170,9 +170,17 @@ namespace Lexplosion.Logic.Objects
         public string ParentCategoryId { get; set; } //TODO: на нулл проверку намутить
     }
 
-    public class SimpleCategory : IProjectCategory
+    public abstract class CategoryBase : IProjectCategory 
     {
-        public string Id
+        public abstract string Id { get; set; }
+        public abstract string Name { get; set; }
+        public abstract string ClassId { get; set; }
+        public abstract string ParentCategoryId { get; set; }
+    }
+
+    public class SimpleCategory : CategoryBase
+    {
+        public override string Id
         {
             get
             {
@@ -180,9 +188,9 @@ namespace Lexplosion.Logic.Objects
             }
             set { }
         }
-        public string Name { get; set; }
-        public string ClassId { get; set; }
-        public string ParentCategoryId { get; set; }
+        public override string Name { get; set; }
+        public override string ClassId { get; set; }
+        public override string ParentCategoryId { get; set; }
     }
 
 }

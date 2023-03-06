@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Gui.Models.ShowCaseMenu;
 using Lexplosion.Logic.Management.Instances;
+using System.Collections;
 
 namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
@@ -92,7 +93,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region Private Methods
         private double CalcCategoryBorderHeight()
         {
-            if (Model.InstanceData?.Categories == null || Model.InstanceData.Categories.Count == 0)
+            if (Model.InstanceData?.Categories == null || ((ICollection)Model.InstanceData.Categories).Count == 0)
             {
                 IsCategoriesExist = false;
                 return 0.0;
@@ -103,9 +104,9 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
             var childWidth = 0.0;
             foreach (var item in _overviewModel.InstanceData.Categories)
             {
-                if (Constants.TagSizes.ContainsKey(item.name)) 
+                if (Constants.TagSizes.ContainsKey(item.Name)) 
                 { 
-                    childWidth += Constants.TagSizes[item.name];
+                    childWidth += Constants.TagSizes[item.Name];
                 }
             }
 

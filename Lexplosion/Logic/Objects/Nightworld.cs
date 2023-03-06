@@ -38,20 +38,20 @@ namespace Lexplosion.Logic.Objects.Nightworld
         public string ProfileUrl;
     }
 
-    class NightWorldCategory : IProjectCategory
+    class NightWorldCategory : CategoryBase
     {
         [JsonProperty("categoryId")]
-        public string Id { get; set; }
+        public override string Id { get; set; }
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public override string Name { get; set; }
         /// <summary>
         /// Id типа аддона.
         /// </summary>
-        public string ClassId { get; set; }//TODO: на нулл проверку намутить
+        public override string ClassId { get; set; }//TODO: на нулл проверку намутить
         /// <summary>
         /// Id родительской категории, 
         /// Если не содержит родительскую категорию, содержит classId
         /// </summary>
-        public string ParentCategoryId { get; set; } //TODO: на нулл проверку намутить
+        public override string ParentCategoryId { get; set; } //TODO: на нулл проверку намутить
     }
 }

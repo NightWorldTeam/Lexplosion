@@ -13,11 +13,13 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <DataTemplate DataType="{x:Type objects:Category}">
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="Pink" />
+        </Style>
+
+        <DataTemplate DataType="{x:Type objects:CategoryBase}">
             <Button Style="{DynamicResource TagStyle}">
-                <Button.Content>
-                    <Binding Path="name" />
-                </Button.Content>
+                <TextBlock Text="{Binding Name}" />
             </Button>
         </DataTemplate>
 
