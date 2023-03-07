@@ -792,6 +792,7 @@ namespace Lexplosion.Logic.Management.Instances
                 installedAddons.Save(actualAddonsList);
             }
 
+            Runtime.DebugWrite(addonType + " " + addons.Count);
             return addons;
         }
 

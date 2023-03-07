@@ -10,7 +10,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             public string Name;
             public string Author;
-            public IEnumerable<IProjectCategory> Categories;
+            public IEnumerable<CategoryBase> Categories;
             public string Summary;
             public string Description;
             public string GameVersion;

@@ -538,6 +538,7 @@ namespace Lexplosion.Logic.FileSystem
                     {
                         errors.Add("File: " + fileName);
                         Runtime.DebugWrite("ERROR " + fileName);
+                        _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
                     }
 
                     downloadedCount++;

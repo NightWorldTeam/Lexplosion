@@ -31,7 +31,7 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             Id = category
                         });
-                    }        
+                    }
                 }
             }
 
@@ -107,7 +107,30 @@ namespace Lexplosion.Logic.Management.Instances
 
         public override List<InstanceVersion> GetVersions(string externalId)
         {
-            return new List<InstanceVersion>();
+            List<ModrinthProjectFile> versions = ModrinthApi.GetProjectFiles(externalId);
+            var data = new List<InstanceVersion>();
+            foreach (ModrinthProjectFile file in versions)
+            {
+                string date;
+                try
+                {
+                    date = (file.Date != null) ? DateTime.Parse(file.Date).ToString("dd MMM yyyy") : "";
+                }
+                catch
+                {
+                    date = "";
+                }
+
+                data.Add(new InstanceVersion
+                {
+                    FileName = file.Name,
+                    Date = date,
+                    Id = file.FileId,
+                    Status = (file.Status == "release") ? ReleaseType.Release : ((file.Status == "beta") ? ReleaseType.Beta : ReleaseType.Alpha)
+                });
+            }
+
+            return data;
         }
 
         public static List<Info> GetCatalog(int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, string sortField, string gameVersion)

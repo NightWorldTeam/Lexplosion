@@ -11,7 +11,7 @@ namespace Lexplosion.Logic.Management
 {
     static class CategoriesManager
     {
-        public static IEnumerable<IProjectCategory> GetModpackCategories(ProjectSource source)
+        public static IEnumerable<CategoryBase> GetModpackCategories(ProjectSource source)
         {
             switch (source)
             {
@@ -21,9 +21,17 @@ namespace Lexplosion.Logic.Management
                     {
                         var result = new List<ModrinthCategory>();
                         List<ModrinthCategory> categories = ModrinthApi.GetCategories();
+                        result.Add(new ModrinthCategory
+                        {
+                            Id = "-1",
+                            Name = "All",
+                            ClassId = "",
+                            ParentCategoryId = ""
+                        });
+
                         foreach (ModrinthCategory category in categories)
                         {
-                            if(category.ClassId == "modpack")
+                            if (category.ClassId == "modpack")
                             {
                                 result.Add(category);
                             }

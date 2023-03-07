@@ -85,6 +85,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         [JsonProperty("icon_url")]
         public string LogoUrl;
 
+        [JsonProperty("updated")]
         public string Updated;
 
         public string WebsiteUrl
@@ -133,6 +134,12 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("dependencies")]
         public List<Dependencie> Dependencies;
+
+        [JsonProperty("date_published")]
+        public string Date;
+
+        [JsonProperty("version_type")]
+        public string Status;
     }
 
     public class InstanceManifest

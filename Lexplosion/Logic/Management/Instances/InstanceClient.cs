@@ -12,6 +12,7 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using System.Runtime.CompilerServices;
 using System.Management.Instrumentation;
+using System.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -108,8 +109,8 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private IEnumerable<IProjectCategory> _categories = null;
-        public IEnumerable<IProjectCategory> Categories
+        private IEnumerable<CategoryBase> _categories = null;
+        public IEnumerable<CategoryBase> Categories
         {
             get => _categories;
             private set
@@ -390,7 +391,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
 
                         //получаем асетсы модпаков
-                        InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
+                        var assetsData = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
 
                         if (assetsData != null)
                         {
@@ -414,7 +415,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Summary = assetsData.Summary ?? NoDescription,
                                 Author = assetsData.Author ?? UnknownAuthor,
                                 Description = assetsData.Description ?? NoDescription,
-                                Categories = assetsData.Categories ?? new List<IProjectCategory>(),
+                                Categories = assetsData.Categories ?? new List<SimpleCategory>(),
                                 GameVersion = instanceManifest.version?.gameVersion,
                                 Logo = logo,
                                 _profileVersion = instanceVersion
@@ -428,7 +429,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 Summary = NoDescription,
                                 Author = UnknownAuthor,
                                 Description = NoDescription,
-                                Categories = new List<IProjectCategory>(),
+                                Categories = new List<CategoryBase>(),
                                 GameVersion = instanceManifest.version?.gameVersion,
                                 Logo = logo,
                                 _profileVersion = instanceVersion
@@ -863,7 +864,7 @@ namespace Lexplosion.Logic.Management.Instances
             catch { }
 
             string file = WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
-            InstanceAssets assetsData_ = DataFilesManager.GetFile<InstanceAssets>(file);
+            InstanceAssetsFileDecodeFormat assetsData_ = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(file);
 
             var assetsData = new InstanceAssets
             {

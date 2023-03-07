@@ -76,9 +76,9 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<ModrinthProjectInfo>("https://api.modrinth.com/v2/project/" + projectId);
         }
 
-        public static List<ModrinthProjectInfo> GetProjectFiles(string projectId)
+        public static List<ModrinthProjectFile> GetProjectFiles(string projectId)
         {
-            return GetApiData<List<ModrinthProjectInfo>>("https://api.modrinth.com/v2/project/" + projectId + "/version");
+            return GetApiData<List<ModrinthProjectFile>>("https://api.modrinth.com/v2/project/" + projectId + "/version");
         }
 
         public static ModrinthProjectFile GetProjectFile(string fileId)

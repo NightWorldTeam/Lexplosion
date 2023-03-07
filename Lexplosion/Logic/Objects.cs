@@ -5,25 +5,28 @@ using Newtonsoft.Json;
 //тут хранятся всякие лайтовые классы, в основном нужные для передачи данных и для декодирования JSON
 namespace Lexplosion.Logic.Objects
 {
+    public abstract class InstanceAssetsBase
+    {
+        public string Description { get; set; }
+        public string Author { get; set; }
+        public List<string> Images { get; set; }
+        public string Xmx { get; set; }
+        public string Xms { get; set; }
+        public string Summary { get; set; }
+    }
+
     /// <summary>
     /// Асесты модпака на главной странице (описание, картинки)
     /// </summary>
-    public class InstanceAssets
+    public class InstanceAssets : InstanceAssetsBase
     {
-        public string Description;
-        public string Author;
-        public List<string> Images;
-        public string Xmx;
-        public string Xms;
-        public IEnumerable<IProjectCategory> Categories;
-        public string Summary;
+        public IEnumerable<CategoryBase> Categories { get; set; }
     }
 
-    /*public class Category
+    public class InstanceAssetsFileDecodeFormat : InstanceAssetsBase
     {
-        public int categoryId;
-        public string name { get; set; }
-    }*/
+        public List<SimpleCategory> Categories { get; set; }
+    }
 
     /// <summary>
     /// Этот класс хранят инфу об установленном с курсфорджа аддоне
@@ -170,7 +173,7 @@ namespace Lexplosion.Logic.Objects
         public string ParentCategoryId { get; set; } //TODO: на нулл проверку намутить
     }
 
-    public abstract class CategoryBase : IProjectCategory 
+    public abstract class CategoryBase : IProjectCategory
     {
         public abstract string Id { get; set; }
         public abstract string Name { get; set; }
@@ -182,11 +185,12 @@ namespace Lexplosion.Logic.Objects
     {
         public override string Id
         {
-            get
-            {
-                return Name;
-            }
-            set { }
+            //get
+            //{
+            //    return Name;
+            //}
+            //set { }
+            get; set;
         }
         public override string Name { get; set; }
         public override string ClassId { get; set; }

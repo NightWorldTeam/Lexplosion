@@ -322,9 +322,17 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     Directory.CreateDirectory(to);
                 }
-
                 DelFile(temp + zipFile);
-                if (!DownloadFile(url + ".zip", zipFile, temp, taskArgs))
+
+                //пробуем скачать 4 раза
+                int i = 0;
+                while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4)
+                {
+                    i++;
+                }
+
+                // все попытки неувенчались успехом
+                if (i > 3)
                 {
                     return false;
                 }
@@ -369,10 +377,19 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                if (!DownloadFile(url + ".zip", zipFile, temp, taskArgs))
+                //пробуем скачать 4 раза
+                int i = 0;
+                while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4)
+                {
+                    i++;
+                }
+
+                // все попытки неувенчались успехом
+                if (i > 3)
                 {
                     return false;
                 }
+
                 DelFile(to + file);
 
                 ZipFile.ExtractToDirectory(temp + zipFile, temp);
@@ -429,10 +446,19 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                if (!DownloadFile(url, file, temp, taskArgs))
+                //пробуем скачать 4 раза
+                int i = 0;
+                while (!DownloadFile(url, file, temp, taskArgs) && i < 4)
+                {
+                    i++;
+                }
+
+                // все попытки неувенчались успехом
+                if (i > 3)
                 {
                     return false;
                 }
+
                 DelFile(to + file);
                 File.Move(temp + file, to + file);
 
@@ -465,10 +491,19 @@ namespace Lexplosion.Logic.FileSystem
                     Directory.CreateDirectory(to);
                 }
 
-                if (!DownloadFile(url, file, temp, taskArgs))
+                //пробуем скачать 4 раза
+                int i = 0;
+                while (!DownloadFile(url, file, temp, taskArgs) && i < 4)
+                {
+                    i++;
+                }
+
+                // все попытки неувенчались успехом
+                if (i > 3)
                 {
                     return false;
                 }
+
                 DelFile(to + file);
 
                 using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))

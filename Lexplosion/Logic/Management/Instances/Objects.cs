@@ -102,7 +102,7 @@ namespace Lexplosion.Logic.Management.Instances
         public string Name { get; set; }
         public string Description { get; set; }
         public string Summary { get; set; }
-        public IEnumerable<IProjectCategory> Categories { get; set; }
+        public IEnumerable<CategoryBase> Categories { get; set; }
         public string Author { get; set; }
         public ClientType Modloader { get; set; }
         public string ModloaderVersion { get; set; }
