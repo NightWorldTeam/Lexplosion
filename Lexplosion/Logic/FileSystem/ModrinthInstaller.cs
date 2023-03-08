@@ -276,6 +276,9 @@ namespace Lexplosion.Logic.FileSystem
                                     if (Path.GetInvalidFileNameChars().Any(s => segments[1].Contains(s))) // если имя файла на валидно возращаем ошибку
                                     {
                                         // тут ошибка
+                                        errors.Add("File: " + file.path);
+                                        Runtime.DebugWrite("ERROR " + file.path);
+                                        _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
                                     }
 
                                     string folderName = segments[0];
@@ -315,7 +318,9 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else
                             {
-                                // тут ошибка
+                                errors.Add("File: " + file.path);
+                                Runtime.DebugWrite("ERROR " + file.path);
+                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
                             }
                         }
                         else
@@ -338,7 +343,9 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             else
                             {
-                                //тут ошибка
+                                errors.Add("File: " + file.path);
+                                Runtime.DebugWrite("ERROR " + file.path);
+                                _fileDownloadHandler?.Invoke(file.path, 100, DownloadFileProgress.Error);
                             }
                         }
                     }

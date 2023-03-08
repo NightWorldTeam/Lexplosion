@@ -328,6 +328,7 @@ namespace Lexplosion.Logic.FileSystem
                 int i = 0;
                 while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4)
                 {
+                    Thread.Sleep(1500);
                     i++;
                 }
 
@@ -381,6 +382,7 @@ namespace Lexplosion.Logic.FileSystem
                 int i = 0;
                 while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4)
                 {
+                    Thread.Sleep(1500);
                     i++;
                 }
 
@@ -450,6 +452,7 @@ namespace Lexplosion.Logic.FileSystem
                 int i = 0;
                 while (!DownloadFile(url, file, temp, taskArgs) && i < 4)
                 {
+                    Thread.Sleep(1500);
                     i++;
                 }
 
@@ -495,6 +498,7 @@ namespace Lexplosion.Logic.FileSystem
                 int i = 0;
                 while (!DownloadFile(url, file, temp, taskArgs) && i < 4)
                 {
+                    Thread.Sleep(1500);
                     i++;
                 }
 
