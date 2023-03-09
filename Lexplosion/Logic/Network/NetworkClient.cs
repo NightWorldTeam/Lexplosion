@@ -156,9 +156,9 @@ namespace Lexplosion.Logic.Network
                     return false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Runtime.DebugWrite("NetworkClient Init exception ");
+                Runtime.DebugWrite("NetworkClient Init exception " + ex);
                 return false;
             }
         }
