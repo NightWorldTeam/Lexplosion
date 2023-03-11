@@ -202,7 +202,6 @@ namespace Lexplosion.Logic.Network
                 Close(null);
                 readingThread.Abort();
             }
-
         }
 
         override protected void Reading() //получаем данные из сети и отправляем на майкрафт клиент

@@ -226,6 +226,7 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     try
                     {
+                        // TODO: не просто принимать все поинты, а проверять ip игнорируя порт
                         IPEndPoint senderPoint = null;
                         data = socket.Receive(ref senderPoint);
                         if (data.Length > 0)
@@ -286,10 +287,8 @@ namespace Lexplosion.Logic.Network.SMP
             bool successfulConnect = false;
             while (!successfulConnect && i < 20)
             {
-                Runtime.DebugWrite("Send connection package");
                 socket.Send(connectPackage, connectPackage.Length, remoteIp);
                 i++;
-
                 successfulConnect = connectionWait.WaitOne(200);
             }
 
@@ -298,7 +297,6 @@ namespace Lexplosion.Logic.Network.SMP
                 Runtime.DebugWrite("Point error");
                 return false;
             }
-
             Runtime.DebugWrite("Point is defined");
 
             socket.Connect(remoteIp);
@@ -920,7 +918,7 @@ namespace Lexplosion.Logic.Network.SMP
                         case PackgeCodes.ConnectRequest:
                             {
                                 //здесь уже не проверяем код подключения, ведь он был уже проверен в методе connect и ip отправителя зафиксирован
-                                if (data[0] == PackgeCodes.ConnectRequest && data.Length > 3)
+                                if (data[0] == PackgeCodes.ConnectRequest && data.Length > 2)
                                 {
                                     socket.Send(_connectAnswerPackage, _connectAnswerPackage.Length);
                                 }

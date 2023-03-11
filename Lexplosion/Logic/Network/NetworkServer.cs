@@ -293,32 +293,37 @@ namespace Lexplosion.Logic.Network
                                 break;
                             }
                         }
-
                         {
-                            byte[] data = new byte[21];
-                            int bytes = _controlConnection.Receive(data); //получем ip клиента
-
-                            byte[] resp = new byte[bytes];
-                            for (int i = 0; i < bytes; i++) // TODO: сделать этот перенос нормально, но не через resize
-                            {
-                                resp[i] = data[i];
-                            }
+                            byte[] data = new byte[50];
+                            int data_lenght = _controlConnection.Receive(data); //получем ip клиента
 
                             bool isConected;
                             IPEndPoint point;
                             if (DirectConnection)
                             {
-                                string str = Encoding.UTF8.GetString(resp, 0, resp.Length);
-                                string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-                                string hostIp = str.Replace(":" + hostPort, "");
-
-                                point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
-                                Runtime.DebugWrite("Host EndPoint " + point);
+                                string str = Encoding.UTF8.GetString(data, 0, data_lenght);
 
                                 using (SHA1 sha = new SHA1Managed())
                                 {
-                                    Runtime.DebugWrite("Connection code: " + myPoint + ", " + str);
-                                    byte[] connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
+                                    byte[] connectionCode;
+                                    if (str.EndsWith(",proxy"))
+                                    {
+                                        point = new IPEndPoint(IPAddress.Parse("194.61.2.176"), 4719);
+                                        Runtime.DebugWrite("Connection code: " + myPoint + ", " + str.Replace(",proxy", ""));
+                                        connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str.Replace(",proxy", "")));
+                                    }
+                                    else
+                                    {
+                                        string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
+                                        string hostIp = str.Replace(":" + hostPort, "");
+
+                                        point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
+                                        Runtime.DebugWrite("Host EndPoint " + point);
+
+                                        Runtime.DebugWrite("Connection code: " + myPoint + ", " + str);
+                                        connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
+                                    }
+
                                     isConected = ((SmpServer)Server).Connect(localPoint, point, connectionCode);
                                 }
                             }
