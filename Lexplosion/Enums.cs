@@ -134,7 +134,7 @@
         Modpacks = 4471
     }
 
-    public enum DownloadStageTypes
+    public enum StageType
     {
         Prepare,
         Client,
@@ -232,7 +232,7 @@
         InProcess
     }
 
-    public enum FileRecvReult
+    public enum FileRecvResult
     {
         Successful,
         ConnectionClose,

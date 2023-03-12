@@ -399,7 +399,7 @@ namespace Lexplosion.Logic.Management
                 {
                     if (javaCheck.Check(out JavaChecker.CheckResult checkResult, out JavaVersion javaVersion))
                     {
-                        progressHandler?.Invoke(DownloadStageTypes.Java, new ProgressHandlerArguments()
+                        progressHandler?.Invoke(StageType.Java, new ProgressHandlerArguments()
                         {
                             StagesCount = 0,
                             Stage = 0,
@@ -410,7 +410,7 @@ namespace Lexplosion.Logic.Management
 
                         bool downloadResult = javaCheck.Update(delegate (int percent, string fileName)
                         {
-                            progressHandler?.Invoke(DownloadStageTypes.Java, new ProgressHandlerArguments()
+                            progressHandler?.Invoke(StageType.Java, new ProgressHandlerArguments()
                             {
                                 StagesCount = 0,
                                 Stage = 0,

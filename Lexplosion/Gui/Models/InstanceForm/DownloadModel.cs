@@ -11,7 +11,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         private readonly MainViewModel _mainViewModel;
         private readonly InstanceFormModel _instanceFormModel;
 
-        public readonly List<Action<DownloadStageTypes, ProgressHandlerArguments>> DownloadActions = new List<Action<DownloadStageTypes, ProgressHandlerArguments>>();
+        public readonly List<Action<StageType, ProgressHandlerArguments>> DownloadActions = new List<Action<StageType, ProgressHandlerArguments>>();
         public readonly List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
 
 
@@ -99,8 +99,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
-        private DownloadStageTypes _downloadStageType;
-        public DownloadStageTypes DownloadStageType
+        private StageType _downloadStageType;
+        public StageType DownloadStageType
         {
             get => _downloadStageType; set
             {
@@ -193,7 +193,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         /// <param name="stagesCount">Количество стадиый</param>
         /// <param name="stage">Номер текущей стадии</param>
         /// <param name="procent">Процетны</param>
-        public void Download(DownloadStageTypes downloadStageType, ProgressHandlerArguments progressHandlerArguments)
+        public void Download(StageType downloadStageType, ProgressHandlerArguments progressHandlerArguments)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -205,21 +205,21 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 DownloadingFilesCount = progressHandlerArguments.FilesCount;
 
 
-                if (downloadStageType != DownloadStageTypes.Prepare)
+                if (downloadStageType != StageType.Prepare)
                 {
                     IsPrepareOnly = false;
                     IsPrepare = false;
                 }
 
-                if (downloadStageType == DownloadStageTypes.Java)
+                if (downloadStageType == StageType.Java)
                 {
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("javaInstalling");
                     HasProcents = false;
                     IsFilesDownload = true;
                 }
-                else if (downloadStageType == DownloadStageTypes.Prepare)
+                else if (downloadStageType == StageType.Prepare)
                 {
-                    _instanceFormModel.OverviewField = ResourceGetter.GetString("runPrepare");
+                    _instanceFormModel.OverviewField = ResourceGetter.GetString("checkLocalFiles");
                     IsPrepare = true;
                     HasProcents = true;
                     IsFilesDownload = false;
@@ -357,6 +357,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 else
                 {
                     //IsDownloadInProgress = false;
+                    IsPrepare = false;
                     _instanceFormModel.UpdateLowerButton();
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
                 }
@@ -388,7 +389,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Private Methods
 
 
-        private void DownloadProcess(DownloadStageTypes downloadStageType, ProgressHandlerArguments progressArgs)
+        private void DownloadProcess(StageType downloadStageType, ProgressHandlerArguments progressArgs)
         {
             var actions = DownloadActions.ToArray();
             foreach (var action in actions)

@@ -147,7 +147,7 @@ namespace Lexplosion.Gui.ViewModels
             Model.InstanceClient.Update();
         }
 
-        internal void DownloadInstance(Action<DownloadStageTypes, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null)
+        internal void DownloadInstance(Action<StageType, ProgressHandlerArguments> progressHandler = null, Action<InstanceInit, List<string>, bool> complitedDownload = null, string version = null)
         {
             if (progressHandler != null)
                 Model.DownloadModel.DownloadActions.Add(progressHandler);
@@ -264,7 +264,8 @@ namespace Lexplosion.Gui.ViewModels
 
                 case UpperButtonFunc.Play:
                     {
-                        LaunchInstance();
+                        if (!MainVM.IsInstanceRunning)
+                            LaunchInstance();
                         break;
                     }
 

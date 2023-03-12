@@ -681,7 +681,7 @@ namespace Lexplosion.Logic.Management.Instances
         public void Update(string instanceVersion = null)
         {
             _cancelTokenSource = new CancellationTokenSource();
-            ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
+            ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
@@ -715,7 +715,7 @@ namespace Lexplosion.Logic.Management.Instances
         public void Run()
         {
             _cancelTokenSource = new CancellationTokenSource();
-            ProgressHandler?.Invoke(DownloadStageTypes.Prepare, new ProgressHandlerArguments());
+            ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
 
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(GlobalData.GeneralSettings, true);

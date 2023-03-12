@@ -137,7 +137,7 @@
     <!--  instance form  -->
     <s:String x:Key="more">Больше</s:String>
     <s:String x:Key="javaInstalling">Идёт скачивание Java...</s:String>
-    <s:String x:Key="runPrepare">Идёт подготовка к запуску...</s:String>
+    <s:String x:Key="checkLocalFiles">Идёт проверка целостности локальных файлов...</s:String>
     <s:String x:Key="instanceLoading">Идёт скачивание... Этап</s:String>
 
     <s:String x:Key="runSuccessfulNotification">Игра успешно запущена.</s:String>

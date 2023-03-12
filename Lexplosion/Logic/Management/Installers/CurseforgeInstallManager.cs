@@ -154,7 +154,7 @@ namespace Lexplosion.Logic.Management.Installers
 
                 installer.MainFileDownloadEvent += delegate (int percent)
                 {
-                    progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                    progressHandler(StageType.Client, new ProgressHandlerArguments()
                     {
                         StagesCount = 3,
                         Stage = 1,
@@ -193,7 +193,7 @@ namespace Lexplosion.Logic.Management.Installers
                     };
                 }
 
-                progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                progressHandler(StageType.Client, new ProgressHandlerArguments()
                 {
                     StagesCount = 3,
                     Stage = 2,
@@ -285,7 +285,7 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                     {
-                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        progressHandler(StageType.Client, new ProgressHandlerArguments()
                         {
                             StagesCount = 3,
                             Stage = 2,
@@ -299,7 +299,7 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     singleDownloadMethod = delegate (string file, int pr, DownloadFileProgress stage_)
                     {
-                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        progressHandler(StageType.Client, new ProgressHandlerArguments()
                         {
                             StagesCount = 3,
                             Stage = 2,
@@ -341,7 +341,7 @@ namespace Lexplosion.Logic.Management.Installers
                     };
                 }
 
-                progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                progressHandler(StageType.Client, new ProgressHandlerArguments()
                 {
                     StagesCount = 3,
                     Stage = 2,
@@ -357,7 +357,7 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     if (nowDataCount != 0)
                     {
-                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        progressHandler(StageType.Client, new ProgressHandlerArguments()
                         {
                             StagesCount = 3,
                             Stage = 3,
@@ -368,7 +368,7 @@ namespace Lexplosion.Logic.Management.Installers
                     }
                     else
                     {
-                        progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                        progressHandler(StageType.Client, new ProgressHandlerArguments()
                         {
                             StagesCount = 3,
                             Stage = 3,
@@ -417,7 +417,7 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         installer.BaseDownloadEvent += delegate (int totalDataCount, int nowDataCount)
                         {
-                            progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                            progressHandler(StageType.Client, new ProgressHandlerArguments()
                             {
                                 StagesCount = 1,
                                 Stage = 1,
@@ -431,7 +431,7 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         installer.FileDownloadEvent += delegate (string file, int pr, DownloadFileProgress stage_)
                         {
-                            progressHandler(DownloadStageTypes.Client, new ProgressHandlerArguments()
+                            progressHandler(StageType.Client, new ProgressHandlerArguments()
                             {
                                 StagesCount = 1,
                                 Stage = 1,

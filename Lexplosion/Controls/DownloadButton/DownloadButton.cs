@@ -407,7 +407,7 @@ namespace Lexplosion.Controls
 
         private void Download()
         {
-            Action<DownloadStageTypes, ProgressHandlerArguments> progressHandlerMethod = delegate (DownloadStageTypes stageType, ProgressHandlerArguments progressHandlerArguments)
+            Action<StageType, ProgressHandlerArguments> progressHandlerMethod = delegate (StageType stageType, ProgressHandlerArguments progressHandlerArguments)
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {

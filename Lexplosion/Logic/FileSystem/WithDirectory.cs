@@ -466,13 +466,13 @@ namespace Lexplosion.Logic.FileSystem
             return ImportResult.Successful;
         }
 
-        public static FileRecvReult ReceiveFile(FileReceiver reciver, out string file)
+        public static FileRecvResult ReceiveFile(FileReceiver reciver, out string file)
         {
             string tempDir = CreateTempDir();
             file = tempDir + "archive.zip";
             reciver.StartDownload(file);
 
-            return FileRecvReult.Successful;
+            return FileRecvResult.Successful;
 
         }
 

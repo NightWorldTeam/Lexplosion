@@ -326,8 +326,7 @@
                     <Border
                         Width="60"
                         Height="60"
-                        CornerRadius="0,10,0,0"
-                        IsEnabled="{Binding MainVM.IsInstanceRunning, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                        CornerRadius="0,10,0,0">
 
                         <Border.Background>
                             <SolidColorBrush x:Name="UpperButtonBackground" />
@@ -359,6 +358,23 @@
                                 </BeginStoryboard>
                             </EventTrigger>
                         </Border.Triggers>
+
+                        <Border.Style>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="IsEnabled" Value="True" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Model.DownloadModel.IsPrepare}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
 
                         <Border.InputBindings>
                             <MouseBinding
