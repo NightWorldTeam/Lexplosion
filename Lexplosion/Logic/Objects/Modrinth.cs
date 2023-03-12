@@ -88,6 +88,9 @@ namespace Lexplosion.Logic.Objects.Modrinth
         [JsonProperty("updated")]
         public string Updated;
 
+        [JsonProperty("gallery")]
+        public List<Dictionary<string, string>> Images;
+
         public string WebsiteUrl
         {
             get => "https://modrinth.com/modpack/" + Slug;

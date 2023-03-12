@@ -49,19 +49,25 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             var images = new List<byte[]>();
-            if (data.screenshots != null)
+            if (data.screenshots != null && data.screenshots.Count > 0)
             {
-                using (var webClient = new WebClient())
+                var perfomer = new TasksPerfomer(3, data.screenshots.Count);
+                foreach (var item in data.screenshots)
                 {
-                    foreach (var item in data.screenshots)
+                    perfomer.ExecuteTask(delegate ()
                     {
-                        try
+                        using (var webClient = new WebClient())
                         {
-                            images.Add(webClient.DownloadData(item.url));
+                            try
+                            {
+                                images.Add(webClient.DownloadData(item.url));
+                            }
+                            catch { }
                         }
-                        catch { }
-                    }
+                    });
                 }
+
+                perfomer.WaitEnd();
             }
 
             int? projectFileId = null;

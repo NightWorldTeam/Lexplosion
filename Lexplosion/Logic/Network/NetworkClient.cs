@@ -137,7 +137,6 @@ namespace Lexplosion.Logic.Network
                                 if (directConnectPossible)
                                 {
                                     hostPoint = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
-                                    connectionCode[4]++;
                                 }
                                 else
                                 {

@@ -2,10 +2,12 @@
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +17,10 @@ namespace Lexplosion.Logic.Management.Instances
     {
         public override bool CheckUpdates(InstancePlatformData infoData, string localId)
         {
-            return false;
+            ModrinthProjectInfo info = ModrinthApi.GetProject(infoData.id);
+
+            if (info.Versions == null || info.Versions.Count == 0) return false;
+            return info.Versions[info.Versions.Count - 1] != infoData.instanceVersion;
         }
 
         private static List<ModrinthCategory> ParseCategories(List<string> data)
@@ -47,21 +52,30 @@ namespace Lexplosion.Logic.Management.Instances
                 return null;
             }
 
-            //var images = new List<byte[]>();
-            //if (data.screenshots != null)
-            //{
-            //    using (var webClient = new WebClient())
-            //    {
-            //        foreach (var item in data.screenshots)
-            //        {
-            //            try
-            //            {
-            //                images.Add(webClient.DownloadData(item.url));
-            //            }
-            //            catch { }
-            //        }
-            //    }
-            //}
+            var images = new List<byte[]>();
+            if (data.Images != null && data.Images.Count > 0)
+            {
+                var perfomer = new TasksPerfomer(3, data.Images.Count);
+                foreach (var item in data.Images)
+                {
+                    perfomer.ExecuteTask(delegate ()
+                    {
+                        using (var webClient = new WebClient())
+                        {
+                            if (item.ContainsKey("url"))
+                            {
+                                try
+                                {
+                                    images.Add(webClient.DownloadData(item["url"]));
+                                }
+                                catch { }
+                            }
+                        }
+                    });  
+                }
+
+                perfomer.WaitEnd();
+            }
 
             ClientType clientType = ClientType.Vanilla;
             if (data.Loaders.Contains("fabric"))
@@ -99,7 +113,7 @@ namespace Lexplosion.Logic.Management.Instances
                 GameVersion = data.GameVersions[data.GameVersions.Count - 1],
                 LastUpdate = date,
                 Modloader = clientType,
-                Images = new List<byte[]>(),
+                Images = images,
                 WebsiteUrl = data.WebsiteUrl,
                 Changelog = ""
             };
