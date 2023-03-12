@@ -390,9 +390,7 @@
                                     Margin="10,0,0,0"
                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                     VerticalAlignment="Center"
-                                    IsHitTestVisible="False"
-                                    TextBlock.FontSize="12"
-                                    TextBlock.Foreground="White" />
+                                    IsHitTestVisible="False" />
                             </StackPanel>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsChecked" Value="True">
@@ -412,6 +410,7 @@
                                                 HorizontalContentAlignment="Left"
                                                 ClickMode="Press"
                                                 Content="{TemplateBinding SelectionBoxItem}"
+                                                FontFamily="{DynamicResource Arkhip}"
                                                 Foreground="WhiteSmoke"
                                                 IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                                 IsTabStop="False"
@@ -482,17 +481,18 @@
                     <ComboBox
                         Height="30"
                         HorizontalAlignment="Center"
+                        FontFamily="{DynamicResource Poppins}"
                         SelectedIndex="{Binding Model.AccountTypeSelectedIndex, UpdateSourceTrigger=PropertyChanged}">
-                        <ComboBoxItem>
+                        <ComboBoxItem FontSize="14">
                             <TextBlock Text="{DynamicResource noAccount}" />
                         </ComboBoxItem>
-                        <ComboBoxItem IsSelected="True">
+                        <ComboBoxItem FontSize="14" IsSelected="True">
                             <TextBlock Text="{DynamicResource accountNightWorld}" />
                         </ComboBoxItem>
-                        <ComboBoxItem>
+                        <ComboBoxItem FontSize="14">
                             <TextBlock Text="{DynamicResource accountMojang}" />
                         </ComboBoxItem>
-                        <ComboBoxItem>
+                        <ComboBoxItem FontSize="14">
                             <TextBlock Text="{DynamicResource accountMicrosoft}" />
                         </ComboBoxItem>
                         <!--<ComboBoxItem>

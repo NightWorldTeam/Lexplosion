@@ -671,16 +671,15 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Resource Include="Assets\fonts\Casper.ttf" />
     <Resource Include="Assets\fonts\Arkhip.ttf" />
     <Resource Include="Assets\fonts\Futurabook.ttf" />
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
     <None Include="App.config" />
-    <Resource Include="Assets\fonts\Montserrat.ttf" />
     <Resource Include="Assets\fonts\PassDots.ttf" />
-    <Resource Include="Assets\fonts\Inner.ttf" />
+    <Resource Include="Assets\fonts\Poppins.ttf" />
+    <Resource Include="Assets\fonts\OpenSans.ttf" />
     <None Include="DLL\DiscordRPC.zip" />
     <None Include="DLL\LumiSoft.Net.zip" />
     <None Include="DLL\NewtonsoftJson.zip" />

@@ -42,18 +42,20 @@
                 </StackPanel>
 
                 <StackPanel Margin="28,40,0,0">
-                    <TextBlock FontSize="20" Text="{DynamicResource priorityConnetionMethod}" />
+                    <TextBlock FontFamily="{DynamicResource Poppins}" FontSize="18" Text="{DynamicResource priorityConnetionMethod}" />
                     <StackPanel Orientation="Horizontal">
                         <RadioButton
                             Margin="0,5,20,5"
                             Content="{DynamicResource directConnetion}"
                             FontSize="18"
+                            FontFamily="{DynamicResource Poppins}"
                             GroupName="ConnectType"
                             IsChecked="{Binding Model.DirectConnetion}" />
                         <RadioButton
                             Margin="20,5,0,5"
                             Content="{DynamicResource viaRepeater}"
                             FontSize="18"
+                            FontFamily="{DynamicResource Poppins}"
                             GroupName="ConnectType"
                             IsChecked="{Binding Model.DirectConnetion, Converter={StaticResource InverseBooleanConverter}}" />
                     </StackPanel>

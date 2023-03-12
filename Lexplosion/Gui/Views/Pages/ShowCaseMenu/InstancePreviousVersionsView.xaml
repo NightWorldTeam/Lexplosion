@@ -80,7 +80,6 @@
                     <TextBlock
                         Width="430"
                         Margin="10"
-                        FontFamily="{DynamicResource Montserrat}"
                         FontSize="15"
                         Foreground="White"
                         Text="{Binding FileName}"
