@@ -277,7 +277,7 @@
 
                     <ItemsControl
                         Grid.Row="1"
-                        Margin="0,1,1,1"
+                        Margin="0,-1,1,1"
                         ItemsSource="{Binding Model.Categories}">
                         <ItemsControl.Style>
                             <Style TargetType="{x:Type ItemsControl}">

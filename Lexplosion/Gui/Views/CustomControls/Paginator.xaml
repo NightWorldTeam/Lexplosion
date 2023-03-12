@@ -15,18 +15,14 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
-                        <Grid>
-                            <Border
-                                x:Name="Border"
-                                Background="#303030"
-                                BorderBrush="#202020"
-                                BorderThickness="2"
-                                CornerRadius="6" />
-                            <ContentPresenter
-                                x:Name="PART_ContentHost"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center" />
-                        </Grid>
+                        <Border
+                            x:Name="Border"
+                            Background="#303030"
+                            BorderBrush="#202020"
+                            BorderThickness="2"
+                            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
@@ -70,10 +66,15 @@
             Height="40"
             HorizontalAlignment="Left"
             Command="{Binding PrevPageCommand}"
-            Content="3"
-            FontFamily="Marlett"
             Style="{StaticResource Button}"
-            Visibility="{Binding CanGoBack, Converter={StaticResource ConvertBoolToVisibility}}" />
+            Visibility="{Binding CanGoBack, Converter={StaticResource ConvertBoolToVisibility}}">
+            <Viewbox Width="10" Height="10">
+                <Path
+                    Data="M28 34 18 24l10-10Z"
+                    Fill="White"
+                    Stretch="Fill" />
+            </Viewbox>
+        </Button>
         <TextBox
             x:Name="PageIndexTB"
             Grid.Column="1"
@@ -93,13 +94,14 @@
             Height="40"
             HorizontalAlignment="Right"
             Command="{Binding NextPageCommand}"
-            Content="3"
-            FontFamily="Marlett"
-            Style="{StaticResource Button}"
+            Style="{DynamicResource Button}"
             Visibility="{Binding CanGoNext, Converter={StaticResource ConvertBoolToVisibility}}">
-            <Button.LayoutTransform>
-                <RotateTransform Angle="180" />
-            </Button.LayoutTransform>
+            <Viewbox Width="10" Height="10">
+                <Path
+                    Data="M20 34V14l10 10Z"
+                    Fill="White"
+                    Stretch="Fill" />
+            </Viewbox>
         </Button>
     </Grid>
 </UserControl>
