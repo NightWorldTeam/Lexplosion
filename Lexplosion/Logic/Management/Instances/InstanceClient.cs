@@ -186,7 +186,7 @@ namespace Lexplosion.Logic.Management.Instances
             private set
             {
                 _websiteUrl = value;
-                OnPropertyChanged();
+                StateChanged?.Invoke();
             }
         }
 
