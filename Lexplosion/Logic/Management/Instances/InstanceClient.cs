@@ -179,8 +179,18 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        private string _websiteUrl = null;
+        public string WebsiteUrl
+        {
+            get => _websiteUrl;
+            private set
+            {
+                _websiteUrl = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsInstalled { get; private set; } = false;
-        public string WebsiteUrl { get; private set; } = null;
 
         #endregion
 
@@ -493,7 +503,7 @@ namespace Lexplosion.Logic.Management.Instances
                         instanceClient.Description = instance.Description;
                     if (instance.Author != null)
                         instanceClient.Author = instance.Author;
-                    if (instance.Author != null)
+                    if (instance.WebsiteUrl != null)
                         instanceClient.WebsiteUrl = instance.WebsiteUrl;
 
                     instanceClient.DownloadLogo(instance.LogoUrl, instanceClient.SaveAssets);
