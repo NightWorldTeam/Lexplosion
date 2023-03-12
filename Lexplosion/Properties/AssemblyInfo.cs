@@ -18,7 +18,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("NightWorld")]
 [assembly: AssemblyCompany("NightWorld.Inc")]
 [assembly: AssemblyProduct("Lexplosion")]
-[assembly: AssemblyCopyright("Copyright © NightWorld 2017-2022")]
+[assembly: AssemblyCopyright("Copyright © NightWorld 2017-2023")]
 [assembly: AssemblyTrademark("NightWorld")]
 [assembly: AssemblyCulture("")]
 
@@ -57,6 +57,6 @@ using System.Windows;
 // Можно задать все значения или принять номер сборки и номер редакции по умолчанию.
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.1")]
-[assembly: AssemblyFileVersion("0.7.1")]
+[assembly: AssemblyVersion("0.7.3")]
+[assembly: AssemblyFileVersion("0.7.3")]
 [assembly: NeutralResourcesLanguage("")]

@@ -119,9 +119,6 @@ namespace Lexplosion.Gui.Models.GameExtensions
             uint[] version = new uint[] { 0, 0, 0 };
             var splitedVersion = gameVersion.Split('.');
 
-            Console.WriteLine(gameVersion);
-
-
             switch (extension)
             {
                 case GameExtension.Forge: return version[0] >= 1 && version[1] >= 1;

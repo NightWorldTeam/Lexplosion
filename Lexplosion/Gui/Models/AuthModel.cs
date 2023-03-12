@@ -253,7 +253,6 @@ namespace Lexplosion.Gui.Models
             // на случае нештатной ситуации.
             if (_accountType != AccountType.Microsoft)
                 return;
-            Console.WriteLine(microsoftData);
             var authCode = _authentication.Auth(_accountType, "", microsoftData, true);
             PerformAuthCode(authCode);
             NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
