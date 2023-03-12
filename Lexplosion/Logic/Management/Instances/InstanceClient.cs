@@ -658,7 +658,6 @@ namespace Lexplosion.Logic.Management.Instances
         public void CancelDownload()
         {
             _cancelTokenSource?.Cancel();
-            DownloadCanceled?.Invoke();
         }
 
         /// <summary>
@@ -683,6 +682,10 @@ namespace Lexplosion.Logic.Management.Instances
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
 
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
+            }
+            else if (data.InitResult == InstanceInit.IsCancelled)
+            {
+                DownloadCanceled?.Invoke();
             }
 
             DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, false);
