@@ -188,14 +188,45 @@
                         <Border
                             x:Name="PART_Track"
                             Background="#505050"
-                            CornerRadius="2" />
+                            CornerRadius="2,2,0,0" />
 
                         <Border
                             x:Name="PART_Indicator"
                             Margin="0,0,0,0"
                             HorizontalAlignment="Left"
                             Background="{TemplateBinding Foreground}"
-                            CornerRadius="2" />
+                            CornerRadius="2,2,0,0" />
+
+                        <Grid x:Name="Animation" ClipToBounds="True">
+                            <Rectangle
+                                x:Name="PART_GlowRect"
+                                Width="100"
+                                Margin="-100,0,0,0"
+                                HorizontalAlignment="Left"
+                                Fill="Transparent" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DefaultProgressBar" TargetType="{x:Type ProgressBar}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <Grid>
+                        <Border
+                            x:Name="PART_Track"
+                            Background="#505050"
+                            CornerRadius="2,2,0,0" />
+
+                        <Border
+                            x:Name="PART_Indicator"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            Background="{TemplateBinding Foreground}"
+                            CornerRadius="2,2,0,0" />
 
                         <Grid x:Name="Animation" ClipToBounds="True">
                             <Rectangle
