@@ -202,7 +202,7 @@ namespace Lexplosion.Logic.Management
             return command.Replace(@"\", "/");
         }
 
-        public bool Run(InitData data, ComplitedLaunchCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
+        public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
         {
             GameClientName = gameClientName;
             GameVersion = data?.VersionFile?.gameVersion;

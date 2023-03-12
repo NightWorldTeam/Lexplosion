@@ -93,18 +93,18 @@ namespace Lexplosion.Gui.ViewModels
         /// <summary>
         /// Запускает сборку по данным формы.
         /// </summary>
-        public void LaunchInstance(ComplitedLaunchCallback complitedLaunchCallback = null, GameExitedCallback gameExitedCallback = null)
+        public void LaunchInstance(LaunchComplitedCallback complitedLaunchCallback = null, GameExitedCallback gameExitedCallback = null)
         {
             if (!MainVM.IsInstanceRunning)
             {
                 if (complitedLaunchCallback != null && gameExitedCallback != null)
                 {
-                    Client.ComplitedLaunch += complitedLaunchCallback;
+                    Client.LaunchComplited += complitedLaunchCallback;
                     Client.GameExited += gameExitedCallback;
                 }
                 MainVM.IsInstanceRunning = true;
 
-                Model.InstanceClient.DownloadStartedEvent += () =>
+                Model.InstanceClient.DownloadStarted += () =>
                 {
                     MainVM.DownloadManager.AddProcess(this);
 

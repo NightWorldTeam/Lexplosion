@@ -28,7 +28,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, FactoryDLCModel factoryDLCModel, FactoryDLCVM factoryDLCVM)
         {
             _mainViewModel = mainViewModel;
-            _mainViewModel.UserProfile.IsShowInfoBar = false;
+            _mainViewModel.UserData.IsShowInfoBar = false;
 
             _instanceClient = instanceClient;
             _projectType = addonsType;
@@ -267,7 +267,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         /// </summary>
         private void ClosePage()
         {
-            _mainViewModel.UserProfile.IsShowInfoBar = true;
+            _mainViewModel.UserData.IsShowInfoBar = true;
             InstanceAddon.ClearAddonsListCache();
             MainViewModel.NavigationStore.CurrentViewModel = MainViewModel.NavigationStore.PrevViewModel;
         }

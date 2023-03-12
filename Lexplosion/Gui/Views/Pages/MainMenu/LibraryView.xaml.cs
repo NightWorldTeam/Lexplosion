@@ -26,7 +26,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu
                 Duration = TimeSpan.FromSeconds(0.4)
             };
             this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
-            InstanceClient.WasCreated += OnCreatedInstance;
+            InstanceClient.Created += OnCreatedInstance;
         }
 
         private void OnCreatedInstance()

@@ -954,7 +954,7 @@ namespace Lexplosion.Logic.FileSystem
                                 {
                                     _fileDownloadHandler?.Invoke("asstes: " + asset, 100, DownloadFileProgress.Error);
                                     errors.Add("asstes: " + asset);
-                                    Runtime.DebugWrite("Download error " + asset);
+                                    Runtime.DebugWrite("Downloading error " + asset);
                                 }
 
                                 updated++;

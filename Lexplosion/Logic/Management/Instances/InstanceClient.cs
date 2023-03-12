@@ -186,14 +186,14 @@ namespace Lexplosion.Logic.Management.Instances
 
         #region events
         public event ProgressHandlerCallback ProgressHandler;
-        public event ComplitedDownloadCallback ComplitedDownload;
-        public event ComplitedLaunchCallback ComplitedLaunch;
+        public event DownloadComplitedCallback DownloadComplited;
+        public event LaunchComplitedCallback LaunchComplited;
         public event GameExitedCallback GameExited;
         public event Action StateChanged;
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
-        public event Action DownloadStartedEvent;
-        public event Action DownloadCanselledEvent;
-        public static event Action WasCreated;
+        public event Action DownloadStarted;
+        public event Action DownloadCancelled;
+        public static event Action Created;
         #endregion
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace Lexplosion.Logic.Management.Instances
             _installedInstances[client._localId] = client;
             SaveInstalledInstancesList();
 
-            WasCreated?.Invoke();
+            Created?.Invoke();
 
             return client;
         }
@@ -658,7 +658,7 @@ namespace Lexplosion.Logic.Management.Instances
         public void CancelDownload()
         {
             _cancelTokenSource?.Cancel();
-            DownloadCanselledEvent?.Invoke();
+            DownloadCancelled?.Invoke();
         }
 
         /// <summary>
@@ -673,7 +673,7 @@ namespace Lexplosion.Logic.Management.Instances
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
-            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStartedEvent, instanceVersion);
+            InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
 
             UpdateAvailable = data.UpdatesAvailable;
             ProfileVersion = data.ClientVersion;
@@ -685,7 +685,7 @@ namespace Lexplosion.Logic.Management.Instances
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
             }
 
-            ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
+            DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, false);
             Runtime.DebugWrite("UpdateInstance-end " + data.InitResult);
 
             _cancelTokenSource = null;
@@ -703,7 +703,7 @@ namespace Lexplosion.Logic.Management.Instances
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             _gameManager = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
-            InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStartedEvent);
+            InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);
 
             UpdateAvailable = data.UpdatesAvailable;
             ProfileVersion = data.ClientVersion;
@@ -712,15 +712,15 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 IsInstalled = true;
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
-                ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, true);
+                DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, true);
 
-                _gameManager.Run(data, ComplitedLaunch, GameExited, Name, GlobalData.User.AccountType == AccountType.NightWorld);
+                _gameManager.Run(data, LaunchComplited, GameExited, Name, GlobalData.User.AccountType == AccountType.NightWorld);
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                 // TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
             }
             else
             {
-                ComplitedDownload?.Invoke(data.InitResult, data.DownloadErrors, false);
+                DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, false);
             }
 
             Runtime.DebugWrite("Run-end " + data.InitResult);

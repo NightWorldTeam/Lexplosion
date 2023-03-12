@@ -28,7 +28,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _mainViewModel = mainViewModel;
             _formViewModel = instanceFormViewModel;
             _formModel = instanceFormModel;
-            _formModel.InstanceClient.ComplitedLaunch += LaunchCompleted;
+            _formModel.InstanceClient.LaunchComplited += LaunchCompleted;
             _formModel.InstanceClient.GameExited += GameExited;
         }
 

@@ -149,7 +149,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             ComplitedDownloadActions.Add(InstanceDownloadCompleted);
 
             instanceFormModel.InstanceClient.ProgressHandler += DownloadProcess;
-            instanceFormModel.InstanceClient.ComplitedDownload += ComplitedDownloadAction;
+            instanceFormModel.InstanceClient.DownloadComplited += ComplitedDownloadAction;
         }
 
 
@@ -356,7 +356,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             _instanceFormModel.OverviewField = ResourceGetter.GetString("downloadCancelling");
             _instanceFormModel.DownloadModel.HasProcents = false;
-            _instanceFormModel.InstanceClient.DownloadCanselledEvent += () =>
+            _instanceFormModel.InstanceClient.DownloadCancelled += () =>
             {
                 _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
             };

@@ -309,7 +309,7 @@ namespace Lexplosion.Controls
         private void OnPlayButtonClicked(object sender, MouseButtonEventArgs e)
         {
             ChangePlayButtonText(ResourceGetter.GetString("prepareRun"));
-            ComplitedLaunchCallback complitedLaunch = delegate (string instanceId, bool successful)
+            LaunchComplitedCallback complitedLaunch = delegate (string instanceId, bool successful)
             {
                 // тут хз что
                 // можно написать при запуске, до полного запуска, что-то типо запускается.

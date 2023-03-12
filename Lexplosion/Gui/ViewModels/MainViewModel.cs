@@ -127,7 +127,7 @@ namespace Lexplosion.Gui.ViewModels
         public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
         public ExportViewModel ExportViewModel { get; set; }
         public LoadingBoard LoadingBoard { get; } = new LoadingBoard();
-        public UserProfile UserProfile { get; }
+        public UserData UserData { get; }
         public ModalWindowViewModel ModalWindowVM { get; } = new ModalWindowViewModel();
 
         public DownloadManagerViewModel DownloadManager;
@@ -198,7 +198,7 @@ namespace Lexplosion.Gui.ViewModels
             PreLoadGameVersions();
 
             Model = new MainModel();
-            UserProfile = new UserProfile(InitTrayComponents);
+            UserData = new UserData(InitTrayComponents);
             LibraryInstanceLoading();
 
             NavigationStore.CurrentViewModel = new AuthViewModel(this);
@@ -284,7 +284,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
                 TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
-                TrayComponents.Add(new TrayButton(3, ResourceGetter.GetString("rebootOnlineGame"), ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+                TrayComponents.Add(new TrayButton(3, ResourceGetter.GetString("rebootOnlineGame"), ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserData.IsNightWorldAccount });
                 TrayComponents.Add(new TrayButton(4, ResourceGetter.GetString("contactSupport"), ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
                 TrayComponents.Add(new TrayButton(5, ResourceGetter.GetString("close"), ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
             });
@@ -298,7 +298,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
                 TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
-                TrayComponents.Add(new TrayButton(3, ResourceGetter.GetString("rebootOnlineGame"), ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserProfile.IsNightWorldAccount });
+                TrayComponents.Add(new TrayButton(3, ResourceGetter.GetString("rebootOnlineGame"), ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserData.IsNightWorldAccount });
                 TrayComponents.Add(new TrayButton(4, ResourceGetter.GetString("contactSupport"), ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
                 TrayComponents.Add(new TrayButton(5, ResourceGetter.GetString("close"), ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
             });

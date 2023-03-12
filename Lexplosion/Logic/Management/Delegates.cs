@@ -3,8 +3,8 @@
 namespace Lexplosion.Logic.Management
 {
     public delegate void ProgressHandlerCallback(DownloadStageTypes stageType, ProgressHandlerArguments data);
-    public delegate void ComplitedDownloadCallback(InstanceInit result, List<string> downloadErrors, bool launchGame);
-    public delegate void ComplitedLaunchCallback(string instanceId, bool successful);
+    public delegate void DownloadComplitedCallback(InstanceInit result, List<string> downloadErrors, bool launchGame);
+    public delegate void LaunchComplitedCallback(string instanceId, bool successful);
     public delegate void GameExitedCallback(string instanceId);
 
     public struct ProgressHandlerArguments

@@ -24,7 +24,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             {
                 _viewModel = instanceFormViewModel;
                 instanceFormViewModel.Client.FileDownloadEvent += OnFileDownload;
-                instanceFormViewModel.Client.ComplitedDownload += OnDownloadFinished;
+                instanceFormViewModel.Client.DownloadComplited += OnDownloadFinished;
             }
         }
 

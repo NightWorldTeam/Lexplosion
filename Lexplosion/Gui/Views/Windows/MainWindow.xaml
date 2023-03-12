@@ -148,7 +148,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             Background="{DynamicResource HeaderSolidColorBrush}"
-            Visibility="{Binding UserProfile.IsShowInfoBar, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
+            Visibility="{Binding UserData.IsShowInfoBar, Source={StaticResource MainVM}, Converter={StaticResource ConvertBoolToVisibility}}">
             <Grid
                 Width="248"
                 Height="34"
@@ -159,7 +159,7 @@
                     Margin="11"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    IsEnabled="{Binding UserProfile.IsNightWorldAccount, Source={StaticResource MainVM}}">
+                    IsEnabled="{Binding UserData.IsNightWorldAccount, Source={StaticResource MainVM}}">
                     <ToggleButton.Template>
                         <ControlTemplate TargetType="{x:Type ToggleButton}">
                             <Grid>
@@ -226,7 +226,7 @@
                                             <Button
                                                 Background="#167FFC"
                                                 Click="ChangeStatusButtonClick"
-                                                Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                Command="{Binding UserData.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Online"
                                                 Content="{DynamicResource online}"
                                                 FontSize="14"
@@ -235,7 +235,7 @@
                                             <Button
                                                 Background="Red"
                                                 Click="ChangeStatusButtonClick"
-                                                Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                Command="{Binding UserData.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="NotDisturb"
                                                 Content="{DynamicResource doNotDisturb}"
                                                 FontSize="14"
@@ -244,7 +244,7 @@
                                             <Button
                                                 Background="Gray"
                                                 Click="ChangeStatusButtonClick"
-                                                Command="{Binding UserProfile.ChangeStatusCommand, Source={StaticResource MainVM}}"
+                                                Command="{Binding UserData.ChangeStatusCommand, Source={StaticResource MainVM}}"
                                                 CommandParameter="Offline"
                                                 Content="{DynamicResource invisible}"
                                                 FontSize="14"
@@ -265,7 +265,7 @@
                     FontSize="18"
                     FontWeight="Bold"
                     Foreground="#fff"
-                    Text="{Binding UserProfile.Nickname, Source={StaticResource MainVM}}"
+                    Text="{Binding UserData.Nickname, Source={StaticResource MainVM}}"
                     TextAlignment="Center" />
 
                 <Button

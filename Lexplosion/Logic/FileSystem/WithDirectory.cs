@@ -199,7 +199,7 @@ namespace Lexplosion.Logic.FileSystem
                     DelFile(DirectoryPath + "/" + path + "/" + fileName);
                 }
 
-                Runtime.DebugWrite("Download error " + fileName + " " + url + " " + ex);
+                Runtime.DebugWrite("Downloading error " + fileName + " " + url + " " + ex);
 
                 return false;
             }
@@ -232,7 +232,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
                 catch (Exception ex)
                 {
-                    Runtime.DebugWrite("Download error " + fileName + " " + url + " " + ex);
+                    Runtime.DebugWrite("Downloading error " + fileName + " " + url + " " + ex);
                     return false;
                 }
             }
