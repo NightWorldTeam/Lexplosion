@@ -159,6 +159,7 @@
     <s:String x:Key="removeFromLibrary">Remove from the library</s:String>
     <s:String x:Key="visitCurseforge">Visit Curseforge</s:String>
     <s:String x:Key="visitNightWorld">Visit NightWorld</s:String>
+    <s:String x:Key="visitModrinth">Visit Modrinth</s:String>
     <s:String x:Key="openFolder">Open Folder</s:String>
 
 

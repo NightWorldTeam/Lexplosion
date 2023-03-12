@@ -112,19 +112,24 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
                 if (InstanceClient.WebsiteUrl != null)
                 {
-                    if (InstanceClient.Type == InstanceSource.Curseforge)
+                    switch (InstanceClient.Type) 
                     {
-                        LowerButtons.Add(
-                                new LowerButton(ResourceGetter.GetString("visitCurseforge"), ResourceGetter.GetIcon("Planet"), LowerButtonFunc.OpenWebsite)
-                            );
+                        case InstanceSource.Curseforge:
+                            {
+                                LowerButtons.Add(new LowerButton(ResourceGetter.GetString("visitCurseforge"), ResourceGetter.GetIcon("Planet"), LowerButtonFunc.OpenWebsite));
+                                break;
+                            }
+                        case InstanceSource.Nightworld:
+                            {
+                                LowerButtons.Add(new LowerButton(ResourceGetter.GetString("visitNightWorld"), ResourceGetter.GetIcon("Planet"), LowerButtonFunc.OpenWebsite));
+                                break;
+                            }
+                        case InstanceSource.Modrinth:
+                            {
+                                LowerButtons.Add(new LowerButton(ResourceGetter.GetString("visitModrinth"), ResourceGetter.GetIcon("Planet"), LowerButtonFunc.OpenWebsite));
+                                break;
+                            }
                     }
-                    else if (InstanceClient.Type == InstanceSource.Nightworld)
-                    {
-                        LowerButtons.Add(
-                            new LowerButton(ResourceGetter.GetString("visitNightWorld"), ResourceGetter.GetIcon("Planet"), LowerButtonFunc.OpenWebsite)
-                        );
-                    }
-
                 }
 
                 if (InstanceClient.InLibrary && !InstanceClient.IsInstalled && !DownloadModel.IsDownloadInProgress)

@@ -28,8 +28,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _mainViewModel = mainViewModel;
             _formViewModel = instanceFormViewModel;
             _formModel = instanceFormModel;
-            _formModel.InstanceClient.LaunchComplited += LaunchCompleted;
-            _formModel.InstanceClient.GameExited += GameExited;
+            _formModel.InstanceClient.LaunchComplited += OnLaunchCompleted;
+            _formModel.InstanceClient.GameExited += OnGameExited;
         }
 
 
@@ -57,9 +57,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Private Methods
 
 
-        private void LaunchCompleted(string id, bool successful)
+        private void OnLaunchCompleted(string id, bool successful)
         {
             _formModel.IsLaunch = false;
+            _formModel.DownloadModel.IsDownloadInProgress = false;
             if (successful)
             {
                 MainViewModel.ShowToastMessage(
@@ -69,7 +70,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 );
 
                 _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
-
                 _formModel.DownloadModel.IsDownloadInProgress = false;
             }
             else
@@ -92,12 +92,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _formModel.UpdateLowerButton();
         }
 
-        private void GameExited(string id)
+        private void OnGameExited(string id)
         {
             _mainViewModel.IsInstanceRunning = false;
-            if (_formModel.DownloadModel.IsDownloadInProgress)
-                _formModel.DownloadModel.IsDownloadInProgress = false;
-
+            _formModel.DownloadModel.IsDownloadInProgress = false;
             _formModel.IsLaunch = false;
 
             _mainViewModel.InitTrayComponentsWithGame(_formViewModel);

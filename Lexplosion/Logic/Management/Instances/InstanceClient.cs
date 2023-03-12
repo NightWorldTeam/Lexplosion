@@ -192,7 +192,7 @@ namespace Lexplosion.Logic.Management.Instances
         public event Action StateChanged;
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
         public event Action DownloadStarted;
-        public event Action DownloadCancelled;
+        public event Action DownloadCanceled;
         public static event Action Created;
         #endregion
 
@@ -658,7 +658,7 @@ namespace Lexplosion.Logic.Management.Instances
         public void CancelDownload()
         {
             _cancelTokenSource?.Cancel();
-            DownloadCancelled?.Invoke();
+            DownloadCanceled?.Invoke();
         }
 
         /// <summary>

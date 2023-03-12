@@ -2,6 +2,7 @@
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -119,6 +120,7 @@ namespace Lexplosion.Gui.ViewModels
                     Model.DownloadModel.HasProcents = false;
                     Model.DownloadModel.IsDownloadInProgress = false;
                     Model.IsLaunch = true;
+                    Model.OverviewField = ResourceGetter.GetString("gameRunning");
                     Model.UpdateButtons();
                 };
 
@@ -135,7 +137,9 @@ namespace Lexplosion.Gui.ViewModels
             Model.InstanceClient.StopGame();
             Model.UpperButton.ChangeFuncPlay();
             MainVM.IsInstanceRunning = false;
+            Model.DownloadModel.IsPrepare = false;
             Model.DownloadModel.HasProcents = false;
+            Model.IsLaunch = false;
             Model.OverviewField = Model.InstanceClient.Summary;
         }
 
@@ -298,7 +302,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 case LowerButtonFunc.CancelDownload:
                     {
-                        Model.DownloadModel.CancelInstanceDownload();
+                        Model.DownloadModel.CancelDownload();
                         break;
                     }
 

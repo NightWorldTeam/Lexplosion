@@ -28,6 +28,16 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
         }
 
+        private bool _isPrepare = false;
+        public bool IsPrepare
+        {
+            get => _isPrepare; set
+            {
+                _isPrepare = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _isFilesDownload;
         public bool IsFilesDownload
         {
@@ -198,6 +208,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 if (downloadStageType != DownloadStageTypes.Prepare)
                 {
                     IsPrepareOnly = false;
+                    IsPrepare = false;
                 }
 
                 if (downloadStageType == DownloadStageTypes.Java)
@@ -209,6 +220,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 else if (downloadStageType == DownloadStageTypes.Prepare)
                 {
                     _instanceFormModel.OverviewField = ResourceGetter.GetString("runPrepare");
+                    IsPrepare = true;
                     HasProcents = true;
                     IsFilesDownload = false;
                 }
@@ -352,12 +364,15 @@ namespace Lexplosion.Gui.Models.InstanceForm
             });
         }
 
-        public void CancelInstanceDownload()
+        public void CancelDownload()
         {
             _instanceFormModel.OverviewField = ResourceGetter.GetString("downloadCancelling");
-            _instanceFormModel.DownloadModel.HasProcents = false;
-            _instanceFormModel.InstanceClient.DownloadCancelled += () =>
+            _instanceFormModel.InstanceClient.DownloadCanceled += () =>
             {
+                _instanceFormModel.DownloadModel.HasProcents = false;
+                _instanceFormModel.DownloadModel.IsDownloadInProgress = false;
+                _instanceFormModel.DownloadModel.IsFilesDownload = false;
+                _instanceFormModel.UpdateButtons();
                 _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
             };
             _instanceFormModel.InstanceClient.CancelDownload();

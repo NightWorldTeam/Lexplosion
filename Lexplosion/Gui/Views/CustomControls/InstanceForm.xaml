@@ -288,9 +288,23 @@
                     <ItemsControl
                         Grid.Row="1"
                         Margin="0,1,1,1"
-                        ItemsSource="{Binding Model.Categories}"
-                        Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}">
-
+                        ItemsSource="{Binding Model.Categories}">
+                        <ItemsControl.Style>
+                            <Style TargetType="{x:Type ItemsControl}">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Model.DownloadModel.IsDownloadInProgress}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Model.IsLaunch}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Model.DownloadModel.IsPrepare}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
