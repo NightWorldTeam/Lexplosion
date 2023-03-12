@@ -199,6 +199,11 @@ namespace Lexplosion.Logic.Management.Instances
         public event DownloadComplitedCallback DownloadComplited;
         public event LaunchComplitedCallback LaunchComplited;
         public event GameExitedCallback GameExited;
+
+        /// <summary>
+        /// Используется, для того чтобы сообщить InstanceFormViewModel,
+        /// что данные обновились, и нужно обновить инфу о данных.
+        /// </summary>
         public event Action StateChanged;
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
         public event Action DownloadStarted;
