@@ -5,7 +5,6 @@ using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Lexplosion.Gui.ViewModels
 {

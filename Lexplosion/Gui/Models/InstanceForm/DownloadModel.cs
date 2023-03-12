@@ -367,13 +367,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public void CancelDownload()
         {
             _instanceFormModel.OverviewField = ResourceGetter.GetString("downloadCancelling");
+
+            HasProcents = false;
+            IsDownloadInProgress = false;
+            IsFilesDownload = false;
+            IsPrepare = true;
+
             _instanceFormModel.InstanceClient.DownloadCanceled += () =>
             {
-                _instanceFormModel.DownloadModel.HasProcents = false;
-                _instanceFormModel.DownloadModel.IsDownloadInProgress = false;
-                _instanceFormModel.DownloadModel.IsFilesDownload = false;
                 _instanceFormModel.UpdateButtons();
                 _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
+                IsPrepare = false;
             };
             _instanceFormModel.InstanceClient.CancelDownload();
         }
