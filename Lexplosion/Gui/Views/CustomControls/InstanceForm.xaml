@@ -436,7 +436,7 @@
         <ProgressBar
             Width="440"
             Height="5"
-            Margin="105,115,60,0"
+            Margin="115,115,60,0"
             Background="#131313"
             BorderThickness="0"
             Foreground="{DynamicResource BrandSolidColorBrush}"

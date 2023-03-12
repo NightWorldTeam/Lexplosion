@@ -44,9 +44,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
             Lexplosion.Runtime.TaskRun(() =>
             {
                 _mainViewModel.RunningInstance = _formViewModel;
-                _formModel.InstanceClient.Run();
                 _mainViewModel.IsInstanceRunning = true;
                 _formModel.UpdateButtons();
+                _formModel.InstanceClient.Run();
+                
             });
         }
 
