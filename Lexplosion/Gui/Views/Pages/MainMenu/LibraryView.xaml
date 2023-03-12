@@ -31,7 +31,7 @@
         <!--  ListBox - ScrollViewer.CanContentScroll="False" создаёт плавный скролл.  -->
         <ScrollViewer
             x:Name="ContainerPage_ScrollViewer"
-            Margin="0,0,0,30"
+            Margin="0,0,0,00"
             extension:ScrollViewer.OnScrollCommand="{Binding OnScrollCommand}"
             IsTabStop="False"
             ScrollChanged="LibraryItemsControl_ScrollChanged">
@@ -46,13 +46,15 @@
                         <CollectionContainer Collection="{Binding Source={StaticResource InstanceCollection}}" />
 
                         <!--  Library Instance Added  -->
-                        <!--<Button
+                        <Button
                             Width="620"
                             Height="120"
                             Margin="30,15,30,30"
-                            Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                            Content="Добавить сборку"
-                            Style="{StaticResource LibraryAddBtn}" />-->
+                            Content="Новая Сборка"
+                            IsTabStop="False"
+                            KeyboardNavigation.IsTabStop="False"
+                            Opacity="0.2"
+                            Style="{StaticResource LibraryAddBtn}" />
 
                     </CompositeCollection>
                 </ItemsControl.ItemsSource>

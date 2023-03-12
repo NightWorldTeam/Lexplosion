@@ -376,7 +376,20 @@
                                         Fill="White"
                                         Stretch="Fill"
                                         Stroke="White"
-                                        Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+                                        Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                                        <Path.Style>
+                                            <Style TargetType="{x:Type Path}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Model.DownloadModel.IsDownloadInProgress}" Value="True">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Model.IsLaunch}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Path.Style>
+                                    </Path>
                                 </Viewbox>
 
                                 <TextBlock
@@ -414,17 +427,34 @@
             Background="#131313"
             BorderThickness="0"
             Foreground="{DynamicResource BrandSolidColorBrush}"
-            IsIndeterminate="{Binding Model.DownloadModel.HasProcents}"
             Maximum="100"
             Minimum="0"
-            Visibility="{Binding Path=Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}"
             Value="{Binding Model.DownloadModel.DownloadProgress}">
-            <!--<ProgressBar.Effect>
-                <DropShadowEffect
-                    BlurRadius="20"
-                    Opacity="0.3"
-                    ShadowDepth="1" />
-            </ProgressBar.Effect>-->
+            <ProgressBar.Style>
+                <Style TargetType="{x:Type ProgressBar}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Setter Property="IsIndeterminate" Value="False" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Model.DownloadModel.IsDownloadInProgress}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Model.IsLaunch}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Model.DownloadModel.HasProcents}" Value="False" />
+                                <Condition Binding="{Binding Model.IsLaunch}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="IsIndeterminate" Value="True" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ProgressBar.Style>
         </ProgressBar>
     </Grid>
 </UserControl>

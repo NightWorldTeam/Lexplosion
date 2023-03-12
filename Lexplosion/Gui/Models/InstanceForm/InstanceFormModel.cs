@@ -21,6 +21,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
         public LaunchModel LaunchModel { get; }
         public UpperButton UpperButton { get; set; }
 
+
+        private bool _isLaunch = false;
+        public bool IsLaunch
+        {
+            get => _isLaunch; set 
+            {
+                _isLaunch = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _overviewField;
         public string OverviewField
         {
@@ -46,16 +57,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
             instanceClient.StateChanged += UpdateLowerButton;
 
             UpperButtonSetup();
-
             LoadingCategories();
 
             OverviewField = instanceClient.Summary;
-            DownloadModel = new DownloadModel(mainViewModel, this)
-            {
-                DownloadProgress = 0,
-                Stage = 0,
-                StagesCount = 0
-            };
+            DownloadModel = new DownloadModel(mainViewModel, this);
             LaunchModel = new LaunchModel(mainViewModel, this, instanceFormViewModel);
 
             UpdateButtons();
@@ -77,13 +82,17 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             UpdateLowerButton();
 
-            if (InstanceClient.IsInstalled)
+            if (InstanceClient.IsInstalled && !_mainViewModel.IsInstanceRunning)
             {
                 UpperButton.ChangeFuncPlay();
             }
             else if (!InstanceClient.IsInstalled || !InstanceClient.InLibrary)
             {
                 UpperButton.ChangeFuncDownload();
+            }
+            else 
+            {
+                UpperButton.ChangeFuncClose();
             }
         }
 

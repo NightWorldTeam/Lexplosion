@@ -4,6 +4,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Lexplosion.Gui.ViewModels
 {
@@ -102,18 +103,27 @@ namespace Lexplosion.Gui.ViewModels
                     Client.LaunchComplited += complitedLaunchCallback;
                     Client.GameExited += gameExitedCallback;
                 }
-                MainVM.IsInstanceRunning = true;
+
 
                 Model.InstanceClient.DownloadStarted += () =>
                 {
                     MainVM.DownloadManager.AddProcess(this);
 
                     Model.UpperButton.ChangeFuncProgressBar();
+                    Model.DownloadModel.HasProcents = true;
                     Model.DownloadModel.IsDownloadInProgress = true;
-                    Model.UpdateLowerButton();
                 };
-                Model.UpperButton.ChangeFuncClose();
+
+                Model.InstanceClient.DownloadComplited += (InstanceInit result, List<string> downloadErrors, bool launchGame) =>
+                {
+                    Model.DownloadModel.HasProcents = false;
+                    Model.DownloadModel.IsDownloadInProgress = false;
+                    Model.IsLaunch = true;
+                    Model.UpdateButtons();
+                };
+
                 Model.LaunchModel.LaunchInstance();
+                Model.UpdateButtons();
             }
         }
 
