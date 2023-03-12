@@ -389,8 +389,7 @@
                                         Data="{Binding Model.UpperButton.Icon}"
                                         Fill="White"
                                         Stretch="Fill"
-                                        Stroke="White"
-                                        Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                                        Stroke="White">
                                         <Path.Style>
                                             <Style TargetType="{x:Type Path}">
                                                 <Style.Triggers>

@@ -59,8 +59,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private void OnLaunchCompleted(string id, bool successful)
         {
-            _formModel.IsLaunch = false;
-            _formModel.DownloadModel.IsDownloadInProgress = false;
             if (successful)
             {
                 MainViewModel.ShowToastMessage(
@@ -70,7 +68,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 );
 
                 _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
-                _formModel.DownloadModel.IsDownloadInProgress = false;
             }
             else
             {
@@ -82,12 +79,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 );
 
                 _mainViewModel.IsInstanceRunning = false;
-                if (_formModel.DownloadModel.IsDownloadInProgress)
-                    _formModel.DownloadModel.IsDownloadInProgress = false;
-
                 _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
                 _formModel.UpperButton.ChangeFuncPlay();
             }
+
+            _formModel.DownloadModel.IsDownloadInProgress = false;
+            _formModel.DownloadModel.IsPrepare = false;
+            _formModel.IsLaunch = false;
             _formModel.OverviewField = _formViewModel.Model.InstanceClient.Summary;
             _formModel.UpdateLowerButton();
         }
