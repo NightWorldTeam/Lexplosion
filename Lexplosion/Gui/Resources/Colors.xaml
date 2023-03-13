@@ -26,14 +26,24 @@
     <SolidColorBrush x:Key="TextBoxSolidColorBrush" Color="{StaticResource TextBoxColor}" />
     <SolidColorBrush x:Key="TagSolidColorBrush" Color="{StaticResource TagColor}" />
 
-    <SolidColorBrush x:Key="InstanceFormBackgroudBrush"/>
-    <SolidColorBrush x:Key="TextBox"/>
-    <SolidColorBrush x:Key="Combobox"/>
-    <SolidColorBrush x:Key="asd"/>
+    <SolidColorBrush x:Key="InstanceFormBackgroudBrush" />
+    <SolidColorBrush x:Key="TextBox" />
+    <SolidColorBrush x:Key="Combobox" />
+    <SolidColorBrush x:Key="asd" />
 
-    <!-- Buttons -->
+    <!--  Buttons  -->
     <SolidColorBrush x:Key="CallToActionBackgroundButton" />
     <SolidColorBrush x:Key="FilledButtonBackgroundBrush" />
-    <SolidColorBrush x:Key="GhostButtonBorderBrush"/>
-    <SolidColorBrush x:Key="FloatingActionButtonBackgroundBrush"/>
+    <SolidColorBrush x:Key="GhostButtonBorderBrush" />
+    <SolidColorBrush x:Key="FloatingActionButtonBackgroundBrush" />
+
+
+    <Color x:Key="DarkColorPalette3Primary1">#0A0F1B</Color>
+    <Color x:Key="DarkColorPalette3Primary2">#0E1422</Color>
+    <Color x:Key="DarkColorPalette3SeparateColor">#0E1422</Color>
+    <Color x:Key="Foreground">#E1E1E3</Color>
+
+    <SolidColorBrush x:Key="DPalette3Primary1" Color="{DynamicResource DarkColorPalette3Primary1}" />
+    <SolidColorBrush x:Key="DPalette3Primary2" Color="{DynamicResource DarkColorPalette3Primary2}" />
+    <SolidColorBrush x:Key="DPalette3Sep" Color="{DynamicResource DarkColorPalette3SeparateColor}" />
 </ResourceDictionary>
