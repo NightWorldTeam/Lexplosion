@@ -269,16 +269,15 @@ namespace Lexplosion
                     if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(gamePath + "/UpgradeTool.exe"))
                     {
                         File.Delete(gamePath + "/UpgradeTool.exe");
-                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?3", gamePath + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
                         DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
 
                     }
                     else if (!File.Exists(gamePath + "/UpgradeTool.exe"))
                     {
-                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?3", gamePath + "/UpgradeTool.exe");
+                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
                         DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
                     }
-
                 }
 
                 string arguments = null;
@@ -286,9 +285,9 @@ namespace Lexplosion
                 app.Dispatcher.Invoke(() =>
                 {
                     arguments =
-                    Assembly.GetExecutingAssembly().Location + " " +
-                    LaunсherSettings.URL.LauncherParts + "Lexplosion.exe?" + version + " " +
-                    Process.GetCurrentProcess().ProcessName + " " +
+                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " +
+                    "\"" + LaunсherSettings.URL.LauncherParts + "Lexplosion.exe?" + version + "\" " +
+                    Process.GetCurrentProcess().Id + " " +
                     Convert.ToInt32(_splashWindow.Left) + " " +
                     Convert.ToInt32(_splashWindow.Top);
                 });
