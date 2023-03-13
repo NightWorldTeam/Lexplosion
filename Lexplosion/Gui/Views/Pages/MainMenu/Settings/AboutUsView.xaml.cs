@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +24,7 @@ namespace Lexplosion.Gui.Views.Pages.MainMenu.Settings
         public AboutUsView()
         {
             InitializeComponent();
+            VersionTextBlock.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
     }
 }

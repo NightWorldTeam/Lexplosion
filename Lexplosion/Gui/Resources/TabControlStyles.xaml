@@ -132,7 +132,7 @@
     <Style x:Key="LeftMenuItem" TargetType="{x:Type TabItem}">
         <Setter Property="Width" Value="246" />
         <Setter Property="Height" Value="60" />
-        <Setter Property="TextElement.Foreground" Value="White" />
+        <Setter Property="TextElement.Foreground" Value="#E1E1E3" />
         <Setter Property="TextElement.FontSize" Value="22" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="SnapsToDevicePixels" Value="False" />
