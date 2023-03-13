@@ -12,7 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="944"
     Height="528"
-    AllowsTransparency="False"
+    AllowsTransparency="True"
     Background="Transparent"
     Icon="pack://application:,,,/Assets/images/icons/logo.ico"
     ResizeMode="NoResize"

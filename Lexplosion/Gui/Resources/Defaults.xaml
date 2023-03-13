@@ -4,7 +4,7 @@
         <Setter Property="FontFamily" Value="{DynamicResource OpenSans}" />
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
-        <Setter Property="Foreground" Value="#E1E1E3" />
+        <!--<Setter Property="Foreground" Value="#E1E1E3" />-->
     </Style>
 
     <Style TargetType="{x:Type ScrollViewer}">

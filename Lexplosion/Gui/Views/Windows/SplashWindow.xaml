@@ -14,38 +14,40 @@
     WindowStyle="None"
     mc:Ignorable="d">
 
-    <Grid Background="#0B101C">
-        <controls:LoadingBoard
-            x:Name="LoadingBoard"
-            Margin="0,80,0,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            BackgroundColor="Transparent"
-            BorderColor="{DynamicResource BrandSolidColorBrush}"
-            Opacity="0.8"
-            RectangeColor="{DynamicResource BrandSolidColorBrush}" />
+    <Border CornerRadius="5">
+        <Grid Background="#0B101C">
+            <controls:LoadingBoard
+                x:Name="LoadingBoard"
+                Margin="0,80,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                BackgroundColor="Transparent"
+                BorderColor="{DynamicResource BrandSolidColorBrush}"
+                Opacity="0.8"
+                RectangeColor="{DynamicResource BrandSolidColorBrush}" />
 
-        <StackPanel
-            Margin="0,0,0,13"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            Orientation="Horizontal">
+            <StackPanel
+                Margin="0,0,0,13"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
 
-            <TextBlock
-                FontSize="12"
-                FontWeight="Medium"
-                Foreground="White"
-                Opacity="0.4"
-                Text="Powered by " />
+                <TextBlock
+                    FontSize="12"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    Opacity="0.4"
+                    Text="Powered by " />
 
-            <TextBlock
-                Margin="0,3,0,0"
-                FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
-                FontSize="12"
-                FontWeight="Bold"
-                Foreground="White"
-                Opacity="0.4"
-                Text="NightWorld" />
-        </StackPanel>
-    </Grid>
+                <TextBlock
+                    Margin="0,3,0,0"
+                    FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Opacity="0.4"
+                    Text="NightWorld" />
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>
