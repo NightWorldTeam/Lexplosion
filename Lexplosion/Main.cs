@@ -394,7 +394,7 @@ namespace Lexplosion
             if (cultureName.Length != 0 && isRestart)
             {
                 Process.Start(Application.ResourceAssembly.Location);
-                App.Current.Shutdown();
+                KillApp();
             }
         }
 
