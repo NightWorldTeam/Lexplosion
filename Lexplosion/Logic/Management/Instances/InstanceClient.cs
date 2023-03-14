@@ -884,10 +884,16 @@ namespace Lexplosion.Logic.Management.Instances
             string file = WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/assets.json";
             InstanceAssetsFileDecodeFormat assetsData_ = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(file);
 
+            var categories_ = new List<SimpleCategory>();
+            foreach(var category in Categories)
+            {
+                categories_.Add(new SimpleCategory(category));
+            }
+
             var assetsData = new InstanceAssets
             {
                 Author = Author,
-                Categories = Categories,
+                Categories = categories_,
                 Description = Description,
                 Images = (assetsData_ != null) ? assetsData_.Images : null,
                 Summary = Summary

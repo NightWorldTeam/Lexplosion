@@ -195,6 +195,16 @@ namespace Lexplosion.Logic.Objects
         public override string Name { get; set; }
         public override string ClassId { get; set; }
         public override string ParentCategoryId { get; set; }
+
+        public SimpleCategory() { }
+
+        public SimpleCategory(CategoryBase category)
+        {
+            Id = category.Id;
+            Name = category.Name;
+            ClassId = category.ClassId;
+            ParentCategoryId = category.ParentCategoryId;
+        }
     }
 
 }
