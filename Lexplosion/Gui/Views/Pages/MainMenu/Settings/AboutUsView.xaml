@@ -8,6 +8,13 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="#EDEDED" />
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Border Padding="45,32,42,0">
             <Border
