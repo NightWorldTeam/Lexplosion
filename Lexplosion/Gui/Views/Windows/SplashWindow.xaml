@@ -40,7 +40,7 @@
                     Text="Powered by " />
 
                 <TextBlock
-                    Margin="0,3,0,0"
+                    Margin="0,0,0,0"
                     FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
                     FontSize="12"
                     FontWeight="Bold"
