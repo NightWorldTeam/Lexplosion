@@ -216,7 +216,7 @@ namespace Lexplosion.Logic.Network
             client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 0);
             client.Client.Ttl = 0; //это чтобы другие компьютеры в локальной сети не видели этого сервера
             client.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
-            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"), IPAddress.Parse("127.0.0.1"));
+            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
 
             while (true)
             {

@@ -3,12 +3,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Security.Cryptography;
 using LumiSoft.Net.STUN.Client;
 
 namespace Lexplosion.Logic.Network
 {
     using SMP;
-    using System.Security.Cryptography;
     using TURN;
 
     abstract class NetworkClient // TODO: вложенные потоки нужно сделать нефоновыми. ну чтобы они давали программе закрыться
@@ -110,7 +110,7 @@ namespace Lexplosion.Logic.Network
                         }
                         else
                         {
-                            // TODO: либо управляющий сервер отъехал, либо сервер отказал
+                            Runtime.DebugWrite("Bytes count: " + bytes + ", buf[0]=" + buf[0] + ", buf[1]=" + buf[1]);
                             return false;
                         }
                     }
