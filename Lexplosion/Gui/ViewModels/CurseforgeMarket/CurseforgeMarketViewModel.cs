@@ -225,7 +225,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
                     foreach (var cfc in sortedByIdCategories.Keys)
                     {
                         // cfc == 6 -> Mods not Subcategory
-                        if (cfc == _projectType.ToString())
+                        if (cfc == ((int)_projectType).ToString())
                         {
                             foreach (var category in sortedByIdCategories[cfc])
                             {
