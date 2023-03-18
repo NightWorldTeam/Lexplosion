@@ -151,17 +151,22 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border
-                        x:Name="Border"
-                        Padding="{TemplateBinding Padding}"
-                        Background="{DynamicResource BrandSolidColorBrush}"
+                        Background="Black"
                         BorderThickness="0"
-                        CornerRadius="5"
-                        SnapsToDevicePixels="False">
-                        <ContentPresenter
-                            Margin="2"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            RecognizesAccessKey="True" />
+                        CornerRadius="5">
+                        <Border
+                            x:Name="Border"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{DynamicResource BrandSolidColorBrush}"
+                            BorderThickness="0"
+                            CornerRadius="5"
+                            SnapsToDevicePixels="False">
+                            <ContentPresenter
+                                Margin="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="True" />
+                        </Border>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

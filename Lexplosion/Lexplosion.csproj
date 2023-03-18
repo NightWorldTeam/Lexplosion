@@ -169,6 +169,7 @@
     <Compile Include="Gui\Converters\NegativeBooleanToVisibilityConverter.cs" />
     <Compile Include="Gui\Player.cs" />
     <Compile Include="Gui\Stores\NavigationStore.cs" />
+    <Compile Include="Gui\StyleSelectors\EvenItemStyleSelector.cs" />
     <Compile Include="Gui\SubmenuViewModel.cs" />
     <Compile Include="Gui\Tab.cs" />
     <Compile Include="Gui\ViewModels\AuthViewModel.cs" />
@@ -680,6 +681,7 @@
     <Resource Include="Assets\fonts\PassDots.ttf" />
     <Resource Include="Assets\fonts\Poppins.ttf" />
     <Resource Include="Assets\fonts\OpenSans.ttf" />
+    <Resource Include="Assets\fonts\SFProDisplay.otf" />
     <None Include="DLL\DiscordRPC.zip" />
     <None Include="DLL\LumiSoft.Net.zip" />
     <None Include="DLL\NewtonsoftJson.zip" />

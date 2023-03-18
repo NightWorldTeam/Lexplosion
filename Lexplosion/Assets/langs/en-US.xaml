@@ -172,6 +172,7 @@
     <s:String x:Key="prepareRun">Launch in progress...</s:String>
     <s:String x:Key="close">Close</s:String>
     <s:String x:Key="install">Install</s:String>
+    <s:String x:Key="cancelInstall">Cancel Installing</s:String>
 
     <s:String x:Key="importResult">Import result</s:String>
     <s:String x:Key="importResultError">Import failed</s:String>

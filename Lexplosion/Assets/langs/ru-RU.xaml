@@ -172,6 +172,7 @@
     <s:String x:Key="prepareRun">Идет запуск...</s:String>
     <s:String x:Key="close">Закрыть</s:String>
     <s:String x:Key="install">Установить</s:String>
+    <s:String x:Key="cancelInstall">Отменить скачивние Install</s:String>
 
     <s:String x:Key="importResult">Результат импорта</s:String>
     <s:String x:Key="importResultError">Импорт завершился с ошибкой</s:String>

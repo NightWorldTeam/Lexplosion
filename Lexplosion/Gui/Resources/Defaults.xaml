@@ -1,9 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="{x:Type TextBlock}">
-        <Setter Property="FontFamily" Value="{DynamicResource OpenSans}" />
+        <Setter Property="FontFamily" Value="{DynamicResource SFProDisplay}" />
         <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
         <!--<Setter Property="Foreground" Value="#E1E1E3" />-->
     </Style>
 

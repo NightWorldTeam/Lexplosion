@@ -208,7 +208,7 @@
                         MaxWidth="340"
                         Margin="0,4,0,0"
                         HorizontalAlignment="Left"
-                        FontFamily="{DynamicResource FuturaBookC}"
+                        FontFamily="{DynamicResource SFProDisplay}"
                         FontSize="20"
                         Foreground="#ffffff"
                         Text="{Binding Model.InstanceClient.Name}"
@@ -259,6 +259,7 @@
                         Grid.Column="0"
                         Width="440"
                         HorizontalAlignment="Left"
+                        FontFamily="{DynamicResource SFProDisplay}"
                         FontSize="16"
                         Foreground="#d5d5d5"
                         Text="{Binding Model.OverviewField}"
@@ -312,6 +313,7 @@
                     <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
 
+                <!--  Upper Button  -->
                 <Grid Grid.Row="0">
                     <Border
                         Width="60"
@@ -423,6 +425,8 @@
                         </Grid>
                     </Border>
                 </Grid>
+
+                <!--  Lower Button  -->
                 <controls:DropdownMenu
                     Grid.Row="1"
                     Background="{DynamicResource SepSolidColorBrush}"

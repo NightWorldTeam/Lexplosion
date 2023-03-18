@@ -4,4 +4,5 @@
     <FontFamily x:Key="Passdots">pack://application:,,,/Assets/fonts/#Password Dots</FontFamily>
     <FontFamily x:Key="Poppins">pack://application:,,,/Assets/fonts/#Poppins</FontFamily>
     <FontFamily x:Key="OpenSans">pack://application:,,,/Assets/fonts/#OpenSans</FontFamily>
+    <FontFamily x:Key="SFProDisplay">pack://application:,,,/Assets/fonts/#SFProDisplay</FontFamily>
 </ResourceDictionary>

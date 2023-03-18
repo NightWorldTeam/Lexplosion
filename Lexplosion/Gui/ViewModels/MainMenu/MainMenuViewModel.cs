@@ -171,7 +171,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         #region Private Methods
 
-
         private List<Tab<VMBase>> InitializeMultiplayerTabs()
         {
 
@@ -196,7 +195,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("friends"),
-                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
+                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
                 },
                 new Tab<VMBase>
                 {

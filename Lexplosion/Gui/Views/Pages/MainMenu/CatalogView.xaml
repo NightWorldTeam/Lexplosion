@@ -269,9 +269,48 @@
                         FontWeight="Bold"
                         SelectedIndex="{Binding SelectedSourceIndex}"
                         Style="{StaticResource DarkCombobox}">
-                        <ComboBoxItem>NightWorld</ComboBoxItem>
-                        <ComboBoxItem>CurseForge</ComboBoxItem>
-                        <ComboBoxItem>Modrinth</ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="20" Height="20">
+                                    <Path
+                                        extension:PathExtension.StringData="{StaticResource NightworldLogo}"
+                                        Fill="White"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="NightWorld" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="20" Height="20">
+                                    <Path
+                                        extension:PathExtension.StringData="{StaticResource CurseforgeLogo}"
+                                        Fill="White"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="Curseforge" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="20" Height="20">
+                                    <Path
+                                        extension:PathExtension.StringData="{StaticResource ModrinthLogo}"
+                                        Fill="White"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                                <TextBlock
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="Modrinth" />
+                            </StackPanel>
+                        </ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
 

@@ -44,13 +44,13 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
             lock (_installingAddonsLocker)
             {
-                if (InstallingAddons.ContainsKey(_instanceClient))
+                if (!InstallingAddons.ContainsKey(_instanceClient))
                 {
-                    DownloadAddonFiles = InstallingAddons[_instanceClient];
+                    DownloadAddonFiles = new ObservableCollection<DownloadAddonFile>();
                 }
                 else
                 {
-                    DownloadAddonFiles = new ObservableCollection<DownloadAddonFile>();
+                    DownloadAddonFiles = InstallingAddons[_instanceClient];
                 }
             }
 
