@@ -55,15 +55,23 @@ namespace Lexplosion.Logic.Network.Web
                 gameVersion = "&gameVersion=" + gameVersion;
             }
 
-            string url;
+            string url = "https://api.curseforge.com/v1/mods/search?";
+
+            if (!string.IsNullOrEmpty(searchFilter))
+            {
+                url += "searchFilter=" + WebUtility.UrlEncode(searchFilter) + "&";
+            }
+
             if (categoriy == "-1")
             {
-                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                url += "gameId=432&classId=4471&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField;
             }
             else
             {
-                url = "https://api.curseforge.com/v1/mods/search?gameId=432&classId=4471&&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField + "&categoryId=" + categoriy + "&searchFilter=" + WebUtility.UrlEncode(searchFilter);
+                url += "gameId=432&classId=4471&sortOrder=desc&pageSize=" + pageSize + "&index=" + index + gameVersion + "&sortField=" + (int)sortField + "&categoryId=" + categoriy;
             }
+
+            Runtime.DebugWrite(url);
 
             return GetApiData<List<CurseforgeInstanceInfo>>(url);
         }
@@ -190,7 +198,7 @@ namespace Lexplosion.Logic.Network.Web
                 ParentCategoryId = ((int)type).ToString()
             });
 
-            return categories;
+            return null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

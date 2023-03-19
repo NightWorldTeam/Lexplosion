@@ -19,9 +19,9 @@ namespace Lexplosion.Logic.Management
                     return CurseforgeApi.GetCategories(CfProjectType.Modpacks);
                 case ProjectSource.Modrinth:
                     {
-                        var result = new List<ModrinthCategory>();
+                        var result = new List<CategoryBase>();
                         List<ModrinthCategory> categories = ModrinthApi.GetCategories();
-                        result.Add(new ModrinthCategory
+                        result.Add(new SimpleCategory
                         {
                             Id = "-1",
                             Name = "All",
