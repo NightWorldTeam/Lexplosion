@@ -25,8 +25,7 @@
                         x:Name="Border"
                         Background="Transparent"
                         BorderBrush="Transparent"
-                        BorderThickness="0"
-                        CornerRadius="{TemplateBinding CornerRadius}">
+                        BorderThickness="0">
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
