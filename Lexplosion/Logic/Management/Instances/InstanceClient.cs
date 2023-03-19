@@ -640,6 +640,11 @@ namespace Lexplosion.Logic.Management.Instances
                 DataFilesManager.SaveManifest(_localId, manifest);
             }
 
+            if (data.OptifineVersion == null)
+            {
+                manifest.version.additionalInstaller = null;
+            }
+
             try
             {
                 if (logoPath != null && File.Exists(logoPath))
