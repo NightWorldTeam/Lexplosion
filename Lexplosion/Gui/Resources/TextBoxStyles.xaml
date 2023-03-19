@@ -298,6 +298,7 @@
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Margin" Value="10,0,0,0" />
+        <Setter Property="FontFamily" Value="{StaticResource SFProDisplay}" />
         <Setter Property="Foreground" Value="White" />
     </Style>
 

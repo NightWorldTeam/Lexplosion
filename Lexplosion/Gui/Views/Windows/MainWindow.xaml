@@ -11,7 +11,7 @@
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="944"
-    Height="540"
+    Height="532"
     AllowsTransparency="True"
     Background="Transparent"
     Icon="pack://application:,,,/Assets/images/icons/logo.ico"
@@ -61,7 +61,7 @@
         <Grid Margin="0,0,0,0" ShowGridLines="False">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
+                <RowDefinition Height="32" />
                 <RowDefinition Height="499*" />
             </Grid.RowDefinitions>
 
@@ -103,7 +103,7 @@
                             Command="{Binding HideCommand, Source={StaticResource MainVM}}"
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                             Style="{StaticResource HeaderButton}">
-                            <Viewbox Width="13" Height="13">
+                            <Viewbox Width="16" Height="16">
                                 <Path
                                     Data="M11.3 24.55v-1.1h25.4v1.1Z"
                                     Fill="LightGray"

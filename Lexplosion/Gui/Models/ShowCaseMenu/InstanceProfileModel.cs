@@ -19,11 +19,12 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             if (BaseInstanceData.Modloader != ClientType.Vanilla)
             {
                 ModloaderModel = new ModloaderModel((GameExtension)BaseInstanceData.Modloader, Version);
+                OptifineModel.IsEnable = false;
             }
             else 
             {
                 ModloaderModel = new ModloaderModel(GameExtension.Forge, Version);
-                OptifineModel.IsEnable = false;
+                OptifineModel.IsEnable = BaseInstanceData.OptifineVersion != null;
             }
 
             GameType = BaseInstanceData.Modloader == ClientType.Vanilla ? GameType.Vanilla : GameType.Modded;
@@ -175,7 +176,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
                 if (_gameType == GameType.Vanilla)
                 {
                     ModloaderModel.IsEnable = false;
-                    OptifineModel.IsEnable = true;
+                    OptifineModel.IsEnable = BaseInstanceData.OptifineVersion != null;
                 }
                 else
                 {
