@@ -32,6 +32,21 @@
         NeedMicrosoftAuth
     }
 
+    public static class EnumManager { 
+        public static ProjectSource InstanceSourceToProjectSource(InstanceSource instanceSource) 
+        {
+            switch (instanceSource) 
+            {
+                case InstanceSource.Curseforge:
+                    return ProjectSource.Curseforge;
+                case InstanceSource.Modrinth:
+                    return ProjectSource.Modrinth;
+                default:
+                    return ProjectSource.None;
+            }
+        }
+    }
+
     public enum InstanceSource
     {
         Nightworld,

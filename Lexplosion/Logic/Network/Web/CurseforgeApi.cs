@@ -198,7 +198,7 @@ namespace Lexplosion.Logic.Network.Web
                 ParentCategoryId = ((int)type).ToString()
             });
 
-            return null;
+            return categories;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

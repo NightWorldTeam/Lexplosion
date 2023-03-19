@@ -11,7 +11,7 @@
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="944"
-    Height="528"
+    Height="540"
     AllowsTransparency="True"
     Background="Transparent"
     Icon="pack://application:,,,/Assets/images/icons/logo.ico"
@@ -61,7 +61,7 @@
         <Grid Margin="0,0,0,0" ShowGridLines="False">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="28" />
+                <RowDefinition Height="40" />
                 <RowDefinition Height="499*" />
             </Grid.RowDefinitions>
 
@@ -74,70 +74,53 @@
 
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25" />
-                        <ColumnDefinition Width="0" />
-                        <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="28" />
-                        <ColumnDefinition Width="28" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <Image
+                            Grid.Column="0"
+                            Width="24"
+                            Height="24"
+                            Margin="8,0,0,0"
+                            Source="pack://application:,,,/Assets/images/icons/logo.ico" />
 
-                    <Image
-                        Grid.Column="0"
-                        Width="20"
-                        Height="20"
-                        Source="pack://application:,,,/Assets/images/icons/logo.ico" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Foreground="LightGray"
+                            Text="Lexplosion" />
+                    </StackPanel>
 
-                    <TextBlock
-                        Grid.Column="2"
-                        Margin="4,2,0,0"
-                        FontSize="16"
-                        Foreground="White"
-                        Text="Lexplosion" />
-
-                    <Button
-                        Grid.Column="4"
-                        Command="{Binding HideCommand, Source={StaticResource MainVM}}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                        Style="{StaticResource HeaderButton}">
-                        <Canvas>
-                            <Line
-                                Canvas.Left="8"
-                                Canvas.Top="15"
-                                Stroke="LightGray"
-                                StrokeThickness="0.5"
-                                X1="0"
-                                X2="12.5"
-                                Y1="0"
-                                Y2="0" />
-                        </Canvas>
-                    </Button>
-                    <Button
-                        Grid.Column="5"
-                        Command="{Binding CloseCommand, Source={StaticResource MainVM}}"
-                        Style="{StaticResource HeaderButton}">
-                        <Canvas>
-                            <Line
-                                Canvas.Left="7"
-                                Canvas.Top="8"
-                                Stroke="LightGray"
-                                StrokeThickness="0.5"
-                                X1="1"
-                                X2="13"
-                                Y1="0"
-                                Y2="13" />
-                            <Line
-                                Canvas.Left="7"
-                                Canvas.Top="8"
-                                Stroke="LightGray"
-                                StrokeThickness="0.5"
-                                X1="1"
-                                X2="13"
-                                Y1="13"
-                                Y2="0" />
-                        </Canvas>
-                    </Button>
+                    <StackPanel
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding HideCommand, Source={StaticResource MainVM}}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                            Style="{StaticResource HeaderButton}">
+                            <Viewbox Width="13" Height="13">
+                                <Path
+                                    Data="M11.3 24.55v-1.1h25.4v1.1Z"
+                                    Fill="LightGray"
+                                    Stretch="Fill" />
+                            </Viewbox>
+                        </Button>
+                        <Button Command="{Binding CloseCommand, Source={StaticResource MainVM}}" Style="{StaticResource HeaderButton}">
+                            <Border CornerRadius="5">
+                                <Viewbox Width="13" Height="13">
+                                    <Path
+                                        Data="m12.7 36.1-.8-.8L23.2 24 11.9 12.7l.8-.8L24 23.2l11.3-11.3.8.8L24.8 24l11.3 11.3-.8.8L24 24.8Z"
+                                        Fill="LightGray"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Border>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </Border>
 

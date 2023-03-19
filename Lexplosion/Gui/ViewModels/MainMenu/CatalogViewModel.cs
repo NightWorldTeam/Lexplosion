@@ -1,8 +1,6 @@
 ﻿using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -28,11 +26,13 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public Action<string, bool> SearchMethod { get; }
 
-        private ObservableCollection<IProjectCategory> _categories;
-        public ObservableCollection<IProjectCategory> Categories
+
+        private Dictionary<InstanceSource, IList<IProjectCategory>> categoriesBySource = new Dictionary<InstanceSource, IList<IProjectCategory>>();
+        
+        private IList<IProjectCategory> _categories;
+        public IList<IProjectCategory> Categories
         {
-            get => _categories;
-            set
+            get => _categories; set
             {
                 _categories = value;
                 OnPropertyChanged();
@@ -54,7 +54,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
         /// <summary>
         /// Ресурс откуда получаем данные.
-        /// Curseforge, NightWorld
+        /// Curseforge, NightWorld, Modrinth
         /// </summary>
         public InstanceSource SelectedInstanceSource
         {
@@ -84,6 +84,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         /// Индекс выбраного источника.
         /// 0 - NightWorld
         /// 1 - Curseforge
+        /// 2 - Modrinth
         /// </summary>
         public byte SelectedSourceIndex
         {
@@ -96,7 +97,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         }
 
         private IProjectCategory _selectedCategory;
-        public IProjectCategory SelectedCurseforgeCategory
+        public IProjectCategory SelectedCategory
         {
             get => _selectedCategory; set
             {
@@ -212,7 +213,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             // выбираем первый вариант из списка версий [Все версии]
             Lexplosion.Runtime.TaskRun(() =>
             {
-                Categories = PrepareCategories();
+                Categories = PrepareCategories(InstanceSource.Curseforge);
                 InstancesPageLoading();
                 _isInit = false;
             });
@@ -224,13 +225,25 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         #region Private Methods
 
-        private ObservableCollection<IProjectCategory> PrepareCategories()
+        private IList<IProjectCategory> PrepareCategories(InstanceSource instanceSource)
         {
-            var categories = new ObservableCollection<IProjectCategory>(
-                CategoriesManager.GetModpackCategories(ProjectSource.Modrinth)
+            IList<IProjectCategory> categories;
+          
+            if (categoriesBySource.TryGetValue(instanceSource, out categories)) 
+            {
+                return categories; 
+            }
+
+            categories = new ObservableCollection<IProjectCategory>(
+                CategoriesManager.GetModpackCategories(EnumManager.InstanceSourceToProjectSource(instanceSource))
             );
 
-            SelectedCurseforgeCategory = categories[0];
+            foreach (var i in categories) 
+            {
+                Console.WriteLine(i.Name);
+            }
+
+            SelectedCategory = categories[0];
 
             return categories;
         }
@@ -241,9 +254,15 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             if (value == 0)
                 SelectedInstanceSource = InstanceSource.Nightworld;
             else if (value == 1)
+            {
+                Categories = PrepareCategories(InstanceSource.Curseforge);
                 SelectedInstanceSource = InstanceSource.Curseforge;
+            }
             else if (value == 2)
+            {
+                Categories = PrepareCategories(InstanceSource.Modrinth);
                 SelectedInstanceSource = InstanceSource.Modrinth;
+            }
         }
 
         private void InstancesPageLoading(string searchText = "", bool isPaginatorInvoke = false)
@@ -268,7 +287,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     SelectedInstanceSource,
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
-                    SelectedCurseforgeCategory,
+                    SelectedCategory,
                     searchText == null ? _previousSearch : searchText,
                     SelectedCfSortBy,
                     gameVersion

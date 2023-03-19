@@ -160,8 +160,8 @@
                                     </Setter.Value>
                                 </Setter>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedInstanceSource}" Value="{x:Static lexplosion:InstanceSource.Modrinth}">
-                                        <Setter Property="Visibility" Value="Visible" />
+                                    <DataTrigger Binding="{Binding SelectedInstanceSource}" Value="{x:Static lexplosion:InstanceSource.Nightworld}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -228,10 +228,9 @@
                                     Text="{DynamicResource filterByCategory}" />
 
                                 <TextBlock
-                                    Margin="0,3,0,0"
-                                    FontFamily="{DynamicResource FuturaBookC}"
+                                    FontFamily="{DynamicResource SFProDisplay}"
                                     FontSize="14"
-                                    FontWeight="Medium"
+                                    FontWeight="Regular"
                                     Foreground="White"
                                     Opacity="0.7"
                                     Text="{DynamicResource canSelectOnlyOne}" />
@@ -242,7 +241,7 @@
                                 ItemContainerStyle="{StaticResource CategoriesListBoxItem}"
                                 ItemTemplate="{StaticResource Category}"
                                 ItemsSource="{Binding Categories, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedItem="{Binding SelectedCurseforgeCategory}"
+                                SelectedItem="{Binding SelectedCategory}"
                                 SelectionChanged="Filter_SelectionChanged"
                                 Style="{StaticResource CategoriesListBox}" />
                         </StackPanel>
