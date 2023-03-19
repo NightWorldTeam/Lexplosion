@@ -885,9 +885,12 @@ namespace Lexplosion.Logic.Management.Instances
             InstanceAssetsFileDecodeFormat assetsData_ = DataFilesManager.GetFile<InstanceAssetsFileDecodeFormat>(file);
 
             var categories_ = new List<SimpleCategory>();
-            foreach(var category in Categories)
+            if (Categories != null)
             {
-                categories_.Add(new SimpleCategory(category));
+                foreach (var category in Categories)
+                {
+                    categories_.Add(new SimpleCategory(category));
+                }
             }
 
             var assetsData = new InstanceAssets
