@@ -68,11 +68,9 @@
             <!--  Header  -->
             <Border
                 BorderBrush="{DynamicResource HeaderSolidColorBrush}"
-                BorderThickness="0,0,0,1"
-                CornerRadius="5,0,0,0">
+                BorderThickness="0,0,0,0"
+                CornerRadius="0,0,0,0">
                 <Grid ShowGridLines="False">
-
-
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
