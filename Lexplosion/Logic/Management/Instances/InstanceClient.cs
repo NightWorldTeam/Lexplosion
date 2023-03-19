@@ -637,12 +637,12 @@ namespace Lexplosion.Logic.Management.Instances
                     };
                 }
 
-                DataFilesManager.SaveManifest(_localId, manifest);
-            }
+                if (data.OptifineVersion == null)
+                {
+                    manifest.version.additionalInstaller = null;
+                }
 
-            if (data.OptifineVersion == null)
-            {
-                manifest.version.additionalInstaller = null;
+                DataFilesManager.SaveManifest(_localId, manifest);
             }
 
             try
