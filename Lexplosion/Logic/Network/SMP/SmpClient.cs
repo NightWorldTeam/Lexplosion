@@ -1222,7 +1222,7 @@ namespace Lexplosion.Logic.Network.SMP
             }
 
             Runtime.DebugWrite("SMP CLIENT STOP WORK");
-            data = null;
+            data = new byte[0];
             return false;
         }
 

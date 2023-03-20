@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using LumiSoft.Net.STUN.Client;
 
 namespace Lexplosion.Logic.Network
 {
     using SMP;
-    using System.Runtime.CompilerServices;
-    using System.Security.Cryptography;
     using TURN;
 
     abstract class NetworkServer
@@ -308,7 +308,7 @@ namespace Lexplosion.Logic.Network
                                     byte[] connectionCode;
                                     if (str.EndsWith(",proxy"))
                                     {
-                                        point = new IPEndPoint(IPAddress.Parse("194.61.2.176"), 4719);
+                                        point = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
                                         Runtime.DebugWrite("Connection code: " + myPoint + ", " + str.Replace(",proxy", ""));
                                         connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str.Replace(",proxy", "")));
                                     }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Logic.Network
 {
@@ -14,6 +17,7 @@ namespace Lexplosion.Logic.Network
 
         private long _fileSize = 0;
         private long _dataCount = 0;
+        private byte[] _fileSha256;
 
         private bool _isWorking = true;
 
@@ -22,26 +26,57 @@ namespace Lexplosion.Logic.Network
 
         private Thread _calculateThread;
 
-        public DataClient(string controlServer, string filename, string fileId) : base(clientType, controlServer)
+        private byte[] _confirmWord;
+        private RSAParameters _publicRsaKey;
+        private byte[] _aesKey;
+        private byte[] _aesIV;
+
+        public DataClient(RSAParameters publicRsaKey, string confirmWord, string controlServer, string filename, string fileId) : base(clientType, controlServer)
         {
             _fstream = new FileStream(filename, FileMode.Create, FileAccess.Write);
             _fileId = fileId;
+
+            _confirmWord = Encoding.UTF8.GetBytes(confirmWord);
+            _publicRsaKey = publicRsaKey;
+
+            var rnd = new Random();
+            _aesKey = rnd.GenerateBytes(32);
+            _aesIV = rnd.GenerateBytes(16);
         }
 
         protected override void Sending()
         {
-            Bridge.Send(Encoding.UTF8.GetBytes(_fileId));
+            // отправляем сообщение о подключении
+            Bridge.Send(new byte[] { 0x00 });
+
+            // отправляем сообщение с aes ключами
+            byte[] payload = new byte[48];
+            Array.Copy(_aesKey, 0, payload, 0, 32);
+            Array.Copy(_aesIV, 0, payload, 32, 16);
+            Bridge.Send(Сryptography.RsaEncode(payload, _publicRsaKey));
         }
 
         protected override void Reading()
         {
             try
             {
-                // получаем размер файла
+                // получаем кодовое слово
                 Bridge.Receive(out byte[] data);
+
+                if (!_confirmWord.SequenceEqual(Сryptography.AesDecode(data, _aesKey, _aesIV)))
+                {
+                    // TODO: тут выходить
+                }
+
+                //отправляем id файла
+                Bridge.Send(Сryptography.AesEncode(Encoding.UTF8.GetBytes(_fileId), _aesKey, _aesIV));
+
+                // получаем размер файла
+                Bridge.Receive(out data);
+                data = Сryptography.AesDecode(data, _aesKey, _aesIV);
                 if (data.Length != 8) // размер файла должен быть типа long, то есть 8 байт. если нет - выходим
                 {
-                    return;
+                    return; // TODO: а точно достаточно return сделать?
                 }
 
                 try
@@ -53,14 +88,19 @@ namespace Lexplosion.Logic.Network
                     return;
                 }
 
+                // получаем хэш файла
+                Bridge.Receive(out data);
+                _fileSha256 = Сryptography.AesDecode(data, _aesKey, _aesIV);
+
                 _calculateThread = new Thread(SpeedClaculate);
                 _calculateThread.Start();
 
                 long offset = 0;
                 _isWorking = Bridge.Receive(out data);
-
                 while (_isWorking && data.Length > 0 && offset < _fileSize)
                 {
+                    data = Сryptography.AesDecode(data, _aesKey, _aesIV);
+
                     offset += data.Length;
                     _dataCount += data.Length;
                     try // чисто перестраховка на случай если в оффсет как-то 0 попадёт

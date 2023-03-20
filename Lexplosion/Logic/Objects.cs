@@ -156,6 +156,8 @@ namespace Lexplosion.Logic.Objects
     public class DistributionData
     {
         public string Name;
+        public string PublicRsaKey;
+        public string ConfirmWord;
     }
 
     public interface IProjectCategory

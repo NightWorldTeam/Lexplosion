@@ -161,7 +161,9 @@ namespace Lexplosion.Logic.Network
 
                     if (answer != null && answer != "")
                     {
-                        answer = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                        byte[] IV = Encoding.UTF8.GetBytes(str.Substring(0, 16));
+                        byte[] decripted = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), IV);
+                        answer = Encoding.UTF8.GetString(decripted);
 
                         T filesData = JsonConvert.DeserializeObject<T>(answer);
                         if (filesData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(filesData.str + ":" + LaunсherSettings.secretWord))))
@@ -307,7 +309,9 @@ namespace Lexplosion.Logic.Network
                     }
                     else
                     {
-                        answer = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                        byte[] IV = Encoding.UTF8.GetBytes(str.Substring(0, 16));
+                        byte[] decripted = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), IV);
+                        answer = Encoding.UTF8.GetString(decripted);
                         T answerData = JsonConvert.DeserializeObject<T>(answer);
 
                         if (answerData.code == Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(answerData.str + ":" + LaunсherSettings.secretWord))))

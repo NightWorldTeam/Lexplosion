@@ -719,6 +719,8 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void Run()
         {
+            //var test = Share(GetPathContent());
+            //return;
             _cancelTokenSource = new CancellationTokenSource();
             ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
 
@@ -1046,7 +1048,7 @@ namespace Lexplosion.Logic.Management.Instances
                 return null;
             }
 
-            string zipFile = shareDir + _localId + ".zip";
+            var zipFile = shareDir + _localId + ".zip";
             ExportResult result = Export(exportList, zipFile, _name);
 
             if (result == ExportResult.Successful)

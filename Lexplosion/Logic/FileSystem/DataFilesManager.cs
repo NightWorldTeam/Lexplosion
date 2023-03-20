@@ -69,7 +69,11 @@ namespace Lexplosion.Logic.FileSystem
                     if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.AccessData))
                     {
                         login = profile.Login;
-                        accessData = Сryptography.AesDecode(Convert.FromBase64String(profile.AccessData), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                        byte[] key = Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey);
+                        byte[] IV = Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16));
+                        byte[] decripted = Сryptography.AesDecode(Convert.FromBase64String(profile.AccessData), key, IV);
+
+                        accessData = Encoding.UTF8.GetString(decripted);
                     }
                     else
                     {

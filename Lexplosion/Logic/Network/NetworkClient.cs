@@ -140,7 +140,7 @@ namespace Lexplosion.Logic.Network
                                 }
                                 else
                                 {
-                                    hostPoint = new IPEndPoint(IPAddress.Parse("194.61.2.176"), 4719);
+                                    hostPoint = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
                                 }
 
                                 isConected = ((SmpClient)Bridge).Connect(hostPoint, sha.ComputeHash(connectionCode));

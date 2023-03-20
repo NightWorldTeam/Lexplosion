@@ -473,7 +473,6 @@ namespace Lexplosion.Logic.FileSystem
             reciver.StartDownload(file);
 
             return FileRecvResult.Successful;
-
         }
 
         public static bool DonwloadJava(string javaName, string bitDepth, TaskArgs taskArgs)

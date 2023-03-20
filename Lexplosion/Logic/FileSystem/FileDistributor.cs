@@ -2,12 +2,19 @@
 using Lexplosion.Logic.Network;
 using Lexplosion.Global;
 using System.IO;
+using System.Security.Cryptography;
+using System;
+using Lexplosion.Tools;
+using Lexplosion.Logic.Objects;
+using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.FileSystem
 {
     public class FileDistributor
     {
         private static DataServer _dataServer = null;
+        private static string _publicRsaKey;
+        private static string _confirmWord;
 
         private string _fileId;
 
@@ -20,7 +27,10 @@ namespace Lexplosion.Logic.FileSystem
         {
             if (_dataServer == null)
             {
-                _dataServer = new DataServer(GlobalData.User.UUID, GlobalData.User.SessionToken, false, LaunсherSettings.ServerIp);
+                Сryptography.CreateRsaKeys(out RSAParameters privateKey, out _publicRsaKey);
+                _confirmWord = new Random().GenerateString(32);
+
+                _dataServer = new DataServer(privateKey, _confirmWord, GlobalData.User.UUID, GlobalData.User.SessionToken, LaunсherSettings.ServerIp);
             }
 
             //Получаем хэш файла
@@ -35,7 +45,13 @@ namespace Lexplosion.Logic.FileSystem
             {
                 ["UUID"] = GlobalData.User.UUID,
                 ["sessionToken"] = GlobalData.User.SessionToken,
-                ["fileId"] = hash
+                ["FileId"] = hash,
+                ["Parameters"] = JsonConvert.SerializeObject(new DistributionData
+                {
+                    Name = "XYI",
+                    PublicRsaKey = _publicRsaKey,
+                    ConfirmWord = _confirmWord
+                })
             });
 
             Runtime.DebugWrite(answer);

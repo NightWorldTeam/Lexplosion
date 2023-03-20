@@ -12,10 +12,10 @@ namespace Lexplosion.Logic.FileSystem
         #region staticData
         private class RecieverInfo
         {
-            public string login;
-            public string userUUID;
-            public string fileId;
-            public DistributionData parameters;
+            public string Login;
+            public string UserUUID;
+            public string FileId;
+            public string Parameters;
         }
 
         private static List<FileReceiver> _toProcessing = new List<FileReceiver>();
@@ -42,7 +42,8 @@ namespace Lexplosion.Logic.FileSystem
                 {
                     foreach (RecieverInfo reciverInfo in recieversInfo)
                     {
-                        data.Add(new FileReceiver(reciverInfo.login, reciverInfo.userUUID, reciverInfo.fileId, reciverInfo.parameters));
+                        var parameters = JsonConvert.DeserializeObject<DistributionData>(reciverInfo.Parameters);
+                        data.Add(new FileReceiver(reciverInfo.Login, reciverInfo.UserUUID, reciverInfo.FileId, parameters));
                     }
                 }
             }
@@ -59,6 +60,7 @@ namespace Lexplosion.Logic.FileSystem
 
         private DistributionState _state;
         private DataClient _dataClient = null;
+        private DistributionData _info;
 
         public event Action<double> ProcentUpdate;
         public event Action<double> SpeedUpdate;
@@ -74,6 +76,7 @@ namespace Lexplosion.Logic.FileSystem
             _ownerLogin = ownerLogin;
             _ownerUUID = ownerUUID;
             _fileId = fileId;
+            _info = info;
 
             _state = DistributionState.InQueue;
         }
@@ -84,7 +87,8 @@ namespace Lexplosion.Logic.FileSystem
             _state = DistributionState.InProcess;
             StateChanged?.Invoke(_state);
 
-            _dataClient = new DataClient(LaunсherSettings.ServerIp, fileName, _fileId);
+            var publicKey = Сryptography.DecodeRsaParams(_info.PublicRsaKey);
+            _dataClient = new DataClient(publicKey, _info.ConfirmWord, LaunсherSettings.ServerIp, fileName, _fileId);
             _dataClient.SpeedUpdate += SpeedUpdate;
             _dataClient.ProcentUpdate += ProcentUpdate;
 

@@ -91,7 +91,10 @@ namespace Lexplosion.Logic.Management.Authentication
                 var account = _accounts.Profiles[accountType];
 
                 login = account.Login;
-                accessData = Сryptography.AesDecode(Convert.FromBase64String(account.AccessData), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16)));
+                byte[] key = Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey);
+                byte[] IV = Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16));
+                byte[] decripted = Сryptography.AesDecode(Convert.FromBase64String(account.AccessData), key, IV);
+                accessData = Encoding.UTF8.GetString(decripted);
 
                 user = authHandler.ReAuth(ref login, ref accessData, out result);
             }
@@ -117,6 +120,23 @@ namespace Lexplosion.Logic.Management.Authentication
                     DataFilesManager.SaveAccount(login, accessData, accountType);
                 }
             }
+
+            //var test = FileReceiver.GetDistributors();
+            //var recv = test[0];
+            //recv.SpeedUpdate += (double val) =>
+            //{
+            //    Runtime.DebugWrite("Speed " + val);
+            //};
+            //recv.ProcentUpdate += (double val) =>
+            //{
+            //    //Runtime.DebugWrite("ProcentUpdate " + val);
+            //};
+
+            //Runtime.TaskRun(() =>
+            //{
+            //    Instances.InstanceClient.Import(recv, out Instances.InstanceClient instanceClient);
+            //    Runtime.DebugWrite("EMPORT " + instanceClient.Name);
+            //});
 
             return result;
         }
