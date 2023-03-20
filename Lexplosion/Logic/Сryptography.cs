@@ -29,6 +29,20 @@ namespace Lexplosion.Logic
             return Sb.ToString();
         }
 
+        public static string Sha256(Stream value)
+        {
+            StringBuilder Sb = new StringBuilder();
+            using (SHA256 hash = SHA256Managed.Create())
+            {
+                byte[] result = hash.ComputeHash(value);
+
+                foreach (byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            return Sb.ToString();
+        }
+
         static public byte[] AesDecode(byte[] data, byte[] Key, byte[] IV)
         {
             using (Aes aesAlg = Aes.Create())

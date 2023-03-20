@@ -37,8 +37,7 @@ namespace Lexplosion.Logic.FileSystem
             string hash;
             using (FileStream fstream = File.OpenRead(filename))
             {
-                byte[] fileBytes = new byte[fstream.Length];
-                hash = Сryptography.Sha256(fileBytes);
+                hash = Сryptography.Sha256(fstream);
             }
 
             string answer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
