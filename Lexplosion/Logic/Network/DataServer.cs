@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Network
 
             while (IsWork)
             {
-                if (AuthorizedClients.Count == 0)
+                if (AuthorizedClients == null || AuthorizedClients.Count == 0)
                 {
                     WaitClient.WaitOne(); //ждём первого авторизированного клиента
                 }
@@ -113,7 +113,6 @@ namespace Lexplosion.Logic.Network
                     {
                         Runtime.DebugWrite("END SEND");
                         toDisconect.Add(clientPoint);
-                        SendingBlock.Release();
                     }
                 }
 
