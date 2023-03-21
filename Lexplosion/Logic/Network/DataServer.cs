@@ -35,6 +35,9 @@ namespace Lexplosion.Logic.Network
         private byte[] _сonfirmWord;
         private RSAParameters _privateRsaKey;
 
+        private object _abortLoocker = new object();
+        private object _authorizeLocker = new object();
+
         public DataServer(RSAParameters privateRsaKey, string confirmWord, string uuid, string sessionToken, string server) : base(uuid, sessionToken, serverType, true, server)
         {
             SFilesList = new Dictionary<string, FileData>();
@@ -49,33 +52,44 @@ namespace Lexplosion.Logic.Network
             _privateRsaKey = privateRsaKey;
         }
 
-        protected override bool BeforeConnect(IPEndPoint point)
+        protected override bool AfterConnect(IPEndPoint point)
         {
             AvailableConnections.Add(point);
-            base.BeforeConnect(point);
+            base.AfterConnect(point);
 
             return true;
         }
 
         protected override void Sending()
         {
-            WaitClient.WaitOne(); //ждём первого авторизированного клиента (того, кто удачно передал id файла, который ему нужно скачать)
+            List<IPEndPoint> toDisconect = new List<IPEndPoint>();
+
             while (IsWork)
             {
-                AcceptingBlock.WaitOne();
+                if (AuthorizedClients.Count == 0)
+                {
+                    WaitClient.WaitOne(); //ждём первого авторизированного клиента
+                }
 
-                IPEndPoint[] authorizedClients = AuthorizedClients.ToArray();
+                IPEndPoint[] authorizedClients;
+                lock (_authorizeLocker)
+                {
+                    authorizedClients = AuthorizedClients.ToArray();
+                }
 
+                SendingBlock.WaitOne();
                 foreach (IPEndPoint clientPoint in authorizedClients)
                 {
                     byte[] buffer = new byte[Heap];
-                    FilesListSemaphore.WaitOne();
 
+                    FilesListSemaphore.WaitOne();
                     ReferenceTuple<string, int, byte[], byte[]> clientData = ClientsData[clientPoint];
-                    FileStream file = SFilesList[clientData.Value1].Stream; //получаем FileStream для этого клиента
+                    var fileData = SFilesList[clientData.Value1];
+                    FileStream file = fileData.Stream; //получаем FileStream для этого клиента
+                    long fileSize = fileData.FileSize;
                     FilesListSemaphore.Release();
 
-                    file.Seek(clientData.Value2, SeekOrigin.Begin);//перемещаем указатель чтения файла
+                    file.Seek(clientData.Value2, SeekOrigin.Begin); //перемещаем указатель чтения файла
                     int bytesCount = file.Read(buffer, 0, Heap); //читаем файл
                     clientData.Value2 += Heap; //увеличиваем оффсет
 
@@ -95,33 +109,31 @@ namespace Lexplosion.Logic.Network
                     Server.Send(payload, clientPoint); //отправляем
 
                     //файл передан, закрываем соединение
-                    if (clientData.Value2 >= SFilesList[clientData.Value1].FileSize)
+                    if (clientData.Value2 >= fileSize)
                     {
-                        Server.Close(clientPoint);
                         Runtime.DebugWrite("END SEND");
-                        AvailableConnections.Remove(clientPoint);
-                        AuthorizedClients.Remove(clientPoint);
-                        ClientsData.Remove(clientPoint);
-
-                        if (AvailableConnections.Count == 0) // клиенты закончились
-                        {
-                            AcceptingBlock.Release(); // разлочиваем AcceptingBlock
-                            SendingWait.WaitOne(); //ждём нового подключения, после чего переходим на метку AfterAcceptingBlock чтобы повторно не вызвать AcceptingBlock.Release()s
-                            goto AfterAcceptingBlock; // Да блять, это goto и мне похуй. Сейчас оно идеально вписывается в ситуацию. Не нужно городить лишних условий, флагов, циклов и прочей поябени
-                        }
+                        toDisconect.Add(clientPoint);
+                        SendingBlock.Release();
                     }
                 }
 
-                AcceptingBlock.Release();
-            AfterAcceptingBlock:;
+                SendingBlock.Release();
+
+                if (toDisconect.Count > 0)
+                {
+                    foreach (IPEndPoint point in toDisconect)
+                    {
+                        Server.Close(point);
+                        ClientAbort(point);
+                    }
+
+                    toDisconect = new List<IPEndPoint>();
+                }
             }
         }
 
         protected override void Reading()
         {
-            ReadingWait.WaitOne(); //ждём первого подключения
-            ReadingWait.Set();
-
             //первое значение - стадия подключения, второе - aes ключ, третье - aes вектор инициализации
             var connectionStages = new Dictionary<IPEndPoint, ReferenceTuple<int, byte[], byte[]>>();
 
@@ -199,7 +211,10 @@ namespace Lexplosion.Logic.Network
                                         };
 
                                         connectionStages.Remove(point);
-                                        AuthorizedClients.Add(point);
+                                        lock (_authorizeLocker)
+                                        {
+                                            AuthorizedClients.Add(point);
+                                        }
 
                                         byte[] fileSize = BitConverter.GetBytes(SFilesList[profileId].FileSize);
                                         Server.Send(Сryptography.AesEncode(fileSize, aesKey, aesIV), point); // отправляем размер файла
@@ -235,18 +250,24 @@ namespace Lexplosion.Logic.Network
 
         protected override void ClientAbort(IPEndPoint point)
         {
-            AcceptingBlock.WaitOne();
-            SendingBlock.WaitOne();
+            lock (_abortLoocker)
+            {
+                if (point != null && ClientsData.ContainsKey(point))
+                {
+                    AcceptingBlock.WaitOne();
+                    SendingBlock.WaitOne();
 
-            // TODO: тут наверное проверять на наличие. И вообще проверить логику отлючения
-            AvailableConnections.Remove(point);
-            AuthorizedClients.Remove(point);
-            ClientsData.Remove(point);
+                    // TODO: тут наверное проверять на наличие. И вообще проверить логику отлючения
+                    AvailableConnections.Remove(point);
+                    AuthorizedClients.Remove(point);
+                    ClientsData.Remove(point);
 
-            base.ClientAbort(point);
+                    base.ClientAbort(point);
 
-            AcceptingBlock.Release();
-            SendingBlock.Release();
+                    AcceptingBlock.Release();
+                    SendingBlock.Release();
+                }
+            }
         }
 
         public bool AddFile(string fileName, string id)

@@ -719,8 +719,8 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void Run()
         {
-            //var test = Share(GetPathContent());
-            //return;
+            var test = Share(GetPathContent());
+            return;
             _cancelTokenSource = new CancellationTokenSource();
             ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
 

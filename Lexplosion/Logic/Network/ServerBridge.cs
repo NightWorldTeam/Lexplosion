@@ -14,6 +14,9 @@ namespace Lexplosion.Logic.Network
         protected List<Socket> Sockets; //этот список нужен для отправляющего потока
         protected Semaphore ConnectSemaphore; //блокировка для метода BeforeConnect
 
+        protected AutoResetEvent SendingWait;
+        protected AutoResetEvent ReadingWait;
+
         const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
         readonly int Port;
 
@@ -29,6 +32,9 @@ namespace Lexplosion.Logic.Network
             Sockets = new List<Socket>();
             Port = localGamePort;
             _isWork = true;
+
+            SendingWait = new AutoResetEvent(false);
+            ReadingWait = new AutoResetEvent(false);
         }
 
         protected override void ClientAbort(IPEndPoint point)
@@ -56,7 +62,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        protected override bool BeforeConnect(IPEndPoint point)
+        protected override bool AfterConnect(IPEndPoint point)
         {
             Runtime.DebugWrite("Before connect method");
 
@@ -79,7 +85,7 @@ namespace Lexplosion.Logic.Network
             }
 
             Runtime.DebugWrite("Before connect method 1");
-            base.BeforeConnect(point);
+            base.AfterConnect(point);
             Runtime.DebugWrite("Before connect method 2");
 
             if (value)
@@ -89,6 +95,9 @@ namespace Lexplosion.Logic.Network
                 Sockets.Add(bridge);
                 ConnectSemaphore.Release();
             }
+
+            SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
+            ReadingWait.Set();
 
             Runtime.DebugWrite("Before connect method end");
 
@@ -107,12 +116,11 @@ namespace Lexplosion.Logic.Network
 
                 ConnectSemaphore.WaitOne();
                 List<Socket> listeningSokets = new List<Socket>(Sockets);
-                List<Socket> errorSokets = new List<Socket>(Sockets);
                 ConnectSemaphore.Release();
 
                 try
                 {
-                    Socket.Select(listeningSokets, null, errorSokets, -1); //слушаем все сокеты
+                    Socket.Select(listeningSokets, null, null, -1); //слушаем все сокеты
                 }
                 catch (ArgumentNullException)
                 {
@@ -171,24 +179,18 @@ namespace Lexplosion.Logic.Network
                         isDisconected.Add(ClientsPoints[sock]); //добавляем клиента в список чтобы потом отключить
                     }
                 }
-
-                foreach (Socket sock in errorSokets)
-                {
-                    Runtime.DebugWrite("GGHT " + sock);
-                }
-
                 SendingBlock.Release();
-
-                // отключаем клиентов которые попали в isDisconected
-                foreach (IPEndPoint point in isDisconected)
-                {
-                    Runtime.DebugWrite("DISCONECTED");
-                    Server.Close(point);
-                    ClientAbort(point);
-                }
 
                 if (isDisconected.Count > 0)
                 {
+                    // отключаем клиентов которые попали в isDisconected
+                    foreach (IPEndPoint point in isDisconected)
+                    {
+                        Runtime.DebugWrite("DISCONECTED");
+                        Server.Close(point);
+                        ClientAbort(point);
+                    }
+
                     isDisconected = new List<IPEndPoint>();
                 }
             }

@@ -25,9 +25,6 @@ namespace Lexplosion.Logic.Network
         protected Semaphore SendingBlock; //блокировка во время работы метода Sending
         private AutoResetEvent ControlConnectionBlock; // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
 
-        protected AutoResetEvent SendingWait;
-        protected AutoResetEvent ReadingWait;
-
         protected IServerTransmitter Server;
 
         protected bool IsWork = false;
@@ -57,9 +54,6 @@ namespace Lexplosion.Logic.Network
             AcceptingBlock = new Semaphore(1, 1);
             SendingBlock = new Semaphore(1, 1);
             ControlConnectionBlock = new AutoResetEvent(false);
-
-            SendingWait = new AutoResetEvent(false);
-            ReadingWait = new AutoResetEvent(false);
 
             KickedClients = new HashSet<string>();
 
@@ -238,7 +232,7 @@ namespace Lexplosion.Logic.Network
                                     if (DirectConnection)
                                     {
                                         var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                                        
+
                                         STUN_Result result = null;
                                         try
                                         {
@@ -337,7 +331,7 @@ namespace Lexplosion.Logic.Network
                             if (isConected)
                             {
                                 Runtime.DebugWrite("КОННЕКТ!!!");
-                                if (BeforeConnect(point))
+                                if (AfterConnect(point))
                                 {
                                     _uuidPointPair[clientUUID] = point;
                                     _pointUuidPair[point] = clientUUID;
@@ -347,9 +341,6 @@ namespace Lexplosion.Logic.Network
                                         ConnectingUser?.Invoke(clientUUID);
                                     }
                                     catch { }
-
-                                    SendingWait.Set(); // если это первый клиент, то сейчас читающий поток будет запущен
-                                    ReadingWait.Set();
                                 }
                                 else
                                 {
@@ -446,7 +437,7 @@ namespace Lexplosion.Logic.Network
         protected virtual void ClientAbort(IPEndPoint point) // мeтод который вызывается при обрыве соединения
         {
             _pointUuidPair.TryRemove(point, out string clientUuid);
-            _uuidPointPair.TryRemove(clientUuid, out _);
+            if (clientUuid != null) _uuidPointPair.TryRemove(clientUuid, out _);
 
             try
             {
@@ -464,7 +455,7 @@ namespace Lexplosion.Logic.Network
         /// <summary>
         /// это метод который запускается после установления соединения
         /// </summary>
-        protected virtual bool BeforeConnect(IPEndPoint point)
+        protected virtual bool AfterConnect(IPEndPoint point)
         {
             AcceptingBlock.Release();
             return true;
