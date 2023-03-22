@@ -9,8 +9,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 {
     public class GeneralSettingsViewModel : VMBase
     {
-        private MainViewModel _mainViewModel;
-
         public GeneralSettingsModel GeneralSettings { get; set; }
 
         private bool _isDirectoryChanged = true;
@@ -66,7 +64,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
             newPath = newPath + "/" + LaunсherSettings.GAME_FOLDER_NAME;
             GeneralSettings.SystemPath = newPath;
 
-            var dialogModal = new DialogViewModel(_mainViewModel);
+            var dialogModal = new DialogViewModel();
             dialogModal.ShowDialog("Перенос директории", "Желаете ли вы полностью перенести директорию?", () =>
             {
                 IsDirectoryChanged = false;
@@ -82,9 +80,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
             });
         }
 
-        public GeneralSettingsViewModel(MainViewModel mainViewModel)
+        public GeneralSettingsViewModel()
         {
-            _mainViewModel = mainViewModel;
             GeneralSettings = new GeneralSettingsModel();
         }
     }

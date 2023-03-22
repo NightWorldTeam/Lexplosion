@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
-    public sealed class ExportViewModel : ModalVMBase
+    public abstract class ExportBase : ModalVMBase 
     {
         #region ModalProperties
 
@@ -18,29 +18,46 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         #endregion ModalProperties
 
+        #region Commands
 
+        /// <summary>
+        /// Скрывает модальное окно с контентом.
+        /// </summary>
+        private RelayCommand _hideModalWindowCommand;
+        public override RelayCommand HideModalWindowCommand
+        {
+            get => _hideModalWindowCommand ?? (_hideModalWindowCommand = new RelayCommand(obj =>
+            {
+                ModalWindowViewModelSingleton.Instance.Hide();
+                // TODO: ещё надо станавливать анимацию до появления окна.
+            }));
+        }
+
+        /// <summary>
+        /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
+        /// Отменяет экспорт, скрывает popup меню.
+        /// </summary>
+        private RelayCommand _closeModalWindowCommand;
+        public override RelayCommand CloseModalWindowCommand
+        {
+            get => _closeModalWindowCommand ?? (_closeModalWindowCommand = new RelayCommand(obj =>
+            {
+                ModalWindowViewModelSingleton.Instance.Close();
+            }));
+        }
+
+        #endregion Commands
+    }
+
+    public sealed class ExportViewModel : ExportBase
+    {
         /// <summary>
         /// Список хранит в себе загруженные директории [string].
         /// </summary>
         private List<string> LoadedDirectories = new List<string>();
 
 
-        #region Constructors
-
-
-        public ExportViewModel(MainViewModel mainViewModel)
-        {
-            MainVM = mainViewModel;
-        }
-
-
-        #endregion Constructors
-
-
         #region Properties
-
-
-        public MainViewModel MainVM { get; }
 
 
         private string _instanceName;
@@ -80,10 +97,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        private Dictionary<string, PathLevel> _unitsList;
         /// <summary>
         /// Коллекция [Словарь] который обновляется при добавлении в него значений.
         /// </summary>
+        private Dictionary<string, PathLevel> _unitsList;
         public Dictionary<string, PathLevel> UnitsList
         {
             get => _unitsList; set
@@ -94,10 +111,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        private bool _isExportFinished = true;
         /// <summary>
         /// Отвечает на вопрос закончился ли экспорт сборка.
         /// </summary>
+        private bool _isExportFinished = true;
         public bool IsExportFinished
         {
             get => _isExportFinished; set
@@ -114,11 +131,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Commands
 
 
-        private RelayCommand _actionCommand;
         /// <summary>
         /// Свойтсво отрабатывает при нажатии кнопки Экспорт, в Export Popup.
         /// Запускает экспорт модпака.
         /// </summary>
+        private RelayCommand _actionCommand;
         public override RelayCommand ActionCommand
         {
             get => _actionCommand ?? (_actionCommand = new RelayCommand(obj =>
@@ -127,37 +144,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }));
         }
 
-        private RelayCommand _closeModalWindowCommand;
-        /// <summary>
-        /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
-        /// Отменяет экспорт, скрывает popup меню.
-        /// </summary>
-        public override RelayCommand CloseModalWindowCommand
-        {
-            get => _closeModalWindowCommand ?? (_closeModalWindowCommand = new RelayCommand(obj =>
-            {
-                MainVM.ModalWindowVM.IsOpen = false;
-            }));
-        }
-
-        private RelayCommand _hideModalWindowCommand;
-        /// <summary>
-        /// Скрывает модальное окно с контентом.
-        /// </summary>
-        public override RelayCommand HideModalWindowCommand
-        {
-            get => _hideModalWindowCommand ?? (_hideModalWindowCommand = new RelayCommand(obj =>
-            {
-                //TODO: закрываем окно
-                MainVM.ModalWindowVM.IsOpen = false;
-                // ещё надо станавливать анимацию до появления окна.
-            }));
-        }
-
-        private RelayCommand _treeViewItemExpanded;
         /// <summary>
         /// Команда отрабатывает при раскрытии TreeViewItem.
         /// </summary>
+        private RelayCommand _treeViewItemExpanded;
         public RelayCommand TreeViewItemExpanded
         {
             get => _treeViewItemExpanded ?? (_treeViewItemExpanded = new RelayCommand(obj =>
@@ -166,10 +156,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                     return;
 
                 // key - directory, value - pathlevel class
-                var keyvaluepair = (KeyValuePair<string, PathLevel>)obj;
+                var keyValuePair = (KeyValuePair<string, PathLevel>)obj;
                 // PathLevel.FullPath | PathLevel
 
-                var sub = LoadDirContent(keyvaluepair.Value.FullPath, keyvaluepair.Value);
+                var sub = LoadDirContent(keyValuePair.Value.FullPath, keyValuePair.Value);
                 ContentPreload(sub);
             }));
         }
@@ -187,8 +177,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// <param name="subUnits">Словарь UnitsList</param>
         private void ContentPreload(Dictionary<string, PathLevel> subUnits)
         {
-            foreach (var i in subUnits)
+            foreach (var i in subUnits) 
+            { 
                 LoadDirContent(i.Value.FullPath, i.Value);
+            }
         }
 
 
@@ -265,7 +257,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
                             ToastMessageState.Notification);
 
                         IsExportFinished = true;
-                        MainVM.ModalWindowVM.IsOpen = false;
+                        ModalWindowViewModelSingleton.Instance.Close();
                     }
                     else
                     {

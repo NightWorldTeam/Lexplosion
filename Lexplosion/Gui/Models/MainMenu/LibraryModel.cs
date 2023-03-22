@@ -32,12 +32,10 @@ namespace Lexplosion.Gui.Models.MainMenu
         /// </summary>
         public void OpenInstanceFactoryModalWindow()
         {
-            MainViewModel.ModalWindowVM.IsOpen = true;
-
             var factory = new FactoryGeneralViewModel(MainViewModel);
             var import = new ImportViewModel(MainViewModel, factory);
 
-            MainViewModel.ModalWindowVM.ChangeCurrentModalContent(
+            ModalWindowViewModelSingleton.Instance.Open(
                 new CustomTabsMenuViewModel(
                     new List<CustomTab>()
                     {

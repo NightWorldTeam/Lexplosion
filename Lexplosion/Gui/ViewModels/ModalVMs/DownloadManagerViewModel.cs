@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         public override RelayCommand CloseModalWindowCommand => new RelayCommand(obj =>
         {
-            _mainViewModel.ModalWindowVM.CloseWindow();
+            ModalWindowViewModelSingleton.Instance.Close();
         });
 
         public DownloadManagerViewModel(MainViewModel mainViewModel, bool IsTest = false)

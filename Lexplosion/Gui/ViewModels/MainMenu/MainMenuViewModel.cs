@@ -212,7 +212,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("general"),
-                    Content = new GeneralSettingsViewModel(_mainViewModel)
+                    Content = new GeneralSettingsViewModel()
                 },
                 new Tab<VMBase>
                 {
@@ -227,7 +227,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("language"),
-                    Content = new LanguageSettingsViewModel(_mainViewModel)
+                    Content = new LanguageSettingsViewModel()
                 },
                 new Tab<VMBase>
                 {

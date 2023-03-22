@@ -10,7 +10,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
     public class LanguageModel : VMBase
     {
         private readonly CultureInfo _cultureInfo;
-        private readonly MainViewModel _mainViewModel;
 
         //private Dictionary<string, string> 
 
@@ -21,9 +20,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         public static LanguageModel SelectedLanguage { get; private set; }
         public static LanguageModel PrevSelectedLanguage { get; private set; }
 
-        public LanguageModel(String cultureId, MainViewModel mainViewModel)
+        public LanguageModel(String cultureId)
         {
-            _mainViewModel = mainViewModel;
             _cultureInfo = new CultureInfo(cultureId);
             NativeName = (char.ToUpper(_cultureInfo.NativeName[0]) + _cultureInfo.NativeName.Substring(1)).Split(' ')[0];
             CurrentLangName = ResourceGetter.GetString(_cultureInfo.Name);
@@ -40,7 +38,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
                 GlobalData.GeneralSettings.LanguageId = _cultureInfo.Name;
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
 
-                var dialog = new DialogViewModel(_mainViewModel);
+                var dialog = new DialogViewModel();
                 var message = ResourceGetter.GetString("changeLanguageWariningMessage");
 
                 dialog.ShowDialog(ResourceGetter.GetString("langChange"), message, () => Runtime.ChangeCurrentLanguage(lang.Id, true));
@@ -63,13 +61,13 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
     {
         public LanguageModel[] Languages { get; }
 
-        public LanguageSettingsViewModel(MainViewModel mainViewModel)
+        public LanguageSettingsViewModel()
         {
             Languages = new LanguageModel[Runtime.Languages.Length];
 
             for (var i = 0; i < Runtime.Languages.Length; i++)
             {
-                Languages[i] = new LanguageModel(Runtime.Languages[i], mainViewModel);
+                Languages[i] = new LanguageModel(Runtime.Languages[i]);
             }
         }
     }

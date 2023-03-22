@@ -128,7 +128,8 @@ namespace Lexplosion.Gui.ViewModels
         public ExportViewModel ExportViewModel { get; set; }
         public LoadingBoard LoadingBoard { get; } = new LoadingBoard();
         public UserData UserData { get; }
-        public ModalWindowViewModel ModalWindowVM { get; } = new ModalWindowViewModel();
+
+        public ModalWindowViewModelSingleton ModalWindowVM { get => ModalWindowViewModelSingleton.Instance; }
 
         public DownloadManagerViewModel DownloadManager;
 
@@ -204,7 +205,7 @@ namespace Lexplosion.Gui.ViewModels
             NavigationStore.CurrentViewModel = new AuthViewModel(this);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
 
-            ExportViewModel = new ExportViewModel(this);
+            ExportViewModel = new ExportViewModel();
 
             DownloadManager = new DownloadManagerViewModel(this);
 

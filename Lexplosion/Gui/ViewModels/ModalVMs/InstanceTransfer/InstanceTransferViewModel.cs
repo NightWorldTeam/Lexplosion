@@ -1,9 +1,4 @@
 ﻿using Lexplosion.Logic.Management.Instances;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs.InstanceTransfer
 {
@@ -19,7 +14,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs.InstanceTransfer
             _mainViewModel = mainVM;
             _instanceClient = instanceClient;
 
-            _exportViewModel = new ExportViewModel(mainVM)
+            _exportViewModel = new ExportViewModel()
             {
                 InstanceName = instanceClient.Name,
                 IsFullExport = false,
