@@ -238,11 +238,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 CategoriesManager.GetModpackCategories(EnumManager.InstanceSourceToProjectSource(instanceSource))
             );
 
-            foreach (var i in categories) 
-            {
-                Console.WriteLine(i.Name);
-            }
-
             SelectedCategory = categories[0];
 
             return categories;

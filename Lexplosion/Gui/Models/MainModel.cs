@@ -1,5 +1,7 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management.Instances;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.Models
@@ -7,6 +9,7 @@ namespace Lexplosion.Gui.Models
     public sealed class MainModel : VMBase
     {
         public ObservableCollection<InstanceFormViewModel> LibraryInstances { get; } = new ObservableCollection<InstanceFormViewModel>();
+
         public ObservableCollection<InstanceFormViewModel> CurrentInstanceCatalog { get; } = new ObservableCollection<InstanceFormViewModel>();
 
         /// <summary>

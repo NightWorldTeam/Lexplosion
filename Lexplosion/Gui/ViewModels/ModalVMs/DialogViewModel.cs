@@ -5,7 +5,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
     public sealed class DialogViewModel : ModalVMBase
     {
-        private readonly MainViewModel _mainViewModel;
         private Action _function;
         private Action _function1;
         private string _title;
@@ -50,7 +49,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             get => _actionCommand ?? (_actionCommand = new RelayCommand(obj =>
             {
                 _function();
-                _mainViewModel.ModalWindowVM.IsOpen = false;
+                ModalWindowViewModelSingleton.Instance.Close();
             }));
         }
 
@@ -60,16 +59,15 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             get => _closeButtonCommand ?? (_closeButtonCommand = new RelayCommand(obj =>
             {
                 _function1?.Invoke();
-                _mainViewModel.ModalWindowVM.IsOpen = false;
+                ModalWindowViewModelSingleton.Instance.Close();
             }));
         }
 
         #endregion Commands
 
 
-        public DialogViewModel(MainViewModel mainViewModel, double modalWidth = 300, double modalHeight = 200)
+        public DialogViewModel(double modalWidth = 300, double modalHeight = 200)
         {
-            _mainViewModel = mainViewModel;
             _width = modalWidth;
             _height = modalHeight;
         }
@@ -83,9 +81,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         /// <param name="function">Делегат который выполниться при нажатии пользователем кнопки "Нет".</param>
         public void ShowDialog(string title, string message, Action function, Action function1 = null)
         {
-            _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(this);
-            _mainViewModel.ModalWindowVM.IsOpen = true;
-
+            ModalWindowViewModelSingleton.Instance.Open(this);
             Title = title;
             Message = message;
             _function = function;

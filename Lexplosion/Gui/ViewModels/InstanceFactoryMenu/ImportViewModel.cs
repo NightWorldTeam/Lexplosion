@@ -59,10 +59,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Properties
 
 
-        private ObservableCollection<ImportFile> _uploadedFiles;
         /// <summary>
         /// Коллекция с испортируемыми файлами.
         /// </summary>
+        private ObservableCollection<ImportFile> _uploadedFiles;
         public ObservableCollection<ImportFile> UploadedFiles
         {
             get => _uploadedFiles; set
@@ -88,10 +88,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Commands
 
 
-        private RelayCommand _importCommand;
         /// <summary>
         /// Команда для ImportView -> [кнопка]Обзор.
         /// </summary>
+        private RelayCommand _importCommand;
         public RelayCommand ImportCommand
         {
             get => _importCommand ?? (_importCommand ?? new RelayCommand(obj =>
@@ -100,16 +100,16 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }));
         }
 
-        private RelayCommand _closeModalWindowCommand;
         /// <summary>
         /// Свойтсво отрабатывает при нажатии кнопки Отмена, в Export Popup.
         /// Отменяет экспорт, скрывает popup меню.
         /// </summary>
+        private RelayCommand _closeModalWindowCommand;
         public override RelayCommand CloseModalWindowCommand
         {
             get => _closeModalWindowCommand ?? (_closeModalWindowCommand = new RelayCommand(obj =>
             {
-                _mainViewModel.ModalWindowVM.IsOpen = false;
+                ModalWindowViewModelSingleton.Instance.Close();
             }));
         }
 

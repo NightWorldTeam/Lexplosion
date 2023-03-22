@@ -103,8 +103,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         {
             get => _closeModalWindowCommand ?? (_closeModalWindowCommand = new RelayCommand(obj =>
             {
-                _mainViewModel.ModalWindowVM.IsOpen = false;
-                _mainViewModel.ModalWindowVM.ChangeCurrentModalContent(null);
+                ModalWindowViewModelSingleton.Instance.Close();
             }));
         }
 

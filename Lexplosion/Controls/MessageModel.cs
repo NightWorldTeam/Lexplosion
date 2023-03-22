@@ -6,6 +6,8 @@ namespace Lexplosion.Controls
 {
     public abstract class MessageModel
     {
+        public uint CollectionIndex { get; private set; }
+
         public string Header { get; }
         public string Message { get; }
         public ToastMessageState State { get; }
@@ -26,5 +28,7 @@ namespace Lexplosion.Controls
             State = state;
             Time = (time == null) ? TimeSpan.MaxValue : time;
         }
+
+
     }
 }

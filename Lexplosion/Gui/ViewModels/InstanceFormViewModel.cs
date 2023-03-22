@@ -170,7 +170,7 @@ namespace Lexplosion.Gui.ViewModels
         /// <param name="IsFromLibrary">Если сборка не установленная но в библиотеки. Влияет на выводимое сообщение</param>
         internal void RemoveInstance(bool IsFromLibrary)
         {
-            var dialog = new DialogViewModel(MainVM);
+            var dialog = new DialogViewModel();
             String message;
 
             if (IsFromLibrary)
@@ -211,10 +211,8 @@ namespace Lexplosion.Gui.ViewModels
 
         internal void StartExportAndOpenModal()
         {
-            MainVM.ModalWindowVM.IsOpen = true;
-
             // возможно не надо вообще эксемпляр класса сохранять.
-            MainVM.ExportViewModel = new ExportViewModel(MainVM)
+            MainVM.ExportViewModel = new ExportViewModel()
             {
                 InstanceName = Client.Name,
                 IsFullExport = false,
@@ -222,7 +220,7 @@ namespace Lexplosion.Gui.ViewModels
                 UnitsList = Client.GetPathContent()
             };
 
-            MainVM.ModalWindowVM.ChangeCurrentModalContent(new CustomTabsMenuViewModel(
+            ModalWindowViewModelSingleton.Instance.Open(new CustomTabsMenuViewModel(
                 new List<CustomTab>()
                 {
                     new CustomTab(
@@ -258,7 +256,7 @@ namespace Lexplosion.Gui.ViewModels
                 case UpperButtonFunc.ProgressBar:
                     {
                         // ну да просто добавим открытие downloadmanager
-                        MainVM.ModalWindowVM.OpenWindow(MainVM.DownloadManager);
+                        ModalWindowViewModelSingleton.Instance.Open(MainVM.DownloadManager);
                         break;
                     }
 

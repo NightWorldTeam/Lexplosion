@@ -119,6 +119,8 @@
     <Compile Include="Controls\PlaceholderTextBox\PlaceholderTextBox.cs" />
     <Compile Include="Controls\SearchBox\SearchBox.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessageContainer.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessageManager.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Gui\ButtonConstructor.cs" />
