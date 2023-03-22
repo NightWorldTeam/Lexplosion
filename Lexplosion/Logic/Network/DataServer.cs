@@ -63,10 +63,11 @@ namespace Lexplosion.Logic.Network
         protected override void Sending()
         {
             List<IPEndPoint> toDisconect = new List<IPEndPoint>();
+            WaitClient.WaitOne(); //ждём первого авторизированного клиента
 
             while (IsWork)
             {
-                if (AuthorizedClients == null || AuthorizedClients.Count == 0)
+                if (AuthorizedClients.Count == 0)
                 {
                     WaitClient.WaitOne(); //ждём первого авторизированного клиента
                 }
@@ -143,7 +144,7 @@ namespace Lexplosion.Logic.Network
                     IPEndPoint point = Server.Receive(out byte[] data);
 
                     AcceptingBlock.WaitOne();
-                    if (AvailableConnections.Contains(point))
+                    if (point != null && AvailableConnections.Contains(point))
                     {
                         try
                         {
@@ -155,14 +156,14 @@ namespace Lexplosion.Logic.Network
                                     {
                                         Value1 = 0
                                     };
-
-                                    AcceptingBlock.Release();
-                                    continue;
                                 }
                                 else
                                 {
-                                    // TODO: тут отключать наверное
+                                    Server.Close(point);
                                 }
+
+                                AcceptingBlock.Release();
+                                continue;
                             }
                             else // в соотвествии со стадией подключения выполняем действия
                             {
@@ -186,7 +187,10 @@ namespace Lexplosion.Logic.Network
                                     }
                                     else
                                     {
-                                        // TODO: наверное отключать
+                                        connectionStages.Remove(point);
+                                        Server.Close(point);
+                                        AcceptingBlock.Release();
+                                        continue;
                                     }
                                 }
                                 else
@@ -226,7 +230,11 @@ namespace Lexplosion.Logic.Network
                                     {
                                         Runtime.DebugWrite("PARASHA");
                                         FilesListSemaphore.Release();
-                                        // TODO: че-то делать
+
+                                        connectionStages.Remove(point);
+                                        Server.Close(point);
+                                        AcceptingBlock.Release();
+                                        continue;
                                     }
                                 }
                             }

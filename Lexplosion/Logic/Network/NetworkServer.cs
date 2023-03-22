@@ -436,11 +436,11 @@ namespace Lexplosion.Logic.Network
 
         protected virtual void ClientAbort(IPEndPoint point) // мeтод который вызывается при обрыве соединения
         {
-            _pointUuidPair.TryRemove(point, out string clientUuid);
-            if (clientUuid != null) _uuidPointPair.TryRemove(clientUuid, out _);
-
             try
             {
+                _pointUuidPair.TryRemove(point, out string clientUuid);
+                if (clientUuid != null) _uuidPointPair.TryRemove(clientUuid, out _);
+
                 if (clientUuid != null)
                 {
                     ThreadPool.QueueUserWorkItem((object obj) =>
