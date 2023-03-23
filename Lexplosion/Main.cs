@@ -15,6 +15,8 @@ using Lexplosion.Properties;
 using Lexplosion.Global;
 using Lexplosion.Tools;
 using Lexplosion.Gui.Views.Windows;
+using Lexplosion.Gui.Models;
+using Lexplosion.Gui.Models.ShowCaseMenu;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.WebSockets;
@@ -23,8 +25,6 @@ using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using ColorConverter = System.Windows.Media.ColorConverter;
-using Lexplosion.Gui.Models;
-using Lexplosion.Gui.Models.ShowCaseMenu;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -503,13 +503,6 @@ namespace Lexplosion
                     Assets = new Assets()
                     {
                         LargeImageKey = "logo1"
-                    },
-                    Party = new Party()
-                    {
-                        ID = "Tedsfd",
-                        Max = 4,
-                        Size = 2,
-                        Privacy = Party.PrivacySetting.Public
                     }
                 });
 

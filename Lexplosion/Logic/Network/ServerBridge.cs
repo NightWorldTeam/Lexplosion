@@ -9,13 +9,13 @@ namespace Lexplosion.Logic.Network
 {
     class ServerBridge : NetworkServer
     {
-        protected ConcurrentDictionary<IPEndPoint, Socket> Connections; //это нужно для читающего потока
-        protected ConcurrentDictionary<Socket, IPEndPoint> ClientsPoints; //этот список нужен для отправляющего потока
-        protected List<Socket> Sockets; //этот список нужен для отправляющего потока
-        protected Semaphore ConnectSemaphore; //блокировка для метода BeforeConnect
+        protected ConcurrentDictionary<IPEndPoint, Socket> Connections = new ConcurrentDictionary<IPEndPoint, Socket>(); //это нужно для читающего потока
+        protected ConcurrentDictionary<Socket, IPEndPoint> ClientsPoints = new ConcurrentDictionary<Socket, IPEndPoint>(); //этот список нужен для отправляющего потока
+        protected List<Socket> Sockets = new List<Socket>(); //этот список нужен для отправляющего потока
+        protected Semaphore ConnectSemaphore = new Semaphore(1, 1); //блокировка для метода BeforeConnect
 
-        protected AutoResetEvent SendingWait;
-        protected AutoResetEvent ReadingWait;
+        protected AutoResetEvent SendingWait = new AutoResetEvent(false);
+        protected AutoResetEvent ReadingWait = new AutoResetEvent(false);
 
         const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
         readonly int Port;
@@ -26,15 +26,10 @@ namespace Lexplosion.Logic.Network
 
         public ServerBridge(string uuid, string sessionToken, int localGamePort, bool directConnection, string server) : base(uuid, sessionToken, serverType, directConnection, server)
         {
-            ConnectSemaphore = new Semaphore(1, 1);
-            Connections = new ConcurrentDictionary<IPEndPoint, Socket>();
-            ClientsPoints = new ConcurrentDictionary<Socket, IPEndPoint>();
-            Sockets = new List<Socket>();
             Port = localGamePort;
             _isWork = true;
 
-            SendingWait = new AutoResetEvent(false);
-            ReadingWait = new AutoResetEvent(false);
+            StartThreads();
         }
 
         protected override void ClientAbort(IPEndPoint point)

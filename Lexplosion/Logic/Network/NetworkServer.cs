@@ -21,9 +21,9 @@ namespace Lexplosion.Logic.Network
         protected Thread SendingThread;
         private Thread MaintainingThread;
 
-        protected Semaphore AcceptingBlock; //блокировка во время приёма подключения
-        protected Semaphore SendingBlock; //блокировка во время работы метода Sending
-        private AutoResetEvent ControlConnectionBlock; // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
+        protected Semaphore AcceptingBlock = new Semaphore(1, 1); //блокировка во время приёма подключения
+        protected Semaphore SendingBlock = new Semaphore(1, 1); //блокировка во время работы метода Sending
+        private AutoResetEvent ControlConnectionBlock = new AutoResetEvent(false); // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
 
         protected IServerTransmitter Server;
 
@@ -39,10 +39,11 @@ namespace Lexplosion.Logic.Network
         public event Action<string> ConnectingUser;
         public event Action<string> DisconnectedUser;
 
-        private ConcurrentDictionary<string, IPEndPoint> _uuidPointPair;
-        private ConcurrentDictionary<IPEndPoint, string> _pointUuidPair;
+        // тут хранится список клиентов. В одном соответсвие uuid и ip, в другом наоборот
+        private ConcurrentDictionary<string, IPEndPoint> _uuidPointPair = new ConcurrentDictionary<string, IPEndPoint>();
+        private ConcurrentDictionary<IPEndPoint, string> _pointUuidPair = new ConcurrentDictionary<IPEndPoint, string>();
 
-        protected HashSet<string> KickedClients; //тут хранятся выкинутые клиенты
+        protected HashSet<string> KickedClients = new HashSet<string>(); //тут хранятся выкинутые клиенты
 
         public NetworkServer(string uuid, string sessionToken, string serverType, bool directConnection, string controlServer)
         {
@@ -51,30 +52,14 @@ namespace Lexplosion.Logic.Network
             IsWork = true;
             ControlServer = controlServer;
             DirectConnection = directConnection;
-            AcceptingBlock = new Semaphore(1, 1);
-            SendingBlock = new Semaphore(1, 1);
-            ControlConnectionBlock = new AutoResetEvent(false);
-
-            KickedClients = new HashSet<string>();
-
-            // тут хранится список клиентов. В одном соответсвие uuid и ip, в другом наоборот
-            _uuidPointPair = new ConcurrentDictionary<string, IPEndPoint>();
-            _pointUuidPair = new ConcurrentDictionary<IPEndPoint, string>();
 
             _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             Server = DirectConnection ? new SmpServer() : new TurnBridgeServer();
             Server.ClientClosing += ClientAbort;
 
-            ReadingThread = new Thread(delegate () //этот поток читает сообщения от клиента
-            {
-                Reading();
-            });
-
-            SendingThread = new Thread(delegate () //этот поток отправляет сообщения клиенту
-            {
-                Sending();
-            });
+            ReadingThread = new Thread(Reading); //этот поток читает сообщения от клиента
+            SendingThread = new Thread(Sending); //этот поток отправляет сообщения клиенту
 
             AcceptingThread = new Thread(delegate () //поток принимающий новые подключения
             {
@@ -85,7 +70,10 @@ namespace Lexplosion.Logic.Network
             {
                 MaintainingConnection();
             });
+        }
 
+        protected void StartThreads()
+        {
             AcceptingThread.Start();
             SendingThread.Start();
             ReadingThread.Start();
@@ -94,8 +82,6 @@ namespace Lexplosion.Logic.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PrepeareRepeat()
         {
-            ControlConnectionBlock.WaitOne();
-
             try
             {
                 _controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
@@ -109,6 +95,142 @@ namespace Lexplosion.Logic.Network
 
             Runtime.DebugWrite("Repeat connection to control server");
             DirectConnection = false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool SetConnection(string serverType)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Runtime.DebugWrite("Сonnection attempt " + i);
+
+                //подключаемся к управляющему серверу
+                try
+                {
+                    _controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
+                }
+                catch (Exception ex)
+                {
+                    //при ошибке ждем 30 секунд и пытаемся повторить
+                    Runtime.DebugWrite("Сonnection to control server error: " + ex);
+                    Thread.Sleep(10000);
+                    Runtime.DebugWrite("Repeat connection");
+
+                    try
+                    {
+                        _controlConnection.Close();
+                    }
+                    catch { }
+
+                    _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    continue;
+                }
+
+                try
+                {
+                    string st =
+                    "{\"UUID\" : \"" + UUID + "\"," +
+                    " \"type\": \"" + serverType + "\"," +
+                    " \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"," +
+                    " \"sessionToken\" : \"" + _sessionToken + "\"}";
+
+                    byte[] sendData = Encoding.UTF8.GetBytes(st);
+                    _controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
+                }
+                catch (Exception ex)
+                {
+                    Runtime.DebugWrite("Сonnection to control server error: " + ex);
+                    Thread.Sleep(3000);
+                    PrepeareRepeat();
+                    continue;
+                }
+
+                MaintainingThread.Start();
+                Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD");
+
+                return true;
+            }
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void PerformConnect(string clientUUID, string myPoint, IPEndPoint localPoint, byte[] pointData, int data_lenght)
+        {
+            bool isConected;
+            IPEndPoint point = null;
+            try
+            {
+                if (DirectConnection)
+                {
+                    Runtime.DebugWrite("Udp connection");
+
+                    string str = Encoding.UTF8.GetString(pointData, 0, data_lenght);
+                    using (SHA1 sha = new SHA1Managed())
+                    {
+                        byte[] connectionCode;
+                        if (str.EndsWith(",proxy"))
+                        {
+                            Runtime.DebugWrite("Udp proxy");
+                            point = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
+                            Runtime.DebugWrite("Connection code: " + myPoint + ", " + str.Replace(",proxy", ""));
+                            connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str.Replace(",proxy", "")));
+                        }
+                        else
+                        {
+                            Runtime.DebugWrite("Udp direct connection");
+                            string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
+                            string hostIp = str.Replace(":" + hostPort, "");
+
+                            point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
+                            Runtime.DebugWrite("Host EndPoint " + point);
+
+                            Runtime.DebugWrite("Connection code: " + myPoint + ", " + str);
+                            connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
+                        }
+
+                        isConected = ((SmpServer)Server).Connect(localPoint, point, connectionCode);
+                    }
+                }
+                else
+                {
+                    Runtime.DebugWrite("Tcp Proxy");
+                    isConected = ((TurnBridgeServer)Server).Connect(UUID, clientUUID, out point);
+                }
+            }
+            catch (Exception ex)
+            {
+                isConected = false;
+                Runtime.DebugWrite("Connect exception " + ex);
+            }
+
+            AcceptingBlock.WaitOne();
+
+            if (isConected)
+            {
+                Runtime.DebugWrite("КОННЕКТ!!!");
+                if (AfterConnect(point))
+                {
+                    _uuidPointPair[clientUUID] = point;
+                    _pointUuidPair[point] = clientUUID;
+
+                    try
+                    {
+                        ConnectingUser?.Invoke(clientUUID);
+                    }
+                    catch { }
+                }
+                else
+                {
+                    Runtime.DebugWrite("Пиздец");
+                    AcceptingBlock.Release();
+                }
+            }
+            else
+            {
+                Runtime.DebugWrite("Пиздец");
+                AcceptingBlock.Release();
+            }
         }
 
         protected void Accepting(string serverType)
@@ -131,43 +253,13 @@ namespace Lexplosion.Logic.Network
                 }
             }
 
-            while (true)
+            bool contolServerExists = true;
+            while (IsWork && contolServerExists)
             {
+                contolServerExists = SetConnection(serverType);
                 bool needRepeat = false;
 
-                //подключаемся к управляющему серверу
-                try
-                {
-                    _controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
-                }
-                catch
-                {
-                    //при ошибке ждем 30 секунд и пытаемся повторить
-                    Thread.Sleep(30000);
-                    continue;
-                }
-
-                try
-                {
-                    string st =
-                    "{\"UUID\" : \"" + UUID + "\"," +
-                    " \"type\": \"" + serverType + "\"," +
-                    " \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"," +
-                    " \"sessionToken\" : \"" + _sessionToken + "\"}";
-
-                    byte[] sendData = Encoding.UTF8.GetBytes(st);
-                    _controlConnection.Send(sendData); //авторизируемся на упрявляющем сервере
-                }
-                catch
-                {
-                    PrepeareRepeat();
-                    continue;
-                }
-
-                MaintainingThread.Start();
-                Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD");
-
-                while (IsWork)
+                while (IsWork && contolServerExists)
                 {
                     try
                     {
@@ -175,191 +267,127 @@ namespace Lexplosion.Logic.Network
                         string myPoint = null;
                         IPEndPoint localPoint = null;
 
+                        byte[] data = new byte[33];
+
+                        Runtime.DebugWrite("ControlServerRecv");
+                        ControlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
+                        _controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
+
+                        int bytes;
+                        try
                         {
-                            byte[] data = new byte[33];
-
-                            Runtime.DebugWrite("ControlServerRecv");
-                            ControlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
-                            _controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
-
-                            int bytes;
-                            try
-                            {
-                                bytes = _controlConnection.Receive(data);
-                            }
-                            catch
-                            {
-                                needRepeat = true;
-                                break;
-                            }
-                            finally
-                            {
-                                ControlConnectionBlock.WaitOne(); // блочим семофор
-                                _controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
-                                Runtime.DebugWrite("ControlServerEndRecv");
-                            }
-
-                            if (bytes > 1 && data[0] == ControlSrverCodes.A) // data[0] == 97 значит поступил запрос на подключение
-                            {
-                                clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
-
-                                // этот клиент был кикнут. послыем его нахуй
-                                lock (KickedClients)
-                                {
-                                    if (KickedClients.Contains(clientUUID))
-                                    {
-                                        _controlConnection.Send(new byte[1] { ControlSrverCodes.E }); //отправляем серверу отказ
-                                        continue;
-                                    }
-                                }
-
-                                // такой клиент уже подключен. Значит обрываем прошлое соединение
-                                if (_uuidPointPair.ContainsKey(clientUUID))
-                                {
-                                    _uuidPointPair.TryGetValue(clientUUID, out IPEndPoint point);
-                                    if (point != null)
-                                    {
-                                        ClientAbort(point);
-                                    }
-                                }
-
-                                _controlConnection.Send(new byte[1] { ControlSrverCodes.A }); //отправляем серверу соглашение
-
-                                bytes = _controlConnection.Receive(data);
-                                if (bytes == 1 && data[0] == ControlSrverCodes.B) //сервер запрашивает мой порт
-                                {
-                                    byte[] portData;
-                                    if (DirectConnection)
-                                    {
-                                        var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-                                        STUN_Result result = null;
-                                        try
-                                        {
-                                            // TODO: сделать получения списка stun серверов с нашего сервера
-                                            result = STUN_Client.Query("stun.l.google.com", 19305, udpSocket); //получем наш внешний адрес
-                                            Runtime.DebugWrite("NatType " + result.NetType.ToString());
-                                        }
-                                        catch { }
-
-                                        localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
-                                        udpSocket.Close();
-
-                                        // какая-то хуйня. Пробуем переподключиться к управляющему серверу
-                                        if (result == null)
-                                        {
-                                            needRepeat = true;
-                                            break;
-                                        }
-
-                                        //парсим порт
-                                        string externalPort;
-                                        if (result.PublicEndPoint != null)
-                                        {
-                                            myPoint = result.PublicEndPoint.ToString();
-                                            externalPort = myPoint.Substring(myPoint.IndexOf(":") + 1, myPoint.Length - myPoint.IndexOf(":") - 1).Trim();
-                                            portData = Encoding.UTF8.GetBytes(externalPort.ToString());
-                                        }
-                                        else // опять какая-то хуйня. Пробуем переподключиться к управляющему серверу
-                                        {
-                                            needRepeat = true;
-                                            break;
-                                        }
-
-                                        Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
-                                    }
-                                    else
-                                    {
-                                        portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
-                                    }
-
-                                    _controlConnection.Send(portData); //отправляем серверу наш порт
-                                }
-                                else
-                                {
-                                    needRepeat = true;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                needRepeat = true;
-                                break;
-                            }
+                            bytes = _controlConnection.Receive(data);
                         }
+                        catch
                         {
-                            byte[] data = new byte[50];
-                            int data_lenght = _controlConnection.Receive(data); //получем ip клиента
+                            needRepeat = true;
+                            break;
+                        }
+                        finally
+                        {
+                            ControlConnectionBlock.WaitOne(); // блочим семофор
+                            _controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
+                            Runtime.DebugWrite("ControlServerEndRecv");
+                        }
 
-                            bool isConected;
-                            IPEndPoint point;
-                            if (DirectConnection)
+                        if (bytes > 1 && data[0] == ControlSrverCodes.A) // data[0] == 97 значит поступил запрос на подключение
+                        {
+                            clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
+
+                            // этот клиент был кикнут. послыем его нахуй
+                            lock (KickedClients)
                             {
-                                string str = Encoding.UTF8.GetString(data, 0, data_lenght);
-
-                                using (SHA1 sha = new SHA1Managed())
+                                if (KickedClients.Contains(clientUUID))
                                 {
-                                    byte[] connectionCode;
-                                    if (str.EndsWith(",proxy"))
-                                    {
-                                        point = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
-                                        Runtime.DebugWrite("Connection code: " + myPoint + ", " + str.Replace(",proxy", ""));
-                                        connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str.Replace(",proxy", "")));
-                                    }
-                                    else
-                                    {
-                                        string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-                                        string hostIp = str.Replace(":" + hostPort, "");
-
-                                        point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
-                                        Runtime.DebugWrite("Host EndPoint " + point);
-
-                                        Runtime.DebugWrite("Connection code: " + myPoint + ", " + str);
-                                        connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
-                                    }
-
-                                    isConected = ((SmpServer)Server).Connect(localPoint, point, connectionCode);
+                                    _controlConnection.Send(new byte[1] { ControlSrverCodes.E }); //отправляем серверу отказ
+                                    continue;
                                 }
                             }
-                            else
+
+                            // такой клиент уже подключен. Значит обрываем прошлое соединение
+                            if (_uuidPointPair.ContainsKey(clientUUID))
                             {
-                                isConected = ((TurnBridgeServer)Server).Connect(UUID, clientUUID, out point);
+                                _uuidPointPair.TryGetValue(clientUUID, out IPEndPoint point);
+                                if (point != null)
+                                {
+                                    ClientAbort(point);
+                                }
                             }
 
-                            AcceptingBlock.WaitOne();
+                            _controlConnection.Send(new byte[1] { ControlSrverCodes.A }); //отправляем серверу соглашение
 
-                            if (isConected)
+                            bytes = _controlConnection.Receive(data);
+                            if (bytes == 1 && data[0] == ControlSrverCodes.B) //сервер запрашивает мой порт
                             {
-                                Runtime.DebugWrite("КОННЕКТ!!!");
-                                if (AfterConnect(point))
+                                byte[] portData;
+                                if (DirectConnection)
                                 {
-                                    _uuidPointPair[clientUUID] = point;
-                                    _pointUuidPair[point] = clientUUID;
+                                    var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
+                                    STUN_Result result = null;
                                     try
                                     {
-                                        ConnectingUser?.Invoke(clientUUID);
+                                        // TODO: сделать получения списка stun серверов с нашего сервера
+                                        result = STUN_Client.Query("stun.l.google.com", 19305, udpSocket); //получем наш внешний адрес
+                                        Runtime.DebugWrite("NatType " + result.NetType.ToString());
                                     }
                                     catch { }
+
+                                    localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
+                                    udpSocket.Close();
+
+                                    // какая-то хуйня. Пробуем переподключиться к управляющему серверу
+                                    if (result == null)
+                                    {
+                                        needRepeat = true;
+                                        break;
+                                    }
+
+                                    //парсим порт
+                                    string externalPort;
+                                    if (result.PublicEndPoint != null)
+                                    {
+                                        myPoint = result.PublicEndPoint.ToString();
+                                        externalPort = myPoint.Substring(myPoint.IndexOf(":") + 1, myPoint.Length - myPoint.IndexOf(":") - 1).Trim();
+                                        portData = Encoding.UTF8.GetBytes(externalPort.ToString());
+                                    }
+                                    else // опять какая-то хуйня. Пробуем переподключиться к управляющему серверу
+                                    {
+                                        needRepeat = true;
+                                        break;
+                                    }
+
+                                    Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
                                 }
                                 else
                                 {
-                                    Runtime.DebugWrite("Пиздец");
-                                    AcceptingBlock.Release();
+                                    portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                                 }
+
+                                _controlConnection.Send(portData); //отправляем серверу наш порт
                             }
                             else
                             {
-                                Runtime.DebugWrite("Пиздец");
-                                AcceptingBlock.Release();
+                                needRepeat = true;
+                                break;
                             }
                         }
+                        else
+                        {
+                            needRepeat = true;
+                            break;
+                        }
+
+                        byte[] pointData = new byte[50];
+                        int pointDataLen = _controlConnection.Receive(pointData); //получем ip клиента
+                        PerformConnect(clientUUID, myPoint, localPoint, pointData, pointDataLen);
                     }
                     catch { }
                 }
 
                 if (needRepeat)
                 {
+                    MaintainingThread.Abort();
                     PrepeareRepeat();
                 }
                 else
