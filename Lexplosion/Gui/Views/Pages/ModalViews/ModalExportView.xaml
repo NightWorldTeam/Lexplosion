@@ -133,7 +133,7 @@
                                 <TreeView.Resources>
                                     <Style TargetType="{x:Type TreeViewItem}">
                                         <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="Padding" Value="1,0,0,0" />
+                                        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
                                         <Setter Property="extension:TreeViewItem.Command" Value="{Binding DataContext.TreeViewItemExpanded, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
                                         <Setter Property="extension:TreeViewItem.CommandParameter" Value="{Binding Header, RelativeSource={RelativeSource Self}}" />
                                         <Setter Property="Foreground" Value="White" />
@@ -226,6 +226,7 @@
                                                             <ContentPresenter
                                                                 x:Name="PART_Header"
                                                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                VerticalAlignment="Center"
                                                                 ContentSource="Header" />
                                                         </Border>
 
