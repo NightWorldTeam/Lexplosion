@@ -21,8 +21,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             Procents = procents;
         }
 
-        /// Выполняется от O(1) до O(n).
-        public static InstanceFile? GetInstanceFile(IList<InstanceFile> files, string name)
+        /// Выполняется O(n).
+        public static InstanceFile GetInstanceFile(IEnumerable<InstanceFile> files, string name)
         {
             foreach (var file in files)
             {

@@ -1,7 +1,6 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
-using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models.MainMenu
@@ -37,7 +36,8 @@ namespace Lexplosion.Gui.Models.MainMenu
         {
             var factory = new FactoryGeneralViewModel(MainViewModel);
             var import = new ImportViewModel(MainViewModel, factory);
-
+            var shares = new InstanceDistributionListViewModel();
+            // TODO : перевод
             ModalWindowViewModelSingleton.Instance.Open(
                 new CustomTabsMenuViewModel(
                     new List<CustomTab>()
@@ -52,7 +52,12 @@ namespace Lexplosion.Gui.Models.MainMenu
                             "M14 40v-3h20v3Zm8.5-8.5V13.7l-6.05 6.05-2.1-2.1L24 8l9.65 9.65-2.1 2.1-6.05-6.05v17.8Z",
                             import,
                             true
-                        )
+                        ),
+                        new CustomTab(
+                            "Раздачи",
+                            "M80 856v-60h400v60H80Zm0-210v-60h200v60H80Zm0-210v-60h200v60H80Zm758 420L678 696q-26 20-56 30t-62 10q-83 0-141.5-58.5T360 536q0-83 58.5-141.5T560 336q83 0 141.5 58.5T760 536q0 32-10 62t-30 56l160 160-42 42ZM559.765 676Q618 676 659 635.235q41-40.764 41-99Q700 478 659.235 437q-40.764-41-99-41Q502 396 461 436.765q-41 40.764-41 99Q420 594 460.765 635q40.764 41 99 41Z",
+                            shares
+                            )
                     }
                 )
             );

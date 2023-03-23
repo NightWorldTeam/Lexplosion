@@ -182,6 +182,7 @@
     <Compile Include="Gui\ViewModels\InstanceFactoryMenu\FactoryGeneralViewModel.cs" />
     <Compile Include="Gui\ViewModels\InstanceFactoryMenu\ImportViewModel.cs" />
     <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFactoryMenu\InstanceDistributionList.cs" />
     <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\CatalogViewModel.cs" />
     <Compile Include="Gui\ViewModels\MainMenu\Settings\AboutUsViewModel.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Gui\ViewModels\CustomTabsMenuViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\DialogViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\DownloadManagerViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ExportBase.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ExportViewModel.cs" />
     <Compile Include="Gui\ViewModels\DevСurtainViewModel.cs" />
     <Compile Include="Gui\ViewModels\ModalVMs\InstanceDownloadProcess.cs" />
@@ -241,6 +243,9 @@
     </Compile>
     <Compile Include="Gui\Views\Pages\FactoryMenu\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\InstanceDistributionListView.xaml.cs">
+      <DependentUpon>InstanceDistributionListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Gui\Views\Pages\MainMenu\CatalogView.xaml.cs">
       <DependentUpon>CatalogView.xaml</DependentUpon>
@@ -551,6 +556,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Gui\Views\Pages\FactoryMenu\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\InstanceDistributionListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -2,6 +2,7 @@
 
 namespace Lexplosion.Gui.ViewModels.ModalVMs.InstanceTransfer
 {
+    // TODO: для чего данный класс?
     public class InstanceTransferViewModel : VMBase
     {
         private readonly MainViewModel _mainViewModel;
@@ -14,13 +15,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs.InstanceTransfer
             _mainViewModel = mainVM;
             _instanceClient = instanceClient;
 
-            _exportViewModel = new ExportViewModel()
-            {
-                InstanceName = instanceClient.Name,
-                IsFullExport = false,
-                InstanceClient = instanceClient,
-                UnitsList = instanceClient.GetPathContent()
-            };
+            _exportViewModel = new ExportViewModel(instanceClient);
         }
     }
 }

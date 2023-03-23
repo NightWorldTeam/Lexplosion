@@ -180,8 +180,6 @@ namespace Lexplosion.Gui.ViewModels
             NavigationStore.CurrentViewModel = new AuthViewModel(this);
             NavigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
 
-            ExportViewModel = new ExportViewModel();
-
             DownloadManager = new DownloadManagerViewModel();
 
             Runtime.TrayMenuElementClicked += InitTrayComponents;

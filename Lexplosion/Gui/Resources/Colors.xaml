@@ -42,6 +42,7 @@
     <Color x:Key="DarkColorPalette3Primary2">#0E1422</Color>
     <Color x:Key="DarkColorPalette3SeparateColor">#0E1422</Color>
     <Color x:Key="Foreground">#E1E1E3</Color>
+    <SolidColorBrush x:Key="ForegroundSolidBrush" Color="{DynamicResource Foreground}" />
 
     <SolidColorBrush x:Key="DPalette3Primary1" Color="{DynamicResource DarkColorPalette3Primary1}" />
     <SolidColorBrush x:Key="DPalette3Primary2" Color="{DynamicResource DarkColorPalette3Primary2}" />
