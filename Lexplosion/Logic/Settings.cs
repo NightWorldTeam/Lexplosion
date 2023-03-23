@@ -23,7 +23,7 @@ namespace Lexplosion.Logic
         /// <summary>
         /// Использовать ли в приоритете в сетевой игре прямое подключение.
         /// </summary>
-        public bool OnlineGameDirectConnection = false;
+        public bool NetworkDirectConnection = true;
         public string LanguageId = "";
         public string AccentColor = "";
 
@@ -58,7 +58,7 @@ namespace Lexplosion.Logic
                 if (settings.GameArgs != null) GameArgs = settings.GameArgs;
             }
 
-            OnlineGameDirectConnection = settings.OnlineGameDirectConnection;
+            NetworkDirectConnection = settings.NetworkDirectConnection;
             LanguageId = settings.LanguageId;
             AccentColor = settings.AccentColor;
         }
@@ -90,7 +90,7 @@ namespace Lexplosion.Logic
                 IsHiddenMode = false,
                 GameArgs = "",
                 IsAutoUpdate = false,
-                OnlineGameDirectConnection = false
+                NetworkDirectConnection = true
             };
         }
     }

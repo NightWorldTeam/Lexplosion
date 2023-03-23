@@ -30,8 +30,8 @@ namespace Lexplosion.Logic.Network
         public virtual bool Initialization(string UUID, string sessionToken, string serverUUID)
         {
             bool directConnectPossible = true; //описывает возможно ли прямое подключение через smp. Если оно не возможно и SmpConnection true, то трафик будет гнаться через Smp ретранслятор
-            string externalPort = null;
-            string externalIp = null;
+            string myEternalPort = null;
+            string myExternalIp = null;
 
             try
             {
@@ -69,19 +69,19 @@ namespace Lexplosion.Logic.Network
                                         // TODO: че-то делать
                                     }
 
-                                    externalPort = result.PublicEndPoint.Port.ToString();
-                                    externalIp = result.PublicEndPoint.Address.ToString();
+                                    myEternalPort = result.PublicEndPoint.Port.ToString();
+                                    myExternalIp = result.PublicEndPoint.Address.ToString();
                                     if (result.NetType == STUN_NetType.UdpBlocked || result.NetType == STUN_NetType.Symmetric || result.NetType == STUN_NetType.SymmetricUdpFirewall)
                                     {
                                         directConnectPossible = false;
-                                        dataToSend = Encoding.UTF8.GetBytes(externalPort + ",proxy");
+                                        dataToSend = Encoding.UTF8.GetBytes(myEternalPort + ",proxy");
                                     }
                                     else
                                     {
                                         Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
                                         Runtime.DebugWrite("Nat type " + result.NetType);
 
-                                        dataToSend = Encoding.UTF8.GetBytes(externalPort);
+                                        dataToSend = Encoding.UTF8.GetBytes(myEternalPort);
                                     }
 
                                     var point = (IPEndPoint)udpSocket.LocalEndPoint;
@@ -90,7 +90,7 @@ namespace Lexplosion.Logic.Network
                                 }
                                 else
                                 {
-                                    string pt = externalPort ?? (new Random()).Next(1000, 65535).ToString();
+                                    string pt = myEternalPort ?? (new Random()).Next(1000, 65535).ToString();
                                     dataToSend = Encoding.UTF8.GetBytes(pt + ",proxy");
                                     Bridge = new SmpClient(emptyPoint);
                                 }
@@ -124,27 +124,45 @@ namespace Lexplosion.Logic.Network
                         try
                         {
                             string str = Encoding.UTF8.GetString(data, 0, data_lenght);
-                            string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-                            string hostIp = str.Replace(":" + hostPort, "");
-                            Runtime.DebugWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
 
+                            byte[] connectionCode;
                             using (SHA1 sha = new SHA1Managed())
                             {
-                                Runtime.DebugWrite("Connection code: " + str + ", " + externalIp + ":" + externalPort);
-                                byte[] connectionCode = Encoding.UTF8.GetBytes(str + ", " + externalIp + ":" + externalPort);
-
-                                IPEndPoint hostPoint;
-                                if (directConnectPossible)
+                                if (str.EndsWith(",proxy"))
                                 {
-                                    hostPoint = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
+                                    Runtime.DebugWrite("The server requires udp proxy");
+                                    directConnectPossible = false;
+                                    var strCode = str.Replace(",proxy", "") + ", " + myExternalIp + ":" + myEternalPort;
+                                    connectionCode = Encoding.UTF8.GetBytes(strCode);
+                                    connectionCode = sha.ComputeHash(connectionCode);
+                                    Runtime.DebugWrite("Connection code: " + strCode);
                                 }
                                 else
                                 {
-                                    hostPoint = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
+                                    var strCode = str + ", " + myExternalIp + ":" + myEternalPort;
+                                    connectionCode = Encoding.UTF8.GetBytes(strCode);
+                                    connectionCode = sha.ComputeHash(connectionCode);
+                                    Runtime.DebugWrite("Connection code: " + strCode);
                                 }
-
-                                isConected = ((SmpClient)Bridge).Connect(hostPoint, sha.ComputeHash(connectionCode));
                             }
+
+                            IPEndPoint hostPoint;
+                            if (directConnectPossible)
+                            {
+                                Runtime.DebugWrite("Udp direct connection");
+                                string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
+                                string hostIp = str.Replace(":" + hostPort, "");
+                                Runtime.DebugWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
+
+                                hostPoint = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
+                            }
+                            else
+                            {
+                                Runtime.DebugWrite("UDP connect through proxy");
+                                hostPoint = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
+                            }
+
+                            isConected = ((SmpClient)Bridge).Connect(hostPoint, connectionCode);
                         }
                         catch
                         {
@@ -153,7 +171,7 @@ namespace Lexplosion.Logic.Network
                     }
                     else
                     {
-                        Runtime.DebugWrite("FFHNHBGHJCMGCHM,VHJ,HJ,HJ");
+                        Runtime.DebugWrite("Tcp proxy");
                         isConected = ((TurnBridgeClient)Bridge).Connect(UUID, serverUUID, ControlServer);
                     }
 
