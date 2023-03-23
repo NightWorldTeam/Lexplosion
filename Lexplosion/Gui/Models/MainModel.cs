@@ -1,16 +1,19 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management.Instances;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.Models
 {
-    public sealed class MainModel : VMBase
+    public sealed class LibraryController
     {
-        public ObservableCollection<InstanceFormViewModel> LibraryInstances { get; } = new ObservableCollection<InstanceFormViewModel>();
+        private ObservableCollection<InstanceFormViewModel> _instances { get; } = new ObservableCollection<InstanceFormViewModel>();
+        public IEnumerable<InstanceFormViewModel> Instances { get => _instances; }
 
-        public ObservableCollection<InstanceFormViewModel> CurrentInstanceCatalog { get; } = new ObservableCollection<InstanceFormViewModel>();
+        public void AddInstance(InstanceFormViewModel instanceFormViewModel)
+        {
+            _instances.Add(instanceFormViewModel);
+        }
 
         /// <summary>
         /// Проверяет наличие сборки в библиотеке.
@@ -18,12 +21,23 @@ namespace Lexplosion.Gui.Models
         /// <param name="instanceClient">Клиент по которому осуществляется проверка</param>
         /// <param name="instanceFormViewModel">Если сборка есть в библиотеке возвращает её InstanceFormViewModel</param>
         /// <returns></returns>
-        public bool IsLibraryContainsInstance(InstanceClient instanceClient, out InstanceFormViewModel instanceFormViewModel)
+        public bool IsLibraryContainsInstance(InstanceClient instanceClient)
         {
-            foreach (var instance in LibraryInstances)
+            foreach (var instance in Instances)
             {
                 if (instance.Client == instanceClient)
                 {
+                    return instance.Client == instanceClient;
+                }
+            }
+            return false;
+        }
+
+        public bool TryGetInstanceByInstanceClient(InstanceClient instanceClient, out InstanceFormViewModel instanceFormViewModel)
+        {
+            foreach (var instance in Instances)
+            {
+                if (instance.Client == instanceClient) {
                     instanceFormViewModel = instance;
                     return true;
                 }
@@ -32,52 +46,38 @@ namespace Lexplosion.Gui.Models
             return false;
         }
 
-        public bool IsLibraryContainsInstance(InstanceClient instanceClient)
-        {
-            foreach (var instance in LibraryInstances)
-            {
-                if (instance.Client == instanceClient)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        public InstanceFormViewModel GetInstance(InstanceClient instanceClient) {
+            InstanceFormViewModel result;
 
-        public void RemoveInstanceFromLibrary(InstanceClient instanceClient)
-        {
-            InstanceFormViewModel viewmodel;
-            if (IsLibraryContainsInstance(instanceClient, out viewmodel))
+            if (TryGetInstanceByInstanceClient(instanceClient, out result)) 
             {
-                if (viewmodel != null)
-                    LibraryInstances.Remove(viewmodel);
-            }
-        }
-
-        public InstanceFormViewModel GetInstance(InstanceClient instanceClient)
-        {
-            InstanceFormViewModel viewmodel;
-            if (IsLibraryContainsInstance(instanceClient, out viewmodel))
-            {
-                if (viewmodel != null)
-                    return viewmodel;
+                return result;
             }
             return null;
         }
 
-        public bool IsCatalogInstanceContains(InstanceClient instanceClient)
+        public void RemoveByInstanceClient(InstanceClient instanceClient)
         {
-            foreach (var instance in LibraryInstances)
+            InstanceFormViewModel viewmodel;
+            if (TryGetInstanceByInstanceClient(instanceClient, out viewmodel))
             {
-                if (instance.Client == instanceClient)
-                    return true;
+                _instances.Remove(viewmodel);
             }
-            return false;
+        }
+    }
+
+    public sealed class CatalogController 
+    { 
+        private ObservableCollection<InstanceFormViewModel> _pageInstances = new ObservableCollection<InstanceFormViewModel>();
+        public IEnumerable<InstanceFormViewModel> PageInstances { get => _pageInstances; }
+
+        public CatalogController()
+        {
         }
 
-        public InstanceFormViewModel GetCatalogInstance(InstanceClient instanceClient)
+        public InstanceFormViewModel GetInstance(InstanceClient instanceClient)
         {
-            foreach (var instance in CurrentInstanceCatalog)
+            foreach (var instance in PageInstances)
             {
                 if (instance.Client == instanceClient)
                     return instance;
@@ -85,9 +85,52 @@ namespace Lexplosion.Gui.Models
             return null;
         }
 
-        public void ClearCatalogInstanceList()
+        public void Clear()
         {
-            CurrentInstanceCatalog.Clear();
+            _pageInstances.Clear();
+        }
+
+        public void AddInstance(InstanceFormViewModel instanceFormViewModel) 
+        {
+            _pageInstances.Add(instanceFormViewModel);
+        }
+    }
+
+    public sealed class MainModel : VMBase
+    {
+        private static readonly MainModel _instance = new MainModel();
+        public static MainModel Instance => _instance;
+
+
+        private InstanceFormViewModel _runningInstance;
+        public InstanceFormViewModel RunningInstance
+        {
+            get => _runningInstance; set
+            {
+                _runningInstance = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Если запушена сборка true, иначе else.
+        /// </summary>
+        private static bool _isInstanceRunning = false;
+        public bool IsInstanceRunning
+        {
+            get => _isInstanceRunning; set
+            {
+                _isInstanceRunning = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public LibraryController LibraryController { get; } = new LibraryController();
+        public CatalogController CatalogController { get; } = new CatalogController();
+
+        private MainModel()
+        {
         }
     }
 }

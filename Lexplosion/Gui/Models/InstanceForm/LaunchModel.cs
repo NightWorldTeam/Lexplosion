@@ -14,7 +14,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Properties
 
 
-        public bool IsGameLaunched { get => _mainViewModel.IsInstanceRunning; }
+        public bool IsGameLaunched { get => MainModel.Instance.IsInstanceRunning; }
 
 
         #endregion Properties
@@ -43,8 +43,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             Lexplosion.Runtime.TaskRun(() =>
             {
-                _mainViewModel.RunningInstance = _formViewModel;
-                _mainViewModel.IsInstanceRunning = true;
+                MainModel.Instance.RunningInstance = _formViewModel;
+                MainModel.Instance.IsInstanceRunning = true;
                 _formModel.UpdateButtons();
                 _formModel.InstanceClient.Run();
                 
@@ -72,14 +72,14 @@ namespace Lexplosion.Gui.Models.InstanceForm
             }
             else
             {
-                _mainViewModel.IsInstanceRunning = false;
+                MainModel.Instance.IsInstanceRunning = false;
                 MainViewModel.ShowToastMessage(
                     ResourceGetter.GetString("runUnsuccessfulNotification"),
                     ResourceGetter.GetString("instanceName") + " : " + _formModel.InstanceClient.Name,
                     Controls.ToastMessageState.Error
                 );
 
-                _mainViewModel.IsInstanceRunning = false;
+                MainModel.Instance.IsInstanceRunning = false;
                 _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
                 _formModel.UpperButton.ChangeFuncPlay();
             }
@@ -93,7 +93,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private void OnGameExited(string id)
         {
-            _mainViewModel.IsInstanceRunning = false;
+            MainModel.Instance.IsInstanceRunning = false;
             _formModel.DownloadModel.IsDownloadInProgress = false;
             _formModel.IsLaunch = false;
 

@@ -60,7 +60,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             LoadingCategories();
 
             OverviewField = instanceClient.Summary;
-            DownloadModel = new DownloadModel(mainViewModel, this);
+            DownloadModel = new DownloadModel(this);
             LaunchModel = new LaunchModel(mainViewModel, this, instanceFormViewModel);
 
             UpdateButtons();
@@ -82,7 +82,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         {
             UpdateLowerButton();
 
-            if (InstanceClient.IsInstalled && !_mainViewModel.IsInstanceRunning)
+            if (InstanceClient.IsInstalled && !MainModel.Instance.IsInstanceRunning)
             {
                 UpperButton.ChangeFuncPlay();
             }
@@ -146,7 +146,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                     );
                 }
 
-                if (DownloadModel.IsDownloadInProgress && !_mainViewModel.IsInstanceRunning)
+                if (DownloadModel.IsDownloadInProgress && !MainModel.Instance.IsInstanceRunning)
                 {
                     LowerButtons.Add(
                         new LowerButton(ResourceGetter.GetString("cancelDownload"), MultiButtonProperties.GeometryCancelIcon, LowerButtonFunc.CancelDownload)

@@ -8,7 +8,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
 {
     public sealed class DownloadModel : VMBase
     {
-        private readonly MainViewModel _mainViewModel;
         private readonly InstanceFormModel _instanceFormModel;
 
         public readonly List<Action<StageType, ProgressHandlerArguments>> DownloadActions = new List<Action<StageType, ProgressHandlerArguments>>();
@@ -150,9 +149,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Constructors
 
 
-        public DownloadModel(MainViewModel mainViewModel, InstanceFormModel instanceFormModel)
+        public DownloadModel(InstanceFormModel instanceFormModel)
         {
-            _mainViewModel = mainViewModel;
             _instanceFormModel = instanceFormModel;
 
             DownloadActions.Add(Download);
@@ -242,7 +240,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                 {
                     case InstanceInit.Successful:
                         {
-                            if (_mainViewModel.RunningInstance != null && _mainViewModel.IsInstanceRunning && _mainViewModel.RunningInstance.Model == _instanceFormModel)
+                            if (MainModel.Instance.RunningInstance != null && MainModel.Instance.IsInstanceRunning && MainModel.Instance.RunningInstance.Model == _instanceFormModel)
                             {
                                 IsPrepareOnly = true;
                                 _instanceFormModel.UpdateLowerButton();

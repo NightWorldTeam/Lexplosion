@@ -9,6 +9,7 @@
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:modrinth="clr-namespace:Lexplosion.Logic.Objects.Modrinth"
+    xmlns:nightworld="clr-namespace:Lexplosion.Logic.Objects.Nightworld"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects"
     d:DesignHeight="500"
     d:DesignWidth="700"
@@ -44,6 +45,14 @@
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type modrinth:ModrinthCategory}">
+            <TextBlock Style="{StaticResource TagTextBlock}">
+                <TextBlock.Text>
+                    <Binding Path="Name" />
+                </TextBlock.Text>
+            </TextBlock>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type nightworld:NightWorldCategory}">
             <TextBlock Style="{StaticResource TagTextBlock}">
                 <TextBlock.Text>
                     <Binding Path="Name" />
@@ -318,31 +327,21 @@
                 <StackPanel Grid.Row="3" Margin="0,2,0,0">
                     <Border
                         x:Name="CategoryPanelBorder"
-                        Grid.Column="0"
                         Height="{Binding CategoryPanelBorderHeight}"
                         Margin="20,0,0,0"
-                        Padding="1"
                         BorderBrush="{DynamicResource BrandSolidColorBrush}"
                         BorderThickness="1.5,0,0,0"
                         Visibility="Visible">
-
-                        <Grid ShowGridLines="False">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
+                        <StackPanel>
                             <TextBlock
-                                Grid.Row="0"
-                                Padding="5,0,0,0"
+                                Margin="5,-12,0,0"
                                 FontWeight="Medium"
                                 Foreground="#ababab"
                                 Text="{DynamicResource categories}" />
+
                             <ItemsControl
-                                Grid.Row="1"
                                 Height="{Binding CategoryPanelBorderHeight}"
-                                Padding="1"
+                                Margin="10,-5,0,0"
                                 ItemsSource="{Binding Model.InstanceData.Categories}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -353,8 +352,11 @@
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
-                        </Grid>
+                        </StackPanel>
                     </Border>
+
+
+
                     <Border
                         x:Name="LoadingCategoryPanel"
                         Margin="18.5,0,0,0"

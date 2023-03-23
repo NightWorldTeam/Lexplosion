@@ -1,4 +1,5 @@
-﻿using Lexplosion.Gui.Models.InstanceForm;
+﻿using Lexplosion.Gui.Models;
+using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
@@ -96,7 +97,7 @@ namespace Lexplosion.Gui.ViewModels
         /// </summary>
         public void LaunchInstance(LaunchComplitedCallback complitedLaunchCallback = null, GameExitedCallback gameExitedCallback = null)
         {
-            if (!MainVM.IsInstanceRunning)
+            if (!MainModel.Instance.IsInstanceRunning)
             {
                 if (complitedLaunchCallback != null && gameExitedCallback != null)
                 {
@@ -135,7 +136,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             Model.InstanceClient.StopGame();
             Model.UpperButton.ChangeFuncPlay();
-            MainVM.IsInstanceRunning = false;
+            MainModel.Instance.IsInstanceRunning = false;
             Model.DownloadModel.IsPrepare = false;
             Model.DownloadModel.HasProcents = false;
             Model.IsLaunch = false;
@@ -157,8 +158,8 @@ namespace Lexplosion.Gui.ViewModels
 
             if (!Model.DownloadModel.IsDownloadInProgress)
             {
-                if (!MainVM.Model.IsLibraryContainsInstance(Client))
-                    MainVM.Model.LibraryInstances.Add(this);
+                if (!MainModel.Instance.LibraryController.IsLibraryContainsInstance(Client))
+                    MainModel.Instance.LibraryController.AddInstance(this);
                 MainVM.DownloadManager.AddProcess(this);
                 Model.DownloadModel.DownloadPrepare(version);
             }
@@ -192,7 +193,7 @@ namespace Lexplosion.Gui.ViewModels
         internal void RemoveInstance()
         {
             Model.InstanceClient.Delete();
-            MainVM.Model.RemoveInstanceFromLibrary(Model.InstanceClient);
+            MainModel.Instance.LibraryController.RemoveByInstanceClient(Model.InstanceClient);
             Model.UpdateButtons();
         }
 
@@ -262,7 +263,7 @@ namespace Lexplosion.Gui.ViewModels
 
                 case UpperButtonFunc.Play:
                     {
-                        if (!MainVM.IsInstanceRunning)
+                        if (!MainModel.Instance.IsInstanceRunning)
                             LaunchInstance();
                         break;
                     }

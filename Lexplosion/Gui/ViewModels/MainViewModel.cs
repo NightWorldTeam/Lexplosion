@@ -29,30 +29,6 @@ namespace Lexplosion.Gui.ViewModels
         public static readonly NavigationStore NavigationStore = new NavigationStore();
         public MainMenuViewModel MainMenuVM { get; private set; }
 
-        private InstanceFormViewModel _runningInstance;
-        public InstanceFormViewModel RunningInstance
-        {
-            get => _runningInstance; set
-            {
-                _runningInstance = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private static bool _isInstanceRunning = false;
-        /// <summary>
-        /// Если запушена сборка true, иначе else.
-        /// </summary>
-        public bool IsInstanceRunning
-        {
-            get => _isInstanceRunning; set
-            {
-                _isInstanceRunning = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private static ImmutableArray<string> _releaseGameVersions;
         /// <summary>
         /// Данное свойство содержит в себе версии игры.
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
@@ -75,7 +51,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
-            if ((bool)!GlobalData.GeneralSettings.IsHiddenMode || ((bool)GlobalData.GeneralSettings.IsHiddenMode && !_isInstanceRunning))
+            if ((bool)!GlobalData.GeneralSettings.IsHiddenMode || ((bool)GlobalData.GeneralSettings.IsHiddenMode && !MainModel.Instance.IsInstanceRunning))
             {
                 ShowToastMessage(header, message, state, null);
             }
@@ -83,7 +59,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message)
         {
-            if ((bool)!GlobalData.GeneralSettings.IsHiddenMode || ((bool)GlobalData.GeneralSettings.IsHiddenMode && !_isInstanceRunning))
+            if ((bool)!GlobalData.GeneralSettings.IsHiddenMode || ((bool)GlobalData.GeneralSettings.IsHiddenMode && !MainModel.Instance.IsInstanceRunning))
             {
                 ShowToastMessage(header, message, ToastMessageState.Notification, null);
             }
@@ -91,7 +67,7 @@ namespace Lexplosion.Gui.ViewModels
 
         public static void ShowToastMessage(string header, string message, TimeSpan? time = null, ToastMessageState state = ToastMessageState.Notification)
         {
-            if ((bool)!GlobalData.GeneralSettings.IsHiddenMode || ((bool)GlobalData.GeneralSettings.IsHiddenMode && !_isInstanceRunning))
+            if ((bool)!GlobalData.GeneralSettings.IsHiddenMode || ((bool)GlobalData.GeneralSettings.IsHiddenMode && !MainModel.Instance.IsInstanceRunning))
             {
                 ShowToastMessage(header, message, state, time);
             }
@@ -123,7 +99,7 @@ namespace Lexplosion.Gui.ViewModels
         #region Properties
 
 
-        public MainModel Model { get; }
+        private MainModel Model { get => MainModel.Instance; }
         public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
         public ExportViewModel ExportViewModel { get; set; }
         public LoadingBoard LoadingBoard { get; } = new LoadingBoard();
@@ -198,7 +174,6 @@ namespace Lexplosion.Gui.ViewModels
         {
             PreLoadGameVersions();
 
-            Model = new MainModel();
             UserData = new UserData(InitTrayComponents);
             LibraryInstanceLoading();
 
@@ -207,7 +182,7 @@ namespace Lexplosion.Gui.ViewModels
 
             ExportViewModel = new ExportViewModel();
 
-            DownloadManager = new DownloadManagerViewModel(this);
+            DownloadManager = new DownloadManagerViewModel();
 
             Runtime.TrayMenuElementClicked += InitTrayComponents;
 
@@ -230,13 +205,12 @@ namespace Lexplosion.Gui.ViewModels
                 {
                     InstanceFormViewModel viewModel;
 
-                    if (Model.IsLibraryContainsInstance(instanceClient))
+                    if (MainModel.Instance.LibraryController.TryGetInstanceByInstanceClient(instanceClient, out viewModel))
                     {
-                        viewModel = Model.GetInstance(instanceClient);
                     }
-                    else if (Model.IsCatalogInstanceContains(instanceClient))
+                    else if (MainModel.Instance.LibraryController.IsLibraryContainsInstance(instanceClient))
                     {
-                        viewModel = Model.GetCatalogInstance(instanceClient);
+                        viewModel = MainModel.Instance.CatalogController.GetInstance(instanceClient);
                     }
                     else
                     {
@@ -268,9 +242,9 @@ namespace Lexplosion.Gui.ViewModels
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                if (RunningInstance == null)
+                if (Model.RunningInstance == null)
                     InitTrayComponentsWithoutGame();
-                else InitTrayComponentsWithGame(RunningInstance);
+                else InitTrayComponentsWithGame(Model.RunningInstance);
             });
         }
 
@@ -281,7 +255,7 @@ namespace Lexplosion.Gui.ViewModels
                 TrayComponents.Clear();
 
                 if (instanceFormViewModel != null)
-                    TrayComponents.Add(new TrayButton(0, ResourceGetter.GetString("closeInstance"), ResourceGetter.GetString("ExtensionOff"), instanceFormViewModel.CloseInstance) { IsEnable = IsInstanceRunning });
+                    TrayComponents.Add(new TrayButton(0, ResourceGetter.GetString("closeInstance"), ResourceGetter.GetString("ExtensionOff"), instanceFormViewModel.CloseInstance) { IsEnable = Model.IsInstanceRunning });
 
                 TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
                 TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
@@ -318,7 +292,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             foreach (var instanceClient in InstanceClient.GetInstalledInstances())
             {
-                Model.LibraryInstances.Add(new InstanceFormViewModel(this, instanceClient));
+                MainModel.Instance.LibraryController.AddInstance(new InstanceFormViewModel(this, instanceClient));
             }
         }
 

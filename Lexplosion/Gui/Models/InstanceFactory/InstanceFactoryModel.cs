@@ -260,7 +260,7 @@ namespace Lexplosion.Gui.Models.InstanceFactory
                 optifineVersion
                 );
 
-            mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(mainViewModel, instance));
+            MainModel.Instance.LibraryController.AddInstance(new InstanceFormViewModel(mainViewModel, instance));
         }
 
         public static void CreateLocalInstance(MainViewModel mainViewModel, InstanceFactoryModel model)

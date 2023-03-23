@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.ViewModels;
 using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Gui.ViewModels.ModalVMs;
+using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models.MainMenu
@@ -8,6 +9,8 @@ namespace Lexplosion.Gui.Models.MainMenu
     public class LibraryModel
     {
         public MainViewModel MainViewModel { get; }
+        
+        public IEnumerable<InstanceFormViewModel> Instances { get => MainModel.Instance.LibraryController.Instances; }
 
         public LibraryModel(MainViewModel mainViewModel)
         {
@@ -20,7 +23,7 @@ namespace Lexplosion.Gui.Models.MainMenu
         /// </summary>
         public void CloseAllOpenedDropDownMenus()
         {
-            foreach (var instance in MainViewModel.Model.LibraryInstances)
+            foreach (var instance in MainModel.Instance.LibraryController.Instances)
             {
                 if (instance.IsDropdownMenuOpen)
                     instance.IsDropdownMenuOpen = false;

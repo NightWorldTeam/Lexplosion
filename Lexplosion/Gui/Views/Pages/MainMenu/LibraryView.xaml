@@ -38,7 +38,7 @@
             <ItemsControl x:Name="LibraryItemsControl" ScrollViewer.VerticalScrollBarVisibility="Auto">
 
                 <ItemsControl.Resources>
-                    <CollectionViewSource x:Key="InstanceCollection" Source="{Binding Model.MainViewModel.Model.LibraryInstances}" />
+                    <CollectionViewSource x:Key="InstanceCollection" Source="{Binding Model.Instances}" />
                 </ItemsControl.Resources>
 
                 <ItemsControl.ItemsSource>

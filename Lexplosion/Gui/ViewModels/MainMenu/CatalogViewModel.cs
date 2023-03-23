@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Gui.Models;
+using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
@@ -17,10 +18,9 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         #region Properties
 
-
-        public ObservableCollection<InstanceFormViewModel> InstanceList { get => _mainViewModel.Model.CurrentInstanceCatalog; }
-
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
+
+        public IEnumerable<InstanceFormViewModel> InstanceList { get => MainModel.Instance.CatalogController.PageInstances; }
 
         #region Filter
 
@@ -188,7 +188,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             get => _onScrollCommand ?? (_onScrollCommand = new RelayCommand(obj =>
             {
                 // TODO: Возможно тяжелый код.
-                foreach (var instance in _mainViewModel.Model.CurrentInstanceCatalog)
+                foreach (var instance in MainModel.Instance.CatalogController.PageInstances)
                 {
                     instance.IsDropdownMenuOpen = false;
                 }
@@ -298,7 +298,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 {
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        InstanceList.Clear();
+                        MainModel.Instance.CatalogController.Clear();
                         IsEmptyList = true;
                     });
                 }
@@ -308,18 +308,18 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     {
                         if (IsEmptyList) IsEmptyList = false;
 
-                        InstanceList.Clear();
+                        MainModel.Instance.CatalogController.Clear();
 
                         foreach (var instance in instances)
                         {
-                            if (_mainViewModel.Model.IsLibraryContainsInstance(instance))
+                            if (MainModel.Instance.LibraryController.IsLibraryContainsInstance(instance))
                             {
-                                InstanceList.Add(_mainViewModel.Model.GetInstance(instance));
+                                MainModel.Instance.CatalogController.AddInstance(MainModel.Instance.LibraryController.GetInstance(instance));
                             }
                             else
                             {
                                 var instanceForm = new InstanceFormViewModel(_mainViewModel, instance);
-                                InstanceList.Add(instanceForm);
+                                MainModel.Instance.CatalogController.AddInstance(instanceForm);
                             }
                         }
                     });

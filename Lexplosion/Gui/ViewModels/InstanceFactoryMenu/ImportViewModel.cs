@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ModalWindow;
+using Lexplosion.Gui.Models;
 using Lexplosion.Gui.ViewModels.FactoryMenu;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
@@ -152,7 +153,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             //FactoryGeneralViewModel.CloseModalWindowCommand.Execute(null);
 
             // Добавляем сборку в библиотеку.
-            _mainViewModel.Model.LibraryInstances.Add(new InstanceFormViewModel(_mainViewModel, instanceClient));
+            MainModel.Instance.LibraryController.AddInstance(new InstanceFormViewModel(_mainViewModel, instanceClient));
 
             // Выводим сообщение о результате испорта.
             MainViewModel.ShowToastMessage(

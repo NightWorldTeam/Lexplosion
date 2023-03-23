@@ -5,7 +5,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
     public sealed class DownloadManagerViewModel : ModalVMBase
     {
-        private MainViewModel _mainViewModel;
         public ObservableCollection<InstanceDownloadProcess> InstanceDownloadProcessList { get; } = new ObservableCollection<InstanceDownloadProcess>();
 
         public override double Width => 500;
@@ -16,9 +15,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             ModalWindowViewModelSingleton.Instance.Close();
         });
 
-        public DownloadManagerViewModel(MainViewModel mainViewModel, bool IsTest = false)
+        public DownloadManagerViewModel(bool IsTest = false)
         {
-            _mainViewModel = mainViewModel;
         }
 
         public void AddProcess(InstanceFormViewModel instanceForm)
