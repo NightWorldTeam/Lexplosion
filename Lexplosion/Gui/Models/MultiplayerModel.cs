@@ -35,9 +35,9 @@ namespace Lexplosion.Gui.Models
 
         public bool DirectConnetion
         {
-            get => GlobalData.GeneralSettings.OnlineGameDirectConnection; set
+            get => GlobalData.GeneralSettings.NetworkDirectConnection; set
             {
-                GlobalData.GeneralSettings.OnlineGameDirectConnection = value;
+                GlobalData.GeneralSettings.NetworkDirectConnection = value;
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
