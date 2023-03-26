@@ -25,7 +25,7 @@
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
 
-            <Grid Height="630" ShowGridLines="False">
+            <Grid ShowGridLines="False">
 
                 <Grid.Background>
                     <!--  "Black" 0.64  -->
@@ -36,6 +36,7 @@
                     <RowDefinition Height="35" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="100" />
+                    <RowDefinition Height="95" />
                     <RowDefinition Height="95" />
                     <RowDefinition Height="95" />
                     <RowDefinition Height="95" />
@@ -246,7 +247,6 @@
                 </Grid>
 
                 <!--  Java  -->
-
                 <Grid
                     Grid.Row="5"
                     Grid.Column="1"
@@ -307,10 +307,71 @@
                             Style="{StaticResource FolderBrowerButton}" />
                     </Grid>
                 </Grid>
+                <!--  Second Java  -->
+                <Grid
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    ShowGridLines="False">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25" />
+                        <RowDefinition Height="60" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Height="35"
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="#ddd"
+                        Text="{DynamicResource secondJavaPath}" />
+
+                    <Grid Grid.Row="1">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="75" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <controls:PlaceholderTextBox
+                            Grid.Column="0"
+                            Height="42"
+                            Padding="6,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Background="{DynamicResource SepSolidColorBrush}"
+                            BorderBrush="#121212"
+                            BorderThickness="1"
+                            FontSize="20"
+                            Foreground="#bbb"
+                            Placeholder="{DynamicResource noValue}"
+                            PlaceholderFontSize="20"
+                            PlaceholderOpacity="0.7"
+                            Text="{Binding GeneralSettings.JavaPath, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <Button
+                            Grid.Column="1"
+                            Width="70"
+                            Height="38"
+                            Command="{Binding OpenJavaFolderBrowser}"
+                            Content="{DynamicResource review}"
+                            FontWeight="Medium"
+                            Style="{StaticResource FolderBrowerButton}" />
+
+                        <Button
+                            Grid.Column="2"
+                            Width="70"
+                            Height="38"
+                            Command="{Binding SetDefaultJavaPath}"
+                            Content="{DynamicResource reboot}"
+                            FontWeight="Medium"
+                            Style="{StaticResource FolderBrowerButton}" />
+                    </Grid>
+                </Grid>
 
                 <!--  JVM  -->
                 <Grid
-                    Grid.Row="6"
+                    Grid.Row="7"
                     Grid.Column="1"
                     ShowGridLines="False">
 
@@ -348,7 +409,7 @@
 
                 <!--  CheckBoxes  -->
                 <StackPanel
-                    Grid.Row="7"
+                    Grid.Row="8"
                     Grid.Column="1"
                     Orientation="Horizontal">
                     <StackPanel Margin="5,0,0,0" HorizontalAlignment="Left">

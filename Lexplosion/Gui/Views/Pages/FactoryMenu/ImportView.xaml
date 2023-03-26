@@ -119,7 +119,7 @@
                     FontWeight="Medium"
                     Foreground="White"
                     Opacity="0.9"
-                    Text="Import Properties" />
+                    Text="{DynamicResource importProperties}" />
 
                 <Button
                     Margin="0,3,0,0"

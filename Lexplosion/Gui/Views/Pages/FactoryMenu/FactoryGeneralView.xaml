@@ -27,7 +27,7 @@
                         FontWeight="Medium"
                         Foreground="White"
                         Opacity="0.9"
-                        Text="Instance Properties" />
+                        Text="{DynamicResource instanceProperties}" />
 
                     <Button
                         Margin="0,3,0,0"
@@ -79,7 +79,7 @@
                             FontWeight="Medium"
                             Foreground="White"
                             Opacity="0.8"
-                            Text="Instance Name" />
+                            Text="{DynamicResource instanceName}" />
 
                         <!--<TextBox
                             Grid.Column="1"
@@ -120,7 +120,7 @@
                                     FontWeight="Medium"
                                     Foreground="White"
                                     Opacity="0.8"
-                                    Text="Minecraft Version" />
+                                    Text="{DynamicResource minecraftVersion}" />
 
                                 <TextBlock
                                     VerticalAlignment="Center"
@@ -128,7 +128,7 @@
                                     FontWeight="Medium"
                                     Foreground="White"
                                     Opacity="0.6"
-                                    Text="Show Snapshots" />
+                                    Text="{DynamicResource showSnapshot}" />
                             </StackPanel>
 
                             <ToggleButton
@@ -304,7 +304,7 @@
                 VerticalAlignment="Bottom"
                 Background="{DynamicResource SecondarySolidColorBrush}"
                 Command="{Binding ActionCommand}"
-                Content="Create Instance"
+                Content="{DynamicResource createInstance}"
                 FontWeight="Medium"
                 IsDefault="True"
                 IsEnabled="{Binding IsExportFinished}"

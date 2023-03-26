@@ -255,4 +255,16 @@
     <s:String x:Key="defaultInstanceName">Сборка</s:String>
 
     <s:String x:Key="manualInput">Ручной ввод</s:String>
+
+    <s:String x:Key="noValue">Отсутствует</s:String>
+    <s:String x:Key="exportInstance">Экспорт Сборки</s:String>
+    <s:String x:Key="shareInstance">Поделиться сборкой</s:String>
+    <s:String x:Key="sharingList">Раздачи</s:String>
+    <s:String x:Key="secondJavaPath">Путь к Java для версий с 1.16.5</s:String>
+
+    <s:String x:Key="showSnapshot">Показать снапшоты</s:String>
+    <s:String x:Key="instanceProperties">Создание сборки</s:String>
+    <s:String x:Key="importProperties">Импорт cборки</s:String>
+    <s:String x:Key="instanceSharingList">Список раздающихся сборок</s:String>
+    <s:String x:Key="createInstance">Создать сборку</s:String>
 </ResourceDictionary>

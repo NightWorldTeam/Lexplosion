@@ -254,4 +254,16 @@
     <s:String x:Key="fullExport">Full Export</s:String>
     <s:String x:Key="defaultInstanceName">Instance</s:String>
     <s:String x:Key="manualInput">Manual Input</s:String>
+
+    <s:String x:Key="noValue">No Value</s:String>
+    <s:String x:Key="exportInstance">Export Instance</s:String>
+    <s:String x:Key="shareInstance">Share Instance</s:String>
+    <s:String x:Key="sharingList">Sharing</s:String>
+    <s:String x:Key="secondJavaPath">Path to Java version above 1.16.5</s:String>
+
+    <s:String x:Key="showSnapshot">Show Snapshot</s:String>
+    <s:String x:Key="instanceProperties">Create Instance</s:String>
+    <s:String x:Key="importProperties">Import Instance</s:String>
+    <s:String x:Key="instanceSharingList">Instnace Sharing List</s:String>
+    <s:String x:Key="createInstance">Create Instance</s:String>
 </ResourceDictionary>
