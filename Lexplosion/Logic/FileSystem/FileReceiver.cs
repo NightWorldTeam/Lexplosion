@@ -66,6 +66,11 @@ namespace Lexplosion.Logic.FileSystem
         public event Action<double> SpeedUpdate;
         public event Action<DistributionState> StateChanged;
 
+        public string OwnerLogin
+        {
+            get => _ownerLogin;
+        }
+
         public DistributionState GetState
         {
             get => _state;

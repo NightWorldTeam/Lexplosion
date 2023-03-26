@@ -18,15 +18,15 @@ namespace Lexplosion.Logic.Network
             public byte[] Sha256;
         }
 
-        protected Dictionary<string, FileData> SFilesList; // список всех FileStream и размеров файлов
+        protected Dictionary<string, FileData> SFilesList = new(); // список всех FileStream и размеров файлов
 
         // первое значение - отправляемый файл, второе - офсет в отправляемом файле, третье - ключ ширования, четвертое - вектор инициализации
-        protected Dictionary<IPEndPoint, ReferenceTuple<string, int, byte[], byte[]>> ClientsData;
+        protected Dictionary<IPEndPoint, ReferenceTuple<string, int, byte[], byte[]>> ClientsData = new();
 
-        protected List<IPEndPoint> AuthorizedClients;
-        protected List<IPEndPoint> AvailableConnections;
+        protected List<IPEndPoint> AuthorizedClients = new();
+        protected List<IPEndPoint> AvailableConnections = new();
 
-        protected Semaphore FilesListSemaphore; //блокировка для метода AddFile
+        protected Semaphore FilesListSemaphore = new(1, 1); //блокировка для метода AddFile
         protected AutoResetEvent WaitClient = new AutoResetEvent(false);
 
         const int Heap = 1400; //количество байт отправляемых за один раз
@@ -40,16 +40,10 @@ namespace Lexplosion.Logic.Network
 
         public DataServer(RSAParameters privateRsaKey, string confirmWord, string uuid, string sessionToken, string server) : base(uuid, sessionToken, serverType, true, server)
         {
-            SFilesList = new Dictionary<string, FileData>();
-
-            ClientsData = new();
-
-            AuthorizedClients = new List<IPEndPoint>();
-            FilesListSemaphore = new Semaphore(1, 1);
-            AvailableConnections = new List<IPEndPoint>();
-
             _сonfirmWord = Encoding.UTF8.GetBytes(confirmWord);
             _privateRsaKey = privateRsaKey;
+
+            StartThreads();
         }
 
         protected override bool AfterConnect(IPEndPoint point)

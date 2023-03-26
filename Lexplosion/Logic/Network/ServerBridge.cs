@@ -9,13 +9,13 @@ namespace Lexplosion.Logic.Network
 {
     class ServerBridge : NetworkServer
     {
-        protected ConcurrentDictionary<IPEndPoint, Socket> Connections = new ConcurrentDictionary<IPEndPoint, Socket>(); //это нужно для читающего потока
-        protected ConcurrentDictionary<Socket, IPEndPoint> ClientsPoints = new ConcurrentDictionary<Socket, IPEndPoint>(); //этот список нужен для отправляющего потока
-        protected List<Socket> Sockets = new List<Socket>(); //этот список нужен для отправляющего потока
-        protected Semaphore ConnectSemaphore = new Semaphore(1, 1); //блокировка для метода BeforeConnect
+        protected ConcurrentDictionary<IPEndPoint, Socket> Connections = new(); //это нужно для читающего потока
+        protected ConcurrentDictionary<Socket, IPEndPoint> ClientsPoints = new(); //этот список нужен для отправляющего потока
+        protected List<Socket> Sockets = new(); //этот список нужен для отправляющего потока
+        protected Semaphore ConnectSemaphore = new(1, 1); //блокировка для метода BeforeConnect
 
-        protected AutoResetEvent SendingWait = new AutoResetEvent(false);
-        protected AutoResetEvent ReadingWait = new AutoResetEvent(false);
+        protected AutoResetEvent SendingWait = new(false);
+        protected AutoResetEvent ReadingWait = new(false);
 
         const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
         readonly int Port;
