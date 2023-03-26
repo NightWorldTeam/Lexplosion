@@ -4,15 +4,15 @@ using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Runtime.CompilerServices;
+using System.Management.Instrumentation;
+using System.Linq;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using System.Runtime.CompilerServices;
-using System.Management.Instrumentation;
-using System.Linq;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -187,6 +187,17 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _websiteUrl = value;
                 StateChanged?.Invoke();
+            }
+        }
+
+        private bool _isIncomplete = false;
+        public bool IsIncomplete
+        {
+            get => _isIncomplete;
+            private set
+            {
+                _isIncomplete = value;
+                OnPropertyChanged();
             }
         }
 
@@ -1201,11 +1212,96 @@ namespace Lexplosion.Logic.Management.Instances
             return res;
         }
 
-
-        public static ImportResult Import(FileReceiver reciver, out InstanceClient instanceClient)
+        private static ImportResult Import(in InstanceClient client, string zipFile)
         {
-            WithDirectory.ReceiveFile(reciver, out string file);
-            return Import(file, out instanceClient);
+            ArchivedClientData parameters;
+            string unzipPath;
+
+            ImportResult res = WithDirectory.UnzipInstance(zipFile, out parameters, out unzipPath);
+            if (res == ImportResult.Successful)
+            {
+                if (parameters != null && parameters.Name != null && parameters.GameVersion != null)
+                {
+                    byte[] logo = null;
+                    if (parameters.LogoFileName != null)
+                    {
+                        try
+                        {
+                            string file = unzipPath + parameters.LogoFileName;
+                            if (File.Exists(unzipPath + parameters.LogoFileName))
+                            {
+                                logo = File.ReadAllBytes(file);
+                            }
+                        }
+                        catch { }
+                    }
+
+                    client.Name = parameters.Name;
+                    client.GameVersion = parameters.GameVersion;
+                    client.Author = parameters.Author ?? UnknownAuthor;
+                    client.Description = parameters.Description;
+                    client.Summary = parameters.Summary;
+                    client.Logo = logo;
+
+                    client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);
+                    res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
+
+                    if (res == ImportResult.Successful)
+                    {
+                        client.SaveAssets();
+                        _installedInstances[client._localId] = client;
+                        SaveInstalledInstancesList();
+                        client.IsIncomplete = false;
+                    }
+                    else
+                    {
+                        WithDirectory.DeleteInstance(client._localId);
+                    }
+                }
+                else
+                {
+                    res = ImportResult.GameVersionError;
+                }
+            }
+
+            return res;
+        }
+
+        public static InstanceClient Import(string zipFile, Action<ImportResult> callback)
+        {
+            var client = new InstanceClient("Importing...", InstanceSource.Local, "")
+            {
+                InLibrary = true,
+                Author = UnknownAuthor,
+                Summary = "",
+                IsIncomplete = true
+            };
+
+            Lexplosion.Runtime.TaskRun(delegate ()
+            {
+                callback(Import(client, zipFile));
+            });
+
+            return client;
+        }
+
+        public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback)
+        {
+            var client = new InstanceClient("Importing...", InstanceSource.Local, "")
+            {
+                InLibrary = true,
+                Author = UnknownAuthor,
+                Summary = "",
+                IsIncomplete = true
+            };
+
+            Lexplosion.Runtime.TaskRun(delegate ()
+            {
+                WithDirectory.ReceiveFile(reciver, out string file);
+                callback(Import(in client, file));
+            });
+
+            return client;
         }
     }
 }
