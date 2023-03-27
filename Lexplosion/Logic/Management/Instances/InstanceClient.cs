@@ -282,7 +282,7 @@ namespace Lexplosion.Logic.Management.Instances
             Name = name;
             Type = type;
             GameVersion = gameVersion;
-            _localId = GenerateInstanceId();
+            GenerateInstanceId();
         }
 
         /// <summary>
@@ -771,7 +771,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             if (!InLibrary)
             {
-                _localId = GenerateInstanceId();
+                GenerateInstanceId();
                 CreateFileStruct(ClientType.Vanilla, "");
                 _installedInstances[_localId] = this;
                 _idsPairs[_externalId] = _localId;
@@ -801,7 +801,7 @@ namespace Lexplosion.Logic.Management.Instances
             return Regex.IsMatch(str, @"[^a-zA-Z0-9]");
         }
 
-        private string GenerateInstanceId()
+        private void GenerateInstanceId()
         {
             string instanceId = Name.ToLower();
 
@@ -858,7 +858,7 @@ namespace Lexplosion.Logic.Management.Instances
                 instanceId = instanceId_;
             }
 
-            return instanceId;
+            _localId = instanceId;
         }
 
         /// <summary>
@@ -1242,7 +1242,7 @@ namespace Lexplosion.Logic.Management.Instances
                     client.Description = parameters.Description;
                     client.Summary = parameters.Summary;
                     client.Logo = logo;
-                    client._localId = client.GenerateInstanceId();
+                    client.GenerateInstanceId();
 
                     client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);
                     res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);

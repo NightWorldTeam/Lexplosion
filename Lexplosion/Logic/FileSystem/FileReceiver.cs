@@ -76,6 +76,11 @@ namespace Lexplosion.Logic.FileSystem
             get => _state;
         }
 
+        public string Name
+        {
+            get => _info?.Name;
+        }
+
         private FileReceiver(string ownerLogin, string ownerUUID, string fileId, DistributionData info)
         {
             _ownerLogin = ownerLogin;
@@ -85,7 +90,6 @@ namespace Lexplosion.Logic.FileSystem
 
             _state = DistributionState.InQueue;
         }
-
 
         public void StartDownload(string fileName)
         {
