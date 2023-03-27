@@ -12,7 +12,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         protected override void Action()
         {
-            _instanceClient.Share(UnitsList);
+            Lexplosion.Runtime.TaskRun(() => 
+            { 
+                _instanceClient.Share(UnitsList);
+            });
         }
     }
 }

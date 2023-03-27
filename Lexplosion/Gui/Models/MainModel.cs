@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Automation;
 
 namespace Lexplosion.Gui.Models
 {
@@ -100,6 +101,21 @@ namespace Lexplosion.Gui.Models
     {
         private static readonly MainModel _instance = new MainModel();
         public static MainModel Instance => _instance;
+
+        // TODO: цикличная зависимость убрать нах отсюда.
+        private MainViewModel _mainViewModel { get; set; }
+        public void SetMainViewModel(MainViewModel mainViewModel)
+        {
+            if (_mainViewModel == null)
+            {
+                _mainViewModel = mainViewModel;
+            }
+        }
+
+        public void AddInstanceForm(InstanceClient instanceClient) 
+        {
+            LibraryController.AddInstance(new InstanceFormViewModel(_mainViewModel, instanceClient));
+        }
 
 
         private InstanceFormViewModel _runningInstance;

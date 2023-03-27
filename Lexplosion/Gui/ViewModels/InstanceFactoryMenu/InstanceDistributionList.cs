@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ModalWindow;
+using Lexplosion.Gui.Models;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
 using System;
@@ -13,7 +14,8 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
     public sealed class InstanceDistribution : VMBase
     {
-        private FileReceiver _receiver;
+        private readonly FileReceiver _receiver;
+        private readonly Action<ImportResult> _resultHandler;
 
         public string Name { get; private set; }
         public string Author { get; private set; }
@@ -48,10 +50,12 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        public InstanceDistribution(FileReceiver fileReceiver)
+        public InstanceDistribution(FileReceiver fileReceiver, Action<ImportResult> resultHandler)
         {
             _receiver = fileReceiver;
-            Name = "Instance Name";
+            _resultHandler = resultHandler;
+
+            Name = fileReceiver.Name;
             Author = fileReceiver.OwnerLogin;
             State = fileReceiver.GetState;
             fileReceiver.ProcentUpdate += FileReceiver_ProcentUpdate;
@@ -63,9 +67,9 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             State = DistributionState.InProcess;
             Runtime.TaskRun(() =>
             {
-                ImportResult importResult;
-                var instanceClient = InstanceClient.Import(_receiver, (importResult) => { Runtime.DebugWrite("RESULT - " + importResult); });
-                Runtime.DebugWrite("EMPORT " + instanceClient.Name);
+                MainModel.Instance.AddInstanceForm(
+                    InstanceClient.Import(_receiver, _resultHandler)
+                );
             });
         }
 
@@ -160,13 +164,21 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         public void LoadInstanceDistribution() 
         {
-            var receivers = FileReceiver.GetDistributors();
-            Runtime.DebugWrite(receivers.Count());
+            Lexplosion.Runtime.TaskRun(() => 
+            { 
+                var receivers = FileReceiver.GetDistributors();
 
-            foreach (var receiver in receivers)
-            {
-                CurrentInstanceDistribution.Add(new InstanceDistribution(receiver));
-            }
+                foreach (var receiver in receivers)
+                {
+                    CurrentInstanceDistribution.Add(new InstanceDistribution(receiver, DownloadResultHandler));
+                }
+            });
+        }
+
+
+        private void DownloadResultHandler(ImportResult importResult) 
+        {
+            MainViewModel.ShowToastMessage("Download Sharing Instance", importResult.ToString());
         }
 
 

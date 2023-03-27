@@ -170,6 +170,8 @@ namespace Lexplosion.Gui.ViewModels
 
         public MainViewModel()
         {
+            MainModel.Instance.SetMainViewModel(this);
+
             PreLoadGameVersions();
 
             UserData = new UserData(InitTrayComponents);

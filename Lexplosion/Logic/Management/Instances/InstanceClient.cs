@@ -1064,7 +1064,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             if (result == ExportResult.Successful)
             {
-                return FileDistributor.CreateDistribution(zipFile);
+                return FileDistributor.CreateDistribution(zipFile, Name);
             }
             else
             {

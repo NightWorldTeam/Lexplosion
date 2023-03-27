@@ -36,7 +36,7 @@
                                     FontSize="14"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource ForegroundSolidBrush}"
-                                    Text="Roadmap planning for scheduling feature." />
+                                    Text="{Binding Name}" />
                                 <TextBlock Foreground="{DynamicResource ForegroundSolidBrush}" Text="{Binding Author}" />
                             </StackPanel>
                         </StackPanel>
