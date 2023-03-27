@@ -4,15 +4,11 @@ using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Lexplosion.Gui.Models
 {
-    public class AuthModel : VMBase
+    public sealed class AuthModel : VMBase
     {
         private AccountType _accountType;
         private bool _isSavedAccountOAuth2 = false;
@@ -56,7 +52,9 @@ namespace Lexplosion.Gui.Models
             }
         }
 
+
         #region Main Auth
+
 
         private string _savedLogin = string.Empty;
         private string _login = String.Empty;
@@ -123,7 +121,9 @@ namespace Lexplosion.Gui.Models
             }
         }
 
+
         #endregion Main Auth
+
 
         private bool _isAuthing = false;
         /// <summary>
@@ -158,10 +158,12 @@ namespace Lexplosion.Gui.Models
             }
         }
 
+
         #endregion Properties
 
 
-        #region Methods
+        #region Public & Protected Methods
+
 
         public void SignIn() 
         {
@@ -223,6 +225,31 @@ namespace Lexplosion.Gui.Models
 
             return type;
         }
+
+
+        public void FollowToMicrosoft()
+        {
+            IsAuthFinished = false;
+            System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
+        }
+
+        public void CancelMicrosoftAuth()
+        {
+            AccountTypeSelectedIndex = 1;
+            IsAuthFinished = true;
+        }
+
+        public void MicrosoftManualInput()
+        {
+            var authCode = _authentication.Auth(_accountType, "", ManualInputedMicrosoftData, true);
+            PerformAuthCode(authCode);
+            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+        }
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
 
 
         /// <summary>
@@ -313,24 +340,6 @@ namespace Lexplosion.Gui.Models
         }
 
 
-        public void FollowToMicrosoft()
-        {
-            IsAuthFinished = false;
-            System.Diagnostics.Process.Start("https://login.live.com/oauth20_authorize.srf?client_id=ed0f84c7-4bf4-4a97-96c7-8c82b1e4ea0b&response_type=code&redirect_uri=https://night-world.org/requestProcessing/microsoftOAuth.php&scope=XboxLive.signin%20offline_access&state=NOT_NEEDED");
-        }
-
-        public void CancelMicrosoftAuth()
-        {
-            AccountTypeSelectedIndex = 1;
-            IsAuthFinished = true;
-        }
-
-        public void MicrosoftManualInput() 
-        {
-            var authCode = _authentication.Auth(_accountType, "", ManualInputedMicrosoftData, true);
-            PerformAuthCode(authCode);
-            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
-        }
-        #endregion Methods
+        #endregion Private Methods
     }
 }

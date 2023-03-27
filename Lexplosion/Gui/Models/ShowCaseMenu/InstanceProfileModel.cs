@@ -2,8 +2,7 @@
 using Lexplosion.Gui.ViewModels;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
-using System.Collections.Generic;
- 
+
 namespace Lexplosion.Gui.Models.ShowCaseMenu
 {
     public class InstanceProfileModel : VMBase
@@ -256,9 +255,9 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             string[] gameVersions;
             if (IsShowSnapshots)
             {
-                gameVersions = MainViewModel.AllGameVersions.ToArray();
+                gameVersions = MainViewModel.AllGameVersions;
             }
-            else gameVersions = MainViewModel.ReleaseGameVersions.ToArray();
+            else gameVersions = MainViewModel.ReleaseGameVersions;
             GameVersions = gameVersions;
         }
 

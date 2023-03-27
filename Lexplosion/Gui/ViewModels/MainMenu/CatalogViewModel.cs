@@ -19,7 +19,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         #region Properties
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
-
         public IEnumerable<InstanceFormViewModel> InstanceList { get => MainModel.Instance.CatalogController.PageInstances; }
 
         #region Filter
@@ -274,7 +273,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }
 
             IsLoaded = false;
-            Lexplosion.Runtime.TaskRun(() =>
+            Lexplosion.Runtime.TaskRun((System.Threading.ThreadStart)(() =>
             {
                 var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
 
@@ -285,7 +284,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     SelectedCategory,
                     searchText == null ? _previousSearch : searchText,
                     SelectedCfSortBy,
-                    gameVersion
+                    (string)gameVersion
                     );
 
 
@@ -326,7 +325,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
                 }
                 IsLoaded = true;
-            });
+            }));
         }
 
         #endregion Private Methods

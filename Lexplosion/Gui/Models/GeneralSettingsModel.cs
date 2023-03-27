@@ -4,7 +4,7 @@ using System;
 
 namespace Lexplosion.Gui.Models
 {
-    public class GeneralSettingsModel : VMBase
+    public sealed class GeneralSettingsModel : VMBase
     {
         public static event Action<bool> ConsoleParameterChanged;
 

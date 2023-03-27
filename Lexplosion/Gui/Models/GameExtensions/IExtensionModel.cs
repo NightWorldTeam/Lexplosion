@@ -1,4 +1,5 @@
-﻿using Lexplosion.Tools.Immutable;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models.GameExtensions
 {
@@ -8,6 +9,6 @@ namespace Lexplosion.Gui.Models.GameExtensions
         public GameExtension GameExtension { get; }
         public bool IsAvaliable { get; }
         public string Version { get; set; }
-        public ImmutableArray<string> Versions { get; }
+        public IEnumerable<string> Versions { get; }
     }
 }

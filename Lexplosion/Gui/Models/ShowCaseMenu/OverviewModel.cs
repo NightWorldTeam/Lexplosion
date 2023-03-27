@@ -8,10 +8,9 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
 {
     public class OverviewModel : VMBase
     {
-        private InstanceData _instanceData;
-        private bool _isLocalInstance = false;
+        #region Properties
 
-        #region props
+        private InstanceData _instanceData;
         public InstanceData InstanceData
         {
             get => _instanceData; set
@@ -21,6 +20,7 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             }
         }
 
+        private bool _isLocalInstance = false;
         public bool IsLocalInstance
         {
             get => _isLocalInstance; set
@@ -29,9 +29,15 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
                 OnPropertyChanged(nameof(IsLocalInstance));
             }
         }
-        #endregion
 
         public GalleryViewModel GalleryVM { get; }
+
+
+        #endregion Properties
+
+
+        #region Constructors
+
 
         public OverviewModel(InstanceClient instanceClient, ISubmenu submenuViewModel, OverviewViewModel overviewViewModel)
         {
@@ -40,6 +46,9 @@ namespace Lexplosion.Gui.Models.ShowCaseMenu
             IsLocalInstance = (InstanceData != null && InstanceData.TotalDownloads != 0);
             GalleryVM = new GalleryViewModel(InstanceData?.Images ?? new List<byte[]>(), submenuViewModel);
         }
+
+
+        #endregion Constructors
     }
 }
 

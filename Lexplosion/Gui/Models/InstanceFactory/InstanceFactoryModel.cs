@@ -191,9 +191,9 @@ namespace Lexplosion.Gui.Models.InstanceFactory
             string[] gameVersions;
             if (IsShowSnapshots)
             {
-                gameVersions = MainViewModel.AllGameVersions.ToArray();
+                gameVersions = MainViewModel.AllGameVersions;
             }
-            else gameVersions = MainViewModel.ReleaseGameVersions.ToArray();
+            else gameVersions = MainViewModel.ReleaseGameVersions;
             Version = gameVersions[0];
             GameVersions = gameVersions;
             Version = gameVersions[0];

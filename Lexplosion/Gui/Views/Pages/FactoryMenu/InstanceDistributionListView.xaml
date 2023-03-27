@@ -72,10 +72,26 @@
                     Background="{DynamicResource SepSolidColorBrush}"
                     CornerRadius="5">
                     <Grid>
-                        <TextBlock
-                            FontSize="14"
-                            Foreground="{DynamicResource ForegroundSolidBrush}"
-                            Text="Long Tech" />
+                        <Grid ShowGridLines="False">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                FontSize="16"
+                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                Text="Long Tech" />
+
+                            <TextBlock
+                                Grid.Column="3"
+                                VerticalAlignment="Top"
+                                FontSize="12"
+                                Foreground="{DynamicResource ForegroundSolidBrush}"
+                                Text="by _Hel2x_" />
+                        </Grid>
 
                         <Button
                             Width="32"
@@ -87,7 +103,7 @@
                                 Width="32"
                                 Height="32"
                                 CornerRadius="5">
-                                <Viewbox Width="20" Height="20">
+                                <Viewbox Width="16" Height="16">
                                     <Path
                                         Data="M220 896q-24 0-42-18t-18-42V693h60v143h520V693h60v143q0 24-18 42t-42 18H220Zm260-153L287 550l43-43 120 120V256h60v371l120-120 43 43-193 193Z"
                                         Fill="{DynamicResource ForegroundSolidBrush}"
@@ -97,9 +113,102 @@
                         </Button>
                         <ProgressBar
                             Height="5"
-                            Margin="-6,0,0,-10"
+                            Margin="0,0,0,0"
                             VerticalAlignment="Bottom"
                             Value="40" />
+                    </Grid>
+                </Border>
+
+                <Border
+                    Height="50"
+                    Margin="0,30,0,7"
+                    Padding="3,7,3,7"
+                    Background="#252525"
+                    CornerRadius="5">
+                    <Grid ShowGridLines="False">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Viewbox Width="35" Height="35">
+                            <Path
+                                Data="M5 2.5H25C25.663 2.5 26.2989 2.76339 26.7678 3.23223C27.2366 3.70107 27.5 4.33696 27.5 5V25C27.5 25.663 27.2366 26.2989 26.7678 26.7678C26.2989 27.2366 25.663 27.5 25 27.5H5C4.33696 27.5 3.70107 27.2366 3.23223 26.7678C2.76339 26.2989 2.5 25.663 2.5 25V5C2.5 4.33696 2.76339 3.70107 3.23223 3.23223C3.70107 2.76339 4.33696 2.5 5 2.5M7.5 7.5V12.5H12.5V15H10V22.5H12.5V20H17.5V22.5H20V15H17.5V12.5H22.5V7.5H17.5V12.5H12.5V7.5H7.5Z"
+                                Fill="#00820D"
+                                Stretch="Fill" />
+                        </Viewbox>
+
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="5,0,0,0"
+                            Orientation="Vertical">
+                            <Grid>
+                                <StackPanel>
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        FontSize="14"
+                                        FontWeight="Medium"
+                                        Foreground="White"
+                                        Text="Long Tech" />
+                                </StackPanel>
+
+                                <!--  IsImportFinished - False  -->
+                                <Button
+                                    Margin="0,0,10,0"
+                                    HorizontalAlignment="Right"
+                                    Background="Transparent"
+                                    Command="{Binding CancelUploadCommand}"
+                                    IsEnabled="False"
+                                    Style="{StaticResource IconicButton}"
+                                    Visibility="Collapsed">
+                                    <!--  Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}"  -->
+                                    <Grid>
+                                        <Viewbox Width="18" Height="18">
+                                            <Path
+                                                Data="m16.5 33.6 7.5-7.5 7.5 7.5 2.1-2.1-7.5-7.5 7.5-7.5-2.1-2.1-7.5 7.5-7.5-7.5-2.1 2.1 7.5 7.5-7.5 7.5ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
+                                                Fill="#FF7575"
+                                                Stretch="Fill" />
+                                        </Viewbox>
+                                    </Grid>
+                                </Button>
+
+                                <!--  IsImportFinished - True  -->
+                                <Grid
+                                    Margin="0,0,10,0"
+                                    HorizontalAlignment="Right"
+                                    Visibility="Visible">
+                                    <!--  Visibility="{Binding IsImportFinished, Converter={StaticResource ConvertBoolToVisibility}}"  -->
+                                    <Viewbox Width="18" Height="18">
+                                        <Path
+                                            Data="M21.05 33.1 35.2 18.95l-2.3-2.25-11.85 11.85-6-6-2.25 2.25ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
+                                            Fill="#00C2FF"
+                                            SnapsToDevicePixels="False"
+                                            Stretch="Fill" />
+                                    </Viewbox>
+                                </Grid>
+                            </Grid>
+
+                            <!--  IsImportFinished - False  -->
+                            <ProgressBar
+                                Height="6"
+                                Margin="0,10,10,0"
+                                Foreground="{DynamicResource BrandSolidColorBrush}"
+                                IsIndeterminate="True"
+                                Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+
+                            <!--  IsImportFinished - True  -->
+                            <TextBlock
+                                Margin="0,2,10,0"
+                                HorizontalAlignment="Left"
+                                FontSize="12"
+                                FontWeight="Medium"
+                                Foreground="White"
+                                Opacity="0.8"
+                                Text="{DynamicResource instanceImportFinished}"
+                                TextWrapping="WrapWithOverflow"
+                                Visibility="{Binding IsImportFinished, Converter={StaticResource ConvertBoolToVisibility}}" />
+                        </StackPanel>
                     </Grid>
                 </Border>
             </StackPanel>

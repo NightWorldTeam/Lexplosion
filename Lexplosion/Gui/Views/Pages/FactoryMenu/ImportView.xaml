@@ -235,6 +235,7 @@
             </Border>
 
             <ItemsControl ItemsSource="{Binding UploadedFiles}" Visibility="{Binding IsEmptyUploadedFiles, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
+
         </StackPanel>
     </Grid>
 </UserControl>

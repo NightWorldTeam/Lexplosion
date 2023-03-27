@@ -127,7 +127,7 @@
     <DataTemplate DataType="{x:Type modalvm:ImportViewModel}">
         <factorymenu:ImportView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type modalvm:InstanceDistributionListViewModel}">
+    <DataTemplate DataType="{x:Type modalvm:InstanceSharingListViewModel}">
         <factorymenu:InstanceDistributionListView />
     </DataTemplate>
 

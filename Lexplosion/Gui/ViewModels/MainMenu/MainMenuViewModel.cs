@@ -35,6 +35,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
         /* mainmenu fields */
         private Dictionary<InstanceFormViewModel, InstanceMenuViewModel> InstanceMenuViewModels = new Dictionary<InstanceFormViewModel, InstanceMenuViewModel>();
 
+
         #region Commands
 
 
@@ -63,7 +64,6 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         public MainMenuViewModel(MainViewModel mainViewModel)
         {
-
             _mainViewModel = mainViewModel;
 
             _catalogVM = new CatalogViewModel(mainViewModel);
@@ -182,7 +182,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
             return new List<Tab<VMBase>>()
             {
-                //new Tab 
+                //new Tab
                 //{
                 //    Header = "Cервера партнёров",
                 //    Content = null

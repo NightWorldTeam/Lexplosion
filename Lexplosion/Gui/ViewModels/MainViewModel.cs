@@ -7,7 +7,6 @@ using Lexplosion.Gui.TrayMenu;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
-using Lexplosion.Tools.Immutable;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,25 +22,20 @@ namespace Lexplosion.Gui.ViewModels
     {
         #region Static Properties and Fields
 
-
-        public ICommand NavigationShowCaseCommand { get; private set; }
-
+        /// <summary>
+        /// Выведенные сообщения.
+        /// </summary>
+        public static ObservableCollection<MessageModel> Messages { get; } = new ObservableCollection<MessageModel>();
+        public static List<ExportViewModel> ExportedInstance { get; } = new List<ExportViewModel>();
         public static readonly NavigationStore NavigationStore = new NavigationStore();
-        public MainMenuViewModel MainMenuVM { get; private set; }
 
         /// <summary>
         /// Данное свойство содержит в себе версии игры.
         /// Является static, т.к эксемпляр MainViewModel создаётся в единственном эксемляре, в начале запуска лаунчер, до появляния начального окна.
         /// </summary>
-        public static ImmutableArray<string> ReleaseGameVersions { get; private set; }
-        public static ImmutableArray<string> AllGameVersions { get; private set; }
 
-        /// <summary>
-        /// Выведенные сообщения.
-        /// </summary>
-        public static ObservableCollection<MessageModel> Messages { get; } = new ObservableCollection<MessageModel>();
-
-        public static List<ExportViewModel> ExportedInstance { get; } = new List<ExportViewModel>();
+        public static string[] ReleaseGameVersions { get; private set; }
+        public static string[] AllGameVersions { get; private set; }
 
         #endregion Static Properties and Fields
 
@@ -99,6 +93,9 @@ namespace Lexplosion.Gui.ViewModels
         #region Properties
 
 
+        public ICommand NavigationShowCaseCommand { get; private set; }
+        public MainMenuViewModel MainMenuVM { get; private set; }
+
         private MainModel Model { get => MainModel.Instance; }
         public VMBase CurrentViewModel => NavigationStore.CurrentViewModel;
         public ExportViewModel ExportViewModel { get; set; }
@@ -111,6 +108,7 @@ namespace Lexplosion.Gui.ViewModels
 
 
         public ObservableCollection<TrayCompontent> TrayComponents { get; } = new ObservableCollection<TrayCompontent>();
+
 
         #endregion Properties
 
@@ -277,7 +275,7 @@ namespace Lexplosion.Gui.ViewModels
             });
         }
 
-        // обновляем свойство currentviewmodel
+
         private void OnCurrentViewModelChanged()
         {
             OnPropertyChanged(nameof(CurrentViewModel));
@@ -296,9 +294,9 @@ namespace Lexplosion.Gui.ViewModels
 
         /// <summary>
         /// Метод в отдельном потоке загружает данные о версии игры.
-        /// После данные заносятся в статичный неизменяемый лист [ImmutableList] - ReleaseGameVersions. 
+        /// После данные заносятся в статичный неизменяемый лист [ImmutableList] - _releaseGameVersions. 
         /// </summary>
-        private void PreLoadGameVersions()
+        private static void PreLoadGameVersions()
         {
             var releaseOnlyVersions = new List<string>();
             var allVersions = new List<string>();
@@ -317,8 +315,8 @@ namespace Lexplosion.Gui.ViewModels
                     }
 
                 }
-                ReleaseGameVersions = new ImmutableArray<string>(releaseOnlyVersions);
-                AllGameVersions = new ImmutableArray<string>(allVersions);
+                ReleaseGameVersions = releaseOnlyVersions.ToArray();
+                AllGameVersions = allVersions.ToArray();
                 releaseOnlyVersions.Clear();
                 allVersions.Clear();
             });

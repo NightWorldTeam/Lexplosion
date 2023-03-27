@@ -25,6 +25,7 @@ using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using ColorConverter = System.Windows.Media.ColorConverter;
+using Lexplosion.Gui.ViewModels;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -306,6 +307,7 @@ namespace Lexplosion
 
         private static byte[] UnzipBytesArray(byte[] zipBytes)
         {
+            // TODO: Использовать MemeryStream?
             using (Stream archivedBytes = new MemoryStream(zipBytes))
             {
                 using (var zip = new ZipArchive(archivedBytes, ZipArchiveMode.Read))

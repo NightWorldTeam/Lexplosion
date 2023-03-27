@@ -13,7 +13,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public string Name { get; set; }
     }
 
-    public sealed class InstanceDistributionListViewModel : ModalVMBase
+    public sealed class InstanceSharingListViewModel : ModalVMBase
     {
         public void GetD() 
         {

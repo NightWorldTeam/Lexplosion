@@ -27,11 +27,6 @@ namespace Lexplosion.Gui.Models
             get => ResourceGetter.GetString("status" + _gameStatus.ToString());
         }
 
-        //private string _gameStatusStr;
-        //public string GameStatusStr
-        //{
-        //    get => _gameStatusStr;
-        //}
 
         public bool DirectConnetion
         {

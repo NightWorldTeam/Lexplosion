@@ -8,10 +8,11 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
     {
         #region Properties
 
+
         private OverviewModel _overviewModel;
         public OverviewModel Model
         {
-            get => _overviewModel; set
+            get => _overviewModel; private set
             {
                 _overviewModel = value;
                 OnPropertyChanged();
@@ -42,15 +43,15 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private bool _isLoading = true;
         public bool IsLoading
         {
-            get => _isLoading;
-            set
+            get => _isLoading; private set
             {
                 _isLoading = value;
                 OnPropertyChanged();
             }
         }
 
-        public bool IsCategoriesExist { get; set; }
+        public bool IsCategoriesExist;
+
 
         #endregion Properties
 
@@ -58,9 +59,11 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #region Commands
 
 
+        //TODO: Переименовать команду
+        private RelayCommand _curseforgePageCommand;
         public RelayCommand CurseforgePageCommand
         {
-            get => new RelayCommand(obj =>
+            get => _curseforgePageCommand ?? (_curseforgePageCommand = new RelayCommand(obj =>
             {
                 try
                 {
@@ -70,7 +73,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 {
                     // message box here.
                 }
-            });
+            }));
         }
 
 
@@ -78,6 +81,8 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 
 
         #region Constructors
+
+
         public OverviewViewModel(InstanceClient instanceClient, ISubmenu submenuViewModel)
         {
             Lexplosion.Runtime.TaskRun(() =>
@@ -87,34 +92,34 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
                 IsLoading = false;
             });
         }
+
+
         #endregion Constructors
 
 
         #region Private Methods
+
+
         private double CalcCategoryBorderHeight()
         {
             if (Model.InstanceData?.Categories == null || ((ICollection)Model.InstanceData.Categories).Count == 0)
             {
-                IsCategoriesExist = false;
                 return 0.0;
             }
-
-            IsCategoriesExist = true;
 
             var childWidth = 0.0;
             foreach (var item in _overviewModel.InstanceData.Categories)
             {
-                if (Constants.TagSizes.ContainsKey(item.Name)) 
+                double width;
+                if (Constants.TagSizes.TryGetValue(item.Name, out width)) 
                 { 
                     childWidth += Constants.TagSizes[item.Name];
                 }
             }
 
-            if (childWidth < 326.5)
-                return 40;
-            else
-                return 60;
+            return childWidth < 326.5 ? 40 : 60;
         }
+        
 
         #endregion Private Methods
     }

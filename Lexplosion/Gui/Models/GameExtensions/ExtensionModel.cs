@@ -1,15 +1,14 @@
 ﻿using Lexplosion.Logic.Network;
-using Lexplosion.Tools.Immutable;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Gui.Models.GameExtensions
 {
     public abstract class ExtensionModel : VMBase, IExtensionModel
     {
-        private static readonly Dictionary<GameExtension, ConcurrentDictionary<string, ImmutableArray<string>>> _extensionVersions;
+        private static readonly IDictionary<GameExtension, ConcurrentDictionary<string, IEnumerable<string>>> _extensionVersions;
 
         #region Properties
 
@@ -58,8 +57,8 @@ namespace Lexplosion.Gui.Models.GameExtensions
         /// <summary>
         /// Массив с версиями расширения
         /// </summary>
-        private ImmutableArray<string> _versions;
-        public ImmutableArray<string> Versions
+        private IEnumerable<string> _versions;
+        public IEnumerable<string> Versions
         {
             get => _versions; private set
             {
@@ -77,12 +76,12 @@ namespace Lexplosion.Gui.Models.GameExtensions
 
         static ExtensionModel()
         {
-            _extensionVersions = new Dictionary<GameExtension, ConcurrentDictionary<string, ImmutableArray<string>>>()
+            _extensionVersions = new Dictionary<GameExtension, ConcurrentDictionary<string, IEnumerable<string>>>()
             {
-                { GameExtension.Optifine, new ConcurrentDictionary<string, ImmutableArray<string>>() },
-                { GameExtension.Forge, new ConcurrentDictionary<string, ImmutableArray<string>>() },
-                { GameExtension.Fabric, new ConcurrentDictionary<string, ImmutableArray<string>>() },
-                { GameExtension.Quilt, new ConcurrentDictionary<string, ImmutableArray<string>>() },
+                { GameExtension.Optifine, new ConcurrentDictionary<string, IEnumerable<string>>() },
+                { GameExtension.Forge, new ConcurrentDictionary<string, IEnumerable<string>>() },
+                { GameExtension.Fabric, new ConcurrentDictionary<string, IEnumerable<string>>() },
+                { GameExtension.Quilt, new ConcurrentDictionary<string, IEnumerable<string>>() },
             };
         }
 
@@ -95,9 +94,10 @@ namespace Lexplosion.Gui.Models.GameExtensions
 
             Lexplosion.Runtime.TaskRun(() => {
                 Versions = LoadExtensionVersions(extension, GameVersion).Result;
-                if (Versions.Count > 0)
+                var versionList = Versions.ToList();
+                if (versionList.Count > 0)
                 {
-                    Version = Versions[0];
+                    Version = versionList[0];
                     IsAvaliable = true;
                 }
                 else
@@ -141,6 +141,7 @@ namespace Lexplosion.Gui.Models.GameExtensions
 
         #endregion Private Methods
 
+
         #region Public & Protected Methods
 
 
@@ -151,21 +152,23 @@ namespace Lexplosion.Gui.Models.GameExtensions
         /// <param name="GameExtension"></param>
         /// <param name="gameVersion"></param>
         /// <returns></returns>
-        public async static Task<ImmutableArray<string>> LoadExtensionVersions(GameExtension extension, string gameVersion)
+        public static Task<IEnumerable<string>> LoadExtensionVersions(GameExtension extension, string gameVersion)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
-                if (_extensionVersions[extension].ContainsKey(gameVersion))
+                if (!_extensionVersions[extension].ContainsKey(gameVersion))
+                {
+                    if (GameExtension.Optifine == extension)
+                    {
+                        _extensionVersions[extension].TryAdd(gameVersion, ToServer.GetOptifineVersions(gameVersion));
+                    }
+                    else
+                    {
+                        _extensionVersions[extension].TryAdd(gameVersion, ToServer.GetModloadersList(gameVersion, (ClientType)extension));
+                    }
                     return _extensionVersions[extension][gameVersion];
+                }
 
-                if (GameExtension.Optifine == extension)
-                {
-                    _extensionVersions[extension].TryAdd(gameVersion, new ImmutableArray<string>(ToServer.GetOptifineVersions(gameVersion)));
-                }
-                else
-                {
-                    _extensionVersions[extension].TryAdd(gameVersion, new ImmutableArray<string>(ToServer.GetModloadersList(gameVersion, (ClientType)extension)));
-                }
                 return _extensionVersions[extension][gameVersion];
             });
         }
