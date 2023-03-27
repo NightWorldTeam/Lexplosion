@@ -66,10 +66,7 @@ namespace Lexplosion.Logic.Network
                 Accepting(serverType);
             });
 
-            MaintainingThread = new Thread(delegate () //поток отправляющий управляющему серверу пустые пакеты для поддержиния соединения
-            {
-                MaintainingConnection();
-            });
+            MaintainingThread = new Thread(MaintainingConnection); //поток отправляющий управляющему серверу пустые пакеты для поддержиния соединения
         }
 
         protected void StartThreads()
@@ -82,6 +79,14 @@ namespace Lexplosion.Logic.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PrepeareRepeat()
         {
+            try
+            {
+                MaintainingThread.Abort();
+            }
+            catch { }
+
+            MaintainingThread = new Thread(MaintainingConnection);
+
             try
             {
                 _controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
@@ -387,7 +392,6 @@ namespace Lexplosion.Logic.Network
 
                 if (needRepeat)
                 {
-                    MaintainingThread.Abort();
                     PrepeareRepeat();
                 }
                 else
