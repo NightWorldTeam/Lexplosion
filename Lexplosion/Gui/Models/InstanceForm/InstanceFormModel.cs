@@ -3,6 +3,7 @@ using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -193,9 +194,16 @@ namespace Lexplosion.Gui.Models.InstanceForm
         /// </summary>
         private void LoadingCategories(IEnumerable<CategoryBase> categories)
         {
+            if (categories == null)
+                categories = new List<CategoryBase>();
+
             App.Current.Dispatcher.Invoke(() => { 
                 Categories.Clear();
-                Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
+                if (InstanceClient.GameVersion != null) 
+                { 
+                    Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
+                }
+
                 foreach (var category in categories) 
                 {
                     Categories.Add(category);
