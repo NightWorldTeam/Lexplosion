@@ -1,4 +1,6 @@
 ﻿using Lexplosion.Gui.ViewModels;
+using Lexplosion.Gui.ViewModels.ModalVMs;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -123,6 +125,11 @@ namespace Lexplosion.Gui.Models
         public void AddInstanceForm(InstanceClient instanceClient) 
         {
             LibraryController.AddInstance(new InstanceFormViewModel(_mainViewModel, instanceClient));
+        }
+
+        public void AddInstanceForm(InstanceClient instanceClient, InstanceDistribution instanceDistribution)
+        {
+            LibraryController.AddInstance(new InstanceFormViewModel(_mainViewModel, instanceClient, instanceDistribution));
         }
 
 

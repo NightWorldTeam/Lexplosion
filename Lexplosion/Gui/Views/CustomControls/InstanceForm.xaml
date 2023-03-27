@@ -266,6 +266,18 @@
                         TextTrimming="WordEllipsis" />
 
                     <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Width="440"
+                        HorizontalAlignment="Left"
+                        FontFamily="{DynamicResource SFProDisplay}"
+                        FontSize="16"
+                        Foreground="#d5d5d5"
+                        Text="{Binding Model.InstanceDistribution.Percentages, StringFormat='{}{0}% complited'}"
+                        TextTrimming="WordEllipsis"
+                        Visibility="{Binding Model.InstanceClient.IsIncomplete, Converter={StaticResource ConvertBoolToVisibility}}" />
+
+                    <TextBlock
                         Grid.Row="1"
                         Margin="0,25,0,0"
                         HorizontalAlignment="Right"
@@ -318,7 +330,8 @@
                     <Border
                         Width="60"
                         Height="60"
-                        CornerRadius="0,10,0,0">
+                        CornerRadius="0,10,0,0"
+                        IsEnabled="{Binding Model.InstanceClient.IsIncomplete}">
 
                         <Border.Background>
                             <SolidColorBrush x:Name="UpperButtonBackground" />
@@ -413,14 +426,25 @@
                                     </Path>
                                 </Viewbox>
 
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontSize="18"
-                                    FontWeight="SemiBold"
-                                    Foreground="White"
-                                    Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
-                                    Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                <Grid>
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        FontWeight="SemiBold"
+                                        Foreground="White"
+                                        Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
+                                        Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />
+
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        FontWeight="SemiBold"
+                                        Foreground="White"
+                                        Text="{Binding Path=Model.InstanceDistribution.Percentages, StringFormat={}{0}%}"
+                                        Visibility="{Binding Model.InstanceClient.IsIncomplete, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Border>
@@ -432,6 +456,7 @@
                     Background="{DynamicResource SepSolidColorBrush}"
                     BorderBrush="{DynamicResource PrimarySolidColorBrush}"
                     BorderThickness="1"
+                    IsEnabled="{Binding Model.InstanceClient.IsIncomplete}"
                     IsOpen="{Binding IsDropdownMenuOpen, Mode=TwoWay}">
                     <ItemsControl ItemsSource="{Binding Model.LowerButtons}">
                         <ItemsControl.ItemsPanel>

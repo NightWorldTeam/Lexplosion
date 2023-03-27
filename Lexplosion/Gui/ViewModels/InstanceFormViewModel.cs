@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.InstanceForm;
 using Lexplosion.Gui.ViewModels.ModalVMs;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
@@ -81,7 +82,14 @@ namespace Lexplosion.Gui.ViewModels
         public InstanceFormViewModel(MainViewModel mainViewModel, InstanceClient instanceClient)
         {
             MainVM = mainViewModel;
-            Model = new InstanceFormModel(mainViewModel, instanceClient, this);
+            Model = new InstanceFormModel(mainViewModel, instanceClient, this, null);
+            Client = instanceClient;
+        }
+
+        public InstanceFormViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, InstanceDistribution instanceDistribution) 
+        {
+            MainVM = mainViewModel;
+            Model = new InstanceFormModel(mainViewModel, instanceClient, this, instanceDistribution);
             Client = instanceClient;
         }
 

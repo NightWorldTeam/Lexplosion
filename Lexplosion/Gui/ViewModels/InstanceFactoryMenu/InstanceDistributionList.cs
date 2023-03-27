@@ -54,7 +54,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         {
             _receiver = fileReceiver;
             _resultHandler = resultHandler;
-
             Name = fileReceiver.Name;
             Author = fileReceiver.OwnerLogin;
             State = fileReceiver.GetState;
@@ -65,9 +64,9 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public void Download() 
         {
             State = DistributionState.InProcess;
-
+            var instanceClient = InstanceClient.Import(_receiver, _resultHandler);
             MainModel.Instance.AddInstanceForm(
-                InstanceClient.Import(_receiver, _resultHandler)
+                instanceClient
             );
         }
 
@@ -162,12 +161,12 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
         public async void LoadInstanceDistribution() 
         {
-                var receivers = await Task.Run(() => FileReceiver.GetDistributors());
+            var receivers = await Task.Run(() => FileReceiver.GetDistributors());
 
-                foreach (var receiver in receivers)
-                {
-                    CurrentInstanceDistribution.Add(new InstanceDistribution(receiver, DownloadResultHandler));
-                }
+            foreach (var receiver in receivers)
+            {
+                CurrentInstanceDistribution.Add(new InstanceDistribution(receiver, DownloadResultHandler));
+            }
         }
 
 
