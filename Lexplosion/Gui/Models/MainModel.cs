@@ -102,6 +102,10 @@ namespace Lexplosion.Gui.Models
         private static readonly MainModel _instance = new MainModel();
         public static MainModel Instance => _instance;
 
+
+        #region some shit
+
+
         // TODO: цикличная зависимость убрать нах отсюда.
         private MainViewModel _mainViewModel { get; set; }
         public void SetMainViewModel(MainViewModel mainViewModel)
@@ -111,6 +115,10 @@ namespace Lexplosion.Gui.Models
                 _mainViewModel = mainViewModel;
             }
         }
+
+
+        #endregion some shit
+
 
         public void AddInstanceForm(InstanceClient instanceClient) 
         {

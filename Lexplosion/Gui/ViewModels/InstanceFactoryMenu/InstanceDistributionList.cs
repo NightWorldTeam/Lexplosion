@@ -65,12 +65,10 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         public void Download() 
         {
             State = DistributionState.InProcess;
-            Runtime.TaskRun(() =>
-            {
-                MainModel.Instance.AddInstanceForm(
-                    InstanceClient.Import(_receiver, _resultHandler)
-                );
-            });
+
+            MainModel.Instance.AddInstanceForm(
+                InstanceClient.Import(_receiver, _resultHandler)
+            );
         }
 
         public void CancelDownloading() 
@@ -162,17 +160,14 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #region Private Methods
 
 
-        public void LoadInstanceDistribution() 
+        public async void LoadInstanceDistribution() 
         {
-            Lexplosion.Runtime.TaskRun(() => 
-            { 
-                var receivers = FileReceiver.GetDistributors();
+                var receivers = await Task.Run(() => FileReceiver.GetDistributors());
 
                 foreach (var receiver in receivers)
                 {
                     CurrentInstanceDistribution.Add(new InstanceDistribution(receiver, DownloadResultHandler));
                 }
-            });
         }
 
 
