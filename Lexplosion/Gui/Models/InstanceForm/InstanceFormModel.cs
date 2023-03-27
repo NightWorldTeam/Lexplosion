@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Gui.ViewModels;
+using Lexplosion.Gui.ViewModels.ModalVMs;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
@@ -15,12 +16,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private MainViewModel _mainViewModel;
         public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
-        public List<IProjectCategory> Categories { get; } = new List<IProjectCategory>();
+        public ObservableCollection<IProjectCategory> Categories { get; } = new ObservableCollection<IProjectCategory>();
         public InstanceClient InstanceClient { get; }
         public DownloadModel DownloadModel { get; }
         public LaunchModel LaunchModel { get; }
         public UpperButton UpperButton { get; set; }
 
+        public InstanceDistribution InstanceDistribution { get; }
 
         private bool _isLaunch = false;
         public bool IsLaunch
@@ -49,15 +51,18 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Constructors
 
 
-        public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient, InstanceFormViewModel instanceFormViewModel)
+        public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient, InstanceFormViewModel instanceFormViewModel, InstanceDistribution instanceDistribution)
         {
+            InstanceDistribution = instanceDistribution;
+
             _mainViewModel = mainViewModel;
             InstanceClient = instanceClient;
 
             instanceClient.StateChanged += UpdateLowerButton;
+            LoadingCategories(InstanceClient.Categories);
+            instanceClient.CategoriesChanged += LoadingCategories;
 
             UpperButtonSetup();
-            LoadingCategories();
 
             OverviewField = instanceClient.Summary;
             DownloadModel = new DownloadModel(this);
@@ -65,7 +70,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
             UpdateButtons();
         }
-
 
         #endregion Constructors
 
@@ -187,17 +191,13 @@ namespace Lexplosion.Gui.Models.InstanceForm
         /// <summary>
         /// Загружаем категории
         /// </summary>
-        private void LoadingCategories()
+        private void LoadingCategories(IEnumerable<CategoryBase> categories)
         {
-            // set categories to list
-            // add game version like category
+            Categories.Clear();
             Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
-            if (InstanceClient.Categories != null)
+            foreach (var category in categories) 
             {
-                foreach (var category in InstanceClient.Categories)
-                {
-                    Categories.Add(category);
-                }
+                Categories.Add(category);
             }
         }
 

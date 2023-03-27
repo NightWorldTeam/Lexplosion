@@ -59,14 +59,26 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         private static Dictionary<string, string> _idsPairs = new Dictionary<string, string>();
 
+        #region events
+        public event ProgressHandlerCallback ProgressHandler;
+        public event DownloadComplitedCallback DownloadComplited;
+        public event LaunchComplitedCallback LaunchComplited;
+        public event GameExitedCallback GameExited;
+
+        /// <summary>
+        /// Используется, для того чтобы сообщить InstanceFormViewModel,
+        /// что данные обновились, и нужно обновить инфу о данных.
+        /// </summary>
+        public event Action StateChanged;
+        public event Action<IEnumerable<CategoryBase>> CategoriesChanged;
+        public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
+        public event Action DownloadStarted;
+        public event Action DownloadCanceled;
+        public static event Action Created;
+        #endregion
+
         #region info
-        public string LocalId
-        {
-            get
-            {
-                return _localId;
-            }
-        }
+        public string LocalId { get => _localId; }
 
         private string _name;
         public string Name
@@ -109,14 +121,14 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private IEnumerable<CategoryBase> _categories = null;
-        public IEnumerable<CategoryBase> Categories
+        private IEnumerable<CategoryBase> _categories;
+        public IEnumerable<CategoryBase> Categories 
         {
-            get => _categories;
-            private set
-            {
+            get => _categories; 
+            private set 
+            { 
                 _categories = value;
-                OnPropertyChanged();
+                CategoriesChanged?.Invoke(_categories); 
             }
         }
 
@@ -203,23 +215,6 @@ namespace Lexplosion.Logic.Management.Instances
 
         public bool IsInstalled { get; private set; } = false;
 
-        #endregion
-
-        #region events
-        public event ProgressHandlerCallback ProgressHandler;
-        public event DownloadComplitedCallback DownloadComplited;
-        public event LaunchComplitedCallback LaunchComplited;
-        public event GameExitedCallback GameExited;
-
-        /// <summary>
-        /// Используется, для того чтобы сообщить InstanceFormViewModel,
-        /// что данные обновились, и нужно обновить инфу о данных.
-        /// </summary>
-        public event Action StateChanged;
-        public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
-        public event Action DownloadStarted;
-        public event Action DownloadCanceled;
-        public static event Action Created;
         #endregion
 
         /// <summary>
