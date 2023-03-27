@@ -1242,6 +1242,7 @@ namespace Lexplosion.Logic.Management.Instances
                     client.Description = parameters.Description;
                     client.Summary = parameters.Summary;
                     client.Logo = logo;
+                    client._localId = client.GenerateInstanceId();
 
                     client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);
                     res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
@@ -1269,8 +1270,9 @@ namespace Lexplosion.Logic.Management.Instances
 
         public static InstanceClient Import(string zipFile, Action<ImportResult> callback)
         {
-            var client = new InstanceClient("Importing...", InstanceSource.Local, "")
+            var client = new InstanceClient(InstanceSource.Local)
             {
+                Name = "Importing...",
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = "",
@@ -1287,8 +1289,9 @@ namespace Lexplosion.Logic.Management.Instances
 
         public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback)
         {
-            var client = new InstanceClient("Importing...", InstanceSource.Local, "")
+            var client = new InstanceClient(InstanceSource.Local)
             {
+                Name = "Importing...",
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = "",
