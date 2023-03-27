@@ -56,7 +56,7 @@ namespace Lexplosion.Logic.FileSystem
             _informingThread.Start();
         }
 
-        public static FileDistributor CreateDistribution(string filename)
+        public static FileDistributor CreateDistribution(string filename, string name)
         {
             lock (_createLock)
             {
@@ -82,7 +82,7 @@ namespace Lexplosion.Logic.FileSystem
                     ["FileId"] = hash,
                     ["Parameters"] = JsonConvert.SerializeObject(new DistributionData
                     {
-                        Name = "XYI",
+                        Name = name,
                         PublicRsaKey = _publicRsaKey,
                         ConfirmWord = _confirmWord
                     })
