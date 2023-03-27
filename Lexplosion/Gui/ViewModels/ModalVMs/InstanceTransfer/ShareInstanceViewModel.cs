@@ -7,6 +7,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
     {
         public ShareInstanceViewModel(InstanceClient instanceClient) : base(instanceClient)
         {
+
         }
 
         protected override void Action()
