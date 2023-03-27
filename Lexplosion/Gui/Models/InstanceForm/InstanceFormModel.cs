@@ -193,12 +193,14 @@ namespace Lexplosion.Gui.Models.InstanceForm
         /// </summary>
         private void LoadingCategories(IEnumerable<CategoryBase> categories)
         {
-            Categories.Clear();
-            Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
-            foreach (var category in categories) 
-            {
-                Categories.Add(category);
-            }
+            App.Current.Dispatcher.Invoke(() => { 
+                Categories.Clear();
+                Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
+                foreach (var category in categories) 
+                {
+                    Categories.Add(category);
+                }
+            });
         }
 
 
