@@ -275,7 +275,7 @@
                         Foreground="#d5d5d5"
                         Text="{Binding Model.InstanceDistribution.Percentages, StringFormat='{}{0}% complited'}"
                         TextTrimming="WordEllipsis"
-                        Visibility="{Binding Model.InstanceClient.IsIncomplete, Converter={StaticResource ConvertBoolToVisibility}}" />
+                        Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
 
                     <TextBlock
                         Grid.Row="1"
@@ -331,7 +331,7 @@
                         Width="60"
                         Height="60"
                         CornerRadius="0,10,0,0"
-                        IsEnabled="{Binding Model.InstanceClient.IsIncomplete}">
+                        IsEnabled="{Binding Model.InstanceClient.IsComplete}">
 
                         <Border.Background>
                             <SolidColorBrush x:Name="UpperButtonBackground" />
@@ -443,7 +443,7 @@
                                         FontWeight="SemiBold"
                                         Foreground="White"
                                         Text="{Binding Path=Model.InstanceDistribution.Percentages, StringFormat={}{0}%}"
-                                        Visibility="{Binding Model.InstanceClient.IsIncomplete, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                        Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -456,7 +456,7 @@
                     Background="{DynamicResource SepSolidColorBrush}"
                     BorderBrush="{DynamicResource PrimarySolidColorBrush}"
                     BorderThickness="1"
-                    IsEnabled="{Binding Model.InstanceClient.IsIncomplete}"
+                    IsEnabled="{Binding Model.InstanceClient.IsComplete}"
                     IsOpen="{Binding IsDropdownMenuOpen, Mode=TwoWay}">
                     <ItemsControl ItemsSource="{Binding Model.LowerButtons}">
                         <ItemsControl.ItemsPanel>

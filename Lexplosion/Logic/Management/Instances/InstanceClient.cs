@@ -202,13 +202,13 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private bool _isIncomplete = false;
-        public bool IsIncomplete
+        private bool _isComplete = true;
+        public bool IsComplete
         {
-            get => _isIncomplete;
+            get => _isComplete;
             private set
             {
-                _isIncomplete = value;
+                _isComplete = value;
                 OnPropertyChanged();
             }
         }
@@ -1247,7 +1247,7 @@ namespace Lexplosion.Logic.Management.Instances
                         client.SaveAssets();
                         _installedInstances[client._localId] = client;
                         SaveInstalledInstancesList();
-                        client.IsIncomplete = false;
+                        client.IsComplete = true;
                     }
                     else
                     {
@@ -1271,7 +1271,7 @@ namespace Lexplosion.Logic.Management.Instances
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = "",
-                IsIncomplete = true
+                IsComplete = false
             };
 
             Lexplosion.Runtime.TaskRun(delegate ()
@@ -1290,7 +1290,7 @@ namespace Lexplosion.Logic.Management.Instances
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = "",
-                IsIncomplete = true
+                IsComplete = false
             };
 
             Lexplosion.Runtime.TaskRun(delegate ()
