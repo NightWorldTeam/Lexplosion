@@ -29,37 +29,37 @@ namespace Lexplosion.Logic.Network.SMP
             Action messageReceived = null;
             messageReceived = delegate ()
             {
-                //ThreadPool.QueueUserWorkItem(delegate (object state)
-                //{
-                //    connectedEvent.WaitOne();
-                //    receivingQueue.Enqueue(remotePoint);
-                //    receiveWait.Set();
-                //});
-
-                //if (connected)
-                //{
-                //    client.MessageReceived -= messageReceived;
-                //    client.MessageReceived += delegate ()
-                //    {
-                //        receivingQueue.Enqueue(remotePoint);
-                //        receiveWait.Set();
-                //    };
-                //}
+                ThreadPool.QueueUserWorkItem(delegate (object state)
+                {
+                    connectedEvent.WaitOne();
+                    receivingQueue.Enqueue(remotePoint);
+                    receiveWait.Set();
+                });
 
                 if (connected)
                 {
-                    receivingQueue.Enqueue(remotePoint);
-                    receiveWait.Set();
-                }
-                else
-                {
-                    ThreadPool.QueueUserWorkItem(delegate (object state)
+                    client.MessageReceived -= messageReceived;
+                    client.MessageReceived += delegate ()
                     {
-                        connectedEvent.WaitOne();
                         receivingQueue.Enqueue(remotePoint);
                         receiveWait.Set();
-                    });
+                    };
                 }
+
+                //if (connected)
+                //{
+                //    receivingQueue.Enqueue(remotePoint);
+                //    receiveWait.Set();
+                //}
+                //else
+                //{
+                //    ThreadPool.QueueUserWorkItem(delegate (object state)
+                //    {
+                //        connectedEvent.WaitOne();
+                //        receivingQueue.Enqueue(remotePoint);
+                //        receiveWait.Set();
+                //    });
+                //}
             };
 
             client.MessageReceived += messageReceived;
@@ -71,6 +71,7 @@ namespace Lexplosion.Logic.Network.SMP
 
             if (client.Connect(remotePoint, connectionCode))
             {
+                Thread.Sleep(300);
                 clients[remotePoint] = client;
                 connected = true;
                 connectedEvent.Set();

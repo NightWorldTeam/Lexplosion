@@ -79,6 +79,8 @@ namespace Lexplosion.Logic.Network.SMP
         {
             private const int DeltesCount = 25;
             private long[] deltes;
+            private long _rtt;
+            private double _countRation;
 
             public RttCalculator(long firstRtt)
             {
@@ -90,10 +92,14 @@ namespace Lexplosion.Logic.Network.SMP
                 }
 
                 _rtt = firstRtt;
+                _countRation = 1;
             }
 
-            public void AddDelta(long delta)
+            public void AddDelta(long delta, int packagesCount)
             {
+                //delta /= packagesCount;
+                _countRation = delta / packagesCount;
+
                 long maxDelta = 0;
                 long maxDelta2 = 0;
                 for (int i = 0; i < DeltesCount - 1; i++)
@@ -123,10 +129,9 @@ namespace Lexplosion.Logic.Network.SMP
                 }
             }
 
-            private long _rtt;
-            public long GetRtt
+            public long GetRtt(int packagesCount)
             {
-                get => _rtt;
+                return _rtt;//(long)(_rtt * packagesCount);
             }
         }
 
@@ -596,10 +601,11 @@ namespace Lexplosion.Logic.Network.SMP
                     // цикл отправки
                     while (IsConnected && attemptCount < 15)
                     {
+                        int packesCount = packages.Count;
 #if DEBUG
                         if (attemptCount > 0)
                         {
-                            Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt);
+                            Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt + ", packages count: " + packesCount);
                         }
 #endif
                         foreach (ushort id in packages.Keys)
@@ -628,8 +634,8 @@ namespace Lexplosion.Logic.Network.SMP
                             {
                                 //рассчитываем задержку
                                 long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
-                                _rttCalculator.AddDelta(deltaTime);
-                                _rtt = _rttCalculator.GetRtt;
+                                _rttCalculator.AddDelta(deltaTime, packesCount);
+                                _rtt = _rttCalculator.GetRtt(packesCount);
 
                                 repeatDeliveryBlock.Release();
                                 break;
@@ -712,7 +718,6 @@ namespace Lexplosion.Logic.Network.SMP
                     data = payload,
                     IsFull = isFull
                 });
-
 
                 if (isFull)
                 {

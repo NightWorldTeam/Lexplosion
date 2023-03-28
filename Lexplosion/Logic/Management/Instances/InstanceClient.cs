@@ -229,6 +229,8 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="type">Тип модпака</param>
         private InstanceClient(InstanceSource type)
         {
+            Type = type;
+
             switch (type)
             {
                 case InstanceSource.Nightworld:
@@ -258,7 +260,6 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="externalID">Внешний ID</param>
         private InstanceClient(InstanceSource type, string externalID) : this(type)
         {
-            Type = type;
             _externalId = externalID;
         }
 
@@ -281,7 +282,6 @@ namespace Lexplosion.Logic.Management.Instances
         private InstanceClient(string name, InstanceSource type, string gameVersion) : this(type)
         {
             Name = name;
-            Type = type;
             GameVersion = gameVersion;
             GenerateInstanceId();
         }

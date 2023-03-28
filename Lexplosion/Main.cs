@@ -8,7 +8,6 @@ using System.Threading;
 using System.IO.Compression;
 using System.Windows.Media;
 using System.Collections.Generic;
-using System.Text;
 using Hardcodet.Wpf.TaskbarNotification;
 using DiscordRPC;
 using Lexplosion.Properties;
@@ -25,7 +24,6 @@ using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using ColorConverter = System.Windows.Media.ColorConverter;
-using Lexplosion.Gui.ViewModels;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -141,7 +139,7 @@ namespace Lexplosion
             CurrentProcess = Process.GetCurrentProcess();
 
             // Проверяем запущен ли лаунчер.
-            if (!InstanceCheck())
+            if (!InstanceCheck() && false)
             {
                 WebSocketClient ws = new WebSocketClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 54352));
                 //отправляем уже запущщеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается
