@@ -221,7 +221,7 @@ namespace Lexplosion.Gui.ViewModels
         internal void StartExportAndOpenModal()
         {
             // TODO: возможно не надо вообще эксемпляр класса сохранять.
-            MainVM.ExportViewModel = new ExportViewModel(Client);
+            MainVM.ExportViewModel = new ExportViewModel(Client, MainViewModel.ShowToastMessage);
 
             ModalWindowViewModelSingleton.Instance.Open(new CustomTabsMenuViewModel(
                 new List<CustomTab>()

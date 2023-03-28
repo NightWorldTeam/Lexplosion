@@ -1,21 +1,15 @@
 ﻿using Lexplosion.Gui.ModalWindow;
 using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Gui.ViewModels.ModalVMs;
-using Lexplosion.Gui.Views.Windows;
-using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Logic.Network;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
 {
     public sealed class FactoryGeneralViewModel : ModalVMBase
     {
-        private readonly MainViewModel _mainViewModel;
+        #region Properties
+
 
         public InstanceFactoryModel Model { get; }
-
-        #region Properties
 
         // Нужно для того, чтобы не сбивались radiobutton
         private bool _isVanilla = true;
@@ -59,6 +53,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         }
 
         #endregion Properties
+
 
         #region Commands
 
@@ -119,14 +114,15 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         #endregion Commands
 
 
+        #region Constructors
+        
+        
         public FactoryGeneralViewModel(MainViewModel mainViewModel)
         {
-            _mainViewModel = mainViewModel;
             Model = new InstanceFactoryModel(mainViewModel);
         }
 
-        #region Private Methods
 
-        #endregion Private Methods
+        #endregion Constructors
     }
 }

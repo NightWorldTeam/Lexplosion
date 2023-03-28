@@ -6,7 +6,13 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
 {
     public sealed class GeneralMultiplayerViewModel : VMBase
     {
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+
         public MultiplayerModel Model { get; }
+
+
+        #region Commands
+
 
         private RelayCommand _multiplayerOff;
         public RelayCommand MultiplayerOff
@@ -22,13 +28,24 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
             get => _multiplayerRefresh ?? (_multiplayerRefresh = new RelayCommand(obj =>
             {
                 LaunchGame.RebootOnlineGame();
-                MainViewModel.ShowToastMessage("Успешно", "Сетевая игра перезапущена", TimeSpan.FromSeconds(5d));
+                _doNotification("Успешно", "Сетевая игра перезапущена", 5, 0);
             }));
         }
 
-        public GeneralMultiplayerViewModel()
+
+        #endregion Commands
+
+
+        #region Constructors
+
+
+        public GeneralMultiplayerViewModel(Action<string, string, uint, byte> doNotification = null)
         {
+            _doNotification = doNotification ?? _doNotification;
             Model = new MultiplayerModel();
         }
+
+
+        #endregion Constructors
     }
 }

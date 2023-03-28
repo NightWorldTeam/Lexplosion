@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Gui.Models.InstanceFactory;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
+using System;
 using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.ViewModels.FactoryMenu
@@ -12,7 +13,11 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private readonly InstanceClient _instanceClient;
 
 
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+
+
         #region Properties
+
 
         private ObservableCollection<FactoryDLCModel> _models = new ObservableCollection<FactoryDLCModel>();
         public ObservableCollection<Tab<FactoryDLCVM>> AddonTabs { get; set; } = new ObservableCollection<Tab<FactoryDLCVM>>();
@@ -58,15 +63,18 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }
         }
 
+
         #endregion Properties
 
 
         #region Command
 
-        private RelayCommand _curseforgeCommand;
+
+        // TODO: GUI пеименовать на Website command
+        private RelayCommand _webpageCommand;
         public RelayCommand CurseforgeCommand
         {
-            get => _curseforgeCommand ?? (new RelayCommand(obj =>
+            get => _webpageCommand ?? (_webpageCommand = new RelayCommand(obj =>
             {
                 if (obj != null)
                 {
@@ -74,7 +82,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                 }
                 else
                 {
-                    MainViewModel.ShowToastMessage("Link null", "Отсутсвует ссылка на страницу curseforge.", Controls.ToastMessageState.Error);
+                    _doNotification("Link null", "Отсутсвует ссылка на сайт.", 8, 1);
                 }
             }));
         }
@@ -82,7 +90,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private RelayCommand _updateCommand;
         public RelayCommand UpdateCommand
         {
-            get => _updateCommand ?? (new RelayCommand(obj =>
+            get => _updateCommand ?? (_updateCommand = new RelayCommand(obj =>
             {
                 var instanceAddon = (InstanceAddon)obj;
                 Lexplosion.Runtime.TaskRun(delegate ()
@@ -95,7 +103,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private RelayCommand _uninstallAddonCommand;
         public RelayCommand UninstallAddonCommand
         {
-            get => _uninstallAddonCommand ?? (new RelayCommand(obj =>
+            get => _uninstallAddonCommand ?? (_uninstallAddonCommand = new RelayCommand(obj =>
             {
                 var instanceAddon = (InstanceAddon)obj;
                 CurrentAddonModel.Uninstall(instanceAddon);
@@ -105,7 +113,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
         private RelayCommand _openMarket;
         public RelayCommand OpenMarket
         {
-            get => _openMarket ?? (new RelayCommand(obj =>
+            get => _openMarket ?? (_openMarket = new RelayCommand(obj =>
             {
                 MainViewModel.NavigationStore.PrevViewModel = MainViewModel.NavigationStore.CurrentViewModel;
                 MainViewModel.NavigationStore.CurrentViewModel = new CurseforgeMarket.CurseforgeMarketViewModel(
@@ -113,7 +121,8 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
                     _instanceClient,
                     ((FactoryDLCModel)obj).Type,
                     CurrentAddonModel,
-                    this
+                    this,
+                    _doNotification
                 );
             }));
         }
@@ -127,14 +136,17 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
             }));
         }
 
-        #endregion
+
+        #endregion Command
 
 
         #region Constructors
 
 
-        public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient)
+        public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null)
         {
+            _doNotification = doNotification ?? _doNotification;
+
             IsLoaded = false;
             _mainViewModel = mainViewModel;
             _instanceClient = instanceClient;

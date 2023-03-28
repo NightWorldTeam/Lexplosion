@@ -22,6 +22,7 @@ namespace Lexplosion.Gui.ViewModels
     {
         #region Static Properties and Fields
 
+
         /// <summary>
         /// Выведенные сообщения.
         /// </summary>
@@ -42,6 +43,15 @@ namespace Lexplosion.Gui.ViewModels
 
         #region ShowToastMessage Methods
         // вынести в отдельный класс
+
+        public static void ShowToastMessage(string header, string message, uint time, byte type) 
+        {
+            if ((bool)!GlobalData.GeneralSettings.IsHiddenMode || ((bool)GlobalData.GeneralSettings.IsHiddenMode && !MainModel.Instance.IsInstanceRunning))
+            {
+                var timeSpan = time > 0 ? TimeSpan.FromSeconds(time) : TimeSpan.MaxValue;
+                ShowToastMessage(header, message, timeSpan, (ToastMessageState)type);
+            }
+        }
 
         public static void ShowToastMessage(string header, string message, ToastMessageState state = ToastMessageState.Notification)
         {
@@ -101,12 +111,8 @@ namespace Lexplosion.Gui.ViewModels
         public ExportViewModel ExportViewModel { get; set; }
         public LoadingBoard LoadingBoard { get; } = new LoadingBoard();
         public UserData UserData { get; }
-
         public ModalWindowViewModelSingleton ModalWindowVM { get => ModalWindowViewModelSingleton.Instance; }
-
         public DownloadManagerViewModel DownloadManager;
-
-
         public ObservableCollection<TrayCompontent> TrayComponents { get; } = new ObservableCollection<TrayCompontent>();
 
 
@@ -330,6 +336,7 @@ namespace Lexplosion.Gui.ViewModels
                 return MainMenuVM = mainMenuViewModel;
             else return MainMenuVM;
         }
+
 
         #endregion Private Methods
     }

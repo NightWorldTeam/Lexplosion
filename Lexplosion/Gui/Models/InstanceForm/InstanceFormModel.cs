@@ -15,7 +15,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Properties
 
 
-        private MainViewModel _mainViewModel;
+        private readonly MainViewModel _mainViewModel;
         public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
         public ObservableCollection<IProjectCategory> Categories { get; } = new ObservableCollection<IProjectCategory>();
         public InstanceClient InstanceClient { get; }
@@ -54,9 +54,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient, InstanceFormViewModel instanceFormViewModel, InstanceDistribution instanceDistribution)
         {
-            InstanceDistribution = instanceDistribution;
-
             _mainViewModel = mainViewModel;
+            InstanceDistribution = instanceDistribution;
             InstanceClient = instanceClient;
 
             instanceClient.StateChanged += UpdateLowerButton;
@@ -66,8 +65,8 @@ namespace Lexplosion.Gui.Models.InstanceForm
             UpperButtonSetup();
 
             OverviewField = instanceClient.Summary;
-            DownloadModel = new DownloadModel(this);
-            LaunchModel = new LaunchModel(mainViewModel, this, instanceFormViewModel);
+            DownloadModel = new DownloadModel(this, MainViewModel.ShowToastMessage);
+            LaunchModel = new LaunchModel(instanceClient, _mainViewModel, this, instanceFormViewModel);
 
             UpdateButtons();
         }
