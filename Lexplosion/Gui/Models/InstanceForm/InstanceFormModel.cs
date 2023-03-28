@@ -58,9 +58,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
             InstanceDistribution = instanceDistribution;
             InstanceClient = instanceClient;
 
+            instanceClient.BuildFinished += UpdateFromInstanceClient;
             instanceClient.StateChanged += UpdateLowerButton;
             LoadingCategories(InstanceClient.Categories);
-            instanceClient.CategoriesChanged += LoadingCategories;
 
             UpperButtonSetup();
 
@@ -187,25 +187,28 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         #region Private Methods
 
+        private void UpdateFromInstanceClient() 
+        {
+            OverviewField = InstanceClient.Summary;
+            LoadingCategories(InstanceClient.Categories);
+        }
+
 
         /// <summary>
         /// Загружаем категории
         /// </summary>
         private void LoadingCategories(IEnumerable<CategoryBase> categories)
         {
-            if (categories == null)
-                categories = new List<CategoryBase>();
-
             App.Current.Dispatcher.Invoke(() => { 
                 Categories.Clear();
-                if (InstanceClient.GameVersion != null) 
-                { 
-                    Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
-                }
+                Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
 
-                foreach (var category in categories) 
-                {
-                    Categories.Add(category);
+                if (categories != null) 
+                { 
+                    foreach (var category in categories) 
+                    {
+                        Categories.Add(category);
+                    }
                 }
             });
         }
