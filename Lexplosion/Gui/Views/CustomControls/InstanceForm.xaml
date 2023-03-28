@@ -318,7 +318,10 @@
                 </Grid>
             </Grid>
 
-            <Grid x:Name="MultiButtonsGrid" Grid.Column="2">
+            <Grid
+                x:Name="MultiButtonsGrid"
+                Grid.Column="2"
+                Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60" />
@@ -330,8 +333,7 @@
                     <Border
                         Width="60"
                         Height="60"
-                        CornerRadius="0,10,0,0"
-                        IsEnabled="{Binding Model.InstanceClient.IsComplete}">
+                        CornerRadius="0,10,0,0">
 
                         <Border.Background>
                             <SolidColorBrush x:Name="UpperButtonBackground" />
@@ -476,12 +478,12 @@
             BorderThickness="0"
             Foreground="{DynamicResource BrandSolidColorBrush}"
             Maximum="100"
-            Minimum="0"
-            Value="{Binding Model.DownloadModel.DownloadProgress}">
+            Minimum="0">
             <ProgressBar.Style>
                 <Style BasedOn="{StaticResource DefaultProgressBar}" TargetType="{x:Type ProgressBar}">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Setter Property="IsIndeterminate" Value="False" />
+                    <Setter Property="Value" Value="{Binding Model.DownloadModel.DownloadProgress}" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Model.DownloadModel.IsDownloadInProgress}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
@@ -492,6 +494,13 @@
                         <DataTrigger Binding="{Binding Model.DownloadModel.IsPrepare}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
                             <Setter Property="IsIndeterminate" Value="True" />
+                        </DataTrigger>
+
+                        <!--  Importing  -->
+
+                        <DataTrigger Binding="{Binding Model.InstanceClient.IsComplete}" Value="False">
+                            <Setter Property="Value" Value="{Binding Model.InstanceClient.IsComplete}" />
+                            <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
 
                         <MultiDataTrigger>

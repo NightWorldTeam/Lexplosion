@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Windows.Documents;
 
 namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
 {
-    public class Friend 
+    public abstract class Person
     {
         public string Name { get; }
         public int ManualFriendsCount { get; }
         public Image Avatar { get; }
         public ActivityStatus Status { get; }
 
-        public Friend(string name, int friendsCount, ActivityStatus status)
+        public Person(string name, int friendsCount, ActivityStatus status)
         {
             Runtime.DebugWrite(status);
             Name = name;
@@ -22,9 +21,27 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
         }
     }
 
+
+
+    public sealed class Friend : Person
+    {
+        public Friend(string name, int friendsCount, ActivityStatus status) : base(name, friendsCount, status)
+        {
+
+        }
+    }
+
+    public sealed class PotentialFriend : Person
+    {
+        public PotentialFriend(string name, int friendsCount, ActivityStatus status) : base(name, friendsCount, status)
+        {
+        }
+    }
+
     public class FriendsTabModel : VMBase 
     {
         public ObservableCollection<Friend> Friends { get; } = new ObservableCollection<Friend>();
+        //public ObservableCollection<>
 
         public FriendsTabModel()
         {
@@ -42,6 +59,27 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Multiplayer
     public class FriendsTabViewModel : VMBase
     {
         public FriendsTabModel Model { get; }
+
+
+        #region Commands
+
+        /// <summary>
+        /// Добавление друга, в качестве агрумента obj, будет передаваться ссылка на объект друга.
+        /// </summary>
+        private RelayCommand _addFriendCommand;
+        public RelayCommand AddFriendCommand
+        {
+            get => _addFriendCommand ?? (_addFriendCommand = new RelayCommand(obj =>
+            {
+                if (obj is PotentialFriend) 
+                {
+                    
+                }
+            }));
+        }
+
+        #endregion
+
 
         public FriendsTabViewModel()
         {

@@ -6,19 +6,68 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
 {
     public sealed class InstanceProfileViewModel : VMBase
     {
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+
+
+        #region Properties
+
+
         public InstanceProfileModel Model { get; }
 
-        public InstanceProfileViewModel(InstanceClient instanceClient)
+
+        private bool _isSavedProperties;
+        public bool IsSavedProperties
         {
-            Model = new InstanceProfileModel(instanceClient);
-            switch (Model.GetInstanceExtenstion()) 
+            get => _isSavedProperties; private set 
             {
-                case ClientType.Vanilla: IsVanilla = true; break;
-                case ClientType.Forge: IsForge = true; break;
-                case ClientType.Fabric: IsFabric = true; break;
-                case ClientType.Quilt: IsQuilt = true; break;
+                _isSavedProperties = value;
+                OnPropertyChanged();
             }
         }
+
+        // Нужно для того, чтобы не сбивались radiobutton
+        private bool _isVanilla = true;
+        public bool IsVanilla
+        {
+            get => _isVanilla; private set
+            {
+                _isVanilla = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isForge;
+        public bool IsForge
+        {
+            get => _isForge; private set
+            {
+                _isForge = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isFabric;
+        public bool IsFabric
+        {
+            get => _isFabric; private set
+            {
+                _isFabric = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isQuilt;
+        public bool IsQuilt
+        {
+            get => _isQuilt; private set
+            {
+                _isQuilt = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        #endregion Properties
 
 
         #region Commands
@@ -31,7 +80,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         {
             get => new RelayCommand(obj =>
             {
-                MainViewModel.ShowToastMessage("Всё прекрасно!", "Настройки сохранены! Ура-а-а!", TimeSpan.FromSeconds(5d));
+                _doNotification("Всё прекрасно!", "Настройки сохранены! Ура-а-а!", 5, 0);
                 Model.Save();
             });
         }
@@ -69,63 +118,24 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         #endregion Commands
 
 
-        #region Properties
+        #region Constructors
 
 
-        private bool _isSavedProperties;
-        public bool IsSavedProperties
+        public InstanceProfileViewModel(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null)
         {
-            get => _isSavedProperties; set 
+            _doNotification = doNotification ?? _doNotification;
+            Model = new InstanceProfileModel(instanceClient);
+            switch (Model.GetInstanceExtenstion())
             {
-                _isSavedProperties = value;
-
-
-                OnPropertyChanged();
+                case ClientType.Vanilla: IsVanilla = true; break;
+                case ClientType.Forge: IsForge = true; break;
+                case ClientType.Fabric: IsFabric = true; break;
+                case ClientType.Quilt: IsQuilt = true; break;
             }
         }
 
-        // Нужно для того, чтобы не сбивались radiobutton
-        private bool _isVanilla = true;
-        public bool IsVanilla
-        {
-            get => _isVanilla; set
-            {
-                _isVanilla = value;
-                OnPropertyChanged();
-            }
-        }
 
-        private bool _isForge;
-        public bool IsForge
-        {
-            get => _isForge; set
-            {
-                _isForge = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _isFabric;
-        public bool IsFabric
-        {
-            get => _isFabric; set
-            {
-                _isFabric = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _isQuilt;
-        public bool IsQuilt
-        {
-            get => _isQuilt; set
-            {
-                _isQuilt = value;
-                OnPropertyChanged();
-            }
-        }
-
-        #endregion Properties
+        #endregion Constructors
 
 
         #region Public & Protected Methods

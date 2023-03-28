@@ -35,6 +35,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             IsImportFinished = false;
         }
 
+        //TODO: вынести во viewmodel
         private RelayCommand _cancelUploadCommand;
         public RelayCommand CancelUploadCommand
         {
@@ -44,7 +45,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }));
         }
 
-        private void CancelUpload()
+        public void CancelUpload()
         {
             var index = _importVM.UploadedFiles.IndexOf(this);
             _importVM.UploadedFiles.RemoveAt(index);
@@ -54,11 +55,13 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
     public sealed class ImportViewModel : ModalVMBase
     {
         private readonly MainViewModel _mainViewModel;
-        public FactoryGeneralViewModel FactoryGeneralViewModel { get; }
 
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
 
         #region Properties
 
+
+        public FactoryGeneralViewModel FactoryGeneralViewModel { get; }
 
         /// <summary>
         /// Коллекция с испортируемыми файлами.
@@ -118,6 +121,29 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #endregion Commands
 
 
+        #region Construcotors
+
+
+        public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel, Action<string, string, uint, byte> doNotification = null)
+        {
+            _doNotification = doNotification ?? _doNotification;
+
+            _mainViewModel = mainViewModel;
+            FactoryGeneralViewModel = factoryGeneralViewModel;
+
+            ImportAction = (string[] files) =>
+            {
+                foreach (var file in files)
+                    Import(file);
+            };
+
+            UploadedFiles = new ObservableCollection<ImportFile>();
+        }
+
+
+        #endregion Construcotors
+
+
         #region Public & Protected Methods
 
 
@@ -164,31 +190,6 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
 
         #endregion Public & Protected Methods
-
-
-        #region Construcotors
-
-
-        public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel)
-        {
-            _mainViewModel = mainViewModel;
-            FactoryGeneralViewModel = factoryGeneralViewModel;
-
-            ImportAction = (string[] files) =>
-            {
-                foreach (var file in files)
-                    Import(file);
-            };
-
-            UploadedFiles = new ObservableCollection<ImportFile>();
-            //{
-            //    new ImportFile(this, "C:\\Users\\HelJo\\Downloads\\git-lfs-windows-v3.3.0.exe")
-            //};
-            //UploadedFiles[0].IsImportFinished = true;
-        }
-
-
-        #endregion Construcotors
 
 
         #region Private Methods

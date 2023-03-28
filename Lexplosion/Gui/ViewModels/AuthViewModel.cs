@@ -1,17 +1,18 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
-using Lexplosion.Logic.Network;
-using System;
 using System.Windows.Input;
-using Lexplosion.Tools;
-using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.Gui.Models;
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class AuthViewModel : VMBase
+    public sealed class AuthViewModel : VMBase
     {
+        #region Properties
+
+
+        private readonly MainViewModel _mainViewModel;
+
         public AuthModel Model { get; }
 
         private bool _isManualInput;
@@ -23,6 +24,10 @@ namespace Lexplosion.Gui.ViewModels
                 OnPropertyChanged(); 
             } 
         }
+
+
+        #endregion Properties
+
 
         #region Commands
 
@@ -105,11 +110,21 @@ namespace Lexplosion.Gui.ViewModels
         {
             NavigationCommand = new NavigateCommand<MainMenuViewModel>(
                 MainViewModel.NavigationStore, () => viewModel.MainMenuVM ?? viewModel.InitMainMenuViewModel(new MainMenuViewModel(viewModel)));
-
-            Model = new AuthModel(viewModel, ref NavigationCommand);
+            _mainViewModel = viewModel;
+            Model = new AuthModel(AuthorizationSuccessful, MainViewModel.ShowToastMessage);
         }
 
 
         #endregion Constructors
+
+
+        private void AuthorizationSuccessful(string name, bool isAuth, bool isNightWorldAccount) 
+        {
+            _mainViewModel.UserData.Nickname = GlobalData.User.Login;
+            _mainViewModel.UserData.IsAuthorized = isAuth;
+            _mainViewModel.UserData.IsNightWorldAccount = isNightWorldAccount;
+
+            NavigationCommand.Execute(null);
+        }
     }
 }

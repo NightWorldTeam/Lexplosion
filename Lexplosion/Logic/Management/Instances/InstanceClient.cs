@@ -5,8 +5,6 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Runtime.CompilerServices;
-using System.Management.Instrumentation;
-using System.Linq;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
@@ -70,7 +68,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// что данные обновились, и нужно обновить инфу о данных.
         /// </summary>
         public event Action StateChanged;
-        public event Action<IEnumerable<CategoryBase>> CategoriesChanged;
+        /// <summary>
+        /// Обновляется после того как InstanceClient будет иметь завершенную версию;
+        /// </summary>
+        public event Action BuildFinished;
         public event Action<string, int, DownloadFileProgress> FileDownloadEvent;
         public event Action DownloadStarted;
         public event Action DownloadCanceled;
@@ -121,16 +122,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private IEnumerable<CategoryBase> _categories;
-        public IEnumerable<CategoryBase> Categories 
-        {
-            get => _categories; 
-            private set 
-            { 
-                _categories = value;
-                CategoriesChanged?.Invoke(_categories); 
-            }
-        }
+        public IEnumerable<CategoryBase> Categories { get; private set; }
 
         private string _gameVersion;
         public string GameVersion
@@ -151,10 +143,20 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _summary = value;
                 OnPropertyChanged();
+                StateChanged?.Invoke();
             }
         }
 
-        public string Author { get; private set; }
+        private string _author;
+        public string Author 
+        { 
+            get => _author; 
+            private set 
+            {
+                _author = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool _inLibrary = false;
         public bool InLibrary
@@ -210,6 +212,10 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _isComplete = value;
                 OnPropertyChanged();
+                if (value) 
+                { 
+                    BuildFinished?.Invoke();
+                }
             }
         }
 

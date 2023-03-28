@@ -9,7 +9,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 {
     public class GeneralSettingsViewModel : VMBase
     {
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+
+        // Model
         public GeneralSettingsModel GeneralSettings { get; set; }
+
+
+        #region Properties
+
 
         private bool _isDirectoryChanged = true;
         public bool IsDirectoryChanged
@@ -20,6 +27,13 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
                 OnPropertyChanged();
             }
         }
+
+
+        #endregion Properties
+
+
+        #region Commands
+
 
         public RelayCommand OpenFolderBrowser
         {
@@ -59,6 +73,26 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
             });
         }
 
+
+        #endregion Commands
+
+
+        #region Constructors
+
+
+        public GeneralSettingsViewModel(Action<string, string, uint, byte> doNotification)
+        {
+            _doNotification = doNotification ?? _doNotification;
+            GeneralSettings = new GeneralSettingsModel();
+        }
+
+
+        #endregion Constructors
+
+
+        #region Private Methods
+
+
         private void ChangedDirectory(string newPath)
         {
             newPath = newPath + "/" + LaunсherSettings.GAME_FOLDER_NAME;
@@ -73,16 +107,14 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
                     WithDirectory.SetNewDirectory(GeneralSettings.SystemPath);
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        MainViewModel.ShowToastMessage("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", TimeSpan.FromSeconds(2));
+                        _doNotification("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", 2, 0);
                         IsDirectoryChanged = true;
                     });
                 });
             });
         }
 
-        public GeneralSettingsViewModel()
-        {
-            GeneralSettings = new GeneralSettingsModel();
-        }
+
+        #endregion Private Methods
     }
 }

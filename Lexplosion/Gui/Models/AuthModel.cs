@@ -13,13 +13,19 @@ namespace Lexplosion.Gui.Models
         private AccountType _accountType;
         private bool _isSavedAccountOAuth2 = false;
         private readonly Authentication _authentication;
-        private readonly MainViewModel _mainViewModel;
-        private readonly ICommand _navigationCommand;
 
-        public AuthModel(MainViewModel mainViewModel, ref ICommand navigationCommand)
+        private readonly Action<string, bool, bool> _successfulAuthorization;
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => {};
+
+        /// <summary>
+        /// Constructors for AuthModel with Messages;
+        /// </summary>
+        /// <param name="successfulAuthorization">Action<Nickname, IsAuth, IsNightWorldAccount></param>
+        /// <param name="doNotification">Action<Header, Message, Time, Type></param>
+        public AuthModel(Action<string, bool, bool> successfulAuthorization, Action<string, string, uint, byte> doNotification) 
         {
-            _mainViewModel = mainViewModel;
-            _navigationCommand = navigationCommand;
+            _doNotification = doNotification;
+            _successfulAuthorization = successfulAuthorization;
 
             // получаем последний выбранный аккаунт
             _authentication = new Authentication();
@@ -180,7 +186,7 @@ namespace Lexplosion.Gui.Models
                 }
                 else
                 {
-                    MainViewModel.ShowToastMessage("Заполните логин и пароль!", "Алло! А кто будет данными заполять? :)", Controls.ToastMessageState.Error);
+                    _doNotification("Заполните логин и пароль!", "Алло! А кто будет данными заполять? :)", 8, 1);
                 }
             }
         }
@@ -263,7 +269,7 @@ namespace Lexplosion.Gui.Models
                 _accountType = (AccountType)AccountTypeSelectedIndex;
 
                 // получаем ответ от проверки данных.
-                AuthCode authCode = _authentication.Auth(_accountType, (Login == _savedLogin) ? null : Login, Password == "" ? null : Password, IsSaveMe);
+                AuthCode authCode = _authentication.Auth(_accountType, (Login == _savedLogin) ? null : Login, Password?.Length == 0 ? null : Password, IsSaveMe);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
@@ -294,45 +300,39 @@ namespace Lexplosion.Gui.Models
                     {
                         CommandReceiver.MicrosoftAuthPassed -= PreformAuthMicrosoft;
 
-                        _mainViewModel.UserData.Nickname = GlobalData.User.Login;
-                        _mainViewModel.UserData.IsAuthorized = true;
-                        _mainViewModel.UserData.IsNightWorldAccount = _accountType == AccountType.NightWorld;
-
-                        _navigationCommand.Execute(null);
-
-                        _mainViewModel.SubscribeToOpenModpackEvent();
+                        _successfulAuthorization(GlobalData.User.Login, true, _accountType == AccountType.NightWorld);
 
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.DataError:
                     {
-                        MainViewModel.ShowToastMessage("Ошибка авторизации", "Неверный логин или пароль.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                        _doNotification("Ошибка авторизации", "Неверный логин или пароль.", 8, 0);
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.NoConnect:
                     {
-                        MainViewModel.ShowToastMessage("Ошибка авторизации", "Нет соединения с сервером.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                        _doNotification("Ошибка авторизации", "Нет соединения с сервером.", 8, 0);
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.TokenError:
                     {
-                        MainViewModel.ShowToastMessage("Ошибка авторизации", "Ошибка с токеном.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                        _doNotification("Ошибка авторизации", "Ошибка с токеном.", 8, 0);
                         FollowToMicrosoft();
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.SessionExpired:
                     {
-                        MainViewModel.ShowToastMessage("Ошибка входа", "Сессия истекла. Стоит попробовать снова ввести пароль.", TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                        _doNotification("Ошибка входа", "Сессия истекла. Стоит попробовать снова ввести пароль.", 8, 0);
                         IsAuthFinished = true;
                         break;
                     }
                 default:
                     {
-                        MainViewModel.ShowToastMessage("Ошибка. Что-то не так", authCode.ToString(), TimeSpan.FromSeconds(8), Controls.ToastMessageState.Error);
+                        _doNotification("Ошибка. Что-то не так", authCode.ToString(), 8, 0);
                         IsAuthFinished = true;
                         break;
                     }

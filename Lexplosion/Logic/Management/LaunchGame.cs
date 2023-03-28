@@ -198,8 +198,10 @@ namespace Lexplosion.Logic.Management
             command += data.VersionFile.arguments;
             command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
             command += additionalInstallerArgumentsAfter;
+            
+            //TODO: сделать функционал для автоматического коннекта - command += "--server 192.168.1.114 --port 55538";
 
-            return command.Replace(@"\", "/");
+            return command.Replace('\\', '/');
         }
 
         public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)
@@ -344,7 +346,7 @@ namespace Lexplosion.Logic.Management
             {
                 _processIsWork = false;
                 ComplitedLaunch(_instanceId, false);
-
+                
                 return false;
             }
         }
@@ -475,8 +477,8 @@ namespace Lexplosion.Logic.Management
             {
                 WithDirectory.Create(_settings.GamePath);
                 InitData data = null;
-
-                if (!Directory.Exists(_settings.GamePath) || !_settings.GamePath.Contains(":"))
+                // Было измененно с !_settings.GamePath.Contains(":") - -на)--> !(_settings.GamePath.IndexOf(':') >= 0) 
+                if (!Directory.Exists(_settings.GamePath) || !(_settings.GamePath.IndexOf(':') >= 0))
                 {
                     return new InitData
                     {

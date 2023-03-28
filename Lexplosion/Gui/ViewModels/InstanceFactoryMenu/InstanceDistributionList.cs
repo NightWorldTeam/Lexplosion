@@ -30,7 +30,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             } 
         }
 
-        private double _speed;
+        private double _speed = 0.0;
         public double Speed 
         { 
             get => _speed; private set 
@@ -40,7 +40,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        private byte _percentages;
+        private byte _percentages = 0;
         public byte Percentages
         {
             get => _percentages; private set
@@ -65,9 +65,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         {
             State = DistributionState.InProcess;
             var instanceClient = InstanceClient.Import(_receiver, _resultHandler);
-            MainModel.Instance.AddInstanceForm(
-                instanceClient
-            );
+            MainModel.Instance.AddInstanceForm(instanceClient, this);
         }
 
         public void CancelDownloading() 
@@ -155,14 +153,13 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
         #endregion Constructors
 
 
-
         #region Private Methods
 
 
         public async void LoadInstanceDistribution() 
         {
             var receivers = await Task.Run(() => FileReceiver.GetDistributors());
-
+            CurrentInstanceDistribution.Clear();
             foreach (var receiver in receivers)
             {
                 CurrentInstanceDistribution.Add(new InstanceDistribution(receiver, DownloadResultHandler));

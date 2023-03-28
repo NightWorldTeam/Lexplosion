@@ -6,6 +6,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
     {
         public LibraryModel Model { get; }
 
+
+        #region Commands
+
+
         private RelayCommand _onScrollCommand;
         public RelayCommand OnScrollCommand
         {
@@ -24,9 +28,19 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
             }));
         }
 
+
+        #endregion Commands
+
+
+        #region Constructors
+
+
         public LibraryViewModel(MainViewModel mainViewModel)
         {
             Model = new LibraryModel(mainViewModel);
         }
+
+
+        #endregion Constructors
     }
 }

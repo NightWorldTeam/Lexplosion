@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Lexplosion.Gui.Models.InstanceFactory
 {
-    public class FactoryDLCModel : VMBase
+    public sealed class FactoryDLCModel : VMBase
     {
         public CfProjectType Type { get; }
 

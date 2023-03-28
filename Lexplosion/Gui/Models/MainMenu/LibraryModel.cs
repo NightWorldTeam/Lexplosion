@@ -5,16 +5,32 @@ using System.Collections.Generic;
 
 namespace Lexplosion.Gui.Models.MainMenu
 {
-    public class LibraryModel
+    public sealed class LibraryModel
     {
+        #region Properties
+
+
         public MainViewModel MainViewModel { get; }
-        
         public IEnumerable<InstanceFormViewModel> Instances { get => MainModel.Instance.LibraryController.Instances; }
+
+
+        #endregion Properties
+
+
+        #region Construcotors
+
 
         public LibraryModel(MainViewModel mainViewModel)
         {
             MainViewModel = mainViewModel;
         }
+
+
+        #endregion Construcotors
+
+
+        #region Public & Protected Method
+
 
         /// <summary>
         /// Закрывает все выпадающие меню у InstanceForm.
@@ -35,7 +51,7 @@ namespace Lexplosion.Gui.Models.MainMenu
         public void OpenInstanceFactoryModalWindow()
         {
             var factory = new FactoryGeneralViewModel(MainViewModel);
-            var import = new ImportViewModel(MainViewModel, factory);
+            var import = new ImportViewModel(MainViewModel, factory, MainViewModel.ShowToastMessage);
             var shares = new InstanceSharingListViewModel();
             // TODO : перевод
             ModalWindowViewModelSingleton.Instance.Open(
@@ -62,5 +78,8 @@ namespace Lexplosion.Gui.Models.MainMenu
                 )
             );
         }
+
+
+        #endregion Public & Protected Method
     }
 }

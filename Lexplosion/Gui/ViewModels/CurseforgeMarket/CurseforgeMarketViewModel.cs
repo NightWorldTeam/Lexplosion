@@ -11,6 +11,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 {
     public sealed class CurseforgeMarketViewModel : VMBase
     {
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
         private readonly MainViewModel _mainViewModel;
         private readonly InstanceClient _instanceClient;
         private readonly CfProjectType _projectType;
@@ -25,8 +26,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         private static readonly Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>> InstallingAddons = new Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>>();
         private static object _installingAddonsLocker = new object();
 
-        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, FactoryDLCModel factoryDLCModel, FactoryDLCVM factoryDLCVM)
+        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, FactoryDLCModel factoryDLCModel, FactoryDLCVM factoryDLCVM, Action<string, string, uint, byte> doNotification = null)
         {
+            _doNotification = doNotification ?? _doNotification;
             _mainViewModel = mainViewModel;
             _mainViewModel.UserData.IsShowInfoBar = false;
 
@@ -62,6 +64,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         public ObservableCollection<InstanceAddon> InstanceAddons { get; } = new ObservableCollection<InstanceAddon>();
         public ObservableCollection<DownloadAddonFile> DownloadAddonFiles { get; }
 
+
         #region Navigation
 
         public PaginatorViewModel PaginatorVM { get; } = new PaginatorViewModel();
@@ -69,6 +72,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion Navigation
 
+        
         #region Load fields
 
         private bool _isLoaded;
@@ -109,7 +113,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         #endregion Load fields
 
+
         #region Categories
+
 
         public ObservableCollection<CfCategory> CfCategories { get; } = new ObservableCollection<CfCategory>();
 
@@ -147,7 +153,9 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         public bool IsDownloadingSomething { get => DownloadAddonFiles.Count != 0; }
 
+
         #endregion Properties
+
 
         #region Commands
 
@@ -193,6 +201,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
         }
 
         #endregion Commands
+
 
         #region Private Methods
 
@@ -325,17 +334,15 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
                             _factoryDLCModel.InstalledAddons.Add(addonInstance);
                             _factoryDLCVM.CurrentAddonModel.IsEmptyList = false;
-                            MainViewModel.ShowToastMessage(title, text, TimeSpan.FromSeconds(5d));
+                            _doNotification(title, text, 5, 0);
                         }
                         else if (arg.Value2 == DownloadAddonRes.IsCanselled)
                         {
-                            MainViewModel.ShowToastMessage("Скачивание аддона было отменено",
-                                "Название аддона: " + addonInstance.Name, Controls.ToastMessageState.Notification);
+                            _doNotification("Скачивание аддона было отменено", "Название аддона: " + addonInstance.Name, 0, 1);
                         }
                         else
                         {
-                            MainViewModel.ShowToastMessage("Извиняемся, не удалось установить мод",
-                                "Название: " + addonInstance.Name + ".\nОшибка " + arg.Value2, Controls.ToastMessageState.Error);
+                            _doNotification("Извиняемся, не удалось установить мод", "Название: " + addonInstance.Name + ".\nОшибка " + arg.Value2, 0, 1);
                         }
 
                         lock (_installingAddonsLocker)

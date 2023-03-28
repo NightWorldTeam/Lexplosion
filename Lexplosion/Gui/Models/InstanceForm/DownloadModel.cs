@@ -3,6 +3,7 @@ using Lexplosion.Logic.Management;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 
 namespace Lexplosion.Gui.Models.InstanceForm
 {
@@ -12,6 +13,9 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public readonly List<Action<StageType, ProgressHandlerArguments>> DownloadActions = new List<Action<StageType, ProgressHandlerArguments>>();
         public readonly List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
+
+
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => {};
 
 
         #region Properties
@@ -161,6 +165,18 @@ namespace Lexplosion.Gui.Models.InstanceForm
         }
 
 
+        public DownloadModel(InstanceFormModel instanceFormModel, Action<string, string, uint, byte> doNotification)
+        {
+            _doNotification = doNotification;
+            _instanceFormModel = instanceFormModel;
+
+            DownloadActions.Add(Download);
+            ComplitedDownloadActions.Add(InstanceDownloadCompleted);
+
+            instanceFormModel.InstanceClient.ProgressHandler += DownloadProcess;
+            instanceFormModel.InstanceClient.DownloadComplited += ComplitedDownloadAction;
+        }
+
         #endregion Construtors
 
 
@@ -249,12 +265,10 @@ namespace Lexplosion.Gui.Models.InstanceForm
                             {
                                 IsDownloadInProgress = false;
                                 //TODO: ЛОКАЗИЛАЦИЯ ТУТ
-                                MainViewModel.ShowToastMessage(
+                                _doNotification(
                                     "Download Successfully Completed",
                                     "Название: " + _instanceFormModel.InstanceClient.Name +
-                                    "\nВерсия: " + _instanceFormModel.InstanceClient.GameVersion,
-                                    TimeSpan.FromSeconds(5d)
-                                    );
+                                    "\nВерсия: " + _instanceFormModel.InstanceClient.GameVersion, 5, 0);
                                 _instanceFormModel.UpperButton.ChangeFuncPlay();
                                 _instanceFormModel.UpdateLowerButton();
                             }
@@ -270,7 +284,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
                                 files += de + "\n";
                             }
                             files += "\nПовторное скачивание может решить проблему, но это не точно.\n";
-                            MainViewModel.ShowToastMessage("Не удалось скачать некоторые файлы", files, Controls.ToastMessageState.Error);
+                            _doNotification("Не удалось скачать некоторые файлы", files, 0, 1);
                         }
                         break;
                     case InstanceInit.CursforgeIdError:
@@ -278,70 +292,70 @@ namespace Lexplosion.Gui.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Id Error", "Внешний id сборки некорректен.", Controls.ToastMessageState.Error);
+                            _doNotification("Id Error", "Внешний id сборки некорректен.", 0, 1);
                         }
                         break;
                     case InstanceInit.ServerError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Server Error", "Не удалось получить данные с сервера.", Controls.ToastMessageState.Error);
+                            _doNotification("Server Error", "Не удалось получить данные с сервера.", 0, 1);
                         }
                         break;
                     case InstanceInit.GuardError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Guard Error", "Не удолось выполнить проверку файла.", Controls.ToastMessageState.Error);
+                            _doNotification("Guard Error", "Не удолось выполнить проверку файла.", 0, 1);
                         }
                         break;
                     case InstanceInit.VersionError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Version Error", "Не удалось определить версию игры.", Controls.ToastMessageState.Error);
+                            _doNotification("Version Error", "Не удалось определить версию игры.", 0, 1);
                         }
                         break;
                     case InstanceInit.ForgeVersionError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Forge Version Error", "Не удалось определить версию модлоадера.", Controls.ToastMessageState.Error);
+                            _doNotification("Forge Version Error", "Не удалось определить версию модлоадера.", 0, 1);
                         }
                         break;
                     case InstanceInit.GamePathError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Game Path Error", "Недействительная директория игры.", Controls.ToastMessageState.Error);
+                            _doNotification("Game Path Error", "Недействительная директория игры.", 0, 1);
                         }
                         break;
                     case InstanceInit.ManifestError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Manifest Error", "Не удалось загрузить манифест сборки.", Controls.ToastMessageState.Error);
+                            _doNotification("Manifest Error", "Не удалось загрузить манифест сборки.", 0, 1);
                         }
                         break;
                     case InstanceInit.JavaDownloadError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Java Download Error", "Попробуйте поставить свой путь до джавы в настройках.", Controls.ToastMessageState.Error);
+                            _doNotification("Java Download Error", "Попробуйте поставить свой путь до джавы в настройках.", 0, 1);
                         }
                         break;
                     case InstanceInit.IsCancelled:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Скачивание сборки было успешно отменено.", "Название модпака: " + _instanceFormModel.InstanceClient.Name, Controls.ToastMessageState.Error);
+                            _doNotification("Скачивание сборки было успешно отменено.", "Название модпака: " + _instanceFormModel.InstanceClient.Name, 0, 1);
                             break;
                         }
                     default:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            MainViewModel.ShowToastMessage("Unknown Error", "Что-то непонятное произошло... Советуем выключить и включить.", Controls.ToastMessageState.Error);
+                            _doNotification("Unknown Error", "Что-то непонятное произошло... Советуем выключить и включить.", 0, 1);
                         }
                         break;
 
@@ -381,6 +395,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _instanceFormModel.InstanceClient.CancelDownload();
         }
 
+
         #endregion Public & Protected Methods
 
 
@@ -389,8 +404,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private void DownloadProcess(StageType downloadStageType, ProgressHandlerArguments progressArgs)
         {
-            var actions = DownloadActions.ToArray();
-            foreach (var action in actions)
+            foreach (var action in DownloadActions)
             {
                 action(downloadStageType, progressArgs);
             }
@@ -398,8 +412,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private void ComplitedDownloadAction(InstanceInit result, List<string> downloadErrors, bool launchGame)
         {
-            var actions = ComplitedDownloadActions.ToArray();
-            foreach (var action in actions)
+            foreach (var action in ComplitedDownloadActions)
             {
                 action(result, downloadErrors, launchGame);
             }

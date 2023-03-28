@@ -9,9 +9,11 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 {
     public sealed class ExportViewModel : ExportBase
     {
-        public ExportViewModel(InstanceClient instanceClient) : base(instanceClient)
-        {
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
 
+        public ExportViewModel(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null) : base(instanceClient)
+        {
+            _doNotification = doNotification ?? _doNotification;
         }
 
         /// <summary>
@@ -39,20 +41,18 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
 
                     if (result == ExportResult.Successful)
                     {
-                        MainViewModel.ShowToastMessage(
+                        _doNotification(
                             ResourceGetter.GetString("instanceExport"),
-                            String.Format(ResourceGetter.GetString("instanceExportSuccessfulOpenFolder"), InstanceName),
-                            ToastMessageState.Notification);
+                            String.Format(ResourceGetter.GetString("instanceExportSuccessfulOpenFolder"), InstanceName), 0, 0);
 
                         IsExportFinished = true;
                         ModalWindowViewModelSingleton.Instance.Close();
                     }
                     else
                     {
-                        MainViewModel.ShowToastMessage(
+                        _doNotification(
                             result.ToString(),
-                            String.Format(ResourceGetter.GetString("instanceExportUnsuccessful"), InstanceName),
-                            ToastMessageState.Error);
+                            String.Format(ResourceGetter.GetString("instanceExportUnsuccessful"), InstanceName), 0,1);
 
                         IsExportFinished = true;
                     }

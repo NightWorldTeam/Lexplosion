@@ -17,7 +17,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
 
         /* multiplayer fields */
         private readonly List<Tab<VMBase>> _multiplayerTabs;
-        private GeneralMultiplayerViewModel _generalMultiplayerViewModel = new GeneralMultiplayerViewModel();
+        private GeneralMultiplayerViewModel _generalMultiplayerViewModel = new GeneralMultiplayerViewModel(MainViewModel.ShowToastMessage);
         private FriendsTabViewModel _friendsTabViewModel = new FriendsTabViewModel();
         private ChannelTabViewModel _channelTabViewModel = new ChannelTabViewModel();
         private AboutUsViewModel _aboutUsViewModel = new AboutUsViewModel();
@@ -192,16 +192,16 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                     Header = ResourceGetter.GetString("general"),
                     Content =  GlobalData.User.AccountType == AccountType.NightWorld ? _generalMultiplayerViewModel : curtains
                 },
-                new Tab<VMBase>
-                {
-                    Header = ResourceGetter.GetString("friends"),
-                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
-                },
-                new Tab<VMBase>
-                {
-                    Header = ResourceGetter.GetString("channels"),
-                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
-                }
+                //new Tab<VMBase>
+                //{
+                //    Header = ResourceGetter.GetString("friends"),
+                //    Content = GlobalData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
+                //},
+                //new Tab<VMBase>
+                //{
+                //    Header = ResourceGetter.GetString("channels"),
+                //    Content = GlobalData.User.AccountType == AccountType.NightWorld ? new DevСurtainViewModel() : curtains
+                //}
             };
         }
 
@@ -212,7 +212,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("general"),
-                    Content = new GeneralSettingsViewModel()
+                    Content = new GeneralSettingsViewModel(MainViewModel.ShowToastMessage)
                 },
                 new Tab<VMBase>
                 {

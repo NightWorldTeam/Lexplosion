@@ -15,7 +15,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
         #region Properties
 
 
-        private MainViewModel _mainViewModel;
+        private readonly MainViewModel _mainViewModel;
         public ObservableCollection<LowerButton> LowerButtons { get; } = new ObservableCollection<LowerButton>();
         public ObservableCollection<IProjectCategory> Categories { get; } = new ObservableCollection<IProjectCategory>();
         public InstanceClient InstanceClient { get; }
@@ -54,20 +54,19 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public InstanceFormModel(MainViewModel mainViewModel, InstanceClient instanceClient, InstanceFormViewModel instanceFormViewModel, InstanceDistribution instanceDistribution)
         {
-            InstanceDistribution = instanceDistribution;
-
             _mainViewModel = mainViewModel;
+            InstanceDistribution = instanceDistribution;
             InstanceClient = instanceClient;
 
+            instanceClient.BuildFinished += UpdateFromInstanceClient;
             instanceClient.StateChanged += UpdateLowerButton;
             LoadingCategories(InstanceClient.Categories);
-            instanceClient.CategoriesChanged += LoadingCategories;
 
             UpperButtonSetup();
 
             OverviewField = instanceClient.Summary;
-            DownloadModel = new DownloadModel(this);
-            LaunchModel = new LaunchModel(mainViewModel, this, instanceFormViewModel);
+            DownloadModel = new DownloadModel(this, MainViewModel.ShowToastMessage);
+            LaunchModel = new LaunchModel(instanceClient, _mainViewModel, this, instanceFormViewModel);
 
             UpdateButtons();
         }
@@ -188,25 +187,28 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         #region Private Methods
 
+        private void UpdateFromInstanceClient() 
+        {
+            OverviewField = InstanceClient.Summary;
+            LoadingCategories(InstanceClient.Categories);
+        }
+
 
         /// <summary>
         /// Загружаем категории
         /// </summary>
         private void LoadingCategories(IEnumerable<CategoryBase> categories)
         {
-            if (categories == null)
-                categories = new List<CategoryBase>();
-
             App.Current.Dispatcher.Invoke(() => { 
                 Categories.Clear();
-                if (InstanceClient.GameVersion != null) 
-                { 
-                    Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
-                }
+                Categories.Add(new SimpleCategory { Name = InstanceClient.GameVersion });
 
-                foreach (var category in categories) 
-                {
-                    Categories.Add(category);
+                if (categories != null) 
+                { 
+                    foreach (var category in categories) 
+                    {
+                        Categories.Add(category);
+                    }
                 }
             });
         }
