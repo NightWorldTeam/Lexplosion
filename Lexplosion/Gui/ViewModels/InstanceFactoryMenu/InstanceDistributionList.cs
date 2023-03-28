@@ -30,7 +30,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             } 
         }
 
-        private double _speed = 0.0;
+        private double _speed = 3.3333;
         public double Speed 
         { 
             get => _speed; private set 
@@ -40,7 +40,7 @@ namespace Lexplosion.Gui.ViewModels.ModalVMs
             }
         }
 
-        private byte _percentages = 0;
+        private byte _percentages = 33;
         public byte Percentages
         {
             get => _percentages; private set

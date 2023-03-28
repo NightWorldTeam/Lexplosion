@@ -284,9 +284,24 @@
                         FlowDirection="RightToLeft"
                         FontSize="14"
                         Foreground="#d5d5d5"
-                        Text="{Binding Model.DownloadModel.DownloadFilesNof}"
-                        TextTrimming="WordEllipsis"
-                        Visibility="{Binding Model.DownloadModel.IsFilesDownload, Converter={StaticResource ConvertBoolToVisibility}}" />
+                        TextTrimming="WordEllipsis">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Model.DownloadModel.IsFilesDownload}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Setter Property="Text" Value="{Binding Model.DownloadModel.DownloadFilesNof}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Model.InstanceClient.IsComplete}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Setter Property="Text" Value="{Binding Model.InstanceDistribution.Speed, StringFormat='{}{0} mbit/s'}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
 
                     <ItemsControl
                         Grid.Row="1"
@@ -437,15 +452,6 @@
                                         Foreground="White"
                                         Text="{Binding Path=Model.DownloadModel.DownloadProgress, StringFormat={}{0}%}"
                                         Visibility="{Binding Model.DownloadModel.IsDownloadInProgress, Converter={StaticResource ConvertBoolToVisibility}}" />
-
-                                    <TextBlock
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        FontSize="18"
-                                        FontWeight="SemiBold"
-                                        Foreground="White"
-                                        Text="{Binding Path=Model.InstanceDistribution.Percentages, StringFormat={}{0}%}"
-                                        Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -458,7 +464,6 @@
                     Background="{DynamicResource SepSolidColorBrush}"
                     BorderBrush="{DynamicResource PrimarySolidColorBrush}"
                     BorderThickness="1"
-                    IsEnabled="{Binding Model.InstanceClient.IsComplete}"
                     IsOpen="{Binding IsDropdownMenuOpen, Mode=TwoWay}">
                     <ItemsControl ItemsSource="{Binding Model.LowerButtons}">
                         <ItemsControl.ItemsPanel>
@@ -498,8 +503,8 @@
 
                         <!--  Importing  -->
 
-                        <DataTrigger Binding="{Binding Model.InstanceClient.IsComplete}" Value="False">
-                            <Setter Property="Value" Value="{Binding Model.InstanceClient.IsComplete}" />
+                        <DataTrigger Binding="{Binding Model.InstanceClient.IsComplete, Mode=OneWay}" Value="False">
+                            <Setter Property="Value" Value="{Binding Model.InstanceDistribution.Percentages, Mode=OneWay}" />
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
 
