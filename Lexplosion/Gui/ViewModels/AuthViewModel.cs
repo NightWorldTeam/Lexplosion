@@ -1,16 +1,12 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Gui.Commands;
 using Lexplosion.Gui.ViewModels.MainMenu;
-using Lexplosion.Logic.Network;
-using System;
 using System.Windows.Input;
-using Lexplosion.Tools;
-using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.Gui.Models;
 
 namespace Lexplosion.Gui.ViewModels
 {
-    public class AuthViewModel : VMBase
+    public sealed class AuthViewModel : VMBase
     {
         #region Properties
 
