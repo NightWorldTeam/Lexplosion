@@ -246,7 +246,7 @@ namespace Lexplosion.Logic.Network.SMP
                                 if (pointDefined)
                                     PingProcessing(data);
                             }
-                            else if ((data[0] == PackgeCodes.ConnectRequest || data[0] == PackgeCodes.ConnectAnswer) && data.Length > 3)
+                            else if ((data[0] == PackgeCodes.ConnectRequest || data[0] == PackgeCodes.ConnectAnswer) && data.Length > 3 && remoteIp.Address.Equals(senderPoint?.Address))
                             {
                                 byte codeSize = data[1];
                                 if (codeSize + 3 == data.Length)
