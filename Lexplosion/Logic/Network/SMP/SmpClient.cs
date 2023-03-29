@@ -78,60 +78,55 @@ namespace Lexplosion.Logic.Network.SMP
         private struct RttCalculator
         {
             private const int DeltesCount = 25;
-            private long[] deltes;
+            private long[] _deltes;
+            private int _lastElement = 0;
             private long _rtt;
-            private double _countRation;
+            private long _deltesSum;
+            private long _minDelta;
+            private long _maxDelta;
 
             public RttCalculator(long firstRtt)
             {
-                deltes = new long[DeltesCount];
+                _deltes = new long[DeltesCount];
 
                 for (int i = 0; i < DeltesCount; i++)
                 {
-                    deltes[i] = firstRtt;
+                    _deltes[i] = firstRtt;
                 }
 
+                _deltesSum = firstRtt * DeltesCount;
                 _rtt = firstRtt;
-                _countRation = 1;
+                _minDelta = _maxDelta = firstRtt;
             }
 
-            public void AddDelta(long delta, int packagesCount)
+            public void AddDelta(long delta)
             {
-                //delta /= packagesCount;
-                _countRation = delta / packagesCount;
+                _deltesSum = _deltesSum + delta - _deltes[_lastElement]; // обновляем сумму всех значений: прибавляем новое, и вичитаем старое (то, что будет заменено новым)
+                double average = (double)_deltesSum / DeltesCount;
 
-                long maxDelta = 0;
-                long maxDelta2 = 0;
-                for (int i = 0; i < DeltesCount - 1; i++)
+                _deltes[_lastElement] = delta;
+                _lastElement++;
+                if (_lastElement == DeltesCount)
                 {
-                    long nextDelta = deltes[i + 1];
-                    deltes[i] = nextDelta;
-
-                    if (nextDelta > maxDelta)
-                    {
-                        maxDelta2 = maxDelta;
-                        maxDelta = nextDelta;
-                    }
+                    _lastElement = 0;
                 }
 
-                deltes[DeltesCount - 1] = delta;
-                if (delta > maxDelta) maxDelta = delta;
+                if (delta > _maxDelta)
+                {
+                    _maxDelta = delta;
+                }
 
-                if (maxDelta < _rtt)
+                if (delta < _minDelta)
                 {
-                    long div = _rtt - maxDelta;
-                    double multiplier = maxDelta2 / maxDelta;
-                    _rtt -= Convert.ToInt64(div * (1 - multiplier));
+                    _minDelta = delta;
                 }
-                else
-                {
-                    _rtt = maxDelta;
-                }
+
+                _rtt = (long)(_maxDelta - _minDelta + average);
             }
 
-            public long GetRtt(int packagesCount)
+            public long GetRtt
             {
-                return _rtt;//(long)(_rtt * packagesCount);
+                get => _rtt;
             }
         }
 
@@ -594,18 +589,17 @@ namespace Lexplosion.Logic.Network.SMP
                     repeatDeliveryBlock.Release();
 
                     byte attemptCount = 0;
-                    int delay = (int)(_rtt + _rtt / 10);
+                    int delay = (int)(_rtt/* + _rtt / 10*/);
                     long lastTime = 0;
                     bool repeated = false;
 
                     // цикл отправки
                     while (IsConnected && attemptCount < 15)
                     {
-                        int packesCount = packages.Count;
 #if DEBUG
                         if (attemptCount > 0)
                         {
-                            Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt + ", packages count: " + packesCount);
+                            Runtime.DebugWrite("AXAXAXAXAXAX " + attemptCount + " " + lastPackageId + ", RTT " + _rtt + ", packages count: " + packages.Count);
                         }
 #endif
                         foreach (ushort id in packages.Keys)
@@ -634,8 +628,8 @@ namespace Lexplosion.Logic.Network.SMP
                             {
                                 //рассчитываем задержку
                                 long deltaTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastTime;
-                                _rttCalculator.AddDelta(deltaTime, packesCount);
-                                _rtt = _rttCalculator.GetRtt(packesCount);
+                                _rttCalculator.AddDelta(deltaTime);
+                                _rtt = _rttCalculator.GetRtt;
 
                                 repeatDeliveryBlock.Release();
                                 break;
@@ -722,7 +716,7 @@ namespace Lexplosion.Logic.Network.SMP
                 if (isFull)
                 {
                     MessageReceived?.Invoke();
-                }     
+                }
             }
         }
 

@@ -186,11 +186,9 @@ namespace Lexplosion.Logic.Network
                             Runtime.DebugWrite("Udp direct connection");
                             string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
                             string hostIp = str.Replace(":" + hostPort, "");
-
                             point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
-                            Runtime.DebugWrite("Host EndPoint " + point);
 
-                            Runtime.DebugWrite("Connection code: " + myPoint + ", " + str);
+                            Runtime.DebugWrite("Connection code: " + myPoint + ", " + str + ". Host EndPoint " + point);
                             connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
                         }
 
@@ -233,7 +231,7 @@ namespace Lexplosion.Logic.Network
             }
             else
             {
-                Runtime.DebugWrite("Пиздец");
+                Runtime.DebugWrite("Пиздец1");
                 AcceptingBlock.Release();
             }
         }
@@ -453,14 +451,14 @@ namespace Lexplosion.Logic.Network
         {
             try
             {
-                Thread.Sleep(240000); // ждём 4 минуты
+                Thread.Sleep(120000); // ждём 2 минуты
 
                 while (IsWork)
                 {
                     ControlConnectionBlock.WaitOne();
                     _controlConnection.Send(new byte[1] { ControlSrverCodes.Y });
                     ControlConnectionBlock.Set();
-                    Thread.Sleep(240000); // ждём 4 минуты
+                    Thread.Sleep(120000); // ждём 2 минуты
                 }
             }
             catch { }

@@ -15,7 +15,6 @@ namespace Lexplosion.Logic.Network
         {
             public FileStream Stream;
             public long FileSize;
-            public byte[] Sha256;
         }
 
         protected Dictionary<string, FileData> SFilesList = new(); // список всех FileStream и размеров файлов
@@ -215,7 +214,6 @@ namespace Lexplosion.Logic.Network
 
                                         byte[] fileSize = BitConverter.GetBytes(SFilesList[profileId].FileSize);
                                         Server.Send(Сryptography.AesEncode(fileSize, aesKey, aesIV), point); // отправляем размер файла
-                                        Server.Send(Сryptography.AesEncode(SFilesList[profileId].Sha256, aesKey, aesIV), point); // отправляем хэш
 
                                         WaitClient.Set();
                                         Runtime.DebugWrite("Авторизировал");
@@ -275,16 +273,11 @@ namespace Lexplosion.Logic.Network
         {
             FileStream stream;
             long fileSize;
-            byte[] sha256;
 
             try
             {
                 stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                using (SHA256 SHA256 = SHA256Managed.Create())
-                {
-                    sha256 = SHA256.ComputeHash(stream);
-                    fileSize = stream.Length;
-                }
+                fileSize = stream.Length;
             }
             catch
             {
@@ -295,8 +288,7 @@ namespace Lexplosion.Logic.Network
             SFilesList[id] = new FileData
             {
                 Stream = stream,
-                FileSize = fileSize,
-                Sha256 = sha256,
+                FileSize = fileSize
             };
             FilesListSemaphore.Release();
 

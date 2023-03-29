@@ -12,14 +12,14 @@ namespace Lexplosion.Logic.Network
     class DataClient : NetworkClient
     {
         const string clientType = "data-client"; // эта строка нужна при подключении к управляющему серверу
-        private readonly string _fileId;
+        private readonly string _fileId; // он же хэш файла
         private readonly FileStream _fstream;
 
         private long _fileSize = 0;
         private long _dataCount = 0;
-        private byte[] _fileSha256;
 
         private bool _isWorking = true;
+        private bool _successfulTransfer = false;
 
         private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
         private readonly ManualResetEvent _workWait = new ManualResetEvent(false);
@@ -33,7 +33,7 @@ namespace Lexplosion.Logic.Network
 
         public DataClient(RSAParameters publicRsaKey, string confirmWord, string controlServer, string filename, string fileId) : base(clientType, controlServer)
         {
-            _fstream = new FileStream(filename, FileMode.Create, FileAccess.Write);
+            _fstream = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite);
             _fileId = fileId;
 
             _confirmWord = Encoding.UTF8.GetBytes(confirmWord);
@@ -65,7 +65,9 @@ namespace Lexplosion.Logic.Network
 
                 if (!_confirmWord.SequenceEqual(Сryptography.AesDecode(data, _aesKey, _aesIV)))
                 {
-                    // TODO: тут выходить
+                    Runtime.DebugWrite("Confirm word error");
+                    _isWorking = false;
+                    goto EndPoint;
                 }
 
                 //отправляем id файла
@@ -76,7 +78,9 @@ namespace Lexplosion.Logic.Network
                 data = Сryptography.AesDecode(data, _aesKey, _aesIV);
                 if (data.Length != 8) // размер файла должен быть типа long, то есть 8 байт. если нет - выходим
                 {
-                    return; // TODO: а точно достаточно return сделать?
+                    Runtime.DebugWrite("data.Length != 8");
+                    _isWorking = false;
+                    goto EndPoint;
                 }
 
                 try
@@ -85,12 +89,9 @@ namespace Lexplosion.Logic.Network
                 }
                 catch
                 {
-                    return;
+                    _isWorking = false;
+                    goto EndPoint;
                 }
-
-                // получаем хэш файла
-                Bridge.Receive(out data);
-                _fileSha256 = Сryptography.AesDecode(data, _aesKey, _aesIV);
 
                 _calculateThread = new Thread(SpeedClaculate);
                 _calculateThread.Start();
@@ -120,6 +121,7 @@ namespace Lexplosion.Logic.Network
                 _isWorking = false;
             }
 
+        EndPoint:
             _resetEvent.Set();
 
             Bridge.Close();
@@ -130,28 +132,40 @@ namespace Lexplosion.Logic.Network
 
         private void SpeedClaculate()
         {
+            const int calculationDelay = 1000; //секунда
             while (_isWorking)
             {
-                _resetEvent.WaitOne(5000); // ждём 5 секунд
+                _resetEvent.WaitOne(calculationDelay); // ждём указанное время
 
                 long dataCount = _dataCount;
                 _dataCount = 0;
 
-                double byteToMillSec = dataCount / 5000.0;
+                double byteToMillSec = dataCount / calculationDelay;
                 double bitToSec = (byteToMillSec * 8) * 1000;
 
                 SpeedUpdate?.Invoke((bitToSec / (1024 * 1014)));
             }
         }
 
-        public void WorkWait()
+        public bool WorkWait()
         {
             _workWait.WaitOne();
             _workWait.Reset();
+
+            return _successfulTransfer;
         }
 
         protected override void Close(IPEndPoint point)
         {
+            try
+            {
+                _successfulTransfer = (_fstream.Length == _fileSize) && (_fileId == Сryptography.Sha256(_fstream));
+            }
+            catch
+            {
+                _successfulTransfer = false;
+            }
+
             _fstream.Close();
             _workWait.Set();
         }
