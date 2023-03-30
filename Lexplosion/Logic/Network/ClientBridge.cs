@@ -86,13 +86,20 @@ namespace Lexplosion.Logic.Network
 
             // проверяем доступность основного сокета
             bool socketIsClose;
-            try
+            if (ServerSimulator != null)
             {
-                socketIsClose = ServerSimulator.Poll(50, SelectMode.SelectRead) && ServerSimulator.Available == 0;
+                try
+                {
+                    socketIsClose = ServerSimulator.Poll(50, SelectMode.SelectRead) && ServerSimulator.Available == 0;
+                }
+                catch
+                {
+                    socketIsClose = true;
+                }
             }
-            catch
+            else
             {
-                socketIsClose = true;
+                socketIsClose = false;
             }
 
             if (socketIsClose)
