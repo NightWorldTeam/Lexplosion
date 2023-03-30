@@ -31,7 +31,6 @@ namespace Lexplosion.Logic.Network
         {
             bool directConnectPossible = true; //описывает возможно ли прямое подключение через smp. Если оно не возможно и SmpConnection true, то трафик будет гнаться через Smp ретранслятор
             string myExternalPort = null;
-            string myExternalIp = null;
 
             try
             {
@@ -43,7 +42,7 @@ namespace Lexplosion.Logic.Network
                     client.Connect(ControlServer, 4565);
 
                     NetworkStream stream = client.GetStream();
-                    string st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"sessionToken\": \"" + sessionToken + "\"}";
+                    var st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"sessionToken\": \"" + sessionToken + "\"}";
                     byte[] sendData = Encoding.UTF8.GetBytes(st);
                     stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
                     Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);
@@ -63,25 +62,30 @@ namespace Lexplosion.Logic.Network
                                 if (directConnectPossible)
                                 {
                                     STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, udpSocket);
-                                    if (result == null)
+                                    if (result?.PublicEndPoint != null)
                                     {
-                                        // TODO: че-то делать
-                                    }
+                                        myExternalPort = result.PublicEndPoint.Port.ToString();
+                                        if (result.NetType == STUN_NetType.UdpBlocked || result.NetType == STUN_NetType.Symmetric || result.NetType == STUN_NetType.SymmetricUdpFirewall)
+                                        {
+                                            directConnectPossible = false;
+                                            dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
+                                            Runtime.DebugWrite("Nat type " + result.NetType);
+                                        }
+                                        else
+                                        {
+                                            Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
+                                            Runtime.DebugWrite("Nat type " + result.NetType);
 
-                                    myExternalPort = result.PublicEndPoint.Port.ToString();
-                                    myExternalIp = result.PublicEndPoint.Address.ToString();
-                                    if (result.NetType == STUN_NetType.UdpBlocked || result.NetType == STUN_NetType.Symmetric || result.NetType == STUN_NetType.SymmetricUdpFirewall)
-                                    {
-                                        directConnectPossible = false;
-                                        dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
+                                            dataToSend = Encoding.UTF8.GetBytes(myExternalPort);
+                                        }
                                     }
                                     else
                                     {
-                                        Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
-                                        Runtime.DebugWrite("Nat type " + result.NetType);
-
-                                        dataToSend = Encoding.UTF8.GetBytes(myExternalPort);
-                                    }                   
+                                        directConnectPossible = false;
+                                        myExternalPort = ((IPEndPoint)udpSocket.LocalEndPoint).Port.ToString(); // в этом случае он нихуя не external
+                                        dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
+                                        Runtime.DebugWrite("STUN_Result is null");
+                                    }                 
                                 }
                                 else
                                 {

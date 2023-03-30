@@ -134,7 +134,7 @@ namespace Lexplosion.Logic.Network
 
                 try
                 {
-                    string st =
+                    var st =
                     "{\"UUID\" : \"" + UUID + "\"," +
                     " \"type\": \"" + serverType + "\"," +
                     " \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"," +
