@@ -210,9 +210,9 @@ namespace Lexplosion.Logic.Network
                             Connections[point].Send(data, data.Length, SocketFlags.None);
                             AcceptingBlock.Release();
                         }
-                        catch // Обрываем соединение с этми клиентом нахуй
+                        catch (Exception e) // Обрываем соединение с этми клиентом нахуй
                         {
-                            Runtime.DebugWrite("SERVER CLOSE 1 ");
+                            Runtime.DebugWrite("SERVER CLOSE 1 " + e);
                             AcceptingBlock.Release();
                             Server.Close(point);
                             ClientAbort(point);
@@ -225,9 +225,9 @@ namespace Lexplosion.Logic.Network
                         ClientAbort(point);
                     }
                 }
-                catch // Обрываем соединение с этми клиентом нахуй
+                catch (Exception e) // Обрываем соединение с этми клиентом нахуй
                 {
-                    Runtime.DebugWrite("SERVER CLOSE 3 ");
+                    Runtime.DebugWrite("SERVER CLOSE 3 " + e);
                     Server.Close(point);
                     ClientAbort(point);
                 }

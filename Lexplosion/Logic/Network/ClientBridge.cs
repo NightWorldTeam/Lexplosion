@@ -84,21 +84,40 @@ namespace Lexplosion.Logic.Network
 
             Socket listener = (Socket)data.AsyncState;
 
-            // если майкнрафт клиент уже подключен или же сокет закрыт то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
-            bool socketClosed;
+            // проверяем доступность основного сокета
+            bool socketIsClose;
             try
             {
-                socketClosed = listener.Poll(50, SelectMode.SelectRead) && listener.Available == 0;
+                socketIsClose = ServerSimulator.Poll(50, SelectMode.SelectRead) && ServerSimulator.Available == 0;
             }
             catch
             {
-                socketClosed = true;
+                socketIsClose = true;
             }
 
-            if (IsConnected || socketClosed || !AvailableServers.ContainsKey(listener))
+            if (socketIsClose)
+            {
+                //основной сокет не доступен. закрываем основное соединение чтобы принять это
+                Runtime.DebugWrite("ServerSimulator closed");
+                Close(null);
+            }
+
+            //проверяем доступность новго сокета
+            bool listenerIsClosed;
+            try
+            {
+                listenerIsClosed = listener.Poll(50, SelectMode.SelectRead) && listener.Available == 0;
+            }
+            catch
+            {
+                listenerIsClosed = true;
+            }
+
+            // если майкнрафт клиент уже подключен или же новый сокет закрыт то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
+            if (IsConnected || listenerIsClosed || !AvailableServers.ContainsKey(listener))
             {
                 AcceptingBlock.Release();
-                if (!socketClosed)
+                if (!listenerIsClosed)
                 {
                     Socket sock = listener.EndAccept(data);
                     sock.Close();

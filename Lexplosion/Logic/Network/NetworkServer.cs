@@ -91,9 +91,10 @@ namespace Lexplosion.Logic.Network
             {
                 _controlConnection.Send(new byte[1] { ControlSrverCodes.Z });
             }
+            catch { }
             finally
             {
-                _controlConnection.Close();
+                try { _controlConnection?.Close(); } catch { }
             }
 
             _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -160,7 +161,7 @@ namespace Lexplosion.Logic.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void PerformConnect(string clientUUID, string myPoint, IPEndPoint localPoint, byte[] pointData, int data_lenght)
+        private void PerformConnect(string clientUUID, string myPort, Socket udpSocket, string hostPointData, bool directConnectPossible)
         {
             bool isConected;
             IPEndPoint point = null;
@@ -170,28 +171,31 @@ namespace Lexplosion.Logic.Network
                 {
                     Runtime.DebugWrite("Udp connection");
 
-                    string str = Encoding.UTF8.GetString(pointData, 0, data_lenght);
                     using (SHA1 sha = new SHA1Managed())
                     {
                         byte[] connectionCode;
-                        if (str.EndsWith(",proxy"))
+                        string hostPort;
+                        if (!directConnectPossible || hostPointData.EndsWith(",proxy"))
                         {
-                            Runtime.DebugWrite("Udp proxy");
+                            Runtime.DebugWrite("Udp proxy (" + directConnectPossible + ", " + hostPointData.EndsWith(",proxy") + ")");
                             point = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
-                            Runtime.DebugWrite("Connection code: " + myPoint + ", " + str.Replace(",proxy", ""));
-                            connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str.Replace(",proxy", "")));
+                            hostPointData = hostPointData.Replace(",proxy", "");
+                            hostPort = hostPointData.Substring(hostPointData.IndexOf(":") + 1, hostPointData.Length - hostPointData.IndexOf(":") - 1).Trim();
                         }
                         else
                         {
                             Runtime.DebugWrite("Udp direct connection");
-                            string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-                            string hostIp = str.Replace(":" + hostPort, "");
+                            hostPort = hostPointData.Substring(hostPointData.IndexOf(":") + 1, hostPointData.Length - hostPointData.IndexOf(":") - 1).Trim();
+                            string hostIp = hostPointData.Replace(":" + hostPort, "");
                             point = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
-
-                            Runtime.DebugWrite("Connection code: " + myPoint + ", " + str + ". Host EndPoint " + point);
-                            connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(myPoint + ", " + str));
                         }
 
+                        var strCode = UUID + "," + clientUUID + "," + myPort + "," + hostPort;
+                        Runtime.DebugWrite("Connection code: " + strCode);
+                        connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(strCode));
+
+                        var localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
+                        udpSocket.Close();
                         isConected = ((SmpServer)Server).Connect(localPoint, point, connectionCode);
                     }
                 }
@@ -267,8 +271,6 @@ namespace Lexplosion.Logic.Network
                     try
                     {
                         string clientUUID;
-                        string myPoint = null;
-                        IPEndPoint localPoint = null;
 
                         byte[] data = new byte[33];
 
@@ -293,6 +295,9 @@ namespace Lexplosion.Logic.Network
                             Runtime.DebugWrite("ControlServerEndRecv");
                         }
 
+                        bool directConnectPossible = true;
+                        string myPort;
+                        Socket udpSocket = null;
                         if (bytes > 1 && data[0] == ControlSrverCodes.A) // data[0] == 97 значит поступил запрос на подключение
                         {
                             clientUUID = Encoding.UTF8.GetString(data, 1, 32); // получаем UUID клиента
@@ -325,7 +330,7 @@ namespace Lexplosion.Logic.Network
                                 byte[] portData;
                                 if (DirectConnection)
                                 {
-                                    var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                                    udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
                                     STUN_Result result = null;
                                     try
@@ -336,34 +341,26 @@ namespace Lexplosion.Logic.Network
                                     }
                                     catch { }
 
-                                    localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
-                                    udpSocket.Close();
-
-                                    // какая-то хуйня. Пробуем переподключиться к управляющему серверу
-                                    if (result == null)
-                                    {
-                                        needRepeat = true;
-                                        break;
-                                    }
-
                                     //парсим порт
-                                    string externalPort;
-                                    if (result.PublicEndPoint != null)
+                                    if (result?.PublicEndPoint != null)
                                     {
-                                        myPoint = result.PublicEndPoint.ToString();
-                                        externalPort = myPoint.Substring(myPoint.IndexOf(":") + 1, myPoint.Length - myPoint.IndexOf(":") - 1).Trim();
-                                        portData = Encoding.UTF8.GetBytes(externalPort.ToString());
-                                    }
-                                    else // опять какая-то хуйня. Пробуем переподключиться к управляющему серверу
-                                    {
-                                        needRepeat = true;
-                                        break;
-                                    }
+                                        myPort = result.PublicEndPoint.Port.ToString();
+                                        portData = Encoding.UTF8.GetBytes(myPort.ToString());
 
-                                    Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
+                                        Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
+                                    }
+                                    else // какая-то хуйня. будем устанавливать соединение через ретранслятор
+                                    {
+                                        Runtime.DebugWrite("My EndPoint error");
+                                        var localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
+                                        portData = Encoding.UTF8.GetBytes(localPoint.Port + ",proxy");
+                                        myPort = localPoint.Port.ToString();
+                                        directConnectPossible = false;
+                                    }
                                 }
                                 else
                                 {
+                                    myPort = "";
                                     portData = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                                 }
 
@@ -371,19 +368,22 @@ namespace Lexplosion.Logic.Network
                             }
                             else
                             {
+                                Runtime.DebugWrite("Repet 1");
                                 needRepeat = true;
                                 break;
                             }
                         }
                         else
                         {
+                            Runtime.DebugWrite("Repet 2");
                             needRepeat = true;
                             break;
                         }
 
                         byte[] pointData = new byte[50];
                         int pointDataLen = _controlConnection.Receive(pointData); //получем ip клиента
-                        PerformConnect(clientUUID, myPoint, localPoint, pointData, pointDataLen);
+                        string pointDataStr = Encoding.UTF8.GetString(pointData, 0, pointDataLen);
+                        PerformConnect(clientUUID, myPort, udpSocket, pointDataStr, directConnectPossible);
                     }
                     catch { }
                 }

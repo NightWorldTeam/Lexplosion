@@ -205,6 +205,15 @@ namespace Lexplosion.Logic.Network.SMP
             socket.Client.IOControl(sioUdpConnectionReset, inValue, outValue);
         }
 
+        public SmpClient(UdpClient udpSocket)
+        {
+            socket = udpSocket;
+            var sioUdpConnectionReset = -1744830452;
+            var inValue = new byte[] { 0 };
+            var outValue = new byte[] { 0 };
+            socket.Client.IOControl(sioUdpConnectionReset, inValue, outValue);
+        }
+
         public bool Connect(IPEndPoint remoteIp, byte[] connectCode)
         {
             var connectionWait = new AutoResetEvent(false);
@@ -226,19 +235,18 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     try
                     {
-                        // TODO: не просто принимать все поинты, а проверять ip игнорируя порт
                         IPEndPoint senderPoint = null;
                         data = socket.Receive(ref senderPoint);
                         if (data.Length > 0)
                         {
                             if (data[0] == PackgeCodes.MtuRequest && data.Length > 2) // если это пакет с вычислением mtu - отвечаем на него
                             {
-                                if (pointDefined || senderPoint?.Equals(remoteIp) == true)
+                                if (pointDefined || remoteIp.Equals(senderPoint))
                                     socket.Send(new byte[2] { PackgeCodes.MtuResponse, data[1] }, 2);
                             }
                             else if (data[0] == PackgeCodes.PingRequest) // если это пакет пинга то отвечаем на него
                             {
-                                if (pointDefined || senderPoint?.Equals(remoteIp) == true)
+                                if (pointDefined || remoteIp.Equals(senderPoint))
                                     socket.Send(new byte[2] { PackgeCodes.PingResponse, data[1] }, 2);
                             }
                             else if (data[0] == PackgeCodes.PingResponse) // если это ответ на пинг, то обрабатываем его
@@ -324,8 +332,10 @@ namespace Lexplosion.Logic.Network.SMP
                 ThreadPool.QueueUserWorkItem(delegate (object state)
                 {
                     _mtu = CalculateMTU(); // измеряем mtu
+                    if (!IsConnected) return;
                     SendMTUInfo(); // отправляем наш mtu хосту
                     _calculateMtuBlock.WaitOne();
+
                     if (_hostMtu != -1) // пакет с инфой об mtu хоста уже был получен
                     {
                         // если mtu хоста меньше, то обновляем наш mtu
@@ -340,7 +350,13 @@ namespace Lexplosion.Logic.Network.SMP
                     }
                     _calculateMtuBlock.Release();
 
-                    socket.Client.ReceiveBufferSize = _maxPackagesCount * _mtu;
+                    if (!IsConnected) return;
+
+                    try
+                    {
+                        socket.Client.ReceiveBufferSize = _maxPackagesCount * _mtu;
+                    }
+                    catch { }
 
                     Runtime.DebugWrite("MTU " + _mtu);
                 });
@@ -360,7 +376,7 @@ namespace Lexplosion.Logic.Network.SMP
 
             byte packageId = 0;
             int difference = 1490;
-            while (difference > 1 && thisData > 0)
+            while (difference > 1 && thisData > 0 && IsConnected)
             {
                 difference = lostData - thisData;
 
@@ -370,7 +386,7 @@ namespace Lexplosion.Logic.Network.SMP
                 data[1] = packageId;
 
                 int j;
-                for (j = 0; j < 5; j++) // пробуем отправить 5 раз
+                for (j = 0; j < 5 && IsConnected; j++) // пробуем отправить 5 раз
                 {
                     try
                     {
@@ -414,7 +430,7 @@ namespace Lexplosion.Logic.Network.SMP
             Array.Copy(payload, 0, data, 1, 2);
             data[0] = PackgeCodes.MtuInfo;
 
-            for (int j = 0; j < 5; j++) // пробуем отправить 5 раз
+            for (int j = 0; j < 5 && IsConnected; j++) // пробуем отправить 5 раз
             {
                 try
                 {

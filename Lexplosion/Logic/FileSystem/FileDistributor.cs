@@ -19,13 +19,11 @@ namespace Lexplosion.Logic.FileSystem
         private static int _distributionsCount = 0;
         private static object _createLock = new object();
 
-        private string _fileId;
         private Thread _informingThread;
         private AutoResetEvent _waitingInforming;
 
         private FileDistributor(string fileId, string UUID, string sessionToken)
         {
-            _fileId = fileId;
             _waitingInforming = new AutoResetEvent(false);
 
             _informingThread = new Thread(() =>

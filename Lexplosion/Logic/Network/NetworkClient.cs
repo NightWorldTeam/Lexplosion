@@ -30,7 +30,7 @@ namespace Lexplosion.Logic.Network
         public virtual bool Initialization(string UUID, string sessionToken, string serverUUID)
         {
             bool directConnectPossible = true; //описывает возможно ли прямое подключение через smp. Если оно не возможно и SmpConnection true, то трафик будет гнаться через Smp ретранслятор
-            string myEternalPort = null;
+            string myExternalPort = null;
             string myExternalIp = null;
 
             try
@@ -57,43 +57,41 @@ namespace Lexplosion.Logic.Network
                             byte[] dataToSend;
                             if (buf[1] == 1) //Определяем по какому методу работает сервер. 1 - прямое подключение. 0 - через TURN
                             {
-                                var emptyPoint = new IPEndPoint(IPAddress.Any, 0);
+                                var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                                udpSocket.Bind(new IPEndPoint(IPAddress.Any, 0));
+
                                 if (directConnectPossible)
                                 {
-                                    var udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                                    udpSocket.Bind(emptyPoint);
-
                                     STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, udpSocket);
                                     if (result == null)
                                     {
                                         // TODO: че-то делать
                                     }
 
-                                    myEternalPort = result.PublicEndPoint.Port.ToString();
+                                    myExternalPort = result.PublicEndPoint.Port.ToString();
                                     myExternalIp = result.PublicEndPoint.Address.ToString();
                                     if (result.NetType == STUN_NetType.UdpBlocked || result.NetType == STUN_NetType.Symmetric || result.NetType == STUN_NetType.SymmetricUdpFirewall)
                                     {
                                         directConnectPossible = false;
-                                        dataToSend = Encoding.UTF8.GetBytes(myEternalPort + ",proxy");
+                                        dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
                                     }
                                     else
                                     {
                                         Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
                                         Runtime.DebugWrite("Nat type " + result.NetType);
 
-                                        dataToSend = Encoding.UTF8.GetBytes(myEternalPort);
-                                    }
-
-                                    var point = (IPEndPoint)udpSocket.LocalEndPoint;
-                                    udpSocket.Close();
-                                    Bridge = new SmpClient(point);
+                                        dataToSend = Encoding.UTF8.GetBytes(myExternalPort);
+                                    }                   
                                 }
                                 else
                                 {
-                                    string pt = myEternalPort ?? (new Random()).Next(1000, 65535).ToString();
+                                    string pt = myExternalPort ?? ((IPEndPoint)udpSocket.LocalEndPoint).Port.ToString();
                                     dataToSend = Encoding.UTF8.GetBytes(pt + ",proxy");
-                                    Bridge = new SmpClient(emptyPoint);
                                 }
+
+                                var point = (IPEndPoint)udpSocket.LocalEndPoint;
+                                udpSocket.Close();
+                                Bridge = new SmpClient(point);
 
                                 SmpConnection = true;
                             }
@@ -123,35 +121,30 @@ namespace Lexplosion.Logic.Network
                     {
                         try
                         {
-                            string str = Encoding.UTF8.GetString(data, 0, data_lenght);
+                            string hostPointData = Encoding.UTF8.GetString(data, 0, data_lenght);
 
                             byte[] connectionCode;
+                            string hostPort;
                             using (SHA1 sha = new SHA1Managed())
                             {
-                                if (str.EndsWith(",proxy"))
+                                if (hostPointData.EndsWith(",proxy"))
                                 {
                                     Runtime.DebugWrite("The server requires udp proxy");
                                     directConnectPossible = false;
-                                    var strCode = str.Replace(",proxy", "") + ", " + myExternalIp + ":" + myEternalPort;
-                                    connectionCode = Encoding.UTF8.GetBytes(strCode);
-                                    connectionCode = sha.ComputeHash(connectionCode);
-                                    Runtime.DebugWrite("Connection code: " + strCode);
+                                    hostPointData = hostPointData.Replace(",proxy", "");
                                 }
-                                else
-                                {
-                                    var strCode = str + ", " + myExternalIp + ":" + myEternalPort;
-                                    connectionCode = Encoding.UTF8.GetBytes(strCode);
-                                    connectionCode = sha.ComputeHash(connectionCode);
-                                    Runtime.DebugWrite("Connection code: " + strCode);
-                                }
+
+                                hostPort = hostPointData.Substring(hostPointData.IndexOf(":") + 1, hostPointData.Length - hostPointData.IndexOf(":") - 1).Trim();
+                                var strCode = serverUUID + "," + UUID + "," + hostPort + "," + myExternalPort;
+                                connectionCode = sha.ComputeHash(Encoding.UTF8.GetBytes(strCode));
+                                Runtime.DebugWrite("Connection code: " + strCode);
                             }
 
                             IPEndPoint hostPoint;
                             if (directConnectPossible)
                             {
                                 Runtime.DebugWrite("Udp direct connection");
-                                string hostPort = str.Substring(str.IndexOf(":") + 1, str.Length - str.IndexOf(":") - 1).Trim();
-                                string hostIp = str.Replace(":" + hostPort, "");
+                                string hostIp = hostPointData.Replace(":" + hostPort, "");
                                 Runtime.DebugWrite("Host EndPoint " + new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort)));
 
                                 hostPoint = new IPEndPoint(IPAddress.Parse(hostIp), Int32.Parse(hostPort));
