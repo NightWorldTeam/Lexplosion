@@ -63,11 +63,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 
         public LanguageSettingsViewModel()
         {
-            Languages = new LanguageModel[Runtime.Languages.Length];
+            Languages = new LanguageModel[Runtime.AvaliableLanguages.Length];
 
-            for (var i = 0; i < Runtime.Languages.Length; i++)
+            for (var i = 0; i < Runtime.AvaliableLanguages.Length; i++)
             {
-                Languages[i] = new LanguageModel(Runtime.Languages[i]);
+                Languages[i] = new LanguageModel(Runtime.AvaliableLanguages[i]);
             }
         }
     }

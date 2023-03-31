@@ -145,6 +145,7 @@ namespace Lexplosion.Gui.ViewModels.FactoryMenu
 
         public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null)
         {
+            // Сделал динамическое обновление
             _doNotification = doNotification ?? _doNotification;
 
             IsLoaded = false;

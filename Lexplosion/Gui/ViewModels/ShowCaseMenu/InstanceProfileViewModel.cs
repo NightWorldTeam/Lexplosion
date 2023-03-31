@@ -29,7 +29,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private bool _isVanilla = true;
         public bool IsVanilla
         {
-            get => _isVanilla; private set
+            get => _isVanilla; set
             {
                 _isVanilla = value;
                 OnPropertyChanged();
@@ -39,7 +39,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private bool _isForge;
         public bool IsForge
         {
-            get => _isForge; private set
+            get => _isForge; set
             {
                 _isForge = value;
                 OnPropertyChanged();
@@ -49,7 +49,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private bool _isFabric;
         public bool IsFabric
         {
-            get => _isFabric; private set
+            get => _isFabric; set
             {
                 _isFabric = value;
                 OnPropertyChanged();
@@ -59,7 +59,7 @@ namespace Lexplosion.Gui.ViewModels.ShowCaseMenu
         private bool _isQuilt;
         public bool IsQuilt
         {
-            get => _isQuilt; private set
+            get => _isQuilt; set
             {
                 _isQuilt = value;
                 OnPropertyChanged();

@@ -15,6 +15,7 @@ using Lexplosion.Logic.Management;
 using System.Diagnostics;
 using Lexplosion.Global;
 using System.Windows.Input;
+using System.Threading;
 
 namespace Lexplosion.Gui.ViewModels
 {

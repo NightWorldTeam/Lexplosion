@@ -37,7 +37,7 @@ namespace Lexplosion
     {
         private static App app = new App();
         private static SplashWindow _splashWindow;
-
+        private static NotificationWindow _notificationWindow;
         private static TaskbarIcon _nofityIcon;
 
         public static Process CurrentProcess { get; private set; }
@@ -54,11 +54,10 @@ namespace Lexplosion
         const string ResourcePath = "pack://application:,,,/Gui/Resources/";
         public const string LangPath = AssetsPath + "langs/";
 
-        public static readonly string[] Languages = new string[]
+        public static readonly string[] AvaliableLanguages = new string[]
         {
             "ru-RU", "en-US"
         };
-
         private static ResourceDictionary CurrentLangDict;
 
         public static Color CurrentAccentColor => (Color)app.Resources["ActivityColor"];
@@ -76,14 +75,51 @@ namespace Lexplosion
             Thread thread = new Thread(InitializedSystem);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
+
             _splashWindow = new SplashWindow();
             _splashWindow.ChangeLoadingBoardPlaceholder();
             app.Run(_splashWindow);
         }
 
+
+        #region Notification Window
+
+
+        private static void InitializeNotificationWindow() 
+        {
+            App.Current.Dispatcher.Invoke(() => 
+            { 
+                _notificationWindow = new NotificationWindow();
+                var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
+                _notificationWindow.Left = desktopWorkingArea.Right - _notificationWindow.MaxWidth;
+                _notificationWindow.Top = desktopWorkingArea.Bottom - 20;
+            });
+        }
+
+        internal static void OpenNotificationWindow()
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _notificationWindow.Show();
+            });
+        }
+
+        internal static void CloseNotificationWindow() 
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _notificationWindow.Hide();
+            });
+        }
+
+
+        #endregion NotificationWindow
+
+
         private static void SetMainWindow()
         {
             _nofityIcon = (TaskbarIcon)app.FindResource("NofityIcon");
+
             app.MainWindow.Topmost = true;
 
             var mainWindow = new MainWindow()
@@ -135,6 +171,9 @@ namespace Lexplosion
             ChangeCurrentLanguage();
             // Встраеваем стили
             app.Dispatcher.Invoke(StylesInit);
+
+            // инициализация окна уведомлений
+            InitializeNotificationWindow();
 
             CurrentProcess = Process.GetCurrentProcess();
 
@@ -248,7 +287,6 @@ namespace Lexplosion
                     app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(activeGameManager));
                 }
             };
-
             Thread.Sleep(800);
 
             app.Dispatcher.Invoke(SetMainWindow);
