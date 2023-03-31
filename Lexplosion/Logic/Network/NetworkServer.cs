@@ -22,8 +22,9 @@ namespace Lexplosion.Logic.Network
         private Thread MaintainingThread;
 
         protected Semaphore AcceptingBlock = new Semaphore(1, 1); //блокировка во время приёма подключения
+        protected ManualResetEvent ConnectionWait = new(false); // блокируется на время работы метода PerformConnect
         protected Semaphore SendingBlock = new Semaphore(1, 1); //блокировка во время работы метода Sending
-        private AutoResetEvent ControlConnectionBlock = new AutoResetEvent(false); // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
+        private AutoResetEvent _controlConnectionBlock = new AutoResetEvent(false); // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
 
         protected IServerTransmitter Server;
 
@@ -165,6 +166,8 @@ namespace Lexplosion.Logic.Network
         {
             bool isConected;
             IPEndPoint point = null;
+            ConnectionWait.Reset();
+
             try
             {
                 if (DirectConnection)
@@ -238,6 +241,8 @@ namespace Lexplosion.Logic.Network
                 Runtime.DebugWrite("Пиздец1");
                 AcceptingBlock.Release();
             }
+
+            ConnectionWait.Set();
         }
 
         protected void Accepting(string serverType)
@@ -275,7 +280,7 @@ namespace Lexplosion.Logic.Network
                         byte[] data = new byte[33];
 
                         Runtime.DebugWrite("ControlServerRecv");
-                        ControlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
+                        _controlConnectionBlock.Set(); // освобождаем семафор переда как начать слушать сокет. Ждать мы на Receive можем долго
                         _controlConnection.ReceiveTimeout = -1; // делаем бесконечное ожидание
 
                         int bytes;
@@ -290,7 +295,7 @@ namespace Lexplosion.Logic.Network
                         }
                         finally
                         {
-                            ControlConnectionBlock.WaitOne(); // блочим семофор
+                            _controlConnectionBlock.WaitOne(); // блочим семофор
                             _controlConnection.ReceiveTimeout = 10000; //огрниччиваем ожидание до 10 секунд
                             Runtime.DebugWrite("ControlServerEndRecv");
                         }
@@ -455,9 +460,9 @@ namespace Lexplosion.Logic.Network
 
                 while (IsWork)
                 {
-                    ControlConnectionBlock.WaitOne();
+                    _controlConnectionBlock.WaitOne();
                     _controlConnection.Send(new byte[1] { ControlSrverCodes.Y });
-                    ControlConnectionBlock.Set();
+                    _controlConnectionBlock.Set();
                     Thread.Sleep(120000); // ждём 2 минуты
                 }
             }

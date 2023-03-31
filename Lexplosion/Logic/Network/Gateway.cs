@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
+using System.Net.NetworkInformation;
+using System.Linq;
 
 namespace Lexplosion.Logic.Network
 {
@@ -213,10 +215,18 @@ namespace Lexplosion.Logic.Network
 
             UdpClient client = new UdpClient();
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 0);
-            client.Client.Ttl = 0; //это чтобы другие компьютеры в локальной сети не видели этого сервера
             client.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
-            client.JoinMulticastGroup(IPAddress.Parse("224.0.2.60"));
+
+            try
+            {
+                //присоединяемся к мультикасту для Loopback адаптера
+                var optionValue = new MulticastOption(IPAddress.Parse("224.0.2.60"), NetworkInterface.LoopbackInterfaceIndex);
+                client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, optionValue);
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("mu;ticast error: " + ex);
+            }
 
             while (true)
             {

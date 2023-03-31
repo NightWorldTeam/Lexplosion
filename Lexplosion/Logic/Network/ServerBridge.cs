@@ -196,42 +196,51 @@ namespace Lexplosion.Logic.Network
             ReadingWait.WaitOne(); //ждём первого подключения
             ReadingWait.Set();
 
-            while (IsWork)
+            try
             {
-                IPEndPoint point = Server.Receive(out byte[] data);
-
-                try
+                while (IsWork)
                 {
-                    if (data.Length != 0)
+                    IPEndPoint point = Server.Receive(out byte[] data);
+
+                    try
                     {
-                        AcceptingBlock.WaitOne();
-                        try
+                        if (data.Length != 0)
                         {
-                            Connections[point].Send(data, data.Length, SocketFlags.None);
-                            AcceptingBlock.Release();
+                            AcceptingBlock.WaitOne();
+                            try
+                            {
+                                Connections[point].Send(data, data.Length, SocketFlags.None);
+                            }
+                            catch (KeyNotFoundException) // point отсуствует, пробуем повторить дождавшись окончания рабоыт метода подключения
+                            {
+                                Runtime.DebugWrite("KeyNotFoundException");
+                                AcceptingBlock.Release();
+                                ConnectionWait.WaitOne(); // если метод подключения в процессе работы, то мы тут остановимся
+
+                                AcceptingBlock.WaitOne();
+                                Connections[point].Send(data, data.Length, SocketFlags.None);
+                            }
+                            finally // освобождаем семофор. если будет исключение, нижний catch поймает его и выполнит обрыв соединения
+                            {
+                                AcceptingBlock.Release();
+                            }
                         }
-                        catch (Exception e) // Обрываем соединение с этми клиентом нахуй
+                        else // Количество байт 0 - значит соединение было оборвано
                         {
-                            Runtime.DebugWrite("SERVER CLOSE 1 " + e);
-                            AcceptingBlock.Release();
+                            Runtime.DebugWrite("SERVER CLOSE 2");
                             Server.Close(point);
                             ClientAbort(point);
                         }
                     }
-                    else // Количество байт 0 - значит соединение было оборвано
+                    catch (Exception e) // Обрываем соединение с этми клиентом нахуй
                     {
-                        Runtime.DebugWrite("SERVER CLOSE 2");
+                        Runtime.DebugWrite("SERVER CLOSE 3 " + e);
                         Server.Close(point);
                         ClientAbort(point);
                     }
                 }
-                catch (Exception e) // Обрываем соединение с этми клиентом нахуй
-                {
-                    Runtime.DebugWrite("SERVER CLOSE 3 " + e);
-                    Server.Close(point);
-                    ClientAbort(point);
-                }
             }
+            catch { }
 
             Runtime.DebugWrite("READING METHOD END");
         }

@@ -11,7 +11,7 @@ namespace Lexplosion.Logic.Network
         protected Socket ServerSimulator;
 
         protected Dictionary<Socket, string> AvailableServers = new Dictionary<Socket, string>();
-        private readonly Semaphore AvailableServersBlock = new Semaphore(1, 1);
+        private readonly Semaphore _availableServersBlock = new Semaphore(1, 1);
 
         protected Semaphore AcceptingBlock = new Semaphore(1, 1); //блокировка на время работы метода AcceptHandler
         protected AutoResetEvent SendingWait = new AutoResetEvent(false);
@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Network
 
             //убираем сервера, которых нет в списке
 
-            AvailableServersBlock.WaitOne();
+            _availableServersBlock.WaitOne();
             Socket[] values = new Socket[AvailableServers.Count];
             AvailableServers.Keys.CopyTo(values, 0);
 
@@ -71,7 +71,7 @@ namespace Lexplosion.Logic.Network
                 }
             }
 
-            AvailableServersBlock.Release();
+            _availableServersBlock.Release();
 
             return ports;
         }
@@ -107,6 +107,7 @@ namespace Lexplosion.Logic.Network
                 //основной сокет не доступен. закрываем основное соединение чтобы принять это
                 Runtime.DebugWrite("ServerSimulator closed");
                 Close(null);
+                Runtime.DebugWrite("End close");
             }
 
             //проверяем доступность новго сокета
@@ -120,23 +121,26 @@ namespace Lexplosion.Logic.Network
                 listenerIsClosed = true;
             }
 
-            // если майкнрафт клиент уже подключен или же новый сокет закрыт то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
-            if (IsConnected || listenerIsClosed || !AvailableServers.ContainsKey(listener))
+            // если майкнрафт клиент уже подключен то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
+            if (IsConnected || listenerIsClosed ||!AvailableServers.ContainsKey(listener))
             {
-                AcceptingBlock.Release();
                 if (!listenerIsClosed)
                 {
+                    Runtime.DebugWrite("Set new BeginAccept");
                     Socket sock = listener.EndAccept(data);
                     sock.Close();
                     listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
                 }
+                
+                AcceptingBlock.Release();
                 Runtime.DebugWrite("AcceptHandler1.1");
 
                 return;
             }
 
             // TODO: тут проверить тот ли клиент подключился
-            AvailableServersBlock.WaitOne();
+            Runtime.DebugWrite("wait _availableServersBlock");
+            _availableServersBlock.WaitOne();
             string serverUUID = AvailableServers[listener];
             Runtime.DebugWrite("AcceptHandler2");
             if (base.Initialization(UUID, _sessionToken, serverUUID))
@@ -162,14 +166,14 @@ namespace Lexplosion.Logic.Network
                     }
                 }
 
-                AvailableServersBlock.Release();
+                _availableServersBlock.Release();
                 AcceptingBlock.Release();
 
                 Runtime.DebugWrite("AcceptHandler4");
             }
             else
             {
-                AvailableServersBlock.Release();
+                _availableServersBlock.Release();
                 AcceptingBlock.Release();
                 Socket sock = listener.EndAccept(data);
                 sock.Close();
@@ -189,6 +193,7 @@ namespace Lexplosion.Logic.Network
                     IsConnected = false;
                     Bridge.Close();
                     ServerSimulator.Close(); //закрываем соединение с клиентом   
+                    Runtime.DebugWrite("End Close");
                 }
             }
         }

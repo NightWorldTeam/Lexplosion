@@ -7,8 +7,8 @@ namespace Lexplosion.Tools
     {
         private class SemophoreData
         {
-            public Semaphore semaphore;
-            public int users;
+            public Semaphore Sem;
+            public int Users;
         }
 
         private Dictionary<T, SemophoreData> _semaphores = new Dictionary<T, SemophoreData>();
@@ -23,8 +23,8 @@ namespace Lexplosion.Tools
                 {
                     sem = new SemophoreData
                     {
-                        semaphore = new Semaphore(1, 1),
-                        users = 1
+                        Sem = new Semaphore(1, 1),
+                        Users = 1
                     };
 
                     _semaphores[key] = sem;
@@ -32,28 +32,28 @@ namespace Lexplosion.Tools
                 else
                 {
                     sem = _semaphores[key];
-                    sem.users++;
+                    sem.Users++;
                 }
             }
 
-            sem.semaphore.WaitOne();
+            sem.Sem.WaitOne();
         }
 
         public void Release(T key)
         {
             lock (_locker)
             {
-                if (_semaphores.ContainsKey(key) && _semaphores[key].users > 0)
+                if (_semaphores.ContainsKey(key) && _semaphores[key].Users > 0)
                 {
-                    _semaphores[key].users--;
-                    if (_semaphores[key].users < 1)
+                    _semaphores[key].Users--;
+                    if (_semaphores[key].Users < 1)
                     {
-                        _semaphores[key].semaphore.Release();
+                        _semaphores[key].Sem.Release();
                         _semaphores.Remove(key);
                     }
                     else
                     {
-                        _semaphores[key].semaphore.Release();
+                        _semaphores[key].Sem.Release();
                     }
                 }
             }
