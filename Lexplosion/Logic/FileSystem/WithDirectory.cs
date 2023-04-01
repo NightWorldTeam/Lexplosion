@@ -470,9 +470,8 @@ namespace Lexplosion.Logic.FileSystem
         {
             string tempDir = CreateTempDir();
             file = tempDir + "archive.zip";
-            reciver.StartDownload(file);
 
-            return FileRecvResult.Successful;
+            return reciver.StartDownload(file);
         }
 
         public static bool DonwloadJava(string javaName, string bitDepth, TaskArgs taskArgs)

@@ -31,6 +31,13 @@ namespace Lexplosion.Logic.Network
         private byte[] _aesKey;
         private byte[] _aesIV;
 
+        private bool _isManualClosed = false;
+
+        /// <param name="publicRsaKey">Публичный rsa ключ хоста, с которого будет идити получение файла</param>
+        /// <param name="confirmWord">Кодовое слово хоста. Используется для верификации передающего хоста</param>
+        /// <param name="controlServer">IP кправляющего сервера</param>
+        /// <param name="filename">Имя с которым файл будет сохранен на диске</param>
+        /// <param name="fileId">ID файла получения, он же его хэш</param>
         public DataClient(RSAParameters publicRsaKey, string confirmWord, string controlServer, string filename, string fileId) : base(clientType, controlServer)
         {
             _fstream = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite);
@@ -147,12 +154,17 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public bool WorkWait()
+        /// <summary>
+        /// Дожидается оконачания получения файла
+        /// </summary>
+        /// <returns>результат скачивания.</returns>
+        public FileRecvResult WorkWait()
         {
             _workWait.WaitOne();
             _workWait.Reset();
 
-            return _successfulTransfer;
+            if (_isManualClosed) return FileRecvResult.Canceled;
+            return _successfulTransfer ? FileRecvResult.Successful : FileRecvResult.UnknownError;
         }
 
         protected override void Close(IPEndPoint point)
@@ -168,6 +180,12 @@ namespace Lexplosion.Logic.Network
 
             _fstream.Close();
             _workWait.Set();
+        }
+
+        public void Close()
+        {
+            _isManualClosed = true;
+            Close(null);
         }
 
         public event Action<double> ProcentUpdate;

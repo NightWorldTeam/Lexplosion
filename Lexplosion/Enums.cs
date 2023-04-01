@@ -8,9 +8,9 @@
         JavaDownloadError,
         IsOfflineMode,
         MovingFilesError,
-        ServerFilesError,
+        DownloadError,
         DirectoryCreateError,
-        ConnectionClose
+        Canceled
     }
 
     public enum ExportResult
@@ -251,6 +251,7 @@
     {
         Successful,
         ConnectionClose,
-        UnknownError
+        UnknownError,
+        Canceled
     }
 }

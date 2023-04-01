@@ -91,7 +91,12 @@ namespace Lexplosion.Logic.FileSystem
             _state = DistributionState.InQueue;
         }
 
-        public void StartDownload(string fileName)
+        public void CancelDownload()
+        {
+            _dataClient?.Close();
+        }
+
+        public FileRecvResult StartDownload(string fileName)
         {
             _state = DistributionState.InProcess;
             StateChanged?.Invoke(_state);
@@ -102,9 +107,7 @@ namespace Lexplosion.Logic.FileSystem
             _dataClient.ProcentUpdate += ProcentUpdate;
 
             _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
-            bool resutl = _dataClient.WorkWait();
-
-            Runtime.DebugWrite("Download end, result: " + resutl);
+            return _dataClient.WorkWait();         
         }
     }
 }

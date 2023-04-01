@@ -148,10 +148,10 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         private string _author;
-        public string Author 
-        { 
-            get => _author; 
-            private set 
+        public string Author
+        {
+            get => _author;
+            private set
             {
                 _author = value;
                 OnPropertyChanged();
@@ -212,8 +212,8 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 _isComplete = value;
                 OnPropertyChanged();
-                if (value) 
-                { 
+                if (value)
+                {
                     BuildFinished?.Invoke();
                 }
             }
@@ -1301,8 +1301,16 @@ namespace Lexplosion.Logic.Management.Instances
 
             Lexplosion.Runtime.TaskRun(delegate ()
             {
-                WithDirectory.ReceiveFile(reciver, out string file);
-                callback(Import(in client, file));
+                FileRecvResult result = WithDirectory.ReceiveFile(reciver, out string file);
+                if (result == FileRecvResult.Successful)
+                {
+                    callback(Import(in client, file));
+                }
+                else
+                {
+                    callback(result == FileRecvResult.Canceled ? ImportResult.Canceled : ImportResult.DownloadError);
+                }
+
             });
 
             return client;

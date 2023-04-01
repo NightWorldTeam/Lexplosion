@@ -84,7 +84,7 @@ namespace Lexplosion.Logic.Network.SMP
             private long _deltesSum;
 
             private int _maxDeltaIndex = 0;
-            private int _minDeltaIndex = 0;
+            private int _minDeltaIndex = 1;
 
             public RttCalculator(long firstRtt)
             {
@@ -104,7 +104,6 @@ namespace Lexplosion.Logic.Network.SMP
                 _deltesSum = _deltesSum + delta - _deltes[_lastElement]; // обновляем сумму всех значений: прибавляем новое, и вичитаем старое (то, что будет заменено новым)
                 double average = (double)_deltesSum / DeltesCount;
 
-                //TODO: оптимизировать чтобы он 2 раза по одному массиву не проходился
                 if (delta >= _deltes[_maxDeltaIndex])
                 {
                     _maxDeltaIndex = _lastElement;
