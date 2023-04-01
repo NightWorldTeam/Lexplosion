@@ -77,13 +77,14 @@ namespace Lexplosion.Logic.Network.SMP
 
         private struct RttCalculator
         {
-            private const int DeltesCount = 25;
+            private const int DeltesCount = 50;
             private long[] _deltes;
             private int _lastElement = 0;
             private long _rtt;
             private long _deltesSum;
-            private long _minDelta;
-            private long _maxDelta;
+
+            private int _maxDeltaIndex = 0;
+            private int _minDeltaIndex = 0;
 
             public RttCalculator(long firstRtt)
             {
@@ -96,13 +97,47 @@ namespace Lexplosion.Logic.Network.SMP
 
                 _deltesSum = firstRtt * DeltesCount;
                 _rtt = firstRtt;
-                _minDelta = _maxDelta = firstRtt;
             }
 
             public void AddDelta(long delta)
             {
                 _deltesSum = _deltesSum + delta - _deltes[_lastElement]; // обновляем сумму всех значений: прибавляем новое, и вичитаем старое (то, что будет заменено новым)
                 double average = (double)_deltesSum / DeltesCount;
+
+                //TODO: оптимизировать чтобы он 2 раза по одному массиву не проходился
+                if (delta >= _deltes[_maxDeltaIndex])
+                {
+                    _maxDeltaIndex = _lastElement;
+                }
+                else if (_maxDeltaIndex == _lastElement)
+                {
+                    long maxValue = 0;
+                    for (int i = _lastElement + 1; i < DeltesCount; i++)
+                    {
+                        if (_deltes[i] > maxValue)
+                        {
+                            maxValue = _deltes[i];
+                            _maxDeltaIndex = i;
+                        }
+                    }
+                }
+
+                if (delta <= _deltes[_minDeltaIndex])
+                {
+                    _minDeltaIndex = _lastElement;
+                }
+                else if (_minDeltaIndex == _lastElement)
+                {
+                    long minValue = 0;
+                    for (int i = _lastElement + 1; i < DeltesCount; i++)
+                    {
+                        if (_deltes[i] < minValue)
+                        {
+                            minValue = _deltes[i];
+                            _minDeltaIndex = i;
+                        }
+                    }
+                }
 
                 _deltes[_lastElement] = delta;
                 _lastElement++;
@@ -111,17 +146,7 @@ namespace Lexplosion.Logic.Network.SMP
                     _lastElement = 0;
                 }
 
-                if (delta > _maxDelta)
-                {
-                    _maxDelta = delta;
-                }
-
-                if (delta < _minDelta)
-                {
-                    _minDelta = delta;
-                }
-
-                _rtt = (long)(_maxDelta - _minDelta + average);
+                _rtt = (long)(_deltes[_maxDeltaIndex] - _deltes[_minDeltaIndex] + average);
             }
 
             public long GetRtt
@@ -199,15 +224,6 @@ namespace Lexplosion.Logic.Network.SMP
             socket = new UdpClient();
             socket.Client.Bind(point);
 
-            var sioUdpConnectionReset = -1744830452;
-            var inValue = new byte[] { 0 };
-            var outValue = new byte[] { 0 };
-            socket.Client.IOControl(sioUdpConnectionReset, inValue, outValue);
-        }
-
-        public SmpClient(UdpClient udpSocket)
-        {
-            socket = udpSocket;
             var sioUdpConnectionReset = -1744830452;
             var inValue = new byte[] { 0 };
             var outValue = new byte[] { 0 };
