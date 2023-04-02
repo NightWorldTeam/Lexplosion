@@ -1,0 +1,107 @@
+﻿<UserControl
+    x:Class="Lexplosion.Gui.Views.CustomControls.Paginator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="60"
+    d:DesignWidth="700"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="Button" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Border"
+                            Background="#303030"
+                            BorderBrush="#202020"
+                            BorderThickness="2"
+                            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Name="tEXTB" TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                        <Border
+                            Background="#303030"
+                            BorderBrush="#202020"
+                            BorderThickness="3"
+                            CornerRadius="6">
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="240,0,240,0" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="40" />
+        </Grid.ColumnDefinitions>
+        <Button
+            Grid.Column="0"
+            Width="35"
+            Height="40"
+            HorizontalAlignment="Left"
+            Command="{Binding PrevPageCommand}"
+            Style="{StaticResource Button}"
+            Visibility="{Binding CanGoBack, Converter={StaticResource ConvertBoolToVisibility}}">
+            <Viewbox Width="10" Height="10">
+                <Path
+                    Data="M28 34 18 24l10-10Z"
+                    Fill="White"
+                    Stretch="Fill" />
+            </Viewbox>
+        </Button>
+        <TextBox
+            x:Name="PageIndexTB"
+            Grid.Column="1"
+            Width="60"
+            Height="40"
+            extension:TextBox.DefaultValue="1"
+            extension:TextBox.OnlyNumeric="Ushort"
+            Background="#131313"
+            Text="{Binding PageIndex, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding TextBoxPageIndexChanged}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <Button
+            Grid.Column="2"
+            Width="35"
+            Height="40"
+            HorizontalAlignment="Right"
+            Command="{Binding NextPageCommand}"
+            Style="{DynamicResource Button}"
+            Visibility="{Binding CanGoNext, Converter={StaticResource ConvertBoolToVisibility}}">
+            <Viewbox Width="10" Height="10">
+                <Path
+                    Data="M20 34V14l10 10Z"
+                    Fill="White"
+                    Stretch="Fill" />
+            </Viewbox>
+        </Button>
+    </Grid>
+</UserControl>

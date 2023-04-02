@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexplosion", "Lexplosion\Lexplosion.csproj", "{4DF9C4D2-E828-456F-872D-622EFD405D44}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6} = {BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexplosion.Core", "Lexplosion.Core\Lexplosion.Core.csproj", "{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DF9C4D2-E828-456F-872D-622EFD405D44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DF9C4D2-E828-456F-872D-622EFD405D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DF9C4D2-E828-456F-872D-622EFD405D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DF9C4D2-E828-456F-872D-622EFD405D44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02D044BB-B998-4F98-84E7-D61E9E43DAD8}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,514 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  Flat ComboBox  -->
+    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <Border
+            Width="{TemplateBinding Width}"
+            Height="{TemplateBinding Height}"
+            Background="{DynamicResource BrandSolidColorBrush}"
+            CornerRadius="6">
+            <Canvas>
+
+                <Viewbox Stretch="Fill">
+                    <Path
+                        x:Name="Arrow"
+                        Width="32"
+                        Height="32"
+                        Margin="6"
+                        Data="M25.3337 4H6.66699C5.60613 4 4.58871 4.42143 3.83857 5.17157C3.08842 5.92172 2.66699 6.93913 2.66699 8V18.6667C2.66699 19.7275 3.08842 20.7449 3.83857 21.4951C4.58871 22.2452 5.60613 22.6667 6.66699 22.6667H14.667V25.3333H9.33366C8.98004 25.3333 8.6409 25.4738 8.39085 25.7239C8.1408 25.9739 8.00033 26.313 8.00033 26.6667C8.00033 27.0203 8.1408 27.3594 8.39085 27.6095C8.6409 27.8595 8.98004 28 9.33366 28H22.667C23.0206 28 23.3598 27.8595 23.6098 27.6095C23.8599 27.3594 24.0003 27.0203 24.0003 26.6667C24.0003 26.313 23.8599 25.9739 23.6098 25.7239C23.3598 25.4738 23.0206 25.3333 22.667 25.3333H17.3337V22.6667H25.3337C26.3945 22.6667 27.4119 22.2452 28.1621 21.4951C28.9122 20.7449 29.3337 19.7275 29.3337 18.6667V8C29.3337 6.93913 28.9122 5.92172 28.1621 5.17157C27.4119 4.42143 26.3945 4 25.3337 4ZM26.667 18.6667C26.667 19.0203 26.5265 19.3594 26.2765 19.6095C26.0264 19.8595 25.6873 20 25.3337 20H6.66699C6.31337 20 5.97423 19.8595 5.72418 19.6095C5.47413 19.3594 5.33366 19.0203 5.33366 18.6667V8C5.33366 7.64638 5.47413 7.30724 5.72418 7.05719C5.97423 6.80714 6.31337 6.66667 6.66699 6.66667H25.3337C25.6873 6.66667 26.0264 6.80714 26.2765 7.05719C26.5265 7.30724 26.667 7.64638 26.667 8V18.6667Z"
+                        Fill="White" />
+                </Viewbox>
+            </Canvas>
+        </Border>
+    </ControlTemplate>
+
+    <Style x:Key="SettingsComboBox" TargetType="{x:Type ComboBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <ToggleButton
+                            Name="ToggleButton"
+                            Grid.Column="2"
+                            ClickMode="Press"
+                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            IsTabStop="False"
+                            Template="{StaticResource ComboBoxToggleButton}" />
+                        <ContentPresenter
+                            Name="ContentSite"
+                            Margin="3,3,23,3"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            IsHitTestVisible="False" />
+                        <!--  None, Fade, Scroll, Slide  -->
+                        <Popup
+                            Name="Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            Placement="Bottom"
+                            PopupAnimation="Scroll">
+                            <Grid
+                                Name="DropDown"
+                                MinWidth="140"
+                                MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                SnapsToDevicePixels="True">
+                                <Border
+                                    x:Name="DropDownBorder"
+                                    Background="#1f1f1f"
+                                    BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                                    BorderThickness="2"
+                                    CornerRadius="5" />
+                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsGrouping" Value="true">
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                        </Trigger>
+                        <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="true">
+                            <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="0" />
+                            <Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0" />
+                        </Trigger>
+                        <Trigger Property="IsEditable" Value="true">
+                            <Setter Property="IsTabStop" Value="false" />
+                            <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="Popup.IsOpen" Value="False" />
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers />
+    </Style>
+
+    <Style x:Key="SettingsComboBoxItem" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="False" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="DemiBold" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border
+                        Name="Border"
+                        Background="Transparent"
+                        SnapsToDevicePixels="true">
+                        <ContentPresenter Margin="3" HorizontalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Default ComboBox  -->
+    <ControlTemplate x:Key="LighterDefaultComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <Border
+            x:Name="Border"
+            Width="{TemplateBinding Width}"
+            Height="{TemplateBinding Height}"
+            Background="#1f1f1f"
+            BorderBrush="#121212"
+            BorderThickness="0"
+            CornerRadius="6">
+            <DockPanel>
+                <ContentPresenter
+                    Margin="10,0,0,0"
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalAlignment="Center"
+                    IsHitTestVisible="False"
+                    TextBlock.FontSize="14" />
+                <Viewbox
+                    Width="24"
+                    Height="20"
+                    Margin="10,0,10,10"
+                    HorizontalAlignment="Right"
+                    Stretch="Fill">
+                    <Path
+                        x:Name="Arrow"
+                        Data="m24 30.75-12-12 2.15-2.15L24 26.5l9.85-9.85L36 18.8Z"
+                        Fill="White"
+                        SnapsToDevicePixels="False" />
+                </Viewbox>
+            </DockPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Arrow" Property="Path.Data" Value="M14.15 30.75 12 28.6l12-12 12 11.95-2.15 2.15L24 20.85Z" />
+                <Setter Property="Path.Fill" Value="#167FFC" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="#252525" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="DarkDefaultComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <Border
+            x:Name="Border"
+            Width="{TemplateBinding Width}"
+            Height="{TemplateBinding Height}"
+            Background="#141414"
+            BorderBrush="#121212"
+            BorderThickness="0"
+            CornerRadius="6">
+            <DockPanel>
+                <ContentPresenter
+                    Margin="10,0,0,0"
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalAlignment="Center"
+                    IsHitTestVisible="False"
+                    TextBlock.FontSize="14" />
+                <Viewbox
+                    Width="24"
+                    Height="20"
+                    Margin="10,0,10,10"
+                    HorizontalAlignment="Right"
+                    Stretch="Fill">
+                    <Path
+                        x:Name="Arrow"
+                        Data="m24 30.75-12-12 2.15-2.15L24 26.5l9.85-9.85L36 18.8Z"
+                        Fill="White"
+                        SnapsToDevicePixels="False" />
+                </Viewbox>
+            </DockPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Arrow" Property="Path.Data" Value="M14.15 30.75 12 28.6l12-12 12 11.95-2.15 2.15L24 20.85Z" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="#161616" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type ComboBox}">
+        <Setter Property="MinWidth" Value="140" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <ToggleButton
+                            Name="ToggleButton"
+                            Grid.Column="2"
+                            HorizontalContentAlignment="Left"
+                            ClickMode="Press"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            Foreground="WhiteSmoke"
+                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            IsTabStop="False"
+                            Template="{StaticResource LighterDefaultComboBoxToggleButton}" />
+
+                        <ContentPresenter VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        <!--  None, Fade, Scroll, Slide  -->
+                        <Popup
+                            Name="Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            Placement="Bottom"
+                            PopupAnimation="Scroll">
+                            <Grid
+                                Name="DropDown"
+                                MinWidth="140"
+                                MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                SnapsToDevicePixels="True">
+
+                                <Border
+                                    x:Name="DropDownBorder"
+                                    Padding="10"
+                                    Background="#1f1f1f"
+                                    CornerRadius="4" />
+
+                                <ScrollViewer Margin="4,10,4,10" SnapsToDevicePixels="True">
+                                    <StackPanel
+                                        IsItemsHost="True"
+                                        KeyboardNavigation.DirectionalNavigation="Contained"
+                                        TextBlock.FontSize="14" />
+                                </ScrollViewer>
+
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="Popup.IsOpen" Value="False" />
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DarkCombobox" TargetType="{x:Type ComboBox}">
+        <Setter Property="MinWidth" Value="140" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <ToggleButton
+                            Name="ToggleButton"
+                            Grid.Column="2"
+                            HorizontalContentAlignment="Left"
+                            ClickMode="Press"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            Foreground="WhiteSmoke"
+                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            IsTabStop="False"
+                            Template="{StaticResource DarkDefaultComboBoxToggleButton}" />
+
+                        <ContentPresenter VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        <!--  None, Fade, Scroll, Slide  -->
+                        <Popup
+                            Name="Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            Placement="Bottom"
+                            PopupAnimation="Scroll">
+                            <Grid
+                                Name="DropDown"
+                                MinWidth="140"
+                                MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                SnapsToDevicePixels="True">
+
+                                <Border
+                                    x:Name="DropDownBorder"
+                                    Padding="10"
+                                    Background="#1f1f1f"
+                                    CornerRadius="4" />
+
+                                <ScrollViewer Margin="4,10,4,10" SnapsToDevicePixels="True">
+                                    <StackPanel
+                                        IsItemsHost="True"
+                                        KeyboardNavigation.DirectionalNavigation="Contained"
+                                        TextBlock.FontSize="14" />
+                                </ScrollViewer>
+
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="Popup.IsOpen" Value="False" />
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="False" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="DemiBold" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border
+                        Name="Border"
+                        Padding="5,2,5,2"
+                        Background="Transparent"
+                        CornerRadius="5"
+                        SnapsToDevicePixels="true">
+                        <DockPanel>
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Margin="3"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                            <Viewbox
+                                x:Name="selectData"
+                                Width="20"
+                                Height="20"
+                                Margin="3,0,0,0"
+                                HorizontalAlignment="Right"
+                                Stretch="Fill"
+                                Visibility="Collapsed">
+                                <Path
+                                    x:Name="Path"
+                                    Data="M21.05 33.1 35.2 18.95l-2.3-2.25-11.85 11.85-6-6-2.25 2.25ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
+                                    Fill="White" />
+                            </Viewbox>
+                        </DockPanel>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="TextElement.Foreground" Value="{DynamicResource BrandSolidColorBrush}" />
+                            <Setter TargetName="Path" Property="Fill" Value="{DynamicResource BrandSolidColorBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="selectData" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsHighlighted" Value="True" />
+                                <Condition Property="IsMouseOver" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="Border" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="TextElement.Foreground" Value="{DynamicResource BrandSolidColorBrush}" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LighterDefaultComboBox" TargetType="{x:Type ComboBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Border>
+                        <Grid>
+                            <ToggleButton
+                                Name="ToggleButton"
+                                Grid.Column="2"
+                                HorizontalContentAlignment="Left"
+                                ClickMode="Press"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                Foreground="#b9b7b7"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                IsTabStop="False"
+                                Template="{StaticResource LighterDefaultComboBoxToggleButton}" />
+                            <ContentPresenter VerticalAlignment="Center" RecognizesAccessKey="True" />
+                            <!--  None, Fade, Scroll, Slide  -->
+                            <Popup
+                                Name="Popup"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                Placement="Bottom"
+                                PopupAnimation="Scroll">
+                                <Grid
+                                    Name="DropDown"
+                                    MinWidth="140"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    SnapsToDevicePixels="True">
+                                    <Border
+                                        x:Name="DropDownBorder"
+                                        Background="#1f1f1f"
+                                        BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                                        BorderThickness="2"
+                                        CornerRadius="2" />
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel
+                                            IsItemsHost="True"
+                                            KeyboardNavigation.DirectionalNavigation="Contained"
+                                            TextBlock.FontSize="14" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="Popup.IsOpen" Value="False" />
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  SimpleStyles: ComboBoxItem  -->
+    <Style x:Key="LighterDefaultComboBoxItem" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="DemiBold" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border Name="Border" SnapsToDevicePixels="true">
+                        <ContentPresenter Margin="3" HorizontalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

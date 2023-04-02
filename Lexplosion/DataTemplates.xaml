@@ -1,0 +1,220 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customcontrols="clr-namespace:Lexplosion.Gui.Views.CustomControls"
+    xmlns:factorymenu="clr-namespace:Lexplosion.Gui.Views.Pages.FactoryMenu"
+    xmlns:modalviews="clr-namespace:Lexplosion.Gui.Views.Pages.ModalViews"
+    xmlns:modalvm="clr-namespace:Lexplosion.Gui.ViewModels.ModalVMs"
+    xmlns:modalvms="clr-namespace:Lexplosion.Gui.ViewModels.ModalVMs"
+    xmlns:pagemm="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu"
+    xmlns:pagemultiplayer="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu.Multiplayer"
+    xmlns:pages="clr-namespace:Lexplosion.Gui.Views.Pages"
+    xmlns:pagesettings="clr-namespace:Lexplosion.Gui.Views.Pages.MainMenu.Settings"
+    xmlns:showcasemenu="clr-namespace:Lexplosion.Gui.ViewModels.ShowCaseMenu"
+    xmlns:showcasepage="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
+    xmlns:styleselectors="clr-namespace:Lexplosion.Gui.StyleSelectors"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
+    xmlns:trayMenu="clr-namespace:Lexplosion.Gui.TrayMenu"
+    xmlns:viewmodels="clr-namespace:Lexplosion.Gui.ViewModels"
+    xmlns:vmcurseforgemarket="clr-namespace:Lexplosion.Gui.ViewModels.CurseforgeMarket"
+    xmlns:vmfactorymenu="clr-namespace:Lexplosion.Gui.ViewModels.FactoryMenu"
+    xmlns:vmmainmenu="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu"
+    xmlns:vmmultiplayer="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu.Multiplayer"
+    xmlns:vmsettings="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu.Settings"
+    xmlns:сonverters="clr-namespace:Lexplosion.Gui.Converters">
+
+    <viewmodels:MainViewModel x:Key="MainVM" />
+
+    <!--  Style Selectors  -->
+    <styleselectors:EvenItemStyleSelector x:Key="EvenItemStyleSelector" />
+
+    <!--  Converters  -->
+    <BooleanToVisibilityConverter x:Key="ConvertBoolToVisibility" />
+    <сonverters:NegativeBooleanToVisibilityConverter x:Key="NegativeConvertBoolToVisibility" />
+    <сonverters:MultiBindingConverter x:Key="MultiBiningConverter" />
+    <сonverters:BytesToBitmapImageConventer x:Key="BytesToBitmapImageConverter" />
+    <сonverters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <сonverters:NotEqualZeroConverter x:Key="NotEqualZeroConverter" />
+    <сonverters:EnumToStringConverter x:Key="EnumToStringConverter" />
+    <сonverters:SolidColorBrushToColorConverter x:Key="SolidColorBrushToColorConverter" />
+    <сonverters:UrlToImageConveter x:Key="UrlToImageConveter" />
+
+    <!--<DataTemplate DataType="{x:Type viewmodels:InstanceFormViewModel}">
+        <customcontrols:InstanceForm  Margin="4,30,30,0"/>
+    </DataTemplate>-->
+
+    <!--  OnlyForEmpty  -->
+    <DataTemplate DataType="{x:Type viewmodels:DevСurtainViewModel}">
+        <pages:DevCurtainView />
+    </DataTemplate>
+
+    <!--  Market  -->
+    <DataTemplate DataType="{x:Type vmcurseforgemarket:CurseforgeMarketViewModel}">
+        <pages:CurseforgeMarketView />
+    </DataTemplate>
+
+    <!--  Auth DataTemplate  -->
+    <DataTemplate DataType="{x:Type viewmodels:AuthViewModel}">
+        <pages:AuthView />
+    </DataTemplate>
+
+    <!--  MainMenu DataTemplate  -->
+    <DataTemplate DataType="{x:Type vmmainmenu:MainMenuViewModel}">
+        <pagemm:MainMenuView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmainmenu:CatalogViewModel}">
+        <pagemm:CatalogView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmainmenu:LibraryViewModel}">
+        <pagemm:LibraryView />
+    </DataTemplate>
+    <!--  MainMenu Settings DataTemplate  -->
+    <DataTemplate DataType="{x:Type vmsettings:GeneralSettingsViewModel}">
+        <pagesettings:GeneralSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmsettings:LanguageSettingsViewModel}">
+        <pagesettings:LanguageSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmsettings:ApperanceSettingsViewModel}">
+        <pagesettings:ApperanceSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmsettings:AboutUsViewModel}">
+        <pagesettings:AboutUsView />
+    </DataTemplate>
+    <!--  MainMenu Multiplayer DataTemplate  -->
+    <DataTemplate DataType="{x:Type vmmultiplayer:GeneralMultiplayerViewModel}">
+        <pagemultiplayer:GeneralMultiplayerView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmultiplayer:FriendsTabViewModel}">
+        <pagemultiplayer:FriendsTabView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmmultiplayer:ChannelTabViewModel}">
+        <pagemultiplayer:ChannelsView />
+    </DataTemplate>
+
+    <!--  InstanceShowCase DataTemplate  -->
+    <DataTemplate DataType="{x:Type showcasemenu:OverviewViewModel}">
+        <showcasepage:OverviewView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodels:GalleryViewModel}">
+        <customcontrols:Gallery />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:InstanceSettingsViewModel}">
+        <showcasepage:InstanceSettingsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:InstanceProfileViewModel}">
+        <showcasepage:InstanceProfileForm />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:ChangelogViewModel}">
+        <showcasepage:ChangelogView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:InstanceMenuViewModel}">
+        <showcasepage:InstanceMenuView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type showcasemenu:InstancePreviousVersionsViewModel}">
+        <showcasepage:InstancePreviousVersionsView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewmodels:TabMenuViewModel}">
+        <pages:TabMenuView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmfactorymenu:FactoryGeneralViewModel}">
+        <factorymenu:FactoryGeneralView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmfactorymenu:FactoryDLCVM}">
+        <factorymenu:FactoryDLCView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:ImportViewModel}">
+        <factorymenu:ImportView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvm:InstanceSharingListViewModel}">
+        <factorymenu:InstanceDistributionListView />
+    </DataTemplate>
+
+
+    <!--  Content for modal  -->
+    <DataTemplate DataType="{x:Type viewmodels:CustomTabsMenuViewModel}">
+        <pages:CustomTabMenu />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvms:ExportViewModel}">
+        <modalviews:ModalExportView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type modalvms:ShareInstanceViewModel}">
+        <modalviews:ModalShareInstanceView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvms:DownloadManagerViewModel}">
+        <modalviews:DownloadManagerView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvms:DialogViewModel}">
+        <modalviews:DialogView />
+    </DataTemplate>
+
+    <tb:TaskbarIcon
+        x:Key="NofityIcon"
+        IconSource="/Assets/images/icons/logo.ico"
+        LeftClickCommand="{Binding Source={StaticResource MainVM}, Path=ShowMainWindowCommand}"
+        PopupActivation="RightClick">
+        <tb:TaskbarIcon.TrayPopup>
+            <Border Padding="10" Background="#161819">
+                <Border.Resources>
+                    <DataTemplate DataType="{x:Type trayMenu:TrayButton}">
+                        <Button Command="{Binding ActionMethodCommand}" Visibility="{Binding IsEnable, Converter={StaticResource ConvertBoolToVisibility}}">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Margin" Value="2" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Border
+                                                    x:Name="Border"
+                                                    Padding="5"
+                                                    Background="Transparent"
+                                                    CornerRadius="5">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Viewbox
+                                                            Width="18"
+                                                            Height="18"
+                                                            Stretch="Fill">
+                                                            <Path
+                                                                x:Name="Icon"
+                                                                Data="{Binding Icon}"
+                                                                Fill="#b8becc"
+                                                                Stroke="#b8becc" />
+                                                        </Viewbox>
+
+                                                        <TextBlock
+                                                            x:Name="TextContent"
+                                                            Width="120"
+                                                            Margin="10,0,0,1"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="14"
+                                                            FontWeight="Medium"
+                                                            Foreground="#b8becc"
+                                                            Text="{Binding Text}"
+                                                            TextWrapping="WrapWithOverflow" />
+                                                    </StackPanel>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Border" Property="Background" Value="#292b2d" />
+                                                        <Setter TargetName="TextContent" Property="Foreground" Value="#ffffff" />
+                                                        <Setter TargetName="Icon" Property="Path.Fill" Value="#ffffff" />
+                                                        <Setter TargetName="Icon" Property="Path.Stroke" Value="#ffffff" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </DataTemplate>
+                </Border.Resources>
+
+                <ItemsControl ItemsSource="{Binding TrayComponents, Source={StaticResource MainVM}}" />
+            </Border>
+        </tb:TaskbarIcon.TrayPopup>
+    </tb:TaskbarIcon>
+</ResourceDictionary>

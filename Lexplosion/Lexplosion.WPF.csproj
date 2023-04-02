@@ -1,0 +1,696 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <LangVersion>preview</LangVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4DF9C4D2-E828-456F-872D-622EFD405D44}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Lexplosion.WPF</RootNamespace>
+    <AssemblyName>Lexplosion.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>false</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0649</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Assets\images\icons\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DiscordRPC, Version=1.0.175.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DiscordRichPresence.1.0.175\lib\net35\DiscordRPC.dll</HintPath>
+    </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="LumiSoft.Net, Version=2.0.4492.11923, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LumiSoft.Net.2.0.4492.11923\lib\LumiSoft.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.7.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.7.0.0\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Tommy, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tommy.3.1.2\lib\net35\Tommy.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs" />
+    <Compile Include="Controls\ChangelogItem\ChangelogItem.cs" />
+    <Compile Include="Controls\Curtains\Curtains.cs" />
+    <Compile Include="Controls\DialogMessage\DialogMessage.cs" />
+    <Compile Include="Controls\DialogMessage\DialogMessageModel.cs" />
+    <Compile Include="Controls\DownloadButton\DownloadButton.cs" />
+    <Compile Include="Controls\DragDropBoard\DragDropBoard.cs" />
+    <Compile Include="Controls\DropdownMenu\DropdownMenu.cs" />
+    <Compile Include="Controls\LoadingBoard\LoadingBoard.cs" />
+    <Compile Include="Controls\MessageModel.cs" />
+    <Compile Include="Controls\ModalControl\Modal.cs" />
+    <Compile Include="Controls\Paginator\Paginator.cs" />
+    <Compile Include="Controls\PlaceholderTextBox\PlaceholderTextBox.cs" />
+    <Compile Include="Controls\SearchBox\SearchBox.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessageContainer.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessageManager.cs" />
+    <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Gui\ButtonConstructor.cs" />
+    <Compile Include="Gui\ControlsExtension\PathExtension.cs" />
+    <Compile Include="Gui\ControlsExtension\ScrollViewer.cs" />
+    <Compile Include="Gui\Converters\AcitivityStatusToColorConverter.cs" />
+    <Compile Include="Gui\Converters\BytesToBitmapImageConventer.cs" />
+    <Compile Include="Gui\Commands\CommandBase.cs" />
+    <Compile Include="Gui\Commands\NavigateCommand.cs" />
+    <Compile Include="Gui\Commands\RelayCommand.cs" />
+    <Compile Include="Gui\Constants.cs" />
+    <Compile Include="Gui\Converters\EnumToStringConverter.cs" />
+    <Compile Include="Gui\Converters\InverseBooleanConverter.cs" />
+    <Compile Include="Gui\ControlsExtension\AsyncObservableCollection.cs" />
+    <Compile Include="Gui\ControlsExtension\PasswordBox.cs" />
+    <Compile Include="Gui\ControlsExtension\TabItem.cs" />
+    <Compile Include="Gui\ControlsExtension\TextBox.cs" />
+    <Compile Include="Gui\ControlsExtension\TreeViewItem.cs" />
+    <Compile Include="Gui\Converters\NotEqualZeroConverter.cs" />
+    <Compile Include="Gui\Converters\SolidColorBrushToColorConverter.cs" />
+    <Compile Include="Gui\Converters\UrlToImageConveter.cs" />
+    <Compile Include="Gui\ModalWindow\IModal.cs" />
+    <Compile Include="Gui\IPaginable.cs" />
+    <Compile Include="Gui\ISubmenu.cs" />
+    <Compile Include="Gui\ModalWindow\ModalVMBase.cs" />
+    <Compile Include="Gui\Models\AuthModel.cs" />
+    <Compile Include="Gui\Models\GameExtensions\ExtensionModel.cs" />
+    <Compile Include="Gui\Models\GameExtensions\IExtensionModel.cs" />
+    <Compile Include="Gui\Models\GameExtensions\ModloaderModel.cs" />
+    <Compile Include="Gui\Models\GameExtensions\OptifineModel.cs" />
+    <Compile Include="Gui\Models\GeneralSettingsModel.cs" />
+    <Compile Include="Gui\Models\InstanceFactory\FactoryDLCModel.cs" />
+    <Compile Include="Gui\Models\InstanceFactory\InstanceFactoryModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\DownloadModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\InstanceFormModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\LaunchModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\LowerButton.cs" />
+    <Compile Include="Gui\Models\InstanceForm\ButtonModel.cs" />
+    <Compile Include="Gui\Models\InstanceForm\UpperButton.cs" />
+    <Compile Include="Gui\Models\MainMenu\CatalogModel.cs" />
+    <Compile Include="Gui\Models\MainMenu\LibraryModel.cs" />
+    <Compile Include="Gui\Models\MainModel.cs" />
+    <Compile Include="Gui\Models\MultiplayerModel.cs" />
+    <Compile Include="Gui\Models\ShowCaseMenu\InstanceProfileModel.cs" />
+    <Compile Include="Gui\Models\ShowCaseMenu\InstanceSettingsModel.cs" />
+    <Compile Include="Gui\Models\ShowCaseMenu\OverviewModel.cs" />
+    <Compile Include="Gui\Converters\MultiBindingConverter.cs" />
+    <Compile Include="Gui\Converters\NegativeBooleanToVisibilityConverter.cs" />
+    <Compile Include="Gui\Player.cs" />
+    <Compile Include="Gui\Stores\NavigationStore.cs" />
+    <Compile Include="Gui\StyleSelectors\EvenItemStyleSelector.cs" />
+    <Compile Include="Gui\SubmenuViewModel.cs" />
+    <Compile Include="Gui\Tab.cs" />
+    <Compile Include="Gui\ViewModels\AuthViewModel.cs" />
+    <Compile Include="Gui\ViewModels\CurseforgeMarket\CfCategory.cs" />
+    <Compile Include="Gui\ViewModels\CurseforgeMarket\CurseforgeMarketViewModel.cs" />
+    <Compile Include="Gui\ViewModels\CurseforgeMarket\DownloadAddonFile.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFactoryMenu\FactoryDLCVM.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFactoryMenu\FactoryGeneralViewModel.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFactoryMenu\ImportViewModel.cs" />
+    <Compile Include="Gui\ViewModels\GalleryViewModel.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFactoryMenu\InstanceDistributionList.cs" />
+    <Compile Include="Gui\ViewModels\InstanceFormViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\CatalogViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Settings\AboutUsViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Settings\ApperanceSettingsViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Settings\GeneralSettingsViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\LibraryViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\MainMenuViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\ChannelTabViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\FriendsTabViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainMenu\Settings\LanguageSettingsViewModel.cs" />
+    <Compile Include="Gui\ViewModels\MainViewModel.cs" />
+    <Compile Include="Gui\ViewModels\CustomTabsMenuViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\DialogViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\DownloadManagerViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ExportBase.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ExportViewModel.cs" />
+    <Compile Include="Gui\ViewModels\DevСurtainViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceDownloadProcess.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceFile.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\InstanceTransferViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\InstanceTransfer\ShareInstanceViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ModalVMs\ModalWindowViewModel.cs" />
+    <Compile Include="Gui\ViewModels\PaginatorViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\ChangelogViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\InstancePreviousVersionsViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceProfileViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceMenuViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\InstanceSettingsViewModel.cs" />
+    <Compile Include="Gui\ViewModels\ShowCaseMenu\OverviewViewModel.cs" />
+    <Compile Include="Gui\ViewModels\TabMenuViewModel.cs" />
+    <Compile Include="Gui\TrayMenu\TrayCompontent.cs" />
+    <Compile Include="Gui\TrayMenu\TrayButton.cs" />
+    <Compile Include="Gui\ViewModels\UserData.cs" />
+    <Compile Include="Gui\Views\CustomControls\Gallery.xaml.cs">
+      <DependentUpon>Gallery.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\CustomControls\InstanceForm.xaml.cs">
+      <DependentUpon>InstanceForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\CustomControls\Paginator.xaml.cs">
+      <DependentUpon>Paginator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\AuthView.xaml.cs">
+      <DependentUpon>AuthView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\CurseforgeMarketView.xaml.cs">
+      <DependentUpon>CurseforgeMarketView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\CustomTabMenu.xaml.cs">
+      <DependentUpon>CustomTabMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\FactoryDLCView.xaml.cs">
+      <DependentUpon>FactoryDLCView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\FactoryGeneralView.xaml.cs">
+      <DependentUpon>FactoryGeneralView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\ImportView.xaml.cs">
+      <DependentUpon>ImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\FactoryMenu\InstanceDistributionListView.xaml.cs">
+      <DependentUpon>InstanceDistributionListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\CatalogView.xaml.cs">
+      <DependentUpon>CatalogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Settings\AboutUsView.xaml.cs">
+      <DependentUpon>AboutUsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Settings\ApperanceSettingsView.xaml.cs">
+      <DependentUpon>ApperanceSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Settings\GeneralSettingsView.xaml.cs">
+      <DependentUpon>GeneralSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\LibraryView.xaml.cs">
+      <DependentUpon>LibraryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\ChannelsView.xaml.cs">
+      <DependentUpon>ChannelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\FriendsTabView.xaml.cs">
+      <DependentUpon>FriendsTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml.cs">
+      <DependentUpon>GeneralMultiplayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\MainMenu\Settings\LanguageSettingsView.xaml.cs">
+      <DependentUpon>LanguageSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ModalViews\DialogView.xaml.cs">
+      <DependentUpon>DialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ModalViews\DownloadManagerView.xaml.cs">
+      <DependentUpon>DownloadManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ModalViews\ModalExportView.xaml.cs">
+      <DependentUpon>ModalExportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\DevCurtainView.xaml.cs">
+      <DependentUpon>DevCurtainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ModalViews\ModalShareInstanceView.xaml.cs">
+      <DependentUpon>ModalShareInstanceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\ChangelogView.xaml.cs">
+      <DependentUpon>ChangelogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstancePreviousVersionsView.xaml.cs">
+      <DependentUpon>InstancePreviousVersionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstanceProfileForm.xaml.cs">
+      <DependentUpon>InstanceProfileForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstanceMenuView.xaml.cs">
+      <DependentUpon>InstanceMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\InstanceSettingsView.xaml.cs">
+      <DependentUpon>InstanceSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\ShowCaseMenu\OverviewView.xaml.cs">
+      <DependentUpon>OverviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Pages\TabMenuView.xaml.cs">
+      <DependentUpon>TabMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Windows\Console.xaml.cs">
+      <DependentUpon>Console.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Windows\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Windows\NotificationWindow.xaml.cs">
+      <DependentUpon>NotificationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Views\Windows\SplashWindow.xaml.cs">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\ColorTools.cs" />
+    <Compile Include="Tools\DynamicStateData.cs" />
+    <Compile Include="Tools\EnumerateExtension.cs" />
+    <Compile Include="Tools\ImageTools.cs" />
+    <Compile Include="Tools\MouseHelper.cs" />
+    <Compile Include="Tools\NativeMethods.cs" />
+    <Compile Include="Tools\ObservableCollectionExtensions.cs" />
+    <Compile Include="Tools\Pointer.cs" />
+    <Compile Include="Tools\RuntimeTools.cs" />
+    <Compile Include="Tools\SocketExtensions.cs" />
+    <Compile Include="Tools\StringExtensions.cs" />
+    <Compile Include="Tools\TaskArgs.cs" />
+    <Compile Include="Tools\RandomExtensions.cs" />
+    <Compile Include="Tools\ResourceGetter.cs" />
+    <Compile Include="Tools\TasksPerfomer.cs" />
+    <Compile Include="Tools\ValuePair.cs" />
+    <Compile Include="VMBase.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Tools\KeySemaphore.cs" />
+    <Compile Include="Main.cs" />
+    <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\langs\en-US.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\langs\ru-RU.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ChangelogItem\ChangelogItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Curtains\Curtains.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DialogMessage\DialogMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DownloadButton\DownloadButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DragDropBoard\DragDropBoard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DropdownMenu\DropdownMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\LoadingBoard\LoadingBoard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ModalControl\Modal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlaceholderTextBox\PlaceholderTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SearchBox\SearchBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ToastMessage\ToastMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DataTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\ComboBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Resources\Defaults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\FrameStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\Iconics.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Resources\ListboxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Resources\StylesDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\TabControlStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Gui\Resources\TextBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\CustomControls\Gallery.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\CustomControls\InstanceForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\CustomControls\Paginator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\AuthView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\CurseforgeMarketView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\CustomTabMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\FactoryDLCView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\FactoryGeneralView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\FactoryMenu\InstanceDistributionListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\CatalogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Settings\AboutUsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Settings\ApperanceSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Settings\GeneralSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\LibraryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\ChannelsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\FriendsTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\MainMenu\Settings\LanguageSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ModalViews\DialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ModalViews\DownloadManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ModalViews\ModalExportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\DevCurtainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ModalViews\ModalShareInstanceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\ChangelogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\InstancePreviousVersionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\InstanceProfileForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\InstanceMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\InstanceSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\ShowCaseMenu\OverviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Pages\TabMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Windows\Console.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Windows\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Windows\NotificationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Gui\Views\Windows\SplashWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Resource Include="Assets\fonts\Arkhip.ttf" />
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
+    <None Include="App.config" />
+    <Resource Include="Assets\fonts\PassDots.ttf" />
+    <Resource Include="Assets\fonts\SFProDisplay.otf" />
+    <None Include="DLL\DiscordRPC.zip" />
+    <None Include="DLL\LumiSoft.Net.zip" />
+    <None Include="DLL\NewtonsoftJson.zip" />
+    <None Include="DLL\TaskbarNotification.zip" />
+    <None Include="DLL\Tommy.zip" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\background\authBG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\background\mainBG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\logo.ico" />
+    <None Include="DLL\Compression.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\non_image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\images\icons\countries\en-US.png" />
+    <Resource Include="Assets\images\icons\countries\ru-RU.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj">
+      <Project>{29daf4bb-730b-4a91-9036-6a565aad2747}</Project>
+      <Name>Lexplosion.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net461.targets" Condition="Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net461.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net461.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net461.targets'))" />
+  </Target>
+</Project>
