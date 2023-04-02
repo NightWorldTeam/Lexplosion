@@ -4,16 +4,20 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{29DAF4BB-730B-4A91-9036-6A565AAD2747}</ProjectGuid>
+    <ProjectGuid>{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lexplosion.Core</RootNamespace>
     <AssemblyName>Lexplosion.Core</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>10.0</LangVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,89 +35,131 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LumiSoft.Net, Version=2.0.4492.11923, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LumiSoft.Net.2.0.4492.11923\lib\LumiSoft.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tommy, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tommy.3.1.2\lib\net35\Tommy.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileSystem\CurseForgeInstaller.cs" />
-    <Compile Include="FileSystem\DataFilesManager.cs" />
-    <Compile Include="FileSystem\FileDistributor.cs" />
-    <Compile Include="FileSystem\FileReceiver.cs" />
-    <Compile Include="FileSystem\InstanceInstaller.cs" />
-    <Compile Include="FileSystem\ModrinthInstaller.cs" />
-    <Compile Include="FileSystem\NightWorldInstaller.cs" />
-    <Compile Include="FileSystem\WithDirectory.cs" />
-    <Compile Include="Management\Addons\AddonDependencie.cs" />
-    <Compile Include="Management\Addons\CurseforgeAddon.cs" />
-    <Compile Include="Management\Addons\InstanceAddon.cs" />
-    <Compile Include="Management\Addons\IPrototypeAddon.cs" />
-    <Compile Include="Management\Addons\ModrinthAddon.cs" />
-    <Compile Include="Management\Authentication\Authentication.cs" />
-    <Compile Include="Management\Authentication\IAuthHandler.cs" />
-    <Compile Include="Management\Authentication\LocalAuth.cs" />
-    <Compile Include="Management\Authentication\MicrosoftAuth.cs" />
-    <Compile Include="Management\Authentication\MojangAuth.cs" />
-    <Compile Include="Management\Authentication\NightWorldAuth.cs" />
-    <Compile Include="Management\CategoriesManager.cs" />
-    <Compile Include="Management\Delegates.cs" />
-    <Compile Include="Management\InstalledAddons.cs" />
-    <Compile Include="Management\Installers\CurseforgeInstallManager.cs" />
-    <Compile Include="Management\Installers\IInstallManager.cs" />
-    <Compile Include="Management\Installers\LocalInstallManager.cs" />
-    <Compile Include="Management\Installers\ModrinthInstallManager.cs" />
-    <Compile Include="Management\Installers\NightworldInstallManager.cs" />
-    <Compile Include="Management\Instances\CurseforgeInstance.cs" />
-    <Compile Include="Management\Instances\InstanceClient.cs" />
-    <Compile Include="Management\Instances\LocalInstance.cs" />
-    <Compile Include="Management\Instances\ModrinthInstance.cs" />
-    <Compile Include="Management\Instances\NightworldInstance.cs" />
-    <Compile Include="Management\Instances\Objects.cs" />
-    <Compile Include="Management\Instances\PrototypeInstance.cs" />
-    <Compile Include="Management\JavaChecker.cs" />
-    <Compile Include="Management\LaunchGame.cs" />
-    <Compile Include="Management\Player.cs" />
-    <Compile Include="Management\User.cs" />
-    <Compile Include="Management\Utils.cs" />
-    <Compile Include="Network\ClientBridge.cs" />
-    <Compile Include="Network\CommandReceiver.cs" />
-    <Compile Include="Network\DataClient.cs" />
-    <Compile Include="Network\DataServer.cs" />
-    <Compile Include="Network\Enums.cs" />
-    <Compile Include="Network\Gateway.cs" />
-    <Compile Include="Network\IClientTransmitter.cs" />
-    <Compile Include="Network\IServerTransmitter.cs" />
-    <Compile Include="Network\NetworkClient.cs" />
-    <Compile Include="Network\NetworkServer.cs" />
-    <Compile Include="Network\ServerBridge.cs" />
-    <Compile Include="Network\SMP\SmpClient.cs" />
-    <Compile Include="Network\SMP\SmpServer.cs" />
-    <Compile Include="Network\TURN\TurnBridgeClient.cs" />
-    <Compile Include="Network\TURN\TurnBridgeServer.cs" />
-    <Compile Include="Network\Values.cs" />
-    <Compile Include="Network\WebSockets\WebSocket.cs" />
-    <Compile Include="Network\WebSockets\WebSocketClient.cs" />
-    <Compile Include="Network\WebSockets\WebSocketServer.cs" />
-    <Compile Include="Network\Web\CurseforgeApi.cs" />
-    <Compile Include="Network\Web\ModrinthApi.cs" />
-    <Compile Include="Network\Web\MojangApi.cs" />
-    <Compile Include="Network\Web\NightWorldApi.cs" />
-    <Compile Include="Network\Web\Objects.cs" />
-    <Compile Include="Network\Web\ToServer.cs" />
-    <Compile Include="Objects.cs" />
-    <Compile Include="Objects\CommonClientData.cs" />
-    <Compile Include="Objects\Curseforge.cs" />
-    <Compile Include="Objects\Modrinth.cs" />
-    <Compile Include="Objects\Nightworld.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Logic\FileSystem\CurseForgeInstaller.cs" />
+    <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
+    <Compile Include="Logic\FileSystem\FileDistributor.cs" />
+    <Compile Include="Logic\FileSystem\FileReceiver.cs" />
+    <Compile Include="Logic\FileSystem\InstanceInstaller.cs" />
+    <Compile Include="Logic\FileSystem\ModrinthInstaller.cs" />
+    <Compile Include="Logic\FileSystem\NightWorldInstaller.cs" />
+    <Compile Include="Logic\FileSystem\WithDirectory.cs" />
+    <Compile Include="Logic\Management\Addons\AddonDependencie.cs" />
+    <Compile Include="Logic\Management\Addons\CurseforgeAddon.cs" />
+    <Compile Include="Logic\Management\Addons\InstanceAddon.cs" />
+    <Compile Include="Logic\Management\Addons\IPrototypeAddon.cs" />
+    <Compile Include="Logic\Management\Addons\ModrinthAddon.cs" />
+    <Compile Include="Logic\Management\Authentication\Authentication.cs" />
+    <Compile Include="Logic\Management\Authentication\IAuthHandler.cs" />
+    <Compile Include="Logic\Management\Authentication\LocalAuth.cs" />
+    <Compile Include="Logic\Management\Authentication\MicrosoftAuth.cs" />
+    <Compile Include="Logic\Management\Authentication\MojangAuth.cs" />
+    <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
+    <Compile Include="Logic\Management\CategoriesManager.cs" />
+    <Compile Include="Logic\Management\Delegates.cs" />
+    <Compile Include="Logic\Management\InstalledAddons.cs" />
+    <Compile Include="Logic\Management\Installers\CurseforgeInstallManager.cs" />
+    <Compile Include="Logic\Management\Installers\IInstallManager.cs" />
+    <Compile Include="Logic\Management\Installers\LocalInstallManager.cs" />
+    <Compile Include="Logic\Management\Installers\ModrinthInstallManager.cs" />
+    <Compile Include="Logic\Management\Installers\NightworldInstallManager.cs" />
+    <Compile Include="Logic\Management\Instances\CurseforgeInstance.cs" />
+    <Compile Include="Logic\Management\Instances\InstanceClient.cs" />
+    <Compile Include="Logic\Management\Instances\LocalInstance.cs" />
+    <Compile Include="Logic\Management\Instances\ModrinthInstance.cs" />
+    <Compile Include="Logic\Management\Instances\NightworldInstance.cs" />
+    <Compile Include="Logic\Management\Instances\Objects.cs" />
+    <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
+    <Compile Include="Logic\Management\JavaChecker.cs" />
+    <Compile Include="Logic\Management\LaunchGame.cs" />
+    <Compile Include="Logic\Management\Player.cs" />
+    <Compile Include="Logic\Management\User.cs" />
+    <Compile Include="Logic\Management\Utils.cs" />
+    <Compile Include="Logic\Network\ClientBridge.cs" />
+    <Compile Include="Logic\Network\CommandReceiver.cs" />
+    <Compile Include="Logic\Network\DataClient.cs" />
+    <Compile Include="Logic\Network\DataServer.cs" />
+    <Compile Include="Logic\Network\Enums.cs" />
+    <Compile Include="Logic\Network\Gateway.cs" />
+    <Compile Include="Logic\Network\IClientTransmitter.cs" />
+    <Compile Include="Logic\Network\IServerTransmitter.cs" />
+    <Compile Include="Logic\Network\NetworkClient.cs" />
+    <Compile Include="Logic\Network\NetworkServer.cs" />
+    <Compile Include="Logic\Network\ServerBridge.cs" />
+    <Compile Include="Logic\Network\SMP\SmpClient.cs" />
+    <Compile Include="Logic\Network\SMP\SmpServer.cs" />
+    <Compile Include="Logic\Network\TURN\TurnBridgeClient.cs" />
+    <Compile Include="Logic\Network\TURN\TurnBridgeServer.cs" />
+    <Compile Include="Logic\Network\Values.cs" />
+    <Compile Include="Logic\Network\WebSockets\WebSocket.cs" />
+    <Compile Include="Logic\Network\WebSockets\WebSocketClient.cs" />
+    <Compile Include="Logic\Network\WebSockets\WebSocketServer.cs" />
+    <Compile Include="Logic\Network\Web\CurseforgeApi.cs" />
+    <Compile Include="Logic\Network\Web\ModrinthApi.cs" />
+    <Compile Include="Logic\Network\Web\MojangApi.cs" />
+    <Compile Include="Logic\Network\Web\NightWorldApi.cs" />
+    <Compile Include="Logic\Network\Web\Objects.cs" />
+    <Compile Include="Logic\Network\Web\ToServer.cs" />
+    <Compile Include="Logic\Objects.cs" />
+    <Compile Include="Logic\Objects\CommonClientData.cs" />
+    <Compile Include="Logic\Objects\Curseforge.cs" />
+    <Compile Include="Logic\Objects\Modrinth.cs" />
+    <Compile Include="Logic\Objects\Nightworld.cs" />
+    <Compile Include="Logic\Settings.cs" />
+    <Compile Include="Logic\Сryptography.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="Сryptography.cs" />
+    <Compile Include="Tools\DynamicStateData.cs" />
+    <Compile Include="Tools\ImageTools.cs" />
+    <Compile Include="Tools\KeySemaphore.cs" />
+    <Compile Include="Tools\NativeMethods.cs" />
+    <Compile Include="Tools\Pointer.cs" />
+    <Compile Include="Tools\RandomExtensions.cs" />
+    <Compile Include="Tools\RuntimeTools.cs" />
+    <Compile Include="Tools\SocketExtensions.cs" />
+    <Compile Include="Tools\StringExtensions.cs" />
+    <Compile Include="Tools\TaskArgs.cs" />
+    <Compile Include="Tools\TasksPerfomer.cs" />
+    <Compile Include="Tools\ValuePair.cs" />
+    <Compile Include="VMBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.NETFramework.ReferenceAssemblies.net472.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net472.targets" Condition="Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net472.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net472.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net472.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net472.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NETFramework.ReferenceAssemblies.net472.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net472.targets'))" />
+  </Target>
 </Project>

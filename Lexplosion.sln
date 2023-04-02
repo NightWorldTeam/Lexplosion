@@ -4,8 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexplosion", "Lexplosion\Lexplosion.csproj", "{4DF9C4D2-E828-456F-872D-622EFD405D44}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6} = {BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoxplosionCore", "..\LoxplosionCore\LoxplosionCore\LoxplosionCore.csproj", "{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexplosion.Core", "Lexplosion.Core\Lexplosion.Core.csproj", "{BD1126B1-ABBE-424F-BF0C-F6B3DC107BF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -41,8 +41,8 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
                 var dialog = new DialogViewModel();
                 var message = ResourceGetter.GetString("changeLanguageWariningMessage");
 
-                dialog.ShowDialog(ResourceGetter.GetString("langChange"), message, () => Runtime.ChangeCurrentLanguage(lang.Id, true));
-                Runtime.ChangeCurrentLanguage(lang.Id, false);
+                dialog.ShowDialog(ResourceGetter.GetString("langChange"), message, () => RuntimeApp.ChangeCurrentLanguage(lang.Id, true));
+                RuntimeApp.ChangeCurrentLanguage(lang.Id, false);
             }));
         }
 
@@ -63,11 +63,11 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
 
         public LanguageSettingsViewModel()
         {
-            Languages = new LanguageModel[Runtime.AvaliableLanguages.Length];
+            Languages = new LanguageModel[RuntimeApp.AvaliableLanguages.Length];
 
-            for (var i = 0; i < Runtime.AvaliableLanguages.Length; i++)
+            for (var i = 0; i < RuntimeApp.AvaliableLanguages.Length; i++)
             {
-                Languages[i] = new LanguageModel(Runtime.AvaliableLanguages[i]);
+                Languages[i] = new LanguageModel(RuntimeApp.AvaliableLanguages[i]);
             }
         }
     }

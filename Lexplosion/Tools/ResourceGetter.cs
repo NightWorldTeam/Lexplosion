@@ -37,7 +37,7 @@ namespace Lexplosion.Tools
             try
             {
                 var d = new ResourceDictionary();
-                d.Source = new Uri(Runtime.LangPath + "en-US.xaml");
+                d.Source = new Uri(RuntimeApp.LangPath + "en-US.xaml");
                 return (string)d[key];
             }
             catch 

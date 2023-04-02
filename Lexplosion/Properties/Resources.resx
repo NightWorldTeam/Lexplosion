@@ -124,6 +124,9 @@
   <data name="DiscordRPC" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DiscordRPC.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Lexplosion_Core" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bin\Debug\Lexplosion.Core.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="LumiSoft_Net" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LumiSoft.Net.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

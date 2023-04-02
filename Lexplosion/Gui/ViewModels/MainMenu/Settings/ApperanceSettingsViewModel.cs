@@ -22,7 +22,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         {
             get => _changeColorCommand ?? (_changeColorCommand = new RelayCommand(obj =>
             {
-                Runtime.ChangeColorToColor(AccentColor);
+                RuntimeApp.ChangeColorToColor(AccentColor);
             }));
         }
 
@@ -30,7 +30,7 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         {
             AccentColor = color;
             AccentColorBrush = new SolidColorBrush(AccentColor);
-            IsSelected = AccentColor == Runtime.CurrentAccentColor;
+            IsSelected = AccentColor == RuntimeApp.CurrentAccentColor;
         }
     }
 
@@ -40,10 +40,10 @@ namespace Lexplosion.Gui.ViewModels.MainMenu.Settings
         public AccentColorModel[] AccentColors { get; }
         public ApperanceSettingsViewModel()
         {
-            AccentColors = new AccentColorModel[Runtime.AccentColors.Length];
+            AccentColors = new AccentColorModel[RuntimeApp.AccentColors.Length];
             for (var i = 0; i < AccentColors.Length; i++)
             {
-                AccentColors[i] = new AccentColorModel(Runtime.AccentColors[i]);
+                AccentColors[i] = new AccentColorModel(RuntimeApp.AccentColors[i]);
             }
         }
     }

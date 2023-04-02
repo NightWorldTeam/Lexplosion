@@ -132,7 +132,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _closeCommand ?? (_closeCommand = new RelayCommand(obj =>
             {
-                Runtime.Exit();
+                RuntimeApp.Exit();
                 InitTrayComponents();
             }));
         }
@@ -164,7 +164,7 @@ namespace Lexplosion.Gui.ViewModels
         {
             get => _showMainWindowCommand ?? (_showMainWindowCommand = new RelayCommand(obj =>
             {
-                Runtime.ShowMainWindow();
+                RuntimeApp.ShowMainWindow();
                 InitTrayComponents();
             }));
         }
@@ -189,7 +189,7 @@ namespace Lexplosion.Gui.ViewModels
 
             DownloadManager = new DownloadManagerViewModel();
 
-            Runtime.TrayMenuElementClicked += InitTrayComponents;
+            RuntimeApp.TrayMenuElementClicked += InitTrayComponents;
 
             InitTrayComponents();
         }
@@ -223,7 +223,7 @@ namespace Lexplosion.Gui.ViewModels
                     }
 
                     MainMenuVM.OpenModpackPage(viewModel);
-                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+                    NativeMethods.ShowProcessWindows(RuntimeApp.CurrentProcess.MainWindowHandle);
                 }
             };
         }
@@ -262,11 +262,11 @@ namespace Lexplosion.Gui.ViewModels
                 if (instanceFormViewModel != null)
                     TrayComponents.Add(new TrayButton(0, ResourceGetter.GetString("closeInstance"), ResourceGetter.GetString("ExtensionOff"), instanceFormViewModel.CloseInstance) { IsEnable = Model.IsInstanceRunning });
 
-                TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
-                TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
+                TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), RuntimeApp.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
+                TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), RuntimeApp.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
                 TrayComponents.Add(new TrayButton(3, ResourceGetter.GetString("rebootOnlineGame"), ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserData.IsNightWorldAccount });
                 TrayComponents.Add(new TrayButton(4, ResourceGetter.GetString("contactSupport"), ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
-                TrayComponents.Add(new TrayButton(5, ResourceGetter.GetString("close"), ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(5, ResourceGetter.GetString("close"), ResourceGetter.GetString("CloseCycle"), RuntimeApp.KillApp) { IsEnable = true });
             });
         }
 
@@ -276,11 +276,11 @@ namespace Lexplosion.Gui.ViewModels
             {
                 TrayComponents.Clear();
 
-                TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), Runtime.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
-                TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), Runtime.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
+                TrayComponents.Add(new TrayButton(1, ResourceGetter.GetString("trayHideLauncher"), ResourceGetter.GetString("SubtitlesOff"), RuntimeApp.CloseMainWindow) { IsEnable = App.Current.MainWindow != null });
+                TrayComponents.Add(new TrayButton(2, ResourceGetter.GetString("maximizeLauncher"), ResourceGetter.GetString("AspectRatio"), RuntimeApp.ShowMainWindow) { IsEnable = App.Current.MainWindow == null });
                 TrayComponents.Add(new TrayButton(3, ResourceGetter.GetString("rebootOnlineGame"), ResourceGetter.GetString("Refresh"), LaunchGame.RebootOnlineGame) { IsEnable = UserData.IsNightWorldAccount });
                 TrayComponents.Add(new TrayButton(4, ResourceGetter.GetString("contactSupport"), ResourceGetter.GetString("ContactSupport"), ContentSupport) { IsEnable = true });
-                TrayComponents.Add(new TrayButton(5, ResourceGetter.GetString("close"), ResourceGetter.GetString("CloseCycle"), Runtime.KillApp) { IsEnable = true });
+                TrayComponents.Add(new TrayButton(5, ResourceGetter.GetString("close"), ResourceGetter.GetString("CloseCycle"), RuntimeApp.KillApp) { IsEnable = true });
             });
         }
 

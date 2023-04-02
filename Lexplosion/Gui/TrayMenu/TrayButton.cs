@@ -25,7 +25,7 @@ namespace Lexplosion.Gui.TrayMenu
             get => _actionMethodCommand ?? (_actionMethodCommand = new RelayCommand(obj =>
             {
                 _actionMethod?.Invoke();
-                Runtime.TrayMenuElementClickExecute();
+                RuntimeApp.TrayMenuElementClickExecute();
             }));
         }
 

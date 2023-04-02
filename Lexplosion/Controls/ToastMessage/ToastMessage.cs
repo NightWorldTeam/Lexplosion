@@ -45,7 +45,7 @@ namespace Lexplosion.Controls
                 var newValue = (TimeSpan)e.NewValue;
                 if (newValue.TotalMilliseconds != TimeSpan.MaxValue.TotalMilliseconds)
                 {
-                    Lexplosion.Runtime.TaskRun(() =>
+                    Runtime.TaskRun(() =>
                     {
                         Thread.Sleep((Int32)newValue.TotalMilliseconds);
 

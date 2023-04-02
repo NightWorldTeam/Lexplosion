@@ -33,7 +33,7 @@ using ColorConverter = System.Windows.Media.ColorConverter;
 
 namespace Lexplosion
 {
-    static partial class Runtime
+    static class RuntimeApp
     {
         private static App app = new App();
         private static SplashWindow _splashWindow;

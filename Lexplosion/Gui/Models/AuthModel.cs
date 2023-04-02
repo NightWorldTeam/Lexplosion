@@ -249,7 +249,7 @@ namespace Lexplosion.Gui.Models
         {
             var authCode = _authentication.Auth(_accountType, "", ManualInputedMicrosoftData, true);
             PerformAuthCode(authCode);
-            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+            NativeMethods.ShowProcessWindows(RuntimeApp.CurrentProcess.MainWindowHandle);
         }
 
         #endregion Public & Protected Methods
@@ -288,7 +288,7 @@ namespace Lexplosion.Gui.Models
                 return;
             var authCode = _authentication.Auth(_accountType, "", microsoftData, true);
             PerformAuthCode(authCode);
-            NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
+            NativeMethods.ShowProcessWindows(RuntimeApp.CurrentProcess.MainWindowHandle);
         }
 
         private void PerformAuthCode(AuthCode authCode)
