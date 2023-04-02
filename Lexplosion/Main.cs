@@ -139,6 +139,12 @@ namespace Lexplosion
 
         private static void InitializedSystem()
         {
+            app.Resources["BrandSolidColorBrush"] = new SolidColorBrush(Color.FromRgb(22, 127, 252));
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Controls/Controls.xaml")
+            });
+
             app.Dispatcher.Invoke(delegate ()
             {
                 app.Exit += Runtime.BeforeExit;
@@ -408,10 +414,6 @@ namespace Lexplosion
             app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "ComboBoxStyles.xaml")
-            });
-            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri("pack://application:,,,/Controls/Controls.xaml")
             });
             app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
