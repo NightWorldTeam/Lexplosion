@@ -297,10 +297,7 @@ namespace Lexplosion.Logic.Management
 
                     if (!gameVisible)
                     {
-                        //App.Current.Dispatcher.Invoke(delegate ()
-                        //{
-                        //    ComplitedLaunch(_instanceId, false);
-                        //});
+                        ComplitedLaunch(_instanceId, false);
                     }
 
                     _classInstance = null;
