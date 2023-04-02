@@ -11,12 +11,6 @@ using Lexplosion.Logic.Network.WebSockets;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 
-/*
- * Лаунчер Lexplosion. Разработано NightWorld Team.
- * Никакие права не защищены.
- * Главный исполняемый файл лаунчера. Здесь людей ебут
- */
-
 namespace Lexplosion
 {
     static partial class Runtime
@@ -158,11 +152,11 @@ namespace Lexplosion
         /// </summary>
         public static void Exit()
         {
-            lock (locker)
+            lock (_locker)
             {
                 _inExited = true;
 
-                if (importantThreads > 0)
+                if (_importantThreads > 0)
                 {
                     ПереходВРежимЗавершения?.Invoke();
                 }
@@ -170,16 +164,16 @@ namespace Lexplosion
 
             TaskRun(delegate ()
             {
-                waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
+                _waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
                                           // проверяем было ли закрытие отменено
                 if (_exitIsCanceled)
                 {
                     // снова блочим waitingClosing, если сохранилась приоритетная задача, ибо метод CancelExit ее разлочил
-                    lock (locker)
+                    lock (_locker)
                     {
-                        if (importantThreads > 0)
+                        if (_importantThreads > 0)
                         {
-                            waitingClosing.Reset();
+                            _waitingClosing.Reset();
                         }
                     }
 
@@ -202,12 +196,12 @@ namespace Lexplosion
 
         public static void CancelingExit()
         {
-            lock (locker)
+            lock (_locker)
             {
                 if (_inExited)
                 {
                     _exitIsCanceled = true;
-                    waitingClosing.Set();
+                    _waitingClosing.Set();
                 }
             }
         }

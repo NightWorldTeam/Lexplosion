@@ -167,7 +167,6 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>powershell Compress-Archive "$(TargetPath)" "$(SolutionDir)DLL\Lexplosion.Core.zip" -Force
-copy "$(SolutionDir)DLL\Lexplosion.Core.zip" "$(SolutionDir)\Lexplosion\Resources\Lexplosion.Core.zip"</PostBuildEvent>
+    <PostBuildEvent>powershell Compress-Archive "$(TargetPath)" "$(SolutionDir)DLL\Lexplosion.Core.zip" -Force</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -8,19 +8,19 @@ namespace Lexplosion
 {
     public static partial class Runtime
     {
-        private static int importantThreads = 0;
-        private static ManualResetEvent waitingClosing = new ManualResetEvent(true);
-        private static object locker = new object();
+        private static int _importantThreads = 0;
+        private static ManualResetEvent _waitingClosing = new ManualResetEvent(true);
+        private static object _locker = new object();
 
         /// <summary>
         /// Добавляет приоритетную задачу. При выключении лаунчер будет ждать завершения всех приоритетных задач.
         /// </summary>
         public static void AddImportantTask()
         {
-            lock (locker)
+            lock (_locker)
             {
-                importantThreads++;
-                waitingClosing.Reset();
+                _importantThreads++;
+                _waitingClosing.Reset();
             }
         }
 
@@ -29,12 +29,12 @@ namespace Lexplosion
         /// </summary>
         public static void RemoveImportantTask()
         {
-            lock (locker)
+            lock (_locker)
             {
-                importantThreads--;
-                if (importantThreads == 0)
+                _importantThreads--;
+                if (_importantThreads == 0)
                 {
-                    waitingClosing.Set();
+                    _waitingClosing.Set();
                 }
             }
         }

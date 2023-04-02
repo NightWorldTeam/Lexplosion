@@ -140,10 +140,7 @@ namespace Lexplosion
         private static void InitializedSystem()
         {
             app.Resources["BrandSolidColorBrush"] = new SolidColorBrush(Color.FromRgb(22, 127, 252));
-            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri("pack://application:,,,/Controls/Controls.xaml")
-            });
+            MainStylesInit();
 
             app.Dispatcher.Invoke(delegate ()
             {
@@ -340,45 +337,8 @@ namespace Lexplosion
             }
         }
 
-        /// <summary>
-        /// Иницализация стилей приложения.
-        /// </summary>
-        private static void StylesInit()
+        private static void MainStylesInit()
         {
-            var colorDict = new ResourceDictionary() { Source = new Uri(ResourcePath + "Colors.xaml") };
-
-            var i = 0;
-            var isRightColor = false;
-            var accentColorsList = new List<Color>();
-            foreach (var resourceKey in colorDict.Keys)
-            {
-                var strResourceKey = (String)resourceKey;
-                if (strResourceKey.Contains("Accent"))
-                {
-                    var color = (Color)colorDict[resourceKey];
-                    accentColorsList.Add(color);
-                    try
-                    {
-                        if (GlobalData.GeneralSettings.AccentColor.Length == 7 && !isRightColor)
-                            isRightColor = color.ToString() == ((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor)).ToString();
-                    }
-                    catch { }
-                    i++;
-                }
-            }
-            AccentColors = accentColorsList.ToArray();
-
-            app.Resources.MergedDictionaries.Add(colorDict);
-
-            if (GlobalData.GeneralSettings.AccentColor.Length == 0 || !isRightColor)
-            {
-                ChangeColorToColor((Color)app.Resources["ActivityColor"]);
-            }
-            else
-            {
-                ChangeColorToColor((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor));
-            }
-
             app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
                 Source = new Uri(ResourcePath + "Fonts.xaml")
@@ -417,8 +377,53 @@ namespace Lexplosion
             });
             app.Resources.MergedDictionaries.Add(new ResourceDictionary()
             {
+                Source = new Uri("pack://application:,,,/Controls/Controls.xaml")
+            });
+
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
                 Source = new Uri("pack://application:,,,/DataTemplates.xaml")
             });
+        }
+
+        /// <summary>
+        /// Иницализация стилей приложения.
+        /// </summary>
+        private static void StylesInit()
+        {
+            var colorDict = new ResourceDictionary() { Source = new Uri(ResourcePath + "Colors.xaml") };
+
+            var i = 0;
+            var isRightColor = false;
+            var accentColorsList = new List<Color>();
+            foreach (var resourceKey in colorDict.Keys)
+            {
+                var strResourceKey = (String)resourceKey;
+                if (strResourceKey.Contains("Accent"))
+                {
+                    var color = (Color)colorDict[resourceKey];
+                    accentColorsList.Add(color);
+                    try
+                    {
+                        if (GlobalData.GeneralSettings.AccentColor.Length == 7 && !isRightColor)
+                            isRightColor = color.ToString() == ((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor)).ToString();
+                    }
+                    catch { }
+                    i++;
+                }
+            }
+            AccentColors = accentColorsList.ToArray();
+
+            app.Resources.MergedDictionaries.Add(colorDict);
+
+            if (GlobalData.GeneralSettings.AccentColor.Length == 0 || !isRightColor)
+            {
+                ChangeColorToColor((Color)app.Resources["ActivityColor"]);
+            }
+            else
+            {
+                ChangeColorToColor((Color)ColorConverter.ConvertFromString(GlobalData.GeneralSettings.AccentColor));
+            }
         }
 
         public static void ChangeColorToColor(Color color)
