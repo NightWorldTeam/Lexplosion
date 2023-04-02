@@ -34,7 +34,7 @@ namespace Lexplosion.Logic.Network.WebSockets
 
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

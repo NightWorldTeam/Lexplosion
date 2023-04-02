@@ -401,7 +401,7 @@ namespace Lexplosion.Logic.FileSystem
                             };
 
                             int count = 0;
-                            ValuePair<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
+                            SetValues<InstalledAddonInfo, DownloadAddonRes> result = CurseforgeApi.DownloadAddon(addonInfo, file.fileID, "/instances/" + instanceId + "/", taskArgs);
 
                             while (count < 4 && result.Value2 != DownloadAddonRes.Successful && !cancelToken.IsCancellationRequested)
                             {

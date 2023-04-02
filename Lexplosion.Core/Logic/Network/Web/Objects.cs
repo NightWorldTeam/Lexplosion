@@ -61,7 +61,7 @@ namespace Lexplosion.Logic.Network
         public AuthCode Status;
         public string Login;
         public string UUID;
-        public string AccesToken;        
+        public string AccesToken;
     }
 
     public class NwAuthResult : AuthResult
@@ -71,7 +71,7 @@ namespace Lexplosion.Logic.Network
         public string AccessID;
     }
 
-    public class MojangAuthResult: AuthResult
+    public class MojangAuthResult : AuthResult
     {
         public string ClientToken;
     }

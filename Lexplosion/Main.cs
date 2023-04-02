@@ -216,9 +216,9 @@ namespace Lexplosion
             var discordClient = InitDiscordApp();
 
             //подписываемся на эвент открытия второй копии лаунчера
-            CommandReceiver.LexplosionOpened += ShowMainWindow;
+            CommandReceiver.OnLexplosionOpened += ShowMainWindow;
 
-            LaunchGame.GameStartedEvent += delegate (LaunchGame gameManager) //подписываемся на эвент запуска игры
+            LaunchGame.OnGameStarted += delegate (LaunchGame gameManager) //подписываемся на эвент запуска игры
             {
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то скрывеам главное окно
                 if (GlobalData.GeneralSettings.IsHiddenMode == true)
@@ -241,7 +241,7 @@ namespace Lexplosion
             LaunchGame activeGameManager = null;
 
             // подписываемся на запуск игры до запуска окна
-            LaunchGame.GameStartEvent += (LaunchGame gameManager) =>
+            LaunchGame.OnGameProcessStarted += (LaunchGame gameManager) =>
             {
                 activeGameManager = gameManager;
 
@@ -251,7 +251,7 @@ namespace Lexplosion
                 }
             };
 
-            LaunchGame.GameStopEvent += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
+            LaunchGame.OnGameStoped += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
             {
                 activeGameManager = null;
 

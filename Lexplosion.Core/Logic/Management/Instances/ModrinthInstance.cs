@@ -5,11 +5,7 @@ using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -71,7 +67,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 catch { }
                             }
                         }
-                    });  
+                    });
                 }
 
                 perfomer.WaitEnd();

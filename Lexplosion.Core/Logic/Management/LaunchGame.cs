@@ -40,15 +40,15 @@ namespace Lexplosion.Logic.Management
         /// <summary>
         /// Выполняется при запуске процесса игры
         /// </summary>
-        public static event Action<LaunchGame> GameStartEvent;
+        public static event Action<LaunchGame> OnGameProcessStarted;
         /// <summary>
         /// Выполняется после GameStartEvent, когда у майкнрафт появляется окно.
         /// </summary>
-        public static event Action<LaunchGame> GameStartedEvent;
+        public static event Action<LaunchGame> OnGameStarted;
         /// <summary>
         /// Выполняется при завершении процесса игры
         /// </summary>
-        public static event Action<LaunchGame> GameStopEvent;
+        public static event Action<LaunchGame> OnGameStoped;
 
         private Action<string> _processDataReceived;
 
@@ -198,7 +198,7 @@ namespace Lexplosion.Logic.Management
             command += data.VersionFile.arguments;
             command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
             command += additionalInstallerArgumentsAfter;
-            
+
             //TODO: сделать функционал для автоматического коннекта - command += "--server 192.168.1.114 --port 55538";
 
             return command.Replace('\\', '/');
@@ -247,7 +247,7 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            GameStartEvent?.Invoke(this);
+            OnGameProcessStarted?.Invoke(this);
 
             _processDataReceived?.Invoke("Выполняется запуск игры...");
             _processDataReceived?.Invoke(command);
@@ -284,7 +284,7 @@ namespace Lexplosion.Logic.Management
                     }
                     catch { }
 
-                    GameStopEvent?.Invoke(this);
+                    OnGameStoped?.Invoke(this);
 
                     lock (_removeImportantTaskLocker)
                     {
@@ -322,7 +322,7 @@ namespace Lexplosion.Logic.Management
                             if (GuiIsExists(_process.Id))
                             {
                                 ComplitedLaunch(_instanceId, true);
-                                GameStartedEvent?.Invoke(this);
+                                OnGameStarted?.Invoke(this);
 
                                 gameVisible = true;
                                 break;
@@ -346,7 +346,7 @@ namespace Lexplosion.Logic.Management
             {
                 _processIsWork = false;
                 ComplitedLaunch(_instanceId, false);
-                
+
                 return false;
             }
         }
@@ -551,7 +551,7 @@ namespace Lexplosion.Logic.Management
             _classInstance = null;
             _processIsWork = false;
 
-            GameStopEvent?.Invoke(this);
+            OnGameStoped?.Invoke(this);
 
             try
             {

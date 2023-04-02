@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.Network
         }
 
         private static Action _lexplosionOpened;
-        public static event Action LexplosionOpened
+        public static event Action OnLexplosionOpened
         {
             add => _lexplosionOpened += value;
             remove => _lexplosionOpened -= value;

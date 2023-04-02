@@ -368,13 +368,13 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
-        private void InstallAddon(bool downloadDependencies, DynamicStateHandler<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie)
+        private void InstallAddon(bool downloadDependencies, DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool isDependencie)
         {
             // если такой аддон уже скачивается - выходим нахуй
             if (!isDependencie && CheckInstalling(_modpackInfo, _addonPrototype.ProjectId)) return;
 
             _cancelTokenSource = new CancellationTokenSource();
-            stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>
+            stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
             {
                 Value1 = this,
                 Value2 = DownloadAddonRes.Successful
@@ -403,7 +403,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                 if (_cancelTokenSource.Token.IsCancellationRequested)
                 {
-                    stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>
+                    stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
                     {
                         Value1 = this,
                         Value2 = DownloadAddonRes.IsCanselled
@@ -467,7 +467,7 @@ namespace Lexplosion.Logic.Management.Instances
                 var ressult = _addonPrototype.Install(taskArgs);
                 if (ressult.Value2 != DownloadAddonRes.Successful)
                 {
-                    stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>
+                    stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
                     {
                         Value1 = this,
                         Value2 = ressult.Value2
@@ -494,7 +494,7 @@ namespace Lexplosion.Logic.Management.Instances
 
                     if (_cancelTokenSource.Token.IsCancellationRequested)
                     {
-                        stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>
+                        stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>
                         {
                             Value1 = this,
                             Value2 = DownloadAddonRes.Successful
@@ -540,7 +540,7 @@ namespace Lexplosion.Logic.Management.Instances
                 {
                     if (_cancelTokenSource.Token.IsCancellationRequested)
                     {
-                        stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>()
+                        stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>()
                         {
                             Value1 = this,
                             Value2 = DownloadAddonRes.IsCanselled
@@ -548,7 +548,7 @@ namespace Lexplosion.Logic.Management.Instances
                     }
                     else
                     {
-                        stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>()
+                        stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>()
                         {
                             Value1 = this,
                             Value2 = ressult.Value2
@@ -562,14 +562,14 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             _cancelTokenSource = null;
-            stateHandler.ChangeState(new ValuePair<InstanceAddon, DownloadAddonRes>()
+            stateHandler.ChangeState(new SetValues<InstanceAddon, DownloadAddonRes>()
             {
                 Value1 = this,
                 Value2 = DownloadAddonRes.Successful
             }, InstallAddonState.EndDownload);
         }
 
-        public void InstallLatestVersion(DynamicStateHandler<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false)
+        public void InstallLatestVersion(DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState> stateHandler, bool downloadDependencies = true, bool isDependencie = false)
         {
             IsInstalling = true;
             _addonPrototype.DefineLatestVersion();
@@ -926,7 +926,7 @@ namespace Lexplosion.Logic.Management.Instances
             List<InstanceAddon> addons = new List<InstanceAddon>();
             InstalledAddonsFormat actualAddonsList = new InstalledAddonsFormat(); //актуальный список аддонов, то есть те аддоны которы действительно существуют и есть в списке. В конце именно этот спсиок будет сохранен в файл
             var existsCfMods = new HashSet<string>(); // айдишники модов которые действителньо существуют (есть и в списке и в папке) и скачаны с курсфорджа
-            var existsAddons = new Dictionary<string, ValuePair<InstanceAddon, string>>(); // ключ - имя файла, значение - экзмепляр и айдишник. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
+            var existsAddons = new Dictionary<string, SetValues<InstanceAddon, string>>(); // ключ - имя файла, значение - экзмепляр и айдишник. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
             using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))
             {
                 // Составляем список известных нам аддонов. То есть читаем спсиок аддонов из файла, проходимся по каждому
@@ -941,7 +941,7 @@ namespace Lexplosion.Logic.Management.Instances
                         {
                             existsCfMods.Add(installedAddonId);
                             actualAddonsList[installedAddonId] = installedAddon;
-                            existsAddons[installedAddon.ActualPath] = new ValuePair<InstanceAddon, string>
+                            existsAddons[installedAddon.ActualPath] = new SetValues<InstanceAddon, string>
                             {
                                 Value1 = null,
                                 Value2 = installedAddonId
@@ -981,7 +981,7 @@ namespace Lexplosion.Logic.Management.Instances
                                     }
                                 }
 
-                                existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
+                                existsAddons[info.ActualPath] = new SetValues<InstanceAddon, string> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
                                 {
                                     Value1 = obj,
                                     Value2 = projectId
@@ -1058,7 +1058,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public DownloadAddonRes Update()
         {
-            var stateData = new DynamicStateData<ValuePair<InstanceAddon, DownloadAddonRes>, InstallAddonState>();
+            var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState>();
 
             var result = DownloadAddonRes.UncnownError;
             stateData.StateChanged += (arg, state) =>

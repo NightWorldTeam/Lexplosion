@@ -122,7 +122,7 @@ namespace Lexplosion.Logic.Network
             }
 
             // если майкнрафт клиент уже подключен то отвергаем это подключение и выходим нахер, ибо это какое-то левое подключение
-            if (IsConnected || listenerIsClosed ||!AvailableServers.ContainsKey(listener))
+            if (IsConnected || listenerIsClosed || !AvailableServers.ContainsKey(listener))
             {
                 if (!listenerIsClosed)
                 {
@@ -131,7 +131,7 @@ namespace Lexplosion.Logic.Network
                     sock.Close();
                     listener.BeginAccept(null, 0, AcceptHandler, listener); // возвращаем асинхронный асепт
                 }
-                
+
                 AcceptingBlock.Release();
                 Runtime.DebugWrite("AcceptHandler1.1");
 

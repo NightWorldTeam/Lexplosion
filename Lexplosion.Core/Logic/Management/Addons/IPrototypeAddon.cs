@@ -1,10 +1,6 @@
 ﻿using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -16,7 +12,7 @@ namespace Lexplosion.Logic.Management.Addons
 
         void DefineLatestVersion();
 
-        ValuePair<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs);
+        SetValues<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs);
 
         /// <summary>
         /// Сравнивает самую последнюю версию версию файла аддона с переданной.

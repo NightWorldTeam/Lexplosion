@@ -139,7 +139,7 @@ namespace Lexplosion.Logic.Network
                     if (point == null)
                     {
                         // возможно метод AfterConnect еще не начал работать. если метод подключения в процессе работы, то мы тут остановимся
-                        ConnectionWait.WaitOne(); 
+                        ConnectionWait.WaitOne();
                     }
 
                     AcceptingBlock.WaitOne();

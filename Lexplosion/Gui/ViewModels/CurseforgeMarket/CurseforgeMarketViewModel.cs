@@ -299,7 +299,7 @@ namespace Lexplosion.Gui.ViewModels.CurseforgeMarket
 
         private void InstallAddon(InstanceAddon instanceAddon)
         {
-            var stateData = new DynamicStateData<ValuePair<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
+            var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>();
 
             stateData.StateChanged += (arg, state) =>
             {

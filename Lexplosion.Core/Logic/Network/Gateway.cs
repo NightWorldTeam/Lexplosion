@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Management;
 using System.Net.NetworkInformation;
-using System.Linq;
 
 namespace Lexplosion.Logic.Network
 {
@@ -148,7 +147,7 @@ namespace Lexplosion.Logic.Network
                     continue;
                 }
 
-                 _name = name; _port = port;
+                _name = name; _port = port;
 
                 InformingThread = new Thread(delegate ()
                 {

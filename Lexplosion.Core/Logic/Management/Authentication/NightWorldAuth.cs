@@ -61,17 +61,17 @@ namespace Lexplosion.Logic.Management.Authentication
                     AccountType.NightWorld,
                     status);
 
-                LaunchGame.GameStartEvent += delegate (LaunchGame gameManager)
+                LaunchGame.OnGameProcessStarted += delegate (LaunchGame gameManager)
                 {
                     user.GameStart(gameManager.GameClientName);
                 };
 
-                LaunchGame.GameStopEvent += delegate (LaunchGame gameManager)
+                LaunchGame.OnGameStoped += delegate (LaunchGame gameManager)
                 {
                     user.GameStop(gameManager.GameClientName);
                 };
 
-                //Lexplosion.Runtime.ExitEvent += user.Exit;
+                Lexplosion.Runtime.OnExitEvent += user.Exit;
 
                 code = AuthCode.Successfully;
                 return user;

@@ -202,13 +202,13 @@ namespace Lexplosion.Logic.Network.Web
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ValuePair<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, TaskArgs taskArgs)
+        private static SetValues<InstalledAddonInfo, DownloadAddonRes> InstallAddon(AddonType addonType, string fileUrl, string fileName, string path, string folderName, string projectID, string fileID, TaskArgs taskArgs)
         {
             if (addonType != AddonType.Maps)
             {
                 if (!WithDirectory.InstallFile(fileUrl, fileName, path + folderName, taskArgs))
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
@@ -221,7 +221,7 @@ namespace Lexplosion.Logic.Network.Web
             {
                 if (!WithDirectory.InstallZipContent(fileUrl, fileName, path + folderName, taskArgs))
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
@@ -231,7 +231,7 @@ namespace Lexplosion.Logic.Network.Web
                 Runtime.DebugWrite("SYS " + fileUrl);
             }
 
-            return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+            return new SetValues<InstalledAddonInfo, DownloadAddonRes>
             {
                 Value1 = new InstalledAddonInfo
                 {
@@ -246,7 +246,7 @@ namespace Lexplosion.Logic.Network.Web
             };
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, TaskArgs taskArgs)
+        public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeFileInfo addonInfo, AddonType addonType, string path, TaskArgs taskArgs)
         {
             Runtime.DebugWrite("PR ID " + addonInfo.id);
             string projectID = addonInfo.modId;
@@ -260,7 +260,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 if (String.IsNullOrWhiteSpace(addonInfo.downloadUrl))
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.UrlError
@@ -275,7 +275,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 if (isInvalidFilename)
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.FileNameError
@@ -296,7 +296,7 @@ namespace Lexplosion.Logic.Network.Web
                         folderName = "resourcepacks";
                         break;
                     default:
-                        return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                        return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
                             Value2 = DownloadAddonRes.UncnownAddonType
@@ -308,7 +308,7 @@ namespace Lexplosion.Logic.Network.Web
             }
             catch
             {
-                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
                     Value2 = DownloadAddonRes.UncnownError
@@ -316,7 +316,7 @@ namespace Lexplosion.Logic.Network.Web
             }
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
+        public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(CurseforgeAddonInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
         {
             try
             {
@@ -326,7 +326,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 if (addonInfo.latestFiles == null)
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.ProjectDataError
@@ -360,7 +360,7 @@ namespace Lexplosion.Logic.Network.Web
                     if (String.IsNullOrWhiteSpace(fileData.downloadUrl))
                     {
                         Runtime.DebugWrite("URL ERROR - " + fileData.downloadUrl + " - " + fileData.fileName);
-                        return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                        return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
                             Value2 = DownloadAddonRes.UrlError
@@ -378,7 +378,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 if (isInvalidFilename)
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.FileNameError
@@ -400,7 +400,7 @@ namespace Lexplosion.Logic.Network.Web
                         folderName = "resourcepacks";
                         break;
                     default:
-                        return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                        return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
                             Value2 = DownloadAddonRes.UncnownAddonType
@@ -412,7 +412,7 @@ namespace Lexplosion.Logic.Network.Web
             }
             catch
             {
-                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
                     Value2 = DownloadAddonRes.UncnownError

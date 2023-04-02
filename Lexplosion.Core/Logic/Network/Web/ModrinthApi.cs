@@ -3,14 +3,12 @@ using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Tools;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Logic.Network.Web
 {
@@ -161,7 +159,7 @@ namespace Lexplosion.Logic.Network.Web
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(string fileUrl, string fileName, ModrinthProjectType addonType, string path, string projectID, string fileID, TaskArgs taskArgs)
+        private static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(string fileUrl, string fileName, ModrinthProjectType addonType, string path, string projectID, string fileID, TaskArgs taskArgs)
         {
             // определяем папку в которую будет установлен данный аддон
             string folderName = "";
@@ -181,7 +179,7 @@ namespace Lexplosion.Logic.Network.Web
                     folderName = "resourcepacks";
                     break;
                 default:
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.UncnownAddonType
@@ -191,7 +189,7 @@ namespace Lexplosion.Logic.Network.Web
             // устанавливаем
             if (!WithDirectory.InstallFile(fileUrl, fileName, path + folderName, taskArgs))
             {
-                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
                     Value2 = taskArgs.CancelToken.IsCancellationRequested ? DownloadAddonRes.IsCanselled : DownloadAddonRes.DownloadError
@@ -200,7 +198,7 @@ namespace Lexplosion.Logic.Network.Web
 
             Runtime.DebugWrite("SYS " + fileUrl);
 
-            return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+            return new SetValues<InstalledAddonInfo, DownloadAddonRes>
             {
                 Value1 = new InstalledAddonInfo
                 {
@@ -215,7 +213,7 @@ namespace Lexplosion.Logic.Network.Web
             };
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectFile fileInfo, ModrinthProjectType addonType, string path, string fileName, TaskArgs taskArgs)
+        public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectFile fileInfo, ModrinthProjectType addonType, string path, string fileName, TaskArgs taskArgs)
         {
             Runtime.DebugWrite("PR ID " + fileInfo.ProjectId);
             string projectID = fileInfo.ProjectId;
@@ -224,7 +222,7 @@ namespace Lexplosion.Logic.Network.Web
             {
                 if (fileInfo.Files == null || fileInfo.Files.Count == 0)
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.UrlError
@@ -235,7 +233,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 if (fileUrl == null)
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.UrlError
@@ -248,7 +246,7 @@ namespace Lexplosion.Logic.Network.Web
             }
             catch
             {
-                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
                     Value2 = DownloadAddonRes.UncnownError
@@ -256,7 +254,7 @@ namespace Lexplosion.Logic.Network.Web
             }
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectFile fileInfo, ModrinthProjectType addonType, string path, TaskArgs taskArgs)
+        public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectFile fileInfo, ModrinthProjectType addonType, string path, TaskArgs taskArgs)
         {
             Runtime.DebugWrite("PR ID " + fileInfo.ProjectId);
             string projectID = fileInfo.ProjectId;
@@ -265,7 +263,7 @@ namespace Lexplosion.Logic.Network.Web
             {
                 if (fileInfo.Files == null || fileInfo.Files.Count == 0)
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.UrlError
@@ -276,7 +274,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 if (fileUrl == null)
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.UrlError
@@ -293,7 +291,7 @@ namespace Lexplosion.Logic.Network.Web
 
                 if (isInvalidFilename)
                 {
-                    return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                    return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
                         Value2 = DownloadAddonRes.FileNameError
@@ -304,7 +302,7 @@ namespace Lexplosion.Logic.Network.Web
             }
             catch
             {
-                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
                     Value2 = DownloadAddonRes.UncnownError
@@ -335,7 +333,7 @@ namespace Lexplosion.Logic.Network.Web
             return type;
         }
 
-        public static ValuePair<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
+        public static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(ModrinthProjectInfo addonInfo, string fileID, string path, TaskArgs taskArgs)
         {
             ModrinthProjectFile fileInfo = GetProjectFile(fileID);
             return DownloadAddon(fileInfo, StrProjectTypToEnum(addonInfo.Type), path, taskArgs);

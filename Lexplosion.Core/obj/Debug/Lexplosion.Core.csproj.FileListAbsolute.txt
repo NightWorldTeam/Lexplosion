@@ -22,3 +22,15 @@ N:\Lexplosion\Lexplosion.Core\obj\Debug\Lexplosion.Core.csproj.CoreCompileInputs
 N:\Lexplosion\Lexplosion.Core\obj\Debug\Lexplosion.Core.csproj.CopyComplete
 N:\Lexplosion\Lexplosion.Core\obj\Debug\Lexplosion.Core.dll
 N:\Lexplosion\Lexplosion.Core\obj\Debug\Lexplosion.Core.pdb
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\bin\Debug\Lexplosion.Core.dll.config
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\bin\Debug\Lexplosion.Core.dll
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\bin\Debug\Lexplosion.Core.pdb
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\bin\Debug\LumiSoft.Net.dll
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\bin\Debug\Newtonsoft.Json.dll
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\bin\Debug\Tommy.dll
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\bin\Debug\Newtonsoft.Json.xml
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\obj\Debug\Lexplosion.Core.csproj.AssemblyReference.cache
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\obj\Debug\Lexplosion.Core.csproj.CoreCompileInputs.cache
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\obj\Debug\Lexplosion.Core.csproj.CopyComplete
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\obj\Debug\Lexplosion.Core.dll
+D:\Projects\csharp\NWLauncher\Lexplosion.Core\obj\Debug\Lexplosion.Core.pdb

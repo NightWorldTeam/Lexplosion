@@ -85,7 +85,7 @@ namespace Lexplosion.Logic.Network
                                         myExternalPort = ((IPEndPoint)udpSocket.LocalEndPoint).Port.ToString(); // в этом случае он нихуя не external
                                         dataToSend = Encoding.UTF8.GetBytes(myExternalPort + ",proxy");
                                         Runtime.DebugWrite("STUN_Result is null");
-                                    }                 
+                                    }
                                 }
                                 else
                                 {

@@ -3,11 +3,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Linq;
-using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
@@ -256,7 +254,7 @@ namespace Lexplosion.Logic.FileSystem
                     }
                 }
 
-                var notableProjects = new Dictionary<InstanceManifest.FileData, ValuePair<ModrinthProjectFile, AddonInstallingInfo>>();
+                var notableProjects = new Dictionary<InstanceManifest.FileData, SetValues<ModrinthProjectFile, AddonInstallingInfo>>();
                 var unknownProjects = new List<InstanceManifest.FileData>(); // тут харним неизтные аддоны, которые потом установим по прямой ссылке
                 {
                     // получем спсиок с проектами по списоку хэшэй
@@ -301,7 +299,7 @@ namespace Lexplosion.Logic.FileSystem
                                             continue;
                                     }
 
-                                    notableProjects[file] = new ValuePair<ModrinthProjectFile, AddonInstallingInfo>
+                                    notableProjects[file] = new SetValues<ModrinthProjectFile, AddonInstallingInfo>
                                     {
                                         Value1 = projectFiles[file.hashes["sha512"]],
                                         Value2 = new AddonInstallingInfo
@@ -351,13 +349,13 @@ namespace Lexplosion.Logic.FileSystem
                     }
                 }
 
-                var downloadList = new List<ValuePair<ModrinthProjectFile, AddonInstallingInfo>>();
+                var downloadList = new List<SetValues<ModrinthProjectFile, AddonInstallingInfo>>();
                 if (installedAddons != null)
                 {
                     var tempList = new List<string>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
                     foreach (var file in notableProjects) // проходимся по списку адднов, полученному с курсфорджа
                     {
-                        ValuePair<ModrinthProjectFile, AddonInstallingInfo> addonData = file.Value;
+                        SetValues<ModrinthProjectFile, AddonInstallingInfo> addonData = file.Value;
                         InstanceManifest.FileData key = file.Key;
 
                         string projectId = addonData.Value1.ProjectId;
@@ -413,10 +411,10 @@ namespace Lexplosion.Logic.FileSystem
                     if (filesCount > 0)
                         perfomer = new TasksPerfomer(10, filesCount);
 
-                    var noDownloaded = new List<ValuePair<ModrinthProjectFile, AddonInstallingInfo>>();
+                    var noDownloaded = new List<SetValues<ModrinthProjectFile, AddonInstallingInfo>>();
 
                     Runtime.DebugWrite("СКАЧАТЬ БЛЯТЬ НАДО " + downloadList.Count + " ЗЛОЕБУЧИХ МОДОВ");
-                    foreach (ValuePair<ModrinthProjectFile, AddonInstallingInfo> addonData in downloadList)
+                    foreach (SetValues<ModrinthProjectFile, AddonInstallingInfo> addonData in downloadList)
                     {
                         perfomer.ExecuteTask(delegate ()
                         {
@@ -465,7 +463,7 @@ namespace Lexplosion.Logic.FileSystem
                         perfomer?.WaitEnd();
 
                         Runtime.DebugWrite("ДОКАЧИВАЕМ " + noDownloaded.Count);
-                        foreach (ValuePair<ModrinthProjectFile, AddonInstallingInfo> addonData in noDownloaded)
+                        foreach (SetValues<ModrinthProjectFile, AddonInstallingInfo> addonData in noDownloaded)
                         {
                             if (cancelToken.IsCancellationRequested) break;
 
@@ -481,7 +479,7 @@ namespace Lexplosion.Logic.FileSystem
                             int count = 0;
 
                             ModrinthProjectFile projectFile = addonData.Value1;
-                            ValuePair<InstalledAddonInfo, DownloadAddonRes> result = ModrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, taskArgs);
+                            SetValues<InstalledAddonInfo, DownloadAddonRes> result = ModrinthApi.DownloadAddon(projectFile, addonData.Value2.Type, "/instances/" + instanceId + "/", addonData.Value2.FileName, taskArgs);
 
                             while (count < 4 && result.Value2 != DownloadAddonRes.Successful && !cancelToken.IsCancellationRequested)
                             {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
 using Lexplosion.Global;
-using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Nightworld;
 

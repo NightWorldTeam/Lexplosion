@@ -5,7 +5,7 @@ namespace Lexplosion.Gui.ViewModels
 {
     public sealed class PaginatorViewModel : VMBase
     {
-        public ValuePair<int, int> PageLimit = new ValuePair<int, int>
+        public SetValues<int, int> PageLimit = new SetValues<int, int>
         {
             Value1 = 0,
             Value2 = 1638

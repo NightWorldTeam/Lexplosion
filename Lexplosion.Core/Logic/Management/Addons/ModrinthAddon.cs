@@ -2,11 +2,8 @@
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 
@@ -151,11 +148,11 @@ namespace Lexplosion.Logic.Management.Addons
             DefaineLatesVersion_();
         }
 
-        public ValuePair<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs)
+        public SetValues<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs)
         {
             if (_versionInfo == null)
             {
-                return new ValuePair<InstalledAddonInfo, DownloadAddonRes>
+                return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
                     Value2 = DownloadAddonRes.ProjectDataError

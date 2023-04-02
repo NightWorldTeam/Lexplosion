@@ -107,7 +107,7 @@ namespace Lexplosion.Logic.FileSystem
             _dataClient.ProcentUpdate += ProcentUpdate;
 
             _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
-            return _dataClient.WorkWait();         
+            return _dataClient.WorkWait();
         }
     }
 }
