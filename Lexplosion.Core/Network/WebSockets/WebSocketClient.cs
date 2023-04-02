@@ -9,7 +9,7 @@ namespace Lexplosion.Logic.Network.WebSockets
     /// Клиент Веб-сокетов. Эта хуяня нужна только чтобы отправлять данные на WebSocketServer.
     /// Устноавить нормальное вебсокет соединение особо не выйдет, ведь они оба работают подобно html соединению.
     /// </summary>
-    class WebSocketClient : WebSocket
+    public class WebSocketClient : WebSocket
     {
         private Socket _socket;
         private IPEndPoint _host;

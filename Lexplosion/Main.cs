@@ -201,7 +201,7 @@ namespace Lexplosion
             bool isStarted = CommandReceiver.StartCommandServer();
             if (!isStarted)
             {
-                TaskRun(() =>
+                Lexplosion.Runtime.TaskRun(() =>
                 {
                     bool isWorld;
                     do
@@ -367,27 +367,27 @@ namespace Lexplosion
 
             if (args.Name.Contains("Newtonsoft.Json"))
             {
-                return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson_zip));
+                return Assembly.Load(UnzipBytesArray(Resources.NewtonsoftJson));
             }
 
             if (args.Name.Contains("LumiSoft.Net"))
             {
-                return Assembly.Load(UnzipBytesArray(Resources.LumiSoftNet_zip));
+                return Assembly.Load(UnzipBytesArray(Resources.LumiSoft_Net));
             }
 
             if (args.Name.Contains("Tommy"))
             {
-                return Assembly.Load(UnzipBytesArray(Resources.Tommy_zip));
+                return Assembly.Load(UnzipBytesArray(Resources.Tommy));
             }
 
             if (args.Name.Contains("Hardcodet.Wpf.TaskbarNotification"))
             {
-                return Assembly.Load(UnzipBytesArray(Resources.TaskbarNotification_zip));
+                return Assembly.Load(UnzipBytesArray(Resources.TaskbarNotification));
             }
 
             if (args.Name.Contains("DiscordRPC"))
             {
-                return Assembly.Load(UnzipBytesArray(Resources.DiscordRPC_zip));
+                return Assembly.Load(UnzipBytesArray(Resources.DiscordRPC));
             }
 
             if (args.Name.Contains("System.IO.Compression"))

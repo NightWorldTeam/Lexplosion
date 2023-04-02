@@ -1,10 +1,16 @@
 ﻿using Lexplosion.Gui;
 using Lexplosion.Gui.ViewModels;
+using System;
 
 namespace Lexplosion.Logic.Management
 {
-    public partial class Player : VMBase
+    public partial class PlayerClub : Player
     {
+        public PlayerClub(string uuid, Action kickMethod, Action unkickMethod) : base(uuid, kickMethod, unkickMethod)
+        {
+            
+        }
+
         public RelayCommand AccessChangeAction
         {
             get => new RelayCommand(obj =>

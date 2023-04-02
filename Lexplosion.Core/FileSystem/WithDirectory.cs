@@ -14,7 +14,7 @@ using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    static class WithDirectory
+    public static class WithDirectory
     {
         // TODO: во всём WithDirectory я заменяю элементы адресов директорий через replace. Не знаю как на винде, но на линуксе могут появиться проблемы, ведь replace заменяет подстроки в строке, а не только конечную подстроку
         public static string DirectoryPath { get; private set; }

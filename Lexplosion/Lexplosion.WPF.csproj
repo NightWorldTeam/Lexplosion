@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4DF9C4D2-E828-456F-872D-622EFD405D44}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Lexplosion</RootNamespace>
-    <AssemblyName>Lexplosion</AssemblyName>
+    <RootNamespace>Lexplosion.WPF</RootNamespace>
+    <AssemblyName>Lexplosion.WPF</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -137,6 +137,7 @@
     <Compile Include="Controls\ToastMessage\ToastMessageContainer.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageManager.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageModel.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Gui\ButtonConstructor.cs" />
     <Compile Include="Gui\ControlsExtension\PathExtension.cs" />
     <Compile Include="Gui\ControlsExtension\ScrollViewer.cs" />
@@ -340,12 +341,24 @@
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tools\ColorTools.cs" />
+    <Compile Include="Tools\DynamicStateData.cs" />
     <Compile Include="Tools\EnumerateExtension.cs" />
     <Compile Include="Tools\ImageTools.cs" />
+    <Compile Include="Tools\MouseHelper.cs" />
+    <Compile Include="Tools\NativeMethods.cs" />
     <Compile Include="Tools\ObservableCollectionExtensions.cs" />
-    <Compile Include="Tools\ResourceGetter.cs" />
+    <Compile Include="Tools\Pointer.cs" />
     <Compile Include="Tools\RuntimeTools.cs" />
+    <Compile Include="Tools\SocketExtensions.cs" />
+    <Compile Include="Tools\StringExtensions.cs" />
+    <Compile Include="Tools\TaskArgs.cs" />
+    <Compile Include="Tools\RandomExtensions.cs" />
+    <Compile Include="Tools\ResourceGetter.cs" />
+    <Compile Include="Tools\TasksPerfomer.cs" />
+    <Compile Include="Tools\ValuePair.cs" />
     <Compile Include="VMBase.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Tools\KeySemaphore.cs" />
     <Compile Include="Main.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -619,11 +632,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Resources\DiscordRPC.zip" />
-    <None Include="Resources\LumiSoft.Net.zip" />
-    <None Include="Resources\NewtonsoftJson.zip" />
-    <None Include="Resources\TaskbarNotification.zip" />
-    <None Include="Resources\Tommy.zip" />
     <Resource Include="Assets\fonts\Arkhip.ttf" />
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
@@ -631,6 +639,11 @@
     <None Include="App.config" />
     <Resource Include="Assets\fonts\PassDots.ttf" />
     <Resource Include="Assets\fonts\SFProDisplay.otf" />
+    <None Include="DLL\DiscordRPC.zip" />
+    <None Include="DLL\LumiSoft.Net.zip" />
+    <None Include="DLL\NewtonsoftJson.zip" />
+    <None Include="DLL\TaskbarNotification.zip" />
+    <None Include="DLL\Tommy.zip" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -657,6 +670,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\icons\logo.ico" />
+    <None Include="DLL\Compression.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\icons\non_image.png" />
@@ -666,13 +680,10 @@
     <Resource Include="Assets\images\icons\countries\ru-RU.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LoxplosionCore\LoxplosionCore\LoxplosionCore.csproj">
-      <Project>{bd1126b1-abbe-424f-bf0c-f6b3dc107bf6}</Project>
-      <Name>LoxplosionCore</Name>
+    <ProjectReference Include="..\Lexplosion.Core\Lexplosion.Core.csproj">
+      <Project>{29daf4bb-730b-4a91-9036-6a565aad2747}</Project>
+      <Name>Lexplosion.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Compression.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net461.targets" Condition="Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net461.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net461.targets')" />

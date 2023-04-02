@@ -7,7 +7,7 @@
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:objects="clr-namespace:Lexplosion.Logic.Objects"
+    xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=LoxplosionCore"
     d:DesignHeight="120"
     d:DesignWidth="620"
     mc:Ignorable="d">

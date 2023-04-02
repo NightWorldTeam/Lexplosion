@@ -19,7 +19,7 @@ namespace Lexplosion.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -73,9 +73,9 @@ namespace Lexplosion.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        public static byte[] DiscordRPC_zip {
+        public static byte[] DiscordRPC {
             get {
-                object obj = ResourceManager.GetObject("DiscordRPC_zip", resourceCulture);
+                object obj = ResourceManager.GetObject("DiscordRPC", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace Lexplosion.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        public static byte[] LumiSoftNet_zip {
+        public static byte[] LumiSoft_Net {
             get {
-                object obj = ResourceManager.GetObject("LumiSoftNet_zip", resourceCulture);
+                object obj = ResourceManager.GetObject("LumiSoft_Net", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace Lexplosion.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        public static byte[] NewtonsoftJson_zip {
+        public static byte[] NewtonsoftJson {
             get {
-                object obj = ResourceManager.GetObject("NewtonsoftJson_zip", resourceCulture);
+                object obj = ResourceManager.GetObject("NewtonsoftJson", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -103,9 +103,9 @@ namespace Lexplosion.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        public static byte[] TaskbarNotification_zip {
+        public static byte[] TaskbarNotification {
             get {
-                object obj = ResourceManager.GetObject("TaskbarNotification_zip", resourceCulture);
+                object obj = ResourceManager.GetObject("TaskbarNotification", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace Lexplosion.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        public static byte[] Tommy_zip {
+        public static byte[] Tommy {
             get {
-                object obj = ResourceManager.GetObject("Tommy_zip", resourceCulture);
+                object obj = ResourceManager.GetObject("Tommy", resourceCulture);
                 return ((byte[])(obj));
             }
         }

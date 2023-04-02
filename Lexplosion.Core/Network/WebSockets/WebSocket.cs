@@ -2,7 +2,7 @@
 
 namespace Lexplosion.Logic.Network.WebSockets
 {
-    abstract class WebSocket
+    public abstract class WebSocket
     {
         /// <summary>
         /// Кодирует данные. Адекватно работает, только если их количество меньше 256

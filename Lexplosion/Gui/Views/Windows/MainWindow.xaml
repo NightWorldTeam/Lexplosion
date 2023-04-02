@@ -7,7 +7,7 @@
     xmlns:converters="clr-namespace:Lexplosion.Gui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
-    xmlns:global="clr-namespace:Lexplosion.Global"
+    xmlns:global="clr-namespace:Lexplosion.Global;assembly=LoxplosionCore"
     xmlns:lexplosion="clr-namespace:Lexplosion"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="944"

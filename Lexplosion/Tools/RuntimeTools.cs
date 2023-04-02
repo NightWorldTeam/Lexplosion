@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Lexplosion
 {
-    static partial class Runtime
+    public static partial class Runtime
     {
         private static int importantThreads = 0;
         private static ManualResetEvent waitingClosing = new ManualResetEvent(true);

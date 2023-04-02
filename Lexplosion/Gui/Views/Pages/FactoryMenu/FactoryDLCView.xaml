@@ -5,8 +5,9 @@
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
-    xmlns:instances="clr-namespace:Lexplosion.Logic.Management.Instances"
+    xmlns:instances="clr-namespace:Lexplosion.Logic.Management.Instances;assembly=LoxplosionCore"
     xmlns:lexplosion="clr-namespace:Lexplosion"
+    xmlns:lexplosioncore="clr-namespace:Lexplosion;assembly=LoxplosionCore"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="700"
@@ -233,10 +234,10 @@
                         <ToggleButton.Style>
                             <Style BasedOn="{StaticResource EllipseToggleButton}" TargetType="{x:Type ToggleButton}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Resourcepacks}">
+                                    <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosioncore:CfProjectType.Resourcepacks}">
                                         <Setter Property="Border.Visibility" Value="Collapsed" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosion:CfProjectType.Maps}">
+                                    <DataTrigger Binding="{Binding DataContext.CurrentAddonModel.Type, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="{x:Static lexplosioncore:CfProjectType.Maps}">
                                         <Setter Property="Border.Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>

@@ -38,8 +38,8 @@ namespace Lexplosion.Gui.Models
             }
         }
 
-        private ObservableCollection<Player> _players;
-        public ObservableCollection<Player> Players
+        private ObservableCollection<PlayerClub> _players;
+        public ObservableCollection<PlayerClub> Players
         {
             get => _players; private set
             {
@@ -67,7 +67,7 @@ namespace Lexplosion.Gui.Models
 
         public MultiplayerModel()
         {
-            Players = new ObservableCollection<Player>();
+            Players = new ObservableCollection<PlayerClub>();
             LaunchGame.StateChanged += OnPlayerStateChanged;
             LaunchGame.UserConnected += OnPlayerConnected;
             LaunchGame.UserDisconnected += OnPlayerDisconnected;
@@ -84,12 +84,13 @@ namespace Lexplosion.Gui.Models
         {
             App.Current.Dispatcher.Invoke(delegate ()
             {
+                var playerClub = (PlayerClub)player;
                 if (player != null)
                 {
-                    if (Players.Contains(player))
-                        Players.Remove(player);
+                    if (Players.Contains(playerClub))
+                        Players.Remove(playerClub);
 
-                    Players.Add(player);
+                    Players.Add(playerClub);
                     IsEmptyPlayers = Players.Count == 0;
                 }
             });
@@ -99,10 +100,11 @@ namespace Lexplosion.Gui.Models
         {
             App.Current.Dispatcher.Invoke(() =>
             {
+                var playerClub = (PlayerClub)player;
                 if (player != null)
                 {
                     if (!player.IsKicked)
-                        Players.Remove(player);
+                        Players.Remove(playerClub);
                     player.SetUnkickedAction(RemoveObjFromList);
                     IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
                 }
@@ -116,7 +118,7 @@ namespace Lexplosion.Gui.Models
         #region Private Methods
 
 
-        private bool IsExistPlayers(Player player)
+        private bool IsExistPlayers(PlayerClub player)
         {
             foreach (var pl in Players)
             {
@@ -130,7 +132,8 @@ namespace Lexplosion.Gui.Models
 
         private void RemoveObjFromList(Player player)
         {
-            Players.Remove(player);
+            var playerClub = (PlayerClub)player;
+            Players.Remove(playerClub);
         }
 
         private void OnPlayerStateChanged(OnlineGameStatus status, string strangeString)

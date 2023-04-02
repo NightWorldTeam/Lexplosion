@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Lexplosion.Gui.Extension"
-    xmlns:lexplosion="clr-namespace:Lexplosion"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=LoxplosionCore"
     xmlns:local="clr-namespace:Lexplosion.Gui.ViewModels.MainMenu.Multiplayer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"

@@ -5,10 +5,10 @@
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
-    xmlns:lexplosion="clr-namespace:Lexplosion"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=LoxplosionCore"
     xmlns:local="clr-namespace:Lexplosion.Gui.Views.Pages.ShowCaseMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:objects="clr-namespace:Lexplosion.Logic.Objects"
+    xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=LoxplosionCore"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
