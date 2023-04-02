@@ -83,9 +83,9 @@ namespace Lexplosion.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        public static byte[] Lexplosion_Core {
+        public static byte[] LexplosionCore {
             get {
-                object obj = ResourceManager.GetObject("Lexplosion_Core", resourceCulture);
+                object obj = ResourceManager.GetObject("LexplosionCore", resourceCulture);
                 return ((byte[])(obj));
             }
         }

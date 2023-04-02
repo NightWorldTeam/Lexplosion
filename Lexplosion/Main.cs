@@ -17,10 +17,7 @@ using Lexplosion.Gui.Views.Windows;
 using Lexplosion.Gui.Models;
 using Lexplosion.Gui.Models.ShowCaseMenu;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.Network;
-using Lexplosion.Logic.Network.WebSockets;
 using Lexplosion.Logic.Management;
-using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using ColorConverter = System.Windows.Media.ColorConverter;
@@ -64,8 +61,6 @@ namespace Lexplosion
         public static Color CurrentAccentColor => (Color)app.Resources["ActivityColor"];
         public static Color[] AccentColors;
 
-        private static LaunchGame _activeGameManager;
-
         [STAThread]
         static void Main()
         {
@@ -73,7 +68,6 @@ namespace Lexplosion
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            app.Exit += Runtime.BeforeExit;
 
             _splashWindow = new SplashWindow();
             _splashWindow.ChangeLoadingBoardPlaceholder();
@@ -92,10 +86,10 @@ namespace Lexplosion
         #region Notification Window
 
 
-        private static void InitializeNotificationWindow() 
+        private static void InitializeNotificationWindow()
         {
-            App.Current.Dispatcher.Invoke(() => 
-            { 
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 _notificationWindow = new NotificationWindow();
                 var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
                 _notificationWindow.Left = desktopWorkingArea.Right - _notificationWindow.MaxWidth;
@@ -111,7 +105,7 @@ namespace Lexplosion
             });
         }
 
-        internal static void CloseNotificationWindow() 
+        internal static void CloseNotificationWindow()
         {
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -145,6 +139,11 @@ namespace Lexplosion
 
         private static void InitializedSystem()
         {
+            app.Dispatcher.Invoke(delegate ()
+            {
+                app.Exit += Runtime.BeforeExit;
+            });
+            
             Runtime.ПереходВРежимЗавершения += CloseMainWindow;
             Runtime.OnExitEvent += ExitHandler;
             Runtime.OnUpdateStart += () => { _splashWindow.ChangeLoadingBoardPlaceholder(true); };
@@ -162,8 +161,7 @@ namespace Lexplosion
 
             var discordClient = InitDiscordApp();
 
-            //подписываемся на эвент открытия второй копии лаунчера
-            CommandReceiver.OnLexplosionOpened += ShowMainWindow;
+            LaunchGame _activeGameManager = null;
 
             LaunchGame.OnGameStarted += (LaunchGame gameManager) =>
             {
@@ -259,7 +257,12 @@ namespace Lexplosion
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            Runtime.DebugWrite("Assembly LOAD " + string.Join(", ", args.Name));
+            System.Console.WriteLine("[AssemblyResolve] Assembly LOAD " + string.Join(", ", args.Name));
+
+            if (args.Name.Contains("Lexplosion.Core"))
+            {
+                return Assembly.Load(UnzipBytesArray(Resources.LexplosionCore));
+            }
 
             if (args.Name.Contains("Newtonsoft.Json"))
             {
@@ -451,9 +454,10 @@ namespace Lexplosion
             TrayMenuElementClicked?.Invoke();
         }
 
-        public static void ExitHandler() 
+        public static void ExitHandler()
         {
-            App.Current.Dispatcher.Invoke(() => { 
+            App.Current.Dispatcher.Invoke(() =>
+            {
                 foreach (Window window in app.Windows)
                 {
                     window.Close();

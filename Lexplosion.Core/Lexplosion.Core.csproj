@@ -134,7 +134,7 @@
     <Compile Include="Logic\Objects\Nightworld.cs" />
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Сryptography.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="Runtime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\DynamicStateData.cs" />
     <Compile Include="Tools\ImageTools.cs" />
@@ -162,4 +162,12 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net472.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net472.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NETFramework.ReferenceAssemblies.net472.1.0.2\build\Microsoft.NETFramework.ReferenceAssemblies.net472.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>powershell Compress-Archive "$(TargetPath)" "$(SolutionDir)DLL\Lexplosion.Core.zip" -Force
+copy "$(SolutionDir)DLL\Lexplosion.Core.zip" "$(SolutionDir)\Lexplosion\Resources\Lexplosion.Core.zip"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
