@@ -51,7 +51,7 @@ namespace Lexplosion
             return isNew;
         }
 
-        private static void InitializedSystem(int updaterOffsetLeft, int updaterOffsetRight)
+        public static void InitializedSystem(int updaterOffsetLeft, int updaterOffsetRight)
         {
             //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
             AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)

@@ -44,7 +44,7 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         public void LaunchInstance()
         {
-            Lexplosion.Runtime.TaskRun(() =>
+            Runtime.TaskRun(() =>
             {
                 MainModel.Instance.RunningInstance = _formViewModel;
                 MainModel.Instance.IsInstanceRunning = true;
@@ -62,37 +62,40 @@ namespace Lexplosion.Gui.Models.InstanceForm
 
         private void OnLaunchCompleted(string id, bool successful)
         {
-            if (successful)
+            App.Current.Dispatcher.Invoke(() =>
             {
-                MainViewModel.ShowToastMessage(
-                    ResourceGetter.GetString("runSuccessfulNotification"),
-                    ResourceGetter.GetString("instanceName") + " : " + _instanceClient.Name,
-                    TimeSpan.FromSeconds(5)
-                );
+                if (successful)
+                {
+                    MainViewModel.ShowToastMessage(
+                        ResourceGetter.GetString("runSuccessfulNotification"),
+                        ResourceGetter.GetString("instanceName") + " : " + _instanceClient.Name,
+                        TimeSpan.FromSeconds(5)
+                    );
 
-                //asdasdasd
-                _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
-            }
-            else
-            {
-                MainModel.Instance.IsInstanceRunning = false;
-                MainViewModel.ShowToastMessage(
-                    ResourceGetter.GetString("runUnsuccessfulNotification"),
-                    ResourceGetter.GetString("instanceName") + " : " + _instanceClient.Name,
-                    Controls.ToastMessageState.Error
-                );
+                    //asdasdasd
+                    _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
+                }
+                else
+                {
+                    MainModel.Instance.IsInstanceRunning = false;
+                    MainViewModel.ShowToastMessage(
+                        ResourceGetter.GetString("runUnsuccessfulNotification"),
+                        ResourceGetter.GetString("instanceName") + " : " + _instanceClient.Name,
+                        Controls.ToastMessageState.Error
+                    );
 
-                MainModel.Instance.IsInstanceRunning = false;
-                // asdasdasdasd
-                _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
-                _formModel.UpperButton.ChangeFuncPlay();
-            }
+                    MainModel.Instance.IsInstanceRunning = false;
+                    // asdasdasdasd
+                    _mainViewModel.InitTrayComponentsWithGame(_formViewModel);
+                    _formModel.UpperButton.ChangeFuncPlay();
+                }
 
-            _formModel.DownloadModel.IsDownloadInProgress = false;
-            _formModel.DownloadModel.IsPrepare = false;
-            _formModel.IsLaunch = false;
-            _formModel.OverviewField = _instanceClient.Summary;
-            _formModel.UpdateLowerButton();
+                _formModel.DownloadModel.IsDownloadInProgress = false;
+                _formModel.DownloadModel.IsPrepare = false;
+                _formModel.IsLaunch = false;
+                _formModel.OverviewField = _instanceClient.Summary;
+                _formModel.UpdateLowerButton();
+            });
         }
 
         private void OnGameExited(string id)
@@ -106,8 +109,6 @@ namespace Lexplosion.Gui.Models.InstanceForm
             _formModel.UpperButton.ChangeFuncPlay();
             _formModel.UpdateLowerButton();
         }
-
-
         #endregion Private Methods
     }
 }

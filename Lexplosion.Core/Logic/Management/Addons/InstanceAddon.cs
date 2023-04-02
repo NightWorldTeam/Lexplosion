@@ -578,7 +578,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void CreateAddonData(IPrototypeAddon prototypeAddon, string projectId, Dictionary<string, ValuePair<InstanceAddon, string, ProjectSource>> existsAddons, List<InstanceAddon> addons, InstalledAddonsFormat actualAddonsList, BaseInstanceData modpackInfo, ProjectSource addonSourse)
+        private static void CreateAddonData(IPrototypeAddon prototypeAddon, string projectId, Dictionary<string, SetValues<InstanceAddon, string, ProjectSource>> existsAddons, List<InstanceAddon> addons, InstalledAddonsFormat actualAddonsList, BaseInstanceData modpackInfo, ProjectSource addonSourse)
         {
             InstalledAddonInfo info = actualAddonsList[projectId];
             var obj = new InstanceAddon(prototypeAddon, modpackInfo)
@@ -595,7 +595,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
             }
 
-            existsAddons[info.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
+            existsAddons[info.ActualPath] = new SetValues<InstanceAddon, string, ProjectSource> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
             {
                 Value1 = obj,
                 Value2 = projectId,
@@ -616,7 +616,7 @@ namespace Lexplosion.Logic.Management.Instances
             InstalledAddonsFormat actualAddonsList = new InstalledAddonsFormat(); //актуальный список аддонов, то есть те аддоны которы действительно существуют и есть в списке. В конце именно этот спсиок будет сохранен в файл
             var existsCfMods = new HashSet<string>(); // айдишники модов которые действителньо существуют (есть и в списке и в папке) и скачаны с курсфорджа
             var existsMdMods = new HashSet<string>(); // аналогично existsCfMods, но для модринфа
-            var existsAddons = new Dictionary<string, ValuePair<InstanceAddon, string, ProjectSource>>(); // ключ - имя файла, значение - экзмепляр,айдишник и источник проекта. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
+            var existsAddons = new Dictionary<string, SetValues<InstanceAddon, string, ProjectSource>>(); // ключ - имя файла, значение - экзмепляр,айдишник и источник проекта. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
 
             using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))
             {
@@ -636,7 +636,7 @@ namespace Lexplosion.Logic.Management.Instances
                                 {
                                     existsCfMods.Add(installedAddonId);
                                     actualAddonsList[installedAddonId] = installedAddon;
-                                    existsAddons[installedAddon.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource>
+                                    existsAddons[installedAddon.ActualPath] = new SetValues<InstanceAddon, string, ProjectSource>
                                     {
                                         Value1 = null,
                                         Value2 = installedAddonId,
@@ -652,7 +652,7 @@ namespace Lexplosion.Logic.Management.Instances
                             {
                                 existsMdMods.Add(installedAddonId);
                                 actualAddonsList[installedAddonId] = installedAddon;
-                                existsAddons[installedAddon.ActualPath] = new ValuePair<InstanceAddon, string, ProjectSource>
+                                existsAddons[installedAddon.ActualPath] = new SetValues<InstanceAddon, string, ProjectSource>
                                 {
                                     Value1 = null,
                                     Value2 = installedAddonId,

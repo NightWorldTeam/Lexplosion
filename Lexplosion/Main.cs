@@ -24,6 +24,7 @@ using Lexplosion.Logic.Management.Instances;
 
 using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
 using ColorConverter = System.Windows.Media.ColorConverter;
+using System.Security.Cryptography.X509Certificates;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -40,15 +41,15 @@ namespace Lexplosion
         private static NotificationWindow _notificationWindow;
         private static TaskbarIcon _nofityIcon;
 
-        public static Process CurrentProcess { get; private set; }
-
-        public static event Action ExitEvent;
         public static event Action TrayMenuElementClicked;
 
         // TODO: сохранять координаты закрытого главного окна, использовать при открытии следующего
 
         private static double leftPos;
         private static double topPos;
+
+        private static double _splashWindowLeft;
+        private static double _splashWindowTop;
 
         const string AssetsPath = "pack://application:,,,/Assets/";
         const string ResourcePath = "pack://application:,,,/Gui/Resources/";
@@ -63,6 +64,8 @@ namespace Lexplosion
         public static Color CurrentAccentColor => (Color)app.Resources["ActivityColor"];
         public static Color[] AccentColors;
 
+        private static LaunchGame _activeGameManager;
+
         [STAThread]
         static void Main()
         {
@@ -70,14 +73,18 @@ namespace Lexplosion
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
 
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            app.Exit += BeforeExit;
+            app.Exit += Runtime.BeforeExit;
+
+            _splashWindow = new SplashWindow();
+            _splashWindow.ChangeLoadingBoardPlaceholder();
+
+            _splashWindowLeft = _splashWindow.Left;
+            _splashWindowTop = _splashWindow.Top;
 
             Thread thread = new Thread(InitializedSystem);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
 
-            _splashWindow = new SplashWindow();
-            _splashWindow.ChangeLoadingBoardPlaceholder();
             app.Run(_splashWindow);
         }
 
@@ -136,36 +143,14 @@ namespace Lexplosion
             app.MainWindow = mainWindow;
         }
 
-        private static Mutex? InstanceCheckMutex;
-
-        /// <summary>
-        /// Проверяет запущен ли уже лаунчер.
-        /// </summary>
-        /// <returns>true - нет запущенного экземпляра. false - есть</returns>
-        private static bool InstanceCheck()
-        {
-            bool isNew;
-            var mutex = new Mutex(true, "NW-Lexplosion_Is_launched", out isNew);
-            if (isNew)
-                InstanceCheckMutex = mutex;
-            else
-                mutex.Dispose();
-
-            return isNew;
-        }
-
         private static void InitializedSystem()
         {
-            //подписываемся на эвент вылета, чтобы логировать все необработанные исключения
-            AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs args)
-            {
-                Exception exception = (Exception)args.ExceptionObject;
-                DataFilesManager.SaveFile(LaunсherSettings.LauncherDataPath + "/crash-report_" + DateTime.Now.ToString("dd.MM.yyyy-h.mm.ss") + ".log", exception.ToString());
-            };
+            Runtime.ПереходВРежимЗавершения += CloseMainWindow;
+            Runtime.OnExitEvent += ExitHandler;
+            Runtime.OnUpdateStart += () => { _splashWindow.ChangeLoadingBoardPlaceholder(true); };
+            Runtime.OnLexplosionOpened += ShowMainWindow;
 
-            // инициализация
-            GlobalData.InitSetting();
-            WithDirectory.Create(GlobalData.GeneralSettings.GamePath);
+            Runtime.InitializedSystem((int)_splashWindowLeft, (int)_splashWindowTop);
 
             // Выставляем язык
             ChangeCurrentLanguage();
@@ -175,48 +160,20 @@ namespace Lexplosion
             // инициализация окна уведомлений
             InitializeNotificationWindow();
 
-            CurrentProcess = Process.GetCurrentProcess();
-
-            // Проверяем запущен ли лаунчер.
-            if (!InstanceCheck() && false)
-            {
-                WebSocketClient ws = new WebSocketClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 54352));
-                //отправляем уже запущщеному лаунчеру запрос о том, что надо бы блять что-то сделать, а то юзер новый запустить пытается
-                ws.SendData("$lexplosionOpened:" + CurrentProcess.Id);
-                CurrentProcess.Kill(); //стопаем этот процесс
-            }
-
-            int version = ToServer.CheckLauncherUpdates();
-            if (version != -1)
-            {
-                app.Dispatcher.Invoke(() =>
-                {
-                    _splashWindow.ChangeLoadingBoardPlaceholder(true);
-                });
-                LauncherUpdate(version);
-            }
-
-            InstanceClient.DefineInstalledInstances();
-
-            bool isStarted = CommandReceiver.StartCommandServer();
-            if (!isStarted)
-            {
-                Lexplosion.Runtime.TaskRun(() =>
-                {
-                    bool isWorld;
-                    do
-                    {
-                        isWorld = !CommandReceiver.StartCommandServer();
-                        Thread.Sleep(2000);
-                    }
-                    while (isWorld);
-                });
-            }
-
             var discordClient = InitDiscordApp();
 
             //подписываемся на эвент открытия второй копии лаунчера
             CommandReceiver.OnLexplosionOpened += ShowMainWindow;
+
+            LaunchGame.OnGameStarted += (LaunchGame gameManager) =>
+            {
+                _activeGameManager = gameManager;
+
+                if (gameManager.ClientSettings.IsShowConsole == true)
+                {
+                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
+                }
+            };
 
             LaunchGame.OnGameStarted += delegate (LaunchGame gameManager) //подписываемся на эвент запуска игры
             {
@@ -238,22 +195,9 @@ namespace Lexplosion
                 });
             };
 
-            LaunchGame activeGameManager = null;
-
-            // подписываемся на запуск игры до запуска окна
-            LaunchGame.OnGameProcessStarted += (LaunchGame gameManager) =>
-            {
-                activeGameManager = gameManager;
-
-                if (gameManager.ClientSettings.IsShowConsole == true)
-                {
-                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(gameManager));
-                }
-            };
-
             LaunchGame.OnGameStoped += delegate (LaunchGame gameManager) //подписываемся на эвент завершения игры
             {
-                activeGameManager = null;
+                _activeGameManager = null;
 
                 // если в настрйоках устанавлено что нужно скрывать лаунчер при запуске клиента, то показываем главное окно
                 if (gameManager.ClientSettings.IsHiddenMode == true)
@@ -274,71 +218,23 @@ namespace Lexplosion
 
             GeneralSettingsModel.ConsoleParameterChanged += delegate (bool isShow)
             {
-                if (isShow && activeGameManager != null)
+                if (isShow && _activeGameManager != null)
                 {
-                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(activeGameManager));
+                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
                 }
             };
 
             InstanceSettingsModel.ConsoleParameterChanged += delegate (bool isShow, string instanceId)
             {
-                if (isShow && activeGameManager != null && activeGameManager.InstanceId == instanceId)
+                if (isShow && _activeGameManager != null && _activeGameManager.InstanceId == instanceId)
                 {
-                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(activeGameManager));
+                    app.Dispatcher.Invoke(() => ConsoleWindow.SetWindow(_activeGameManager));
                 }
             };
             Thread.Sleep(800);
 
             app.Dispatcher.Invoke(SetMainWindow);
             _splashWindow = null;
-        }
-
-        private static void LauncherUpdate(int version)
-        {
-            try
-            {
-                int upgradeToolVersion = Int32.Parse(ToServer.HttpPost(LaunсherSettings.URL.LauncherParts + "upgradeToolVersion.html"));
-                string gamePath = GlobalData.GeneralSettings.GamePath;
-
-                // скачивание и проверка версии UpgradeTool.exe
-                using (WebClient wc = new WebClient())
-                {
-                    if (DataFilesManager.GetUpgradeToolVersion() < upgradeToolVersion && File.Exists(gamePath + "/UpgradeTool.exe"))
-                    {
-                        File.Delete(gamePath + "/UpgradeTool.exe");
-                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
-                        DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
-
-                    }
-                    else if (!File.Exists(gamePath + "/UpgradeTool.exe"))
-                    {
-                        wc.DownloadFile(LaunсherSettings.URL.LauncherParts + "UpgradeTool.exe?" + upgradeToolVersion, gamePath + "/UpgradeTool.exe");
-                        DataFilesManager.SetUpgradeToolVersion(upgradeToolVersion);
-                    }
-                }
-
-                string arguments = null;
-
-                app.Dispatcher.Invoke(() =>
-                {
-                    arguments =
-                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " +
-                    "\"" + LaunсherSettings.URL.LauncherParts + "Lexplosion.exe?" + version + "\" " +
-                    Process.GetCurrentProcess().Id + " " +
-                    Convert.ToInt32(_splashWindow.Left) + " " +
-                    Convert.ToInt32(_splashWindow.Top);
-                });
-
-                // запуск UpgradeTool.exe
-                Process proc = new Process();
-                proc.StartInfo.FileName = gamePath + "/UpgradeTool.exe";
-                proc.StartInfo.Arguments = arguments;
-                proc.Start();
-            }
-            catch
-            {
-                MessageBox.Show("Не удалось обновить лаунчер!");
-            }
         }
 
         private static byte[] UnzipBytesArray(byte[] zipBytes)
@@ -431,7 +327,7 @@ namespace Lexplosion
             if (cultureName.Length != 0 && isRestart)
             {
                 Process.Start(Application.ResourceAssembly.Location);
-                KillApp();
+                Runtime.KillApp();
             }
         }
 
@@ -555,83 +451,21 @@ namespace Lexplosion
             TrayMenuElementClicked?.Invoke();
         }
 
-        /// <summary>
-        /// убивает процесс лаунчера
-        /// </summary>
-        public static void KillApp()
+        public static void ExitHandler() 
         {
-            BeforeExit(null, null);
-            Environment.Exit(0);
-        }
-
-        /// <summary>
-        /// Выход из лаунчера. Если запущен приоритетный процесс, то ждет его завршения и только потом закрывеат лаунчер. Закртие может быть омтенено методом ShowMainWindow
-        /// </summary>
-        public static void Exit()
-        {
-            lock (locker)
-            {
-                _inExited = true;
-
-                if (importantThreads > 0)
+            App.Current.Dispatcher.Invoke(() => { 
+                foreach (Window window in app.Windows)
                 {
-                    CloseMainWindow();
-                }
-            }
-
-            TaskRun(delegate ()
-            {
-                waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
-                                          // проверяем было ли закрытие отменено
-                if (_exitIsCanceled)
-                {
-                    // снова блочим waitingClosing, если сохранилась приоритетная задача, ибо метод CancelExit ее разлочил
-                    lock (locker)
-                    {
-                        if (importantThreads > 0)
-                        {
-                            waitingClosing.Reset();
-                        }
-                    }
-
-                    _exitIsCanceled = false;
-                    _inExited = false;
-
-                    return;
+                    window.Close();
                 }
 
-                app.Dispatcher.Invoke(delegate ()
-                {
-                    BeforeExit(null, null);
-                    Environment.Exit(0);
-                });
+                _nofityIcon.Dispose();
             });
-        }
-
-        public static void BeforeExit(object sender, EventArgs e)
-        {
-            //закрываем все окна
-            foreach (Window window in app.Windows)
-            {
-                window.Close();
-            }
-
-            _nofityIcon.Dispose();
-            ExitEvent?.Invoke();
-            CommandReceiver.StopCommandServer();
         }
 
         public static void ShowMainWindow()
         {
-            lock (locker)
-            {
-                if (_inExited)
-                {
-                    _exitIsCanceled = true;
-                    waitingClosing.Set();
-                }
-            }
-
+            Runtime.CancelingExit();
             app.Dispatcher.Invoke(() =>
             {
                 if (app.MainWindow == null)
@@ -645,7 +479,7 @@ namespace Lexplosion
                 }
                 else
                 {
-                    NativeMethods.ShowProcessWindows(CurrentProcess.MainWindowHandle);
+                    NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
                 }
             });
         }
