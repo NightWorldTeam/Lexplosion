@@ -27,11 +27,6 @@ namespace Lexplosion
         public static event Action OnUpdateStart;
         public static event Action OnLexplosionOpened;
         public static event Action ПереходВРежимЗавершения;
-        public static event Action<LaunchGame> OnGameStarted;
-        public static event Action<LaunchGame> OnGameProcessStarted;
-        public static event Action<LaunchGame> OnGameStoped;
-
-        public static LaunchGame ActiveGameManager { get; private set; }
 
         private static Mutex? InstanceCheckMutex;
 
@@ -100,20 +95,7 @@ namespace Lexplosion
             }
 
             //подписываемся на эвент открытия второй копии лаунчера
-            CommandReceiver.OnLexplosionOpened += delegate ()
-            {
-                CancelingExit();
-                OnLexplosionOpened?.Invoke();
-            };
-
-            //подписываемся на эвент запуска игры
-            LaunchGame.OnGameStarted += OnGameStarted;
-
-            // подписываемся на эвент запуска игры до появления окна игры
-            LaunchGame.OnGameProcessStarted += OnGameProcessStarted;
-
-            //подписываемся на эвент завершения игры
-            LaunchGame.OnGameStoped += OnGameStoped;
+            CommandReceiver.OnLexplosionOpened += OnLexplosionOpened;
         }
 
         private static bool LauncherUpdate(int version, int updaterOffsetLeft, int updaterOffsetRight)
