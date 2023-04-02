@@ -136,6 +136,12 @@ namespace Lexplosion.Logic.Network
                 {
                     IPEndPoint point = Server.Receive(out byte[] data);
 
+                    if (point == null)
+                    {
+                        // возможно метод AfterConnect еще не начал работать. если метод подключения в процессе работы, то мы тут остановимся
+                        ConnectionWait.WaitOne(); 
+                    }
+
                     AcceptingBlock.WaitOne();
                     if (point != null && AvailableConnections.Contains(point))
                     {
@@ -235,7 +241,6 @@ namespace Lexplosion.Logic.Network
                         {
                             // TODO: че-то делать
                         }
-
                     }
                     AcceptingBlock.Release();
                 }

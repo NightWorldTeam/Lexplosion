@@ -129,7 +129,7 @@ namespace Lexplosion.Logic.Network
                     Runtime.DebugWrite("Set new BeginAccept");
                     Socket sock = listener.EndAccept(data);
                     sock.Close();
-                    listener.BeginAccept(null, 0, new AsyncCallback(AcceptHandler), listener); // возвращаем асинхронный асепт
+                    listener.BeginAccept(null, 0, AcceptHandler, listener); // возвращаем асинхронный асепт
                 }
                 
                 AcceptingBlock.Release();
