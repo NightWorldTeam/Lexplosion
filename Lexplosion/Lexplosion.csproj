@@ -595,12 +595,6 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Resources\DiscordRPC.zip" />
-    <None Include="Resources\Lexplosion.Core.zip" />
-    <None Include="Resources\LumiSoft.Net.zip" />
-    <None Include="Resources\NewtonsoftJson.zip" />
-    <None Include="Resources\TaskbarNotification.zip" />
-    <None Include="Resources\Tommy.zip" />
     <Resource Include="Assets\fonts\Arkhip.ttf" />
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
@@ -647,15 +641,6 @@
       <Project>{bd1126b1-abbe-424f-bf0c-f6b3dc107bf6}</Project>
       <Name>Lexplosion.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\Lexplosion.Core.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Compression.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\InstanceXAML.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
