@@ -81,6 +81,11 @@ namespace Lexplosion.Logic.FileSystem
             get => _info?.Name;
         }
 
+        public string Id
+        {
+            get => _fileId;
+        }
+
         private FileReceiver(string ownerLogin, string ownerUUID, string fileId, DistributionData info)
         {
             _ownerLogin = ownerLogin;

@@ -30,8 +30,7 @@ namespace Lexplosion
         /// <returns>true - нет запущенного экземпляра. false - есть</returns>
         private static bool InstanceCheck()
         {
-            bool isNew;
-            var mutex = new Mutex(true, "NW-Lexplosion_Is_launched", out isNew);
+            var mutex = new Mutex(true, "NW-Lexplosion_Is_launched", out bool isNew);
             if (isNew)
                 InstanceCheckMutex = mutex;
             else
@@ -116,7 +115,7 @@ namespace Lexplosion
                     }
                 }
 
-                string arguments =
+                var arguments =
                     "\"" + Assembly.GetExecutingAssembly().Location + "\" " +
                     "\"" + LaunсherSettings.URL.LauncherParts + "Lexplosion.exe?" + version + "\" " +
                     Process.GetCurrentProcess().Id + " " +
