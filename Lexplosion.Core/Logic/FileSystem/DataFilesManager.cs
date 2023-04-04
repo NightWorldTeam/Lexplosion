@@ -14,6 +14,7 @@ namespace Lexplosion.Logic.FileSystem
     {
         public static void SaveAccount(string login, string accessData, AccountType accountType)
         {
+            //костыль и мне похуй, лень проверку делать
             if (accountType == AccountType.NoAuth)
             {
                 accessData = "zhopa";
