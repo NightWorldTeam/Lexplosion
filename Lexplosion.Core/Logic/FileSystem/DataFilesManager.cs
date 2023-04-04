@@ -14,6 +14,11 @@ namespace Lexplosion.Logic.FileSystem
     {
         public static void SaveAccount(string login, string accessData, AccountType accountType)
         {
+            if (accountType == AccountType.NoAuth)
+            {
+                accessData = "zhopa";
+            }
+
             accessData = Convert.ToBase64String(Сryptography.AesEncode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
 
             var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
@@ -43,52 +48,6 @@ namespace Lexplosion.Logic.FileSystem
             }
 
             SaveFile(LaunсherSettings.LauncherDataPath + "/account.json", JsonConvert.SerializeObject(data));
-        }
-
-        /// <summary>
-        /// Получает сохраненный аккаунт.
-        /// </summary>
-        /// <param name="login">Сюда будет помещен логин.</param>
-        /// <param name="accessData">Данные для получения доступа. Может быть пароль, а может какой-нибудь токен.</param>
-        /// <param name="accountType">Сюда передавать тип аккаунта, который нужно получить. Передавать null, если нужно получить использованный в последний раз аккаунт.</param>
-        /// <returns>
-        /// Возвращает тип полученного аккаунта, он может отличаться от параметра accountType, 
-        /// ведь если accountType будет null, то будет возвращен тип аккаунта, использованного в последний раз.
-        /// </returns>
-        public static AccountType GetAccount(out string login, out string accessData, AccountType? accountType)
-        {
-            var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
-            if (data != null && data.Profiles != null && data.Profiles.Count > 0)
-            {
-                AccountType selectedAccount = accountType ?? data.SelectedProfile;
-
-                if (data.Profiles.ContainsKey(selectedAccount))
-                {
-                    AcccountsFormat.Profile profile = data.Profiles[selectedAccount];
-
-                    if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.AccessData))
-                    {
-                        login = profile.Login;
-                        byte[] key = Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey);
-                        byte[] IV = Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16));
-                        byte[] decripted = Сryptography.AesDecode(Convert.FromBase64String(profile.AccessData), key, IV);
-
-                        accessData = Encoding.UTF8.GetString(decripted);
-                    }
-                    else
-                    {
-                        login = null;
-                        accessData = null;
-                    }
-
-                    return selectedAccount;
-                }
-            }
-
-            login = null;
-            accessData = null;
-
-            return accountType ?? AccountType.NightWorld;
         }
 
         public static void SaveSettings(Settings data, string instanceId = "")
