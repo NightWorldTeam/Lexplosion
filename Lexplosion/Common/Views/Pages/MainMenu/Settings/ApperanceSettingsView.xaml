@@ -1,0 +1,82 @@
+﻿<UserControl
+    x:Class="Lexplosion.Common.Views.Pages.MainMenu.Settings.ApperanceSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Lexplosion.Common.Views.Pages.MainMenu.Settings"
+    xmlns:localVM="clr-namespace:Lexplosion.Common.ViewModels.MainMenu.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="AccentColorSelectButton" TargetType="{x:Type RadioButton}">
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+            <Setter Property="SnapsToDevicePixels" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Ellipse
+                                x:Name="ellipse"
+                                Width="25"
+                                Height="25"
+                                Fill="{TemplateBinding Background}"
+                                SnapsToDevicePixels="False"
+                                Stroke="#131313"
+                                StrokeThickness="1" />
+                            <Viewbox
+                                Name="checkMark"
+                                Width="15"
+                                Height="15"
+                                Stretch="Fill"
+                                Visibility="Collapsed">
+                                <Path
+                                    Data="M 26.980469 5.9902344 A 1.0001 1.0001 0 0 0 26.292969 6.2929688 L 11 21.585938 L 4.7070312 15.292969 A 1.0001 1.0001 0 1 0 3.2929688 16.707031 L 10.292969 23.707031 A 1.0001 1.0001 0 0 0 11.707031 23.707031 L 27.707031 7.7070312 A 1.0001 1.0001 0 0 0 26.980469 5.9902344 z"
+                                    Fill="White"
+                                    Stroke="White" />
+                            </Viewbox>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="checkMark" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="ColorDataTemplate" DataType="{x:Type localVM:AccentColorModel}">
+            <RadioButton
+                Margin="5,0,0,0"
+                HorizontalAlignment="Left"
+                Background="{Binding AccentColorBrush}"
+                Command="{Binding ChangeColorCommand}"
+                GroupName="AccentColor"
+                IsChecked="{Binding IsSelected}"
+                Style="{StaticResource AccentColorSelectButton}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel Margin="20">
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="18"
+                Foreground="White"
+                Opacity="0.8"
+                Text="{StaticResource chooseYourAccentColor}" />
+
+            <ItemsControl ItemTemplate="{StaticResource ColorDataTemplate}" ItemsSource="{Binding AccentColors}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

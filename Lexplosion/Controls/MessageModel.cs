@@ -1,5 +1,5 @@
-﻿using Lexplosion.Gui;
-using Lexplosion.Gui.ViewModels;
+﻿using Lexplosion.Common;
+using Lexplosion.Common.ViewModels;
 using System;
 
 namespace Lexplosion.Controls

@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:extension="clr-namespace:Lexplosion.Gui.Extension"
+    xmlns:extension="clr-namespace:Lexplosion.Common.Extension"
     xmlns:local="clr-namespace:Lexplosion.Controls"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <Style x:Key="DownloadButtonProgressBar" TargetType="{x:Type ProgressBar}">

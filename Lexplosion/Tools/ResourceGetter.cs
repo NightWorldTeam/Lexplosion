@@ -1,5 +1,4 @@
-﻿using Lexplosion.Global;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Media;
 
@@ -32,7 +31,7 @@ namespace Lexplosion.Tools
             return (string)Application.Current.Resources[key] ?? "Не удалось найти значение";
         }
 
-        public static string GetCurrentLangString(string lang, string key) 
+        public static string GetCurrentLangString(string lang, string key)
         {
             try
             {
@@ -40,9 +39,9 @@ namespace Lexplosion.Tools
                 d.Source = new Uri(RuntimeApp.LangPath + "en-US.xaml");
                 return (string)d[key];
             }
-            catch 
+            catch
             {
-            
+
             }
             return "Не удалось найти значение";
         }
