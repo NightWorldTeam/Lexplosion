@@ -1,0 +1,134 @@
+﻿using Lexplosion.Logic.Management.Instances;
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
+
+namespace Lexplosion.Common.Views.Pages.MainMenu
+{
+    /// <summary>
+    /// Логика взаимодействия для LibraryView.xaml
+    /// </summary>
+    public partial class LibraryView : UserControl
+    {
+        private static double _scrollValue = 0;
+
+        public LibraryView()
+        {
+            InitializeComponent();
+            ContainerPage_ScrollViewer.ScrollToVerticalOffset(_scrollValue);
+            this.Opacity = 0.0;
+            this.Visibility = Visibility.Visible;
+            DoubleAnimation doubleAnimation = new DoubleAnimation()
+            {
+                From = 0.0,
+                To = 1.0,
+                Duration = TimeSpan.FromSeconds(0.4)
+            };
+            this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+            InstanceClient.Created += OnCreatedInstance;
+        }
+
+        private void OnCreatedInstance()
+        {
+            Lexplosion.Common.Extension.ScrollViewer.ScroollToPosAnimated(
+                ContainerPage_ScrollViewer,
+                Lexplosion.Common.Extension.ScrollViewer.GetScrollBar(ContainerPage_ScrollViewer).Maximum
+            );
+        }
+
+        private void LibraryItemsControl_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            const double animationTime = 0.3;
+
+            var viewer = (ScrollViewer)sender;
+            _scrollValue = viewer.VerticalOffset;
+
+            if (viewer.VerticalOffset >= 48)
+            {
+                if (UpButton.Visibility != Visibility.Visible)
+                {
+                    UpButton.Visibility = Visibility.Visible;
+
+                    DoubleAnimation doubleAnimation = new DoubleAnimation()
+                    {
+                        From = 0.0,
+                        To = 1.0,
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseIn
+                        }
+                    };
+
+                    ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                    {
+                        From = new Thickness(0, 10, 0, -50),
+                        To = new Thickness(0, 10, 0, 0),
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseIn
+                        }
+                    };
+
+                    UpButton.BeginAnimation(FrameworkElement.MarginProperty, thicknessAnimation);
+                    UpButton.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+                }
+            }
+            else
+            {
+                if (UpButton.Visibility == Visibility.Visible)
+                {
+                    DoubleAnimation doubleAnimation = new DoubleAnimation()
+                    {
+                        From = 1.0,
+                        To = 0.0,
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseOut
+                        }
+                    };
+
+                    ThicknessAnimation thicknessAnimation = new ThicknessAnimation()
+                    {
+                        From = new Thickness(0, 10, 0, 0),
+                        To = new Thickness(0, 10, 0, -50),
+                        Duration = TimeSpan.FromSeconds(animationTime),
+                        EasingFunction = new SineEase()
+                        {
+                            EasingMode = EasingMode.EaseOut
+                        }
+                    };
+
+                    thicknessAnimation.Completed += delegate (object sender, EventArgs e)
+                    {
+                        UpButton.Visibility = Visibility.Collapsed;
+                    };
+
+                    UpButton.BeginAnimation(FrameworkElement.MarginProperty, thicknessAnimation);
+                    UpButton.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
+                }
+            }
+
+            try
+            {
+                var onScrollCommand = Lexplosion.Common.Extension.ScrollViewer.GetOnScrollCommand(viewer);
+                onScrollCommand.Execute(null);
+            }
+            catch
+            {
+                Runtime.DebugWrite("tes12");
+            }
+        }
+
+        private void UpButton_Click(object sender, RoutedEventArgs e)
+        {
+            Lexplosion.Common.Extension.ScrollViewer.ScroollToPosAnimated(
+                ContainerPage_ScrollViewer,
+                Lexplosion.Common.Extension.ScrollViewer.GetScrollBar(ContainerPage_ScrollViewer).Minimum
+            );
+        }
+    }
+}

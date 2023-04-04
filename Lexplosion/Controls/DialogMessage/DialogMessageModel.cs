@@ -1,4 +1,4 @@
-﻿using Lexplosion.Gui;
+﻿using Lexplosion.Common;
 using System;
 
 namespace Lexplosion.Controls

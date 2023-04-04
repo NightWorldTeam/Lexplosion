@@ -13,7 +13,7 @@ namespace Lexplosion.Controls
             _toastMessages = new ObservableCollection<MessageModel>();
         }
 
-        public void AddMessage(MessageModel message) 
+        public void AddMessage(MessageModel message)
         {
             _toastMessages.Add(message);
         }

@@ -267,4 +267,11 @@
     <s:String x:Key="importProperties">Импорт cборки</s:String>
     <s:String x:Key="instanceSharingList">Список раздающихся сборок</s:String>
     <s:String x:Key="createInstance">Создать сборку</s:String>
+
+
+    <!--  Discord Phares  -->
+
+    <s:String x:Key="minecraftIsNotRunning">Minecraft не запущен</s:String>
+    <s:String x:Key="minecraft">Minecraft:</s:String>
+    <s:String x:Key="instance">Сборка:</s:String>
 </ResourceDictionary>

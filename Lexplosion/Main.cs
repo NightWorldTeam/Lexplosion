@@ -1,27 +1,24 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Reflection;
-using System.Windows;
-using System.Threading;
-using System.IO.Compression;
-using System.Windows.Media;
-using System.Collections.Generic;
+﻿using DiscordRPC;
 using Hardcodet.Wpf.TaskbarNotification;
-using DiscordRPC;
-using Lexplosion.Properties;
+using Lexplosion.Common.Models;
+using Lexplosion.Common.Models.ShowCaseMenu;
+using Lexplosion.Common.Views.Windows;
 using Lexplosion.Global;
-using Lexplosion.Tools;
-using Lexplosion.Gui.Views.Windows;
-using Lexplosion.Gui.Models;
-using Lexplosion.Gui.Models.ShowCaseMenu;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management;
-
-using ConsoleWindow = Lexplosion.Gui.Views.Windows.Console;
+using Lexplosion.Properties;
+using Lexplosion.Tools;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Reflection;
+using System.Threading;
+using System.Windows;
+using System.Windows.Media;
 using ColorConverter = System.Windows.Media.ColorConverter;
-using System.Security.Cryptography.X509Certificates;
+using ConsoleWindow = Lexplosion.Common.Views.Windows.Console;
 
 /*
  * Лаунчер Lexplosion. Разработано NightWorld Team.
@@ -33,6 +30,15 @@ namespace Lexplosion
 {
     static class RuntimeApp
     {
+        public static readonly string[] AvaliableLanguages = new string[]
+        {
+            "ru-RU", "en-US"
+        };
+
+        const string AssetsPath = "pack://application:,,,/Assets/";
+        const string ResourcePath = "pack://application:,,,/Common/Resources/";
+        internal const string LangPath = AssetsPath + "langs/";
+
         private static App app = new App();
         private static SplashWindow _splashWindow;
         private static NotificationWindow _notificationWindow;
@@ -48,14 +54,6 @@ namespace Lexplosion
         private static double _splashWindowLeft;
         private static double _splashWindowTop;
 
-        const string AssetsPath = "pack://application:,,,/Assets/";
-        const string ResourcePath = "pack://application:,,,/Gui/Resources/";
-        public const string LangPath = AssetsPath + "langs/";
-
-        public static readonly string[] AvaliableLanguages = new string[]
-        {
-            "ru-RU", "en-US"
-        };
         private static ResourceDictionary CurrentLangDict;
 
         public static Color CurrentAccentColor => (Color)app.Resources["ActivityColor"];
@@ -142,11 +140,16 @@ namespace Lexplosion
             app.Resources["BrandSolidColorBrush"] = new SolidColorBrush(Color.FromRgb(22, 127, 252));
             MainStylesInit();
 
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/DataTemplates.xaml")
+            });
+
             app.Dispatcher.Invoke(delegate ()
             {
                 app.Exit += Runtime.BeforeExit;
             });
-            
+
             Runtime.ПереходВРежимЗавершения += CloseMainWindow;
             Runtime.OnExitEvent += ExitHandler;
             Runtime.OnUpdateStart += () => { _splashWindow.ChangeLoadingBoardPlaceholder(true); };
@@ -186,8 +189,8 @@ namespace Lexplosion
 
                 discordClient?.SetPresence(new RichPresence()
                 {
-                    State = "Minecraft " + gameManager.GameVersion,
-                    Details = "Сборка " + gameManager.GameClientName,
+                    State = ResourceGetter.GetString("minecraft") + " " + gameManager.GameVersion,
+                    Details = ResourceGetter.GetString("instance") + " " + gameManager.GameClientName,
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -208,7 +211,7 @@ namespace Lexplosion
 
                 discordClient?.SetPresence(new RichPresence()
                 {
-                    State = "Minecraft не запущен",
+                    State = ResourceGetter.GetString("minecraftIsNotRunning"),
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {
@@ -379,11 +382,6 @@ namespace Lexplosion
             {
                 Source = new Uri("pack://application:,,,/Controls/Controls.xaml")
             });
-
-            app.Resources.MergedDictionaries.Add(new ResourceDictionary()
-            {
-                Source = new Uri("pack://application:,,,/DataTemplates.xaml")
-            });
         }
 
         /// <summary>
@@ -442,7 +440,7 @@ namespace Lexplosion
             {
                 client.SetPresence(new RichPresence()
                 {
-                    State = "Minecraft не запущен",
+                    State = ResourceGetter.GetString("minecraftIsNotRunning"),
                     Timestamps = Timestamps.Now,
                     Assets = new Assets()
                     {

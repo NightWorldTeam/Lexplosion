@@ -266,4 +266,11 @@
     <s:String x:Key="importProperties">Import Instance</s:String>
     <s:String x:Key="instanceSharingList">Instnace Sharing List</s:String>
     <s:String x:Key="createInstance">Create Instance</s:String>
+
+
+    <!--  Discord Phrase  -->
+
+    <s:String x:Key="minecraftIsNotRunning">Minecraft is not running</s:String>
+    <s:String x:Key="minecraft">Minecraft:</s:String>
+    <s:String x:Key="instance">Instance:</s:String>
 </ResourceDictionary>
