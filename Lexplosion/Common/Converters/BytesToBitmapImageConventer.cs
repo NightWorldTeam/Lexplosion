@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace Lexplosion.Common.Converters
 {
-    public class BytesToBitmapImageConventer : IValueConverter
+    public sealed class BytesToBitmapImageConventer : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -296,4 +296,52 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+
+    <Style x:Key="TestItemStyle" TargetType="{x:Type TabItem}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="TextBlock.Foreground" Value="#E1E1E1" />
+        <Setter Property="TextBlock.FontWeight" Value="Medium" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Border
+                        x:Name="border"
+                        Padding="16,8"
+                        Background="Transparent"
+                        BorderBrush="#282828"
+                        BorderThickness="0,0,0,3"
+                        CornerRadius="0">
+                        <ContentPresenter
+                            TextBlock.FontSize="14"
+                            x:Name="ContentSite"
+                            Margin="5,0,5,0"
+                            VerticalAlignment="Center"
+                            ContentSource="Header"
+                            RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                        </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="False" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="border" Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Lexplosion.Common.Converters
 {
-    public class NotEqualZeroConverter : IValueConverter
+    public sealed class NotEqualZeroConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

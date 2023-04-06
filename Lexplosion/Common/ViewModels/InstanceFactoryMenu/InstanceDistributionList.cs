@@ -1,7 +1,8 @@
 ﻿using Lexplosion.Common.ModalWindow;
+using Lexplosion.Common.Models.Controllers;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Logic.FileSystem;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs
@@ -11,7 +12,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Properties
 
 
-        public ObservableCollection<InstanceDistribution> CurrentInstanceDistribution { get; private set; } = new ObservableCollection<InstanceDistribution>();
+        public IEnumerable<InstanceDistribution> CurrentInstanceDistribution => ShareController.Instance.FileReceivers;
 
 
         #endregion Properities
@@ -50,7 +51,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
                 if (obj is InstanceDistribution)
                 {
                     var instance = (InstanceDistribution)obj;
-                    instance.CancelDownloading();
+                    instance.CancelDownload();
                 }
             }));
         }
@@ -75,18 +76,26 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #endregion Constructors
 
 
-        #region Private Methods
+        #region Public & Protected Methods
 
 
         public async void LoadInstanceDistribution()
         {
             var receivers = await Task.Run(() => FileReceiver.GetDistributors());
-            CurrentInstanceDistribution.Clear();
+
             foreach (var receiver in receivers)
             {
-                CurrentInstanceDistribution.Add(new InstanceDistribution(receiver, DownloadResultHandler));
+                if (!ShareController.Instance.IsReceiverContains(receiver.Id)) { 
+                    ShareController.Instance.AddFileReceiver(new InstanceDistribution(receiver, DownloadResultHandler));
+                }
             }
         }
+
+
+        #endregion Public & Protected Methods
+
+
+        #region Private Methods
 
 
         private void DownloadResultHandler(ImportResult importResult)

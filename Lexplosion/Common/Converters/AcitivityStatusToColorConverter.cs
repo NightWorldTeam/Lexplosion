@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Lexplosion.Common.Converters
 {
-    public class AcitivityStatusToColorConverter : IValueConverter
+    public sealed class AcitivityStatusToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

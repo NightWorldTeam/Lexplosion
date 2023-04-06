@@ -97,6 +97,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
+    <Compile Include="Common\Models\Controllers\ShareController.cs" />
+    <Compile Include="Common\Models\Objects\FileDistributionWrapper.cs" />
     <Compile Include="Common\Models\Objects\ImportFile.cs" />
     <Compile Include="Common\Models\Objects\InstanceDistribution.cs" />
     <Compile Include="Controls\ChangelogItem\ChangelogItem.cs" />

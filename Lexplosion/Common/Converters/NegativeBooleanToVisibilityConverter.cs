@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace Lexplosion.Common.Converters
 {
-    public class NegativeBooleanToVisibilityConverter : IValueConverter
+    public sealed class NegativeBooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

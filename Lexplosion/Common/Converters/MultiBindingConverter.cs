@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Lexplosion.Common.Converters
 {
-    public class MultiBindingConverter : IMultiValueConverter
+    public sealed class MultiBindingConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

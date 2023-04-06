@@ -144,7 +144,9 @@
                         Background="#131313"
                         BorderBrush="#202020"
                         BorderThickness="1,0,0,0">
-                        <ContentControl Content="{Binding CurrentPage}" />
+                        <Border BorderBrush="Transparent" BorderThickness="0.5">
+                            <ContentControl Content="{Binding CurrentPage}" />
+                        </Border>
                     </Border>
                 </ScrollViewer>
             </Grid>

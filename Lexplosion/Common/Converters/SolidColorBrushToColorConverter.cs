@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Lexplosion.Common.Converters
 {
-    internal class SolidColorBrushToColorConverter : IValueConverter
+    public sealed class SolidColorBrushToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

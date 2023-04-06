@@ -2,6 +2,7 @@
 using Lexplosion.Logic.Management.Instances;
 using System;
 
+
 namespace Lexplosion.Common.Models.Objects
 {
     public sealed class InstanceDistribution : VMBase
@@ -9,8 +10,9 @@ namespace Lexplosion.Common.Models.Objects
         private readonly FileReceiver _receiver;
         private readonly Action<ImportResult> _resultHandler;
 
-        public string Name { get; private set; }
-        public string Author { get; private set; }
+        public string Id => _receiver.Id;
+        public string Name { get; }
+        public string Author { get; }
 
         private DistributionState _state = DistributionState.InProcess;
         public DistributionState State
@@ -22,7 +24,7 @@ namespace Lexplosion.Common.Models.Objects
             }
         }
 
-        private double _speed = 3.3333;
+        private double _speed = 0.0000;
         public double Speed
         {
             get => _speed; private set
@@ -32,7 +34,7 @@ namespace Lexplosion.Common.Models.Objects
             }
         }
 
-        private byte _percentages = 33;
+        private byte _percentages = 0;
         public byte Percentages
         {
             get => _percentages; private set
@@ -60,9 +62,9 @@ namespace Lexplosion.Common.Models.Objects
             MainModel.Instance.AddInstanceForm(instanceClient, this);
         }
 
-        public void CancelDownloading()
+        public void CancelDownload()
         {
-
+            _receiver.CancelDownload();
         }
 
         private void FileReceiver_SpeedUpdate(double value)
