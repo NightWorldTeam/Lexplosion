@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -49,8 +50,9 @@ namespace Lexplosion.Logic.Network.TURN
 
                 return true;
             }
-            catch
+            catch (Exception e)
             {
+                Runtime.DebugWrite("Turn Receive exception " + e);
                 data = new byte[0];
                 return false;
             }

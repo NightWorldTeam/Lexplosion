@@ -22,6 +22,8 @@ namespace Lexplosion.Logic.FileSystem
         private Thread _informingThread;
         private AutoResetEvent _waitingInforming;
 
+        public event Action OnClosed;
+
         private FileDistributor(string fileId, string UUID, string sessionToken)
         {
             _waitingInforming = new AutoResetEvent(false);
@@ -108,6 +110,11 @@ namespace Lexplosion.Logic.FileSystem
                     _dataServer.StopWork();
                     _dataServer = null;
                 }
+
+                ThreadPool.QueueUserWorkItem(delegate (object state)
+                {
+                    OnClosed?.Invoke();
+                });
             }
         }
     }

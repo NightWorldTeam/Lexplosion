@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -111,8 +112,9 @@ namespace Lexplosion.Logic.Network.TURN
                 {
                     break;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Runtime.DebugWrite("ServiceSend Exception " + ex);
                     ThreadPool.QueueUserWorkItem(delegate (object state)
                     {
                         Close(point);
@@ -136,13 +138,14 @@ namespace Lexplosion.Logic.Network.TURN
                 Socket sock = sockets_[0];
 
                 IPEndPoint point;
-                // Полученный из select сокет может быть отключенны и тогда RemoteEndPoint выкинет исключение. В этом случае мы продалжаем цикл и снова пытаемся считать данные
+                // Полученный из select сокет может быть отключенным и тогда RemoteEndPoint выкинет исключение. В этом случае мы продалжаем цикл и снова пытаемся считать данные
                 try
                 {
                     point = (IPEndPoint)sock.LocalEndPoint;
                 }
-                catch
+                catch (Exception e)
                 {
+                    Runtime.DebugWrite("Turn Receive exception " + e);
                     continue;
                 }
 
@@ -151,14 +154,16 @@ namespace Lexplosion.Logic.Network.TURN
                     data = new byte[sock.Available];
                     sock.Receive(data);
                 }
-                catch
+                catch (Exception e)
                 {
+                    Runtime.DebugWrite("Turn Receive exception " + e);
                     data = new byte[0];
                 }
 
                 return point;
             }
 
+            Runtime.DebugWrite("Turn Receive stop");
             data = new byte[0];
             return null;
         }

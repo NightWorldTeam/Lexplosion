@@ -219,6 +219,8 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        public bool IsSharing { get; private set; } = false;
+
         public bool IsInstalled { get; private set; } = false;
 
         #endregion
@@ -1065,7 +1067,15 @@ namespace Lexplosion.Logic.Management.Instances
 
             if (result == ExportResult.Successful)
             {
-                return FileDistributor.CreateDistribution(zipFile, Name);
+                IsSharing = true;
+
+                FileDistributor distributor =  FileDistributor.CreateDistribution(zipFile, Name);
+                distributor.OnClosed += delegate ()
+                {
+                    IsSharing = false;
+                };
+
+                return distributor;
             }
             else
             {

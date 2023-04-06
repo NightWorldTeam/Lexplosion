@@ -101,14 +101,14 @@ namespace Lexplosion.Common.Models
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                var playerClub = (PlayerClub)player;
-                if (player != null)
-                {
-                    if (!player.IsKicked)
-                        Players.Remove(playerClub);
-                    player.SetUnkickedAction(RemoveObjFromList);
-                    IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
-                }
+                //var playerClub = (PlayerClub)player;
+                //if (player != null)
+                //{
+                //    if (!player.IsKicked)
+                //        Players.Remove(playerClub);
+                //    player.SetUnkickedAction(RemoveObjFromList);
+                //    IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
+                //}
             });
         }
 
