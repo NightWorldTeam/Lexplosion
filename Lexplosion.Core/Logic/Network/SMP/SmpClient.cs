@@ -9,9 +9,8 @@ using System.Threading;
 
 namespace Lexplosion.Logic.Network.SMP
 {
-
     /// <summary>
-    /// Клиент Stream Messages Protocol. Работает на udp. 
+    /// Клиент Stream Messages Protocol. Работает над udp. 
     /// Устанавливает соединение, контролириует доставку пакетов. Заточен для работы с Udp hole pushing.
     /// Может соединяться только с одним хостом.
     /// </summary>
@@ -158,7 +157,7 @@ namespace Lexplosion.Logic.Network.SMP
         private readonly ConcurrentQueue<Message> _receivingBuffer = new ConcurrentQueue<Message>();
         private readonly ConcurrentDictionary<ushort, byte[]> _packagesBuffer = new ConcurrentDictionary<ushort, byte[]>(); //буфер принятых пакетов
 
-        private readonly Semaphore _sendBlock = new Semaphore(1, 1);
+        private readonly object _sendLocker = new object();
         private readonly AutoResetEvent _waitSendData = new AutoResetEvent(false);
         private readonly AutoResetEvent _deliveryWait = new AutoResetEvent(false);
         private readonly Semaphore _repeatDeliveryBlock = new Semaphore(1, 1);
@@ -534,85 +533,94 @@ namespace Lexplosion.Logic.Network.SMP
         {
             while (IsConnected)
             {
-                _sendingCycleDetector.Reset();
-
                 try
                 {
+                    _sendingCycleDetector.Reset();
+
                     // ждём появления сообщений в буфере
                     while (_sendingBuffer.Count == 0)
                     {
                         _waitSendData.WaitOne();
                     }
 
-                    _sendBlock.WaitOne();
+                    ushort lastPackageId;
+                    SortedDictionary<ushort, byte[]> packages;
+                    bool acquiredLock = false;
 
-                    var packages = new SortedDictionary<ushort, byte[]>();
-                    _sendingBuffer.TryPeek(out List<Package> packagesHeap); // получаем кучу пакетов
-
-                    int lastPackageId_ = packagesHeap.Count + _sendingPointer - 1;
-                    ushort lastPackageId = (ushort)(lastPackageId_ > 65535 ? 65535 : lastPackageId_); // id последнего пакета в этом сегменте отправки
-                    int i = 0;
-                    // проходимся по всем пакетам
-                    foreach (Package packageInfo in packagesHeap)
+                    try
                     {
-                        byte[] package = new byte[packageInfo.Size];
+                        Monitor.Enter(_sendLocker, ref acquiredLock);
 
-                        byte[] id = BitConverter.GetBytes(_sendingPointer);
-                        package[HeaderPositions.Code] = PackgeCodes.Data; //код пакета
-                        package[HeaderPositions.Id_1] = id[0]; //первая часть его айдишника
-                        package[HeaderPositions.Id_2] = id[1]; //вторая
+                        packages = new();
+                        _sendingBuffer.TryPeek(out List<Package> packagesHeap); // получаем кучу пакетов
 
-                        id = BitConverter.GetBytes(lastPackageId);
-                        package[HeaderPositions.LastId_1] = id[0]; // первая часть id последнего пакета
-                        package[HeaderPositions.LastId_2] = id[1]; // вторая часть
-                        package[HeaderPositions.AttemptsCounts] = 0; // этот байт отвечает за номер попытки отправки
-
-                        int offset = HeaderPositions.FirstDataByte;
-                        int lastFlagIndex = 0;
-                        // проходимся по каждому сегменту
-                        foreach (byte[] payload in packageInfo.Segments)
+                        int lastPackageId_ = packagesHeap.Count + _sendingPointer - 1;
+                        lastPackageId = (ushort)(lastPackageId_ > 65535 ? 65535 : lastPackageId_); // id последнего пакета в этом сегменте отправки
+                        int i = 0;
+                        // проходимся по всем пакетам
+                        foreach (Package packageInfo in packagesHeap)
                         {
-                            package[offset] = DataFlags.None; // это флаг данного сегмента данных. 0 - значит нихуя не делать
-                            lastFlagIndex = offset;
+                            byte[] package = new byte[packageInfo.Size];
 
-                            int payloadSize = payload.Length;
-                            byte[] size = BitConverter.GetBytes(payloadSize);
-                            package[offset + 1] = size[0]; // первая часть размера сегмента данных
-                            package[offset + 2] = size[1]; // вторая часть
-                            offset += 3;
+                            byte[] id = BitConverter.GetBytes(_sendingPointer);
+                            package[HeaderPositions.Code] = PackgeCodes.Data; //код пакета
+                            package[HeaderPositions.Id_1] = id[0]; //первая часть его айдишника
+                            package[HeaderPositions.Id_2] = id[1]; //вторая
 
-                            Array.Copy(payload, 0, package, offset, payloadSize);
-                            offset += payloadSize;
+                            id = BitConverter.GetBytes(lastPackageId);
+                            package[HeaderPositions.LastId_1] = id[0]; // первая часть id последнего пакета
+                            package[HeaderPositions.LastId_2] = id[1]; // вторая часть
+                            package[HeaderPositions.AttemptsCounts] = 0; // этот байт отвечает за номер попытки отправки
+
+                            int offset = HeaderPositions.FirstDataByte;
+                            int lastFlagIndex = 0;
+                            // проходимся по каждому сегменту
+                            foreach (byte[] payload in packageInfo.Segments)
+                            {
+                                package[offset] = DataFlags.None; // это флаг данного сегмента данных. 0 - значит нихуя не делать
+                                lastFlagIndex = offset;
+
+                                int payloadSize = payload.Length;
+                                byte[] size = BitConverter.GetBytes(payloadSize);
+                                package[offset + 1] = size[0]; // первая часть размера сегмента данных
+                                package[offset + 2] = size[1]; // вторая часть
+                                offset += 3;
+
+                                Array.Copy(payload, 0, package, offset, payloadSize);
+                                offset += payloadSize;
+                            }
+
+                            if (!packageInfo.lastSegmentIsFull) // последний сегмент данных не полный и надо поставить флаг что его необходимо склеить
+                            {
+                                package[lastFlagIndex] = DataFlags.NotFull;
+                            }
+
+                            packages[_sendingPointer] = package;
+                            _sendingPointer++;
+                            i++;
+
+                            if (_sendingPointer == 0)
+                            {
+                                break;
+                            }
                         }
 
-                        if (!packageInfo.lastSegmentIsFull) // последний сегмент данных не полный и надо поставить флаг что его необходимо склеить
+                        if (packagesHeap.Count == i) // если все пакеты из кучи были поставлены на отправку, то убираем эту кучу из буфера
                         {
-                            package[lastFlagIndex] = DataFlags.NotFull;
+                            _sendingBuffer.TryDequeue(out _);
                         }
-
-                        packages[_sendingPointer] = package;
-                        _sendingPointer++;
-                        i++;
-
-                        if (_sendingPointer == 0)
+                        else // если нет, то тогда убираем из кучи поставленные на отправку пакеты. Оставшиеся пакеты отправим на следующей итерации
                         {
-                            break;
+                            for (int j = 0; j < i; j++)
+                            {
+                                packagesHeap.RemoveAt(0);
+                            }
                         }
                     }
-
-                    if (packagesHeap.Count == i) // если все пакеты из кучи были поставлены на отправку, то убираем эту кучу из буфера
+                    finally
                     {
-                        _sendingBuffer.TryDequeue(out _);
+                        if (acquiredLock) Monitor.Exit(_sendLocker);
                     }
-                    else // если нет, то тогда убираем из кучи поставленные на отправку пакеты. Оставшиеся пакеты отправим на следующей итерации
-                    {
-                        for (int j = 0; j < i; j++)
-                        {
-                            packagesHeap.RemoveAt(0);
-                        }
-                    }
-
-                    _sendBlock.Release();
 
                     _repeatDeliveryBlock.WaitOne();
                     _lastPackage = lastPackageId;
@@ -715,6 +723,10 @@ namespace Lexplosion.Logic.Network.SMP
                     }
 
                     _lastPackage = -1;
+                }
+                catch
+                {
+                    break;
                 }
                 finally
                 {
@@ -1110,8 +1122,10 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Send(byte[] inputData)
         {
+            bool acquiredLock = false;
+
             if (_inStopping || !IsConnected) return;
-            Begin: _sendBlock.WaitOne();
+            Begin: Monitor.Enter(_sendLocker, ref acquiredLock);
 
             int mtu = _mtu;
             int maxPackagesCount = _maxPackagesCount;
@@ -1121,7 +1135,7 @@ namespace Lexplosion.Logic.Network.SMP
             {
                 if (_sendingBuffer.Count > 1)
                 {
-                    _sendBlock.Release();
+                    if (acquiredLock) Monitor.Exit(_sendLocker);
                     _sendingCycleDetector.WaitOne();
 
                     if (_inStopping || !IsConnected) return;
@@ -1173,7 +1187,7 @@ namespace Lexplosion.Logic.Network.SMP
                         }
                         else
                         {
-                            _sendBlock.Release();
+                            if (acquiredLock) Monitor.Exit(_sendLocker);
                             _sendingCycleDetector.WaitOne();
 
                             if (_inStopping || !IsConnected) return;
@@ -1188,13 +1202,13 @@ namespace Lexplosion.Logic.Network.SMP
             }
             else
             {
-                _sendBlock.Release();
+                if (acquiredLock) Monitor.Exit(_sendLocker);
                 _sendingCycleDetector.WaitOne();
                 goto Begin;
             }
 
             _waitSendData.Set();
-            _sendBlock.Release();
+            if (acquiredLock) Monitor.Exit(_sendLocker);
         }
 
         private void FormingMessage(out byte[] data)
@@ -1274,19 +1288,24 @@ namespace Lexplosion.Logic.Network.SMP
             {
                 if (IsConnected)
                 {
-                    _sendBlock.WaitOne();
+                    bool acquiredLock = false;
+                    Monitor.Enter(_sendLocker, ref acquiredLock);
                     _inStopping = true; // ставим флаг чтобы send нельзя было вызвать ещё раз
-                    _sendBlock.Release();
+                    if (acquiredLock) Monitor.Exit(_sendLocker);
 
-                    while (_sendingBuffer.Count != 0) // ждём когда все пакеты из буфера будут доставлены
+                    while (_sendingBuffer.Count != 0 && IsConnected) // ждём когда все пакеты из буфера будут доставлены
                     {
                         _sendingCycleDetector.WaitOne();
                     }
 
-                    for (int i = 0; i < 20; i++) //отправляем 20 запросов на разрыв соединения
+                    try
                     {
-                        _socket.Send(new byte[2] { PackgeCodes.ConnectionClose, _selfSessionId }, 2); // TODO: было исключение доступ к ликвидированному объекту запрещен
+                        for (int i = 0; i < 20; i++) //отправляем 20 запросов на разрыв соединения
+                        {
+                            _socket.Send(new byte[2] { PackgeCodes.ConnectionClose, _selfSessionId }, 2);
+                        }
                     }
+                    catch { }
 
                     StopWork();
                 }

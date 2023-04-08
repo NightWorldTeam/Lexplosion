@@ -17,9 +17,21 @@ namespace Lexplosion
     {
         public static Process CurrentProcess { get; private set; }
 
+        /// <summary>
+        /// Происходит переда закрытием лаунчера
+        /// </summary>
         public static event Action OnExitEvent;
+        /// <summary>
+        /// Происходит перед запуском процесса обновления лаунчера
+        /// </summary>
         public static event Action OnUpdateStart;
+        /// <summary>
+        /// Происходит если была запущена вторая копия лаунчера
+        /// </summary>
         public static event Action OnLexplosionOpened;
+        /// <summary>
+        /// Происходит если было вызвано закрытие лаунчера методом Exit
+        /// </summary>
         public static event Action ПереходВРежимЗавершения;
 
         private static Mutex? InstanceCheckMutex;
@@ -137,7 +149,7 @@ namespace Lexplosion
         }
 
         /// <summary>
-        /// убивает процесс лаунчера
+        /// Закрытие лаунчера. В отличии от Exit сразу убивает процесс лаунчера, не дожидаясь заврешения приоритетных задач.
         /// </summary>
         public static void KillApp()
         {
@@ -146,11 +158,12 @@ namespace Lexplosion
         }
 
         /// <summary>
-        /// Выход из лаунчера. Если запущен приоритетный процесс, то ждет его завршения и только потом закрывеат лаунчер. 
+        /// Закрытие лаунчера. Если запущена приоритетная задача, то ждет её завршения и только потом закрывеат лаунчер. 
         /// Закртие может быть отменено методом CancelingExit
         /// </summary>
         public static void Exit()
         {
+            Runtime.DebugWrite("Exit");
             lock (_locker)
             {
                 _inExited = true;
@@ -193,6 +206,9 @@ namespace Lexplosion
             CommandReceiver.StopCommandServer();
         }
 
+        /// <summary>
+        /// Отмена закрытия лаунчера, вызванного методом Exit.
+        /// </summary>
         public static void CancelingExit()
         {
             lock (_locker)
