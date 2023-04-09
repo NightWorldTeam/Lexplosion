@@ -372,10 +372,11 @@
         </Button>
 
         <controls:LoadingBoard
+            x:Name="CatalogLoader"
             BackgroundColor="#18191b"
             BackgroundOpacity="0.9"
             IsLoadingFinished="{Binding IsLoaded}"
             IsTabStop="False"
-            Placeholder="{DynamicResource curseforgeDataLoading}" />
+            Placeholder="{Binding LoaderPlaceholder}" />
     </Grid>
 </UserControl>

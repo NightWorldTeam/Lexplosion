@@ -132,6 +132,8 @@
 
     <!--  catalog  -->
     <s:String x:Key="curseforgeDataLoading">Идёт загрузка данных с curseforge.com...</s:String>
+    <s:String x:Key="modrinthDataLoading">Идёт загрузка данных с modrinth.com...</s:String>
+    <s:String x:Key="nightworldDataLoading">Идёт загрузка данных с night-world.org...</s:String>
     <s:String x:Key="nothingHere">Мы ничего не нашли по вашему запросу.</s:String>
 
     <!--  instance form  -->
@@ -274,4 +276,8 @@
     <s:String x:Key="minecraftIsNotRunning">Minecraft не запущен</s:String>
     <s:String x:Key="minecraft">Minecraft:</s:String>
     <s:String x:Key="instance">Сборка:</s:String>
+
+
+    <!--  Share  -->
+    <s:String x:Key="stopAll">Остановить все</s:String>
 </ResourceDictionary>

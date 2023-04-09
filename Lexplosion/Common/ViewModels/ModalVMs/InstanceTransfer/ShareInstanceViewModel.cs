@@ -12,14 +12,15 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
 
         public IEnumerable<FileDistributionWrapper> ActiveShareProcess => ShareController.Instance.ActiveShareProcess;
+        public bool IsAlreadySharing => _instanceClient.IsShare;
+        public ShareController ShareCtrl => ShareController.Instance;
 
-
-        private bool _isAlreadySharing;
-        public bool IsAlreadySharing 
+        private bool _isPrepareToShare;
+        public bool IsPrepareToShare 
         {
-            get => _isAlreadySharing; private set 
+            get => _isPrepareToShare; set 
             {
-                _isAlreadySharing = value;
+                _isPrepareToShare = value;
                 OnPropertyChanged();
             }
         }
@@ -39,6 +40,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
                 var wrapper = (FileDistributionWrapper)obj;
                 wrapper.FileDistribution.Stop();
                 ShareController.Instance.RemoveActiveShareProcess(wrapper);
+                OnPropertyChanged(nameof(IsAlreadySharing));
             }));
         }
 
@@ -63,13 +65,15 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
         protected override void Action()
         {
+            IsPrepareToShare = true;
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var fileDistribution = _instanceClient.Share(UnitsList);
                 var wrapper = new FileDistributionWrapper(_instanceClient.Name, fileDistribution);
                 App.Current.Dispatcher.Invoke(() => { 
                     ShareController.Instance.AddActiveShareProcess(wrapper);
-                    IsAlreadySharing = true;
+                    OnPropertyChanged(nameof(IsAlreadySharing));
+                    IsPrepareToShare = false;
                 });
             });
         }
