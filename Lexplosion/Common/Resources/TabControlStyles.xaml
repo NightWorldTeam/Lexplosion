@@ -316,17 +316,21 @@
                         BorderThickness="0,0,0,3"
                         CornerRadius="0">
                         <ContentPresenter
-                            TextBlock.FontSize="14"
                             x:Name="ContentSite"
                             Margin="5,0,5,0"
                             VerticalAlignment="Center"
                             ContentSource="Header"
-                            RecognizesAccessKey="True" />
+                            RecognizesAccessKey="True"
+                            TextBlock.FontSize="14" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="White" />
                             <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="ContentSite" Property="Opacity" Value="0.5" />
                         </Trigger>
 
                         <MultiTrigger>

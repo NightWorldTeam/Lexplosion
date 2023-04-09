@@ -65,6 +65,7 @@ namespace Lexplosion.Common.Models.Objects
         public void CancelDownload()
         {
             _receiver.CancelDownload();
+            State = DistributionState.InQueue;
         }
 
         private void FileReceiver_SpeedUpdate(double value)

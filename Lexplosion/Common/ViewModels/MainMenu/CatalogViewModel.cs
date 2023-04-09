@@ -174,6 +174,16 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             }
         }
 
+        private string _loaderPlaceholder;
+        public string LoaderPlaceholder 
+        {
+            get => _loaderPlaceholder; set 
+            {
+                _loaderPlaceholder = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #endregion Properties
 
@@ -245,15 +255,20 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
         private void SetSelectedInstanceSourceByIndex(byte value)
         {
-            if (value == 0)
+            if (value == 0) 
+            {
+                LoaderPlaceholder = ResourceGetter.GetString("nightworldDataLoading");
                 SelectedInstanceSource = InstanceSource.Nightworld;
+            }
             else if (value == 1)
             {
+                LoaderPlaceholder = ResourceGetter.GetString("curseforgeDataLoading");
                 Categories = PrepareCategories(InstanceSource.Curseforge);
                 SelectedInstanceSource = InstanceSource.Curseforge;
             }
             else if (value == 2)
             {
+                LoaderPlaceholder = ResourceGetter.GetString("modrinthDataLoading");
                 Categories = PrepareCategories(InstanceSource.Modrinth);
                 SelectedInstanceSource = InstanceSource.Modrinth;
             }

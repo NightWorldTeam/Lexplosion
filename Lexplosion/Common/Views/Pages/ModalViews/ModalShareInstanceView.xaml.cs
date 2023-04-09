@@ -22,5 +22,10 @@ namespace Lexplosion.Common.Views.Pages.ModalViews
             };
             this.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation);
         }
+
+        private void StopShare_Click(object sender, RoutedEventArgs e)
+        {
+            ActiveShareTabItem.IsSelected = true;
+        }
     }
 }
