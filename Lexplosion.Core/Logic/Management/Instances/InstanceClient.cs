@@ -219,6 +219,18 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        private bool _IsUpdating = false;
+        public bool IsUpdating
+        {
+            get => _IsUpdating;
+            private set
+            {
+
+                _IsUpdating = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsSharing { get; private set; } = false;
 
         public bool IsInstalled { get; private set; } = false;
@@ -1069,7 +1081,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 IsSharing = true;
 
-                FileDistributor distributor =  FileDistributor.CreateDistribution(zipFile, Name);
+                FileDistributor distributor = FileDistributor.CreateDistribution(zipFile, Name);
                 distributor.OnClosed += delegate ()
                 {
                     IsSharing = false;
@@ -1287,12 +1299,14 @@ namespace Lexplosion.Logic.Management.Instances
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = "",
-                IsComplete = false
+                IsComplete = false,
+                IsUpdating = true
             };
 
             Lexplosion.Runtime.TaskRun(delegate ()
             {
                 callback(Import(client, zipFile));
+                client.IsUpdating = false;
             });
 
             return client;
@@ -1306,7 +1320,8 @@ namespace Lexplosion.Logic.Management.Instances
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = "",
-                IsComplete = false
+                IsComplete = false,
+                IsUpdating = true
             };
 
             Lexplosion.Runtime.TaskRun(delegate ()
@@ -1321,6 +1336,7 @@ namespace Lexplosion.Logic.Management.Instances
                     callback(result == FileRecvResult.Canceled ? ImportResult.Canceled : ImportResult.DownloadError);
                 }
 
+                client.IsUpdating = false;
             });
 
             return client;
