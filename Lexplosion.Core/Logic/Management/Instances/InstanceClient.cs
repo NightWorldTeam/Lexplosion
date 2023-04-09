@@ -219,6 +219,17 @@ namespace Lexplosion.Logic.Management.Instances
             }
         }
 
+        private bool _isUpdating = false;
+        public bool IsUpdating
+        {
+            get => _isUpdating;
+            private set
+            {
+                _isUpdating = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsSharing { get; private set; } = false;
 
         public bool IsInstalled { get; private set; } = false;
@@ -1067,12 +1078,12 @@ namespace Lexplosion.Logic.Management.Instances
 
             if (result == ExportResult.Successful)
             {
-                IsShare = true;
+                IsSharing = true;
 
                 FileDistributor distributor = FileDistributor.CreateDistribution(zipFile, Name);
                 distributor.OnClosed += delegate ()
                 {
-                    IsShare = false;
+                    IsSharing = false;
                 };
 
                 return distributor;
