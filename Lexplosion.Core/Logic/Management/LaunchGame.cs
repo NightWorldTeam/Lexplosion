@@ -36,6 +36,8 @@ namespace Lexplosion.Logic.Management
 
         private CancellationToken _updateCancelToken;
 
+        private string _customJavaPath = null;
+
         #region events
         /// <summary>
         /// Выполняется при запуске процесса игры
@@ -107,6 +109,9 @@ namespace Lexplosion.Logic.Management
             if (_classInstance == null)
                 _classInstance = this;
 
+            // Сохраняем JavaPath для этой сборки. У настроек сборок нельзя установить Java17Path,
+            // поэтому в JavaPath может храниться как новая версия джавы, так и старая.
+            _customJavaPath = instanceSettings.JavaPath;
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             _settings = instanceSettings;
@@ -392,7 +397,29 @@ namespace Lexplosion.Logic.Management
                 };
             }
 
-            if (_settings.IsCustomJava == false)
+            bool javaIsNotDefined = true;
+            if (_settings.IsCustomJava == true)
+            {
+                if (!string.IsNullOrEmpty(_customJavaPath))
+                {
+                    // _customJavaPath хранит путь до джавы конкретно для этой сборки. По этому если джава кастомная, то юзаем этот путь.
+                    // Если не использовать _customJavaPath, то для новых версий мы можем выбрать Java17Path, даже если в настройках
+                    // сборки прописана конретная версия джавы, а это нам не надо.
+                    _javaPath = _customJavaPath;
+                    javaIsNotDefined = false;
+                }
+                else
+                {
+                    string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, releaseIndex);
+                    if (!string.IsNullOrEmpty(javaPath))
+                    {
+                        _javaPath = javaPath;
+                        javaIsNotDefined = false;
+                    }
+                }
+            }
+
+            if (javaIsNotDefined)
             {
                 using (JavaChecker javaCheck = new JavaChecker(releaseIndex, _updateCancelToken))
                 {
@@ -460,15 +487,6 @@ namespace Lexplosion.Logic.Management
                     }
                 }
             }
-            else
-            {
-                //using (JavaChecker javaCheck = new JavaChecker(releaseIndex, _updateCancelToken, true))
-                //{
-                //    javaCheck.DefinePath()
-                //}
-
-                _javaPath = _settings.JavaPath;
-            }
 
             return instance.Update(_javaPath, progressHandler);
         }
@@ -499,7 +517,26 @@ namespace Lexplosion.Logic.Management
                 {
                     if (files?.version != null && files.libraries != null)
                     {
-                        if (_settings.IsCustomJava == false)
+                        bool javaIsNotDefined = true;
+                        if (_settings.IsCustomJava == true)
+                        {
+                            if (!string.IsNullOrEmpty(_customJavaPath))
+                            {
+                                _javaPath = _customJavaPath;
+                                javaIsNotDefined = false;
+                            }
+                            else
+                            {
+                                string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, files.version.releaseIndex);
+                                if (!string.IsNullOrEmpty(javaPath))
+                                {
+                                    _javaPath = javaPath;
+                                    javaIsNotDefined = false;
+                                }
+                            }
+                        }
+
+                        if (javaIsNotDefined)
                         {
                             using (JavaChecker javaCheck = new JavaChecker(files.version.releaseIndex, _updateCancelToken, true))
                             {
@@ -514,10 +551,6 @@ namespace Lexplosion.Logic.Management
 
                                 _javaPath = WithDirectory.DirectoryPath + "/java/" + javaInfo.JavaName + javaInfo.ExecutableFile;
                             }
-                        }
-                        else
-                        {
-                            _javaPath = _settings.JavaPath;
                         }
 
                         data = new InitData

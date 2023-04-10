@@ -9,8 +9,32 @@ namespace Lexplosion.Logic
     [Serializable]
     public class Settings
     {
-        public string JavaPath = null;
-        public string Java17Path = null;
+        private string _javaPath = null;
+        public string JavaPath
+        {
+            get
+            {
+                return (IsCustomJava == true) ? _javaPath : "";
+            }
+            set
+            {
+                _javaPath = value;
+            }
+        }
+
+        private string _java17Path = null;
+        public string Java17Path
+        {
+            get
+            {
+                return (IsCustomJava == true) ? _java17Path : "";
+            }
+            set
+            {
+                _java17Path = value;
+            }
+        }
+
         public bool? IsCustomJava = null;
         public string GamePath = null;
         public uint? Xmx = null;
@@ -32,8 +56,8 @@ namespace Lexplosion.Logic
         {
             if (priority)
             {
-                if (JavaPath == null) JavaPath = settings.JavaPath;
-                if (Java17Path == null) Java17Path = settings.Java17Path;
+                if (string.IsNullOrEmpty(JavaPath)) JavaPath = settings.JavaPath;
+                if (string.IsNullOrEmpty(Java17Path)) Java17Path = settings.Java17Path;
                 if (IsCustomJava == null) IsCustomJava = settings.IsCustomJava;
                 if (GamePath == null) GamePath = settings.GamePath;
                 if (Xmx == null) Xmx = settings.Xmx;
@@ -47,8 +71,8 @@ namespace Lexplosion.Logic
             }
             else
             {
-                if (settings.JavaPath != null) JavaPath = settings.JavaPath;
-                if (settings.Java17Path != null) Java17Path = settings.Java17Path;
+                if (!string.IsNullOrEmpty(settings.JavaPath)) JavaPath = settings.JavaPath;
+                if (string.IsNullOrEmpty(settings.Java17Path)) Java17Path = settings.Java17Path;
                 if (settings.IsCustomJava != null) IsCustomJava = settings.IsCustomJava;
                 if (settings.GamePath != null) GamePath = settings.GamePath;
                 if (settings.Xmx != null) Xmx = settings.Xmx;

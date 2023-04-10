@@ -1057,7 +1057,8 @@ namespace Lexplosion.Logic.Management.Instances
         /// Раздать сборку друзьям
         /// </summary>
         /// <param name="exportList">Аналогично методу Export</param>
-        /// <returns>Экземпляр раздачи</returns>
+        /// <param name="distributor">Экземпляр раздачи</param>
+        /// <returns>Результат подготовки к раздаче.</returns>
         public ExportResult Share(Dictionary<string, PathLevel> exportList, out FileDistributor distributor)
         {
             distributor = null;
