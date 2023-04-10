@@ -90,7 +90,11 @@ namespace Lexplosion.Logic.FileSystem
 
                 Runtime.DebugWrite(answer);
 
-                _dataServer.AddFile(filename, hash);
+                if (!_dataServer.AddFile(filename, hash))
+                {
+                    return null;
+                }
+
                 _distributionsCount++;
 
                 return new FileDistributor(hash, GlobalData.User.UUID, GlobalData.User.SessionToken);

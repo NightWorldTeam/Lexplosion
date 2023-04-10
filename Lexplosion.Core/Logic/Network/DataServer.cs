@@ -299,5 +299,10 @@ namespace Lexplosion.Logic.Network
 
             return true;
         }
+
+        public void RemoveFile()
+        {
+
+        }
     }
 }

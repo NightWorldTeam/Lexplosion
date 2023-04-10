@@ -1058,8 +1058,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         /// <param name="exportList">Аналогично методу Export</param>
         /// <returns>Экземпляр раздачи</returns>
-        public FileDistributor Share(Dictionary<string, PathLevel> exportList)
+        public ExportResult Share(Dictionary<string, PathLevel> exportList, out FileDistributor distributor)
         {
+            distributor = null;
+
             string shareDir = WithDirectory.DirectoryPath + "/shares/files/";
             try
             {
@@ -1070,7 +1072,7 @@ namespace Lexplosion.Logic.Management.Instances
             }
             catch
             {
-                return null;
+                return ExportResult.ZipFileError;
             }
 
             var zipFile = shareDir + _localId + ".zip";
@@ -1080,17 +1082,19 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 IsSharing = true;
 
-                FileDistributor distributor = FileDistributor.CreateDistribution(zipFile, Name);
+                distributor = FileDistributor.CreateDistribution(zipFile, Name);
+                if (distributor == null) return ExportResult.ZipFileError;
+
                 distributor.OnClosed += delegate ()
                 {
                     IsSharing = false;
                 };
 
-                return distributor;
+                return ExportResult.Successful;
             }
             else
             {
-                return null;
+                return result;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Common.Models.Controllers;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
+using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
 using System.Collections.Generic;
 
@@ -68,7 +69,8 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             IsPrepareToShare = true;
             Lexplosion.Runtime.TaskRun(() =>
             {
-                var fileDistribution = _instanceClient.Share(UnitsList);
+                var result = _instanceClient.Share(UnitsList, out FileDistributor fileDistribution);
+                // TODO: проверять result
                 var wrapper = new FileDistributionWrapper(_instanceClient.Name, fileDistribution);
                 App.Current.Dispatcher.Invoke(() => { 
                     ShareController.Instance.AddActiveShareProcess(wrapper);
