@@ -1123,8 +1123,8 @@ namespace Lexplosion.Logic.Network.SMP
         public void Send(byte[] inputData)
         {
             if (_inStopping || !IsConnected) return;
-            bool acquiredLock = false;
         Begin:
+            bool acquiredLock = false;
             Monitor.Enter(_sendLocker, ref acquiredLock);
 
             int mtu = _mtu;
