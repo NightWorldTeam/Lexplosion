@@ -462,6 +462,11 @@ namespace Lexplosion.Logic.Management
             }
             else
             {
+                //using (JavaChecker javaCheck = new JavaChecker(releaseIndex, _updateCancelToken, true))
+                //{
+                //    javaCheck.DefinePath()
+                //}
+
                 _javaPath = _settings.JavaPath;
             }
 

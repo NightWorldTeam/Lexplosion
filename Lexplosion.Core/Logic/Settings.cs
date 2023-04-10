@@ -10,6 +10,7 @@ namespace Lexplosion.Logic
     public class Settings
     {
         public string JavaPath = null;
+        public string Java17Path = null;
         public bool? IsCustomJava = null;
         public string GamePath = null;
         public uint? Xmx = null;
@@ -32,6 +33,7 @@ namespace Lexplosion.Logic
             if (priority)
             {
                 if (JavaPath == null) JavaPath = settings.JavaPath;
+                if (Java17Path == null) Java17Path = settings.Java17Path;
                 if (IsCustomJava == null) IsCustomJava = settings.IsCustomJava;
                 if (GamePath == null) GamePath = settings.GamePath;
                 if (Xmx == null) Xmx = settings.Xmx;
@@ -46,6 +48,7 @@ namespace Lexplosion.Logic
             else
             {
                 if (settings.JavaPath != null) JavaPath = settings.JavaPath;
+                if (settings.Java17Path != null) Java17Path = settings.Java17Path;
                 if (settings.IsCustomJava != null) IsCustomJava = settings.IsCustomJava;
                 if (settings.GamePath != null) GamePath = settings.GamePath;
                 if (settings.Xmx != null) Xmx = settings.Xmx;
@@ -80,6 +83,7 @@ namespace Lexplosion.Logic
             return new Settings
             {
                 JavaPath = "",
+                Java17Path = "",
                 IsCustomJava = false,
                 GamePath = LaunсherSettings.gamePath,
                 Xmx = xmx,

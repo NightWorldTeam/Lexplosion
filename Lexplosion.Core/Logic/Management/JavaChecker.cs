@@ -55,6 +55,18 @@ namespace Lexplosion.Logic.Management
             return javaInfo;
         }
 
+        /// <summary>
+        /// Определяет путь до джавы для этой версии майкрафта. 
+        /// Метод произведет проверку версии и вернет либо path1 либо path2.
+        /// </summary>
+        /// <param name="path1">Путь до старой джавы</param>
+        /// <param name="path2">Путь до новой джавы</param>
+        /// <returns>Для старых версий будет возвращен path1, для новых - path2</returns>
+        public static string DefinePath(string path1, string path2, long releaseIndex)
+        {
+            return (releaseIndex <= 410640332) ? path1 : path2;
+        }
+
         public bool Check(out CheckResult result, out JavaVersion java)
         {
             List<JavaVersion> versions = ToServer.GetJavaVersions(); // получамем данные с сервера

@@ -1122,10 +1122,10 @@ namespace Lexplosion.Logic.Network.SMP
 
         public void Send(byte[] inputData)
         {
-            bool acquiredLock = false;
-
             if (_inStopping || !IsConnected) return;
-            Begin: Monitor.Enter(_sendLocker, ref acquiredLock);
+            bool acquiredLock = false;
+        Begin:
+            Monitor.Enter(_sendLocker, ref acquiredLock);
 
             int mtu = _mtu;
             int maxPackagesCount = _maxPackagesCount;
