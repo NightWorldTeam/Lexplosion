@@ -12,7 +12,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
 
         public IEnumerable<FileDistributionWrapper> ActiveShareProcess => ShareController.Instance.ActiveShareProcess;
-        public bool IsAlreadySharing => _instanceClient.IsShare;
+        public bool IsAlreadySharing => _instanceClient.IsSharing;
         public ShareController ShareCtrl => ShareController.Instance;
 
         private bool _isPrepareToShare;

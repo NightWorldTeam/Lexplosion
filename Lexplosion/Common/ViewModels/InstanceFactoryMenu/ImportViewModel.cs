@@ -16,6 +16,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
         private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
 
+
         #region Properties
 
 
@@ -108,42 +109,13 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         public async void Import(string path)
         {
 #nullable enable
-            InstanceClient? instanceClient = null;
-
             var importFile = new ImportFile(this, path);
 
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFilesChanged(importFile);
 
-            // Начинаем импорт файла.
-            var result = await Task.Run(() => InstanceClient.Import(path, out instanceClient));
-
-            // Импорт закончился.
-            importFile.IsImportFinished = result == ImportResult.Successful;
-
-            if (instanceClient == null || result != ImportResult.Successful)
-            {
-                // Выводим сообщение о результате испорта.
-                MainViewModel.ShowToastMessage(
-                    ResourceGetter.GetString("importResultError"),
-                    result.ToString(),
-                    Controls.ToastMessageState.Error);
-                return;
-            }
-
-
-            //Закрываем модальное окно.
-            // TODO: Надо ли?
-            //FactoryGeneralViewModel.CloseModalWindowCommand.Execute(null);
-
-            // Добавляем сборку в библиотеку.
-            MainModel.Instance.LibraryController.AddInstance(new InstanceFormViewModel(_mainViewModel, instanceClient));
-
-            // Выводим сообщение о результате испорта.
-            MainViewModel.ShowToastMessage(
-                ResourceGetter.GetString("importResult"),
-                ResourceGetter.GetString("importResultSuccessfulWannaPlay"),
-                Controls.ToastMessageState.Notification);
+            var instanceClient = InstanceClient.Import(path, (result) => { });
+            MainModel.Instance.AddInstanceForm(instanceClient);
         }
 
 
