@@ -1293,7 +1293,7 @@ namespace Lexplosion.Logic.Network.SMP
                     _inStopping = true; // ставим флаг чтобы send нельзя было вызвать ещё раз
                     if (acquiredLock) Monitor.Exit(_sendLocker);
 
-                    while (_sendingBuffer.Count != 0 && IsConnected) // ждём когда все пакеты из буфера будут доставлены
+                    while (_sendingBuffer.Count != 0) // ждём когда все пакеты из буфера будут доставлены
                     {
                         _sendingCycleDetector.WaitOne();
                     }

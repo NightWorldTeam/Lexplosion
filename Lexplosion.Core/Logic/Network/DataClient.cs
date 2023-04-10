@@ -33,6 +33,9 @@ namespace Lexplosion.Logic.Network
 
         private bool _isManualClosed = false;
 
+        private bool _isClosed = false;
+        private object _closeLocker = new object();
+
         /// <param name="publicRsaKey">Публичный rsa ключ хоста, с которого будет идити получение файла</param>
         /// <param name="confirmWord">Кодовое слово хоста. Используется для верификации передающего хоста</param>
         /// <param name="controlServer">IP кправляющего сервера</param>
@@ -169,17 +172,27 @@ namespace Lexplosion.Logic.Network
 
         protected override void Close(IPEndPoint point)
         {
-            try
+            lock (_closeLocker)
             {
-                _successfulTransfer = (_fstream.Length == _fileSize) && (_fileId == Сryptography.Sha256(_fstream));
-            }
-            catch
-            {
-                _successfulTransfer = false;
-            }
+                if (!_isClosed)
+                {
+                    _isClosed = true;
 
-            _fstream.Close();
-            _workWait.Set();
+                    try
+                    {
+                        var test = Сryptography.Sha256(_fstream);
+                        _successfulTransfer = (_fstream.Length == _fileSize) && (_fileId == test);
+                    }
+                    catch
+                    {
+                        _successfulTransfer = false;
+                    }
+
+                    _fstream.Close();
+                    _workWait.Set();
+                }
+
+            }
         }
 
         public void Close()
