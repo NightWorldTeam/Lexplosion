@@ -36,6 +36,8 @@ namespace Lexplosion.Logic.Network
         private bool _isClosed = false;
         private object _closeLocker = new object();
 
+        private string _fileName;
+
         /// <param name="publicRsaKey">Публичный rsa ключ хоста, с которого будет идити получение файла</param>
         /// <param name="confirmWord">Кодовое слово хоста. Используется для верификации передающего хоста</param>
         /// <param name="controlServer">IP кправляющего сервера</param>
@@ -43,6 +45,7 @@ namespace Lexplosion.Logic.Network
         /// <param name="fileId">ID файла получения, он же его хэш</param>
         public DataClient(RSAParameters publicRsaKey, string confirmWord, string controlServer, string filename, string fileId) : base(clientType, controlServer)
         {
+            _fileName = filename;
             _fstream = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite);
             _fileId = fileId;
 
@@ -180,8 +183,13 @@ namespace Lexplosion.Logic.Network
 
                     try
                     {
-                        var test = Сryptography.Sha256(_fstream);
-                        _successfulTransfer = (_fstream.Length == _fileSize) && (_fileId == test);
+                        _fstream.Close();
+                        using (FileStream fstream = File.OpenRead(_fileName))
+                        {
+                            string fileSha256 = Сryptography.Sha256(fstream);
+                            _successfulTransfer = (fstream.Length == _fileSize) && (_fileId == fileSha256);
+                        }
+                        
                     }
                     catch
                     {
