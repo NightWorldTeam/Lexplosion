@@ -398,7 +398,7 @@ namespace Lexplosion.Logic.Management
             }
 
             bool javaIsNotDefined = true;
-            if (_settings.IsCustomJava == true)
+            if (_settings.IsCustomJava == true || _settings.IsCustomJava17 == true)
             {
                 if (!string.IsNullOrEmpty(_customJavaPath))
                 {
@@ -518,7 +518,7 @@ namespace Lexplosion.Logic.Management
                     if (files?.version != null && files.libraries != null)
                     {
                         bool javaIsNotDefined = true;
-                        if (_settings.IsCustomJava == true)
+                        if (_settings.IsCustomJava == true || _settings.IsCustomJava17 == true)
                         {
                             if (!string.IsNullOrEmpty(_customJavaPath))
                             {

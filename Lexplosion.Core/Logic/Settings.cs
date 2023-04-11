@@ -27,7 +27,7 @@ namespace Lexplosion.Logic
         {
             get
             {
-                return (IsCustomJava == true) ? _java17Path : "";
+                return (IsCustomJava17 == true) ? _java17Path : "";
             }
             set
             {
@@ -36,6 +36,7 @@ namespace Lexplosion.Logic
         }
 
         public bool? IsCustomJava = null;
+        public bool? IsCustomJava17 = null;
         public string GamePath = null;
         public uint? Xmx = null;
         public uint? Xms = null;
@@ -59,6 +60,7 @@ namespace Lexplosion.Logic
                 if (string.IsNullOrEmpty(JavaPath)) JavaPath = settings.JavaPath;
                 if (string.IsNullOrEmpty(Java17Path)) Java17Path = settings.Java17Path;
                 if (IsCustomJava == null) IsCustomJava = settings.IsCustomJava;
+                if (IsCustomJava17 == null) IsCustomJava17 = settings.IsCustomJava17;
                 if (GamePath == null) GamePath = settings.GamePath;
                 if (Xmx == null) Xmx = settings.Xmx;
                 if (Xms == null) Xms = settings.Xms;
@@ -74,6 +76,7 @@ namespace Lexplosion.Logic
                 if (!string.IsNullOrEmpty(settings.JavaPath)) JavaPath = settings.JavaPath;
                 if (string.IsNullOrEmpty(settings.Java17Path)) Java17Path = settings.Java17Path;
                 if (settings.IsCustomJava != null) IsCustomJava = settings.IsCustomJava;
+                if (settings.IsCustomJava17 != null) IsCustomJava17 = settings.IsCustomJava17;
                 if (settings.GamePath != null) GamePath = settings.GamePath;
                 if (settings.Xmx != null) Xmx = settings.Xmx;
                 if (settings.Xms != null) Xms = settings.Xms;
@@ -109,6 +112,7 @@ namespace Lexplosion.Logic
                 JavaPath = "",
                 Java17Path = "",
                 IsCustomJava = false,
+                IsCustomJava17 = false,
                 GamePath = LaunсherSettings.gamePath,
                 Xmx = xmx,
                 Xms = 256,

@@ -122,6 +122,8 @@ namespace Lexplosion.Logic.Network.TURN
                     });
                 }
             }
+
+            Runtime.DebugWrite("ServiceSend end");
         }
 
         public IPEndPoint Receive(out byte[] data)

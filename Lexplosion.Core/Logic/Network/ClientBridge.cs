@@ -189,7 +189,7 @@ namespace Lexplosion.Logic.Network
             {
                 if (IsConnected)
                 {
-                    Runtime.DebugWrite("Close");
+                    Runtime.DebugWrite("Close. StackTrace: " + new System.Diagnostics.StackTrace());
                     IsConnected = false;
                     Bridge.Close();
                     ServerSimulator.Close(); //закрываем соединение с клиентом   
@@ -233,6 +233,8 @@ namespace Lexplosion.Logic.Network
                 Close(null);
                 readingThread.Abort();
             }
+
+            Runtime.DebugWrite("Sending end " + Bridge.IsConnected);
         }
 
         override protected void Reading() //получаем данные из сети и отправляем на майкрафт клиент

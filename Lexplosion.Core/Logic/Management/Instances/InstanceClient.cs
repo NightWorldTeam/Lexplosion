@@ -744,8 +744,6 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void Run()
         {
-            //var test = Share(GetPathContent());
-            //return;
             _cancelTokenSource = new CancellationTokenSource();
             ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
 
@@ -1177,66 +1175,6 @@ namespace Lexplosion.Logic.Management.Instances
             };
 
             return WithDirectory.ExportInstance<ArchivedClientData>(_localId, filesList, exportFile, parameters, logoPath);
-        }
-
-        /// <summary>
-        /// Импортирует модпак из архива.
-        /// </summary>
-        /// <param name="zipFile">Путь до zip файла, содержащего клиент.</param>
-        /// <returns>Результат импорта.</returns>
-        public static ImportResult Import(string zipFile, out InstanceClient instanceClient)
-        {
-            ArchivedClientData parameters;
-            string unzipPath;
-            instanceClient = null;
-
-            ImportResult res = WithDirectory.UnzipInstance(zipFile, out parameters, out unzipPath);
-            if (res == ImportResult.Successful)
-            {
-                if (parameters != null && parameters.Name != null && parameters.GameVersion != null)
-                {
-                    byte[] logo = null;
-                    if (parameters.LogoFileName != null)
-                    {
-                        try
-                        {
-                            string file = unzipPath + parameters.LogoFileName;
-                            if (File.Exists(unzipPath + parameters.LogoFileName))
-                            {
-                                logo = File.ReadAllBytes(file);
-                            }
-                        }
-                        catch { }
-                    }
-
-                    var client = new InstanceClient(parameters.Name, InstanceSource.Local, parameters.GameVersion)
-                    {
-                        InLibrary = true,
-                        Author = parameters.Author ?? UnknownAuthor,
-                        Description = parameters.Description,
-                        Summary = parameters.Summary,
-                        Logo = logo,
-                        //Categories = parameters.Categories
-                    };
-
-                    client.CreateFileStruct(parameters.ModloaderType, parameters.ModloaderVersion, parameters.AdditionalInstallerType, parameters.AdditionalInstallerVersion);
-                    res = WithDirectory.MoveUnpackedInstance(client._localId, unzipPath);
-
-                    if (res == ImportResult.Successful)
-                    {
-                        client.SaveAssets();
-                        _installedInstances[client._localId] = client;
-                        SaveInstalledInstancesList();
-                        instanceClient = client;
-                    }
-                    else
-                    {
-                        WithDirectory.DeleteInstance(client._localId);
-                    }
-                }
-            }
-
-            return res;
         }
 
         private static ImportResult Import(in InstanceClient client, string zipFile)
