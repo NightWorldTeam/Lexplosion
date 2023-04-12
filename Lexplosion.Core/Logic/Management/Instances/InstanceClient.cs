@@ -1061,7 +1061,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             distributor = null;
 
-            string shareDir = WithDirectory.DirectoryPath + "/shares/files/";
+            string shareDir = FileDistributor.SharesDir;
             try
             {
                 if (!Directory.Exists(shareDir))

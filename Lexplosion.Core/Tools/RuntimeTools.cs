@@ -9,8 +9,8 @@ namespace Lexplosion
     public static partial class Runtime
     {
         private static int _importantThreads = 0;
-        private static ManualResetEvent _waitingClosing = new ManualResetEvent(true);
         private static object _locker = new object();
+        private static ManualResetEvent _waitingClosing = new ManualResetEvent(true);
 
         /// <summary>
         /// Добавляет приоритетную задачу. При выключении лаунчер будет ждать завершения всех приоритетных задач.

@@ -18,11 +18,22 @@ namespace Lexplosion.Logic.FileSystem
         private static string _confirmWord;
         private static int _distributionsCount = 0;
         private static object _createLock = new object();
+        private static HashSet<FileDistributor> _distributors = new();
+        private static bool _isWork = true;
+        private static List<string> _files = new();
 
         private Thread _informingThread;
         private AutoResetEvent _waitingInforming;
 
         public event Action OnClosed;
+
+        public static string SharesDir
+        {
+            get
+            {
+                return WithDirectory.DirectoryPath + "/shares/files/";
+            }
+        }
 
         private FileDistributor(string fileId, string UUID, string sessionToken)
         {
@@ -56,8 +67,12 @@ namespace Lexplosion.Logic.FileSystem
             _informingThread.Start();
         }
 
-        public static FileDistributor CreateDistribution(string filename, string name)
+        public static FileDistributor CreateDistribution(string filePath, string name)
         {
+            if (!_isWork) return null;
+
+            _files.Add(filePath);
+
             lock (_createLock)
             {
                 if (_dataServer == null)
@@ -70,7 +85,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 //Получаем хэш файла
                 string hash;
-                using (FileStream fstream = File.OpenRead(filename))
+                using (FileStream fstream = File.OpenRead(filePath))
                 {
                     hash = Сryptography.Sha256(fstream);
                 }
@@ -90,14 +105,17 @@ namespace Lexplosion.Logic.FileSystem
 
                 Runtime.DebugWrite(answer);
 
-                if (!_dataServer.AddFile(filename, hash))
+                if (!_dataServer.AddFile(filePath, hash))
                 {
                     return null;
                 }
 
                 _distributionsCount++;
 
-                return new FileDistributor(hash, GlobalData.User.UUID, GlobalData.User.SessionToken);
+                var dstr = new FileDistributor(hash, GlobalData.User.UUID, GlobalData.User.SessionToken);
+                _distributors.Add(dstr);
+
+                return dstr;
             }
         }
 
@@ -115,11 +133,39 @@ namespace Lexplosion.Logic.FileSystem
                     _dataServer = null;
                 }
 
-                ThreadPool.QueueUserWorkItem(delegate (object state)
+                if (_isWork)
                 {
-                    OnClosed?.Invoke();
-                });
+                    _distributors.Remove(this);
+
+                    ThreadPool.QueueUserWorkItem(delegate (object state)
+                    {
+                        OnClosed?.Invoke();
+                    });
+                }
             }
+        }
+
+        public static void StopWork()
+        {
+            _isWork = false;
+
+            foreach (var distributor in _distributors)
+            {
+                distributor.Stop();
+            }
+
+            _distributors = null;
+
+            foreach (var file in _files)
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch { }
+            }
+
+            _files = null;
         }
     }
 }

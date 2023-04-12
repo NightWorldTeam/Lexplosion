@@ -211,7 +211,7 @@ namespace Lexplosion.Logic.Network
                             {
                                 Connections[point].Send(data, data.Length, SocketFlags.None);
                             }
-                            catch (KeyNotFoundException) // point отсуствует, пробуем повторить дождавшись окончания рабоыт метода подключения
+                            catch (KeyNotFoundException) // point отсуствует, пробуем повторить дождавшись окончания работы метода подключения
                             {
                                 Runtime.DebugWrite("KeyNotFoundException");
                                 AcceptingBlock.Release();

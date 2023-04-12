@@ -28,8 +28,8 @@ namespace Lexplosion.Logic.Network
         protected Semaphore FilesListSemaphore = new(1, 1); //блокировка для метода AddFile
         protected AutoResetEvent WaitClient = new AutoResetEvent(false);
 
-        const int Heap = 1400; //количество байт отправляемых за один раз
-        const string serverType = "data-server"; // эта строка нужна при подключении к управляющему серверу
+        const int HEAP = 1400; //количество байт отправляемых за один раз
+        const string SERVER_TYPE = "data-server"; // эта строка нужна при подключении к управляющему серверу
 
         private byte[] _сonfirmWord;
         private RSAParameters _privateRsaKey;
@@ -37,7 +37,7 @@ namespace Lexplosion.Logic.Network
         private object _abortLoocker = new object();
         private object _authorizeLocker = new object();
 
-        public DataServer(RSAParameters privateRsaKey, string confirmWord, string uuid, string sessionToken, string server) : base(uuid, sessionToken, serverType, true, server)
+        public DataServer(RSAParameters privateRsaKey, string confirmWord, string uuid, string sessionToken, string server) : base(uuid, sessionToken, SERVER_TYPE, true, server)
         {
             _сonfirmWord = Encoding.UTF8.GetBytes(confirmWord);
             _privateRsaKey = privateRsaKey;
@@ -74,7 +74,7 @@ namespace Lexplosion.Logic.Network
                 SendingBlock.WaitOne();
                 foreach (IPEndPoint clientPoint in authorizedClients)
                 {
-                    byte[] buffer = new byte[Heap];
+                    byte[] buffer = new byte[HEAP];
 
                     FilesListSemaphore.WaitOne();
                     ReferenceTuple<string, int, byte[], byte[]> clientData = ClientsData[clientPoint];
@@ -84,11 +84,11 @@ namespace Lexplosion.Logic.Network
                     FilesListSemaphore.Release();
 
                     file.Seek(clientData.Value2, SeekOrigin.Begin); //перемещаем указатель чтения файла
-                    int bytesCount = file.Read(buffer, 0, Heap); //читаем файл
-                    clientData.Value2 += Heap; //увеличиваем оффсет
+                    int bytesCount = file.Read(buffer, 0, HEAP); //читаем файл
+                    clientData.Value2 += HEAP; //увеличиваем оффсет
 
                     byte[] buffer_;
-                    if (bytesCount != Heap)
+                    if (bytesCount != HEAP)
                     {
                         buffer_ = new byte[bytesCount];
                         Array.Copy(buffer, 0, buffer_, 0, bytesCount); //обрезаем буффер до нужных размеров
@@ -300,9 +300,13 @@ namespace Lexplosion.Logic.Network
             return true;
         }
 
-        public void RemoveFile()
+        public override void StopWork()
         {
-
+            base.StopWork();
+            foreach (var file in SFilesList.Values)
+            {
+                file.Stream.Close();
+            }
         }
     }
 }

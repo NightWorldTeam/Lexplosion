@@ -204,6 +204,7 @@ namespace Lexplosion
         {
             OnExitEvent?.Invoke();
             CommandReceiver.StopCommandServer();
+            FileDistributor.StopWork();
         }
 
         /// <summary>
