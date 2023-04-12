@@ -169,7 +169,7 @@ namespace Lexplosion
 
             LaunchGame _activeGameManager = null;
 
-            LaunchGame.OnGameStarted += (LaunchGame gameManager) =>
+            LaunchGame.OnGameProcessStarted += (LaunchGame gameManager) =>
             {
                 _activeGameManager = gameManager;
 

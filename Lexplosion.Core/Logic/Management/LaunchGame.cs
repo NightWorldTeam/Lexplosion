@@ -44,7 +44,7 @@ namespace Lexplosion.Logic.Management
         /// </summary>
         public static event Action<LaunchGame> OnGameProcessStarted;
         /// <summary>
-        /// Выполняется после GameStartEvent, когда у майкнрафт появляется окно.
+        /// Выполняется после OnGameProcessStarted, когда у майкнрафт появляется окно.
         /// </summary>
         public static event Action<LaunchGame> OnGameStarted;
         /// <summary>
