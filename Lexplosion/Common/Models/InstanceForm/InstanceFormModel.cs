@@ -181,6 +181,12 @@ namespace Lexplosion.Common.Models.InstanceForm
         }
 
 
+        public void StopDownloadShareInstance()
+        {
+            InstanceDistribution.CancelDownload();
+        }
+
+
         #endregion Public & Protected Methods
 
 

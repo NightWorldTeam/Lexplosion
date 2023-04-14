@@ -28,7 +28,7 @@ namespace Lexplosion.Common.Models.Objects
                 OnPropertyChanged();
             }
         }
-
+        // TODO: после завершения скачивания нужно, чтобы перезапускать не пришлось
         private double _speed = 0.0000;
         public double Speed
         {
@@ -107,8 +107,15 @@ namespace Lexplosion.Common.Models.Objects
         private void DownloadResultHandler(ImportResult result) 
         {
             _resultHandler.Invoke(result);
-            MainModel.Instance.LibraryController.RemoveByInstanceClient(_instanceClient);
-        }
+            switch (result) 
+            {
+                case ImportResult.Successful:
+                    break;
+                default:
+                    MainModel.Instance.LibraryController.RemoveByInstanceClient(_instanceClient);
+                    break;
+            }
+    }
 
 
         #endregion Private Methods

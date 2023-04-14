@@ -73,6 +73,15 @@ namespace Lexplosion.Common.ViewModels
         }
 
 
+        private RelayCommand _stopDownloadShareInstanceCommand;
+        public RelayCommand StopDownloadShareInstanceCommand 
+        {
+            get => _stopDownloadShareInstanceCommand ?? (_stopDownloadShareInstanceCommand = new RelayCommand(obj => 
+            {
+                Model.StopDownloadShareInstance();
+            }));
+        }
+
         #endregion Commands
 
 
@@ -239,6 +248,7 @@ namespace Lexplosion.Common.ViewModels
                 }
                 ));
         }
+
 
         #endregion Public & Protected Methods
 

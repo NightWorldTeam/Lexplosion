@@ -6,6 +6,7 @@
     xmlns:button="clr-namespace:Lexplosion.Common.Models.InstanceForm"
     xmlns:controls="clr-namespace:Lexplosion.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extension="clr-namespace:Lexplosion.Common.Extension"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:objects="clr-namespace:Lexplosion.Logic.Objects;assembly=Lexplosion.Core"
     d:DesignHeight="120"
@@ -117,6 +118,7 @@
             <Grid
                 x:Name="InstanceLogo"
                 Grid.Column="0"
+                IsEnabled="{Binding Model.InstanceClient.IsComplete}"
                 MouseEnter="InstanceLogo_MouseEnter"
                 MouseLeave="InstanceLogo_MouseLeave">
 
@@ -333,18 +335,78 @@
                 </Grid>
             </Grid>
 
-            <Grid
-                x:Name="MultiButtonsGrid"
-                Grid.Column="2"
-                Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
+            <Grid x:Name="MultiButtonsGrid" Grid.Column="2">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60" />
                     <RowDefinition Height="60" />
                 </Grid.RowDefinitions>
 
+                <!--  Cancel Download Share Instace Button  -->
+                <Grid Grid.Row="0" Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                    <Border CornerRadius="0,10,0,0">
+
+                        <Border.Background>
+                            <SolidColorBrush x:Name="CancelDownloadShareInstanceButtonBackground" />
+                        </Border.Background>
+
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="Border.MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                            Storyboard.TargetName="CancelDownloadShareInstanceButtonBackground"
+                                            Storyboard.TargetProperty="Color"
+                                            From="Transparent"
+                                            To="{DynamicResource ActivityColor}"
+                                            Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+
+                            <EventTrigger RoutedEvent="Border.MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                            Storyboard.TargetName="CancelDownloadShareInstanceButtonBackground"
+                                            Storyboard.TargetProperty="Color"
+                                            To="Transparent"
+                                            Duration="0:0:0.02" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
+
+                        <Border.InputBindings>
+                            <MouseBinding Command="{Binding StopDownloadShareInstanceCommand}" Gesture="LeftClick" />
+                        </Border.InputBindings>
+
+                        <Border.ToolTip>
+                            <ToolTip
+                                Background="Black"
+                                BorderThickness="0"
+                                FontFamily="{DynamicResource Inner}"
+                                HorizontalOffset="{Binding Model.UpperButton.Tip.Offset}"
+                                Placement="Relative">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="White"
+                                    Text="Cancel Download" />
+                            </ToolTip>
+                        </Border.ToolTip>
+
+                        <Viewbox Width="20" Height="20">
+                            <Path
+                                extension:PathExtension.StringData="{StaticResource CloseCycle}"
+                                Fill="White"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+                </Grid>
+
                 <!--  Upper Button  -->
-                <Grid Grid.Row="0">
+                <Grid Grid.Row="0" Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
                     <Border
                         Width="60"
                         Height="60"
@@ -464,7 +526,8 @@
                     Background="{DynamicResource SepSolidColorBrush}"
                     BorderBrush="{DynamicResource PrimarySolidColorBrush}"
                     BorderThickness="1"
-                    IsOpen="{Binding IsDropdownMenuOpen, Mode=TwoWay}">
+                    IsOpen="{Binding IsDropdownMenuOpen, Mode=TwoWay}"
+                    Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
                     <ItemsControl ItemsSource="{Binding Model.LowerButtons}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -516,7 +579,8 @@
 
                             <MultiDataTrigger.Setters>
                                 <Setter Property="Visibility" Value="Visible" />
-                                <Setter Property="IsIndeterminate" Value="True" />
+                                <Setter Property="IsIndeterminate" Value="False" />
+                                <Setter Property="Value" Value="{Binding Model.InstanceDistribution.Percentages, Mode=OneWay}" />
                             </MultiDataTrigger.Setters>
                         </MultiDataTrigger>
 
