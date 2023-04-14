@@ -222,6 +222,7 @@ namespace Lexplosion.Logic.Network.SMP
             _socket = new UdpClient();
             _socket.Client.Bind(point);
 
+            // TODO: можеть быть вырезать эту хуйню
             var sioUdpConnectionReset = -1744830452;
             var inValue = new byte[] { 0 };
             var outValue = new byte[] { 0 };
