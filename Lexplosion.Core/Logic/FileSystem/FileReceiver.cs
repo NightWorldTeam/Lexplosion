@@ -66,6 +66,8 @@ namespace Lexplosion.Logic.FileSystem
         public event Action<double> SpeedUpdate;
         public event Action<DistributionState> StateChanged;
 
+        private object _locker = new object();
+
         public string OwnerLogin
         {
             get => _ownerLogin;
@@ -98,23 +100,30 @@ namespace Lexplosion.Logic.FileSystem
 
         public void CancelDownload()
         {
-            _dataClient?.Close();
-            _dataClient = null;
+            lock (_locker)
+            {
+                _dataClient?.Close();
+                _dataClient = null;
+            }
         }
 
         public FileRecvResult StartDownload(string fileName)
         {
-            _state = DistributionState.InProcess;
-            StateChanged?.Invoke(_state);
+            lock (_locker)
+            {
+                _state = DistributionState.InProcess;
+                StateChanged?.Invoke(_state);
 
-            var publicKey = Сryptography.DecodeRsaParams(_info.PublicRsaKey);
-            _dataClient?.Close();
-            _dataClient = new DataClient(publicKey, _info.ConfirmWord, LaunсherSettings.ServerIp, fileName, _fileId);
-            _dataClient.SpeedUpdate += SpeedUpdate;
-            _dataClient.ProcentUpdate += ProcentUpdate;
+                var publicKey = Сryptography.DecodeRsaParams(_info.PublicRsaKey);
+                _dataClient?.Close();
+                _dataClient = new DataClient(publicKey, _info.ConfirmWord, LaunсherSettings.ServerIp, fileName, _fileId);
+                _dataClient.SpeedUpdate += SpeedUpdate;
+                _dataClient.ProcentUpdate += ProcentUpdate;
 
-            _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
-            return _dataClient.WorkWait();
+                _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
+            }
+
+            return _dataClient?.WorkWait() ?? FileRecvResult.Canceled;
         }
     }
 }
