@@ -1,11 +1,23 @@
 ﻿using Lexplosion.Common.ModalWindow;
 using Lexplosion.Logic.Management.Instances;
+using System;
 using System.Collections.Generic;
+using Lexplosion.Controls;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 {
-    public abstract class ExportBase : ModalVMBase
+    public abstract class ExportBase : ModalVMBase, INotifiable
     {
+        private Action<string, string, uint, byte> _doNotification;
+        public Action<string, string, uint, byte> DoNotification
+        {
+            get => _doNotification; protected set
+            {
+                _doNotification = value ?? ((header, message, time, type) => { });
+            }
+        }
+
+
         #region ModalProperties
 
         public override double Width => 620;
@@ -141,18 +153,22 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
             }));
         }
 
+        
         #endregion Commands
 
 
         #region Constructors
 
-        public ExportBase(InstanceClient instanceClient)
+
+        public ExportBase(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification)
         {
+            DoNotification = doNotification ?? DoNotification;
             _instanceClient = instanceClient;
             InstanceName = instanceClient.Name;
             IsFullExport = false;
             UnitsList = instanceClient.GetPathContent();
         }
+
 
         #endregion Constructors
 
@@ -217,7 +233,30 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 
         #region Public & Protected Methods
 
+
         protected abstract void Action();
+
+        protected void ExportResultHandler(ExportResult result)
+        {
+            switch (result)
+            {
+                case ExportResult.Successful:
+                    DoNotification("Export Successful", "...", 5, 0);
+                    break;
+                case ExportResult.TempPathError:
+                    DoNotification("Export Error", "TempPathError", 5, 1);
+                    break;
+                case ExportResult.FileCopyError:
+                    DoNotification("Export Error", "FileCopyError", 5, 1);
+                    break;
+                case ExportResult.InfoFileError:
+                    DoNotification("Export Error", "InfoFileError", 5, 1);
+                    break;
+                case ExportResult.ZipFileError:
+                    DoNotification("Export Error", "ZipFileError", 5, 1);
+                    break;
+            }
+        }
 
         #endregion Public & Protected Methods
     }

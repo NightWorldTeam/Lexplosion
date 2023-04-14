@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace Lexplosion.Common.Views.Windows

@@ -114,6 +114,7 @@
     <Compile Include="Controls\Paginator\Paginator.cs" />
     <Compile Include="Controls\PlaceholderTextBox\PlaceholderTextBox.cs" />
     <Compile Include="Controls\SearchBox\SearchBox.cs" />
+    <Compile Include="Controls\Core\INotifiable.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessage.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageContainer.cs" />
     <Compile Include="Controls\ToastMessage\ToastMessageManager.cs" />

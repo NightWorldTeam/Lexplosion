@@ -3,6 +3,7 @@ using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
+using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs
@@ -52,9 +53,8 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Constructors
 
 
-        public ShareInstanceViewModel(InstanceClient instanceClient) : base(instanceClient)
+        public ShareInstanceViewModel(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null) : base(instanceClient, doNotification)
         {
-
         }
 
 
@@ -82,23 +82,6 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             });
         }
 
-
-        private static void ExportResultHandler(ExportResult result) 
-        {
-            switch (result) 
-            {
-                case ExportResult.Successful:
-                    break;
-                case ExportResult.TempPathError:
-                    break;
-                case ExportResult.FileCopyError:
-                    break;
-                case ExportResult.InfoFileError:
-                    break;
-                case ExportResult.ZipFileError:
-                    break;
-            }
-        }
 
         #endregion Public & Protected Methods
     }

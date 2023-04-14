@@ -8,11 +8,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 {
     public sealed class ExportViewModel : ExportBase
     {
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
-
-        public ExportViewModel(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null) : base(instanceClient)
+        public ExportViewModel(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null) : base(instanceClient, doNotification)
         {
-            _doNotification = doNotification ?? _doNotification;
+
         }
 
         /// <summary>
@@ -40,7 +38,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
                     if (result == ExportResult.Successful)
                     {
-                        _doNotification(
+                        DoNotification(
                             ResourceGetter.GetString("instanceExport"),
                             String.Format(ResourceGetter.GetString("instanceExportSuccessfulOpenFolder"), InstanceName), 0, 0);
 
@@ -49,7 +47,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
                     }
                     else
                     {
-                        _doNotification(
+                        DoNotification(
                             result.ToString(),
                             String.Format(ResourceGetter.GetString("instanceExportUnsuccessful"), InstanceName), 0, 1);
 
