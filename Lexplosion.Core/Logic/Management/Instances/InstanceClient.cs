@@ -1258,7 +1258,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             var client = new InstanceClient(InstanceSource.Local)
             {
-                Name = "Importing...",
+                Name = reciver.Name,
                 InLibrary = true,
                 Author = UnknownAuthor,
                 Summary = "",

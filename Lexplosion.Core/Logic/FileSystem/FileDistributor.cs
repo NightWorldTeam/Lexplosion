@@ -149,23 +149,29 @@ namespace Lexplosion.Logic.FileSystem
         {
             _isWork = false;
 
-            foreach (var distributor in _distributors)
+            if (_distributors != null)
             {
-                distributor.Stop();
-            }
-
-            _distributors = null;
-
-            foreach (var file in _files)
-            {
-                try
+                foreach (var distributor in _distributors)
                 {
-                    File.Delete(file);
+                    distributor.Stop();
                 }
-                catch { }
+
+                _distributors = null;
             }
 
-            _files = null;
+            if (_files != null)
+            {
+                foreach (var file in _files)
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch { }
+                }
+
+                _files = null;
+            }
         }
     }
 }
