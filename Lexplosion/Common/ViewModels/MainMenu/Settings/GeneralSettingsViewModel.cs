@@ -11,12 +11,11 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
     {
         private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
 
-        // Model
-        public GeneralSettingsModel GeneralSettings { get; set; }
-
 
         #region Properties
 
+
+        public GeneralSettingsModel Model { get; set; }
 
         private bool _isDirectoryChanged = true;
         public bool IsDirectoryChanged
@@ -41,7 +40,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
             {
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
-                    dialog.SelectedPath = GeneralSettings.SystemPath.Replace('/', '\\');
+                    dialog.SelectedPath = Model.SystemPath.Replace('/', '\\');
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
                         ChangedDirectory(dialog.SelectedPath);
@@ -56,21 +55,31 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
             {
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
-                    dialog.SelectedPath = GeneralSettings.JavaPath.Replace('/', '\\');
+                    dialog.SelectedPath = Model.JavaPath.Replace('/', '\\');
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
-                        GeneralSettings.JavaPath = dialog.SelectedPath;
+                        Model.JavaPath = dialog.SelectedPath;
                     }
                 }
             });
         }
 
-        public RelayCommand SetDefaultJavaPath
+        private RelayCommand _resetJavaPath;
+        public RelayCommand ResetJavaPath
         {
-            get => new RelayCommand(obj =>
+            get => _resetJavaPath ?? (_resetJavaPath = new RelayCommand(obj =>
             {
-                GeneralSettings.JavaPath = "";
-            });
+                Model.ResetJavaPath();
+            }));
+        }
+
+        private RelayCommand _resetJava17Path;
+        public RelayCommand ResetJava17Path 
+        {
+            get => _resetJava17Path ?? (_resetJava17Path = new RelayCommand(obj => 
+            {
+                Model.ResetJava17Path();
+            }));
         }
 
 
@@ -83,7 +92,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
         public GeneralSettingsViewModel(Action<string, string, uint, byte> doNotification)
         {
             _doNotification = doNotification ?? _doNotification;
-            GeneralSettings = new GeneralSettingsModel();
+            Model = new GeneralSettingsModel();
         }
 
 
@@ -96,7 +105,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
         private void ChangedDirectory(string newPath)
         {
             newPath = newPath + "/" + LaunсherSettings.GAME_FOLDER_NAME;
-            GeneralSettings.SystemPath = newPath;
+            Model.SystemPath = newPath;
 
             var dialogModal = new DialogViewModel();
             dialogModal.ShowDialog("Перенос директории", "Желаете ли вы полностью перенести директорию?", () =>
@@ -104,7 +113,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
                 IsDirectoryChanged = false;
                 Lexplosion.Runtime.TaskRun(() =>
                 {
-                    WithDirectory.SetNewDirectory(GeneralSettings.SystemPath);
+                    WithDirectory.SetNewDirectory(Model.SystemPath);
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         _doNotification("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", 2, 0);

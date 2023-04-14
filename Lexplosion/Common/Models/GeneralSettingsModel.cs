@@ -127,6 +127,26 @@ namespace Lexplosion.Common.Models
             }
         }
 
+
+        public string Java17Path 
+        {
+            get => GlobalData.GeneralSettings.Java17Path; set 
+            {
+                GlobalData.GeneralSettings.Java17Path = value;
+                OnPropertyChanged();
+                if (value.Length == 0)
+                {
+                    GlobalData.GeneralSettings.IsCustomJava17 = true;
+                }
+                else 
+                {
+                    GlobalData.GeneralSettings.IsCustomJava17 = false;
+                }
+
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
+            }
+        }
+
         public string JVMArgs
         {
             get => GlobalData.GeneralSettings.GameArgs; set
@@ -135,6 +155,18 @@ namespace Lexplosion.Common.Models
                 OnPropertyChanged();
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
             }
+        }
+
+
+        public void ResetJavaPath() 
+        {
+            JavaPath = "";
+        }
+
+
+        public void ResetJava17Path() 
+        {
+            Java17Path = "";
         }
     }
 }

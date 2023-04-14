@@ -23,6 +23,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
 
         private readonly FactoryDLCVM _factoryDLCVM;
 
+
         #region Commands
 
 

@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace Lexplosion.Common.Views.Windows
@@ -13,8 +14,14 @@ namespace Lexplosion.Common.Views.Windows
         public MainWindow()
         {
             InitializeComponent();
+            this.Closing += MainWindow_Closing;
             MouseDown += delegate { try { DragMove(); } catch { } };
         }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Runtime.Exit();
+        }   
 
         private void ChangeStatusButtonClick(object sender, RoutedEventArgs e)
         {

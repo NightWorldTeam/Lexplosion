@@ -17,9 +17,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         public ShareController ShareCtrl => ShareController.Instance;
 
         private bool _isPrepareToShare;
-        public bool IsPrepareToShare 
+        public bool IsPrepareToShare
         {
-            get => _isPrepareToShare; set 
+            get => _isPrepareToShare; set
             {
                 _isPrepareToShare = value;
                 OnPropertyChanged();
@@ -34,9 +34,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
 
         private RelayCommand _stopInstanceSharingCommand;
-        public RelayCommand StopInstanceSharingCommand 
+        public RelayCommand StopInstanceSharingCommand
         {
-            get => _stopInstanceSharingCommand ?? (_stopInstanceSharingCommand = new RelayCommand(obj => 
+            get => _stopInstanceSharingCommand ?? (_stopInstanceSharingCommand = new RelayCommand(obj =>
             {
                 var wrapper = (FileDistributionWrapper)obj;
                 wrapper.FileDistribution.Stop();
@@ -70,9 +70,11 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var result = _instanceClient.Share(UnitsList, out FileDistributor fileDistribution);
-                // TODO: проверять result
+
+                ExportResultHandler(result);
+
                 var wrapper = new FileDistributionWrapper(_instanceClient.Name, fileDistribution);
-                App.Current.Dispatcher.Invoke(() => { 
+                App.Current.Dispatcher.Invoke(() => {
                     ShareController.Instance.AddActiveShareProcess(wrapper);
                     OnPropertyChanged(nameof(IsAlreadySharing));
                     IsPrepareToShare = false;
@@ -80,6 +82,23 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             });
         }
 
+
+        private static void ExportResultHandler(ExportResult result) 
+        {
+            switch (result) 
+            {
+                case ExportResult.Successful:
+                    break;
+                case ExportResult.TempPathError:
+                    break;
+                case ExportResult.FileCopyError:
+                    break;
+                case ExportResult.InfoFileError:
+                    break;
+                case ExportResult.ZipFileError:
+                    break;
+            }
+        }
 
         #endregion Public & Protected Methods
     }

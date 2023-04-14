@@ -191,6 +191,7 @@ namespace Lexplosion.Common.ViewModels
             RuntimeApp.TrayMenuElementClicked += InitTrayComponents;
 
             InitTrayComponents();
+            SubscribeToOpenModpackEvent();
         }
 
 

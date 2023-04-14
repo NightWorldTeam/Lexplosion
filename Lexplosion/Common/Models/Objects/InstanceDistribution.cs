@@ -9,6 +9,11 @@ namespace Lexplosion.Common.Models.Objects
     {
         private readonly FileReceiver _receiver;
         private readonly Action<ImportResult> _resultHandler;
+        private InstanceClient _instanceClient;
+
+
+        #region Properties
+
 
         public string Id => _receiver.Id;
         public string Name { get; }
@@ -29,7 +34,7 @@ namespace Lexplosion.Common.Models.Objects
         {
             get => _speed; private set
             {
-                _speed = value;
+                _speed = Math.Round(value, 3);
                 OnPropertyChanged();
             }
         }
@@ -44,6 +49,13 @@ namespace Lexplosion.Common.Models.Objects
             }
         }
 
+
+        #endregion Properties
+
+
+        #region Constructors
+
+
         public InstanceDistribution(FileReceiver fileReceiver, Action<ImportResult> resultHandler)
         {
             _receiver = fileReceiver;
@@ -55,11 +67,18 @@ namespace Lexplosion.Common.Models.Objects
             fileReceiver.SpeedUpdate += FileReceiver_SpeedUpdate;
         }
 
+
+        #endregion Constructors
+
+
+        #region Public Methods
+
+
         public void Download()
         {
             State = DistributionState.InProcess;
-            var instanceClient = InstanceClient.Import(_receiver, _resultHandler);
-            MainModel.Instance.AddInstanceForm(instanceClient, this);
+            _instanceClient = InstanceClient.Import(_receiver, DownloadResultHandler);
+            MainModel.Instance.AddInstanceForm(_instanceClient, this);
         }
 
         public void CancelDownload()
@@ -67,6 +86,13 @@ namespace Lexplosion.Common.Models.Objects
             _receiver.CancelDownload();
             State = DistributionState.InQueue;
         }
+
+
+        #endregion Public Methods
+
+
+        #region Private Methods
+
 
         private void FileReceiver_SpeedUpdate(double value)
         {
@@ -77,5 +103,14 @@ namespace Lexplosion.Common.Models.Objects
         {
             Percentages = (byte)value;
         }
+
+        private void DownloadResultHandler(ImportResult result) 
+        {
+            _resultHandler.Invoke(result);
+            MainModel.Instance.LibraryController.RemoveByInstanceClient(_instanceClient);
+        }
+
+
+        #endregion Private Methods
     }
 }

@@ -105,7 +105,7 @@
                         ItemContainerStyle="{StaticResource SettingsComboBoxItem}"
                         ItemsSource="{Binding Source={StaticResource Const}, Path=ScreenResolutions}"
                         MaxDropDownHeight="180"
-                        SelectedValue="{Binding GeneralSettings.ScreenResolution}"
+                        SelectedValue="{Binding Model.ScreenResolution}"
                         Style="{StaticResource SettingsComboBox}" />
                     <Grid Grid.Column="1" ShowGridLines="False">
 
@@ -134,7 +134,7 @@
                             BorderThickness="1"
                             FontSize="20"
                             Style="{StaticResource SettingsTextBox}"
-                            Text="{Binding GeneralSettings.WindowWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            Text="{Binding Model.WindowWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     </Grid>
                     <Grid Grid.Column="2" ShowGridLines="False">
                         <Grid.RowDefinitions>
@@ -160,7 +160,7 @@
                             BorderThickness="1"
                             FontSize="20"
                             Style="{StaticResource SettingsTextBox}"
-                            Text="{Binding GeneralSettings.WindowHeight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            Text="{Binding Model.WindowHeight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     </Grid>
                 </Grid>
                 <Grid
@@ -198,7 +198,7 @@
                         BorderThickness="1"
                         FontSize="20"
                         Style="{StaticResource SettingsTextBox}"
-                        Text="{Binding GeneralSettings.Xmx}" />
+                        Text="{Binding Model.Xmx}" />
                 </Grid>
                 <Grid
                     Grid.Row="4"
@@ -233,7 +233,7 @@
                             FontSize="20"
                             Foreground="#bbb"
                             Style="{StaticResource SettingsTextBox}"
-                            Text="{Binding GeneralSettings.SystemPath, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding Model.SystemPath, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Button
                             Grid.Column="1"
@@ -286,7 +286,7 @@
                             Placeholder="{DynamicResource defaultJavaPath}"
                             PlaceholderFontSize="20"
                             PlaceholderOpacity="0.7"
-                            Text="{Binding GeneralSettings.JavaPath, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding Model.JavaPath, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Button
                             Grid.Column="1"
@@ -301,13 +301,13 @@
                             Grid.Column="2"
                             Width="70"
                             Height="38"
-                            Command="{Binding SetDefaultJavaPath}"
+                            Command="{Binding ResetJavaPath}"
                             Content="{DynamicResource reboot}"
                             FontWeight="Medium"
                             Style="{StaticResource FolderBrowerButton}" />
                     </Grid>
                 </Grid>
-                <!--  Second Java  -->
+                <!--  Custom Java 17  -->
                 <Grid
                     Grid.Row="6"
                     Grid.Column="1"
@@ -344,10 +344,10 @@
                             BorderThickness="1"
                             FontSize="20"
                             Foreground="#bbb"
-                            Placeholder="{DynamicResource noValue}"
+                            Placeholder="{DynamicResource defaultJavaPath}"
                             PlaceholderFontSize="20"
                             PlaceholderOpacity="0.7"
-                            Text="{Binding GeneralSettings.JavaPath, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding Model.Java17Path, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Button
                             Grid.Column="1"
@@ -362,7 +362,7 @@
                             Grid.Column="2"
                             Width="70"
                             Height="38"
-                            Command="{Binding SetDefaultJavaPath}"
+                            Command="{Binding ResetJava17Path}"
                             Content="{DynamicResource reboot}"
                             FontWeight="Medium"
                             Style="{StaticResource FolderBrowerButton}" />
@@ -403,7 +403,7 @@
                             FontSize="20"
                             Foreground="#bbb"
                             Style="{StaticResource SettingsTextBox}"
-                            Text="{Binding GeneralSettings.GameArgs, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding Model.GameArgs, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </Grid>
 
@@ -417,17 +417,17 @@
                         <CheckBox
                             Margin="0,0,0,5"
                             Content="{DynamicResource autoUpdateInstance}"
-                            IsChecked="{Binding GeneralSettings.IsAutoUpdate}" />
+                            IsChecked="{Binding Model.IsAutoUpdate}" />
 
                         <CheckBox
                             Margin="0,0,0,5"
                             Content="{DynamicResource hideLauncher}"
-                            IsChecked="{Binding GeneralSettings.IsHiddenMode}" />
+                            IsChecked="{Binding Model.IsHiddenMode}" />
 
                         <CheckBox
                             Margin="0,0,0,5"
                             Content="{DynamicResource showConsole}"
-                            IsChecked="{Binding GeneralSettings.IsShowConsole}" />
+                            IsChecked="{Binding Model.IsShowConsole}" />
                     </StackPanel>
 
                     <Button

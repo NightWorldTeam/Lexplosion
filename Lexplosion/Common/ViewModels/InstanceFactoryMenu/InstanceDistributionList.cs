@@ -2,6 +2,7 @@
 using Lexplosion.Common.Models.Controllers;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Logic.FileSystem;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +10,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 {
     public sealed class InstanceSharingListViewModel : ModalVMBase
     {
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+
+
         #region Properties
 
 
@@ -67,8 +71,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Constructors
 
 
-        public InstanceSharingListViewModel()
+        public InstanceSharingListViewModel(Action<string, string, uint, byte> doNotification = null)
         {
+            _doNotification = doNotification ?? _doNotification;
             LoadInstanceDistribution();
         }
 
@@ -100,6 +105,20 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
         private void DownloadResultHandler(ImportResult importResult)
         {
+            switch (importResult) 
+            {
+                case ImportResult.Successful: 
+                    {
+                        _doNotification("Download Sharing Instance", "Successful", 5, 0);
+                    }
+                    break;
+                default:
+                    {
+                        
+                    }
+                    break;
+            }
+
             MainViewModel.ShowToastMessage("Download Sharing Instance", importResult.ToString());
         }
 

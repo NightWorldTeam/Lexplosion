@@ -508,10 +508,17 @@
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
 
-                        <DataTrigger Binding="{Binding Model.InstanceClient.IsUpdating, Mode=OneWay}" Value="True">
-                            <Setter Property="Visibility" Value="Visible" />
-                            <Setter Property="IsIndeterminate" Value="True" />
-                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Model.InstanceClient.IsUpdating, Mode=OneWay}" Value="True" />
+                                <Condition Binding="{Binding Model.InstanceClient.IsComplete, Mode=OneWay}" Value="False" />
+                            </MultiDataTrigger.Conditions>
+
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Setter Property="IsIndeterminate" Value="True" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
 
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
