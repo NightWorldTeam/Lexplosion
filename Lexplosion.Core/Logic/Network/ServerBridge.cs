@@ -13,18 +13,19 @@ namespace Lexplosion.Logic.Network
         protected ConcurrentDictionary<Socket, IPEndPoint> ClientsPoints = new(); //этот список нужен для отправляющего потока
         protected List<Socket> Sockets = new(); //этот список нужен для отправляющего потока
         protected Semaphore ConnectSemaphore = new(1, 1); //блокировка для метода BeforeConnect
+        protected Semaphore SendingBlock = new Semaphore(1, 1); //блокировка во время работы метода Sending
 
         protected AutoResetEvent SendingWait = new(false);
         protected AutoResetEvent ReadingWait = new(false);
 
-        const string serverType = "game-server"; // эта строка нужна при подключении к управляющему серверу
+        const string SERVER_TYPE = "game-server"; // эта строка нужна при подключении к управляющему серверу
         readonly int Port;
 
         private bool _isWork;
         private object _stopLosk = new object();
         private object _abortLoocker = new object();
 
-        public ServerBridge(string uuid, string sessionToken, int localGamePort, bool directConnection, string server) : base(uuid, sessionToken, serverType, directConnection, server)
+        public ServerBridge(string uuid, string sessionToken, int localGamePort, bool directConnection, string server) : base(uuid, sessionToken, SERVER_TYPE, directConnection, server)
         {
             Port = localGamePort;
             _isWork = true;

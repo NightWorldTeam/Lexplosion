@@ -99,6 +99,7 @@ namespace Lexplosion.Logic.FileSystem
         public void CancelDownload()
         {
             _dataClient?.Close();
+            _dataClient = null;
         }
 
         public FileRecvResult StartDownload(string fileName)
@@ -107,6 +108,7 @@ namespace Lexplosion.Logic.FileSystem
             StateChanged?.Invoke(_state);
 
             var publicKey = Сryptography.DecodeRsaParams(_info.PublicRsaKey);
+            _dataClient?.Close();
             _dataClient = new DataClient(publicKey, _info.ConfirmWord, LaunсherSettings.ServerIp, fileName, _fileId);
             _dataClient.SpeedUpdate += SpeedUpdate;
             _dataClient.ProcentUpdate += ProcentUpdate;

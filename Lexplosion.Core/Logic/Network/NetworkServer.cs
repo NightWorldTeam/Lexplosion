@@ -23,19 +23,18 @@ namespace Lexplosion.Logic.Network
 
         protected Semaphore AcceptingBlock = new Semaphore(1, 1); //блокировка во время приёма подключения
         protected ManualResetEvent ConnectionWait = new(false); // блокируется на время работы метода PerformConnect
-        protected Semaphore SendingBlock = new Semaphore(1, 1); //блокировка во время работы метода Sending
+        
         private AutoResetEvent _controlConnectionBlock = new AutoResetEvent(false); // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
+        private ManualResetEvent _threadsStartWait = new(false);
 
+        private Socket _controlConnection;
         protected IServerTransmitter Server;
-
         protected bool IsWork = false;
 
         protected string UUID;
         protected string _sessionToken;
-        protected bool DirectConnection;
+        protected bool SmpConnection;
         protected string ControlServer;
-
-        private Socket _controlConnection;
 
         public event Action<string> ConnectingUser;
         public event Action<string> DisconnectedUser;
@@ -52,19 +51,28 @@ namespace Lexplosion.Logic.Network
             _sessionToken = sessionToken;
             IsWork = true;
             ControlServer = controlServer;
-            DirectConnection = directConnection;
 
             _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            Server = DirectConnection ? new SmpServer() : new TurnBridgeServer();
-            Server.ClientClosing += ClientAbort;
-
-            ReadingThread = new Thread(Reading); //этот поток читает сообщения от клиента
-            SendingThread = new Thread(Sending); //этот поток отправляет сообщения клиенту
-
             AcceptingThread = new Thread(delegate () //поток принимающий новые подключения
             {
+                TransmitterPrepear(directConnection);
+                _threadsStartWait.Set();
                 Accepting(serverType);
+            });
+
+            //этот поток читает сообщения от клиента
+            ReadingThread = new Thread(delegate ()
+            {
+                _threadsStartWait.WaitOne();
+                Reading();
+            });
+
+            //этот поток отправляет сообщения клиенту
+            SendingThread = new Thread(delegate ()
+            {
+                _threadsStartWait.WaitOne();
+                Sending();
             });
 
             MaintainingThread = new Thread(MaintainingConnection); //поток отправляющий управляющему серверу пустые пакеты для поддержиния соединения
@@ -75,6 +83,40 @@ namespace Lexplosion.Logic.Network
             AcceptingThread.Start();
             SendingThread.Start();
             ReadingThread.Start();
+        }
+
+        private void TransmitterPrepear(bool directConnectionIsPriority)
+        {
+            // если стоит парметр установки прямого соединения, то проверяем, возможно ли его вообще установить. если нет - переходим на TURN
+            if (directConnectionIsPriority)
+            {
+                STUN_Result result = null;
+                try
+                {
+                    // TODO: сделать получения списка stun серверов с нашего сервера
+                    result = STUN_Client.Query("stun.l.google.com", 19305, new IPEndPoint(IPAddress.Any, 0)); //получем наш внешний адрес
+                    Runtime.DebugWrite("NatType " + result.NetType.ToString());
+                }
+                catch { }
+
+                if (result != null && result.NetType != STUN_NetType.UdpBlocked && result.NetType != STUN_NetType.Symmetric && result.NetType != STUN_NetType.SymmetricUdpFirewall)
+                {
+                    SmpConnection = true;
+                    Server = new SmpServer();
+                }
+                else
+                {
+                    SmpConnection = false;
+                    Server = new TurnBridgeServer();
+                }
+            }
+            else
+            {
+                SmpConnection = false;
+                Server = new TurnBridgeServer();
+            }
+
+            Server.ClientClosing += ClientAbort;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -101,7 +143,6 @@ namespace Lexplosion.Logic.Network
             _controlConnection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             Runtime.DebugWrite("Repeat connection to control server");
-            DirectConnection = false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -138,7 +179,7 @@ namespace Lexplosion.Logic.Network
                     var st =
                     "{\"UUID\" : \"" + UUID + "\"," +
                     " \"type\": \"" + serverType + "\"," +
-                    " \"method\": \"" + (DirectConnection ? "STUN" : "TURN") + "\"," +
+                    " \"method\": \"" + (SmpConnection ? "STUN" : "TURN") + "\"," +
                     " \"sessionToken\" : \"" + _sessionToken + "\"}";
 
                     byte[] sendData = Encoding.UTF8.GetBytes(st);
@@ -170,7 +211,7 @@ namespace Lexplosion.Logic.Network
 
             try
             {
-                if (DirectConnection)
+                if (Server is SmpServer)
                 {
                     Runtime.DebugWrite("Udp connection");
 
@@ -247,24 +288,6 @@ namespace Lexplosion.Logic.Network
 
         protected void Accepting(string serverType)
         {
-            // если стоит парметр установки прямого соединения, то проверяем, возможно ли его вообще установить. если нет - переходим на TURN
-            if (DirectConnection)
-            {
-                STUN_Result result = null;
-                try
-                {
-                    // TODO: сделать получения списка stun серверов с нашего сервера
-                    result = STUN_Client.Query("stun.l.google.com", 19305, new IPEndPoint(IPAddress.Any, 0)); //получем наш внешний адрес
-                    Runtime.DebugWrite("NatType " + result.NetType.ToString());
-                }
-                catch { }
-
-                if (result == null || result.NetType == STUN_NetType.UdpBlocked || result.NetType == STUN_NetType.Symmetric || result.NetType == STUN_NetType.SymmetricUdpFirewall)
-                {
-                    DirectConnection = false;
-                }
-            }
-
             bool contolServerExists = true;
             while (IsWork && contolServerExists)
             {
@@ -333,7 +356,7 @@ namespace Lexplosion.Logic.Network
                             if (bytes == 1 && data[0] == ControlSrverCodes.B) //сервер запрашивает мой порт
                             {
                                 byte[] portData;
-                                if (DirectConnection)
+                                if (SmpConnection)
                                 {
                                     udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 

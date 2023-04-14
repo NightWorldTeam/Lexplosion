@@ -90,6 +90,11 @@ namespace Lexplosion.Logic.FileSystem
                     hash = Сryptography.Sha256(fstream);
                 }
 
+                if (!_dataServer.AddFile(filePath, hash))
+                {
+                    return null;
+                }
+
                 string answer = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "setFileDistribution", new Dictionary<string, string>
                 {
                     ["UUID"] = GlobalData.User.UUID,
@@ -104,11 +109,6 @@ namespace Lexplosion.Logic.FileSystem
                 });
 
                 Runtime.DebugWrite(answer);
-
-                if (!_dataServer.AddFile(filePath, hash))
-                {
-                    return null;
-                }
 
                 _distributionsCount++;
 
@@ -129,7 +129,7 @@ namespace Lexplosion.Logic.FileSystem
                 _distributionsCount--;
                 if (_distributionsCount < 1)
                 {
-                    _dataServer.StopWork();
+                    _dataServer?.StopWork();
                     _dataServer = null;
                 }
 

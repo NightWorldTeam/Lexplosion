@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
@@ -20,13 +21,13 @@ namespace Lexplosion.Logic.Network
         protected Dictionary<string, FileData> SFilesList = new(); // список всех FileStream и размеров файлов
 
         // первое значение - отправляемый файл, второе - офсет в отправляемом файле, третье - ключ ширования, четвертое - вектор инициализации
-        protected Dictionary<IPEndPoint, ReferenceTuple<string, int, byte[], byte[]>> ClientsData = new();
+        protected ConcurrentDictionary<IPEndPoint, ReferenceTuple<string, int, byte[], byte[]>> ClientsData = new();
 
         protected List<IPEndPoint> AuthorizedClients = new();
         protected List<IPEndPoint> AvailableConnections = new();
 
-        protected Semaphore FilesListSemaphore = new(1, 1); //блокировка для метода AddFile
         protected AutoResetEvent WaitClient = new AutoResetEvent(false);
+        protected Semaphore SendingBlock = new Semaphore(1, 1); //блокировка во время работы метода Sending
 
         const int HEAP = 1400; //количество байт отправляемых за один раз
         const string SERVER_TYPE = "data-server"; // эта строка нужна при подключении к управляющему серверу
@@ -74,39 +75,51 @@ namespace Lexplosion.Logic.Network
                 SendingBlock.WaitOne();
                 foreach (IPEndPoint clientPoint in authorizedClients)
                 {
-                    byte[] buffer = new byte[HEAP];
-
-                    FilesListSemaphore.WaitOne();
-                    ReferenceTuple<string, int, byte[], byte[]> clientData = ClientsData[clientPoint];
-                    var fileData = SFilesList[clientData.Value1];
-                    FileStream file = fileData.Stream; //получаем FileStream для этого клиента
-                    long fileSize = fileData.FileSize;
-                    FilesListSemaphore.Release();
-
-                    file.Seek(clientData.Value2, SeekOrigin.Begin); //перемещаем указатель чтения файла
-                    int bytesCount = file.Read(buffer, 0, HEAP); //читаем файл
-                    clientData.Value2 += HEAP; //увеличиваем оффсет
-
-                    byte[] buffer_;
-                    if (bytesCount != HEAP)
+                    try
                     {
-                        buffer_ = new byte[bytesCount];
-                        Array.Copy(buffer, 0, buffer_, 0, bytesCount); //обрезаем буффер до нужных размеров
+                        byte[] buffer = new byte[HEAP];
+
+                        ReferenceTuple<string, int, byte[], byte[]> clientData = ClientsData[clientPoint];
+                        var fileData = SFilesList[clientData.Value1];
+                        FileStream file = fileData.Stream; //получаем FileStream для этого клиента
+                        long fileSize = fileData.FileSize;
+
+                        file.Seek(clientData.Value2, SeekOrigin.Begin); //перемещаем указатель чтения файла
+                        int bytesCount = file.Read(buffer, 0, HEAP); //читаем файл
+                        clientData.Value2 += HEAP; //увеличиваем оффсет
+
+                        byte[] buffer_;
+                        if (bytesCount != HEAP)
+                        {
+                            buffer_ = new byte[bytesCount];
+                            Array.Copy(buffer, 0, buffer_, 0, bytesCount); //обрезаем буффер до нужных размеров
+                        }
+                        else
+                        {
+                            buffer_ = buffer;
+                        }
+
+                        // TODO: тут трай надо
+                        byte[] payload = Сryptography.AesEncode(buffer_, clientData.Value3, clientData.Value4);
+                        Server.Send(payload, clientPoint); //отправляем
+
+                        //файл передан, закрываем соединение
+                        if (clientData.Value2 >= fileSize)
+                        {
+                            Runtime.DebugWrite("END SEND");
+                            toDisconect.Add(clientPoint);
+                        }
                     }
-                    else
+                    catch (KeyNotFoundException)
                     {
-                        buffer_ = buffer;
+                        Runtime.DebugWrite("KeyNotFoundException");
+                        continue;
                     }
-
-                    // TODO: тут трай надо
-                    byte[] payload = Сryptography.AesEncode(buffer_, clientData.Value3, clientData.Value4);
-                    Server.Send(payload, clientPoint); //отправляем
-
-                    //файл передан, закрываем соединение
-                    if (clientData.Value2 >= fileSize)
+                    catch (Exception ex)
                     {
-                        Runtime.DebugWrite("END SEND");
-                        toDisconect.Add(clientPoint);
+                        Runtime.DebugWrite("Sending exception " + ex);
+                        break;
+                        // TODO: че-то мутить
                     }
                 }
 
@@ -198,12 +211,9 @@ namespace Lexplosion.Logic.Network
                                     byte[] aesIV = connectionStages[point].Value3;
 
                                     string profileId = Encoding.UTF8.GetString(Сryptography.AesDecode(data, aesKey, aesIV));
-                                    FilesListSemaphore.WaitOne();
 
                                     if (SFilesList.ContainsKey(profileId))
                                     {
-                                        FilesListSemaphore.Release();
-
                                         ClientsData[point] = new ReferenceTuple<string, int, byte[], byte[]>
                                         {
                                             Value1 = profileId,
@@ -227,7 +237,6 @@ namespace Lexplosion.Logic.Network
                                     else
                                     {
                                         Runtime.DebugWrite("PARASHA");
-                                        FilesListSemaphore.Release();
 
                                         connectionStages.Remove(point);
                                         Server.Close(point);
@@ -260,11 +269,11 @@ namespace Lexplosion.Logic.Network
                 {
                     AcceptingBlock.WaitOne();
                     SendingBlock.WaitOne();
+                    Runtime.DebugWrite("ClientAbort");
 
-                    // TODO: тут наверное проверять на наличие. И вообще проверить логику отлючения
                     AvailableConnections.Remove(point);
                     AuthorizedClients.Remove(point);
-                    ClientsData.Remove(point);
+                    ClientsData.TryRemove(point, out _);
 
                     base.ClientAbort(point);
 
@@ -289,13 +298,11 @@ namespace Lexplosion.Logic.Network
                 return false;
             }
 
-            FilesListSemaphore.WaitOne();
             SFilesList[id] = new FileData
             {
                 Stream = stream,
                 FileSize = fileSize
             };
-            FilesListSemaphore.Release();
 
             return true;
         }
