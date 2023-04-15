@@ -54,6 +54,12 @@ namespace Lexplosion.Common.Models.InstanceForm
         }
 
 
+        public void Shutdown() 
+        {
+            MainModel.Instance.IsInstanceRunning = false;
+        }
+
+
         #endregion Public & Protected Methods
 
 

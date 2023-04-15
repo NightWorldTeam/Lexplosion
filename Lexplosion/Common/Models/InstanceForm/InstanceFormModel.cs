@@ -3,6 +3,7 @@ using Lexplosion.Common.ViewModels;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -21,6 +22,10 @@ namespace Lexplosion.Common.Models.InstanceForm
         public DownloadModel DownloadModel { get; }
         public LaunchModel LaunchModel { get; }
         public UpperButton UpperButton { get; set; }
+
+
+        public readonly Action OnComplitedError;
+
 
         public InstanceDistribution InstanceDistribution { get; }
 
@@ -64,8 +69,13 @@ namespace Lexplosion.Common.Models.InstanceForm
             UpperButtonSetup();
 
             OverviewField = instanceClient.Summary;
-            DownloadModel = new DownloadModel(this, MainViewModel.ShowToastMessage);
             LaunchModel = new LaunchModel(instanceClient, _mainViewModel, this, instanceFormViewModel);
+            OnComplitedError = () =>
+            {
+                LaunchModel.Shutdown();
+            };
+            DownloadModel = new DownloadModel(this, OnComplitedError, MainViewModel.ShowToastMessage);
+
 
             UpdateButtons();
         }

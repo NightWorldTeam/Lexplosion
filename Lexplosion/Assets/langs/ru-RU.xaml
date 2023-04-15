@@ -23,12 +23,13 @@
     <s:String x:Key="unkick">Вернуть</s:String>
     <s:String x:Key="rebootOnlineGame">Перезапустить сетевую игру</s:String>
     <s:String x:Key="offOnlineGame">Выключить сетевую игру</s:String>
+
     <!--  multiplayer status  -->
     <s:String x:Key="statusNone">Нет открытых миров</s:String>
     <s:String x:Key="statusOpenWorld">Открыт для подключения</s:String>
     <s:String x:Key="statusConnectedToUser">Подключен к серверу</s:String>
 
-
+    <!--  Multiplayer Tabs  -->
     <s:String x:Key="general">Основное</s:String>
     <s:String x:Key="friends">Друзья</s:String>
     <s:String x:Key="channels">Комнаты</s:String>
@@ -63,6 +64,7 @@
     <s:String x:Key="cancel">Отмена</s:String>
     <s:String x:Key="import">Импорт</s:String>
     <s:String x:Key="creation">Создание</s:String>
+
     <!--  Import  -->
     <s:String x:Key="uploadYourInstance">Загрузите свою сборку</s:String>
     <s:String x:Key="onlyZipAllowed">разрешенны только .zip</s:String>
@@ -86,6 +88,7 @@
     <!--  instance configuration  -->
     <s:String x:Key="configuration">Конфигурация</s:String>
     <s:String x:Key="instanceSettings">Настройки сборки</s:String>
+
     <!--  instance profile  -->
     <s:String x:Key="avatar">Аватар</s:String>
     <s:String x:Key="selectedInstanceLogo">Выберите изображение для вашего модпака.</s:String>
@@ -215,8 +218,11 @@
     <s:String x:Key="downloadCancelling">Отмена скачивания...</s:String>
     <s:String x:Key="directoryChanging">Идет процесс переноса файлов...</s:String>
 
+
     <s:String x:Key="warningAboutMultiplayer">Функции нашей сетевой игры доступны только при использовании аккаунта NightWorld</s:String>
     <s:String x:Key="registerNightWorldAccount">Создать аккаунт NightWorld</s:String>
+
+    <!--  Lang  -->
 
     <s:String x:Key="appearance">Внешний вид</s:String>
     <s:String x:Key="language">Язык</s:String>
@@ -248,9 +254,12 @@
     <s:String x:Key="nothingDownloading">Сейчас ничего не скачивается</s:String>
     <s:String x:Key="installModification">Установить модификацию</s:String>
 
+
     <s:String x:Key="howToPlayMultiplayer">Как играть по сети</s:String>
     <s:String x:Key="yep">Хорошо</s:String>
     <s:String x:Key="no">Нет</s:String>
+
+    <!--  Factory  -->
 
     <s:String x:Key="foldersAndFiles">Папки и файлы</s:String>
     <s:String x:Key="fullExport">Полный экспорт</s:String>
@@ -280,4 +289,7 @@
 
     <!--  Share  -->
     <s:String x:Key="stopAll">Остановить все</s:String>
+    <s:String x:Key="youNothingShare">Вы ничего не раздаёте</s:String>
+    <s:String x:Key="prepareFileForShare">Идёт подготовка файлов...</s:String>
+    <s:String x:Key="activeShares">Активные раздачи</s:String>
 </ResourceDictionary>

@@ -81,7 +81,7 @@
         Successful,
         DownloadFilesError,
         NightworldIdError,
-        CursforgeIdError,
+        CurseforgeIdError,
         ServerError,
         GuardError,
         VersionError,

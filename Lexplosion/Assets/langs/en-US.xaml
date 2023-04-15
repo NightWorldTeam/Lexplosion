@@ -279,4 +279,7 @@
 
     <!--  Share  -->
     <s:String x:Key="stopAll">Stop all</s:String>
+    <s:String x:Key="youNothingShare">You are not sharing anything</s:String>
+    <s:String x:Key="prepareFileForShare">Files are being prepared in progress...</s:String>
+    <s:String x:Key="activeShares">Active Shares</s:String>
 </ResourceDictionary>

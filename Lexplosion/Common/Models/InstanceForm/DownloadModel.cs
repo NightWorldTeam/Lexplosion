@@ -14,6 +14,7 @@ namespace Lexplosion.Common.Models.InstanceForm
 
 
         private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+        private readonly Action _complitedError;
 
 
         #region Properties
@@ -163,9 +164,10 @@ namespace Lexplosion.Common.Models.InstanceForm
         }
 
 
-        public DownloadModel(InstanceFormModel instanceFormModel, Action<string, string, uint, byte> doNotification)
+        public DownloadModel(InstanceFormModel instanceFormModel, Action complitedError, Action<string, string, uint, byte> doNotification = null)
         {
-            _doNotification = doNotification;
+            _complitedError = complitedError;
+            _doNotification = doNotification ?? _doNotification;
             _instanceFormModel = instanceFormModel;
 
             DownloadActions.Add(Download);
@@ -247,13 +249,16 @@ namespace Lexplosion.Common.Models.InstanceForm
 
         public void InstanceDownloadCompleted(InstanceInit result, IEnumerable<string> downloadErrors, bool IsGameRun)
         {
+            var isError = true;
             App.Current.Dispatcher.Invoke(() =>
             {
+                // TODO: localization
                 IsFilesDownload = false;
                 switch (result)
                 {
                     case InstanceInit.Successful:
                         {
+                            isError = true;
                             if (MainModel.Instance.RunningInstance != null && MainModel.Instance.IsInstanceRunning && MainModel.Instance.RunningInstance.Model == _instanceFormModel)
                             {
                                 IsPrepareOnly = true;
@@ -274,7 +279,6 @@ namespace Lexplosion.Common.Models.InstanceForm
                         break;
                     case InstanceInit.DownloadFilesError:
                         {
-                            IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             string files = "Не удалось скачать следующие файлы:\n";
                             foreach (var de in downloadErrors ?? new List<string>())
@@ -283,9 +287,18 @@ namespace Lexplosion.Common.Models.InstanceForm
                             }
                             files += "\nПовторное скачивание может решить проблему, но это не точно.\n";
                             _doNotification("Не удалось скачать некоторые файлы", files, 0, 1);
+                            IsDownloadInProgress = false;
+                            IsPrepare = false;
+                            _complitedError.Invoke();
                         }
                         break;
-                    case InstanceInit.CursforgeIdError:
+                    case InstanceInit.CurseforgeIdError:
+                        {
+                            IsDownloadInProgress = false;
+                            _instanceFormModel.UpperButton.ChangeFuncDownload();
+                            _doNotification("Id Error", "Внешний id сборки некорректен.", 0, 1);
+                        }
+                        break;
                     case InstanceInit.NightworldIdError:
                         {
                             IsDownloadInProgress = false;
@@ -356,22 +369,20 @@ namespace Lexplosion.Common.Models.InstanceForm
                             _doNotification("Unknown Error", "Что-то непонятное произошло... Советуем выключить и включить.", 0, 1);
                         }
                         break;
-
                 }
 
-                if (!IsPrepareOnly)
-                {
-                    _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
-                    _instanceFormModel.UpdateLowerButton();
-                }
-                else
-                {
-                    //IsDownloadInProgress = false;
-                    IsPrepare = false;
-                    _instanceFormModel.UpdateLowerButton();
-                    _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
-                }
-
+                    if (isError || !IsPrepareOnly)
+                    {
+                        _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
+                        _instanceFormModel.UpdateLowerButton();
+                    }
+                    else
+                    {
+                        //IsDownloadInProgress = false;
+                        IsPrepare = false;
+                        _instanceFormModel.UpdateLowerButton();
+                        _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
+                    }
             });
         }
 

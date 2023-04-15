@@ -64,7 +64,7 @@ namespace Lexplosion.Logic.Management.Installers
 
             if (InfoData == null || InfoData.id == null)
             {
-                return InstanceInit.CursforgeIdError;
+                return InstanceInit.CurseforgeIdError;
             }
 
             // TODO: думаю, если манифест равен null, вполне можно продолжить работу скачав всё заново 
@@ -144,7 +144,7 @@ namespace Lexplosion.Logic.Management.Installers
                     {
                         return new InitData
                         {
-                            InitResult = InstanceInit.CursforgeIdError,
+                            InitResult = InstanceInit.CurseforgeIdError,
                         };
                     }
                 }

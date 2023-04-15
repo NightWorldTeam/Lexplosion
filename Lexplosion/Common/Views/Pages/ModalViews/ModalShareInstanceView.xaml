@@ -321,12 +321,12 @@
                             BackgroundColor="Black"
                             BackgroundOpacity="0.2"
                             IsLoadingFinished="{Binding IsPrepareToShare, Converter={StaticResource InverseBooleanConverter}}"
-                            Placeholder="Идёт подготовка файлов..." />
+                            Placeholder="{DynamicResource prepareFileForShare}" />
                     </Grid>
                 </TabItem>
                 <TabItem
                     x:Name="ActiveShareTabItem"
-                    Header="Active Share"
+                    Header="{DynamicResource activeShares}"
                     IsSelected="{Binding IsAlreadySharing, Mode=OneWay}">
                     <Grid>
                         <ScrollViewer VerticalScrollBarVisibility="Visible">
@@ -338,7 +338,7 @@
                             Width="415"
                             Margin="0,32,0,0"
                             FontSize="18"
-                            Text="Вы ничего не раздаёте"
+                            Text="{DynamicResource youNothingShare}"
                             TextAlignment="Center">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
