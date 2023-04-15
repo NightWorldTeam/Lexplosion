@@ -21,11 +21,11 @@ namespace Lexplosion.Logic.Network
         private readonly string UUID = "";
         private readonly string _sessionToken = "";
 
-        const string clientType = "game-client"; // эта строка нужна при подключении к управляющему серверу
+        const string CLIENT_TYPE = "game-client"; // эта строка нужна при подключении к управляющему серверу
 
         private readonly object _closeLock = new object();
 
-        public ClientBridge(string uuid, string sessionToken, string server) : base(clientType, server)
+        public ClientBridge(string uuid, string sessionToken, string server) : base(CLIENT_TYPE, server)
         {
             UUID = uuid;
             _sessionToken = sessionToken;

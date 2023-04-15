@@ -23,7 +23,7 @@ namespace Lexplosion.Logic.Network
 
         protected Semaphore AcceptingBlock = new Semaphore(1, 1); //блокировка во время приёма подключения
         protected ManualResetEvent ConnectionWait = new(false); // блокируется на время работы метода PerformConnect
-        
+
         private AutoResetEvent _controlConnectionBlock = new AutoResetEvent(false); // чтобы методы MaintainingConnection и Accepting одновременно не обраащлись к управляющему серверу
         private ManualResetEvent _threadsStartWait = new(false);
 

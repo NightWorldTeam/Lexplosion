@@ -8,7 +8,6 @@ using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.WebSockets;
-using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion
@@ -177,7 +176,7 @@ namespace Lexplosion
             TaskRun(delegate ()
             {
                 _waitingClosing.WaitOne(); // ждём отработки всех приоритетных задач. 
-                                          // проверяем было ли закрытие отменено
+                                           // проверяем было ли закрытие отменено
                 if (_exitIsCanceled)
                 {
                     // снова блочим waitingClosing, если сохранилась приоритетная задача, ибо метод CancelExit ее разлочил

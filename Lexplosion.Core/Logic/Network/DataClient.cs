@@ -11,7 +11,7 @@ namespace Lexplosion.Logic.Network
 {
     class DataClient : NetworkClient
     {
-        const string clientType = "data-client"; // эта строка нужна при подключении к управляющему серверу
+        const string CLIENT_TYPE = "data-client"; // эта строка нужна при подключении к управляющему серверу
         private readonly string _fileId; // он же хэш файла
         private readonly FileStream _fstream;
 
@@ -43,7 +43,7 @@ namespace Lexplosion.Logic.Network
         /// <param name="controlServer">IP кправляющего сервера</param>
         /// <param name="filename">Имя с которым файл будет сохранен на диске</param>
         /// <param name="fileId">ID файла получения, он же его хэш</param>
-        public DataClient(RSAParameters publicRsaKey, string confirmWord, string controlServer, string filename, string fileId) : base(clientType, controlServer)
+        public DataClient(RSAParameters publicRsaKey, string confirmWord, string controlServer, string filename, string fileId) : base(CLIENT_TYPE, controlServer)
         {
             _fileName = filename;
             _fstream = new FileStream(filename, FileMode.Create, FileAccess.ReadWrite);
