@@ -21,7 +21,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
 
         private readonly InstanceFormViewModel _instanceForm;
 
-        private readonly FactoryDLCVM _factoryDLCVM;
+        private FactoryDLCVM _factoryDLCVM;
 
 
         #region Commands
@@ -159,7 +159,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
             }
 
             _settingsTabs.Add(new Tab<VMBase> { Id = 0, Header = ResourceGetter.GetString("settings"), Content = new InstanceSettingsViewModel(_instanceForm.Client) });
-            _settingsTabs.Add(new Tab<VMBase> { Id = 3, Header = ResourceGetter.GetString("dlc"), Content = _factoryDLCVM });
+            _settingsTabs.Add(new Tab<VMBase> { Id = 3, Header = ResourceGetter.GetString("dlc"), Content = _factoryDLCVM ?? (_factoryDLCVM = new FactoryDLCVM(_mainViewModel, _instanceForm.Client)) });
         }
 
 

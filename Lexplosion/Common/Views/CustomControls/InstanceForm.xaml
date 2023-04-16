@@ -281,7 +281,6 @@
 
                     <TextBlock
                         Grid.Row="1"
-                        Width="80"
                         Margin="0,25,0,0"
                         HorizontalAlignment="Right"
                         FontSize="14"
@@ -308,8 +307,7 @@
                     <ItemsControl
                         Grid.Row="1"
                         Margin="0,-1,1,1"
-                        ItemsSource="{Binding Model.Categories}"
-                        Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
+                        ItemsSource="{Binding Model.Categories}">
                         <ItemsControl.Style>
                             <Style TargetType="{x:Type ItemsControl}">
                                 <Setter Property="Visibility" Value="Visible" />
@@ -321,6 +319,9 @@
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Model.DownloadModel.IsPrepare}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Model.InstanceClient.IsComplete}" Value="False">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
