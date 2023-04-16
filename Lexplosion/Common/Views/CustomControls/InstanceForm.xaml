@@ -281,9 +281,9 @@
 
                     <TextBlock
                         Grid.Row="1"
+                        Width="80"
                         Margin="0,25,0,0"
                         HorizontalAlignment="Right"
-                        FlowDirection="RightToLeft"
                         FontSize="14"
                         Foreground="#d5d5d5"
                         TextTrimming="WordEllipsis">
@@ -297,7 +297,7 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Model.InstanceClient.IsComplete}" Value="False">
                                         <Setter Property="Visibility" Value="Visible" />
-                                        <Setter Property="Text" Value="{Binding Model.InstanceDistribution.Speed, StringFormat='{}{0} mbit/s'}" />
+                                        <Setter Property="Text" Value="{Binding Model.InstanceDistribution.Speed, StringFormat='{}{0} Mbit/s'}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -308,7 +308,8 @@
                     <ItemsControl
                         Grid.Row="1"
                         Margin="0,-1,1,1"
-                        ItemsSource="{Binding Model.Categories}">
+                        ItemsSource="{Binding Model.Categories}"
+                        Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
                         <ItemsControl.Style>
                             <Style TargetType="{x:Type ItemsControl}">
                                 <Setter Property="Visibility" Value="Visible" />

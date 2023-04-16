@@ -540,6 +540,7 @@
             Background="{DynamicResource PrimarySolidColorBrush}"
             Visibility="{Binding IsManualInput, Converter={StaticResource ConvertBoolToVisibility}}">
             <StackPanel>
+                <!--  Translate  -->
                 <TextBlock
                     Margin="0,0,0,10"
                     FontSize="16"
