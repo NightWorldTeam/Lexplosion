@@ -73,6 +73,7 @@
             <!--  "Black" 0.64  -->
             <SolidColorBrush Opacity="0.84" Color="{DynamicResource PrimaryColor}" />
         </Grid.Background>
+
         <ScrollViewer
             x:Name="ContainerPage_ScrollViewer"
             extension:ScrollViewer.ChildItemsUpdated="{Binding IsLoaded}"
@@ -330,7 +331,7 @@
 
                 <ItemsControl
                     Grid.Row="1"
-                    Margin="15,0,0,30"
+                    Margin="30,0,0,30"
                     BorderBrush="Transparent"
                     IsTabStop="False"
                     ItemsSource="{Binding InstanceList}" />

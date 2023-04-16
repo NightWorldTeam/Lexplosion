@@ -72,7 +72,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
 
         // TODO: GUI пеименовать на Website command
         private RelayCommand _webpageCommand;
-        public RelayCommand CurseforgeCommand
+        public RelayCommand WebsiteCommand
         {
             get => _webpageCommand ?? (_webpageCommand = new RelayCommand(obj =>
             {
@@ -82,6 +82,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
                 }
                 else
                 {
+                    // TODO: Translate
                     _doNotification("Link null", "Отсутсвует ссылка на сайт.", 8, 1);
                 }
             }));
@@ -202,6 +203,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
                 });
             });
         }
+
 
         #endregion Construtors
 

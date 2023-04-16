@@ -107,6 +107,7 @@
     <s:String x:Key="openfolder">Open Folder</s:String>
     <s:String x:Key="startModification">Run modification</s:String>
     <s:String x:Key="curseforgePage">Curseforge Page</s:String>
+    <s:String x:Key="modrinthPage">Modrinth Page</s:String>
     <s:String x:Key="update">Update</s:String>
     <s:String x:Key="delete">Delete</s:String>
     <s:String x:Key="noInstalledModification">No Installed Mods.</s:String>

@@ -110,6 +110,7 @@
     <s:String x:Key="openfolder">Открыть папку</s:String>
     <s:String x:Key="startModification">Запускать модификацию</s:String>
     <s:String x:Key="curseforgePage">Страница на Curseforge</s:String>
+    <s:String x:Key="modrinthPage">Страница на Modrinth</s:String>
     <s:String x:Key="update">Обновить</s:String>
     <s:String x:Key="delete">Удалить</s:String>
     <s:String x:Key="noInstalledModification">Отсутвуют установленные модификации.</s:String>
