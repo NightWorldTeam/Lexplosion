@@ -177,15 +177,8 @@ namespace Lexplosion.Logic.Network
 
                     if (isConected)
                     {
-                        readingThread = new Thread(delegate ()
-                        {
-                            Reading();
-                        });
-
-                        sendingThread = new Thread(delegate ()
-                        {
-                            Sending();
-                        });
+                        readingThread = new Thread(Reading);
+                        sendingThread = new Thread(Sending);
 
                         sendingThread.Start();
                         readingThread.Start();

@@ -18,7 +18,7 @@ namespace Lexplosion.Logic.FileSystem
             public string Parameters;
         }
 
-        private static List<FileReceiver> _toProcessing = new List<FileReceiver>();
+        private static object _dataClientInitLocker = new object();
 
         public static List<FileReceiver> GetDistributors()
         {
@@ -111,16 +111,19 @@ namespace Lexplosion.Logic.FileSystem
         {
             lock (_locker)
             {
-                _state = DistributionState.InProcess;
-                StateChanged?.Invoke(_state);
-
                 var publicKey = Сryptography.DecodeRsaParams(_info.PublicRsaKey);
                 _dataClient?.Close();
                 _dataClient = new DataClient(publicKey, _info.ConfirmWord, LaunсherSettings.ServerIp, fileName, _fileId);
                 _dataClient.SpeedUpdate += SpeedUpdate;
                 _dataClient.ProcentUpdate += ProcentUpdate;
 
-                _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
+                lock (_dataClientInitLocker)
+                {
+                    _dataClient.Initialization(GlobalData.User.UUID, GlobalData.User.SessionToken, _ownerUUID);
+                }
+
+                _state = DistributionState.InProcess;
+                StateChanged?.Invoke(_state);
             }
 
             return _dataClient?.WorkWait() ?? FileRecvResult.Canceled;
