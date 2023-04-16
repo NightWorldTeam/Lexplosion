@@ -363,10 +363,7 @@
                         Background="#232323"
                         CornerRadius="2"
                         Visibility="{Binding IsLoading, Converter={StaticResource ConvertBoolToVisibility}}" />
-                    <Border
-                        Margin="10,5,0,0"
-                        BorderBrush="#212326"
-                        BorderThickness="0,0,0,0">
+                    <Border Margin="10,5,0,0" BorderThickness="0">
 
                         <Border.Style>
                             <Style>

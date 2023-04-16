@@ -20,7 +20,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border Background="#212326" CornerRadius="5">
+                        <Border Background="{DynamicResource SepSolidColorBrush}" CornerRadius="5">
                             <StackPanel Background="Transparent" Orientation="Horizontal">
                                 <Ellipse
                                     x:Name="ellipse"

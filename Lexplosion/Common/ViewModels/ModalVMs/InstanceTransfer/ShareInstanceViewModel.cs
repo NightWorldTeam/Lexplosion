@@ -70,11 +70,10 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var result = _instanceClient.Share(UnitsList, out FileDistributor fileDistribution);
-
                 ExportResultHandler(result);
 
-                var wrapper = new FileDistributionWrapper(_instanceClient.Name, fileDistribution);
                 App.Current.Dispatcher.Invoke(() => {
+                    var wrapper = new FileDistributionWrapper(_instanceClient.Name, fileDistribution);
                     ShareController.Instance.AddActiveShareProcess(wrapper);
                     OnPropertyChanged(nameof(IsAlreadySharing));
                     IsPrepareToShare = false;

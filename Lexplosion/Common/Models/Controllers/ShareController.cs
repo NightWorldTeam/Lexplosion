@@ -68,6 +68,7 @@ namespace Lexplosion.Common.Models.Controllers
 
         public void RemoveActiveShareProcess(FileDistributionWrapper fileDistributionWrapper) 
         {
+            fileDistributionWrapper.StopTimer();
             _activeShareProcess.Remove(fileDistributionWrapper);
             ActiveShareProcessCount = _activeShareProcess.Count;
         }

@@ -104,7 +104,7 @@
                                     <TextBox
                                         Width="400"
                                         Height="40"
-                                        Background="#1f1f1f"
+                                        Background="{DynamicResource TextBoxSolidColorBrush}"
                                         FontSize="14"
                                         Text="{Binding Model.BaseInstanceData.Name, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>

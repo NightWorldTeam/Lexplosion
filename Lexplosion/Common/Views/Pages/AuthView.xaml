@@ -431,7 +431,7 @@
                                                     SnapsToDevicePixels="True">
                                                     <Border
                                                         x:Name="DropDownBorder"
-                                                        Background="#1f1f1f"
+                                                        Background="{DynamicResource TextBoxSolidColorBrush}"
                                                         BorderBrush="{DynamicResource BrandSolidColorBrush}"
                                                         BorderThickness="2"
                                                         CornerRadius="2" />

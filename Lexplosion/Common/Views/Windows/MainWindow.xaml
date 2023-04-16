@@ -124,7 +124,7 @@
 
 
             <!--  Content View  -->
-            <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel, Source={StaticResource MainVM}}" />
+            <ContentControl BorderThickness="0" Grid.Row="1" Content="{Binding CurrentViewModel, Source={StaticResource MainVM}}" />
 
             <!--  User Stats Menu  -->
             <Border

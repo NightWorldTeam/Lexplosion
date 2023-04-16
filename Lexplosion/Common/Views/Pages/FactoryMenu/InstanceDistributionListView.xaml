@@ -85,7 +85,7 @@
                             <TextBlock
                                 HorizontalAlignment="Right"
                                 Foreground="{DynamicResource ForegroundSolidBrush}"
-                                Text="{Binding Speed, StringFormat='{}{0} mbit/s'}" />
+                                Text="{Binding Speed, StringFormat='{}{0} Mbit/s'}" />
                         </Grid>
                         <ProgressBar Height="5" Value="{Binding Percentages, Mode=OneWay}" />
                     </StackPanel>

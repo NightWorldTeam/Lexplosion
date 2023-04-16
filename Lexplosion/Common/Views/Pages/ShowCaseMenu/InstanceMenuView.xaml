@@ -9,9 +9,9 @@
     mc:Ignorable="d">
     <Grid>
         <TabControl
-            Background="#18191b"
-            BorderBrush="#212326"
-            BorderThickness="1,0,0,0"
+            Background="{DynamicResource PrimarySolidColorBrush}"
+            BorderBrush="{DynamicResource SepSolidColorBrush}"
+            BorderThickness="0.5,0,0,0"
             ItemsSource="{Binding Tabs}"
             SelectedIndex="{Binding TabControlSelectedIndex}"
             SelectedValue="{Binding SelectedTab}"

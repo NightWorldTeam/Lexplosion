@@ -21,7 +21,7 @@
 
                 <Grid.Background>
                     <!--  "Black" 0.64  -->
-                    <SolidColorBrush Opacity="0.65" Color="#191919" />
+                    <SolidColorBrush Opacity="0.65" Color="{DynamicResource PrimaryColor}" />
                 </Grid.Background>
 
                 <Grid.RowDefinitions>

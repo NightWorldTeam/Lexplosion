@@ -30,8 +30,8 @@
 
                         <Border
                             Grid.Row="1"
-                            BorderBrush="#212326"
-                            BorderThickness="0,1,0,0">
+                            BorderBrush="{DynamicResource SepSolidColorBrush}"
+                            BorderThickness="0,0.5,0,0">
                             <ContentPresenter ContentSource="SelectedContent" />
                         </Border>
                     </Grid>

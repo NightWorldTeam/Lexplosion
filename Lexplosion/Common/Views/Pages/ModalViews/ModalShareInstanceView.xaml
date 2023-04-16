@@ -59,7 +59,7 @@
                                 Margin="0,16,0,0"
                                 FontSize="12"
                                 Foreground="{DynamicResource ForegroundSolidBrush}"
-                                Text="Active: 20 min" />
+                                Text="{Binding ActivityTime, StringFormat='{}Active: {0} min'}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock

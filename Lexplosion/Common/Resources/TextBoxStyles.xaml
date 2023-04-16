@@ -16,7 +16,7 @@
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border
                         x:Name="Border"
-                        Background="#1f1f1f"
+                        Background="{DynamicResource TextBoxSolidColorBrush}"
                         BorderBrush="#121212"
                         BorderThickness="1"
                         CornerRadius="10">
@@ -50,7 +50,7 @@
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border
                         x:Name="Border"
-                        Background="{DynamicResource SepSolidColorBrush}"
+                        Background="{DynamicResource TextBoxSolidColorBrush}"
                         BorderBrush="#121212"
                         BorderThickness="1"
                         CornerRadius="10">
@@ -101,7 +101,7 @@
 
                     <Border
                         x:Name="Border"
-                        Background="{DynamicResource SepSolidColorBrush}"
+                        Background="{DynamicResource TextBoxSolidColorBrush}"
                         BorderBrush="#121212"
                         BorderThickness="1"
                         CornerRadius="10">
