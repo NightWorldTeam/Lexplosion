@@ -159,6 +159,14 @@ namespace Lexplosion.Logic.Management.Instances
             get => !string.IsNullOrEmpty(_websiteUrl);
         }
 
+        public ProjectSource Source
+        {
+            get
+            {
+                return (_addonPrototype is CurseforgeAddon) ? ProjectSource.Curseforge : ((_addonPrototype is ModrinthAddon) ? ProjectSource.Modrinth : ProjectSource.None);
+            }
+        }
+
         #endregion
 
         //private readonly CurseforgeAddonInfo _modInfo;
