@@ -722,12 +722,6 @@ namespace Lexplosion.Logic.Management.Instances
             UpdateAvailable = data.UpdatesAvailable;
             ProfileVersion = data.ClientVersion;
 
-            data.InitResult = InstanceInit.DownloadFilesError;
-            data.DownloadErrors = new List<string>()
-            {
-                "XER"
-            };
-
             if (data.InitResult == InstanceInit.Successful)
             {
                 IsInstalled = (data.InitResult == InstanceInit.Successful);
@@ -761,13 +755,6 @@ namespace Lexplosion.Logic.Management.Instances
 
             UpdateAvailable = data.UpdatesAvailable;
             ProfileVersion = data.ClientVersion;
-
-            data.InitResult = InstanceInit.DownloadFilesError;
-            data.DownloadErrors = new List<string>()
-            {
-                "XER"
-            };
-
 
             if (data.InitResult == InstanceInit.Successful)
             {
