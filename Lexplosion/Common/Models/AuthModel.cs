@@ -184,7 +184,7 @@ namespace Lexplosion.Common.Models
                 }
                 else
                 {
-                    _doNotification("Заполните логин и пароль!", "Алло! А кто будет данными заполять? :)", 8, 1);
+                    _doNotification(ResourceGetter.GetString("fillLoginAndPassword"), ResourceGetter.GetString("heyWhoWillFiilField"), 8, 1);
                 }
             }
         }
@@ -305,32 +305,32 @@ namespace Lexplosion.Common.Models
                     }
                 case AuthCode.DataError:
                     {
-                        _doNotification("Ошибка авторизации", "Неверный логин или пароль.", 8, 0);
+                        _doNotification(ResourceGetter.GetString("authorisationError"), ResourceGetter.GetString("wrongLoginOrPassword"), 8, 0);
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.NoConnect:
                     {
-                        _doNotification("Ошибка авторизации", "Нет соединения с сервером.", 8, 0);
+                        _doNotification(ResourceGetter.GetString("authorisationError"), ResourceGetter.GetString("noConnetionsToTheServer"), 8, 0);
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.TokenError:
                     {
-                        _doNotification("Ошибка авторизации", "Ошибка с токеном.", 8, 0);
+                        _doNotification(ResourceGetter.GetString("authorisationError"), ResourceGetter.GetString("tokenError"), 8, 0);
                         FollowToMicrosoft();
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.SessionExpired:
                     {
-                        _doNotification("Ошибка входа", "Сессия истекла. Стоит попробовать снова ввести пароль.", 8, 0);
+                        _doNotification(ResourceGetter.GetString("loginFailed"), ResourceGetter.GetString("sessionExpiredPleaseTryAgainFillPassword"), 8, 0);
                         IsAuthFinished = true;
                         break;
                     }
                 default:
                     {
-                        _doNotification("Ошибка. Что-то не так", authCode.ToString(), 8, 0);
+                        _doNotification(ResourceGetter.GetString("someError"), authCode.ToString(), 8, 0);
                         IsAuthFinished = true;
                         break;
                     }

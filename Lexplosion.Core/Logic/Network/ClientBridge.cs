@@ -10,12 +10,12 @@ namespace Lexplosion.Logic.Network
     {
         protected Socket ServerSimulator;
 
-        protected Dictionary<Socket, string> AvailableServers = new();
-        private readonly Semaphore _availableServersBlock = new(1, 1);
+        protected Dictionary<Socket, string> AvailableServers = new Dictionary<Socket, string>();
+        private readonly Semaphore _availableServersBlock = new Semaphore(1, 1);
 
-        protected Semaphore AcceptingBlock = new(1, 1); //блокировка на время работы метода AcceptHandler
-        protected AutoResetEvent SendingWait = new(false);
-        protected AutoResetEvent ReadingWait = new(false);
+        protected Semaphore AcceptingBlock = new Semaphore(1, 1); //блокировка на время работы метода AcceptHandler
+        protected AutoResetEvent SendingWait = new AutoResetEvent(false);
+        protected AutoResetEvent ReadingWait = new AutoResetEvent(false);
 
         private bool IsConnected = false; // когда будет подключен майкнрафт клиент эта переменная будет true
         private readonly string UUID = "";
@@ -33,7 +33,7 @@ namespace Lexplosion.Logic.Network
 
         public Dictionary<string, int> SetServers(List<string> servers)
         {
-            var ports = new Dictionary<string, int>();
+            Dictionary<string, int> ports = new Dictionary<string, int>();
 
             //убираем сервера, которых нет в списке
 

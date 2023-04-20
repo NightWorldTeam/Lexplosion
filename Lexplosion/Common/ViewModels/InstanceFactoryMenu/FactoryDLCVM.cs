@@ -82,8 +82,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
                 }
                 else
                 {
-                    // TODO: Translate
-                    _doNotification("Link null", "Отсутсвует ссылка на сайт.", 8, 1);
+                    _doNotification("Link = null", ResourceGetter.GetString("noUrl"), 8, 1);
                 }
             }));
         }

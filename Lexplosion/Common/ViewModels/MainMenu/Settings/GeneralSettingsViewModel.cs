@@ -2,6 +2,7 @@
 using Lexplosion.Common.ViewModels.ModalVMs;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Tools;
 using System;
 using System.Windows.Forms;
 
@@ -108,7 +109,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
             Model.SystemPath = newPath;
 
             var dialogModal = new DialogViewModel();
-            dialogModal.ShowDialog("Перенос директории", "Желаете ли вы полностью перенести директорию?", () =>
+            dialogModal.ShowDialog(ResourceGetter.GetString("directoryTransfer"), ResourceGetter.GetString("doYouWantToFullDirectoryTransfer"), () =>
             {
                 IsDirectoryChanged = false;
                 Lexplosion.Runtime.TaskRun(() =>
@@ -116,7 +117,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
                     WithDirectory.SetNewDirectory(Model.SystemPath);
                     App.Current.Dispatcher.Invoke(() =>
                     {
-                        _doNotification("Настройки изменены!", "Директория для лаунчера была успешно перенесена.", 2, 0);
+                        _doNotification(ResourceGetter.GetString("settingsChanged"), ResourceGetter.GetString("directoryWasTransfered"), 2, 0);
                         IsDirectoryChanged = true;
                     });
                 });

@@ -288,9 +288,76 @@
     <s:String x:Key="instance">Сборка:</s:String>
 
 
-    <!--  Share  -->
+    <!--  Share - Import  -->
     <s:String x:Key="stopAll">Остановить все</s:String>
     <s:String x:Key="youNothingShare">Вы ничего не раздаёте</s:String>
     <s:String x:Key="prepareFileForShare">Идёт подготовка файлов...</s:String>
     <s:String x:Key="activeShares">Активные раздачи</s:String>
+
+    <!--  Share - Export  -->
+    <!--  <s:String  -->
+
+    <!--  Instance Form View Model  -->
+    <s:String x:Key="deleteInstance">Удаление сборки</s:String>
+    <s:String x:Key="wantDeleteInstance">Вы действительно желаете удалить "{0}"?</s:String>
+    <s:String x:Key="wantDeleteInstanceFromLibrary">Вы действительно желаете удалить "{0}" из библиотеки?</s:String>
+
+    <!--  Auth Model  -->
+    <s:String x:Key="fillLoginAndPassword">Заполните логин и пароль!</s:String>
+    <s:String x:Key="heyWhoWillFiilField">Алло! А кто будет данными заполять? :)</s:String>
+    <s:String x:Key="wrongLoginOrPassword">Неверный логин или пароль</s:String>
+    <s:String x:Key="сonfirm">Подтвердить</s:String>
+    <s:String x:Key="authCode">Код авторизации</s:String>
+    <s:String x:Key="signOut">Выйти</s:String>
+
+    <!--  Errors  -->
+    <s:String x:Key="authError">Ошибка авторизации</s:String>
+    <s:String x:Key="loginFailed">Ошибка входа</s:String>
+    <s:String x:Key="tokenError">Ошибка токена</s:String>
+    <s:String x:Key="someError">Ошибка. Что-то не так</s:String>
+
+    <!--  Auth Errors Description  -->
+    <s:String x:Key="noConnectionsToTheServer">Нет соединения с сервером</s:String>
+    <s:String x:Key="sessionExpiredPleaseTryAgainFillPassword">Сессия истекла. Стоит попробовать снова ввести пароль.</s:String>
+
+
+    <!--  Instance Form  -->
+    <!--  Notification  -->
+    <s:String x:Key="downloadSuccessfullyCompleted">Скачивание было успешно завершено</s:String>
+    <s:String x:Key="failedToDownloadFiles">Не удалось скачать следующие файлы</s:String>
+    <s:String x:Key="failedToDownloadSomeFiles">Не удалось скачать некоторые файлы</s:String>
+    <s:String x:Key="tryDownloadAgain">Повторное скачивание может решить проблему, но это не точно.</s:String>
+    <s:String x:Key="externalIdIncorrect">Внешний id сборки некорректен.</s:String>
+    <s:String x:Key="serverError">Ошибка сервера.</s:String>
+    <s:String x:Key="failedGetDataFromServer">Не удалось получить данные с сервера.</s:String>
+    <s:String x:Key="fileVerificationFailed">Не удалось выполнить проверку файла.</s:String>
+    <s:String x:Key="versionVerificationFailed">Не удалось определить версию игры.</s:String>
+    <s:String x:Key="modloaderVerificationFailed">Не удалось определить версию модлоадера.</s:String>
+    <s:String x:Key="invalidGameDirectory">Недействительная директория игры</s:String>
+    <s:String x:Key="failedLoadInstanceManifest">Не удалось загрузить манифест сборки.</s:String>
+    <s:String x:Key="trySetCustomJavaPath">Попробуйте поставить свой путь до джавы в настройках..</s:String>
+    <s:String x:Key="instanceDownloadWasCanceledSuccessfully">Скачивание сборки было успешно отменено.</s:String>
+    <s:String x:Key="unknownErrorTryRestartLauncher">Что-то непонятное произошло... Советуем выключить и включить.</s:String>
+
+    <!--  DLC Markets  -->
+    <s:String x:Key="modSuccessfullyInstalled">Мод успешно установлен. Не за что</s:String>
+    <s:String x:Key="requiredModSuccessfullyInstalled">Необходимый мод успешно установлен</s:String>
+    <s:String x:Key="requiredFor">Необходим для</s:String>
+    <s:String x:Key="addonDownloadHasBeenCanceled">Скачивание аддона было отменено.</s:String>
+    <s:String x:Key="modCouldNotBeInstalled">Sorry, the mod could not be installed.</s:String>
+    <s:String x:Key="error">Ошибка</s:String>
+    <s:String x:Key="noUrl">Отсутсвует ссылка на сайт</s:String>
+
+
+    <!--  General Settings  -->
+    <s:String x:Key="directoryTransfer">Перенос директории</s:String>
+    <s:String x:Key="doYouWantToFullDirectoryTransfer">Желаете ли вы полностью перенести директорию?</s:String>
+    <s:String x:Key="settingsChanged">Настройки изменены!</s:String>
+    <s:String x:Key="directoryWasTransfered">Директория для лаунчера была успешно перенесена."</s:String>
+    <s:String x:Key="everythingIsFine">Всё прекрасно</s:String>
+    <s:String x:Key="settingsSaved">Настройки сохранены</s:String>
+
+
+    <!--  Library  -->
+    <s:String x:Key="newInstance">Новая сборка</s:String>
 </ResourceDictionary>

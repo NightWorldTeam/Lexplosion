@@ -267,11 +267,10 @@ namespace Lexplosion.Common.Models.InstanceForm
                             else if (!IsPrepareOnly)
                             {
                                 IsDownloadInProgress = false;
-                                //TODO: ЛОКАЗИЛАЦИЯ ТУТ
                                 _doNotification(
-                                    "Download Successfully Completed",
-                                    "Название: " + _instanceFormModel.InstanceClient.Name +
-                                    "\nВерсия: " + _instanceFormModel.InstanceClient.GameVersion, 5, 0);
+                                    ResourceGetter.GetString("downloadSuccessfullyCompleted"),
+                                    ResourceGetter.GetString("instanceTitle") + ": " + _instanceFormModel.InstanceClient.Name +
+                                    "\n" + ResourceGetter.GetString("version") + ": " + _instanceFormModel.InstanceClient.GameVersion, 5, 0);
                                 _instanceFormModel.UpperButton.ChangeFuncPlay();
                                 _instanceFormModel.UpdateLowerButton();
                             }
@@ -280,13 +279,13 @@ namespace Lexplosion.Common.Models.InstanceForm
                     case InstanceInit.DownloadFilesError:
                         {
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            string files = "Не удалось скачать следующие файлы:\n";
+                            string files = ResourceGetter.GetString("failedToDownloadFiles") + ":\n";
                             foreach (var de in downloadErrors ?? new List<string>())
                             {
                                 files += de + "\n";
                             }
-                            files += "\nПовторное скачивание может решить проблему, но это не точно.\n";
-                            _doNotification("Не удалось скачать некоторые файлы", files, 0, 1);
+                            files += "\n" + ResourceGetter.GetString("tryDownloadAgain")  + "\n";
+                            _doNotification(ResourceGetter.GetString("failedToDownloadSomeFiles"), files, 0, 1);
                             IsDownloadInProgress = false;
                             IsPrepare = false;
                             _complitedError.Invoke();
@@ -296,77 +295,77 @@ namespace Lexplosion.Common.Models.InstanceForm
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Id Error", "Внешний id сборки некорректен.", 0, 1);
+                            _doNotification("Curseforge Id Error", ResourceGetter.GetString("externalIdIncorrect"), 0, 1);
                         }
                         break;
                     case InstanceInit.NightworldIdError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Id Error", "Внешний id сборки некорректен.", 0, 1);
+                            _doNotification("Nightworld Id Error", ResourceGetter.GetString("externalIdIncorrect"), 0, 1);
                         }
                         break;
                     case InstanceInit.ServerError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Server Error", "Не удалось получить данные с сервера.", 0, 1);
+                            _doNotification(ResourceGetter.GetString("serverError"), ResourceGetter.GetString("failedGetDataFromServer"), 0, 1);
                         }
                         break;
                     case InstanceInit.GuardError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Guard Error", "Не удолось выполнить проверку файла.", 0, 1);
+                            _doNotification("Guard Error", ResourceGetter.GetString("fileVerificationFailed"), 0, 1);
                         }
                         break;
                     case InstanceInit.VersionError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Version Error", "Не удалось определить версию игры.", 0, 1);
+                            _doNotification("Version Error", ResourceGetter.GetString("versionVerificationFailed"), 0, 1);
                         }
                         break;
                     case InstanceInit.ForgeVersionError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Forge Version Error", "Не удалось определить версию модлоадера.", 0, 1);
+                            _doNotification("Forge Version Error", ResourceGetter.GetString("modloaderVerificationFailed"), 0, 1);
                         }
                         break;
                     case InstanceInit.GamePathError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Game Path Error", "Недействительная директория игры.", 0, 1);
+                            _doNotification("Game Path Error", ResourceGetter.GetString("invalidGameDirectory"), 0, 1);
                         }
                         break;
                     case InstanceInit.ManifestError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Manifest Error", "Не удалось загрузить манифест сборки.", 0, 1);
+                            _doNotification("Manifest Error", ResourceGetter.GetString("failedLoadInstanceManifest"), 0, 1);
                         }
                         break;
                     case InstanceInit.JavaDownloadError:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Java Download Error", "Попробуйте поставить свой путь до джавы в настройках.", 0, 1);
+                            _doNotification("Java Download Error", ResourceGetter.GetString("trySetCustomJavaPath"), 0, 1);
                         }
                         break;
                     case InstanceInit.IsCancelled:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Скачивание сборки было успешно отменено.", "Название модпака: " + _instanceFormModel.InstanceClient.Name, 0, 1);
+                            _doNotification(ResourceGetter.GetString("instanceDownloadWasCanceledSuccessfully"), ResourceGetter.GetString("instanceTitle") + ": " + _instanceFormModel.InstanceClient.Name, 0, 1);
                             break;
                         }
                     default:
                         {
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
-                            _doNotification("Unknown Error", "Что-то непонятное произошло... Советуем выключить и включить.", 0, 1);
+                            _doNotification("Unknown Error", ResourceGetter.GetString("unknownErrorTryRestartLauncher"), 0, 1);
                         }
                         break;
                 }

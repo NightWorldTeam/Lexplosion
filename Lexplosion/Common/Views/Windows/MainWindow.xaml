@@ -8,11 +8,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extension="clr-namespace:Lexplosion.Common.Extension"
     xmlns:global="clr-namespace:Lexplosion.Global;assembly=Lexplosion.Core"
-    xmlns:lexplosion="clr-namespace:Lexplosion"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="944"
     Height="532"
     AllowsTransparency="True"
+    d:DataContext="clr-n"
     Background="Transparent"
     Icon="pack://application:,,,/Assets/images/icons/logo.ico"
     ResizeMode="NoResize"
@@ -124,7 +125,10 @@
 
 
             <!--  Content View  -->
-            <ContentControl BorderThickness="0" Grid.Row="1" Content="{Binding CurrentViewModel, Source={StaticResource MainVM}}" />
+            <ContentControl
+                Grid.Row="1"
+                BorderThickness="0"
+                Content="{Binding CurrentViewModel, Source={StaticResource MainVM}}" />
 
             <!--  User Stats Menu  -->
             <Border
@@ -274,6 +278,7 @@
                                 HorizontalOffset="-80"
                                 Placement="Relative"
                                 VerticalOffset="-30">
+                                <!-- Translate -->
                                 <TextBlock
                                     FontSize="12"
                                     Foreground="White"
@@ -371,100 +376,6 @@
                     </Style>
                 </ScrollViewer.Resources>
             </ScrollViewer>
-
-            <Grid
-                Grid.Row="1"
-                Width="250"
-                Height="280"
-                Margin="-90,-80,0,0"
-                Visibility="Collapsed">
-                <Border
-                    Background="{DynamicResource PrimarySolidColorBrush}"
-                    CornerRadius="5"
-                    SnapsToDevicePixels="True">
-                    <StackPanel>
-
-                        <!--  Header  -->
-                        <StackPanel Margin="13">
-                            <TextBlock
-                                FontSize="18"
-                                FontWeight="Medium"
-                                Foreground="White"
-                                Opacity="0.8"
-                                Text="Filter by category" />
-
-                            <TextBlock
-                                Margin="0,3,0,0"
-                                FontFamily="{DynamicResource FuturaBookC}"
-                                FontSize="14"
-                                FontWeight="Medium"
-                                Foreground="White"
-                                Opacity="0.7"
-                                Text="128 chips discovered" />
-                        </StackPanel>
-
-                        <!--  category buffer  -->
-                        <WrapPanel Margin="13,0,13,0">
-
-                            <!--  category item  -->
-                            <Border
-                                Padding="10,3,10,3"
-                                BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                                BorderThickness="2"
-                                CornerRadius="10"
-                                SnapsToDevicePixels="False">
-
-                                <Border.Background>
-                                    <SolidColorBrush Opacity="0.2" Color="{DynamicResource ActivityColor}" />
-                                </Border.Background>
-
-                                <StackPanel
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Orientation="Horizontal">
-
-                                    <!--  Catagory text  -->
-                                    <TextBlock
-                                        Margin="0,0,0,0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="{DynamicResource FuturaBookC}"
-                                        FontSize="16"
-                                        FontWeight="Bold"
-                                        Foreground="{DynamicResource BrandSolidColorBrush}"
-                                        Text="Tech" />
-                                </StackPanel>
-                            </Border>
-                            <Border
-                                Margin="5,0,0,0"
-                                Padding="10,3,10,3"
-                                BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                                BorderThickness="1"
-                                CornerRadius="10"
-                                SnapsToDevicePixels="False">
-
-                                <Border.Background>
-                                    <SolidColorBrush Opacity="0" Color="{DynamicResource ActivityColor}" />
-                                </Border.Background>
-
-                                <StackPanel
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Orientation="Horizontal">
-
-                                    <!--  Catagory text  -->
-                                    <TextBlock
-                                        Margin="0,0,0,0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="{DynamicResource FuturaBookC}"
-                                        FontSize="16"
-                                        Foreground="{DynamicResource BrandSolidColorBrush}"
-                                        Text="Magic" />
-                                </StackPanel>
-                            </Border>
-                        </WrapPanel>
-                    </StackPanel>
-                </Border>
-            </Grid>
         </Grid>
     </Border>
 </Window>

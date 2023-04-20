@@ -324,13 +324,13 @@ namespace Lexplosion.Common.ViewModels.CurseforgeMarket
                             string text, title;
                             if (instanceAddon == addonInstance)
                             {
-                                title = "Мод успешно установлен. Не за что";
-                                text = "Название: " + addonInstance.Name;
+                                title = ResourceGetter.GetString("modSuccessfullyInstalled");
+                                text = ResourceGetter.GetString("instanceTitle") + ": " + addonInstance.Name;
                             }
                             else
                             {
-                                title = "Необходимый мод успешно установлен";
-                                text = "Название: " + addonInstance.Name + ".\nНеобходим для " + instanceAddon.Name;
+                                title = ResourceGetter.GetString("requiredModSuccessfullyInstalled");
+                                text = ResourceGetter.GetString("instanceTitle") + ": " + addonInstance.Name + ".\n" + ResourceGetter.GetString("requiredFor") + " " + instanceAddon.Name;
                             }
 
                             _factoryDLCModel.InstalledAddons.Add(addonInstance);
@@ -339,11 +339,11 @@ namespace Lexplosion.Common.ViewModels.CurseforgeMarket
                         }
                         else if (arg.Value2 == DownloadAddonRes.IsCanselled)
                         {
-                            _doNotification("Скачивание аддона было отменено", "Название аддона: " + addonInstance.Name, 0, 1);
+                            _doNotification(ResourceGetter.GetString("addonDownloadHasBeenCanceled"), ResourceGetter.GetString("instanceTitle") + ": " + addonInstance.Name, 0, 1);
                         }
                         else
                         {
-                            _doNotification("Извиняемся, не удалось установить мод", "Название: " + addonInstance.Name + ".\nОшибка " + arg.Value2, 0, 1);
+                            _doNotification(ResourceGetter.GetString("modCouldNotBeInstalled"), ResourceGetter.GetString("instanceTitle") + ": " + addonInstance.Name + ".\n" + ResourceGetter.GetString("error") + arg.Value2, 0, 1);
                         }
 
                         lock (_installingAddonsLocker)

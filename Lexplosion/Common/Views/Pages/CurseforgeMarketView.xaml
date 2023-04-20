@@ -226,13 +226,12 @@
                                                     Stretch="Fill"
                                                     Stroke="White" />
                                             </Viewbox>
-
                                             <TextBlock
                                                 Margin="8,0,0,0"
                                                 VerticalAlignment="Center"
                                                 FontFamily="{DynamicResource SFProDisplay}"
                                                 FontWeight="Bold"
-                                                Text="Отмена" />
+                                                Text="{DynamicResource cancel}" />
                                         </WrapPanel>
                                     </Border>
                                     <Button.ToolTip>

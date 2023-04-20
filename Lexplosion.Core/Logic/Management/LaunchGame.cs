@@ -590,8 +590,8 @@ namespace Lexplosion.Logic.Management
 
             try
             {
-                _process?.Kill(); // TODO: тут иногда крашится (ввроде если ошибка скачивания была)
-                _process?.Dispose();
+                _process.Kill(); // TODO: тут иногда крашится (ввроде если ошибка скачивания была)
+                _process.Dispose();
             }
             catch { }
 

@@ -100,6 +100,7 @@
                                         Stroke="White"
                                         StrokeThickness="1" />
                                 </Viewbox>
+
                                 <TextBlock
                                     x:Name="TextBlock"
                                     Margin="10,0,0,0"
@@ -107,7 +108,7 @@
                                     FontFamily="{DynamicResource FuturaBookC}"
                                     FontSize="14"
                                     Foreground="White"
-                                    Text="Войти" />
+                                    Text="{DynamicResource singIn}" />
                             </StackPanel>
                         </Border>
 
@@ -358,7 +359,7 @@
                                                         FontFamily="{DynamicResource FuturaBookC}"
                                                         FontSize="14"
                                                         Foreground="White"
-                                                        Text="Выйти" />
+                                                        Text="{DynamicResource signOut}" />
                                                 </StackPanel>
                                             </Button>
 
@@ -540,13 +541,12 @@
             Background="{DynamicResource PrimarySolidColorBrush}"
             Visibility="{Binding IsManualInput, Converter={StaticResource ConvertBoolToVisibility}}">
             <StackPanel>
-                <!--  Translate  -->
                 <TextBlock
                     Margin="0,0,0,10"
                     FontSize="16"
                     FontWeight="Medium"
                     Foreground="White"
-                    Text="Код авторизации" />
+                    Text="{DynamicResource authCode}" />
                 <TextBox
                     Height="300"
                     Margin="0,0,0,10"
@@ -560,13 +560,13 @@
                     <Button
                         Padding="16,8,16,8"
                         Command="{Binding ManualInputMicrosoftDataCommand}"
-                        Content="Подтвердить"
+                        Content="{DynamicResource confirm}"
                         Style="{StaticResource DefaultBrandColorButton}" />
                     <Button
                         Margin="10,0,0,0"
                         Padding="16,8,16,8"
                         Command="{Binding ManualInputMicrosoftDataFormCloseCommand}"
-                        Content="Отмена"
+                        Content="{DynamicResource cancel}"
                         Style="{StaticResource DefaultCloseButton}" />
                 </StackPanel>
             </StackPanel>

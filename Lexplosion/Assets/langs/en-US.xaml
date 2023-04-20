@@ -283,4 +283,43 @@
     <s:String x:Key="youNothingShare">You are not sharing anything</s:String>
     <s:String x:Key="prepareFileForShare">Files are being prepared in progress...</s:String>
     <s:String x:Key="activeShares">Active Shares</s:String>
+
+    <!--  Instance Form Notification  -->
+    <s:String x:Key="downloadSuccessfullyCompleted">Download Successfully Completed</s:String>
+    <s:String x:Key="failedToDownloadFiles">Failed to download the following files</s:String>
+    <s:String x:Key="failedToDownloadSomeFiles">Failed to download some files.</s:String>
+    <s:String x:Key="tryDownloadAgain">Re-downloading may solve the problem, but this is not certain.</s:String>
+    <s:String x:Key="externalIdIncorrect">The external instance id is incorrect.</s:String>
+    <s:String x:Key="serverError">Server Error.</s:String>
+    <s:String x:Key="failedGetDataFromServer">Failed to get data from server.</s:String>
+    <s:String x:Key="fileVerificationFailed">File validation failed.</s:String>
+    <s:String x:Key="versionVerificationFailed">Failed to determine game version.</s:String>
+    <s:String x:Key="modloaderVerificationFailed">Failed to determine modloader version.</s:String>
+    <s:String x:Key="invalidGameDirectory">Invalid game directory</s:String>
+    <s:String x:Key="failedLoadInstanceManifest">Failed to load assembly manifest.</s:String>
+    <s:String x:Key="trySetCustomJavaPath">Try putting your path to java in settings.</s:String>
+    <s:String x:Key="instanceDownloadWasCanceledSuccessfully">Instance download was canceled successfully.</s:String>
+    <s:String x:Key="unknownErrorTryRestartLauncher">Something incomprehensible happened ... We advise you to turn it off and on.</s:String>
+
+    <!--  DLC Markets  -->
+    <s:String x:Key="modSuccessfullyInstalled">The mod has been successfully installed. Our pleasure.</s:String>
+    <s:String x:Key="requiredModSuccessfullyInstalled">Required mod successfully installed.</s:String>
+    <s:String x:Key="requiredFor">Required for</s:String>
+    <s:String x:Key="addonDownloadHasBeenCanceled">Addon download has been cancelled.</s:String>
+    <s:String x:Key="modCouldNotBeInstalled">Sorry, the mod could not be installed.</s:String>
+    <s:String x:Key="error">Error</s:String>
+    <s:String x:Key="noUrl">Site link missing</s:String>
+
+
+    <!--  General Settings  -->
+    <s:String x:Key="directoryTransfer">Directory transfer</s:String>
+    <s:String x:Key="doYouWantToFullDirectoryTransfer">Do you want to move the entire directory?</s:String>
+    <s:String x:Key="settingsChanged">Settings changed!</s:String>
+    <s:String x:Key="directoryWasTransfered">The directory for the launcher has been successfully transferred."</s:String>
+    <s:String x:Key="everythingIsFine">Everything is fine</s:String>
+    <s:String x:Key="settingsSaved">Settings have been saved</s:String>
+
+
+    <!--  Library  -->
+    <s:String x:Key="newInstance">New Instance</s:String>
 </ResourceDictionary>

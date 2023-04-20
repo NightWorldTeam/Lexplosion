@@ -16,7 +16,7 @@
     <Color x:Key="PrimaryColor1">#131313</Color>
     <Color x:Key="LightPrimaryColor">#f8f8f8</Color>
     <Color x:Key="HeaderColor">#151719</Color>
-    <Color x:Key="SepColor">#212326</Color>
+    <Color x:Key="SepColor">#171921</Color>
     <Color x:Key="TextBoxColor">#151719</Color>
     <Color x:Key="TagColor">#242527</Color>
 

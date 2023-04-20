@@ -18,7 +18,7 @@ namespace Lexplosion.Common.Models.Objects
             {
                 var action = AccessChange();
                 if (action == UserAction.Unkick)
-                    //TODO сделать перевод
+                    //TODO Translate
                     MainViewModel.ShowToastMessage("Действие на игроком", "У игрока " + this.Nickname + " появилась возможность снова зайти на ваш сервер.");
             });
         }

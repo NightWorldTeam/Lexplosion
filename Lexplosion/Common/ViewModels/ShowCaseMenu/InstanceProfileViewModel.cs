@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Common.Models.ShowCaseMenu;
 using Lexplosion.Logic.Management.Instances;
+using Lexplosion.Tools;
 using System;
 
 namespace Lexplosion.Common.ViewModels.ShowCaseMenu
@@ -80,7 +81,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
         {
             get => new RelayCommand(obj =>
             {
-                _doNotification("Всё прекрасно!", "Настройки сохранены! Ура-а-а!", 5, 0);
+                _doNotification(ResourceGetter.GetString("everythingIsFine"), ResourceGetter.GetString("settingsSaved"), 5, 0);
                 Model.Save();
             });
         }

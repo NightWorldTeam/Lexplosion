@@ -8,15 +8,8 @@ namespace Lexplosion.Logic.Management.Addons
     {
         List<AddonDependencie> Dependecies { get; }
 
-        /// <summary>
-        /// Устанавливает версию по умолчанию.
-        /// Версия по умолчанию может быть как последней, так и конкретной, если она задана в экземпляре.
-        /// </summary>
         void DefineDefaultVersion();
 
-        /// <summary>
-        /// Устанавливает последнюю версию для аддона.
-        /// </summary>
         void DefineLatestVersion();
 
         SetValues<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs);

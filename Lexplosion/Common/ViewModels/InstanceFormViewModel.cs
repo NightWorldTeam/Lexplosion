@@ -16,6 +16,7 @@ namespace Lexplosion.Common.ViewModels
 
 
         public MainViewModel MainVM { get; } // Ссылка на MainViewModel
+        public MainModel MainModel { get => MainModel.Instance; } // Ссылка на MainViewModel
         public InstanceClient Client { get; } // Ссылка на InstanceClient
         public InstanceFormModel Model { get; } // Ссылка на InstanceFormModel
 
@@ -193,15 +194,14 @@ namespace Lexplosion.Common.ViewModels
 
             if (IsFromLibrary)
             {
-                // TODO: LOCALIZATE
-                message = "Вы действительно желаете удалить  \"" + Model.InstanceClient.Name + "\"  из библиотеки?";
+                message = String.Format(ResourceGetter.GetString("wantDeleteInstanceFromLibrary"), Model.InstanceClient.Name);
             }
             else
             {
-                message = "Вы действительно желаете удалить  \"" + Model.InstanceClient.Name + "\"";
+                message = String.Format(ResourceGetter.GetString("wantDeleteInstance"), Model.InstanceClient.Name);
             }
 
-            dialog.ShowDialog("Удаление сборки", message, RemoveInstance);
+            dialog.ShowDialog(ResourceGetter.GetString("wantDeleteInstance"), message, RemoveInstance);
         }
 
         /// <summary>
@@ -258,7 +258,6 @@ namespace Lexplosion.Common.ViewModels
 
         private void ExecuteUpperButtonFunc(UpperButtonFunc buttonFunc)
         {
-            Runtime.DebugWrite(buttonFunc.ToString());
             switch (buttonFunc)
             {
                 case UpperButtonFunc.Download:

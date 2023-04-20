@@ -50,7 +50,7 @@
                             Width="620"
                             Height="120"
                             Margin="30,15,30,30"
-                            Content="Новая Сборка"
+                            Content="{DynamicResource newInstance}"
                             IsTabStop="False"
                             KeyboardNavigation.IsTabStop="False"
                             Opacity="0.2"

@@ -408,7 +408,10 @@
                 </Grid>
 
                 <!--  Upper Button  -->
-                <Grid Grid.Row="0" Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
+                <Grid
+                    Grid.Row="0"
+                    IsEnabled="{Binding MainModel.IsInstanceRunning, Converter={StaticResource NegativeConvertBoolToVisibility}}"
+                    Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
                     <Border
                         Width="60"
                         Height="60"
@@ -445,13 +448,13 @@
                             </EventTrigger>
                         </Border.Triggers>
 
-                        <Border.Style>
+                        <!--<Border.Style>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="IsEnabled" Value="True" />
                                 <Style.Triggers>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding Model.DownloadModel.IsPrepare}" Value="True" />
+                                            <Condition Binding="{Binding Model.DownloadModel.IsPrepareOnly}" Value="True" />
                                         </MultiDataTrigger.Conditions>
 
                                         <MultiDataTrigger.Setters>
@@ -460,7 +463,7 @@
                                     </MultiDataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Border.Style>
+                        </Border.Style>-->
 
                         <Border.InputBindings>
                             <MouseBinding

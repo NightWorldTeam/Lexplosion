@@ -125,7 +125,7 @@
                                                                 FontSize="12"
                                                                 FontWeight="Medium"
                                                                 Foreground="Red"
-                                                                Text="Неудалось скачать ошибка: 3010201" />
+                                                                Text="{DynamicResource failedToDownloadFiles}" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>
@@ -162,7 +162,7 @@
                                                             FontSize="12"
                                                             FontWeight="Medium"
                                                             Foreground="White"
-                                                            Text="2KB" />
+                                                            Text="No info" />
                                                     </Grid>
                                                 </Border>
                                             </DataTemplate>
