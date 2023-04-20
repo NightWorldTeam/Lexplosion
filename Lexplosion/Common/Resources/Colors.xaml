@@ -12,19 +12,19 @@
     <Color x:Key="ActivityColor">#167FFC</Color>
     <SolidColorBrush x:Key="BrandSolidColorBrush" Color="{DynamicResource ActivityColor}" />
 
-    <Color x:Key="PrimaryColor">#121416</Color>
+    <Color x:Key="PrimaryColor">#191919</Color>
     <Color x:Key="PrimaryColor1">#131313</Color>
     <Color x:Key="LightPrimaryColor">#f8f8f8</Color>
     <Color x:Key="HeaderColor">#151719</Color>
-    <Color x:Key="SepColor">#171921</Color>
-    <Color x:Key="TextBoxColor">#151719</Color>
+    <Color x:Key="SepColor">#212326</Color>
+    <Color x:Key="TextBoxColor">#1f1f1f</Color>
     <Color x:Key="TagColor">#242527</Color>
 
-    <SolidColorBrush x:Key="PrimarySolidColorBrush" Color="{DynamicResource PrimaryColor}" />
-    <SolidColorBrush x:Key="HeaderSolidColorBrush" Color="{DynamicResource HeaderColor}" />
-    <SolidColorBrush x:Key="SepSolidColorBrush" Color="{DynamicResource SepColor}" />
-    <SolidColorBrush x:Key="TextBoxSolidColorBrush" Color="{DynamicResource TextBoxColor}" />
-    <SolidColorBrush x:Key="TagSolidColorBrush" Color="{DynamicResource TagColor}" />
+    <SolidColorBrush x:Key="PrimarySolidColorBrush" Color="{StaticResource PrimaryColor}" />
+    <SolidColorBrush x:Key="HeaderSolidColorBrush" Color="{StaticResource HeaderColor}" />
+    <SolidColorBrush x:Key="SepSolidColorBrush" Color="{StaticResource SepColor}" />
+    <SolidColorBrush x:Key="TextBoxSolidColorBrush" Color="{StaticResource TextBoxColor}" />
+    <SolidColorBrush x:Key="TagSolidColorBrush" Color="{StaticResource TagColor}" />
 
     <SolidColorBrush x:Key="InstanceFormBackgroudBrush" />
     <SolidColorBrush x:Key="TextBox" />
