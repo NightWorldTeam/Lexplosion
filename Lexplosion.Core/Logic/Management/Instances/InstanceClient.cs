@@ -689,15 +689,11 @@ namespace Lexplosion.Logic.Management.Instances
             SaveInstalledInstancesList();
         }
 
-        private bool _gameInStopping = false;
-
         /// <summary>
         /// Останавливает игру
         /// </summary>
         public void StopGame()
         {
-            _gameInStopping = true;
-            _cancelTokenSource?.Cancel();
             _gameManager?.Stop();
         }
 
@@ -752,7 +748,6 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         public void Run()
         {
-            _gameInStopping = false;
             _cancelTokenSource = new CancellationTokenSource();
 
             ProgressHandler?.Invoke(StageType.Prepare, new ProgressHandlerArguments());
@@ -763,7 +758,6 @@ namespace Lexplosion.Logic.Management.Instances
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
             _gameManager = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
-            Thread.Sleep(2000);
             InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);
 
             UpdateAvailable = data.UpdatesAvailable;
@@ -775,24 +769,13 @@ namespace Lexplosion.Logic.Management.Instances
                 SaveInstalledInstancesList(); // чтобы если сборка установилась то флаг IsInstalled сохранился
                 DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, true);
 
-                if (!_gameInStopping)
-                {
-                    _gameManager.Run(data, LaunchComplited, GameExited, Name, GlobalData.User.AccountType == AccountType.NightWorld);
-                    DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
-                }
-                else
-                {
-                    LaunchComplited.Invoke(LocalId, true);
-                }
+                _gameManager.Run(data, LaunchComplited, GameExited, Name, GlobalData.User.AccountType == AccountType.NightWorld);
+                DataFilesManager.SaveSettings(GlobalData.GeneralSettings);
                 // TODO: тут надо как-то определять что сборка обновилась и UpdateAvailable = false делать, если было обновление
-            }
-            else if (!_gameInStopping)
-            {
-                DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, false);
             }
             else
             {
-                LaunchComplited.Invoke(LocalId, true);
+                DownloadComplited?.Invoke(data.InitResult, data.DownloadErrors, false);
             }
 
             IsUpdating = false;

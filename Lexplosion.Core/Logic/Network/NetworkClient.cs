@@ -101,7 +101,7 @@ namespace Lexplosion.Logic.Network
                             }
                             else
                             {
-                                Bridge = new TurnBridgeClient();
+                                Bridge = new TurnBridgeClient(UUID, ClientType[0], ControlServer);
                                 dataToSend = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                                 SmpConnection = false;
                             }
@@ -169,7 +169,7 @@ namespace Lexplosion.Logic.Network
                     else
                     {
                         Runtime.DebugWrite("Tcp proxy");
-                        isConected = ((TurnBridgeClient)Bridge).Connect(UUID, serverUUID, ControlServer);
+                        isConected = ((TurnBridgeClient)Bridge).Connect(serverUUID);
                     }
 
                     stream.Close();

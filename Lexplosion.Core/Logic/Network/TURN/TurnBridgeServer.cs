@@ -31,26 +31,40 @@ namespace Lexplosion.Logic.Network.TURN
 
         private bool IsWork = true;
 
-        public bool Connect(string selfUUID, string hostUUID, out IPEndPoint point)
+        private byte[] _selfTurnId;
+        private char _groupPrefix;
+        private IPEndPoint _serverPoint;
+
+        /// <param name="uuid">UUID с которым мы подключаемся к серверу. Не должен быть больше 32-х символов.</param>
+        /// <param name="turnGroup">Этот символ будет вставлен перед uuid при подключении к серверу.
+        /// Он описывает группу, к которой относится это подключение.
+        /// </param>
+        public TurnBridgeServer(string uuid, char turnGroup, string controlServerIp)
+        {
+            _selfTurnId = Encoding.UTF8.GetBytes(turnGroup + uuid);
+            _groupPrefix = turnGroup;
+
+            _serverPoint = new IPEndPoint(IPAddress.Parse(controlServerIp), 9765);
+        }
+
+        /// <summary>
+        /// Выполняет соединение с хостом.
+        /// </summary>
+        /// <param name="hostUUID">UUID хоста. не должен быть больше 32-х символов.</param>
+        /// <param name="point">Поинт, присвоенный этому клиенту. С помощью этого поинта можно взаимодействоать с склиентом.</param>
+        /// <returns></returns>
+        public bool Connect(string hostUUID, out IPEndPoint point)
         {
             try
             {
-                byte[] data = new byte[64];
-                byte[] bselfUUID = Encoding.UTF8.GetBytes(selfUUID);
-                byte[] bhostUUID = Encoding.UTF8.GetBytes(hostUUID);
+                byte[] data = new byte[66];
+                byte[] bhostUUID = Encoding.UTF8.GetBytes(_groupPrefix +hostUUID);
 
-                for (int i = 0; i < bselfUUID.Length; i++)
-                {
-                    data[i] = bselfUUID[i];
-                }
-
-                for (int i = 0; i < bhostUUID.Length; i++)
-                {
-                    data[i + 32] = bhostUUID[i];
-                }
+                Buffer.BlockCopy(_selfTurnId, 0, data, 0, _selfTurnId.Length);
+                Buffer.BlockCopy(bhostUUID, 0, data, 33, bhostUUID.Length);
 
                 Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                sock.Connect(new IPEndPoint(IPAddress.Parse("194.61.2.176"), 9765));
+                sock.Connect(_serverPoint);
                 sock.Send(data);
 
                 point = (IPEndPoint)sock.LocalEndPoint;

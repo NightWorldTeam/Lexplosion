@@ -56,7 +56,7 @@ namespace Lexplosion.Logic.Network
 
             AcceptingThread = new Thread(delegate () //поток принимающий новые подключения
             {
-                TransmitterPrepear(directConnection);
+                TransmitterPrepear(directConnection, serverType);
                 _threadsStartWait.Set();
                 Accepting(serverType);
             });
@@ -85,7 +85,7 @@ namespace Lexplosion.Logic.Network
             ReadingThread.Start();
         }
 
-        private void TransmitterPrepear(bool directConnectionIsPriority)
+        private void TransmitterPrepear(bool directConnectionIsPriority, string serverType)
         {
             // если стоит парметр установки прямого соединения, то проверяем, возможно ли его вообще установить. если нет - переходим на TURN
             if (directConnectionIsPriority)
@@ -107,13 +107,13 @@ namespace Lexplosion.Logic.Network
                 else
                 {
                     SmpConnection = false;
-                    Server = new TurnBridgeServer();
+                    Server = new TurnBridgeServer(UUID, serverType[0], ControlServer);
                 }
             }
             else
             {
                 SmpConnection = false;
-                Server = new TurnBridgeServer();
+                Server = new TurnBridgeServer(UUID, serverType[0], ControlServer);
             }
 
             Server.ClientClosing += ClientAbort;
@@ -246,7 +246,7 @@ namespace Lexplosion.Logic.Network
                 else
                 {
                     Runtime.DebugWrite("Tcp Proxy");
-                    isConected = ((TurnBridgeServer)Server).Connect(UUID, clientUUID, out point);
+                    isConected = ((TurnBridgeServer)Server).Connect(clientUUID, out point);
                 }
             }
             catch (Exception ex)

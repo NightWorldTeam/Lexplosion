@@ -7,29 +7,42 @@ namespace Lexplosion.Logic.Network.TURN
 {
     class TurnBridgeClient : IClientTransmitter
     {
-        private Socket socket;
+        private Socket _socket;
+        private IPEndPoint _serverPoint;
 
-        public bool Connect(string selfUUID, string hostUUID, string controlServerIp)
+        private byte[] _selfTurnId;
+        private char _groupPrefix;
+
+        /// <param name="uuid">UUID с которым мы подключаемся к серверу. Не должен быть больше 32-х символов.</param>
+        /// <param name="turnGroup">Этот символ будет вставлен перед uuid при подключении к серверу.
+        /// Он описывает группу, к которой относится это подключение.
+        /// </param>
+        public TurnBridgeClient(string uuid, char turnGroup, string controlServerIp)
         {
-            byte[] data = new byte[64];
-            byte[] bselfUUID = Encoding.UTF8.GetBytes(selfUUID);
-            byte[] bhostUUID = Encoding.UTF8.GetBytes(hostUUID);
+            _selfTurnId = Encoding.UTF8.GetBytes(turnGroup + uuid);
+            _groupPrefix = turnGroup;
 
-            for (int i = 0; i < bselfUUID.Length; i++)
-            {
-                data[i] = bselfUUID[i];
-            }
+            _serverPoint = new IPEndPoint(IPAddress.Parse(controlServerIp), 9765);
+        }
 
-            for (int i = 0; i < bhostUUID.Length; i++)
-            {
-                data[i + 32] = bhostUUID[i];
-            }
+        /// <summary>
+        /// Выполняет соединение с хостом.
+        /// </summary>
+        /// <param name="hostUUID">UUID хоста. не должен быть больше 32-х символов.</param>
+        /// <returns></returns>
+        public bool Connect(string hostUUID)
+        {
+            byte[] data = new byte[66];
+            byte[] bhostUUID = Encoding.UTF8.GetBytes(_groupPrefix + hostUUID);
+
+            Buffer.BlockCopy(_selfTurnId, 0, data, 0, _selfTurnId.Length);
+            Buffer.BlockCopy(bhostUUID, 0, data, 33, bhostUUID.Length);
 
             Runtime.DebugWrite(Encoding.UTF8.GetString(data));
 
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(new IPEndPoint(IPAddress.Parse(controlServerIp), 9765));
-            socket.Send(data);
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.Connect(_serverPoint);
+            _socket.Send(data);
 
             Runtime.DebugWrite("CONNECTED FDHSGFHDFH");
             return true;
@@ -37,16 +50,16 @@ namespace Lexplosion.Logic.Network.TURN
 
         public void Send(byte[] inputData)
         {
-            socket.Send(inputData);
+            _socket.Send(inputData);
         }
 
         public bool Receive(out byte[] data)
         {
             try
             {
-                socket.Poll(-1, SelectMode.SelectRead);
-                data = new byte[socket.Available];
-                socket.Receive(data);
+                _socket.Poll(-1, SelectMode.SelectRead);
+                data = new byte[_socket.Available];
+                _socket.Receive(data);
 
                 return true;
             }
@@ -62,13 +75,13 @@ namespace Lexplosion.Logic.Network.TURN
         {
             get
             {
-                return socket.Connected;
+                return _socket.Connected;
             }
         }
 
         public void Close()
         {
-            socket.Close();
+            _socket.Close();
         }
 
         public event PointHandle ClientClosing;
