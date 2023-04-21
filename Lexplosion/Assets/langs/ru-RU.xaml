@@ -363,4 +363,6 @@
 
     <s:String x:Key="share">Раздача</s:String>
     <s:String x:Key="exportProperties">Свойства экспорта</s:String>
+    <s:String x:Key="shares">Раздачи</s:String>
+    <s:String x:Key="noAvaliableShares">Доступные раздачи отсутствуют</s:String>
 </ResourceDictionary>

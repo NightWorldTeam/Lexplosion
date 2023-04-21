@@ -183,6 +183,23 @@
             <ScrollViewer Grid.Row="1">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding CurrentInstanceDistribution}" />
+                    <TextBlock
+                        Margin="0,32,0,0"
+                        HorizontalAlignment="Center"
+                        FontSize="16"
+                        Foreground="White"
+                        Text="{DynamicResource noAvaliableShares}">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DistributionCount}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                 </Grid>
             </ScrollViewer>
         </Grid>

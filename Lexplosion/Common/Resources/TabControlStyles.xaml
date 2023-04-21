@@ -304,7 +304,7 @@
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="TextBlock.Foreground" Value="#E1E1E1" />
         <Setter Property="TextBlock.FontWeight" Value="Medium" />
-        <Setter Property="Height" Value="32" />
+        <Setter Property="Height" Value="34" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">

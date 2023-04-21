@@ -86,7 +86,7 @@
                     <Style BasedOn="{StaticResource TestItemStyle}" TargetType="{x:Type TabItem}" />
                 </TabControl.Resources>
 
-                <TabItem Header="Share" IsEnabled="{Binding IsAlreadySharing, Converter={StaticResource InverseBooleanConverter}}">
+                <TabItem Header="{DynamicResource share}" IsEnabled="{Binding IsAlreadySharing, Converter={StaticResource InverseBooleanConverter}}">
                     <Grid>
                         <StackPanel>
                             <Border

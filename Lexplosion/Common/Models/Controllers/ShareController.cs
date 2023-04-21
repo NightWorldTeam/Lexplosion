@@ -25,6 +25,7 @@ namespace Lexplosion.Common.Models.Controllers
         private Dictionary<string, InstanceDistribution> _receiverIdByInstanceDistribution = new Dictionary<string, InstanceDistribution>(); 
         public IEnumerable<InstanceDistribution> FileReceivers => _fileReceivers;
 
+
         private int _receiversCount;
         public int ReceiversCount 
         {
@@ -78,6 +79,7 @@ namespace Lexplosion.Common.Models.Controllers
             _receiverIdByInstanceDistribution.Add(fileReceiver.Id, fileReceiver);
             _fileReceivers.Add(fileReceiver);
             ReceiversCount = _fileReceivers.Count;
+
         }
 
         public void RemoveFileReceiver(InstanceDistribution fileReceiver)

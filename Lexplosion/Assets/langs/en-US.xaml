@@ -325,4 +325,6 @@
 
     <s:String x:Key="share">Share</s:String>
     <s:String x:Key="exportProperties">Export Properties</s:String>
+    <s:String x:Key="shares">Shares</s:String>
+    <s:String x:Key="noAvaliableShares">There are no shares available</s:String>
 </ResourceDictionary>
