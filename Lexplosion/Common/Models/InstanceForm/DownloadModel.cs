@@ -36,7 +36,6 @@ namespace Lexplosion.Common.Models.InstanceForm
             get => _isPrepare; set
             {
                 _isPrepare = value;
-                Console.WriteLine(_isPrepare);
                 OnPropertyChanged();
             }
         }
