@@ -413,9 +413,11 @@
                     IsEnabled="{Binding MainModel.IsInstanceRunning, Converter={StaticResource NegativeConvertBoolToVisibility}}"
                     Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource ConvertBoolToVisibility}}">
                     <Border
+                        x:Name="UpperButtonBorder"
                         Width="60"
                         Height="60"
-                        CornerRadius="0,10,0,0">
+                        CornerRadius="0,10,0,0"
+                        IsEnabledChanged="UpperButtonBorder_IsEnabledChanged">
 
                         <Border.Background>
                             <SolidColorBrush x:Name="UpperButtonBackground" />
@@ -448,22 +450,19 @@
                             </EventTrigger>
                         </Border.Triggers>
 
-                        <!--<Border.Style>
+                        <Border.Style>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="IsEnabled" Value="True" />
                                 <Style.Triggers>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding Model.DownloadModel.IsPrepareOnly}" Value="True" />
-                                        </MultiDataTrigger.Conditions>
-
-                                        <MultiDataTrigger.Setters>
+                                    <!--  When Instance Prepare  -->
+                                    <DataTrigger Binding="{Binding Model.DownloadModel.IsPrepare}" Value="True">
+                                        <DataTrigger.Setters>
                                             <Setter Property="IsEnabled" Value="False" />
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
+                                        </DataTrigger.Setters>
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </Border.Style>-->
+                        </Border.Style>
 
                         <Border.InputBindings>
                             <MouseBinding

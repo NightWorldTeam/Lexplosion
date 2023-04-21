@@ -64,5 +64,22 @@ namespace Lexplosion.Common.Views.CustomControls
             grid.ColumnDefinitions.Add(columnDefin);
             grid.ColumnDefinitions.Add(columnDefin1);
         }
+
+        private void UpperButtonBorder_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var border = (Border)sender;
+            if (border.IsEnabled)
+            {
+                UpperButtonBorder.BeginAnimation(Border.OpacityProperty,
+                    new DoubleAnimation(0.5, 1, TimeSpan.FromMilliseconds(AnimationTime))
+                );
+            }
+            else 
+            {
+                UpperButtonBorder.BeginAnimation(Border.OpacityProperty,
+                    new DoubleAnimation(1, 0.5, TimeSpan.FromMilliseconds(AnimationTime))
+                );
+            }
+        }
     }
 }

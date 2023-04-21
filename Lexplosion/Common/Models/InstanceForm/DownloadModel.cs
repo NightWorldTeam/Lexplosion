@@ -36,6 +36,7 @@ namespace Lexplosion.Common.Models.InstanceForm
             get => _isPrepare; set
             {
                 _isPrepare = value;
+                Console.WriteLine(_isPrepare);
                 OnPropertyChanged();
             }
         }
@@ -258,7 +259,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                 {
                     case InstanceInit.Successful:
                         {
-                            isError = true;
+                            isError = false;
                             if (MainModel.Instance.RunningInstance != null && MainModel.Instance.IsInstanceRunning && MainModel.Instance.RunningInstance.Model == _instanceFormModel)
                             {
                                 IsPrepareOnly = true;
