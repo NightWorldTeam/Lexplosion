@@ -106,7 +106,7 @@
                                         FontWeight="Medium"
                                         Foreground="White"
                                         Opacity="0.8"
-                                        Text="Instance Name" />
+                                        Text="{DynamicResource instanceName}" />
 
                                     <TextBox
                                         Grid.Column="1"
@@ -311,7 +311,7 @@
                                 Height="30"
                                 Background="{DynamicResource SecondarySolidColorBrush}"
                                 Command="{Binding ActionCommand}"
-                                Content="Share Instance"
+                                Content="{DynamicResource shareInstance}"
                                 FontWeight="Medium"
                                 IsDefault="True"
                                 IsEnabled="{Binding IsExportFinished}"

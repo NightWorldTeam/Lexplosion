@@ -322,4 +322,7 @@
 
     <!--  Library  -->
     <s:String x:Key="newInstance">New Instance</s:String>
+
+    <s:String x:Key="share">Share</s:String>
+    <s:String x:Key="exportProperties">Export Properties</s:String>
 </ResourceDictionary>

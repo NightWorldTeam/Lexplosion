@@ -360,4 +360,7 @@
 
     <!--  Library  -->
     <s:String x:Key="newInstance">Новая сборка</s:String>
+
+    <s:String x:Key="share">Раздача</s:String>
+    <s:String x:Key="exportProperties">Свойства экспорта</s:String>
 </ResourceDictionary>

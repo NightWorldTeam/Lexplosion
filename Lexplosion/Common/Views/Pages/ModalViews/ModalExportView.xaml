@@ -28,7 +28,7 @@
                         FontWeight="Medium"
                         Foreground="White"
                         Opacity="0.9"
-                        Text="Export Properties" />
+                        Text="{DynamicResource exportProperties}" />
 
                     <Button
                         Margin="0,3,0,0"
@@ -85,7 +85,7 @@
                             FontWeight="Medium"
                             Foreground="White"
                             Opacity="0.8"
-                            Text="Instance Name" />
+                            Text="{DynamicResource instanceName}" />
 
                         <TextBox
                             Grid.Column="1"
@@ -291,7 +291,7 @@
                     Height="30"
                     Background="{DynamicResource SecondarySolidColorBrush}"
                     Command="{Binding ActionCommand}"
-                    Content="Export Instance"
+                    Content="{DynamicResource exportInstance}"
                     FontWeight="Medium"
                     IsDefault="True"
                     IsEnabled="{Binding IsExportFinished}"
