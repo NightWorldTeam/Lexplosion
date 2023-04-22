@@ -152,7 +152,13 @@ namespace Lexplosion
 
             Runtime.ПереходВРежимЗавершения += CloseMainWindow;
             Runtime.OnExitEvent += ExitHandler;
-            Runtime.OnUpdateStart += () => { _splashWindow.ChangeLoadingBoardPlaceholder(true); };
+            Runtime.OnUpdateStart += () => 
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    _splashWindow.ChangeLoadingBoardPlaceholder(true);
+                });
+            };
             Runtime.OnLexplosionOpened += ShowMainWindow;
 
             Runtime.InitializedSystem((int)_splashWindowLeft, (int)_splashWindowTop);
