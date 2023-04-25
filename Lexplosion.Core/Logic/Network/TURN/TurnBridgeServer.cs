@@ -58,7 +58,7 @@ namespace Lexplosion.Logic.Network.TURN
             try
             {
                 byte[] data = new byte[66];
-                byte[] bhostUUID = Encoding.UTF8.GetBytes(_groupPrefix +hostUUID);
+                byte[] bhostUUID = Encoding.UTF8.GetBytes(_groupPrefix + hostUUID);
 
                 Buffer.BlockCopy(_selfTurnId, 0, data, 0, _selfTurnId.Length);
                 Buffer.BlockCopy(bhostUUID, 0, data, 33, bhostUUID.Length);
