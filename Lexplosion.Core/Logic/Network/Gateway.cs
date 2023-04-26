@@ -19,7 +19,6 @@ namespace Lexplosion.Logic.Network
         private Thread InformingThread;
 
         private ServerBridge Server = null;
-        private string ControlServer = "";
 
         private string UUID;
         private string sessionToken;
@@ -35,6 +34,8 @@ namespace Lexplosion.Logic.Network
         /// </summary>
         private bool _directConnection = false;
 
+        private ControlServerData _controlServer;
+
         /// <summary>
         /// Отвечает за тевевую игру.
         /// </summary>
@@ -42,11 +43,11 @@ namespace Lexplosion.Logic.Network
         /// <param name="sessionToken_">Его токен</param>
         /// <param name="controlServer">Айпи сервера сетевой игры</param>
         /// <param name="directConnection">Использовать ли прямо подключение в приоритете</param>
-        public Gateway(string uuid, string sessionToken_, string controlServer, bool directConnection)
+        public Gateway(string uuid, string sessionToken_, ControlServerData controlServer, bool directConnection)
         {
             UUID = uuid;
             sessionToken = sessionToken_;
-            ControlServer = controlServer;
+            _controlServer = controlServer;
             _directConnection = directConnection;
             Runtime.DebugWrite("Create Gateway");
         }
@@ -177,7 +178,7 @@ namespace Lexplosion.Logic.Network
                 });
 
                 InformingThread.Start();
-                Server = new ServerBridge(UUID, sessionToken, port, _directConnection, ControlServer);
+                Server = new ServerBridge(UUID, sessionToken, port, _directConnection, _controlServer);
 
                 Server.ConnectingUser += ConnectingUser;
                 Server.DisconnectedUser += DisconnectedUser;
@@ -210,7 +211,7 @@ namespace Lexplosion.Logic.Network
         // Симуляция майнкрафт сервера. То есть используется если наш макрафт является клиентом
         public void ServerSimulator(int pid)
         {
-            ClientBridge bridge = new ClientBridge(UUID, sessionToken, ControlServer);
+            ClientBridge bridge = new ClientBridge(UUID, sessionToken, _controlServer);
 
             UdpClient client = new UdpClient();
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);

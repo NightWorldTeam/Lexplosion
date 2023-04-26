@@ -104,6 +104,7 @@
     <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />
     <Compile Include="Logic\Network\CommandReceiver.cs" />
+    <Compile Include="Logic\Network\ControlServerData.cs" />
     <Compile Include="Logic\Network\DataClient.cs" />
     <Compile Include="Logic\Network\DataServer.cs" />
     <Compile Include="Logic\Network\Enums.cs" />

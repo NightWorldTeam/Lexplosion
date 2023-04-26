@@ -80,7 +80,8 @@ namespace Lexplosion.Logic.FileSystem
                     Сryptography.CreateRsaKeys(out RSAParameters privateKey, out _publicRsaKey);
                     _confirmWord = new Random().GenerateString(32);
 
-                    _dataServer = new DataServer(privateKey, _confirmWord, GlobalData.User.UUID, GlobalData.User.SessionToken, LaunсherSettings.ServerIp);
+                    var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+                    _dataServer = new DataServer(privateKey, _confirmWord, GlobalData.User.UUID, GlobalData.User.SessionToken, serverData);
                 }
 
                 //Получаем хэш файла

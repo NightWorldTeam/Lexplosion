@@ -15,13 +15,13 @@ namespace Lexplosion.Logic.Network
     {
         protected IClientTransmitter Bridge;
         protected string ClientType;
-        protected string ControlServer;
+        protected ControlServerData ControlServer;
         protected bool SmpConnection;
 
         protected Thread readingThread;
         protected Thread sendingThread;
 
-        public NetworkClient(string clientType, string controlServer)
+        public NetworkClient(string clientType, ControlServerData controlServer)
         {
             ClientType = clientType;
             ControlServer = controlServer;
@@ -39,7 +39,7 @@ namespace Lexplosion.Logic.Network
                     //подключаемся к управляющему серверу
                     TcpClient client = new TcpClient();
                     Runtime.DebugWrite("CONNECT Initialization");
-                    client.Connect(ControlServer, 4565);
+                    client.Connect(ControlServer.HandshakeServerPoint);
 
                     NetworkStream stream = client.GetStream();
                     var st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"sessionToken\": \"" + sessionToken + "\"}";
@@ -101,7 +101,7 @@ namespace Lexplosion.Logic.Network
                             }
                             else
                             {
-                                Bridge = new TurnBridgeClient(UUID, ClientType[0], ControlServer);
+                                Bridge = new TurnBridgeClient(UUID, ClientType[0], ControlServer.TurnPoint);
                                 dataToSend = Encoding.UTF8.GetBytes(" "); // если мы работает с TURN, то нам поебать на порт. Отправляем простой пробел
                                 SmpConnection = false;
                             }
@@ -156,7 +156,7 @@ namespace Lexplosion.Logic.Network
                             else
                             {
                                 Runtime.DebugWrite("UDP connect through proxy");
-                                hostPoint = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
+                                hostPoint = ControlServer.SmpProxyPoint;
                             }
 
                             isConected = ((SmpClient)Bridge).Connect(hostPoint, connectionCode);

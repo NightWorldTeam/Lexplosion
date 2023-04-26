@@ -38,7 +38,7 @@ namespace Lexplosion.Logic.Network
         private object _abortLoocker = new object();
         private object _authorizeLocker = new object();
 
-        public DataServer(RSAParameters privateRsaKey, string confirmWord, string uuid, string sessionToken, string server) : base(uuid, sessionToken, SERVER_TYPE, true, server)
+        public DataServer(RSAParameters privateRsaKey, string confirmWord, string uuid, string sessionToken, ControlServerData server) : base(uuid, sessionToken, SERVER_TYPE, true, server)
         {
             _сonfirmWord = Encoding.UTF8.GetBytes(confirmWord);
             _privateRsaKey = privateRsaKey;

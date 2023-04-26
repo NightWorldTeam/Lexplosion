@@ -112,8 +112,10 @@ namespace Lexplosion.Logic.FileSystem
             lock (_locker)
             {
                 var publicKey = Сryptography.DecodeRsaParams(_info.PublicRsaKey);
+                var serverData = new ControlServerData(LaunсherSettings.ServerIp);
+
                 _dataClient?.Close();
-                _dataClient = new DataClient(publicKey, _info.ConfirmWord, LaunсherSettings.ServerIp, fileName, _fileId);
+                _dataClient = new DataClient(publicKey, _info.ConfirmWord, serverData, fileName, _fileId);
                 _dataClient.SpeedUpdate += SpeedUpdate;
                 _dataClient.ProcentUpdate += ProcentUpdate;
 

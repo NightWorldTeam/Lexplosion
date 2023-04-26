@@ -17,12 +17,12 @@ namespace Lexplosion.Logic.Network.TURN
         /// <param name="turnGroup">Этот символ будет вставлен перед uuid при подключении к серверу.
         /// Он описывает группу, к которой относится это подключение.
         /// </param>
-        public TurnBridgeClient(string uuid, char turnGroup, string controlServerIp)
+        public TurnBridgeClient(string uuid, char turnGroup, IPEndPoint controlServerPoint)
         {
             _selfTurnId = Encoding.UTF8.GetBytes(turnGroup + uuid);
             _groupPrefix = turnGroup;
 
-            _serverPoint = new IPEndPoint(IPAddress.Parse(controlServerIp), 9765);
+            _serverPoint = controlServerPoint;
         }
 
         /// <summary>

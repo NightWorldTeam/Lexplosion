@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.Network
         private object _stopLosk = new object();
         private object _abortLoocker = new object();
 
-        public ServerBridge(string uuid, string sessionToken, int localGamePort, bool directConnection, string server) : base(uuid, sessionToken, SERVER_TYPE, directConnection, server)
+        public ServerBridge(string uuid, string sessionToken, int localGamePort, bool directConnection, ControlServerData server) : base(uuid, sessionToken, SERVER_TYPE, directConnection, server)
         {
             Port = localGamePort;
             _isWork = true;

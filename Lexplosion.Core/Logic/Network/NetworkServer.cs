@@ -34,7 +34,7 @@ namespace Lexplosion.Logic.Network
         protected string UUID;
         protected string _sessionToken;
         protected bool SmpConnection;
-        protected string ControlServer;
+        protected ControlServerData ControlServer;
 
         public event Action<string> ConnectingUser;
         public event Action<string> DisconnectedUser;
@@ -45,7 +45,7 @@ namespace Lexplosion.Logic.Network
 
         protected HashSet<string> KickedClients = new HashSet<string>(); //тут хранятся выкинутые клиенты
 
-        public NetworkServer(string uuid, string sessionToken, string serverType, bool directConnection, string controlServer)
+        public NetworkServer(string uuid, string sessionToken, string serverType, bool directConnection, ControlServerData controlServer)
         {
             UUID = uuid;
             _sessionToken = sessionToken;
@@ -107,13 +107,13 @@ namespace Lexplosion.Logic.Network
                 else
                 {
                     SmpConnection = false;
-                    Server = new TurnBridgeServer(UUID, serverType[0], ControlServer);
+                    Server = new TurnBridgeServer(UUID, serverType[0], ControlServer.TurnPoint);
                 }
             }
             else
             {
                 SmpConnection = false;
-                Server = new TurnBridgeServer(UUID, serverType[0], ControlServer);
+                Server = new TurnBridgeServer(UUID, serverType[0], ControlServer.TurnPoint);
             }
 
             Server.ClientClosing += ClientAbort;
@@ -155,7 +155,7 @@ namespace Lexplosion.Logic.Network
                 //подключаемся к управляющему серверу
                 try
                 {
-                    _controlConnection.Connect(new IPEndPoint(IPAddress.Parse(ControlServer), 4565));
+                    _controlConnection.Connect(ControlServer.HandshakeServerPoint);
                 }
                 catch (Exception ex)
                 {
@@ -222,7 +222,7 @@ namespace Lexplosion.Logic.Network
                         if (!directConnectPossible || hostPointData.EndsWith(",proxy"))
                         {
                             Runtime.DebugWrite("Udp proxy (" + directConnectPossible + ", " + hostPointData.EndsWith(",proxy") + ")");
-                            point = new IPEndPoint(IPAddress.Parse(ControlServer), 4719);
+                            point = ControlServer.SmpProxyPoint;
                             hostPointData = hostPointData.Replace(",proxy", "");
                             hostPort = hostPointData.Substring(hostPointData.IndexOf(":") + 1, hostPointData.Length - hostPointData.IndexOf(":") - 1).Trim();
                         }

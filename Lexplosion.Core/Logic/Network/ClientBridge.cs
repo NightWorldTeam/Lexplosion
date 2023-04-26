@@ -25,7 +25,7 @@ namespace Lexplosion.Logic.Network
 
         private readonly object _closeLock = new object();
 
-        public ClientBridge(string uuid, string sessionToken, string server) : base(CLIENT_TYPE, server)
+        public ClientBridge(string uuid, string sessionToken, ControlServerData server) : base(CLIENT_TYPE, server)
         {
             UUID = uuid;
             _sessionToken = sessionToken;

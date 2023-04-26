@@ -47,7 +47,12 @@ namespace Lexplosion
             else
                 mutex.Dispose();
 
+#if DEBUG
+            return true;
+#else
+
             return isNew;
+#endif
         }
 
         public static void InitializedSystem(int updaterOffsetLeft, int updaterOffsetRight)
