@@ -25,6 +25,13 @@ namespace Lexplosion.Logic.Management.Addons
             _projectId = addonInfo.ProjectId;
         }
 
+        public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectFile addonFileInfo)
+        {
+            _instanceData = instanceData;
+            _projectId = addonFileInfo.ProjectId;
+            _fileId = addonFileInfo.FileId;
+        }
+
         private ModrinthAddon(BaseInstanceData instanceData, string projectId)
         {
             _instanceData = instanceData;
@@ -41,7 +48,10 @@ namespace Lexplosion.Logic.Management.Addons
         #region Info
         public string ProjectId
         {
-            get { return _projectId; }
+            get
+            {
+                return _projectId;
+            }
         }
 
         public string WebsiteUrl
@@ -84,6 +94,16 @@ namespace Lexplosion.Logic.Management.Addons
             }
         }
 
+        public string FileId
+        {
+            get => _fileId;
+        }
+
+        public ProjectSource Source
+        {
+            get => ProjectSource.Modrinth;
+        }
+
         public List<AddonDependencie> Dependecies
         {
             get
@@ -94,7 +114,6 @@ namespace Lexplosion.Logic.Management.Addons
                 {
                     foreach (var dependencie in _versionInfo.Dependencies)
                     {
-
                         if (dependencie?.ProjectId != null)
                         {
                             if (dependencie.VersionId != null)
@@ -130,7 +149,10 @@ namespace Lexplosion.Logic.Management.Addons
 
             if (_fileId != null)
             {
-                _versionInfo = ModrinthApi.GetProjectFile(_fileId);
+                if (_versionInfo == null)
+                {
+                    _versionInfo = ModrinthApi.GetProjectFile(_fileId);
+                }
             }
             else
             {

@@ -77,7 +77,7 @@ namespace Lexplosion.Logic.FileSystem
             {
                 if (_dataServer == null)
                 {
-                    Сryptography.CreateRsaKeys(out RSAParameters privateKey, out _publicRsaKey);
+                    Cryptography.CreateRsaKeys(out RSAParameters privateKey, out _publicRsaKey);
                     _confirmWord = new Random().GenerateString(32);
 
                     var serverData = new ControlServerData(LaunсherSettings.ServerIp);
@@ -88,7 +88,7 @@ namespace Lexplosion.Logic.FileSystem
                 string hash;
                 using (FileStream fstream = File.OpenRead(filePath))
                 {
-                    hash = Сryptography.Sha256(fstream);
+                    hash = Cryptography.Sha256(fstream);
                 }
 
                 if (!_dataServer.AddFile(filePath, hash))

@@ -93,7 +93,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 login = account.Login;
                 byte[] key = Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey);
                 byte[] IV = Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16));
-                byte[] decripted = Сryptography.AesDecode(Convert.FromBase64String(account.AccessData), key, IV);
+                byte[] decripted = Cryptography.AesDecode(Convert.FromBase64String(account.AccessData), key, IV);
                 accessData = Encoding.UTF8.GetString(decripted);
 
                 user = authHandler.ReAuth(ref login, ref accessData, out result);

@@ -100,7 +100,7 @@ namespace Lexplosion.Logic.Network
                         }
 
                         // TODO: тут трай надо
-                        byte[] payload = Сryptography.AesEncode(buffer_, clientData.Value3, clientData.Value4);
+                        byte[] payload = Cryptography.AesEncode(buffer_, clientData.Value3, clientData.Value4);
                         Server.Send(payload, clientPoint); //отправляем
 
                         //файл передан, закрываем соединение
@@ -181,7 +181,7 @@ namespace Lexplosion.Logic.Network
                             {
                                 if (connectionStages[point].Value1 == 0)
                                 {
-                                    byte[] aesData = Сryptography.RsaDecode(data, _privateRsaKey); // получем aes ключ для шифрования
+                                    byte[] aesData = Cryptography.RsaDecode(data, _privateRsaKey); // получем aes ключ для шифрования
                                     if (aesData.Length == 48)
                                     {
                                         byte[] aesKey = new byte[32];
@@ -191,7 +191,7 @@ namespace Lexplosion.Logic.Network
                                         Array.Copy(aesData, 32, aesIV, 0, 16);
 
                                         // отправляем кодовое слово клиенту в зашифрованном виде
-                                        Server.Send(Сryptography.AesEncode(_сonfirmWord, aesKey, aesIV), point);
+                                        Server.Send(Cryptography.AesEncode(_сonfirmWord, aesKey, aesIV), point);
 
                                         connectionStages[point].Value2 = aesKey;
                                         connectionStages[point].Value3 = aesIV;
@@ -210,7 +210,7 @@ namespace Lexplosion.Logic.Network
                                     byte[] aesKey = connectionStages[point].Value2;
                                     byte[] aesIV = connectionStages[point].Value3;
 
-                                    string profileId = Encoding.UTF8.GetString(Сryptography.AesDecode(data, aesKey, aesIV));
+                                    string profileId = Encoding.UTF8.GetString(Cryptography.AesDecode(data, aesKey, aesIV));
 
                                     if (SFilesList.ContainsKey(profileId))
                                     {
@@ -229,7 +229,7 @@ namespace Lexplosion.Logic.Network
                                         }
 
                                         byte[] fileSize = BitConverter.GetBytes(SFilesList[profileId].FileSize);
-                                        Server.Send(Сryptography.AesEncode(fileSize, aesKey, aesIV), point); // отправляем размер файла
+                                        Server.Send(Cryptography.AesEncode(fileSize, aesKey, aesIV), point); // отправляем размер файла
 
                                         WaitClient.Set();
                                         Runtime.DebugWrite("Авторизировал");

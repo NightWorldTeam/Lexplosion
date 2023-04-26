@@ -162,7 +162,7 @@ namespace Lexplosion.Logic.Network
                     if (answer != null && answer != "")
                     {
                         byte[] IV = Encoding.UTF8.GetBytes(str.Substring(0, 16));
-                        byte[] decripted = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), IV);
+                        byte[] decripted = Cryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), IV);
                         answer = Encoding.UTF8.GetString(decripted);
 
                         T filesData = JsonConvert.DeserializeObject<T>(answer);
@@ -281,7 +281,7 @@ namespace Lexplosion.Logic.Network
 
                 data = Convert.ToBase64String(Encoding.UTF8.GetBytes(data)) + ":" + str;
                 string planText = Convert.ToBase64String(Encoding.UTF8.GetBytes(data)) + ":" + salt;
-                byte[] encrypted = Сryptography.AesEncode(planText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
+                byte[] encrypted = Cryptography.AesEncode(planText, Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(str.Substring(0, 16)));
 
                 var fullData = new Dictionary<string, string>()
                 {
@@ -310,7 +310,7 @@ namespace Lexplosion.Logic.Network
                     else
                     {
                         byte[] IV = Encoding.UTF8.GetBytes(str.Substring(0, 16));
-                        byte[] decripted = Сryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), IV);
+                        byte[] decripted = Cryptography.AesDecode(Convert.FromBase64String(answer), Encoding.UTF8.GetBytes(key), IV);
                         answer = Encoding.UTF8.GetString(decripted);
                         T answerData = JsonConvert.DeserializeObject<T>(answer);
 

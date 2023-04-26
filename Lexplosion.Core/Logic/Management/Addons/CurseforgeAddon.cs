@@ -81,6 +81,16 @@ namespace Lexplosion.Logic.Management.Addons
             }
         }
 
+        public string FileId
+        {
+            get => _versionInfo?.id.ToString() ?? "";
+        }
+
+        public ProjectSource Source
+        {
+            get => ProjectSource.Curseforge;
+        }
+
         public List<AddonDependencie> Dependecies
         {
             get

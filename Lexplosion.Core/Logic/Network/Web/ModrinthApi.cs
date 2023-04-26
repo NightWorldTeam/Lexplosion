@@ -95,7 +95,6 @@ namespace Lexplosion.Logic.Network.Web
             public string algorithm;
         }
 
-
         /// <summary>
         /// Возврщает файлы Modrinth по списку хэшей файлов
         /// </summary>

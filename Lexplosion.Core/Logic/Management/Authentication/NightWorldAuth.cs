@@ -15,7 +15,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 accessData = new AuthData.AccessData
                 {
                     type = "password",
-                    data = Сryptography.Sha256(accessData + login)
+                    data = Cryptography.Sha256(accessData + login)
                 }
             };
             return Execute(data, ref accessData, out code);

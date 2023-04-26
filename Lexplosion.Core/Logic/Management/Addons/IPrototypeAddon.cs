@@ -22,6 +22,8 @@ namespace Lexplosion.Logic.Management.Addons
         bool CompareVersions(string addonFileId);
 
         string ProjectId { get; }
+        string FileId { get; }
+        ProjectSource Source { get; }
 
         string WebsiteUrl { get; }
 

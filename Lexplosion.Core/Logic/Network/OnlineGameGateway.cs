@@ -12,7 +12,7 @@ using System.Net.NetworkInformation;
 
 namespace Lexplosion.Logic.Network
 {
-    class Gateway
+    class OnlineGameGateway
     {
         private Thread ServerSimulatorThread;
         private Thread ClientSimulatorThread;
@@ -43,7 +43,7 @@ namespace Lexplosion.Logic.Network
         /// <param name="sessionToken_">Его токен</param>
         /// <param name="controlServer">Айпи сервера сетевой игры</param>
         /// <param name="directConnection">Использовать ли прямо подключение в приоритете</param>
-        public Gateway(string uuid, string sessionToken_, ControlServerData controlServer, bool directConnection)
+        public OnlineGameGateway(string uuid, string sessionToken_, ControlServerData controlServer, bool directConnection)
         {
             UUID = uuid;
             sessionToken = sessionToken_;

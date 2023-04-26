@@ -66,7 +66,7 @@ namespace Lexplosion.Logic.Network
             byte[] payload = new byte[48];
             Array.Copy(_aesKey, 0, payload, 0, 32);
             Array.Copy(_aesIV, 0, payload, 32, 16);
-            Bridge.Send(Сryptography.RsaEncode(payload, _publicRsaKey));
+            Bridge.Send(Cryptography.RsaEncode(payload, _publicRsaKey));
         }
 
         protected override void Reading()
@@ -76,7 +76,7 @@ namespace Lexplosion.Logic.Network
                 // получаем кодовое слово
                 Bridge.Receive(out byte[] data);
 
-                if (!_confirmWord.SequenceEqual(Сryptography.AesDecode(data, _aesKey, _aesIV)))
+                if (!_confirmWord.SequenceEqual(Cryptography.AesDecode(data, _aesKey, _aesIV)))
                 {
                     Runtime.DebugWrite("Confirm word error");
                     _isWorking = false;
@@ -84,11 +84,11 @@ namespace Lexplosion.Logic.Network
                 }
 
                 //отправляем id файла
-                Bridge.Send(Сryptography.AesEncode(Encoding.UTF8.GetBytes(_fileId), _aesKey, _aesIV));
+                Bridge.Send(Cryptography.AesEncode(Encoding.UTF8.GetBytes(_fileId), _aesKey, _aesIV));
 
                 // получаем размер файла
                 Bridge.Receive(out data);
-                data = Сryptography.AesDecode(data, _aesKey, _aesIV);
+                data = Cryptography.AesDecode(data, _aesKey, _aesIV);
                 if (data.Length != 8) // размер файла должен быть типа long, то есть 8 байт. если нет - выходим
                 {
                     Runtime.DebugWrite("data.Length != 8");
@@ -113,7 +113,7 @@ namespace Lexplosion.Logic.Network
                 _isWorking = Bridge.Receive(out data);
                 while (_isWorking && data.Length > 0 && offset < _fileSize)
                 {
-                    data = Сryptography.AesDecode(data, _aesKey, _aesIV);
+                    data = Cryptography.AesDecode(data, _aesKey, _aesIV);
 
                     offset += data.Length;
                     _dataCount += data.Length;
@@ -186,7 +186,7 @@ namespace Lexplosion.Logic.Network
                         _fstream.Close();
                         using (FileStream fstream = File.OpenRead(_fileName))
                         {
-                            string fileSha256 = Сryptography.Sha256(fstream);
+                            string fileSha256 = Cryptography.Sha256(fstream);
                             _successfulTransfer = (fstream.Length == _fileSize) && (_fileId == fileSha256);
                         }
                     }

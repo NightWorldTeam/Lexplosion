@@ -586,7 +586,7 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void CreateAddonData(IPrototypeAddon prototypeAddon, string projectId, Dictionary<string, SetValues<InstanceAddon, string, ProjectSource>> existsAddons, List<InstanceAddon> addons, InstalledAddonsFormat actualAddonsList, BaseInstanceData modpackInfo, ProjectSource addonSourse)
+        private static InstanceAddon CreateAddonData(IPrototypeAddon prototypeAddon, string projectId, Dictionary<string, SetValues<InstanceAddon, string, ProjectSource>> existsAddons, List<InstanceAddon> addons, InstalledAddonsFormat actualAddonsList, BaseInstanceData modpackInfo, ProjectSource addonSourse)
         {
             InstalledAddonInfo info = actualAddonsList[projectId];
             var obj = new InstanceAddon(prototypeAddon, modpackInfo)
@@ -611,6 +611,8 @@ namespace Lexplosion.Logic.Management.Instances
             };
 
             addons.Add(obj);
+
+            return obj;
         }
 
         private delegate void IternalAddonInfo(string fileAddr, out string displayName, out string authors, out string version, out string description, out string modId);
@@ -749,6 +751,30 @@ namespace Lexplosion.Logic.Management.Instances
                             string addonId;
                             if (notContains) // мод есть в папке, но нет в списке, значит установлен собственноручно
                             {
+                                IPrototypeAddon addonData = AddonsPrototypesCreater.CreateFromFile(modpackInfo, fileAddr_);
+
+                                if (addonData != null)
+                                {
+                                    addonData.DefineDefaultVersion();
+                                    string addon_projectId = addonData.ProjectId;
+
+                                    actualAddonsList[addon_projectId] = new InstalledAddonInfo
+                                    {
+                                        FileID = addonData.FileId,
+                                        ProjectID = addon_projectId,
+                                        Type = addonType,
+                                        IsDisable = isDisable,
+                                        Path = isAddonExtension ? xyi : xyi.Remove(xyi.Length - 8), // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
+                                        Source = addonData.Source
+                                    };
+
+                                    var obj = CreateAddonData(addonData, addonData.ProjectId, existsAddons, addons, actualAddonsList, modpackInfo, addonData.Source);
+                                    obj.FileName = filename;
+                                    obj._isEnable = isAddonExtension;
+
+                                    continue;
+                                }
+
                                 // собстна генерируем айдишник
                                 addonId_ = generatedAddonId;
                                 while (actualAddonsList.ContainsKey(addonId_.ToString()))
@@ -792,7 +818,6 @@ namespace Lexplosion.Logic.Management.Instances
                             obj._isEnable = isAddonExtension;
                             //obj.Version = version;
                             //if (string.IsNullOrEmpty(obj.Author)) obj.Author = authors;
-
                         }
                     }
                 }

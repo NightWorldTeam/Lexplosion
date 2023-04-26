@@ -16,7 +16,7 @@ namespace Lexplosion.Logic.Management
     public class LaunchGame
     {
         private Process _process = null;
-        private Gateway _gameGateway = null;
+        private OnlineGameGateway _gameGateway = null;
 
         private string _instanceId;
         private Settings _settings;
@@ -222,7 +222,7 @@ namespace Lexplosion.Logic.Management
                 lock (loocker)
                 {
                     var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-                    _gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, serverData, GlobalData.GeneralSettings.NetworkDirectConnection);
+                    _gameGateway = new OnlineGameGateway(GlobalData.User.UUID, GlobalData.User.SessionToken, serverData, GlobalData.GeneralSettings.NetworkDirectConnection);
 
                     _removeImportantTaskMark = false;
                     Lexplosion.Runtime.AddImportantTask();
@@ -633,7 +633,7 @@ namespace Lexplosion.Logic.Management
                         catch { }
 
                         var serverData = new ControlServerData(LaunсherSettings.ServerIp);
-                        _classInstance._gameGateway = new Gateway(GlobalData.User.UUID, GlobalData.User.SessionToken, serverData, GlobalData.GeneralSettings.NetworkDirectConnection);
+                        _classInstance._gameGateway = new OnlineGameGateway(GlobalData.User.UUID, GlobalData.User.SessionToken, serverData, GlobalData.GeneralSettings.NetworkDirectConnection);
                         _classInstance._gameGateway.Initialization(_classInstance._process.Id);
                     }
                 }

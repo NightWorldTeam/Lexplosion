@@ -111,7 +111,7 @@ namespace Lexplosion.Logic.FileSystem
         {
             lock (_locker)
             {
-                var publicKey = Сryptography.DecodeRsaParams(_info.PublicRsaKey);
+                var publicKey = Cryptography.DecodeRsaParams(_info.PublicRsaKey);
                 var serverData = new ControlServerData(LaunсherSettings.ServerIp);
 
                 _dataClient?.Close();

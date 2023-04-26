@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Lexplosion.Logic
 {
-    static class Сryptography
+    static class Cryptography
     {
         public static string Sha256(string value)
         {
@@ -37,6 +37,36 @@ namespace Lexplosion.Logic
                 foreach (byte b in result)
                     Sb.Append(b.ToString("x2"));
             }
+
+            return Sb.ToString();
+        }
+
+        public static string Sha512(Stream value)
+        {
+            StringBuilder Sb = new StringBuilder();
+            using (SHA512 hash = SHA512Managed.Create())
+            {
+                byte[] result = hash.ComputeHash(value);
+
+                foreach (byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            return Sb.ToString();
+        }
+
+        public static string Sha1(Stream value)
+        {
+            StringBuilder Sb = new StringBuilder();
+            using (SHA1CryptoServiceProvider mySha = new SHA1CryptoServiceProvider())
+            {
+                byte[] result = mySha.ComputeHash(value);
+
+                foreach (byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            Runtime.DebugWrite(Sb.ToString());
 
             return Sb.ToString();
         }

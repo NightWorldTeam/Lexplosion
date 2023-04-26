@@ -93,6 +93,15 @@ namespace Lexplosion.Logic.Objects.Modrinth
         }
     }
 
+    public class ProjectFileHashes
+    {
+        [JsonProperty("sha512")]
+        public string Sha512;
+
+        [JsonProperty("sha1")]
+        public string Sha1;
+    }
+
     public class ModrinthProjectFile
     {
         public class File
@@ -105,6 +114,9 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
             [JsonProperty("size")]
             public int Size;
+
+            [JsonProperty("hashes")]
+            public ProjectFileHashes Hashes;
         }
 
         public class Dependencie

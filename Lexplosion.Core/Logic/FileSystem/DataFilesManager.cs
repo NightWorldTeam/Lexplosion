@@ -20,7 +20,7 @@ namespace Lexplosion.Logic.FileSystem
                 accessData = "zhopa";
             }
 
-            accessData = Convert.ToBase64String(Сryptography.AesEncode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
+            accessData = Convert.ToBase64String(Cryptography.AesEncode(accessData, Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey), Encoding.UTF8.GetBytes(LaunсherSettings.passwordKey.Substring(0, 16))));
 
             var data = GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
             if (data != null && data.Profiles != null && data.Profiles.Count > 0)
