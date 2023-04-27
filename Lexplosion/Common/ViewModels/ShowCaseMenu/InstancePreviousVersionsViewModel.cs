@@ -14,7 +14,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
         private ObservableCollection<InstanceVersion> _previousVersions;
         public ObservableCollection<InstanceVersion> PreviousVersions
         {
-            get => _previousVersions; set
+            get => _previousVersions; private set
             {
                 _previousVersions = value;
                 OnPropertyChanged();

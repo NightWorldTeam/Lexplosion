@@ -130,7 +130,8 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
 
                 Tabs.Clear();
 
-
+                // TODO: System.InvalidOperationException: "Невозможно вызвать StartAt, когда выполняется генерация содержимого."
+                // Header: Configuration
                 Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("overview"), Content = new TabMenuViewModel(_showCaseTabMenu, _instanceForm.Client.Name, 0, _instanceForm) });
                 Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("configuration"), Content = new TabMenuViewModel(_settingsTabs, ResourceGetter.GetString("instanceSettings"), _selectedSettingsTabIndex) });
                 Tabs.Add(new Tab<VMBase> { Header = ResourceGetter.GetString("back"), Content = null, Command = ClearMemory });
