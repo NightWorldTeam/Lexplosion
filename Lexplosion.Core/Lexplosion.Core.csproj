@@ -147,6 +147,7 @@
     <Compile Include="Tools\RuntimeTools.cs" />
     <Compile Include="Tools\SocketExtensions.cs" />
     <Compile Include="Tools\StringExtensions.cs" />
+    <Compile Include="Tools\StupidHash.cs" />
     <Compile Include="Tools\TaskArgs.cs" />
     <Compile Include="Tools\TasksPerfomer.cs" />
     <Compile Include="Tools\SetValues.cs" />

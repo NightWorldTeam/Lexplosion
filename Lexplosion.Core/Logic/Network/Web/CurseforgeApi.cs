@@ -22,6 +22,17 @@ namespace Lexplosion.Logic.Network.Web
             public T data;
         }
 
+        class FingerprintSearchAnswer
+        {
+            public class SearchedFiles
+            {
+                public int id;
+                public CurseforgeFileInfo file;
+            }
+
+            public List<SearchedFiles> exactMatches;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static T GetApiData<T>(string url) where T : new()
         {
@@ -111,6 +122,57 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
         }
 
+        public static List<CurseforgeFileInfo> GetFilesFromFingerprint(string fingerprint)
+        {
+            // TODO: заменить это на ToServer.HttpPostJson
+            var jsonContent = "{\"fingerprints\": [" + fingerprint + "]}";
+
+            try
+            {
+                WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/fingerprints");
+                req.Method = "POST";
+                req.Headers.Add("x-api-key", Token);
+                req.ContentType = "application/json";
+
+                byte[] byteArray = Encoding.UTF8.GetBytes(jsonContent);
+                req.ContentLength = byteArray.Length;
+
+                using (Stream dataStream = req.GetRequestStream())
+                {
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                }
+
+                string answer;
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                var data = JsonConvert.DeserializeObject<DataContainer<FingerprintSearchAnswer>>(answer);
+
+                var result = new List<CurseforgeFileInfo>();
+                if (data?.data?.exactMatches != null)
+                {
+                    foreach (var item in data?.data?.exactMatches)
+                    {
+                        result.Add(item.file);
+                    }
+                }
+
+                return result;
+            }
+            catch
+            {
+                return new List<CurseforgeFileInfo>();
+            }
+        }
+
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
         {
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files");
@@ -160,11 +222,11 @@ namespace Lexplosion.Logic.Network.Web
 
                 var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeAddonInfo>>>(answer);
 
-                return data.data;
+                return data?.data ?? new List<CurseforgeAddonInfo>();
             }
             catch
             {
-                return null;
+                return new List<CurseforgeAddonInfo>();
             }
         }
 

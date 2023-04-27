@@ -66,7 +66,19 @@ namespace Lexplosion.Logic
                     Sb.Append(b.ToString("x2"));
             }
 
-            Runtime.DebugWrite(Sb.ToString());
+            return Sb.ToString();
+        }
+
+        public static string Md5(Stream value)
+        {
+            StringBuilder Sb = new StringBuilder();
+            using (MD5CryptoServiceProvider hash = new MD5CryptoServiceProvider())
+            {
+                byte[] result = hash.ComputeHash(value);
+
+                foreach (byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
 
             return Sb.ToString();
         }

@@ -23,6 +23,13 @@ namespace Lexplosion.Logic.Management.Addons
             _projectId = addonInfo.id;
         }
 
+        public CurseforgeAddon(BaseInstanceData instanceData, CurseforgeFileInfo fileInfo)
+        {
+            _instanceData = instanceData;
+            _projectId = fileInfo.modId;
+            _versionInfo = fileInfo;
+        }
+
         private CurseforgeAddon(BaseInstanceData instanceData, string projectId)
         {
             _instanceData = instanceData;
@@ -128,7 +135,21 @@ namespace Lexplosion.Logic.Management.Addons
             }
         }
 
-        public void DefineDefaultVersion() => DefaineLatesVersion_();
+        public void DefineDefaultVersion()
+        {
+            if (_versionInfo != null)
+            {
+                if (_addonInfo == null)
+                {
+                    _addonInfo = CurseforgeApi.GetAddonInfo(_projectId);
+                }
+            }
+            else
+            {
+                DefaineLatesVersion_();
+            }
+        }
+
         public void DefineLatestVersion() => DefaineLatesVersion_();
 
         private CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo, List<CurseforgeAddonInfo.GameVersionAddon> supportAddonInfo, AddonType? addonType)
