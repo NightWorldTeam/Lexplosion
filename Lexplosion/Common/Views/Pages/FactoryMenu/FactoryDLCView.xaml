@@ -309,7 +309,7 @@
                                     <DataTrigger Binding="{Binding Source}" Value="{x:Static lexplosioncore:ProjectSource.Modrinth}">
                                         <Setter Property="Content">
                                             <Setter.Value>
-                                                <Viewbox Width="24" Height="24">
+                                                <Viewbox Width="20" Height="20">
                                                     <Path
                                                         extension:PathExtension.StringData="{StaticResource ModrinthLogo}"
                                                         Fill="White"

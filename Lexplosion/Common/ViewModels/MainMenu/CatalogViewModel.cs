@@ -213,6 +213,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
         public CatalogViewModel(MainViewModel mainViewModel)
         {
+            LoaderPlaceholder = ResourceGetter.GetString("curseforgeDataLoading");
             IsLoaded = false;
             _mainViewModel = mainViewModel;
 
