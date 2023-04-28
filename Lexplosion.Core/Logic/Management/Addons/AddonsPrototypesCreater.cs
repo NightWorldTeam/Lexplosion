@@ -83,7 +83,7 @@ namespace Lexplosion.Logic.Management.Addons
 
         public static Dictionary<string, IPrototypeAddon> CreateFromFile(BaseInstanceData indtanceData, List<string> files)
         {
-
+            return null;
         }
     }
 }
