@@ -22,7 +22,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public List<string> Loaders;
 
         [JsonProperty("project_type")]
-        public string Type;//mod, modpack, resourcepack, shader
+        public string Type; //mod, modpack, resourcepack, shader
     }
 
     public class ModrinthCtalogUnit : ModrinthProject

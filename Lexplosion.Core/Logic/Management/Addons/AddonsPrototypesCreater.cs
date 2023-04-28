@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Objects.Curseforge;
@@ -54,7 +50,7 @@ namespace Lexplosion.Logic.Management.Addons
             {
                 string fingerprint = StupidHash.Compute(File.ReadAllBytes(filePath)).ToString();
 
-                List<CurseforgeFileInfo> projectFiles = CurseforgeApi.GetFilesFromFingerprint(fingerprint);
+                List<CurseforgeFileInfo> projectFiles = CurseforgeApi.GetFilesFromFingerprints(new string[1] { fingerprint });
                 foreach (var projectFile in projectFiles)
                 {
                     if (projectFile?.hashes != null)
@@ -83,6 +79,11 @@ namespace Lexplosion.Logic.Management.Addons
             }
 
             return null;
+        }
+
+        public static Dictionary<string, IPrototypeAddon> CreateFromFile(BaseInstanceData indtanceData, List<string> files)
+        {
+
         }
     }
 }

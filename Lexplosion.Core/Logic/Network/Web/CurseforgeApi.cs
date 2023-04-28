@@ -58,6 +58,31 @@ namespace Lexplosion.Logic.Network.Web
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static T GetApiData<T>(string url, string jsonInputData) where T : new()
+        {
+            try
+            {
+                var headers = new Dictionary<string, string>()
+                {
+                    ["x-api-key"] = Token
+                };
+
+                string answer = ToServer.HttpPostJson(url, jsonInputData, out _, headers);
+                if (answer != null)
+                {
+                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer).data;
+                    return data ?? new T();
+                }
+
+                return new T();
+            }
+            catch
+            {
+                return new T();
+            }
+        }
+
         public static List<CurseforgeInstanceInfo> GetInstances(int pageSize, int index, string categoriy, CfSortField sortField, string searchFilter, string gameVersion)
         {
             Runtime.DebugWrite(categoriy);
@@ -122,55 +147,21 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
         }
 
-        public static List<CurseforgeFileInfo> GetFilesFromFingerprint(string fingerprint)
+        public static List<CurseforgeFileInfo> GetFilesFromFingerprints(string[] fingerprint)
         {
-            // TODO: заменить это на ToServer.HttpPostJson
-            var jsonContent = "{\"fingerprints\": [" + fingerprint + "]}";
+            var jsonContent = "{\"fingerprints\": [" + string.Join(", ", fingerprint) + "]}";
 
-            try
+            var data = GetApiData<DataContainer<FingerprintSearchAnswer>>("https://api.curseforge.com/v1/fingerprints", jsonContent);
+            var result = new List<CurseforgeFileInfo>();
+            if (data?.data?.exactMatches != null)
             {
-                WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/fingerprints");
-                req.Method = "POST";
-                req.Headers.Add("x-api-key", Token);
-                req.ContentType = "application/json";
-
-                byte[] byteArray = Encoding.UTF8.GetBytes(jsonContent);
-                req.ContentLength = byteArray.Length;
-
-                using (Stream dataStream = req.GetRequestStream())
+                foreach (var item in data?.data?.exactMatches)
                 {
-                    dataStream.Write(byteArray, 0, byteArray.Length);
+                    result.Add(item.file);
                 }
-
-                string answer;
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
-                }
-
-                var data = JsonConvert.DeserializeObject<DataContainer<FingerprintSearchAnswer>>(answer);
-
-                var result = new List<CurseforgeFileInfo>();
-                if (data?.data?.exactMatches != null)
-                {
-                    foreach (var item in data?.data?.exactMatches)
-                    {
-                        result.Add(item.file);
-                    }
-                }
-
-                return result;
             }
-            catch
-            {
-                return new List<CurseforgeFileInfo>();
-            }
+
+            return result;
         }
 
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
@@ -190,44 +181,10 @@ namespace Lexplosion.Logic.Network.Web
 
         public static List<CurseforgeAddonInfo> GetAddonsInfo(string[] ids)
         {
-            // TODO: заменить это на ToServer.HttpPostJson
             string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
-            try
-            {
-                WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods");
-                req.Method = "POST";
-                req.Headers.Add("x-api-key", Token);
-                req.ContentType = "application/json";
-
-                byte[] byteArray = Encoding.UTF8.GetBytes(jsonContent);
-                req.ContentLength = byteArray.Length;
-
-                using (Stream dataStream = req.GetRequestStream())
-                {
-                    dataStream.Write(byteArray, 0, byteArray.Length);
-                }
-
-                string answer;
-                using (WebResponse resp = req.GetResponse())
-                {
-                    using (Stream stream = resp.GetResponseStream())
-                    {
-                        using (StreamReader sr = new StreamReader(stream))
-                        {
-                            answer = sr.ReadToEnd();
-                        }
-                    }
-                }
-
-                var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeAddonInfo>>>(answer);
-
-                return data?.data ?? new List<CurseforgeAddonInfo>();
-            }
-            catch
-            {
-                return new List<CurseforgeAddonInfo>();
-            }
+            var data = GetApiData<DataContainer<List<CurseforgeAddonInfo>>>("https://api.curseforge.com/v1/mods", jsonContent);
+            return data?.data ?? new List<CurseforgeAddonInfo>();
         }
 
         public static CurseforgeInstanceInfo GetInstance(string id)
