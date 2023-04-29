@@ -15,6 +15,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
         private readonly MainViewModel _mainViewModel;
         private string _previousSearch = null;
         private bool _isInit = true;
+        private object _locker = new object();
 
         #region Properties
 
@@ -175,9 +176,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu
         }
 
         private string _loaderPlaceholder;
-        public string LoaderPlaceholder 
+        public string LoaderPlaceholder
         {
-            get => _loaderPlaceholder; set 
+            get => _loaderPlaceholder; set
             {
                 _loaderPlaceholder = value;
                 OnPropertyChanged();
@@ -256,7 +257,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
         private void SetSelectedInstanceSourceByIndex(byte value)
         {
-            if (value == 0) 
+            if (value == 0)
             {
                 LoaderPlaceholder = ResourceGetter.GetString("nightworldDataLoading");
                 SelectedInstanceSource = InstanceSource.Nightworld;
@@ -274,7 +275,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                 SelectedInstanceSource = InstanceSource.Modrinth;
             }
         }
-
+        
         private void InstancesPageLoading(string searchText = "", bool isPaginatorInvoke = false)
         {
             if (!isPaginatorInvoke && searchText == _previousSearch)
@@ -291,56 +292,61 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             IsLoaded = false;
             Lexplosion.Runtime.TaskRun((System.Threading.ThreadStart)(() =>
             {
-                var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
-
-                var instances = InstanceClient.GetOutsideInstances(
-                    SelectedInstanceSource,
-                    _pageSize,
-                    PaginatorVM.PageIndex - 1,
-                    SelectedCategory,
-                    searchText == null ? _previousSearch : searchText,
-                    SelectedCfSortBy,
-                    (string)gameVersion
-                    );
-
-
-                _previousSearch = searchText == null ? _previousSearch : searchText;
-
-                if (instances.Count == _pageSize) IsPaginatorVisible = true;
-                else IsPaginatorVisible = false;
-
-                if (instances.Count == 0)
+                lock (_locker)
                 {
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        MainModel.Instance.CatalogController.Clear();
-                        IsEmptyList = true;
-                    });
-                }
-                else
-                {
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (IsEmptyList) IsEmptyList = false;
+                    var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
 
-                        MainModel.Instance.CatalogController.Clear();
+                    Runtime.DebugWrite(SelectedInstanceSource);
 
-                        foreach (var instance in instances)
+                    var instances = InstanceClient.GetOutsideInstances(
+                        SelectedInstanceSource,
+                        _pageSize,
+                        PaginatorVM.PageIndex - 1,
+                        SelectedCategory,
+                        searchText == null ? _previousSearch : searchText,
+                        SelectedCfSortBy,
+                        (string)gameVersion
+                        );
+
+
+                    _previousSearch = searchText == null ? _previousSearch : searchText;
+
+                    if (instances.Count == _pageSize) IsPaginatorVisible = true;
+                    else IsPaginatorVisible = false;
+
+                    if (instances.Count == 0)
+                    {
+                        App.Current.Dispatcher.Invoke(() =>
                         {
-                            if (MainModel.Instance.LibraryController.IsLibraryContainsInstance(instance))
-                            {
-                                MainModel.Instance.CatalogController.AddInstance(MainModel.Instance.LibraryController.GetInstance(instance));
-                            }
-                            else
-                            {
-                                var instanceForm = new InstanceFormViewModel(_mainViewModel, instance);
-                                MainModel.Instance.CatalogController.AddInstance(instanceForm);
-                            }
-                        }
-                    });
+                            MainModel.Instance.CatalogController.Clear();
+                            IsEmptyList = true;
+                        });
+                    }
+                    else
+                    {
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (IsEmptyList) IsEmptyList = false;
 
+                            MainModel.Instance.CatalogController.Clear();
+
+                            foreach (var instance in instances)
+                            {
+                                if (MainModel.Instance.LibraryController.IsLibraryContainsInstance(instance))
+                                {
+                                    MainModel.Instance.CatalogController.AddInstance(MainModel.Instance.LibraryController.GetInstance(instance));
+                                }
+                                else
+                                {
+                                    var instanceForm = new InstanceFormViewModel(_mainViewModel, instance);
+                                    MainModel.Instance.CatalogController.AddInstance(instanceForm);
+                                }
+                            }
+                        });
+
+                    }
+                    IsLoaded = true;
                 }
-                IsLoaded = true;
             }));
         }
 
