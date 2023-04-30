@@ -720,25 +720,25 @@ namespace Lexplosion.Logic.Management.Instances
                     return addons;
                 }
 
-                var uncnownAddons = new List<string>();
-                foreach (string fileAddr in files)
-                {
-                    string fileAddr_ = fileAddr.Replace('\\', '/');
-                    string extension = Path.GetExtension(fileAddr_);
-                    bool isAddonExtension = (extension == fileExtension), isDisable = (extension == DISABLE_FILE_EXTENSION);
-                    if (isAddonExtension || isDisable)
-                    {
-                        string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
+                //var uncnownAddons = new List<string>();
+                //foreach (string fileAddr in files)
+                //{
+                //    string fileAddr_ = fileAddr.Replace('\\', '/');
+                //    string extension = Path.GetExtension(fileAddr_);
+                //    bool isAddonExtension = (extension == fileExtension), isDisable = (extension == DISABLE_FILE_EXTENSION);
+                //    if (isAddonExtension || isDisable)
+                //    {
+                //        string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
 
-                        // аддон есть в папке, но нет в списке, или он есть и в папке и в списке, но скачан нее с курсфорджа, то нужно добавить, так же генерируем айдишник для него
-                        // ну или просто запрос был не успешным
-                        bool notContains = !existsAddons.ContainsKey(xyi);
-                        if (notContains)
-                        {
-                            uncnownAddons.Add(fileAddr);
-                        }
-                    }
-                }
+                //        // аддон есть в папке, но нет в списке, или он есть и в папке и в списке, но скачан нее с курсфорджа, то нужно добавить, так же генерируем айдишник для него
+                //        // ну или просто запрос был не успешным
+                //        bool notContains = !existsAddons.ContainsKey(xyi);
+                //        if (notContains)
+                //        {
+                //            uncnownAddons.Add(fileAddr);
+                //        }
+                //    }
+                //}
 
 
                 int generatedAddonId = -1; // тут хранится следующий следющий сгенерированный айдишник. По сути переменная нужна чисто для оптимизации
