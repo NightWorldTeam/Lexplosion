@@ -64,6 +64,11 @@ namespace Lexplosion.Logic.Network.Web
             }
         }
 
+        public static List<ModrinthTeam> GetTeam(string teamId)
+        {
+            return GetApiData<List<ModrinthTeam>>("https://api.modrinth.com/v2/team/"+ teamId + "/members");
+        }
+
         public static List<ModrinthCategory> GetCategories()
         {
             return GetApiData<List<ModrinthCategory>>("https://api.modrinth.com/v2/tag/category");

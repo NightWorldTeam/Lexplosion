@@ -191,6 +191,13 @@ namespace Lexplosion.Logic.Management.Instances
             WebsiteUrl = addonPrototype.WebsiteUrl;
 
             DownloadLogo(addonPrototype.LogoUrl);
+
+            addonPrototype.OnInfoUpdated += delegate ()
+            {
+                Author = _addonPrototype.AuthorName;
+                OnPropertyChanged(nameof(Author));
+                Runtime.DebugWrite(Author);
+            };
         }
 
         /// <summary>

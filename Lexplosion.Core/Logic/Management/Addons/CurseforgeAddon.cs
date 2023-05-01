@@ -5,6 +5,7 @@ using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -226,5 +227,7 @@ namespace Lexplosion.Logic.Management.Addons
             var lastFile = GetLastFile(_instanceData.GameVersion, _addonInfo.latestFiles, _addonInfo.latestFilesIndexes, (AddonType)(_addonInfo.classId ?? 0));
             return lastFile != null && lastFile.id > addonFileId.ToInt32();
         }
+
+        public event Action OnInfoUpdated;
     }
 }
