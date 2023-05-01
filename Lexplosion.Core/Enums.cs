@@ -198,13 +198,13 @@
         ProjectDataError,
         FileIdError,
         DownloadError,
-        UncnownAddonType,
+        unknownAddonType,
         FileVersionError,
         UrlError,
         FileNameError,
         UzipError,
         IsCanselled,
-        UncnownError
+        unknownError
     }
 
     /// <summary>

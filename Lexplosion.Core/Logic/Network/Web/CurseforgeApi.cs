@@ -319,7 +319,7 @@ namespace Lexplosion.Logic.Network.Web
                         return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
-                            Value2 = DownloadAddonRes.UncnownAddonType
+                            Value2 = DownloadAddonRes.unknownAddonType
                         };
                 }
 
@@ -331,7 +331,7 @@ namespace Lexplosion.Logic.Network.Web
                 return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
-                    Value2 = DownloadAddonRes.UncnownError
+                    Value2 = DownloadAddonRes.unknownError
                 };
             }
         }
@@ -423,7 +423,7 @@ namespace Lexplosion.Logic.Network.Web
                         return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
-                            Value2 = DownloadAddonRes.UncnownAddonType
+                            Value2 = DownloadAddonRes.unknownAddonType
                         };
                 }
 
@@ -435,7 +435,7 @@ namespace Lexplosion.Logic.Network.Web
                 return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
-                    Value2 = DownloadAddonRes.UncnownError
+                    Value2 = DownloadAddonRes.unknownError
                 };
             }
         }

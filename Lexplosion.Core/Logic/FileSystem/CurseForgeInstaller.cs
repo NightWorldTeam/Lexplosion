@@ -453,7 +453,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch
             {
-                errors.Add("uncnownError");
+                errors.Add("unknownError");
                 return null;
             }
         }
