@@ -32,6 +32,14 @@ namespace Lexplosion.Logic.Management.Addons
             _fileId = addonFileInfo.FileId;
         }
 
+        public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo, ModrinthProjectFile addonFileInfo)
+        {
+            _instanceData = instanceData;
+            _projectId = addonFileInfo.ProjectId;
+            _addonInfo = addonInfo;
+            _fileId = addonFileInfo.FileId;
+        }
+
         private ModrinthAddon(BaseInstanceData instanceData, string projectId)
         {
             _instanceData = instanceData;
@@ -144,6 +152,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             if (_addonInfo == null)
             {
+                Runtime.DebugWrite("fdgfdsgdf");
                 _addonInfo = ModrinthApi.GetProject(_projectId);
             }
 

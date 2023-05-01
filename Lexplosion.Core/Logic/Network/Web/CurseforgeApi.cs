@@ -17,12 +17,12 @@ namespace Lexplosion.Logic.Network.Web
     {
         private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
 
-        class DataContainer<T>
+        public class DataContainer<T>
         {
             public T data;
         }
 
-        class FingerprintSearchAnswer
+        public class FingerprintSearchAnswer
         {
             public class SearchedFiles
             {
@@ -71,7 +71,8 @@ namespace Lexplosion.Logic.Network.Web
                 string answer = ToServer.HttpPostJson(url, jsonInputData, out _, headers);
                 if (answer != null)
                 {
-                    var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer).data;
+                    var test = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
+                    var data = test.data;
                     return data ?? new T();
                 }
 
@@ -147,15 +148,15 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
         }
 
-        public static List<CurseforgeFileInfo> GetFilesFromFingerprints(string[] fingerprint)
+        public static List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
         {
-            var jsonContent = "{\"fingerprints\": [" + string.Join(", ", fingerprint) + "]}";
+            var jsonContent = "{\"fingerprints\": [" + string.Join(",", fingerprint) + "]}";
 
-            var data = GetApiData<DataContainer<FingerprintSearchAnswer>>("https://api.curseforge.com/v1/fingerprints", jsonContent);
+            var data = GetApiData<FingerprintSearchAnswer>("https://api.curseforge.com/v1/fingerprints/432", jsonContent);
             var result = new List<CurseforgeFileInfo>();
-            if (data?.data?.exactMatches != null)
+            if (data?.exactMatches != null)
             {
-                foreach (var item in data?.data?.exactMatches)
+                foreach (var item in data?.exactMatches)
                 {
                     result.Add(item.file);
                 }
@@ -183,8 +184,8 @@ namespace Lexplosion.Logic.Network.Web
         {
             string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
-            var data = GetApiData<DataContainer<List<CurseforgeAddonInfo>>>("https://api.curseforge.com/v1/mods", jsonContent);
-            return data?.data ?? new List<CurseforgeAddonInfo>();
+            var data = GetApiData<List<CurseforgeAddonInfo>>("https://api.curseforge.com/v1/mods", jsonContent);
+            return data ?? new List<CurseforgeAddonInfo>();
         }
 
         public static CurseforgeInstanceInfo GetInstance(string id)

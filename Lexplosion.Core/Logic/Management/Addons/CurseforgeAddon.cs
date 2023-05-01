@@ -30,6 +30,14 @@ namespace Lexplosion.Logic.Management.Addons
             _versionInfo = fileInfo;
         }
 
+        public CurseforgeAddon(BaseInstanceData instanceData, CurseforgeAddonInfo addonInfo, CurseforgeFileInfo fileInfo)
+        {
+            _addonInfo = addonInfo;
+            _instanceData = instanceData;
+            _projectId = addonInfo.id;
+            _versionInfo = fileInfo;
+        }
+
         private CurseforgeAddon(BaseInstanceData instanceData, string projectId)
         {
             _instanceData = instanceData;

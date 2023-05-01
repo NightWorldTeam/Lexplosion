@@ -109,16 +109,16 @@ namespace Lexplosion.Logic.Network.Web
             });
         }
 
-        public static List<ModrinthProjectInfo> GetProjects(string[] filesId)
+        public static List<ModrinthProjectInfo> GetProjects(string[] ids)
         {
             var files = new List<ModrinthProjectInfo>();
 
             StringBuilder str = new StringBuilder(1950);
-            for (int i = 0; i < filesId.Length; i++)
+            for (int i = 0; i < ids.Length; i++)
             {
-                str.Append(filesId[i]);
+                str.Append(ids[i]);
 
-                if (i == filesId.Length - 1 || str.Length + 3 + filesId[i + 1].Length > 1950)
+                if (i == ids.Length - 1 || str.Length + 3 + ids[i + 1].Length > 1950)
                 {
                     var data = GetApiData<List<ModrinthProjectInfo>>("https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]");
                     var tes = "https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]";

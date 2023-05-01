@@ -181,6 +181,7 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public int releaseType;
         public List<Hashes> hashes;
         public long fileLength;
+        public string fileFingerprint;
 
         // т.к разрабы курсфорджа дефектные рукожопы и конченные недоумки, которые не умеют писать код, то url иногда может быть null, поэтому придётся мутить костыли
         private string _downloadUrl;
