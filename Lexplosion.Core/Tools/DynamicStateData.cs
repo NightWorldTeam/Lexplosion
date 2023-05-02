@@ -27,7 +27,7 @@ namespace Lexplosion.Tools
     }
 
     /// <summary>
-    /// Генерируется классом DynamicStateData и нужена для обновления состояния
+    /// Генерируется классом DynamicStateData и нужен для обновления состояния
     /// </summary>
     /// <typeparam name="T">Тип аргумента</typeparam>
     /// <typeparam name="U">Тип состояния</typeparam>
