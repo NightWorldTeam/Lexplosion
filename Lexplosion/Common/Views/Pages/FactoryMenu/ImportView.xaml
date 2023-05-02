@@ -49,6 +49,7 @@
                                 HorizontalAlignment="Right"
                                 Background="Transparent"
                                 Command="{Binding CancelUploadCommand}"
+                                CommandParameter="{Binding}"
                                 IsEnabled="False"
                                 Style="{StaticResource IconicButton}"
                                 Visibility="{Binding IsImportFinished, Converter={StaticResource NegativeConvertBoolToVisibility}}">

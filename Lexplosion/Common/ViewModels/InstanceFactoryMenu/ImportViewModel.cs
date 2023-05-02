@@ -38,7 +38,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         public bool IsEmptyUploadedFiles { get => UploadedFiles.Count == 0; }
 
         /// <summary>
-        /// Делегат который вызывает принимает в качестве агрумента массив строк.
+        /// Делегат который принимает в качестве агрумента массив строк.
         /// Проходится по массиву и для каждого элемента начинает импорт.
         /// </summary>
         public Action<string[]> ImportAction { get; }
@@ -76,6 +76,17 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         }
 
 
+        private RelayCommand _cancelUploadCommand;
+        public RelayCommand CancelUploadCommand
+        {
+            get => _cancelUploadCommand ?? (_cancelUploadCommand = new RelayCommand(obj =>
+            {
+                var file = (ImportFile)obj;
+                var index = UploadedFiles.IndexOf(file);
+                UploadedFiles.RemoveAt(index);
+            }));
+        }
+
         #endregion Commands
 
 
@@ -106,12 +117,17 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         public async void Import(string path)
         {
 #nullable enable
-            var importFile = new ImportFile(this, path);
+            var importFile = new ImportFile(path);
 
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFilesChanged(importFile);
 
-            var instanceClient = InstanceClient.Import(path, DownloadResultHandler);
+            var instanceClient = InstanceClient.Import(path, (result) => 
+                {
+                    importFile.IsImportFinished = true;
+                    DownloadResultHandler(result);
+                }
+            );
             MainModel.Instance.AddInstanceForm(instanceClient);
         }
 
