@@ -50,8 +50,21 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         #region info
+
+        private string _author = "";
+        public string Author
+        {
+            get
+            {
+                return _addonPrototype?.AuthorName ?? _author;
+            }
+            set
+            {
+                _author = value;
+            }
+        }
+
         public string Name { get; private set; } = "";
-        public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
         public string Version { get; private set; } = "";
         public int DownloadCount { get; private set; } = 0;
@@ -194,9 +207,7 @@ namespace Lexplosion.Logic.Management.Instances
 
             addonPrototype.OnInfoUpdated += delegate ()
             {
-                Author = _addonPrototype.AuthorName;
                 OnPropertyChanged(nameof(Author));
-                Runtime.DebugWrite(Author);
             };
         }
 
