@@ -445,6 +445,7 @@
                                                         <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
                                                             <DoubleAnimation
                                                                 RepeatBehavior="Forever"
+                                                                From="0"
                                                                 To="360"
                                                                 Duration="0:0:1" />
                                                         </Storyboard>
@@ -461,7 +462,6 @@
                                                 </DataTrigger.ExitActions>
 
                                                 <Setter TargetName="Path" Property="Opacity" Value="0.8" />
-                                                <Setter Property="IsEnabled" Value="True" />
                                             </DataTrigger>
 
                                         </ControlTemplate.Triggers>
