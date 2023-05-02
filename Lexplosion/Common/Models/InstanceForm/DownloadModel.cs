@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Management;
+﻿using Lexplosion.Controls;
+using Lexplosion.Logic.Management;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Lexplosion.Common.Models.InstanceForm
         public readonly List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
 
 
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
         private readonly Action _complitedError;
 
 
@@ -164,7 +165,7 @@ namespace Lexplosion.Common.Models.InstanceForm
         }
 
 
-        public DownloadModel(InstanceFormModel instanceFormModel, Action complitedError, Action<string, string, uint, byte> doNotification = null)
+        public DownloadModel(InstanceFormModel instanceFormModel, Action complitedError, DoNotificationCallback doNotification = null)
         {
             _complitedError = complitedError;
             _doNotification = doNotification ?? _doNotification;

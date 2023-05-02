@@ -2,6 +2,8 @@
 using Lexplosion.Common.Models;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels.FactoryMenu;
+using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
+using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
@@ -10,12 +12,9 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs
 {
-    public sealed class ImportViewModel : ModalVMBase
+    public sealed class ImportViewModel : ImportBase
     {
         private readonly MainViewModel _mainViewModel;
-
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
-
 
         #region Properties
 
@@ -83,10 +82,8 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Construcotors
 
 
-        public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel, Action<string, string, uint, byte> doNotification = null)
+        public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel, DoNotificationCallback doNotification = null) : base(doNotification)
         {
-            _doNotification = doNotification ?? _doNotification;
-
             _mainViewModel = mainViewModel;
             FactoryGeneralViewModel = factoryGeneralViewModel;
 
@@ -114,7 +111,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFilesChanged(importFile);
 
-            var instanceClient = InstanceClient.Import(path, (result) => { });
+            var instanceClient = InstanceClient.Import(path, DownloadResultHandler);
             MainModel.Instance.AddInstanceForm(instanceClient);
         }
 

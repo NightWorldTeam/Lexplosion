@@ -8,8 +8,8 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 {
     public abstract class ExportBase : ModalVMBase, INotifiable
     {
-        private Action<string, string, uint, byte> _doNotification;
-        public Action<string, string, uint, byte> DoNotification
+        private DoNotificationCallback _doNotification;
+        public DoNotificationCallback DoNotification
         {
             get => _doNotification; protected set
             {
@@ -160,9 +160,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
         #region Constructors
 
 
-        public ExportBase(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification)
+        public ExportBase(InstanceClient instanceClient, DoNotificationCallback doNotification)
         {
-            DoNotification = doNotification ?? DoNotification;
+            DoNotification = doNotification;
             _instanceClient = instanceClient;
             InstanceName = instanceClient.Name;
             IsFullExport = false;
@@ -236,28 +236,34 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 
         protected abstract void Action();
 
+        // todo translate
         protected void ExportResultHandler(ExportResult result)
         {
+            var message = GetExportResultMessage(result);
             switch (result)
             {
                 case ExportResult.Successful:
-                    DoNotification("Export Successful", "...", 5, 0);
+                    DoNotification("Всё прошло как по маслу :)", message, 5, 0);
                     break;
-                case ExportResult.TempPathError:
-                    DoNotification("Export Error", "TempPathError", 5, 1);
-                    break;
-                case ExportResult.FileCopyError:
-                    DoNotification("Export Error", "FileCopyError", 5, 1);
-                    break;
-                case ExportResult.InfoFileError:
-                    DoNotification("Export Error", "InfoFileError", 5, 1);
-                    break;
-                case ExportResult.ZipFileError:
-                    DoNotification("Export Error", "ZipFileError", 5, 1);
+                default:
+                    DoNotification("Что-то пошло не так :(", message, 5, 1);
                     break;
             }
         }
 
+
+        public static string GetExportResultMessage(ExportResult exportResult) 
+        {
+            switch (exportResult)
+            {
+                case ExportResult.Successful: return "Всё прошло успешно";
+                case ExportResult.TempPathError: return "Ошибка создания временной директории";
+                case ExportResult.FileCopyError: return "Ошибка при копировании файлов";
+                case ExportResult.InfoFileError: return "Ошибка создания файла instanceInfo.json";
+                case ExportResult.ZipFileError: return "Ошибка создания zip архива";
+                default: return "Что-то нам не известное";
+            }
+        }
         #endregion Public & Protected Methods
     }
 }

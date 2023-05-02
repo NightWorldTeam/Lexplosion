@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Common.Models.InstanceFactory;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels.FactoryMenu;
+using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
@@ -12,7 +13,7 @@ namespace Lexplosion.Common.ViewModels.CurseforgeMarket
 {
     public sealed class CurseforgeMarketViewModel : VMBase
     {
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
         private readonly MainViewModel _mainViewModel;
         private readonly InstanceClient _instanceClient;
         private readonly CfProjectType _projectType;
@@ -27,7 +28,7 @@ namespace Lexplosion.Common.ViewModels.CurseforgeMarket
         private static readonly Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>> InstallingAddons = new Dictionary<InstanceClient, ObservableCollection<DownloadAddonFile>>();
         private static object _installingAddonsLocker = new object();
 
-        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, FactoryDLCModel factoryDLCModel, FactoryDLCVM factoryDLCVM, Action<string, string, uint, byte> doNotification = null)
+        public CurseforgeMarketViewModel(MainViewModel mainViewModel, InstanceClient instanceClient, CfProjectType addonsType, FactoryDLCModel factoryDLCModel, FactoryDLCVM factoryDLCVM, DoNotificationCallback doNotification = null)
         {
             _doNotification = doNotification ?? _doNotification;
             _mainViewModel = mainViewModel;

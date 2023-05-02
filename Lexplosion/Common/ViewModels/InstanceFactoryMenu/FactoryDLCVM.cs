@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Common.Models.InstanceFactory;
+using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
@@ -13,7 +14,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
         private readonly InstanceClient _instanceClient;
 
 
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
 
 
         #region Properties
@@ -214,7 +215,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
         #region Constructors
 
 
-        public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null)
+        public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient, DoNotificationCallback doNotification = null)
         {
             // Сделал динамическое обновление
             _doNotification = doNotification ?? _doNotification;
