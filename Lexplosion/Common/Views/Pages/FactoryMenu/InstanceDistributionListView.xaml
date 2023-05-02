@@ -95,12 +95,11 @@
                         x:Name="SuccessfulComplited"
                         Orientation="Horizontal"
                         Visibility="Collapsed">
-                        <!--  TODO Translate  -->
                         <TextBlock
                             Margin="0,8,0,0"
                             FontSize="12"
                             Foreground="White"
-                            Text="Скачивание сборки успешно завершено :)" />
+                            Text="{DynamicResource downloadSuccessfullyCompleted}" />
 
                         <Viewbox
                             Width="16"

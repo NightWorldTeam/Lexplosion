@@ -1,5 +1,7 @@
 ﻿using Lexplosion.Common.ModalWindow;
+using Lexplosion.Common.Models.InstanceForm;
 using Lexplosion.Controls;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 {
@@ -41,17 +43,17 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
         {
             switch (importResult) 
             {
-                case ImportResult.Successful:  return "Скачивание было успешно завершено";
+                case ImportResult.Successful:  return ResourceGetter.GetString("downloadSuccessfullyCompleted");
+                    
+                case ImportResult.ZipFileError:  return ResourceGetter.GetString("importResultZipFileError");
+                case ImportResult.GameVersionError:  return ResourceGetter.GetString("importResultGameVersionError");
+                case ImportResult.JavaDownloadError:  return ResourceGetter.GetString("importResultJavaDownloadError");
+                case ImportResult.IsOfflineMode:  return ResourceGetter.GetString("importResultIsOfflineMode");
 
-                case ImportResult.ZipFileError:  return "Ошибка открытия zip файла";
-                case ImportResult.GameVersionError:  return "Ошибка версии игры";
-                case ImportResult.JavaDownloadError:  return "Проблема со скачиванием Java";
-                case ImportResult.IsOfflineMode:  return "Оффлайн мод";
-
-                case ImportResult.MovingFilesError:  return "Ошибка при перемещении файлов";
-                case ImportResult.DownloadError:  return "Ошибка скачивания";
-                case ImportResult.DirectoryCreateError:  return "Ошибка с создание директории";
-                case ImportResult.Canceled:  return "Отменено";
+                case ImportResult.MovingFilesError:  return ResourceGetter.GetString("importResultMovingFilesError");
+                case ImportResult.DownloadError:  return ResourceGetter.GetString("importResultDownloadError");
+                case ImportResult.DirectoryCreateError:  return ResourceGetter.GetString("importResultDirectoryCreateError");
+                case ImportResult.Canceled:  return ResourceGetter.GetString("importResultCanceled");
 
                 default: return "Неизвестная ошибка!! лол";
             }

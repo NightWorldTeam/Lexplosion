@@ -23,6 +23,7 @@
     <s:String x:Key="unkick">Unkick</s:String>
     <s:String x:Key="rebootOnlineGame">Reboot OnlineGame</s:String>
     <s:String x:Key="offOnlineGame">Off OnlineGame</s:String>
+
     <!--  multiplayer status  -->
     <s:String x:Key="statusNone">No open worlds</s:String>
     <s:String x:Key="statusOpenWorld">Open for connection</s:String>
@@ -331,4 +332,15 @@
     <!--  Factory DLC  -->
     <s:String x:Key="refreshDLCList">Refresh DLC List</s:String>
     <s:String x:Key="dlcListRefreshing">Data refreshing...</s:String>
+
+    <!--  Import Result  -->
+    <s:String x:Key="importResultSuccesfulTitle">Everything is fine :)</s:String>
+    <s:String x:Key="importResultNotSuccesfulTitle">Something wrong :(</s:String>
+
+    <s:String x:Key="importResultSuccesful">Всё прошло успешно</s:String>
+    <s:String x:Key="importResultTempPathError">Error creating temporary directory</s:String>
+    <s:String x:Key="importResultFileCopyError">Error while copying files</s:String>
+    <s:String x:Key="importResultInfoFileError">Error creating instanceInfo.json file</s:String>
+    <s:String x:Key="importResultZipFileError">Error creating zip archive</s:String>
+    <s:String x:Key="importResultNotExists">Something we don't know</s:String>
 </ResourceDictionary>
