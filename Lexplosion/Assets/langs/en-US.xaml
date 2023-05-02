@@ -327,4 +327,8 @@
     <s:String x:Key="exportProperties">Export Properties</s:String>
     <s:String x:Key="shares">Shares</s:String>
     <s:String x:Key="noAvaliableShares">There are no shares available</s:String>
+
+    <!--  Factory DLC  -->
+    <s:String x:Key="refreshDLCList">Refresh DLC List</s:String>
+    <s:String x:Key="dlcListRefreshing">Data refreshing...</s:String>
 </ResourceDictionary>

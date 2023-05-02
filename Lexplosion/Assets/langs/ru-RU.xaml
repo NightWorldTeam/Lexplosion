@@ -365,4 +365,8 @@
     <s:String x:Key="exportProperties">Свойства экспорта</s:String>
     <s:String x:Key="shares">Раздачи</s:String>
     <s:String x:Key="noAvaliableShares">Доступные раздачи отсутствуют</s:String>
+
+    <!--  Factory DLC  -->
+    <s:String x:Key="refreshDLCList">Обновить список</s:String>
+    <s:String x:Key="dlcListRefreshing">Обновление данных...</s:String>
 </ResourceDictionary>

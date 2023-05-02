@@ -403,47 +403,144 @@
     </UserControl.Resources>
 
     <Grid>
+
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="0,10,0,0">
-                <TabControl
-                    HorizontalAlignment="Center"
+            <Grid>
+                <Button
+                    x:Name="RefreshButton"
+                    Margin="16,20,16,16"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
                     Background="Transparent"
-                    BorderBrush="Transparent"
-                    ItemContainerStyle="{StaticResource ButtonItemBinableStyle}"
-                    ItemsSource="{Binding AddonTabs}"
-                    SelectedIndex="{Binding SelectedAddonIndex, UpdateSourceTrigger=PropertyChanged}"
-                    TabStripPlacement="Top">
+                    Command="{Binding RefreshDLCDataCommand}"
+                    CommandParameter="{Binding CurrentAddonModel}">
 
-                    <TabControl.Resources>
-                        <Style TargetType="{x:Type TabPanel}">
-                            <Setter Property="HorizontalAlignment" Value="Center" />
+
+                    <Button.Style>
+                        <Style BasedOn="{StaticResource IconicButton}" TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="Yellow" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border
+                                            x:Name="ButtonBorder"
+                                            Background="Transparent"
+                                            RenderTransformOrigin="0.5, 0.5">
+                                            <Viewbox Width="16" Height="16">
+                                                <Path
+                                                    x:Name="Path"
+                                                    extension:PathExtension.StringData="{StaticResource Refresh}"
+                                                    Fill="White"
+                                                    Stretch="Fill" />
+
+                                            </Viewbox>
+                                            <Border.RenderTransform>
+                                                <RotateTransform Angle="0" />
+                                            </Border.RenderTransform>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsRefreshingDLC}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard x:Name="BorderBeginStoryboard">
+                                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                                            <DoubleAnimation
+                                                                RepeatBehavior="Forever"
+                                                                To="360"
+                                                                Duration="0:0:1" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+
+                                                <DataTrigger.ExitActions>
+                                                    <PauseStoryboard BeginStoryboardName="BorderBeginStoryboard" />
+                                                    <BeginStoryboard x:Name="BorderEndBeginStoryboard">
+                                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                                            <DoubleAnimation To="360" Duration="0:0:1" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+
+                                                <Setter TargetName="Path" Property="Opacity" Value="0.8" />
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </DataTrigger>
+
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
                         </Style>
-                    </TabControl.Resources>
 
-                    <TabControl.ContentTemplate>
-                        <!--  this is the body of the TabItem template  -->
-                        <DataTemplate>
-                            <StackPanel x:Name="DlcContainer" Loaded="DlcContainer_Loaded">
-                                <ListBox
-                                    ItemsSource="{Binding Content.CurrentAddonModel.InstalledAddons}"
-                                    Tag="{Binding BindsDirectlyToSource=True}"
-                                    Template="{StaticResource DLCHeaderControlTemplate}" />
+                    </Button.Style>
+                    <Button.ToolTip>
+                        <ToolTip
+                            Background="Black"
+                            BorderThickness="0"
+                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                            HorizontalOffset="-120"
+                            Placement="Relative"
+                            VerticalOffset="-25">
+                            <TextBlock
+                                MaxWidth="400"
+                                Foreground="White"
+                                TextWrapping="WrapWithOverflow">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsRefreshingDLC}" Value="True">
+                                                <Setter Property="Text" Value="{DynamicResource dlcListRefreshing}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsRefreshingDLC}" Value="False">
+                                                <Setter Property="Text" Value="{DynamicResource refreshDLCList}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
 
-                                <TextBlock
-                                    Margin="100"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Foreground="White"
-                                    Opacity="0.8"
-                                    Text="{Binding Content.CurrentAddonModel.EmptyListMessage}"
-                                    Visibility="{Binding Content.CurrentAddonModel.IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
-                            </StackPanel>
-                        </DataTemplate>
+                <StackPanel Margin="0,10,0,0">
+                    <TabControl
+                        HorizontalAlignment="Center"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        ItemContainerStyle="{StaticResource ButtonItemBinableStyle}"
+                        ItemsSource="{Binding AddonTabs}"
+                        SelectedIndex="{Binding SelectedAddonIndex, UpdateSourceTrigger=PropertyChanged}"
+                        TabStripPlacement="Top">
 
-                    </TabControl.ContentTemplate>
-                </TabControl>
-            </StackPanel>
+                        <TabControl.Resources>
+                            <Style TargetType="{x:Type TabPanel}">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                            </Style>
+                        </TabControl.Resources>
+
+                        <TabControl.ContentTemplate>
+                            <!--  this is the body of the TabItem template  -->
+                            <DataTemplate>
+                                <StackPanel x:Name="DlcContainer" Loaded="DlcContainer_Loaded">
+                                    <ListBox
+                                        ItemsSource="{Binding Content.CurrentAddonModel.InstalledAddons}"
+                                        Tag="{Binding BindsDirectlyToSource=True}"
+                                        Template="{StaticResource DLCHeaderControlTemplate}" />
+
+                                    <TextBlock
+                                        Margin="100"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Foreground="White"
+                                        Opacity="0.8"
+                                        Text="{Binding Content.CurrentAddonModel.EmptyListMessage}"
+                                        Visibility="{Binding Content.CurrentAddonModel.IsEmptyList, Converter={StaticResource ConvertBoolToVisibility}}" />
+                                </StackPanel>
+                            </DataTemplate>
+
+                        </TabControl.ContentTemplate>
+                    </TabControl>
+                </StackPanel>
+            </Grid>
         </ScrollViewer>
 
         <controls:LoadingBoard
