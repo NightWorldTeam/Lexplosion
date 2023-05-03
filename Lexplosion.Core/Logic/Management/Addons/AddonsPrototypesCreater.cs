@@ -6,7 +6,6 @@ using Lexplosion.Logic.Objects.Curseforge;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System.Linq;
-using System.Security.Cryptography;
 using System;
 
 namespace Lexplosion.Logic.Management.Addons
