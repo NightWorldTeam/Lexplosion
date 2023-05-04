@@ -50,21 +50,8 @@ namespace Lexplosion.Logic.Management.Instances
         }
 
         #region info
-
-        private string _author = "";
-        public string Author
-        {
-            get
-            {
-                return _addonPrototype?.AuthorName ?? _author;
-            }
-            set
-            {
-                _author = value;
-            }
-        }
-
         public string Name { get; private set; } = "";
+        public string Author { get; private set; } = "";
         public string Description { get; private set; } = "";
         public string Version { get; private set; } = "";
         public int DownloadCount { get; private set; } = 0;
@@ -204,11 +191,6 @@ namespace Lexplosion.Logic.Management.Instances
             WebsiteUrl = addonPrototype.WebsiteUrl;
 
             DownloadLogo(addonPrototype.LogoUrl);
-
-            addonPrototype.OnInfoUpdated += delegate ()
-            {
-                OnPropertyChanged(nameof(Author));
-            };
         }
 
         /// <summary>
@@ -644,7 +626,6 @@ namespace Lexplosion.Logic.Management.Instances
             InstalledAddonsFormat actualAddonsList = new InstalledAddonsFormat(); //актуальный список аддонов, то есть те аддоны которы действительно существуют и есть в списке. В конце именно этот спсиок будет сохранен в файл
             var existsCfMods = new HashSet<string>(); // айдишники модов которые действителньо существуют (есть и в списке и в папке) и скачаны с курсфорджа
             var existsMdMods = new HashSet<string>(); // аналогично existsCfMods, но для модринфа
-            var existsUnknownAddons = new HashSet<string>(); // аддоны, которые существуют (есть в папке и спсике), но не имеют источника
             var existsAddons = new Dictionary<string, SetValues<InstanceAddon, string, ProjectSource>>(); // ключ - имя файла, значение - экзмепляр,айдишник и источник проекта. Этот список нужен чтобы при прохожднии циклом по папке быстро определить был ли этот аддон в списке.
 
             using (InstalledAddons installedAddons = InstalledAddons.Get(modpackInfo.LocalId))
@@ -688,10 +669,6 @@ namespace Lexplosion.Logic.Management.Instances
                                     Value3 = ProjectSource.Modrinth
                                 };
                             }
-                            else
-                            {
-                                existsUnknownAddons.Add(installedAddon.ActualPath);
-                            }
                         }
                     }
                     else //всё остальное не тогаем. Просто перекидывеам в новый список
@@ -717,7 +694,6 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                     }
                 }
-
                 // теперь получаем инфу об известных нам модов с модринфа
                 if (existsMdMods.Count > 0)
                 {
@@ -744,29 +720,6 @@ namespace Lexplosion.Logic.Management.Instances
                     return addons;
                 }
 
-                var unknownAddons = new List<string>();
-                foreach (string fileAddr in files)
-                {
-                    string fileAddr_ = fileAddr.Replace('\\', '/');
-                    string extension = Path.GetExtension(fileAddr_);
-                    bool isAddonExtension = (extension == fileExtension), isDisable = (extension == DISABLE_FILE_EXTENSION);
-                    if (isAddonExtension || isDisable)
-                    {
-                        string xyi = fileAddr_.Replace(WithDirectory.DirectoryPath + "/instances/" + modpackInfo.LocalId + "/", "");
-                        if (!existsUnknownAddons.Contains(xyi) && !existsAddons.ContainsKey(xyi))
-                        {
-                            unknownAddons.Add(fileAddr);
-                        }
-                    }
-                }
-
-                Dictionary<string, IPrototypeAddon> addonsData = null;
-                if (unknownAddons.Count > 0)
-                {
-                    addonsData = AddonsPrototypesCreater.CreateFromFiles(modpackInfo, unknownAddons);
-                    Runtime.DebugWrite("addonsData lenght " + addonsData.Count);
-                }
-
                 int generatedAddonId = -1; // тут хранится следующий следющий сгенерированный айдишник. По сути переменная нужна чисто для оптимизации
                                            // Теперь проходмся по всем файлам в папке. Создаем InstalledAddonInfo для тех аддонов, которых не было в списке, или инфа о которых не была получена с курсфорджа
                 foreach (string fileAddr in files)
@@ -787,18 +740,21 @@ namespace Lexplosion.Logic.Management.Instances
 
                         // аддон есть в папке, но нет в списке, или он есть и в папке и в списке, но скачан нее с курсфорджа, то нужно добавить, так же генерируем айдишник для него
                         // ну или просто запрос был не успешным
-                        bool noSource = !existsAddons.ContainsKey(xyi);
-                        if (noSource || existsAddons[xyi].Value1 == null)
+                        bool notContains = !existsAddons.ContainsKey(xyi);
+                        if (notContains || existsAddons[xyi].Value1 == null)
                         {
+                            // тут пытаемся получить инфу о моде
+                            infoHandler(fileAddr_, out string displayName, out string authors, out string version, out string description, out string modId);
+
                             // определяем айдишник
                             int addonId_;
                             string addonId;
-                            if (noSource) // мод есть в папке, но нет в списке, значит установлен собственноручно
+                            if (notContains) // мод есть в папке, но нет в списке, значит установлен собственноручно
                             {
-                                if (addonsData != null && addonsData.ContainsKey(fileAddr))
-                                {
-                                    IPrototypeAddon addonData = addonsData[fileAddr];
+                                IPrototypeAddon addonData = AddonsPrototypesCreater.CreateFromFile(modpackInfo, fileAddr_);
 
+                                if (addonData != null)
+                                {
                                     addonData.DefineDefaultVersion();
                                     string addon_projectId = addonData.ProjectId;
 
@@ -833,20 +789,15 @@ namespace Lexplosion.Logic.Management.Instances
                                 addonId = existsAddons[xyi].Value2;
                             }
 
-                            Runtime.DebugWrite("unknown addon " + fileAddr_);
-
                             actualAddonsList[addonId] = new InstalledAddonInfo
                             {
-                                FileID = noSource ? "-1" : actualAddonsList[existsAddons[xyi].Value2].FileID,
+                                FileID = notContains ? "-1" : actualAddonsList[existsAddons[xyi].Value2].FileID,
                                 ProjectID = addonId,
                                 Type = addonType,
                                 IsDisable = isDisable,
                                 Path = isAddonExtension ? xyi : xyi.Remove(xyi.Length - 8), // если аддон выключен, то в спсиок его путь помещаем без расширения .disable
-                                Source = noSource ? ProjectSource.None : existsAddons[xyi].Value3
+                                Source = notContains ? ProjectSource.None : existsAddons[xyi].Value3
                             };
-
-                            // тут пытаемся получить инфу о моде
-                            infoHandler(fileAddr_, out string displayName, out string authors, out string version, out string description, out string modId);
 
                             addons.Add(new InstanceAddon(addonId, modpackInfo)
                             {
@@ -870,8 +821,6 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                     }
                 }
-
-                Runtime.DebugWrite("End");
 
                 installedAddons.Save(actualAddonsList);
             }
@@ -1144,7 +1093,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             var stateData = new DynamicStateData<SetValues<InstanceAddon, DownloadAddonRes>, InstallAddonState>();
 
-            var result = DownloadAddonRes.unknownError;
+            var result = DownloadAddonRes.UncnownError;
             stateData.StateChanged += (arg, state) =>
             {
                 if (state == InstallAddonState.EndDownload)

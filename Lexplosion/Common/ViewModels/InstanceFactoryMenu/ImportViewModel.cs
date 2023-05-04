@@ -2,8 +2,6 @@
 using Lexplosion.Common.Models;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels.FactoryMenu;
-using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
-using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
@@ -12,9 +10,12 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs
 {
-    public sealed class ImportViewModel : ImportBase
+    public sealed class ImportViewModel : ModalVMBase
     {
         private readonly MainViewModel _mainViewModel;
+
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+
 
         #region Properties
 
@@ -38,7 +39,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         public bool IsEmptyUploadedFiles { get => UploadedFiles.Count == 0; }
 
         /// <summary>
-        /// Делегат который принимает в качестве агрумента массив строк.
+        /// Делегат который вызывает принимает в качестве агрумента массив строк.
         /// Проходится по массиву и для каждого элемента начинает импорт.
         /// </summary>
         public Action<string[]> ImportAction { get; }
@@ -76,25 +77,16 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         }
 
 
-        private RelayCommand _cancelUploadCommand;
-        public RelayCommand CancelUploadCommand
-        {
-            get => _cancelUploadCommand ?? (_cancelUploadCommand = new RelayCommand(obj =>
-            {
-                var file = (ImportFile)obj;
-                var index = UploadedFiles.IndexOf(file);
-                UploadedFiles.RemoveAt(index);
-            }));
-        }
-
         #endregion Commands
 
 
         #region Construcotors
 
 
-        public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel, DoNotificationCallback doNotification = null) : base(doNotification)
+        public ImportViewModel(MainViewModel mainViewModel, FactoryGeneralViewModel factoryGeneralViewModel, Action<string, string, uint, byte> doNotification = null)
         {
+            _doNotification = doNotification ?? _doNotification;
+
             _mainViewModel = mainViewModel;
             FactoryGeneralViewModel = factoryGeneralViewModel;
 
@@ -117,17 +109,12 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         public async void Import(string path)
         {
 #nullable enable
-            var importFile = new ImportFile(path);
+            var importFile = new ImportFile(this, path);
 
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFilesChanged(importFile);
 
-            var instanceClient = InstanceClient.Import(path, (result) => 
-                {
-                    importFile.IsImportFinished = true;
-                    DownloadResultHandler(result);
-                }
-            );
+            var instanceClient = InstanceClient.Import(path, (result) => { });
             MainModel.Instance.AddInstanceForm(instanceClient);
         }
 

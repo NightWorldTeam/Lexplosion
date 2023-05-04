@@ -2,8 +2,6 @@
 
 namespace Lexplosion.Controls
 {
-    public delegate void DoNotificationCallback(string title, string message, uint time, byte type);
-
     public interface INotifiable
     {
         /// <summary>
@@ -12,6 +10,6 @@ namespace Lexplosion.Controls
         /// <para>Time - uint arg (time in seconds)</para>
         /// <para>Notification Type - byte arg (type of notification)</para>
         /// </summary>
-        DoNotificationCallback DoNotification { get; }
+        Action<string, string, uint, byte> DoNotification { get; }
     }
 }

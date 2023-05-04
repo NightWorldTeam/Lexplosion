@@ -20,8 +20,6 @@ namespace Lexplosion.Common.ViewModels
         public InstanceClient Client { get; } // Ссылка на InstanceClient
         public InstanceFormModel Model { get; } // Ссылка на InstanceFormModel
 
-        public event Action OnDeleted;
-
         /// <summary>
         /// Свойтсво отвечает за видимость DropdownMenu.
         /// Создано для возможности вручную скрывать DropdownMenu.
@@ -214,7 +212,6 @@ namespace Lexplosion.Common.ViewModels
             Model.InstanceClient.Delete();
             MainModel.Instance.LibraryController.RemoveByInstanceClient(Model.InstanceClient);
             Model.UpdateButtons();
-            OnDeleted?.Invoke();
         }
 
 

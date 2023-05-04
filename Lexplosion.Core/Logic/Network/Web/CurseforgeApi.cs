@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Lexplosion.Logic.FileSystem;
@@ -16,20 +17,9 @@ namespace Lexplosion.Logic.Network.Web
     {
         private const string Token = "$2a$10$Ky9zG9R9.ha.kf5BRrvwU..OGSvC0I2Wp56hgXI/4aRtGbizrm3we";
 
-        public class DataContainer<T>
+        class DataContainer<T>
         {
             public T data;
-        }
-
-        public class FingerprintSearchAnswer
-        {
-            public class SearchedFiles
-            {
-                public int id;
-                public CurseforgeFileInfo file;
-            }
-
-            public List<SearchedFiles> exactMatches;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -46,32 +36,6 @@ namespace Lexplosion.Logic.Network.Web
                 if (answer != null)
                 {
                     var data = JsonConvert.DeserializeObject<DataContainer<T>>(answer).data;
-                    return data ?? new T();
-                }
-
-                return new T();
-            }
-            catch
-            {
-                return new T();
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static T GetApiData<T>(string url, string jsonInputData) where T : new()
-        {
-            try
-            {
-                var headers = new Dictionary<string, string>()
-                {
-                    ["x-api-key"] = Token
-                };
-
-                string answer = ToServer.HttpPostJson(url, jsonInputData, out _, headers);
-                if (answer != null)
-                {
-                    var test = JsonConvert.DeserializeObject<DataContainer<T>>(answer);
-                    var data = test.data;
                     return data ?? new T();
                 }
 
@@ -147,23 +111,6 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files?gameVersion=" + gameVersion + modloaderStr);
         }
 
-        public static List<CurseforgeFileInfo> GetFilesFromFingerprints(List<string> fingerprint)
-        {
-            var jsonContent = "{\"fingerprints\": [" + string.Join(",", fingerprint) + "]}";
-
-            var data = GetApiData<FingerprintSearchAnswer>("https://api.curseforge.com/v1/fingerprints/432", jsonContent);
-            var result = new List<CurseforgeFileInfo>();
-            if (data?.exactMatches != null)
-            {
-                foreach (var item in data?.exactMatches)
-                {
-                    result.Add(item.file);
-                }
-            }
-
-            return result;
-        }
-
         public static List<CurseforgeFileInfo> GetProjectFiles(string projectId)
         {
             return GetApiData<List<CurseforgeFileInfo>>("https://api.curseforge.com/v1/mods/" + projectId + "/files");
@@ -181,10 +128,44 @@ namespace Lexplosion.Logic.Network.Web
 
         public static List<CurseforgeAddonInfo> GetAddonsInfo(string[] ids)
         {
+            // TODO: заменить это на ToServer.HttpPostJson
             string jsonContent = "{\"modIds\": [" + string.Join(",", ids) + "]}";
 
-            var data = GetApiData<List<CurseforgeAddonInfo>>("https://api.curseforge.com/v1/mods", jsonContent);
-            return data ?? new List<CurseforgeAddonInfo>();
+            try
+            {
+                WebRequest req = WebRequest.Create("https://api.curseforge.com/v1/mods");
+                req.Method = "POST";
+                req.Headers.Add("x-api-key", Token);
+                req.ContentType = "application/json";
+
+                byte[] byteArray = Encoding.UTF8.GetBytes(jsonContent);
+                req.ContentLength = byteArray.Length;
+
+                using (Stream dataStream = req.GetRequestStream())
+                {
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                }
+
+                string answer;
+                using (WebResponse resp = req.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            answer = sr.ReadToEnd();
+                        }
+                    }
+                }
+
+                var data = JsonConvert.DeserializeObject<DataContainer<List<CurseforgeAddonInfo>>>(answer);
+
+                return data.data;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static CurseforgeInstanceInfo GetInstance(string id)
@@ -318,7 +299,7 @@ namespace Lexplosion.Logic.Network.Web
                         return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
-                            Value2 = DownloadAddonRes.unknownAddonType
+                            Value2 = DownloadAddonRes.UncnownAddonType
                         };
                 }
 
@@ -330,7 +311,7 @@ namespace Lexplosion.Logic.Network.Web
                 return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
-                    Value2 = DownloadAddonRes.unknownError
+                    Value2 = DownloadAddonRes.UncnownError
                 };
             }
         }
@@ -422,7 +403,7 @@ namespace Lexplosion.Logic.Network.Web
                         return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                         {
                             Value1 = null,
-                            Value2 = DownloadAddonRes.unknownAddonType
+                            Value2 = DownloadAddonRes.UncnownAddonType
                         };
                 }
 
@@ -434,7 +415,7 @@ namespace Lexplosion.Logic.Network.Web
                 return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
-                    Value2 = DownloadAddonRes.unknownError
+                    Value2 = DownloadAddonRes.UncnownError
                 };
             }
         }

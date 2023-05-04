@@ -101,7 +101,6 @@
     <Compile Include="Common\Models\Objects\FileDistributionWrapper.cs" />
     <Compile Include="Common\Models\Objects\ImportFile.cs" />
     <Compile Include="Common\Models\Objects\InstanceDistribution.cs" />
-    <Compile Include="Common\ViewModels\ModalVMs\InstanceTransfer\ImportBase.cs" />
     <Compile Include="Controls\ChangelogItem\ChangelogItem.cs" />
     <Compile Include="Controls\Curtains\Curtains.cs" />
     <Compile Include="Controls\DialogMessage\DialogMessage.cs" />

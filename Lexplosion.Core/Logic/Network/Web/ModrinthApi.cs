@@ -64,11 +64,6 @@ namespace Lexplosion.Logic.Network.Web
             }
         }
 
-        public static List<ModrinthTeam> GetTeam(string teamId)
-        {
-            return GetApiData<List<ModrinthTeam>>("https://api.modrinth.com/v2/team/" + teamId + "/members");
-        }
-
         public static List<ModrinthCategory> GetCategories()
         {
             return GetApiData<List<ModrinthCategory>>("https://api.modrinth.com/v2/tag/category");
@@ -114,16 +109,16 @@ namespace Lexplosion.Logic.Network.Web
             });
         }
 
-        public static List<ModrinthProjectInfo> GetProjects(string[] ids)
+        public static List<ModrinthProjectInfo> GetProjects(string[] filesId)
         {
             var files = new List<ModrinthProjectInfo>();
 
             StringBuilder str = new StringBuilder(1950);
-            for (int i = 0; i < ids.Length; i++)
+            for (int i = 0; i < filesId.Length; i++)
             {
-                str.Append(ids[i]);
+                str.Append(filesId[i]);
 
-                if (i == ids.Length - 1 || str.Length + 3 + ids[i + 1].Length > 1950)
+                if (i == filesId.Length - 1 || str.Length + 3 + filesId[i + 1].Length > 1950)
                 {
                     var data = GetApiData<List<ModrinthProjectInfo>>("https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]");
                     var tes = "https://api.modrinth.com/v2/projects?ids=[\"" + str.ToString() + "\"]";
@@ -186,7 +181,7 @@ namespace Lexplosion.Logic.Network.Web
                     return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                     {
                         Value1 = null,
-                        Value2 = DownloadAddonRes.unknownAddonType
+                        Value2 = DownloadAddonRes.UncnownAddonType
                     };
             }
 
@@ -253,7 +248,7 @@ namespace Lexplosion.Logic.Network.Web
                 return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
-                    Value2 = DownloadAddonRes.unknownError
+                    Value2 = DownloadAddonRes.UncnownError
                 };
             }
         }
@@ -309,7 +304,7 @@ namespace Lexplosion.Logic.Network.Web
                 return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {
                     Value1 = null,
-                    Value2 = DownloadAddonRes.unknownError
+                    Value2 = DownloadAddonRes.UncnownError
                 };
             }
         }

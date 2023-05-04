@@ -1,8 +1,6 @@
 ﻿using Lexplosion.Common.ModalWindow;
 using Lexplosion.Common.Models.Controllers;
 using Lexplosion.Common.Models.Objects;
-using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
-using Lexplosion.Controls;
 using Lexplosion.Logic.FileSystem;
 using System;
 using System.Collections.Generic;
@@ -10,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs
 {
-    public sealed class InstanceSharingListViewModel : ImportBase
+    public sealed class InstanceSharingListViewModel : ModalVMBase
     {
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+
+
         #region Properties
 
 
-        public ShareController ShareController => ShareController.Instance;
         public IEnumerable<InstanceDistribution> CurrentInstanceDistribution => ShareController.Instance.FileReceivers;
-
+        public int DistributionCount => ShareController.Instance.ReceiversCount;
 
         #endregion Properities
 
@@ -71,8 +71,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Constructors
 
 
-        public InstanceSharingListViewModel(DoNotificationCallback doNotification = null) : base(doNotification)
+        public InstanceSharingListViewModel(Action<string, string, uint, byte> doNotification = null)
         {
+            _doNotification = doNotification ?? _doNotification;
             LoadInstanceDistribution();
         }
 
@@ -97,5 +98,31 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 
 
         #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private void DownloadResultHandler(ImportResult importResult)
+        {
+            switch (importResult) 
+            {
+                case ImportResult.Successful: 
+                    {
+                        _doNotification("Download Sharing Instance", "Successful", 5, 0);
+                    }
+                    break;
+                default:
+                    {
+                        
+                    }
+                    break;
+            }
+
+            MainViewModel.ShowToastMessage("Download Sharing Instance", importResult.ToString());
+        }
+
+
+        #endregion Private Methods
     }
 }

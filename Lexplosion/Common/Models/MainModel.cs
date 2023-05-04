@@ -129,11 +129,9 @@ namespace Lexplosion.Common.Models
             LibraryController.AddInstance(new InstanceFormViewModel(_mainViewModel, instanceClient));
         }
 
-        public InstanceFormViewModel AddInstanceForm(InstanceClient instanceClient, InstanceDistribution instanceDistribution)
+        public void AddInstanceForm(InstanceClient instanceClient, InstanceDistribution instanceDistribution)
         {
-            var instanceFormVM = new InstanceFormViewModel(_mainViewModel, instanceClient, instanceDistribution);
-            LibraryController.AddInstance(instanceFormVM);
-            return instanceFormVM;
+            LibraryController.AddInstance(new InstanceFormViewModel(_mainViewModel, instanceClient, instanceDistribution));
         }
 
 

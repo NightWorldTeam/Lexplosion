@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
-using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
@@ -9,7 +8,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
 {
     public sealed class ExportViewModel : ExportBase
     {
-        public ExportViewModel(InstanceClient instanceClient, DoNotificationCallback doNotification = null) : base(instanceClient, doNotification)
+        public ExportViewModel(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null) : base(instanceClient, doNotification)
         {
 
         }

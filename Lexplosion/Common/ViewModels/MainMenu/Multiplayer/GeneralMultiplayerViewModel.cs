@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Common.Models;
-using Lexplosion.Controls;
 using Lexplosion.Logic.Management;
 using System;
 
@@ -7,7 +6,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 {
     public sealed class GeneralMultiplayerViewModel : VMBase
     {
-        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
+        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
 
         public MultiplayerModel Model { get; }
 
@@ -40,7 +39,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
         #region Constructors
 
 
-        public GeneralMultiplayerViewModel(DoNotificationCallback doNotification = null)
+        public GeneralMultiplayerViewModel(Action<string, string, uint, byte> doNotification = null)
         {
             _doNotification = doNotification ?? _doNotification;
             Model = new MultiplayerModel();

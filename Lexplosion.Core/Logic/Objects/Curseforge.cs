@@ -159,18 +159,6 @@ namespace Lexplosion.Logic.Objects.Curseforge
 
     public class CurseforgeFileInfo
     {
-        public class Hashes
-        {
-            public string value;
-            public Algorithm algo;
-
-            public enum Algorithm
-            {
-                Sha1 = 1,
-                Md5 = 2
-            }
-        }
-
         public int id;
         public string modId;
         public string fileName;
@@ -179,9 +167,6 @@ namespace Lexplosion.Logic.Objects.Curseforge
         public List<string> gameVersions;
         public string fileDate;
         public int releaseType;
-        public List<Hashes> hashes;
-        public long fileLength;
-        public string fileFingerprint;
 
         // т.к разрабы курсфорджа дефектные рукожопы и конченные недоумки, которые не умеют писать код, то url иногда может быть null, поэтому придётся мутить костыли
         private string _downloadUrl;

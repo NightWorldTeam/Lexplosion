@@ -14,7 +14,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
             get => _instanceAddons; set
             {
                 _instanceAddons = value;
-                IsEmptyList = _instanceAddons.Count == 0;
+
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsEmptyList));
             }

@@ -414,7 +414,7 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        public static string HttpPostJson(string url, string data, out HttpStatusCode? httpStatus, Dictionary<string, string> headers = null)
+        public static string HttpPostJson(string url, string data, out HttpStatusCode? httpStatus)
         {
             httpStatus = null;
 
@@ -423,14 +423,6 @@ namespace Lexplosion.Logic.Network
                 WebRequest req = WebRequest.Create(url);
                 req.Method = "POST";
                 req.ContentType = "application/json";
-
-                if (headers != null)
-                {
-                    foreach (var header in headers)
-                    {
-                        req.Headers.Add(header.Key, header.Value);
-                    }
-                }
 
                 byte[] byteArray = Encoding.UTF8.GetBytes(data);
 

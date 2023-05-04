@@ -22,7 +22,7 @@ namespace Lexplosion.Logic.Objects.Modrinth
         public List<string> Loaders;
 
         [JsonProperty("project_type")]
-        public string Type; //mod, modpack, resourcepack, shader
+        public string Type;//mod, modpack, resourcepack, shader
     }
 
     public class ModrinthCtalogUnit : ModrinthProject
@@ -86,9 +86,6 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("gallery")]
         public List<Dictionary<string, string>> Images;
-
-        [JsonProperty("team")]
-        public string Team;
 
         public string WebsiteUrl
         {
@@ -193,24 +190,5 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("header")]
         public override string ParentCategoryId { get; set; }
-    }
-
-    public class ModrinthUser
-    {
-        [JsonProperty("username")]
-        public string Username;
-        [JsonProperty("name")]
-        public string Name;
-        [JsonProperty("avatar_url")]
-        public string Avatar_url;
-    }
-
-    public class ModrinthTeam
-    {
-        [JsonProperty("team_id")]
-        public string TeamId;
-
-        [JsonProperty("user")]
-        public ModrinthUser User;
     }
 }

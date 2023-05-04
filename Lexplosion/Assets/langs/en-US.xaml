@@ -23,7 +23,6 @@
     <s:String x:Key="unkick">Unkick</s:String>
     <s:String x:Key="rebootOnlineGame">Reboot OnlineGame</s:String>
     <s:String x:Key="offOnlineGame">Off OnlineGame</s:String>
-
     <!--  multiplayer status  -->
     <s:String x:Key="statusNone">No open worlds</s:String>
     <s:String x:Key="statusOpenWorld">Open for connection</s:String>
@@ -328,34 +327,4 @@
     <s:String x:Key="exportProperties">Export Properties</s:String>
     <s:String x:Key="shares">Shares</s:String>
     <s:String x:Key="noAvaliableShares">There are no shares available</s:String>
-
-    <!--  Factory DLC  -->
-    <s:String x:Key="refreshDLCList">Refresh DLC List</s:String>
-    <s:String x:Key="dlcListRefreshing">Data refreshing...</s:String>
-
-
-    <!--  Results  -->
-    <s:String x:Key="resultSuccesfulTitle">Everything is fine :)</s:String>
-    <s:String x:Key="resultNotSuccesfulTitle">Something is wrong :(</s:String>
-    <s:String x:Key="resultNotExists">We don't not what is it</s:String>
-
-    <!--  Import Result  -->
-    <s:String x:Key="exportResultSuccesful">Everything went well</s:String>
-    <s:String x:Key="exportResultTempPathError">Error creating temporary directory</s:String>
-    <s:String x:Key="exportResultFileCopyError">Error while copying files</s:String>
-    <s:String x:Key="exportResultInfoFileError">Error creating instanceInfo.json file</s:String>
-    <s:String x:Key="exportResultZipFileError">Error creating zip archive</s:String>
-
-    <!--  Export Result  -->
-    <s:String x:Key="importResultSuccesful">Everything went well</s:String>
-
-    <s:String x:Key="importResultZipFileError">Error opening zip file</s:String>
-    <s:String x:Key="importResultGameVersionError">Game version error</s:String>
-    <s:String x:Key="importResultJavaDownloadError">Java download problem</s:String>
-    <s:String x:Key="importResultIsOfflineMode">Offline mode</s:String>
-    <s:String x:Key="importResultMovingFilesError">Error while moving files</s:String>
-    <s:String x:Key="importResultDownloadError">Download error</s:String>
-    <s:String x:Key="importResultDirectoryCreateError">Error creating directory</s:String>
-
-
 </ResourceDictionary>
