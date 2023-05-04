@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Common.Models.ShowCaseMenu;
+using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
@@ -7,7 +8,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
 {
     public sealed class InstanceProfileViewModel : VMBase
     {
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
 
 
         #region Properties
@@ -122,7 +123,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
         #region Constructors
 
 
-        public InstanceProfileViewModel(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null)
+        public InstanceProfileViewModel(InstanceClient instanceClient, DoNotificationCallback doNotification = null)
         {
             _doNotification = doNotification ?? _doNotification;
             Model = new InstanceProfileModel(instanceClient);

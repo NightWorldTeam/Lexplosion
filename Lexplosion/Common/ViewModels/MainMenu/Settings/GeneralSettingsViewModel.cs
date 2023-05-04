@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Common.Models;
 using Lexplosion.Common.ViewModels.ModalVMs;
+using Lexplosion.Controls;
 using Lexplosion.Global;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
@@ -10,7 +11,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
 {
     public class GeneralSettingsViewModel : VMBase
     {
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
 
 
         #region Properties
@@ -42,7 +43,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
                     dialog.SelectedPath = Model.SystemPath.Replace('/', '\\');
-                    if (dialog.ShowDialog() == DialogResult.OK)
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         ChangedDirectory(dialog.SelectedPath);
                     }
@@ -57,7 +58,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
                 using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                 {
                     dialog.SelectedPath = Model.JavaPath.Replace('/', '\\');
-                    if (dialog.ShowDialog() == DialogResult.OK)
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         Model.JavaPath = dialog.SelectedPath;
                     }
@@ -90,7 +91,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
         #region Constructors
 
 
-        public GeneralSettingsViewModel(Action<string, string, uint, byte> doNotification)
+        public GeneralSettingsViewModel(DoNotificationCallback doNotification)
         {
             _doNotification = doNotification ?? _doNotification;
             Model = new GeneralSettingsModel();

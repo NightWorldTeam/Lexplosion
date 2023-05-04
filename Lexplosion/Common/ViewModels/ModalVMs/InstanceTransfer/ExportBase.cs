@@ -3,13 +3,14 @@ using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
 using Lexplosion.Controls;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 {
     public abstract class ExportBase : ModalVMBase, INotifiable
     {
-        private Action<string, string, uint, byte> _doNotification;
-        public Action<string, string, uint, byte> DoNotification
+        private DoNotificationCallback _doNotification;
+        public DoNotificationCallback DoNotification
         {
             get => _doNotification; protected set
             {
@@ -160,9 +161,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
         #region Constructors
 
 
-        public ExportBase(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification)
+        public ExportBase(InstanceClient instanceClient, DoNotificationCallback doNotification)
         {
-            DoNotification = doNotification ?? DoNotification;
+            DoNotification = doNotification;
             _instanceClient = instanceClient;
             InstanceName = instanceClient.Name;
             IsFullExport = false;
@@ -238,26 +239,31 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 
         protected void ExportResultHandler(ExportResult result)
         {
+            var message = GetExportResultMessage(result);
             switch (result)
             {
                 case ExportResult.Successful:
-                    DoNotification("Export Successful", "...", 5, 0);
+                    DoNotification(ResourceGetter.GetString("resultSuccesfulTitle"), message, 5, 0);
                     break;
-                case ExportResult.TempPathError:
-                    DoNotification("Export Error", "TempPathError", 5, 1);
-                    break;
-                case ExportResult.FileCopyError:
-                    DoNotification("Export Error", "FileCopyError", 5, 1);
-                    break;
-                case ExportResult.InfoFileError:
-                    DoNotification("Export Error", "InfoFileError", 5, 1);
-                    break;
-                case ExportResult.ZipFileError:
-                    DoNotification("Export Error", "ZipFileError", 5, 1);
+                default:
+                    DoNotification(ResourceGetter.GetString("resultNotSuccesfulTitle"), message, 5, 1);
                     break;
             }
         }
 
+
+        public static string GetExportResultMessage(ExportResult exportResult) 
+        {
+            switch (exportResult)
+            {
+                case ExportResult.Successful: return ResourceGetter.GetString("exportResultSuccesful");
+                case ExportResult.TempPathError: return ResourceGetter.GetString("exportTempPathError");
+                case ExportResult.FileCopyError: return ResourceGetter.GetString("exportFileCopyError");
+                case ExportResult.InfoFileError: return ResourceGetter.GetString("exportInfoFileError");
+                case ExportResult.ZipFileError: return ResourceGetter.GetString("exportZipFileError");
+                default: return ResourceGetter.GetString("resultNotExists");
+            }
+        }
         #endregion Public & Protected Methods
     }
 }

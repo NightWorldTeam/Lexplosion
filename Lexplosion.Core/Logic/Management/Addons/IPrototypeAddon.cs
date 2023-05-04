@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
+using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management.Addons
@@ -34,6 +35,8 @@ namespace Lexplosion.Logic.Management.Addons
         string Name { get; }
 
         string LogoUrl { get; }
+
+        event Action OnInfoUpdated;
     }
 
 }

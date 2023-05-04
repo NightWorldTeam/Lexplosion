@@ -5,6 +5,14 @@ using System;
 
 namespace Lexplosion.Common.Models.Objects
 {
+    public enum InstanceDistributionStates
+    {
+        InQuque,
+        Downloading,
+        DownloadComplitedSuccessful,
+        DownloadComplitedError,
+    }
+
     public sealed class InstanceDistribution : VMBase
     {
         private readonly FileReceiver _receiver;
@@ -19,15 +27,6 @@ namespace Lexplosion.Common.Models.Objects
         public string Name { get; }
         public string Author { get; }
 
-        private DistributionState _state = DistributionState.InProcess;
-        public DistributionState State
-        {
-            get => _state; private set
-            {
-                _state = value;
-                OnPropertyChanged();
-            }
-        }
         // TODO: после завершения скачивания нужно, чтобы перезапускать не пришлось
         private double _speed = 0.0000;
         public double Speed
@@ -49,6 +48,15 @@ namespace Lexplosion.Common.Models.Objects
             }
         }
 
+        private InstanceDistributionStates _instanceState = InstanceDistributionStates.InQuque;
+        public InstanceDistributionStates InstanceState 
+        {
+            get => _instanceState; private set 
+            {
+                _instanceState = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion Properties
 
@@ -62,29 +70,36 @@ namespace Lexplosion.Common.Models.Objects
             _resultHandler = resultHandler;
             Name = fileReceiver.Name;
             Author = fileReceiver.OwnerLogin;
-            State = fileReceiver.GetState;
             fileReceiver.ProcentUpdate += FileReceiver_ProcentUpdate;
             fileReceiver.SpeedUpdate += FileReceiver_SpeedUpdate;
         }
 
 
         #endregion Constructors
-
+            
 
         #region Public Methods
 
 
         public void Download()
         {
-            State = DistributionState.InProcess;
-            _instanceClient = InstanceClient.Import(_receiver, DownloadResultHandler);
-            MainModel.Instance.AddInstanceForm(_instanceClient, this);
+            InstanceState = InstanceDistributionStates.Downloading;
+            _instanceClient = InstanceClient.Import(_receiver, (result) => 
+                {
+                    if (result == ImportResult.Successful) 
+                    {
+                        InstanceState = InstanceDistributionStates.DownloadComplitedSuccessful;
+                    }
+                    DownloadResultHandler(result);
+                }
+            );
+            MainModel.Instance.AddInstanceForm(_instanceClient, this).OnDeleted += OnDeletedInstance;
         }
 
         public void CancelDownload()
         {
             _receiver.CancelDownload();
-            State = DistributionState.InQueue;
+            InstanceState = InstanceDistributionStates.InQuque;
         }
 
 
@@ -115,7 +130,14 @@ namespace Lexplosion.Common.Models.Objects
                     MainModel.Instance.LibraryController.RemoveByInstanceClient(_instanceClient);
                     break;
             }
-    }
+        }
+
+        private void OnDeletedInstance() 
+        {
+            InstanceState = InstanceDistributionStates.InQuque;
+            Percentages = 0;
+            Speed = 0;
+        }
 
 
         #endregion Private Methods

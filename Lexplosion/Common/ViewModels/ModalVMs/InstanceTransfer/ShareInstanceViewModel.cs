@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Common.Models.Controllers;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
+using Lexplosion.Controls;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
 using System;
@@ -53,7 +54,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Constructors
 
 
-        public ShareInstanceViewModel(InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null) : base(instanceClient, doNotification)
+        public ShareInstanceViewModel(InstanceClient instanceClient, DoNotificationCallback doNotification = null) : base(instanceClient, doNotification)
         {
         }
 

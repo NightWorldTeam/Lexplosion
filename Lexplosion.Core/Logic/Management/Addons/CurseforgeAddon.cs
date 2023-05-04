@@ -5,6 +5,7 @@ using Lexplosion.Logic.Objects;
 using System.Collections.Generic;
 using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -21,6 +22,21 @@ namespace Lexplosion.Logic.Management.Addons
             _addonInfo = addonInfo;
             _instanceData = instanceData;
             _projectId = addonInfo.id;
+        }
+
+        public CurseforgeAddon(BaseInstanceData instanceData, CurseforgeFileInfo fileInfo)
+        {
+            _instanceData = instanceData;
+            _projectId = fileInfo.modId;
+            _versionInfo = fileInfo;
+        }
+
+        public CurseforgeAddon(BaseInstanceData instanceData, CurseforgeAddonInfo addonInfo, CurseforgeFileInfo fileInfo)
+        {
+            _addonInfo = addonInfo;
+            _instanceData = instanceData;
+            _projectId = addonInfo.id;
+            _versionInfo = fileInfo;
         }
 
         private CurseforgeAddon(BaseInstanceData instanceData, string projectId)
@@ -128,7 +144,21 @@ namespace Lexplosion.Logic.Management.Addons
             }
         }
 
-        public void DefineDefaultVersion() => DefaineLatesVersion_();
+        public void DefineDefaultVersion()
+        {
+            if (_versionInfo != null)
+            {
+                if (_addonInfo == null)
+                {
+                    _addonInfo = CurseforgeApi.GetAddonInfo(_projectId);
+                }
+            }
+            else
+            {
+                DefaineLatesVersion_();
+            }
+        }
+
         public void DefineLatestVersion() => DefaineLatesVersion_();
 
         private CurseforgeFileInfo GetLastFile(string gameVersion, List<CurseforgeFileInfo> addonInfo, List<CurseforgeAddonInfo.GameVersionAddon> supportAddonInfo, AddonType? addonType)
@@ -197,5 +227,7 @@ namespace Lexplosion.Logic.Management.Addons
             var lastFile = GetLastFile(_instanceData.GameVersion, _addonInfo.latestFiles, _addonInfo.latestFilesIndexes, (AddonType)(_addonInfo.classId ?? 0));
             return lastFile != null && lastFile.id > addonFileId.ToInt32();
         }
+
+        public event Action OnInfoUpdated;
     }
 }

@@ -52,7 +52,8 @@
                             Background="Transparent"
                             Command="{Binding DataContext.DownloadInstanceCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                             CommandParameter="{Binding}"
-                            Style="{StaticResource IconicButton}">
+                            Style="{StaticResource IconicButton}"
+                            Visibility="{Binding IsDownloadComplitedSuccessful}">
                             <Viewbox Width="20">
                                 <Path
                                     Data="M220 896q-24 0-42-18t-18-42V693h60v143h520V693h60v143q0 24-18 42t-42 18H220Zm260-153L287 550l43-43 120 120V256h60v371l120-120 43 43-193 193Z"
@@ -89,17 +90,45 @@
                         </Grid>
                         <ProgressBar Height="5" Value="{Binding Percentages, Mode=OneWay}" />
                     </StackPanel>
+
+                    <StackPanel
+                        x:Name="SuccessfulComplited"
+                        Orientation="Horizontal"
+                        Visibility="Collapsed">
+                        <TextBlock
+                            Margin="0,8,0,0"
+                            FontSize="12"
+                            Foreground="White"
+                            Text="{DynamicResource downloadSuccessfullyCompleted}" />
+
+                        <Viewbox
+                            Width="16"
+                            Height="16"
+                            Margin="135,6,0,0">
+                            <Path
+                                Data="M21.05 33.1 35.2 18.95l-2.3-2.25-11.85 11.85-6-6-2.25 2.25ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
+                                Fill="#00C2FF"
+                                SnapsToDevicePixels="False"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 
             <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:DistributionState.InQueue}">
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static wpfObjects:InstanceDistributionStates.InQuque}">
                     <Setter TargetName="CancelButton" Property="Visibility" Value="Collapsed" />
                     <Setter TargetName="DownloadInformationContainer" Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding State}" Value="{x:Static lexplosion:DistributionState.InProcess}">
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static wpfObjects:InstanceDistributionStates.Downloading}">
                     <Setter TargetName="DownloadButton" Property="Visibility" Value="Collapsed" />
                     <Setter TargetName="DownloadInformationContainer" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding InstanceState}" Value="{x:Static wpfObjects:InstanceDistributionStates.DownloadComplitedSuccessful}">
+                    <Setter TargetName="DownloadButton" Property="Visibility" Value="Collapsed" />
+                    <Setter TargetName="CancelButton" Property="Visibility" Value="Collapsed" />
+                    <Setter TargetName="DownloadInformationContainer" Property="Visibility" Value="Collapsed" />
+                    <Setter TargetName="SuccessfulComplited" Property="Visibility" Value="Visible" />
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
@@ -193,7 +222,7 @@
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Visibility" Value="Collapsed" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DistributionCount}" Value="0">
+                                    <DataTrigger Binding="{Binding ShareController.ReceiversCount}" Value="0">
                                         <Setter Property="Visibility" Value="Visible" />
                                     </DataTrigger>
                                 </Style.Triggers>

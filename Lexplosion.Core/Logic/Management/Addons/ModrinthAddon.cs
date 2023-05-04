@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
+using System;
+using System.Threading;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -23,6 +25,8 @@ namespace Lexplosion.Logic.Management.Addons
             _addonInfo = addonInfo;
             _instanceData = instanceData;
             _projectId = addonInfo.ProjectId;
+
+            SetAuthor();
         }
 
         public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectFile addonFileInfo)
@@ -30,6 +34,16 @@ namespace Lexplosion.Logic.Management.Addons
             _instanceData = instanceData;
             _projectId = addonFileInfo.ProjectId;
             _fileId = addonFileInfo.FileId;
+        }
+
+        public ModrinthAddon(BaseInstanceData instanceData, ModrinthProjectInfo addonInfo, ModrinthProjectFile addonFileInfo)
+        {
+            _instanceData = instanceData;
+            _projectId = addonFileInfo.ProjectId;
+            _addonInfo = addonInfo;
+            _fileId = addonFileInfo.FileId;
+
+            SetAuthor();
         }
 
         private ModrinthAddon(BaseInstanceData instanceData, string projectId)
@@ -64,10 +78,7 @@ namespace Lexplosion.Logic.Management.Addons
 
         public string AuthorName
         {
-            get
-            {
-                return "";
-            }
+            get; private set;
         }
 
         public string Description
@@ -103,6 +114,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             get => ProjectSource.Modrinth;
         }
+        #endregion
 
         public List<AddonDependencie> Dependecies
         {
@@ -131,7 +143,20 @@ namespace Lexplosion.Logic.Management.Addons
                 return list;
             }
         }
-        #endregion
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetAuthor()
+        {
+            ThreadPool.QueueUserWorkItem(delegate (object state)
+            {
+                List<ModrinthTeam> teamsData = ModrinthApi.GetTeam(_addonInfo.Team);
+                if (teamsData.Count > 0)
+                {
+                    AuthorName = teamsData[0]?.User?.Username;
+                    OnInfoUpdated?.Invoke();
+                }
+            });
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DefaineLatesVersion_()
@@ -145,6 +170,7 @@ namespace Lexplosion.Logic.Management.Addons
             if (_addonInfo == null)
             {
                 _addonInfo = ModrinthApi.GetProject(_projectId);
+                SetAuthor();
             }
 
             if (_fileId != null)
@@ -165,6 +191,7 @@ namespace Lexplosion.Logic.Management.Addons
             if (_addonInfo == null)
             {
                 _addonInfo = ModrinthApi.GetProject(_projectId);
+                SetAuthor();
             }
 
             DefaineLatesVersion_();
@@ -188,5 +215,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             return _addonInfo.Versions[_addonInfo.Versions.Count() - 1] != addonFileId;
         }
+
+        public event Action OnInfoUpdated;
     }
 }

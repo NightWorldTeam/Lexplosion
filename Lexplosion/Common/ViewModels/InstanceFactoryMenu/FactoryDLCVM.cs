@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Common.Models.InstanceFactory;
+using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Tools;
 using System;
@@ -13,7 +14,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
         private readonly InstanceClient _instanceClient;
 
 
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
 
 
         #region Properties
@@ -137,13 +138,84 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
         }
 
 
+        private bool _isRefreshingDLC;
+        public bool IsRefreshingDLC
+        {
+            get => _isRefreshingDLC; private set 
+            {
+                _isRefreshingDLC = value;
+                Runtime.DebugWrite(value);
+                OnPropertyChanged();
+            }
+        }
+
+
+        private RelayCommand _refreshDLCDataCommand;
+        public RelayCommand RefreshDLCDataCommand 
+        {
+            get => _refreshDLCDataCommand ?? (_refreshDLCDataCommand = new RelayCommand(obj => 
+            {
+                if (IsRefreshingDLC) 
+                {
+                    return;
+                }
+
+                var model = (FactoryDLCModel)obj;
+
+                IsRefreshingDLC = true;
+                Lexplosion.Runtime.TaskRun(() =>
+                {
+                    switch (model.Type)
+                    {
+                        case CfProjectType.Mods:
+                            {
+                                var addons = InstanceAddon.GetInstalledMods(_instanceClient.GetBaseData);
+                                App.Current.Dispatcher.Invoke(new Action(() => 
+                                { 
+                                    model.InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
+                                    IsRefreshingDLC = false;
+                                }));
+                            }
+                            break;
+                        case CfProjectType.Resourcepacks:
+                            {
+                                var addons = InstanceAddon.GetInstalledResourcepacks(_instanceClient.GetBaseData);
+                                App.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    model.InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
+                                    IsRefreshingDLC = false;
+                                }));
+                            }
+                            break;
+                        case CfProjectType.Maps:
+                            {
+                                var addons = InstanceAddon.GetInstalledWorlds(_instanceClient.GetBaseData);
+                                App.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    model.InstalledAddons = new ObservableCollection<InstanceAddon>(addons);
+                                    IsRefreshingDLC = false;
+                                }));
+                            }
+                            break;
+                    }
+                });
+            })); 
+        }
+
+
+        private void RefreshDLCData(FactoryDLCModel model) 
+        {
+            
+        }
+
+
         #endregion Command
 
 
         #region Constructors
 
 
-        public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient, Action<string, string, uint, byte> doNotification = null)
+        public FactoryDLCVM(MainViewModel mainViewModel, InstanceClient instanceClient, DoNotificationCallback doNotification = null)
         {
             // Сделал динамическое обновление
             _doNotification = doNotification ?? _doNotification;

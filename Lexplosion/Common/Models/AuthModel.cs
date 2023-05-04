@@ -1,4 +1,5 @@
-﻿using Lexplosion.Global;
+﻿using Lexplosion.Controls;
+using Lexplosion.Global;
 using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
@@ -13,14 +14,14 @@ namespace Lexplosion.Common.Models
         private readonly Authentication _authentication;
 
         private readonly Action<string, bool, bool> _successfulAuthorization;
-        private readonly Action<string, string, uint, byte> _doNotification = (header, message, time, type) => { };
+        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
 
         /// <summary>
         /// Constructors for AuthModel with Messages;
         /// </summary>
         /// <param name="successfulAuthorization">Action<Nickname, IsAuth, IsNightWorldAccount></param>
         /// <param name="doNotification">Action<Header, Message, Time, Type></param>
-        public AuthModel(Action<string, bool, bool> successfulAuthorization, Action<string, string, uint, byte> doNotification)
+        public AuthModel(Action<string, bool, bool> successfulAuthorization, DoNotificationCallback doNotification)
         {
             _doNotification = doNotification;
             _successfulAuthorization = successfulAuthorization;
