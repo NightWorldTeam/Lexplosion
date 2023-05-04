@@ -13,6 +13,82 @@
     d:DesignWidth="700"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <!--  Придумать как сделать всё в одном стиле, либо сделать в нескольких стилей  -->
+        <Style
+            x:Key="RotateAnimatedButton"
+            BasedOn="{StaticResource IconicButton}"
+            TargetType="{x:Type Button}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            x:Name="ButtonBorder"
+                            Background="Transparent"
+                            RenderTransformOrigin="0.5, 0.5">
+
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                            <Border.RenderTransform>
+                                <RotateTransform Angle="0" />
+                            </Border.RenderTransform>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsRefreshingDLC}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="BorderBeginStoryboard">
+                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation
+                                                RepeatBehavior="Forever"
+                                                From="0"
+                                                To="360"
+                                                Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+
+                                <DataTrigger.ExitActions>
+                                    <PauseStoryboard BeginStoryboardName="BorderBeginStoryboard" />
+                                    <BeginStoryboard x:Name="BorderEndBeginStoryboard">
+                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation To="360" Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+
+                                <Setter Property="Opacity" Value="0.8" />
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding IsInstalling}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="AddonBorderBeginStoryboard">
+                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation
+                                                RepeatBehavior="Forever"
+                                                From="0"
+                                                To="360"
+                                                Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+
+                                <DataTrigger.ExitActions>
+                                    <PauseStoryboard BeginStoryboardName="AddonBorderBeginStoryboard" />
+                                    <BeginStoryboard x:Name="AddonBorderEndBeginStoryboard">
+                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
+                                            <DoubleAnimation To="360" Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+
+                                <Setter Property="Opacity" Value="0.8" />
+                            </DataTrigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <ControlTemplate x:Key="DLCHeaderControlTemplate">
             <Border
@@ -337,7 +413,7 @@
                         Margin="8,0,0,0"
                         Command="{Binding DataContext.UpdateCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                         CommandParameter="{Binding}"
-                        Style="{StaticResource IconicButton}"
+                        Style="{StaticResource RotateAnimatedButton}"
                         Visibility="{Binding UpdateAvailable, Converter={StaticResource ConvertBoolToVisibility}}">
                         <Viewbox Width="20" Height="20">
                             <Path
@@ -413,64 +489,19 @@
                     VerticalAlignment="Top"
                     Background="Transparent"
                     Command="{Binding RefreshDLCDataCommand}"
-                    CommandParameter="{Binding CurrentAddonModel}">
+                    CommandParameter="{Binding CurrentAddonModel}"
+                    Style="{StaticResource RotateAnimatedButton}">
 
+                    <Button.Content>
+                        <Viewbox Width="16" Height="16">
+                            <Path
+                                x:Name="Path"
+                                extension:PathExtension.StringData="{StaticResource Refresh}"
+                                Fill="White"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Button.Content>
 
-                    <Button.Style>
-                        <Style BasedOn="{StaticResource IconicButton}" TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="Yellow" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border
-                                            x:Name="ButtonBorder"
-                                            Background="Transparent"
-                                            RenderTransformOrigin="0.5, 0.5">
-                                            <Viewbox Width="16" Height="16">
-                                                <Path
-                                                    x:Name="Path"
-                                                    extension:PathExtension.StringData="{StaticResource Refresh}"
-                                                    Fill="White"
-                                                    Stretch="Fill" />
-
-                                            </Viewbox>
-                                            <Border.RenderTransform>
-                                                <RotateTransform Angle="0" />
-                                            </Border.RenderTransform>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding IsRefreshingDLC}" Value="True">
-                                                <DataTrigger.EnterActions>
-                                                    <BeginStoryboard x:Name="BorderBeginStoryboard">
-                                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
-                                                            <DoubleAnimation
-                                                                RepeatBehavior="Forever"
-                                                                From="0"
-                                                                To="360"
-                                                                Duration="0:0:1" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.EnterActions>
-
-                                                <DataTrigger.ExitActions>
-                                                    <PauseStoryboard BeginStoryboardName="BorderBeginStoryboard" />
-                                                    <BeginStoryboard x:Name="BorderEndBeginStoryboard">
-                                                        <Storyboard Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="(Border.RenderTransform).(RotateTransform.Angle)">
-                                                            <DoubleAnimation To="360" Duration="0:0:1" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </DataTrigger.ExitActions>
-
-                                                <Setter TargetName="Path" Property="Opacity" Value="0.8" />
-                                            </DataTrigger>
-
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-
-                    </Button.Style>
                     <Button.ToolTip>
                         <ToolTip
                             Background="Black"
