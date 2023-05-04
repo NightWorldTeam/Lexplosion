@@ -45,7 +45,7 @@ namespace Lexplosion.Logic.Network
                     var st = "{\"UUID-server\" : \"" + serverUUID + "\", \"type\": \"" + ClientType + "\", \"UUID\": \"" + UUID + "\", \"sessionToken\": \"" + sessionToken + "\"}";
                     byte[] sendData = Encoding.UTF8.GetBytes(st);
                     stream.Write(sendData, 0, sendData.Length); //авторизируемся на управляющем сервере
-                    Runtime.DebugWrite("ASZSAFDSDFAFSADSAFDFSDSD " + serverUUID);
+                    Runtime.DebugWrite("Server uuid: " + serverUUID);
 
                     {
                         byte[] buf = new byte[2];
@@ -73,8 +73,7 @@ namespace Lexplosion.Logic.Network
                                         }
                                         else
                                         {
-                                            Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString());
-                                            Runtime.DebugWrite("Nat type " + result.NetType);
+                                            Runtime.DebugWrite("My EndPoint " + result.PublicEndPoint.ToString() + " Nat type " + result.NetType);
 
                                             dataToSend = Encoding.UTF8.GetBytes(myExternalPort);
                                         }
