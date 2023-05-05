@@ -393,4 +393,14 @@
     <s:String x:Key="importResultMovingFilesError">Ошибка при перемещении файлов</s:String>
     <s:String x:Key="importResultDownloadError">Ошибка скачивания</s:String>
     <s:String x:Key="importResultDirectoryCreateError">Ошибка с создание директории</s:String>
+
+
+    <!--  Default  -->
+    <s:String x:Key="successful">Успешно</s:String>
+
+
+    <!--  Multiplayer  -->
+    <s:String x:Key="multiplayerReloaded">Сетевая игра перезапущена</s:String>
+    <s:String x:Key="actionOnThePlayer">Действие над игроком</s:String>
+    <s:String x:Key="playerCanJoinToServerAgain">У игрока {0} появилась возможность снова зайти на ваш сервер."</s:String>
 </ResourceDictionary>

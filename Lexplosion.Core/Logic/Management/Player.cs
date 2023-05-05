@@ -14,58 +14,34 @@ namespace Lexplosion.Logic.Management
             Unkick
         }
 
-        public string UUID { get; }
-        private Action<Player> _unkickedAction = null;
 
-        private string _nickname = "Player";
+        public readonly Action _kickMethod;
+        public readonly Action _unkickMethod;
+
+
+        public string UUID { get; }
+
         /// <summary>
         /// Содержит ник пользователя.
         /// <para>Стаднартное значение: Player</para>
         /// </summary>
-        public string Nickname
-        {
-            get => _nickname;
-            private set
-            {
-                _nickname = value;
-                OnPropertyChanged();
-            }
-        }
+        public string Nickname { get; set; } = "Player";
 
-        private byte[] _skin = null;
         /// <summary>
         /// Содержит аватар пользователя в виде массива байт.
         /// </summary>
-        public byte[] Skin
-        {
-            get => _skin;
-            private set
-            {
-                _skin = value;
-                OnPropertyChanged();
-            }
-        }
+        public byte[] Skin { get; set; } = null;
 
         /// <summary>
         /// Ссылка на профиль 
         /// </summary>
         public string ProfileUrl { get; private set; } = null;
 
-        private bool _isKicked;
         /// <summary>
         /// Отвечает на вопрос был ли кикнут пользователь.
         /// </summary>
-        public bool IsKicked
-        {
-            get => _isKicked; private set
-            {
-                _isKicked = value;
-                OnPropertyChanged();
-            }
-        }
+        public bool IsKicked { get; set; } = false;
 
-        protected Action _kickMethod;
-        protected Action _unkickMethod;
 
         public Player(string uuid, Action kickMethod, Action unkickMethod)
         {
@@ -91,54 +67,6 @@ namespace Lexplosion.Logic.Management
                 }
                 catch { }
             });
-        }
-
-        /// <summary>
-        /// Вызывает метод Kick или Unkick взависимости от статуса пользователя.
-        /// </summary>
-        protected UserAction AccessChange()
-        {
-            if (IsKicked)
-            {
-                Unkick();
-                return UserAction.Unkick;
-            }
-            else
-            {
-                Kick();
-                return UserAction.Kick;
-            }
-        }
-
-        /// <summary>
-        /// Кикает пользователя
-        /// </summary>
-        protected void Kick()
-        {
-            IsKicked = true;
-            _kickMethod();
-        }
-
-        /// <summary>
-        /// Снимает кик.
-        /// </summary>
-        protected void Unkick()
-        {
-            _unkickMethod();
-            _unkickedAction?.Invoke(this);
-            IsKicked = false;
-        }
-
-        /// <summary>
-        /// Присваивает значение делегату. Поменять значение можно только единажды.
-        /// </summary>
-        /// <param name="action"></param>
-        public void SetUnkickedAction(Action<Player> action)
-        {
-            if (_unkickedAction != null)
-                return;
-
-            _unkickedAction = action;
         }
     }
 }

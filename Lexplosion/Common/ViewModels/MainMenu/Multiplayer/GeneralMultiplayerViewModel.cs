@@ -1,13 +1,20 @@
 ﻿using Lexplosion.Common.Models;
 using Lexplosion.Controls;
 using Lexplosion.Logic.Management;
-using System;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 {
-    public sealed class GeneralMultiplayerViewModel : VMBase
+    public sealed class GeneralMultiplayerViewModel : VMBase, INotifiable
     {
-        private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
+        private DoNotificationCallback _doNotification;
+        public DoNotificationCallback DoNotification
+        {
+            get => _doNotification; private set
+            {
+                _doNotification = value ?? ((header, message, time, type) => { });
+            }
+        }
 
         public MultiplayerModel Model { get; }
 
@@ -29,7 +36,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             get => _multiplayerRefresh ?? (_multiplayerRefresh = new RelayCommand(obj =>
             {
                 LaunchGame.RebootOnlineGame();
-                _doNotification("Успешно", "Сетевая игра перезапущена", 5, 0);
+                // TODO : Translate
+                DoNotification(ResourceGetter.GetString("successful"), ResourceGetter.GetString("multiplayerReloaded"), 5, 0);
             }));
         }
 
@@ -42,7 +50,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 
         public GeneralMultiplayerViewModel(DoNotificationCallback doNotification = null)
         {
-            _doNotification = doNotification ?? _doNotification;
+            DoNotification = doNotification ?? DoNotification;
             Model = new MultiplayerModel();
         }
 

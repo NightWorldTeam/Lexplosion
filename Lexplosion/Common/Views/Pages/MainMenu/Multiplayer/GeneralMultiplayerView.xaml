@@ -92,7 +92,7 @@
                     <TextBlock
                         HorizontalAlignment="Center"
                         FontFamily="{DynamicResource FuturaBookC}"
-                        FontSize="20"
+                        FontSize="18"
                         Foreground="White"
                         Text="{DynamicResource connectedPlayers}" />
 
@@ -110,7 +110,7 @@
                         <ItemsControl ItemsSource="{Binding Model.Players}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="20,20,0,0" ShowGridLines="False">
+                                    <Grid Margin="0,20,0,0" ShowGridLines="False">
 
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="50" />

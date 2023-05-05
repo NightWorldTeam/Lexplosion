@@ -551,18 +551,24 @@
             Foreground="{DynamicResource BrandSolidColorBrush}"
             Maximum="100"
             Minimum="0">
-            <ProgressBar.Style> 
+            <ProgressBar.Style>
                 <Style BasedOn="{StaticResource DefaultProgressBar}" TargetType="{x:Type ProgressBar}">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Setter Property="IsIndeterminate" Value="False" />
                     <Setter Property="Value" Value="{Binding Model.DownloadModel.DownloadProgress}" />
                     <Style.Triggers>
-                        <!--  Importing  -->
-
-                        <DataTrigger Binding="{Binding Model.InstanceClient.IsUpdating, Mode=OneWay}" Value="True">
-                            <Setter Property="Value" Value="{Binding Model.DownloadModel.DownloadProgress, Mode=OneWay}" />
+                        <DataTrigger Binding="{Binding Model.DownloadModel.IsDownloadInProgress}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding Model.IsLaunch}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Model.DownloadModel.IsPrepare}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Setter Property="IsIndeterminate" Value="True" />
+                        </DataTrigger>
+
+                        <!--  Importing  -->
 
                         <DataTrigger Binding="{Binding Model.InstanceClient.IsComplete, Mode=OneWay}" Value="False">
                             <Setter Property="Value" Value="{Binding Model.InstanceDistribution.Percentages, Mode=OneWay}" />
