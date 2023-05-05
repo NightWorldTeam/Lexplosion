@@ -115,6 +115,8 @@ namespace Lexplosion.Common.Models.InstanceForm
             _formModel.UpperButton.ChangeFuncPlay();
             _formModel.UpdateLowerButton();
         }
+
+
         #endregion Private Methods
     }
 }

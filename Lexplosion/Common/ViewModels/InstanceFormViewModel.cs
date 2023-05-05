@@ -139,8 +139,13 @@ namespace Lexplosion.Common.ViewModels
                 {
                     Model.DownloadModel.HasProcents = false;
                     Model.DownloadModel.IsDownloadInProgress = false;
-                    Model.IsLaunch = true;
-                    Model.OverviewField = ResourceGetter.GetString("gameRunning");
+
+                    if (result == InstanceInit.Successful) 
+                    { 
+                        Model.IsLaunch = true;
+                        Model.OverviewField = ResourceGetter.GetString("gameRunning");
+                    }
+
                     Model.UpdateButtons();
                 };
 
