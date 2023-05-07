@@ -14,7 +14,6 @@ namespace Lexplosion.Logic.Management
             Unkick
         }
 
-
         public readonly Action _kickMethod;
         public readonly Action _unkickMethod;
 
