@@ -79,7 +79,7 @@
                                         FontSize="18"
                                         FontWeight="Bold"
                                         Foreground="#167FFC"
-                                        Text="NightWorldTeam" />
+                                        Text="NightWorldTeam Developers" />
                                     <StackPanel Margin="0,16,0,0">
                                         <Border
                                             Width="350"
