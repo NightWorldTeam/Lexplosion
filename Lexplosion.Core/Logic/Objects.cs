@@ -53,7 +53,7 @@ namespace Lexplosion.Logic.Objects
 
         public bool IsExists(string instancePath)
         {
-            if (Type == AddonType.Mods || Type == AddonType.Resourcepacks)
+            if (Type == AddonType.Mods || Type == AddonType.Resourcepacks || Type == AddonType.Shaders)
             {
                 try
                 {

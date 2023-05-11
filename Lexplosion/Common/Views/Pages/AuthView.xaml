@@ -482,18 +482,21 @@
                     <ComboBox
                         Height="30"
                         HorizontalAlignment="Center"
-                        FontFamily="{DynamicResource Poppins}"
+                        FontFamily="{DynamicResource SFProDisplay}"
                         SelectedIndex="{Binding Model.AccountTypeSelectedIndex, UpdateSourceTrigger=PropertyChanged}">
-                        <ComboBoxItem FontSize="14">
+                        <ComboBoxItem Margin="2,0" FontSize="14">
                             <TextBlock Text="{DynamicResource noAccount}" />
                         </ComboBoxItem>
-                        <ComboBoxItem FontSize="14" IsSelected="True">
+                        <ComboBoxItem
+                            Margin="2,0"
+                            FontSize="14"
+                            IsSelected="True">
                             <TextBlock Text="{DynamicResource accountNightWorld}" />
                         </ComboBoxItem>
-                        <ComboBoxItem FontSize="14">
+                        <ComboBoxItem Margin="2,0" FontSize="14">
                             <TextBlock Text="{DynamicResource accountMojang}" />
                         </ComboBoxItem>
-                        <ComboBoxItem FontSize="14">
+                        <ComboBoxItem Margin="2,0" FontSize="14">
                             <TextBlock Text="{DynamicResource accountMicrosoft}" />
                         </ComboBoxItem>
                         <!--<ComboBoxItem>

@@ -132,7 +132,7 @@ namespace Lexplosion
                 }
 
                 var arguments =
-                    "\"" + Assembly.GetExecutingAssembly().Location + "\" " +
+                    "\"" + Assembly.GetEntryAssembly().Location + "\" " +
                     "\"" + LaunсherSettings.URL.LauncherParts + "Lexplosion.exe?" + version + "\" " +
                     Process.GetCurrentProcess().Id + " " +
                     Convert.ToInt32(updaterOffsetLeft) + " " +

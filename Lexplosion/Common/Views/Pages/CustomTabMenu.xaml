@@ -13,7 +13,6 @@
     <UserControl.Resources>
         <Style x:Key="TabRadioButton" TargetType="{x:Type RadioButton}">
             <Setter Property="IsTabStop" Value="False" />
-            <Setter Property="IsTabStop" Value="False" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RadioButton}">
@@ -36,9 +35,34 @@
                                 </Border.Effect>
                             </Border>
 
-                            <ContentPresenter />
+                            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                <Viewbox Width="16" Height="16">
+                                    <!--  M11 40q-1.2 0-2.1-.9Q8 38.2 8 37v-7.15h3V37h26v-7.15h3V37q0 1.2-.9 2.1-.9.9-2.1.9Zm13-7.65-9.65-9.65 2.15-2.15 6 6V8h3v18.55l6-6 2.15 2.15Z  -->
+                                    <Path
+                                        x:Name="Path"
+                                        Data="{Binding Icon}"
+                                        Fill="{DynamicResource BrandSolidColorBrush}"
+                                        Stretch="Fill"
+                                        Stroke="{DynamicResource BrandSolidColorBrush}"
+                                        StrokeThickness="1" />
+                                </Viewbox>
+                                <TextBlock
+                                    x:Name="TextBlock"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource BrandSolidColorBrush}"
+                                    Text="{Binding Text}" />
+                            </StackPanel>
                         </Grid>
                         <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Path" Property="Stroke" Value="{DynamicResource TextBoxSolidColorBrush}" />
+                                <Setter TargetName="Path" Property="Fill" Value="{DynamicResource TextBoxSolidColorBrush}" />
+                                <Setter TargetName="TextBlock" Property="Foreground" Value="{DynamicResource TextBoxSolidColorBrush}" />
+                            </Trigger>
+
                             <Trigger Property="IsChecked" Value="False">
                                 <!--<Trigger.EnterActions>
                                     <BeginStoryboard>
@@ -92,26 +116,7 @@
                 GroupName="Tabs"
                 IsChecked="{Binding IsSelected}"
                 IsEnabled="{Binding IsEnable}"
-                Style="{StaticResource TabRadioButton}">
-                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
-                    <Viewbox Width="16" Height="16">
-                        <!--  M11 40q-1.2 0-2.1-.9Q8 38.2 8 37v-7.15h3V37h26v-7.15h3V37q0 1.2-.9 2.1-.9.9-2.1.9Zm13-7.65-9.65-9.65 2.15-2.15 6 6V8h3v18.55l6-6 2.15 2.15Z  -->
-                        <Path
-                            Data="{Binding Icon}"
-                            Fill="{DynamicResource BrandSolidColorBrush}"
-                            Stretch="Fill"
-                            Stroke="{DynamicResource BrandSolidColorBrush}"
-                            StrokeThickness="1" />
-                    </Viewbox>
-                    <TextBlock
-                        Margin="10,0,0,0"
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource BrandSolidColorBrush}"
-                        Text="{Binding Text}" />
-                </StackPanel>
-            </RadioButton>
+                Style="{StaticResource TabRadioButton}" />
         </DataTemplate>
     </UserControl.Resources>
 

@@ -369,4 +369,38 @@
     <!--  Factory DLC  -->
     <s:String x:Key="refreshDLCList">Обновить список</s:String>
     <s:String x:Key="dlcListRefreshing">Обновление данных...</s:String>
+
+
+    <!--  Results  -->
+    <s:String x:Key="resultSuccesfulTitle">Всё прошло как по маслу :)</s:String>
+    <s:String x:Key="resultNotSuccesfulTitle">Что-то пошло не так :(</s:String>
+    <s:String x:Key="resultNotExists">Что-то нам не известное</s:String>
+
+    <!--  Import Result  -->
+    <s:String x:Key="exportResultSuccesful">Всё прошло успешно</s:String>
+    <s:String x:Key="exportResultTempPathError">Ошибка создания временной директории</s:String>
+    <s:String x:Key="exportResultFileCopyError">Ошибка при копировании файлов</s:String>
+    <s:String x:Key="exportResultInfoFileError">Ошибка создания файла instanceInfo.json</s:String>
+    <s:String x:Key="exportResultZipFileError">Ошибка создания zip архива</s:String>
+
+    <!--  Export Result  -->
+    <s:String x:Key="importResultSuccesful">Всё прошло успешно</s:String>
+
+    <s:String x:Key="importResultZipFileError">Ошибка открытия zip файла</s:String>
+    <s:String x:Key="importResultGameVersionError">Ошибка версии игры</s:String>
+    <s:String x:Key="importResultJavaDownloadError">Проблема со скачиванием Java</s:String>
+    <s:String x:Key="importResultIsOfflineMode">Оффлайн мод</s:String>
+    <s:String x:Key="importResultMovingFilesError">Ошибка при перемещении файлов</s:String>
+    <s:String x:Key="importResultDownloadError">Ошибка скачивания</s:String>
+    <s:String x:Key="importResultDirectoryCreateError">Ошибка с создание директории</s:String>
+
+
+    <!--  Default  -->
+    <s:String x:Key="successful">Успешно</s:String>
+
+
+    <!--  Multiplayer  -->
+    <s:String x:Key="multiplayerReloaded">Сетевая игра перезапущена</s:String>
+    <s:String x:Key="actionOnThePlayer">Действие над игроком</s:String>
+    <s:String x:Key="playerCanJoinToServerAgain">У игрока {0} появилась возможность снова зайти на ваш сервер."</s:String>
 </ResourceDictionary>

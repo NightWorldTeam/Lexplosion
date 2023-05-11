@@ -20,6 +20,8 @@ namespace Lexplosion.Common.ViewModels
         public InstanceClient Client { get; } // Ссылка на InstanceClient
         public InstanceFormModel Model { get; } // Ссылка на InstanceFormModel
 
+        public event Action OnDeleted;
+
         /// <summary>
         /// Свойтсво отвечает за видимость DropdownMenu.
         /// Создано для возможности вручную скрывать DropdownMenu.
@@ -137,8 +139,13 @@ namespace Lexplosion.Common.ViewModels
                 {
                     Model.DownloadModel.HasProcents = false;
                     Model.DownloadModel.IsDownloadInProgress = false;
-                    Model.IsLaunch = true;
-                    Model.OverviewField = ResourceGetter.GetString("gameRunning");
+
+                    if (result == InstanceInit.Successful) 
+                    { 
+                        Model.IsLaunch = true;
+                        Model.OverviewField = ResourceGetter.GetString("gameRunning");
+                    }
+
                     Model.UpdateButtons();
                 };
 
@@ -212,6 +219,7 @@ namespace Lexplosion.Common.ViewModels
             Model.InstanceClient.Delete();
             MainModel.Instance.LibraryController.RemoveByInstanceClient(Model.InstanceClient);
             Model.UpdateButtons();
+            OnDeleted?.Invoke();
         }
 
 
@@ -243,7 +251,8 @@ namespace Lexplosion.Common.ViewModels
                     new CustomTab(
                         ResourceGetter.GetString("shares"),
                         "M6.54 55.08a1.91 1.91 0 0 1-.62-.1 2 2 0 0 1-1.38-2c0-.3 2.06-29.34 31.18-31.62V10.92a2 2 0 0 1 3.43-1.4l19.74 20.16a2 2 0 0 1 0 2.8L39.15 52.64a2 2 0 0 1-3.43-1.4V41c-19.44.74-27.41 13-27.49 13.15a2 2 0 0 1-1.69.93Zm33.18-39.26v7.41a2 2 0 0 1-1.93 2c-18.84.69-25.58 13.24-28 21.31 5-4.32 13.91-9.6 27.81-9.6h.09a2 2 0 0 1 2 2v7.41l15-15.26Z",
-                        new ShareInstanceViewModel(Client), true
+                        new ShareInstanceViewModel(Client),
+                        Global.GlobalData.User.AccountType == AccountType.NightWorld
                         )
                 }
                 ));

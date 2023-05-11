@@ -3,6 +3,7 @@ using Lexplosion.Logic.Management.Instances;
 using System;
 using System.Collections.Generic;
 using Lexplosion.Controls;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 {
@@ -236,17 +237,16 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
 
         protected abstract void Action();
 
-        // todo translate
         protected void ExportResultHandler(ExportResult result)
         {
             var message = GetExportResultMessage(result);
             switch (result)
             {
                 case ExportResult.Successful:
-                    DoNotification("Всё прошло как по маслу :)", message, 5, 0);
+                    DoNotification(ResourceGetter.GetString("resultSuccesfulTitle"), message, 5, 0);
                     break;
                 default:
-                    DoNotification("Что-то пошло не так :(", message, 5, 1);
+                    DoNotification(ResourceGetter.GetString("resultNotSuccesfulTitle"), message, 5, 1);
                     break;
             }
         }
@@ -256,12 +256,12 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
         {
             switch (exportResult)
             {
-                case ExportResult.Successful: return "Всё прошло успешно";
-                case ExportResult.TempPathError: return "Ошибка создания временной директории";
-                case ExportResult.FileCopyError: return "Ошибка при копировании файлов";
-                case ExportResult.InfoFileError: return "Ошибка создания файла instanceInfo.json";
-                case ExportResult.ZipFileError: return "Ошибка создания zip архива";
-                default: return "Что-то нам не известное";
+                case ExportResult.Successful: return ResourceGetter.GetString("exportResultSuccesful");
+                case ExportResult.TempPathError: return ResourceGetter.GetString("exportTempPathError");
+                case ExportResult.FileCopyError: return ResourceGetter.GetString("exportFileCopyError");
+                case ExportResult.InfoFileError: return ResourceGetter.GetString("exportInfoFileError");
+                case ExportResult.ZipFileError: return ResourceGetter.GetString("exportZipFileError");
+                default: return ResourceGetter.GetString("resultNotExists");
             }
         }
         #endregion Public & Protected Methods

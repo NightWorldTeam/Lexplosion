@@ -94,6 +94,12 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
             get => _updateCommand ?? (_updateCommand = new RelayCommand(obj =>
             {
                 var instanceAddon = (InstanceAddon)obj;
+
+                if (instanceAddon.IsInstalling)
+                { 
+                    return;
+                }
+
                 Lexplosion.Runtime.TaskRun(delegate ()
                 {
                     instanceAddon.Update();

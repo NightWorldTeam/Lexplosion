@@ -11,6 +11,7 @@
     xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Lexplosion.Common.ViewModels"
+    Title="Lexplosion"
     Width="944"
     Height="532"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"

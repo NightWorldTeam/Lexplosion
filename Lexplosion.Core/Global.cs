@@ -43,12 +43,12 @@ namespace Lexplosion.Global
         }
 
         public const string GAME_FOLDER_NAME = "lexplosion";
-
         public static string LauncherDataPath = Environment.ExpandEnvironmentVariables("%appdata%") + "/lexplosion-data";
         public static string gamePath = Environment.ExpandEnvironmentVariables("%appdata%") + "/." + GAME_FOLDER_NAME;
+
         public const string secretWord = "iDRCQxDMwGVCjWVe0ZEJ4u9DeG38BNL52x777trQ";
         public const string passwordKey = "ZEmMJ0ZaXQXuHu8tUnfdaCLCQaFgRjOP";
-        public const int version = 1682112300;
+        public const int version = 1683481344;
         public const int CommandServerPort = 54352;
         public const string DiscordAppID = "839856058703806484";
         public const string ServerIp = "194.61.2.176";

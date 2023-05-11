@@ -15,8 +15,8 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
         #region Properties
 
 
+        public ShareController ShareController => ShareController.Instance;
         public IEnumerable<InstanceDistribution> CurrentInstanceDistribution => ShareController.Instance.FileReceivers;
-        public int DistributionCount => ShareController.Instance.ReceiversCount;
 
 
         #endregion Properities

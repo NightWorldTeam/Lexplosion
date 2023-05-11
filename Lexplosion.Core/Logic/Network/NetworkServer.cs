@@ -396,14 +396,14 @@ namespace Lexplosion.Logic.Network
                             }
                             else
                             {
-                                Runtime.DebugWrite("Repet 1");
+                                Runtime.DebugWrite("Repeat 1");
                                 needRepeat = true;
                                 break;
                             }
                         }
                         else
                         {
-                            Runtime.DebugWrite("Repet 2");
+                            Runtime.DebugWrite("Repeat 2");
                             needRepeat = true;
                             break;
                         }

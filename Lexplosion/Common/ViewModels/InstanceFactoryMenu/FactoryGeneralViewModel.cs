@@ -52,6 +52,7 @@ namespace Lexplosion.Common.ViewModels.FactoryMenu
             }
         }
 
+
         #endregion Properties
 
 

@@ -39,8 +39,8 @@ namespace Lexplosion.Common.Models
             }
         }
 
-        private ObservableCollection<PlayerClub> _players;
-        public ObservableCollection<PlayerClub> Players
+        private ObservableCollection<PlayerWrapper> _players;
+        public ObservableCollection<PlayerWrapper> Players
         {
             get => _players; private set
             {
@@ -68,7 +68,7 @@ namespace Lexplosion.Common.Models
 
         public MultiplayerModel()
         {
-            Players = new ObservableCollection<PlayerClub>();
+            Players = new ObservableCollection<PlayerWrapper>();
             LaunchGame.StateChanged += OnPlayerStateChanged;
             LaunchGame.UserConnected += OnPlayerConnected;
             LaunchGame.UserDisconnected += OnPlayerDisconnected;
@@ -85,13 +85,13 @@ namespace Lexplosion.Common.Models
         {
             App.Current.Dispatcher.Invoke(delegate ()
             {
-                var playerClub = (PlayerClub)player;
+                var wrapper = new PlayerWrapper(player);
                 if (player != null)
                 {
-                    if (Players.Contains(playerClub))
-                        Players.Remove(playerClub);
+                    if (Players.Contains(wrapper))
+                        Players.Remove(wrapper);
 
-                    Players.Add(playerClub);
+                    Players.Add(wrapper);
                     IsEmptyPlayers = Players.Count == 0;
                 }
             });
@@ -101,14 +101,14 @@ namespace Lexplosion.Common.Models
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                //var playerClub = (PlayerClub)player;
-                //if (player != null)
-                //{
-                //    if (!player.IsKicked)
-                //        Players.Remove(playerClub);
-                //    player.SetUnkickedAction(RemoveObjFromList);
-                //    IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
-                //}
+                var wrapper = new PlayerWrapper(player);
+                if (player != null)
+                {
+                    if (!player.IsKicked)
+                        Players.Remove(wrapper);
+                    wrapper.SetUnkickedAction(RemoveObjFromList);
+                    IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
+                }
             });
         }
 
@@ -119,11 +119,11 @@ namespace Lexplosion.Common.Models
         #region Private Methods
 
 
-        private bool IsExistPlayers(PlayerClub player)
+        private bool IsExistPlayers(PlayerWrapper player)
         {
-            foreach (var pl in Players)
+            foreach (var wrapper in Players)
             {
-                if (pl.UUID == player.UUID)
+                if (wrapper.UUID == player.UUID)
                 {
                     return true;
                 }
@@ -133,8 +133,8 @@ namespace Lexplosion.Common.Models
 
         private void RemoveObjFromList(Player player)
         {
-            var playerClub = (PlayerClub)player;
-            Players.Remove(playerClub);
+            var wrapper = new PlayerWrapper(player);
+            Players.Remove(wrapper);
         }
 
         private void OnPlayerStateChanged(OnlineGameStatus status, string strangeString)
@@ -142,8 +142,10 @@ namespace Lexplosion.Common.Models
             App.Current.Dispatcher.Invoke(() =>
             {
                 GameStatus = status;
-                if (GameStatus == OnlineGameStatus.None)
+                if (GameStatus == OnlineGameStatus.None) 
+                {
                     Players?.Clear();
+                }
 
                 IsEmptyPlayers = true;
             });

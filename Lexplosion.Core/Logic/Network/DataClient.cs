@@ -198,7 +198,6 @@ namespace Lexplosion.Logic.Network
                     _fstream.Close();
                     _workWait.Set();
                 }
-
             }
         }
 
@@ -206,6 +205,7 @@ namespace Lexplosion.Logic.Network
         {
             _isManualClosed = true;
             Close(null);
+            Bridge?.Close();
         }
 
         public event Action<double> ProcentUpdate;
