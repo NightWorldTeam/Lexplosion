@@ -100,6 +100,7 @@
     <Compile Include="Logic\Management\Instances\PrototypeInstance.cs" />
     <Compile Include="Logic\Management\JavaChecker.cs" />
     <Compile Include="Logic\Management\LaunchGame.cs" />
+    <Compile Include="Logic\Management\MinecraftServerInstance.cs" />
     <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Logic\Management\Utils.cs" />

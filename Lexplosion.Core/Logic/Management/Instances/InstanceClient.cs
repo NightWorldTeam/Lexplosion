@@ -41,6 +41,7 @@ namespace Lexplosion.Logic.Management.Instances
         private string _externalId = null;
         private string _localId = null;
         private readonly PrototypeInstance _dataManager;
+        private HashSet<MinecraftServerInstance> _minecraftServers;
 
         private CancellationTokenSource _cancelTokenSource = null;
         private LaunchGame _gameManager = null;
@@ -949,7 +950,8 @@ namespace Lexplosion.Logic.Management.Instances
         /// </summary>
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="modloaderVersion">Версия модлоадера</param>
-        /// <param name="optifineVersion">Версия оптифайна. null если не нужен</param>
+        /// <param name="additionalInstaller">Оптифайн. Если не нужен, то null</param>
+        /// <param name="additionalInstallerVer">Версия оптифайна. null если не нужен</param>
         private void CreateFileStruct(ClientType modloader, string modloaderVersion, AdditionalInstallerType? additionalInstaller = null, string additionalInstallerVer = null)
         {
             Directory.CreateDirectory(WithDirectory.DirectoryPath + "/instances/" + _localId);
