@@ -503,10 +503,24 @@ namespace Lexplosion
             {
                 if (app.MainWindow != null)
                 {
-                    leftPos = app.MainWindow.Left;
-                    topPos = app.MainWindow.Top;
-                    app.MainWindow.Close();
-                    app.MainWindow = null;
+                    try
+                    {
+                        leftPos = app.MainWindow.Left;
+                        topPos = app.MainWindow.Top;
+                    }
+                    catch { }
+
+                    try
+                    {
+                        app.MainWindow.Close();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        app.MainWindow = null;
+                    }
+                    catch { }
                 }
             });
         }

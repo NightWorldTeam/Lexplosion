@@ -64,6 +64,7 @@ namespace Lexplosion.Common.Models.Objects
 
         public PlayerWrapper(Player player, DoNotificationCallback doNotification = null)
         {
+            Runtime.DebugWrite("Create wrapper " + player.Nickname + " " + player.GetHashCode());
             DoNotification = doNotification ?? DoNotification;
             _player = player;
         }
@@ -118,6 +119,16 @@ namespace Lexplosion.Common.Models.Objects
             _unkickedAction = action;
         }
 
+        public override bool Equals(object obj)
+        {
+            PlayerWrapper wrapperObj = obj as PlayerWrapper;
+            return wrapperObj?._player.Equals(_player) ?? false;
+        }
+
+        public override int GetHashCode()
+        {
+            return _player.GetHashCode();
+        }
 
         #endregion Public Methods
 

@@ -85,9 +85,10 @@ namespace Lexplosion.Common.Models
         {
             App.Current.Dispatcher.Invoke(delegate ()
             {
-                var wrapper = new PlayerWrapper(player);
                 if (player != null)
                 {
+                    var wrapper = new PlayerWrapper(player);
+
                     if (Players.Contains(wrapper))
                         Players.Remove(wrapper);
 
@@ -101,11 +102,13 @@ namespace Lexplosion.Common.Models
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                var wrapper = new PlayerWrapper(player);
                 if (player != null)
                 {
+                    var wrapper = new PlayerWrapper(player);
+
                     if (!player.IsKicked)
-                        Players.Remove(wrapper);
+                        Runtime.DebugWrite(Players.Remove(wrapper));
+
                     wrapper.SetUnkickedAction(RemoveObjFromList);
                     IsEmptyPlayers = (Players.Count == 0) && !player.IsKicked;
                 }
