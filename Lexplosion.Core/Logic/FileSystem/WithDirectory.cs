@@ -341,13 +341,15 @@ namespace Lexplosion.Logic.FileSystem
 
                         File.Copy(dirUnit, target);
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        Runtime.DebugWrite("FileCopyError exception " + e);
                         return ExportResult.FileCopyError;
                     }
                 }
                 else
                 {
+                    Runtime.DebugWrite("File not exists " + dirUnit);
                     return ExportResult.FileCopyError;
                 }
             }

@@ -7,6 +7,7 @@ using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
+using Lexplosion.Logic.FileSystem.StorageManagment;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -266,6 +267,39 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 return null;
+            }
+        }
+
+        public static T GetFile<T, U>(U handler) where U : IDataHandler<T>, IFileStorage
+        {
+            try
+            {
+                if (File.Exists(handler.FilePath))
+                {
+                    using (FileStream fstream = File.OpenRead(handler.FilePath))
+                    {
+                        byte[] fileBytes = new byte[fstream.Length];
+                        fstream.Read(fileBytes, 0, fileBytes.Length);
+                        fstream.Close();
+
+                        return handler.ConvertFromStorage(fileBytes);
+                    }
+                }
+
+                return default;
+            }
+            catch
+            {
+                try
+                {
+                    if (File.Exists(handler.FilePath))
+                    {
+                        File.Delete(handler.FilePath);
+                    }
+                }
+                catch { }
+
+                return default;
             }
         }
 

@@ -1185,7 +1185,10 @@ namespace Lexplosion.Logic.Management.Instances
 
             };
 
-            return WithDirectory.ExportInstance<ArchivedClientData>(_localId, filesList, exportFile, parameters, logoPath);
+            var res = WithDirectory.ExportInstance<ArchivedClientData>(_localId, filesList, exportFile, parameters, logoPath);
+            Runtime.DebugWrite(res);
+
+            return res;
         }
 
         private static ImportResult Import(in InstanceClient client, string zipFile)
