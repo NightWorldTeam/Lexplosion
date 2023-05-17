@@ -2,7 +2,7 @@
 {
     public interface IDataHandler<T>
     {
-        byte[] ConvertToStorage(T data);
-        T ConvertFromStorage(byte[] data);
+        void SaveToStorage(T data);
+        T LoadFromStorage();
     }
 }

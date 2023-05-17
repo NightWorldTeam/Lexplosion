@@ -7,6 +7,7 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Tools;
+using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 
 namespace Lexplosion.Logic.Management.Installers
 {
@@ -88,7 +89,7 @@ namespace Lexplosion.Logic.Management.Installers
 
             if (!_requiresUpdates)
             {
-                VersionManifest manifest_ = DataFilesManager.GetManifest(InstanceId, false);
+                VersionManifest manifest_ = DataFilesManager.GetData(new VersionManifestArgs(InstanceId, false));
                 if (manifest_ == null || manifest_.version == null || manifest_.version.gameVersion == null || manifest_.version.gameVersion == "")
                 {
                     nightworldManifest = NightWorldApi.GetInstanceManifest(InfoData.id);
@@ -382,7 +383,7 @@ namespace Lexplosion.Logic.Management.Installers
                 }
             }
 
-            DataFilesManager.SaveManifest(InstanceId, manifest);
+            DataFilesManager.SaveData(new VersionManifestArgs(InstanceId), manifest);
 
             if (errors != null)
             {

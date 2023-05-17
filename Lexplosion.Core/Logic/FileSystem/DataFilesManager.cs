@@ -270,112 +270,16 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public static T GetFile<T, U>(U handler) where U : IDataHandler<T>, IFileStorage
+        public static T GetData<T>(IDataHandlerArgs<T> args)
         {
-            try
-            {
-                if (File.Exists(handler.FilePath))
-                {
-                    using (FileStream fstream = File.OpenRead(handler.FilePath))
-                    {
-                        byte[] fileBytes = new byte[fstream.Length];
-                        fstream.Read(fileBytes, 0, fileBytes.Length);
-                        fstream.Close();
-
-                        return handler.ConvertFromStorage(fileBytes);
-                    }
-                }
-
-                return default;
-            }
-            catch
-            {
-                try
-                {
-                    if (File.Exists(handler.FilePath))
-                    {
-                        File.Delete(handler.FilePath);
-                    }
-                }
-                catch { }
-
-                return default;
-            }
+            var handler = args.Handler;
+            return handler.LoadFromStorage();
         }
 
-        public static void SaveManifest(string instanceId, VersionManifest data)
+        public static void SaveData<T>(IDataHandlerArgs<T> args, T data)
         {
-            SaveFile(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(data));
-            if (data.libraries != null)
-            {
-                if (data.version.additionalInstaller != null)
-                {
-                    var baseLibs = new Dictionary<string, LibInfo>();
-                    var additionalLibs = new Dictionary<string, LibInfo>();
-
-                    // в этом цикле разъединяем либрариесы и дополнительный отправляем в отадельные файлы
-                    foreach (var key in data.libraries.Keys)
-                    {
-                        LibInfo value = data.libraries[key];
-                        if (value.additionalInstallerType == null)
-                        {
-                            baseLibs[key] = value;
-                        }
-                        else
-                        {
-                            additionalLibs[key] = value;
-                        }
-                    }
-
-                    SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(baseLibs));
-
-                    if (additionalLibs != null && additionalLibs.Count > 0)
-                    {
-                        SaveFile(DirectoryPath + "/versions/additionalLibraries/" + data.version.additionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
-                    }
-                }
-                else
-                {
-                    SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
-                }
-            }
-        }
-
-        public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
-        {
-            VersionManifest data = GetFile<VersionManifest>(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json");
-            if (data == null)
-            {
-                return null;
-            }
-
-            if (includingLibraries)
-            {
-                var librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json") ?? new Dictionary<string, LibInfo>();
-
-                var installer = data.version?.additionalInstaller;
-                if (installer != null)
-                {
-                    var additionallibrarieData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/additionalLibraries/" + installer?.GetLibName + ".json");
-
-                    if (additionallibrarieData != null)
-                    {
-                        foreach (var lib in additionallibrarieData.Keys)
-                        {
-                            librariesData[lib] = additionallibrarieData[lib];
-                            librariesData[lib].additionalInstallerType = installer.type;
-                        }
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-
-                data.libraries = librariesData;
-            }
-
-            return data;
+            var handler = args.Handler;
+            handler.SaveToStorage(data);
         }
 
         public static InstalledAddonsFormat GetInstalledAddons(string instanceId)

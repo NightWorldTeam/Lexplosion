@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
+using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -59,7 +60,7 @@ namespace Lexplosion.Logic.Management.Installers
         {
             releaseIndex = 0;
 
-            Manifest = DataFilesManager.GetManifest(InstanceId, false);
+            Manifest = DataFilesManager.GetData(new VersionManifestArgs(InstanceId, false));
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (InfoData == null || InfoData.id == null)
@@ -236,7 +237,7 @@ namespace Lexplosion.Logic.Management.Installers
 
                     if (Manifest != null)
                     {
-                        DataFilesManager.SaveManifest(InstanceId, Manifest);
+                        DataFilesManager.SaveData(new VersionManifestArgs(InstanceId), Manifest);
 
                         if (_cancelToken.IsCancellationRequested)
                         {
@@ -473,7 +474,7 @@ namespace Lexplosion.Logic.Management.Installers
                 }
             }
 
-            DataFilesManager.SaveManifest(InstanceId, Manifest);
+            DataFilesManager.SaveData(new VersionManifestArgs(InstanceId), Manifest);
 
             return new InitData
             {
