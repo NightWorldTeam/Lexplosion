@@ -4,10 +4,9 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Lexplosion.Global;
-using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects;
-using static Lexplosion.Logic.FileSystem.WithDirectory;
 using Lexplosion.Logic.FileSystem.StorageManagment;
+using static Lexplosion.Logic.FileSystem.WithDirectory;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -280,25 +279,6 @@ namespace Lexplosion.Logic.FileSystem
         {
             var handler = args.Handler;
             handler.SaveToStorage(data);
-        }
-
-        public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
-        {
-            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
-
-            var data = DataFilesManager.GetFile<InstalledAddonsFormat>(path);
-            if (data == null)
-            {
-                return new InstalledAddonsFormat();
-            }
-
-            return data;
-        }
-
-        public static void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
-        {
-            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
-            DataFilesManager.SaveFile(path, JsonConvert.SerializeObject(data));
         }
     }
 }
