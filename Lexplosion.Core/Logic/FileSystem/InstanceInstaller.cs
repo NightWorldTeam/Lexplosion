@@ -39,8 +39,6 @@ namespace Lexplosion.Logic.FileSystem
             public Dictionary<string, AssetFile> objects;
         }
 
-        public delegate void ProcentUpdate(int totalDataCount, int nowDataCount);
-
         /// <summary>
         /// Эвент скачивнаия файла. string - имя файла, int - проценты. DownloadFileProgress - стадия
         /// </summary>

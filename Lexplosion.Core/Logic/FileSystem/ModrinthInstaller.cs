@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Linq;
+using System;
 using Newtonsoft.Json;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Management;
@@ -15,13 +16,11 @@ using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    class ModrinthInstaller : InstanceInstaller
+    class ModrinthInstaller : InstanceInstaller, ArchivedInstanceInstaller<InstanceManifest>
     {
         public ModrinthInstaller(string instanceId) : base(instanceId) { }
 
-        public delegate void Procent(int procent);
-
-        public event Procent MainFileDownloadEvent;
+        public event Action<int> MainFileDownloadEvent;
         public event ProcentUpdate AddonsDownloadEvent;
 
         public InstanceContent GetInstanceContent()
