@@ -1,0 +1,203 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Threading;
+using System.Linq;
+using System;
+using Newtonsoft.Json;
+using Lexplosion.Tools;
+using Lexplosion.Logic.Management;
+using Lexplosion.Logic.Objects;
+using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Network.Web;
+using static Lexplosion.Logic.FileSystem.WithDirectory;
+using static Lexplosion.Logic.FileSystem.DataFilesManager;
+
+namespace Lexplosion.Logic.FileSystem
+{
+    abstract class StandartInstanceInstaller<TManifest> : InstanceInstaller, IArchivedInstanceInstaller<TManifest>
+    {
+        public StandartInstanceInstaller(string instanceId) : base(instanceId) { }
+
+        public event Action<int> MainFileDownloadEvent;
+        public event ProcentUpdate AddonsDownloadEvent;
+
+        public InstanceContent GetInstanceContent()
+        {
+            var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json");
+            using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+            {
+                if (content != null)
+                {
+                    var data = new InstanceContent
+                    {
+                        Files = content.Files,
+                        FullClient = content.FullClient,
+                        InstalledAddons = null
+                    };
+
+                    if (content.InstalledAddons != null)
+                    {
+                        data.InstalledAddons = new InstalledAddonsFormat();
+
+                        foreach (string addonId in content.InstalledAddons)
+                        {
+                            if (installedAddons.ContainsKey(addonId))
+                            {
+                                data.InstalledAddons[addonId] = installedAddons[addonId];
+                            }
+                        }
+                    }
+
+                    return data;
+                }
+                else
+                {
+                    return new InstanceContent();
+                }
+            }
+        }
+
+        public void SaveInstanceContent(InstanceContent content)
+        {
+            DataFilesManager.SaveFile(WithDirectory.DirectoryPath + "/instances/" + instanceId + "/instanceContent.json",
+                JsonConvert.SerializeObject(new InstanceContentFile
+                {
+                    FullClient = content.FullClient,
+                    Files = content.Files,
+                    InstalledAddons = new List<string>(content.InstalledAddons.Keys.ToArray())
+                }));
+
+            using (InstalledAddons installedAddons = InstalledAddons.Get(instanceId))
+            {
+                foreach (var key in content.InstalledAddons.Keys)
+                {
+                    var elem = content.InstalledAddons[key];
+                    if (elem != null)
+                    {
+                        installedAddons[key] = elem;
+                    }
+                }
+
+                installedAddons.Save();
+            }
+        }
+
+        /// <summary>
+        /// Проверяет все ли файлы клиента присутсвуют
+        /// </summary>
+        public bool InvalidStruct(InstanceContent localFiles)
+        {
+            if (localFiles.Files == null || localFiles.InstalledAddons == null || !localFiles.FullClient)
+            {
+                return true;
+            }
+
+            foreach (InstalledAddonInfo addon in localFiles.InstalledAddons.Values)
+            {
+                if (addon == null)
+                {
+                    return true;
+                }
+
+                string instancePath = DirectoryPath + "/instances/" + instanceId + "/";
+
+                if (!addon.IsExists(instancePath))
+                {
+                    return true;
+                }
+            }
+
+            foreach (string file in localFiles.Files)
+            {
+                if (!File.Exists(DirectoryPath + "/instances/" + instanceId + file))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Вызывает когда нужно обработать разорхивированный архив со сборкой. 
+        /// Путь до папки, содержащей разорхивированный архив.
+        /// </summary>
+        /// <param name="unzupArchivePath"></param>
+        /// <returns>Манифест</returns>
+        protected abstract TManifest ArchiveHadnle(string unzupArchivePath);
+
+        /// <summary>
+        /// Скачивает архив с модпаком.
+        /// </summary>
+        /// <returns>
+        /// Возвращает манифест, полученный из архива.
+        /// </returns>
+        public TManifest DownloadInstance(string downloadUrl, string fileName, ref InstanceContent localFiles, CancellationToken cancelToken)
+        {
+            try
+            {
+                //удаляем старые файлы
+                if (localFiles.Files != null)
+                {
+                    foreach (string file in localFiles.Files)
+                    {
+                        DelFile(DirectoryPath + "/instances/" + instanceId + file);
+                    }
+                }
+
+                List<string> files = new List<string>();
+
+                string tempDir = CreateTempDir();
+
+                MainFileDownloadEvent?.Invoke(0);
+
+                var taskArgs = new TaskArgs
+                {
+                    PercentHandler = delegate (int percent)
+                    {
+                        _fileDownloadHandler?.Invoke(fileName, percent, DownloadFileProgress.PercentagesChanged);
+                        MainFileDownloadEvent?.Invoke(percent);
+                    },
+                    CancelToken = cancelToken
+                };
+
+                // скачивание архива
+                bool res = DownloadFile(downloadUrl, fileName, tempDir, taskArgs);
+
+                if (!res)
+                {
+                    _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Error);
+                    return default;
+                }
+                _fileDownloadHandler?.Invoke(fileName, 100, DownloadFileProgress.Successful);
+
+                if (Directory.Exists(tempDir + "dataDownload"))
+                {
+                    Directory.Delete(tempDir + "dataDownload", true);
+                }
+
+                // Извлекаем содержимое этого архима
+                Directory.CreateDirectory(tempDir + "dataDownload");
+                ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
+                DelFile(tempDir + fileName);
+
+                var data = GetFile<TManifest>(tempDir + "dataDownload/modrinth.index.json");
+
+                return ArchiveHadnle(tempDir + "dataDownload/");
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Скачивает все аддоны модпака из спика
+        /// </summary>
+        /// <returns>
+        /// Возвращает список ошибок.
+        /// </returns>
+        public abstract List<string> InstallInstance(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
+    }
+}

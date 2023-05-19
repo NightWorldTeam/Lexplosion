@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    abstract class ArchiveInstallManager<TInstaller, UManifest> where TInstaller: InstanceInstaller, ArchivedInstanceInstaller<UManifest>
+    abstract class ArchiveInstallManager<TInstaller, UManifest> where TInstaller: InstanceInstaller, IArchivedInstanceInstaller<UManifest>
     {
         private VersionManifest Manifest;
         private LastUpdates Updates;

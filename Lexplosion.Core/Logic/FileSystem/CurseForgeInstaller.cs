@@ -17,7 +17,7 @@ using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    class CurseforgeInstaller : InstanceInstaller, ArchivedInstanceInstaller<InstanceManifest>
+    class CurseforgeInstaller : InstanceInstaller, IArchivedInstanceInstaller<InstanceManifest>
     {
         public CurseforgeInstaller(string instanceId) : base(instanceId) { }
 

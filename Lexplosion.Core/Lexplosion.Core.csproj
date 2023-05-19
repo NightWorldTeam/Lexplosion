@@ -63,7 +63,8 @@
   <ItemGroup>
     <Compile Include="Enums.cs" />
     <Compile Include="Global.cs" />
-    <Compile Include="Logic\FileSystem\ArchivedInstanceInstaller.cs" />
+    <Compile Include="Logic\FileSystem\StandartInstanceInstaller.cs" />
+    <Compile Include="Logic\FileSystem\IArchivedInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\CurseForgeInstaller.cs" />
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
     <Compile Include="Logic\FileSystem\StorageManagment\DataHandlers\InstalledAddonsFormat.cs" />

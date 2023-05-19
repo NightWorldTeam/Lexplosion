@@ -16,7 +16,7 @@ using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    class ModrinthInstaller : InstanceInstaller, ArchivedInstanceInstaller<InstanceManifest>
+    class ModrinthInstaller : InstanceInstaller, IArchivedInstanceInstaller<InstanceManifest>
     {
         public ModrinthInstaller(string instanceId) : base(instanceId) { }
 

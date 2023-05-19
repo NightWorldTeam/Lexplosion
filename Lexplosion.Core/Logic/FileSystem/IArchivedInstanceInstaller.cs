@@ -10,7 +10,7 @@ using static Lexplosion.Logic.FileSystem.InstanceInstaller;
 
 namespace Lexplosion.Logic.FileSystem
 {
-    interface ArchivedInstanceInstaller<TManifest>
+    interface IArchivedInstanceInstaller<TManifest>
     {
         public InstanceContent GetInstanceContent();
         public void SaveInstanceContent(InstanceContent content);
