@@ -9,9 +9,7 @@ using Lexplosion.Tools;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Logic.Network.Web;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
-using static Lexplosion.Logic.FileSystem.DataFilesManager;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -21,6 +19,27 @@ namespace Lexplosion.Logic.FileSystem
 
         public event Action<int> MainFileDownloadEvent;
         public event ProcentUpdate AddonsDownloadEvent;
+
+        /// <summary>
+        /// Вызывает когда нужно обработать разорхивированный архив со сборкой. 
+        /// </summary>
+        /// <param name="unzupArchivePath">Путь до папки, содержащей разорхивированный архив.</param>
+        /// <param name="files">Список файлов клиента.</param>
+        /// <returns>Манифест</returns>
+        protected abstract TManifest ArchiveHadnle(string unzupArchivePath, out List<string> files);
+
+        /// <summary>
+        /// Скачивает все аддоны модпака из спика
+        /// </summary>
+        /// <returns>
+        /// Возвращает список ошибок.
+        /// </returns>
+        public abstract List<string> InstallInstance(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
+
+        protected void AddonsDownloadEventInvoke(int totalDataCount, int nowDataCount)
+        {
+            AddonsDownloadEvent?.Invoke(totalDataCount, nowDataCount);
+        }
 
         public InstanceContent GetInstanceContent()
         {
@@ -120,14 +139,6 @@ namespace Lexplosion.Logic.FileSystem
         }
 
         /// <summary>
-        /// Вызывает когда нужно обработать разорхивированный архив со сборкой. 
-        /// Путь до папки, содержащей разорхивированный архив.
-        /// </summary>
-        /// <param name="unzupArchivePath"></param>
-        /// <returns>Манифест</returns>
-        protected abstract TManifest ArchiveHadnle(string unzupArchivePath);
-
-        /// <summary>
         /// Скачивает архив с модпаком.
         /// </summary>
         /// <returns>
@@ -145,8 +156,6 @@ namespace Lexplosion.Logic.FileSystem
                         DelFile(DirectoryPath + "/instances/" + instanceId + file);
                     }
                 }
-
-                List<string> files = new List<string>();
 
                 string tempDir = CreateTempDir();
 
@@ -182,22 +191,24 @@ namespace Lexplosion.Logic.FileSystem
                 ZipFile.ExtractToDirectory(tempDir + fileName, tempDir + "dataDownload");
                 DelFile(tempDir + fileName);
 
-                var data = GetFile<TManifest>(tempDir + "dataDownload/modrinth.index.json");
+                var manifest = ArchiveHadnle(tempDir + "dataDownload/", out List<string> files);
+                localFiles.Files = files;
 
-                return ArchiveHadnle(tempDir + "dataDownload/");
+                try
+                {
+                    if (Directory.Exists(tempDir))
+                    {
+                        Directory.Delete(tempDir, true);
+                    }
+                }
+                catch { }
+
+                return manifest;
             }
             catch
             {
                 return default;
             }
         }
-
-        /// <summary>
-        /// Скачивает все аддоны модпака из спика
-        /// </summary>
-        /// <returns>
-        /// Возвращает список ошибок.
-        /// </returns>
-        public abstract List<string> InstallInstance(TManifest data, InstanceContent localFiles, CancellationToken cancelToken);
     }
 }

@@ -1,12 +1,7 @@
 ﻿using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Logic.Objects.Curseforge;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using static Lexplosion.Logic.FileSystem.InstanceInstaller;
 
 namespace Lexplosion.Logic.FileSystem
 {

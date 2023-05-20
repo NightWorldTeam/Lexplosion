@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 using Lexplosion.Logic.Network;
@@ -12,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    abstract class ArchiveInstallManager<TInstaller, UManifest> where TInstaller: InstanceInstaller, IArchivedInstanceInstaller<UManifest>
+    abstract class ArchiveInstallManager<TInstaller, UManifest, BProjectInfo> : IInstallManager where TInstaller : InstanceInstaller, IArchivedInstanceInstaller<UManifest>
     {
         private VersionManifest Manifest;
         private LastUpdates Updates;
@@ -20,7 +17,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         private string InstanceId;
         private InstancePlatformData InfoData;
-        protected object ProjectInfo;
+        protected BProjectInfo ProjectInfo;
 
         private bool BaseFilesIsCheckd = false;
         private bool onlyBase;
@@ -50,14 +47,50 @@ namespace Lexplosion.Logic.Management.Installers
             _installer = installer;
         }
 
+        /// <summary>
+        /// Получает информацию о проекте.
+        /// </summary>
+        /// <param name="projectId">ID проекта</param>
+        /// <param name="projectVersion">Версия проекта</param>
+        /// <returns>
+        /// Объект, содержащий нужную инфу о пректе.
+        /// </returns>
+        protected abstract BProjectInfo GetProjectInfo(string projectId, string projectVersion);
+
+        /// <summary>
+        /// Аналогично GetProjectInfo, за исключением того, что он должнн возвращать версию по умочланию (обычно последнюю)
+        /// </summary>
+        protected abstract BProjectInfo GetProjectDefaultInfo(string projectId, string actualInstanceVersion);
+
+        /// <summary>
+        /// Должен возвращать версию проекта из его объъекта информации (объект, что возвращают GetProjectInfo и GetProjectDefaultInfo)
+        /// </summary>
+        protected abstract string GetProjectVersion(BProjectInfo projectData);
+
+        protected abstract bool ManifestIsValid(UManifest manifest);
+
+        /// <summary>
+        /// Должен определять тип майкрафта
+        /// </summary>
+        /// <param name="clienType">Тип клиента</param>
+        /// <param name="modloaderVersion">Версия модлоадера (если его нет, то должна возвращаться пустая строка)</param>
+        protected abstract void DetermineGameType(UManifest manifest, out ClientType clienType, out string modloaderVersion);
+
+        protected abstract string DetermineGameVersion(UManifest manifest);
+
+        protected abstract bool LocalInfoIsValid(InstancePlatformData data);
+
+        public abstract string ProjectId { get; }
+        protected abstract bool ProfectInfoIsValid { get; }
+        protected abstract string ArchiveDownloadUrl { get; }
+        protected abstract string ArchiveFileName { get; }
+
         private bool _downloadStartedIsCalled = false;
         private void DownloadStartedCall()
         {
             if (!_downloadStartedIsCalled)
                 DownloadStarted?.Invoke();
         }
-
-        protected abstract bool LocalInfoIsValid(InstancePlatformData data);
 
         public InstanceInit Check(out long releaseIndex, string instanceVersion)
         {
@@ -66,7 +99,7 @@ namespace Lexplosion.Logic.Management.Installers
             Manifest = DataFilesManager.GetData(new VersionManifestArgs(InstanceId, false));
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
-            if (LocalInfoIsValid(InfoData))
+            if (!LocalInfoIsValid(InfoData))
             {
                 return InstanceInit.CurseforgeIdError;
             }
@@ -77,7 +110,7 @@ namespace Lexplosion.Logic.Management.Installers
                 return InstanceInit.VersionError;
             }
 
-            if (Manifest.version.modloaderVersion != null && Manifest.version.modloaderVersion != "" && Manifest.version.modloaderType != ClientType.Vanilla)
+            if (!string.IsNullOrEmpty(Manifest.version.modloaderVersion) && Manifest.version.modloaderType != ClientType.Vanilla)
             {
                 BaseFilesIsCheckd = true;
 
@@ -104,14 +137,14 @@ namespace Lexplosion.Logic.Management.Installers
             }
 
             // если версия сборки определена, то получаем инфу о ней
-            object info = null;
+            BProjectInfo info = default;
             if (instanceVersion != null)
             {
                 info = GetProjectInfo(InfoData.id, instanceVersion);
             }
             else if (!onlyBase) //версия сборки не определена. Получаем версию по умолчанию
             {
-                info = GetProjectDefaultInfo(InfoData.id);
+                info = GetProjectDefaultInfo(InfoData.id, InfoData.instanceVersion);
             }
 
             if (info != null)
@@ -126,42 +159,6 @@ namespace Lexplosion.Logic.Management.Installers
             return InstanceInit.Successful;
         }
 
-        /// <summary>
-        /// Получает информацию о проекте.
-        /// </summary>
-        /// <param name="projectId">ID проекта</param>
-        /// <param name="projectVersion">Версия проекта</param>
-        /// <returns>
-        /// Объект, содержащий нужную инфу о пректе.
-        /// </returns>
-        protected abstract object GetProjectInfo(string projectId, string projectVersion);
-
-        /// <summary>
-        /// Аналогично GetProjectInfo, за исключением того, что он должнн возвращать версию по умочланию (обычно последнюю)
-        /// </summary>
-        protected abstract object GetProjectDefaultInfo(string projectId);
-
-        /// <summary>
-        /// Должен возвращать версию проекта из его объъекта информации (объект, что возвращают GetProjectInfo и GetProjectDefaultInfo)
-        /// </summary>
-        protected abstract string GetProjectVersion(object projectInfo);
-
-        protected abstract bool ManifestIsValid(UManifest manifest);
-
-        /// <summary>
-        /// Должен определять тип майкрафта
-        /// </summary>
-        /// <param name="clienType">Тип клиента</param>
-        /// <param name="modloaderVersion">Версия модлоадера (если его нет, то должна возвращаться пустая строка)</param>
-        protected abstract void DetermineGameType(UManifest manifest, out ClientType clienType, out string modloaderVersion);
-
-        protected abstract string DetermineGameVersion(UManifest manifest);
-
-        public abstract string ProjectId { get; }
-        protected abstract bool ProfectInfoIsValid { get; }
-        protected abstract string ArchiveDownloadUrl { get; }
-        protected abstract string ArchiveFileName { get; }
-
         public InitData Update(string javaPath, ProgressHandlerCallback progressHandler)
         {
             var localFiles = _installer.GetInstanceContent(); //получем список всех файлов модпака
@@ -175,7 +172,7 @@ namespace Lexplosion.Logic.Management.Installers
                 {
                     ProjectInfo = GetProjectInfo(InfoData.id, InfoData.instanceVersion); //получем информацию об этом модпаке
 
-                    if (ProfectInfoIsValid)
+                    if (!ProfectInfoIsValid)
                     {
                         return new InitData
                         {
@@ -215,7 +212,7 @@ namespace Lexplosion.Logic.Management.Installers
                     };
                 }
 
-                if (ManifestIsValid(manifest))
+                if (!ManifestIsValid(manifest))
                 {
                     return new InitData
                     {
