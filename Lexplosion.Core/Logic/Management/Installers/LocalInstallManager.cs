@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 
@@ -45,7 +44,7 @@ namespace Lexplosion.Logic.Management.Installers
             releaseIndex = 0;
 
             //модпак локальный. получем его версию, отправляем её в ToServer.GetFilesList. Метод ToServer.GetFilesList получит список именно для этой версии, а не для модпака
-            Manifest = DataFilesManager.GetData(new VersionManifestArgs(InstanceId, false));
+            Manifest = DataFilesManager.GetManifest(InstanceId, false);
 
             if (Manifest == null || Manifest.version == null || Manifest.version.gameVersion == null)
             {
@@ -134,7 +133,7 @@ namespace Lexplosion.Logic.Management.Installers
             }
 
             List<string> errors = installer.UpdateBaseFiles(Manifest, ref Updates, javaPath, _cancelToken);
-            DataFilesManager.SaveData(new VersionManifestArgs(InstanceId), Manifest);
+            DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             if (_cancelToken.IsCancellationRequested)
             {

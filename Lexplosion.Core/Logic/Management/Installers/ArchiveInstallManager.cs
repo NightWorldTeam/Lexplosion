@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Newtonsoft.Json;
@@ -96,7 +95,7 @@ namespace Lexplosion.Logic.Management.Installers
         {
             releaseIndex = 0;
 
-            Manifest = DataFilesManager.GetData(new VersionManifestArgs(InstanceId, false));
+            Manifest = DataFilesManager.GetManifest(InstanceId, false);
             InfoData = DataFilesManager.GetFile<InstancePlatformData>(WithDirectory.DirectoryPath + "/instances/" + InstanceId + "/instancePlatformData.json");
 
             if (!LocalInfoIsValid(InfoData))
@@ -244,7 +243,7 @@ namespace Lexplosion.Logic.Management.Installers
 
                     if (Manifest != null)
                     {
-                        DataFilesManager.SaveData(new VersionManifestArgs(InstanceId), Manifest);
+                        DataFilesManager.SaveManifest(InstanceId, Manifest);
 
                         if (_cancelToken.IsCancellationRequested)
                         {
@@ -481,7 +480,7 @@ namespace Lexplosion.Logic.Management.Installers
                 }
             }
 
-            DataFilesManager.SaveData(new VersionManifestArgs(InstanceId), Manifest);
+            DataFilesManager.SaveManifest(InstanceId, Manifest);
 
             return new InitData
             {

@@ -5,8 +5,8 @@ using System.Text;
 using Newtonsoft.Json;
 using Lexplosion.Global;
 using Lexplosion.Logic.Objects;
-using Lexplosion.Logic.FileSystem.StorageManagment;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
+using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -269,16 +269,98 @@ namespace Lexplosion.Logic.FileSystem
             }
         }
 
-        public static T GetData<T>(IDataHandlerArgs<T> args)
+        public static void SaveManifest(string instanceId, VersionManifest data)
         {
-            var handler = args.Handler;
-            return handler.LoadFromStorage();
+            SaveFile(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json", JsonConvert.SerializeObject(data));
+            if (data.libraries != null)
+            {
+                if (data.version.additionalInstaller != null)
+                {
+                    var baseLibs = new Dictionary<string, LibInfo>();
+                    var additionalLibs = new Dictionary<string, LibInfo>();
+
+                    // в этом цикле разъединяем либрариесы и дополнительный отправляем в отадельные файлы
+                    foreach (var key in data.libraries.Keys)
+                    {
+                        LibInfo value = data.libraries[key];
+                        if (value.additionalInstallerType == null)
+                        {
+                            baseLibs[key] = value;
+                        }
+                        else
+                        {
+                            additionalLibs[key] = value;
+                        }
+                    }
+
+                    SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(baseLibs));
+
+                    if (additionalLibs != null && additionalLibs.Count > 0)
+                    {
+                        SaveFile(DirectoryPath + "/versions/additionalLibraries/" + data.version.additionalInstaller.GetLibName + ".json", JsonConvert.SerializeObject(additionalLibs));
+                    }
+                }
+                else
+                {
+                    SaveFile(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json", JsonConvert.SerializeObject(data.libraries));
+                }
+            }
         }
 
-        public static void SaveData<T>(IDataHandlerArgs<T> args, T data)
+        public static VersionManifest GetManifest(string instanceId, bool includingLibraries)
         {
-            var handler = args.Handler;
-            handler.SaveToStorage(data);
+            VersionManifest data = GetFile<VersionManifest>(DirectoryPath + "/instances/" + instanceId + "/" + "manifest.json");
+            if (data == null)
+            {
+                return null;
+            }
+
+            if (includingLibraries)
+            {
+                var librariesData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/libraries/" + data.version.GetLibName + ".json") ?? new Dictionary<string, LibInfo>();
+
+                var installer = data.version?.additionalInstaller;
+                if (installer != null)
+                {
+                    var additionallibrarieData = GetFile<Dictionary<string, LibInfo>>(DirectoryPath + "/versions/additionalLibraries/" + installer?.GetLibName + ".json");
+
+                    if (additionallibrarieData != null)
+                    {
+                        foreach (var lib in additionallibrarieData.Keys)
+                        {
+                            librariesData[lib] = additionallibrarieData[lib];
+                            librariesData[lib].additionalInstallerType = installer.type;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
+                data.libraries = librariesData;
+            }
+
+            return data;
+        }
+
+        public static InstalledAddonsFormat GetInstalledAddons(string instanceId)
+        {
+            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
+
+            var data = DataFilesManager.GetFile<InstalledAddonsFormat>(path);
+            if (data == null)
+            {
+                return new InstalledAddonsFormat();
+            }
+
+            return data;
+        }
+
+        public static void SaveInstalledAddons(string instanceId, InstalledAddonsFormat data)
+        {
+            string path = WithDirectory.DirectoryPath + "/instances/" + instanceId + "/installedAddons.json";
+            DataFilesManager.SaveFile(path, JsonConvert.SerializeObject(data));
         }
     }
 }

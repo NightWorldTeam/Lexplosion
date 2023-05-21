@@ -11,7 +11,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
-using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -356,7 +355,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             get
             {
-                VersionManifest manifest = DataFilesManager.GetData(new VersionManifestArgs(_localId, false));
+                VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
 
                 return new BaseInstanceData
                 {
@@ -409,7 +408,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 foreach (string localId in list.Keys)
                 {
-                    VersionManifest instanceManifest = DataFilesManager.GetData(new VersionManifestArgs(localId, false));
+                    VersionManifest instanceManifest = DataFilesManager.GetManifest(localId, false);
                     bool manifestIsCorrect =
                         (instanceManifest != null && instanceManifest.version != null && instanceManifest.version.gameVersion != null);
 
@@ -648,7 +647,7 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="logoPath">Путь до лого. Если логотип изменять не нужно, то null</param>
         public void ChangeParameters(BaseInstanceData data, string logoPath)
         {
-            VersionManifest manifest = DataFilesManager.GetData(new VersionManifestArgs(_localId, false));
+            VersionManifest manifest = DataFilesManager.GetManifest(_localId, false);
             if (manifest != null)
             {
                 manifest.version.modloaderType = data.Modloader;
@@ -669,7 +668,7 @@ namespace Lexplosion.Logic.Management.Instances
                     manifest.version.additionalInstaller = null;
                 }
 
-                DataFilesManager.SaveData(new VersionManifestArgs(_localId), manifest);
+                DataFilesManager.SaveManifest(_localId, manifest);
             }
 
             try
@@ -976,7 +975,7 @@ namespace Lexplosion.Logic.Management.Instances
                 };
             }
 
-            DataFilesManager.SaveData(new VersionManifestArgs(_localId), manifest);
+            DataFilesManager.SaveManifest(_localId, manifest);
 
             if (Type != InstanceSource.Local)
             {
@@ -1167,7 +1166,7 @@ namespace Lexplosion.Logic.Management.Instances
                 filesList.Add(dirPath + "/installedAddons.json");
             }
 
-            VersionManifest instanceManifest = DataFilesManager.GetData(new VersionManifestArgs(_localId, false));
+            VersionManifest instanceManifest = DataFilesManager.GetManifest(_localId, false);
 
             string logoPath = (Logo != null ? WithDirectory.DirectoryPath + "/instances-assets/" + _localId + "/" + LogoFileName : null);
             var parameters = new ArchivedClientData

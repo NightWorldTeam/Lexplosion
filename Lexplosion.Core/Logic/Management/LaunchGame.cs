@@ -10,7 +10,6 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Installers;
-using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 
 namespace Lexplosion.Logic.Management
 {
@@ -509,7 +508,7 @@ namespace Lexplosion.Logic.Management
                     };
                 }
 
-                VersionManifest files = DataFilesManager.GetData(new VersionManifestArgs(_instanceId, true));
+                VersionManifest files = DataFilesManager.GetManifest(_instanceId, true);
                 bool versionIsStatic = files?.version?.isStatic == true;
 
                 if (!versionIsStatic && ToServer.ServerIsOnline())

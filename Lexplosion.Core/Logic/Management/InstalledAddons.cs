@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 
@@ -33,7 +32,7 @@ namespace Lexplosion.Logic.Management
             }
             else
             {
-                var fileData = DataFilesManager.GetData(new InstalledAddonsFormatArgs(instanceID));
+                var fileData = DataFilesManager.GetInstalledAddons(instanceID);
                 data = new InstalledAddons(fileData, instanceID);
                 _memoryStore[instanceID] = data;
             }
@@ -116,7 +115,7 @@ namespace Lexplosion.Logic.Management
         public void Save()
         {
             _semaphore.WaitOne(_instanceId);
-            DataFilesManager.SaveData(new InstalledAddonsFormatArgs(_instanceId), _data);
+            DataFilesManager.SaveInstalledAddons(_instanceId, _data);
             _semaphore.Release(_instanceId);
         }
 
@@ -124,7 +123,7 @@ namespace Lexplosion.Logic.Management
         {
             _semaphore.WaitOne(_instanceId);
             _data = addonsList;
-            DataFilesManager.SaveData(new InstalledAddonsFormatArgs(_instanceId), _data);
+            DataFilesManager.SaveInstalledAddons(_instanceId, _data);
             _semaphore.Release(_instanceId);
         }
 

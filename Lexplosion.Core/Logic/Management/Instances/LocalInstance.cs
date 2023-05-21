@@ -1,5 +1,4 @@
 ﻿using Lexplosion.Logic.FileSystem;
-using Lexplosion.Logic.FileSystem.StorageManagment.DataHandlers;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public override InstanceData GetFullInfo(string localId, string externalId)
         {
-            VersionManifest instanceManifest = DataFilesManager.GetData(new VersionManifestArgs(localId, false));
+            VersionManifest instanceManifest = DataFilesManager.GetManifest(localId, false);
             InstanceAssets assetsData = DataFilesManager.GetFile<InstanceAssets>(WithDirectory.DirectoryPath + "/instances-assets/" + localId + "/assets.json");
 
             return new InstanceData
