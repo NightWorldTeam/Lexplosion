@@ -388,7 +388,7 @@ namespace Lexplosion.Logic.FileSystem
             }
             catch
             {
-                Directory.Delete(targetDir, true);
+                try { Directory.Delete(targetDir, true); } catch { }
 
                 return ExportResult.ZipFileError;
             }

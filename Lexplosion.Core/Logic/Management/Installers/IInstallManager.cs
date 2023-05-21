@@ -3,12 +3,12 @@ using Lexplosion.Logic.Objects.CommonClientData;
 
 namespace Lexplosion.Logic.Management.Installers
 {
-    interface IInstallManager
+    public interface IInstallManager
     {
         /// <summary>
         /// Проверяет сборку на обновления.
         /// </summary>
-        /// <param name="gameVersion">Сюда возвращается редизный индекс игры. Это нужно чтобы определить версию джавы.</param>
+        /// <param name="releaseIndex">Сюда возвращается редизный индекс игры. Это нужно чтобы определить версию джавы.</param>
         /// <param name="instanceVersion">
         /// Сюда пихать версию сборки, которая нужна. Если это не надо, то просто null. 
         /// При передачи сюда ненулевого параметра по возможности метод Update установит эту версию(ну если исключений не будет).

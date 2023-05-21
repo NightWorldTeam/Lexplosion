@@ -11,6 +11,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
+using Lexplosion.Logic.Management.Sources;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -41,6 +42,7 @@ namespace Lexplosion.Logic.Management.Instances
         private string _externalId = null;
         private string _localId = null;
         private readonly PrototypeInstance _dataManager;
+        private readonly IInstanceSource _instanceSource;
         private HashSet<MinecraftServerInstance> _minecraftServers;
 
         private CancellationTokenSource _cancelTokenSource = null;
@@ -240,26 +242,12 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Базовый конструктор, от него должны наследоваться все остальные
         /// </summary>
-        /// <param name="type">Тип модпака</param>
-        private InstanceClient(InstanceSource type)
+        /// <param name="source">Источник модпака</param>
+        private InstanceClient(IInstanceSource source)
         {
-            Type = type;
-
-            switch (type)
-            {
-                case InstanceSource.Nightworld:
-                    _dataManager = new NightworldInstance();
-                    break;
-                case InstanceSource.Curseforge:
-                    _dataManager = new CurseforgeInstance();
-                    break;
-                case InstanceSource.Modrinth:
-                    _dataManager = new ModrinthInstance();
-                    break;
-                default:
-                    _dataManager = new LocalInstance();
-                    break;
-            }
+            Type = source.SourceType;
+            _instanceSource = source;
+            _dataManager = source.ContentManager;
 
             GameExited += delegate (string _)
             {
@@ -270,9 +258,9 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Этот конструктор создаёт еще не установленную сборку. Используется для сборок из каталога
         /// </summary>
-        /// <param name="type">Тип модпака</param>
+        /// <param name="source">Источник модпака</param>
         /// <param name="externalID">Внешний ID</param>
-        private InstanceClient(InstanceSource type, string externalID) : this(type)
+        private InstanceClient(IInstanceSource source, string externalID) : this(source)
         {
             _externalId = externalID;
         }
@@ -280,10 +268,10 @@ namespace Lexplosion.Logic.Management.Instances
         /// <summary>
         /// Этот конструктор создаёт установленную сборку. Используется для сборок в библиотеке.
         /// </summary>
-        /// <param name="type">Тип модпака</param>
+        /// <param name="source">Источник модпака</param>
         /// <param name="externalID">Внешний ID</param>
         /// <param name="externalID">Локальный ID</param>
-        private InstanceClient(InstanceSource type, string externalID, string localId) : this(type, externalID)
+        private InstanceClient(IInstanceSource source, string externalID, string localId) : this(source, externalID)
         {
             _localId = localId;
         }
@@ -292,12 +280,31 @@ namespace Lexplosion.Logic.Management.Instances
         /// Этот конструктор создаёт локальную сборку. Должен использоваться только при создании локальной сборки и при импорте.
         /// </summary>
         /// <param name="name">Название сборки</param>
+        /// <param name="source">Источник модпака</param>
         /// <param name="gameVersion">Версия игры</param>
-        private InstanceClient(string name, InstanceSource type, string gameVersion) : this(type)
+        private InstanceClient(string name, IInstanceSource source, string gameVersion) : this(source)
         {
             Name = name;
             GameVersion = gameVersion;
             GenerateInstanceId();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IInstanceSource CreateSourceFactory(InstanceSource type)
+        {
+            switch (type)
+            {
+                case InstanceSource.Local:
+                    return new LocalSource();
+                case InstanceSource.Nightworld:
+                    return new NightWorldSource();
+                case InstanceSource.Curseforge:
+                    return new CurseforgeSource();
+                case InstanceSource.Modrinth:
+                    return new ModrinthSource();
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
@@ -312,7 +319,7 @@ namespace Lexplosion.Logic.Management.Instances
         {
             if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
-            var client = new InstanceClient(name, type, gameVersion)
+            var client = new InstanceClient(name, CreateSourceFactory(type), gameVersion)
             {
                 InLibrary = true,
                 Author = GlobalData.User.Login,
@@ -450,7 +457,7 @@ namespace Lexplosion.Logic.Management.Instances
                         InstanceClient instance;
                         if (assetsData != null)
                         {
-                            instance = new InstanceClient(list[localId].Type, externalID, localId)
+                            instance = new InstanceClient(CreateSourceFactory(list[localId].Type), externalID, localId)
                             {
                                 Name = list[localId].Name ?? UnknownName,
                                 Summary = assetsData.Summary ?? NoDescription,
@@ -464,7 +471,7 @@ namespace Lexplosion.Logic.Management.Instances
                         }
                         else
                         {
-                            instance = new InstanceClient(list[localId].Type, externalID, localId)
+                            instance = new InstanceClient(CreateSourceFactory(list[localId].Type), externalID, localId)
                             {
                                 Name = list[localId].Name ?? UnknownName,
                                 Summary = NoDescription,
@@ -513,8 +520,10 @@ namespace Lexplosion.Logic.Management.Instances
         {
             Runtime.DebugWrite("UploadInstances " + pageIndex);
 
+            IInstanceSource source = CreateSourceFactory(type);
+
             var instances = new List<InstanceClient>();
-            List<PrototypeInstance.Info> catalog = PrototypeInstance.GetCatalog(type, pageSize, pageIndex, categoriy, searchFilter, sortField, gameVersion);
+            List<InstanceInfo> catalog = source.GetCatalog(type, pageSize, pageIndex, categoriy, searchFilter, sortField, gameVersion);
 
             foreach (var instance in catalog)
             {
@@ -541,7 +550,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
                 else
                 {
-                    instanceClient = new InstanceClient(type, instance.ExternalId)
+                    instanceClient = new InstanceClient(source, instance.ExternalId)
                     {
                         Name = instance.Name ?? UnknownName,
                         Logo = null,
@@ -595,7 +604,7 @@ namespace Lexplosion.Logic.Management.Instances
                 }
                 else
                 {
-                    instanceClient = new InstanceClient(type, instance.ExternalId)
+                    instanceClient = new InstanceClient(CreateSourceFactory(type), instance.ExternalId)
                     {
                         Name = instance.Name ?? UnknownName,
                         Logo = null,
@@ -719,7 +728,7 @@ namespace Lexplosion.Logic.Management.Instances
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
-            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
+            LaunchGame launchGame = new LaunchGame(_localId, instanceSettings, _instanceSource, _cancelTokenSource.Token);
             InitData data = launchGame.Update(ProgressHandler, FileDownloadEvent, DownloadStarted, instanceVersion);
 
             UpdateAvailable = data.UpdatesAvailable;
@@ -758,7 +767,7 @@ namespace Lexplosion.Logic.Management.Instances
             Settings instanceSettings = DataFilesManager.GetSettings(_localId);
             instanceSettings.Merge(GlobalData.GeneralSettings, true);
 
-            _gameManager = new LaunchGame(_localId, instanceSettings, Type, _cancelTokenSource.Token);
+            _gameManager = new LaunchGame(_localId, instanceSettings, _instanceSource, _cancelTokenSource.Token);
             InitData data = _gameManager.Initialization(ProgressHandler, FileDownloadEvent, DownloadStarted);
 
             UpdateAvailable = data.UpdatesAvailable;
@@ -1249,7 +1258,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public static InstanceClient Import(string zipFile, Action<ImportResult> callback)
         {
-            var client = new InstanceClient(InstanceSource.Local)
+            var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
             {
                 Name = "Importing...",
                 InLibrary = true,
@@ -1270,7 +1279,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public static InstanceClient Import(FileReceiver reciver, Action<ImportResult> callback)
         {
-            var client = new InstanceClient(InstanceSource.Local)
+            var client = new InstanceClient(CreateSourceFactory(InstanceSource.Local))
             {
                 Name = reciver.Name,
                 InLibrary = true,

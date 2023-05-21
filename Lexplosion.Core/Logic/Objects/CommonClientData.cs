@@ -144,7 +144,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public bool ShouldSerializenotArchived() => false;
     }
 
-    class InstancePlatformData
+    public class InstancePlatformData
     {
         public string id;
         public string instanceVersion;

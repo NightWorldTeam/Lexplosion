@@ -87,6 +87,8 @@
     <Compile Include="Logic\Management\Authentication\NightWorldAuth.cs" />
     <Compile Include="Logic\Management\CategoriesManager.cs" />
     <Compile Include="Logic\Management\Delegates.cs" />
+    <Compile Include="Logic\Management\Sources\CurseforgeSource.cs" />
+    <Compile Include="Logic\Management\Sources\IInstanceSource.cs" />
     <Compile Include="Logic\Management\InstalledAddons.cs" />
     <Compile Include="Logic\Management\Installers\ArchiveInstallManager.cs" />
     <Compile Include="Logic\Management\Installers\CurseforgeInstallManager.cs" />
@@ -106,6 +108,9 @@
     <Compile Include="Logic\Management\MinecraftServerInstance.cs" />
     <Compile Include="Logic\Management\Player.cs" />
     <Compile Include="Logic\FileSystem\ProcentUpdateDelegate.cs" />
+    <Compile Include="Logic\Management\Sources\LocalSource.cs" />
+    <Compile Include="Logic\Management\Sources\ModrinthSource.cs" />
+    <Compile Include="Logic\Management\Sources\NightWorldSource.cs" />
     <Compile Include="Logic\Management\User.cs" />
     <Compile Include="Logic\Management\Utils.cs" />
     <Compile Include="Logic\Network\ClientBridge.cs" />

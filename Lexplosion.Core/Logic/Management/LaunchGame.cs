@@ -10,6 +10,7 @@ using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Installers;
+using Lexplosion.Logic.Management.Sources;
 
 namespace Lexplosion.Logic.Management
 {
@@ -20,7 +21,7 @@ namespace Lexplosion.Logic.Management
 
         private string _instanceId;
         private Settings _settings;
-        private InstanceSource _type;
+        private IInstanceSource _source;
         private string _javaPath = "";
         private bool _processIsWork;
 
@@ -104,7 +105,7 @@ namespace Lexplosion.Logic.Management
             get => _instanceId;
         }
 
-        public LaunchGame(string instanceId, Settings instanceSettings, InstanceSource type, CancellationToken updateCancelToken)
+        public LaunchGame(string instanceId, Settings instanceSettings, IInstanceSource source, CancellationToken updateCancelToken)
         {
             if (_classInstance == null)
                 _classInstance = this;
@@ -116,7 +117,7 @@ namespace Lexplosion.Logic.Management
 
             _settings = instanceSettings;
             _instanceId = instanceId;
-            _type = type;
+            _source = source;
 
             _updateCancelToken = updateCancelToken;
         }
@@ -357,26 +358,7 @@ namespace Lexplosion.Logic.Management
 
         public InitData Update(ProgressHandlerCallback progressHandler, Action<string, int, DownloadFileProgress> fileDownloadHandler, Action downloadStarted, string version = null, bool onlyBase = false)
         {
-            IInstallManager instance;
-
-            switch (_type)
-            {
-                case InstanceSource.Nightworld:
-                    instance = new NightworldInstallManager(_instanceId, onlyBase, _updateCancelToken);
-                    break;
-                case InstanceSource.Local:
-                    instance = new LocalInstallManager(_instanceId, _updateCancelToken);
-                    break;
-                case InstanceSource.Curseforge:
-                    instance = new CurseforgeInstallManager(_instanceId, onlyBase, _updateCancelToken);
-                    break;
-                case InstanceSource.Modrinth:
-                    instance = new ModrinthInstallManager(_instanceId, onlyBase, _updateCancelToken);
-                    break;
-                default:
-                    instance = null;
-                    break;
-            }
+            IInstallManager instance = _source.GetInstaller(_instanceId, onlyBase, _updateCancelToken);
 
             instance.FileDownloadEvent += fileDownloadHandler;
             instance.DownloadStarted += downloadStarted;

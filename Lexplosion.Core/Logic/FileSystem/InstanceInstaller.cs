@@ -710,7 +710,7 @@ namespace Lexplosion.Logic.FileSystem
                                 }
                             }
 
-                            Directory.Delete(tempFolder, true); // TODO: тут выползало исключение папка не пуста
+                            Directory.Delete(tempFolder, true);
                         }
                         catch
                         {

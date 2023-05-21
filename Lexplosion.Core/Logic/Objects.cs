@@ -28,6 +28,19 @@ namespace Lexplosion.Logic.Objects
         public List<SimpleCategory> Categories { get; set; }
     }
 
+    public class InstanceInfo
+    {
+        public string Name;
+        public string Author;
+        public IEnumerable<CategoryBase> Categories;
+        public string Summary;
+        public string Description;
+        public string GameVersion;
+        public string WebsiteUrl;
+        public string LogoUrl;
+        public string ExternalId;
+    }
+
     /// <summary>
     /// Этот класс хранят инфу об установленном с курсфорджа аддоне
     /// </summary>

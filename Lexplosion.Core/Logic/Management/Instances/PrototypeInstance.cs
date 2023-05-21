@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Management.Instances
 {
-    abstract class PrototypeInstance
+    public abstract class PrototypeInstance
     {
         public class Info
         {
