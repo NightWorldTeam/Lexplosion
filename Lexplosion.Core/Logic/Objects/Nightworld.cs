@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Lexplosion.Global;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Newtonsoft.Json;
 
@@ -53,5 +54,54 @@ namespace Lexplosion.Logic.Objects.Nightworld
         /// Если не содержит родительскую категорию, содержит classId
         /// </summary>
         public override string ParentCategoryId { get; set; } //TODO: на нулл проверку намутить
+    }
+
+    public class NwUser
+    {
+        [JsonProperty("status")]
+        public ActivityStatus ActivityStatus;
+        /// <summary>
+        /// Имя клиента, в который сейчас играет пользователь. Может быть null.
+        /// </summary>
+        /// 
+        [JsonProperty("gameClientName")]
+        public string GameClientName;
+
+        [JsonProperty("login")]
+        public string Login;
+
+        [JsonIgnore]
+        public string AvatarUrl
+        {
+            get => LaunсherSettings.URL.Base + "requestProcessing/getUserImage.php?user_login=" + Login;
+        }
+    }
+
+    public struct UsersCatalogPage
+    {
+        /// <summary>
+        /// Список найденных пользователей
+        /// </summary>
+        [JsonProperty("data")]
+        public List<NwUser> Data;
+        /// <summary>
+        /// true - если существует следующая страница, false - если нет
+        /// </summary>
+        [JsonProperty("nextPage")]
+        public bool NextPage;
+    }
+
+    public struct FriendRequests
+    {
+        /// <summary>
+        /// Входящией заявки в друзья
+        /// </summary>
+        [JsonProperty("incoming")]
+        public List<NwUser> Incoming;
+        /// <summary>
+        /// Исходящие заявки в друзья
+        /// </summary>
+        [JsonProperty("outgoing")]
+        public List<NwUser> Outgoing;
     }
 }

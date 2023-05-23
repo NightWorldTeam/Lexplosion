@@ -231,5 +231,144 @@ namespace Lexplosion.Logic.Network
 
             return null;
         }
+
+        /// <summary>
+        /// Выполняет поиск пользователей.
+        /// </summary>
+        /// <param name="UUID">uuid. Его можно получить в GlobalData.User.UUID</param>
+        /// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
+        /// <param name="page">Страница (начиная с нуля)</param>
+        /// <param name="filter">Поиск конкретного логина. Если не нужен, то пустая строка</param>
+        public static UsersCatalogPage FindUsers(string UUID, string sessionToken, uint page, string filter)
+        {
+            string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "findUsers?page=" + page + "&user_login=" + filter, new Dictionary<string, string>
+            {
+                ["UUID"] = UUID,
+                ["sessionToken"] = sessionToken
+            });
+
+            UsersCatalogPage result = new UsersCatalogPage()
+            {
+                Data = null,
+                NextPage = false
+            };
+
+            if (data != null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<UsersCatalogPage>(data);
+                }
+                catch { }
+            }
+
+            if (result.Data == null)
+            {
+                result.Data = new List<NwUser>();
+                result.NextPage = false;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Получает спсиок друзей пользователя
+        /// </summary>
+        /// <param name="UUID">uuid. Его можно получить в GlobalData.User.UUID</param>
+        /// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
+        /// <param name="userLogin">
+        /// Ник пользователя, список друзей которого нужно получить. 
+        /// Если нужно получить список своих друзей, то нужно передать свой ник.
+        /// </param>
+        /// <returns></returns>
+        public static List<NwUser> GetFreinds(string UUID, string sessionToken, string userLogin)
+        {
+            string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getFreinds?login=" + userLogin, new Dictionary<string, string>
+            {
+                ["UUID"] = UUID,
+                ["sessionToken"] = sessionToken
+            });
+
+            List<NwUser> result = null;
+
+            if (data != null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<List<NwUser>>(data);
+                }
+                catch { }
+            }
+
+            return result ?? new List<NwUser>();
+        }
+
+        /// <summary>
+        /// Получает списки входящих и исходящих заявок в друзья
+        /// </summary>
+        /// <param name="UUID">uuid. Его можно получить в GlobalData.User.UUID</param>
+        /// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
+        /// <returns></returns>
+        public static FriendRequests GetFriendRequests(string UUID, string sessionToken)
+        {
+            string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getFriendRequests", new Dictionary<string, string>
+            {
+                ["UUID"] = UUID,
+                ["sessionToken"] = sessionToken
+            });
+
+            FriendRequests result = new FriendRequests
+            {
+                Outgoing = null,
+                Incoming = null
+            };
+
+            if (data != null)
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<FriendRequests>(data);
+                }
+                catch { }
+            }
+
+            if (result.Incoming == null) result.Incoming = new List<NwUser>();
+            if (result.Outgoing == null) result.Outgoing = new List<NwUser>();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Если пользователь с ником login отправлял заявку в друзья, то принимает её. 
+        /// Иначе отправляет отправляет аему заявку.
+        /// </summary>
+        /// <param name="UUID">uuid. Его можно получить в GlobalData.User.UUID</param>
+        /// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
+        /// <param name="login">Логин потльзователя, которому нужно отправить заявку в друзья или принять её.</param>
+        public static void AddFriend(string UUID, string sessionToken, string login)
+        {
+            ToServer.HttpPost(LaunсherSettings.URL.UserApi + "addFriend?user_login=" + UUID, new Dictionary<string, string>
+            {
+                ["UUID"] = UUID,
+                ["sessionToken"] = sessionToken
+            });
+        }
+
+        /// <summary>
+        /// Если пользователь с ником login отправлял заявку в друзья, то отвергает её. 
+        /// Если пользователю с ником login была отправлена заявка, то отменяет её.
+        /// Если же этот пользователь уже в друзьях, то удаляет его.
+        /// </summary>
+        /// <param name="UUID">uuid. Его можно получить в GlobalData.User.UUID</param>
+        /// <param name="sessionToken">Токен сессии. Его можно получить в GlobalData.User.SessionToken</param>
+        /// <param name="login">Логин пользователя.</param>
+        public static void RemoveFriend(string UUID, string sessionToken, string login)
+        {
+            ToServer.HttpPost(LaunсherSettings.URL.UserApi + "removeFriend?user_login=" + UUID, new Dictionary<string, string>
+            {
+                ["UUID"] = UUID,
+                ["sessionToken"] = sessionToken
+            });
+        }
     }
 }
