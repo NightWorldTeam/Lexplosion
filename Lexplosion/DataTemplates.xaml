@@ -27,6 +27,7 @@
 
     <!--  Style Selectors  -->
     <styleselectors:EvenItemStyleSelector x:Key="EvenItemStyleSelector" />
+    <styleselectors:NotLastItemStyleSelector x:Key="NotLastItemStyleSelector" />
 
     <!--  Converters  -->
     <BooleanToVisibilityConverter x:Key="ConvertBoolToVisibility" />
@@ -149,6 +150,11 @@
 
     <DataTemplate DataType="{x:Type modalvms:DialogViewModel}">
         <modalviews:DialogView />
+    </DataTemplate>
+
+    <!--  Multiplayer  -->
+    <DataTemplate DataType="{x:Type vmmultiplayer:AdServersListTabViewModel}">
+        <pagemultiplayer:AdServersListTabView />
     </DataTemplate>
 
     <tb:TaskbarIcon

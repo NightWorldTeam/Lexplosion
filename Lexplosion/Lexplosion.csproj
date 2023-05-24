@@ -98,10 +98,17 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Common\Models\Controllers\ShareController.cs" />
+    <Compile Include="Common\Models\Objects\AdServer.cs" />
     <Compile Include="Common\Models\Objects\FileDistributionWrapper.cs" />
     <Compile Include="Common\Models\Objects\ImportFile.cs" />
     <Compile Include="Common\Models\Objects\InstanceDistribution.cs" />
+    <Compile Include="Common\StyleSelectors\NotLastItemStyleSelector.cs" />
+    <Compile Include="Common\ViewModels\MainMenu\Multiplayer\AdServersListTabViewModel.cs" />
+    <Compile Include="Common\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Common\ViewModels\ModalVMs\InstanceTransfer\ImportBase.cs" />
+    <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\AdServersListTabView.xaml.cs">
+      <DependentUpon>AdServersListTabView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ChangelogItem\ChangelogItem.cs" />
     <Compile Include="Controls\Curtains\Curtains.cs" />
     <Compile Include="Controls\DialogMessage\DialogMessage.cs" />
@@ -189,7 +196,6 @@
     <Compile Include="Common\ViewModels\MainMenu\MainMenuViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\ChannelTabViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\FriendsTabViewModel.cs" />
-    <Compile Include="Common\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Settings\LanguageSettingsViewModel.cs" />
     <Compile Include="Common\ViewModels\MainViewModel.cs" />
     <Compile Include="Common\ViewModels\CustomTabsMenuViewModel.cs" />
@@ -343,6 +349,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Assets\langs\ru-RU.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\Views\Pages\MainMenu\Multiplayer\AdServersListTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -182,10 +182,10 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
             return new List<Tab<VMBase>>()
             {
-                //new Tab
+                //new Tab<VMBase>
                 //{
                 //    Header = "Cервера партнёров",
-                //    Content = null
+                //    Content = new AdServersListTabViewModel()
                 //},
                 new Tab<VMBase>
                 {
