@@ -113,7 +113,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
         private string _selectedCfSortByString = CfSortToString[(int)CfSortField.Popularity - 1];
         public string SelectedCfSortByString
         {
-            get => _selectedCfSortByString; set
+            get => _selectedCfSortByString; set 
             {
                 _selectedCfSortByString = value;
                 OnPropertyChanged();

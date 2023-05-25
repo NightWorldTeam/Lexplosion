@@ -6,6 +6,7 @@
     xmlns:modalviews="clr-namespace:Lexplosion.Common.Views.Pages.ModalViews"
     xmlns:modalvm="clr-namespace:Lexplosion.Common.ViewModels.ModalVMs"
     xmlns:modalvms="clr-namespace:Lexplosion.Common.ViewModels.ModalVMs"
+    xmlns:pagefriends="clr-namespace:Lexplosion.Common.Views.Pages.MainMenu.Multiplayer.Friends"
     xmlns:pagemm="clr-namespace:Lexplosion.Common.Views.Pages.MainMenu"
     xmlns:pagemultiplayer="clr-namespace:Lexplosion.Common.Views.Pages.MainMenu.Multiplayer"
     xmlns:pages="clr-namespace:Lexplosion.Common.Views.Pages"
@@ -18,6 +19,7 @@
     xmlns:viewmodels="clr-namespace:Lexplosion.Common.ViewModels"
     xmlns:vmcurseforgemarket="clr-namespace:Lexplosion.Common.ViewModels.CurseforgeMarket"
     xmlns:vmfactorymenu="clr-namespace:Lexplosion.Common.ViewModels.FactoryMenu"
+    xmlns:vmfriends="clr-namespace:Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends"
     xmlns:vmmainmenu="clr-namespace:Lexplosion.Common.ViewModels.MainMenu"
     xmlns:vmmultiplayer="clr-namespace:Lexplosion.Common.ViewModels.MainMenu.Multiplayer"
     xmlns:vmsettings="clr-namespace:Lexplosion.Common.ViewModels.MainMenu.Settings"
@@ -86,12 +88,17 @@
     <DataTemplate DataType="{x:Type vmmultiplayer:GeneralMultiplayerViewModel}">
         <pagemultiplayer:GeneralMultiplayerView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vmmultiplayer:FriendsTabViewModel}">
-        <pagemultiplayer:FriendsTabView />
-    </DataTemplate>
     <DataTemplate DataType="{x:Type vmmultiplayer:ChannelTabViewModel}">
         <pagemultiplayer:ChannelsView />
     </DataTemplate>
+    <!--  Friends  -->
+    <DataTemplate DataType="{x:Type vmmultiplayer:FriendsTabViewModel}">
+        <pagemultiplayer:FriendsTabView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vmfriends:FindFriendsTabViewModel}">
+        <pagefriends:FindFriendsTabView />
+    </DataTemplate>
+
 
     <!--  InstanceShowCase DataTemplate  -->
     <DataTemplate DataType="{x:Type showcasemenu:OverviewViewModel}">

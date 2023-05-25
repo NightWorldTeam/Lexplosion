@@ -8,7 +8,7 @@ using Lexplosion.Logic.Objects.Nightworld;
 
 namespace Lexplosion.Logic.Network
 {
-    static class NightWorldApi
+    public static class NightWorldApi
     {
         /// <summary>
         /// этот класс нужен для декодирования json в GetInstanceManifest
@@ -281,7 +281,7 @@ namespace Lexplosion.Logic.Network
         /// Если нужно получить список своих друзей, то нужно передать свой ник.
         /// </param>
         /// <returns></returns>
-        public static List<NwUser> GetFreinds(string UUID, string sessionToken, string userLogin)
+        public static List<NwUser> GetFriends(string UUID, string sessionToken, string userLogin)
         {
             string data = ToServer.HttpPost(LaunсherSettings.URL.UserApi + "getFreinds?login=" + userLogin, new Dictionary<string, string>
             {

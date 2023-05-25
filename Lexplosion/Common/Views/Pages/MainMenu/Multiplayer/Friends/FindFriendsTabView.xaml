@@ -1,0 +1,330 @@
+﻿<UserControl
+    x:Class="Lexplosion.Common.Views.Pages.MainMenu.Multiplayer.Friends.FindFriendsTabView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Lexplosion.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extension="clr-namespace:Lexplosion.Common.Extension"
+    xmlns:lexplosion="clr-namespace:Lexplosion;assembly=Lexplosion.Core"
+    xmlns:local="clr-namespace:Lexplosion.Common.Views.Pages.MainMenu.Multiplayer.Friends"
+    xmlns:localVM="clr-namespace:Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Lexplosion.Common.Models.Objects"
+    d:DataContext="{d:DesignInstance localVM:FindFriendsTabViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="Button" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="border"
+                            Background="#303030"
+                            BorderBrush="#202020"
+                            BorderThickness="2"
+                            CornerRadius="5">
+                            <ContentPresenter
+                                x:Name="content"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
+                            </Trigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                    <Condition Property="IsEnabled" Value="False" />
+                                </MultiTrigger.Conditions>
+
+                                <MultiTrigger.Setters>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#202020" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="content" Property="TextBlock.Foreground" Value="Gray" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="EvenItemStyle" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Margin" Value="4,0,0,0" />
+        </Style>
+
+        <DataTemplate x:Key="User" DataType="{x:Type objects:NWUserWrapper}">
+            <Border
+                Width="300"
+                Height="64"
+                Margin="0,0,0,4"
+                Padding="16,13"
+                Background="{DynamicResource HeaderSolidColorBrush}"
+                BorderBrush="{DynamicResource SepSolidColorBrush}"
+                BorderThickness="1"
+                CornerRadius="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="38" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="48" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border
+                        Width="38"
+                        Height="38"
+                        CornerRadius="5">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding Avatar}" />
+                        </Border.Background>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="8,0">
+                        <!--  Name & Status  -->
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="WhiteSmoke"
+                                Text="{Binding Login}" />
+                            <Border
+                                Width="10"
+                                Height="10"
+                                Margin="8,0,0,0"
+                                BorderBrush="{DynamicResource SepSolidColorBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10">
+                                <Border.Style>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.Online}">
+                                                <Setter Property="Background" Value="#009834" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.Offline}">
+                                                <Setter Property="Background" Value="Gray" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.NotDisturb}">
+                                                <Setter Property="Background" Value="Orange" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.InGame}">
+                                                <Setter Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                            </Border>
+                        </StackPanel>
+
+                        <!--  Manual Friends Count  -->
+                        <!--<TextBlock
+                            Margin="0,5,0,0"
+                            FontSize="12"
+                            FontWeight="Medium"
+                            Foreground="WhiteSmoke"
+                            Text="{Binding ManualFriendsCount, StringFormat='Manual Friends {0}'}" />-->
+
+                        <!--  Current Activity  -->
+                        <TextBlock
+                            Margin="0,5,0,0"
+                            FontSize="12"
+                            FontWeight="Medium"
+                            Foreground="LightGray"
+                            Text="{Binding CurrentRunningInstanceName}" />
+                    </StackPanel>
+
+
+                    <Button
+                        Grid.Column="2"
+                        Style="{StaticResource IconicButton}"
+                        Visibility="{Binding IsSendFriendRequests, Converter={StaticResource NegativeConvertBoolToVisibility}}">
+                        <Button.Content>
+                            <Border
+                                Padding="5"
+                                BorderBrush="White"
+                                BorderThickness="0"
+                                CornerRadius="5">
+
+                                <Border.Background>
+                                    <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                </Border.Background>
+
+                                <Viewbox Width="20" Height="20">
+                                    <Path
+                                        extension:PathExtension.StringData="{StaticResource AddFriend}"
+                                        Fill="{DynamicResource BrandSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Border>
+                        </Button.Content>
+
+                        <Button.ToolTip>
+                            <ToolTip
+                                Background="Black"
+                                BorderThickness="0"
+                                FontFamily="{StaticResource SFProDisplay}"
+                                HorizontalOffset="40"
+                                Placement="Relative"
+                                VerticalOffset="10">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="Bold"
+                                    Foreground="White"
+                                    Text="{DynamicResource sendFriendRequest}" />
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+
+                    <Button
+                        Grid.Column="2"
+                        Style="{StaticResource IconicButton}"
+                        Visibility="{Binding IsSendFriendRequests, Converter={StaticResource ConvertBoolToVisibility}}">
+                        <Button.Content>
+                            <Border
+                                Padding="5"
+                                BorderBrush="White"
+                                BorderThickness="0"
+                                CornerRadius="5">
+
+                                <Border.Background>
+                                    <SolidColorBrush Opacity="0.1" Color="{DynamicResource ActivityColor}" />
+                                </Border.Background>
+
+                                <Viewbox Width="20" Height="20">
+                                    <Path
+                                        extension:PathExtension.StringData="{StaticResource Unfriend}"
+                                        Fill="{DynamicResource BrandSolidColorBrush}"
+                                        Stretch="Fill" />
+                                </Viewbox>
+                            </Border>
+                        </Button.Content>
+
+                        <Button.ToolTip>
+                            <ToolTip
+                                Background="Black"
+                                BorderThickness="0"
+                                FontFamily="{StaticResource SFProDisplay}"
+                                HorizontalOffset="40"
+                                Placement="Relative"
+                                VerticalOffset="10">
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="Bold"
+                                    Foreground="White"
+                                    Text="{DynamicResource sendFriendRequest}" />
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border Padding="16">
+        <!--  Find Friends  -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="36" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="32" />
+            </Grid.RowDefinitions>
+            <controls:SearchBox
+                Width="256"
+                Height="36"
+                HorizontalContentAlignment="Center"
+                CaretBrush="{DynamicResource BrandSolidColorBrush}"
+                FontSize="14"
+                Foreground="LightGray"
+                Placeholder="Кого ищим?"
+                SearchAction="{Binding Model.SetNewFilterValueAction}" />
+
+            <ItemsControl
+                Grid.Row="1"
+                Width="604"
+                Margin="0,16,0,0"
+                HorizontalAlignment="Center"
+                ItemContainerStyleSelector="{StaticResource EvenItemStyleSelector}"
+                ItemTemplate="{StaticResource User}"
+                ItemsSource="{Binding Model.Users}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <TextBlock
+                Grid.Row="1"
+                Margin="0,64,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                FontSize="16"
+                FontWeight="Medium"
+                Foreground="LightGray"
+                Text="Мы не смогли найти человек с этим ником">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Model.Users.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <StackPanel
+                Grid.Row="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <Button
+                    Width="64"
+                    Height="32"
+                    Command="{Binding MovePrevPageCommand}"
+                    Content="&lt;">
+                    <Button.Style>
+                        <Style BasedOn="{StaticResource Button}" TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Model.NextUsersCatalogPageIndex}" Value="1">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Model.Users.Count}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button
+                    Width="64"
+                    Height="32"
+                    Margin="4,0,0,0"
+                    Command="{Binding MoveNextPageCommand}"
+                    Content="&gt;">
+                    <Button.Style>
+                        <Style BasedOn="{StaticResource Button}" TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Model.UsersCatalogPage.NextPage}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Model.Users.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

@@ -25,6 +25,7 @@ namespace Lexplosion.Controls
 
         private string _confirmedText = String.Empty;
 
+
         #region Dependency Properties fields
 
 
@@ -98,6 +99,7 @@ namespace Lexplosion.Controls
 
         #region Private Methods
 
+
         private void Search()
         {
             SearchAction?.Invoke(_confirmedText, false);
@@ -112,6 +114,8 @@ namespace Lexplosion.Controls
 
             Search();
         }
+
+
         #endregion Private Methods
     }
 }

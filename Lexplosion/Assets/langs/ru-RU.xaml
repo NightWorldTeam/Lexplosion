@@ -403,4 +403,10 @@
     <s:String x:Key="multiplayerReloaded">Сетевая игра перезапущена</s:String>
     <s:String x:Key="actionOnThePlayer">Действие над игроком</s:String>
     <s:String x:Key="playerCanJoinToServerAgain">У игрока {0} появилась возможность снова зайти на ваш сервер."</s:String>
+
+
+    <!--  Friends  -->
+    <s:String x:Key="unfriend">Удалить из друзей</s:String>
+    <s:String x:Key="addFriend">Добавить в друзья</s:String>
+    <s:String x:Key="sendFriendRequest">Отправить заявку в друзья</s:String>
 </ResourceDictionary>

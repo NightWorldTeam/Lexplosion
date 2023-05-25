@@ -358,4 +358,8 @@
     <s:String x:Key="importResultDirectoryCreateError">Error creating directory</s:String>
 
 
+    <!--  Friends  -->
+    <s:String x:Key="unfriend">Unfriend</s:String>
+    <s:String x:Key="addFriend">Add Friends</s:String>
+    <s:String x:Key="sendFriendRequest">Send Friend Request</s:String>
 </ResourceDictionary>

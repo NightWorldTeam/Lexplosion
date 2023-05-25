@@ -173,7 +173,7 @@
                     <ToolTip
                         Background="Black"
                         BorderThickness="0"
-                        FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                        FontFamily="{StaticResource SFProDisplay}"
                         HorizontalOffset="40"
                         Placement="Relative"
                         VerticalOffset="10">

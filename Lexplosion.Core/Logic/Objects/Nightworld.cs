@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Lexplosion.Logic.Objects.Nightworld
 {
-    class LocalNightWorldManifest
+    public class LocalNightWorldManifest
     {
         public class WithFolder
         {
@@ -19,7 +19,7 @@ namespace Lexplosion.Logic.Objects.Nightworld
         public bool CustomVersion;
     }
 
-    class NightWorldManifest : LocalNightWorldManifest
+    public class NightWorldManifest : LocalNightWorldManifest
     {
         public class Version
         {
@@ -32,7 +32,7 @@ namespace Lexplosion.Logic.Objects.Nightworld
         public Version version;
     }
 
-    class PlayerData
+    public class PlayerData
     {
         public string Nickname;
         public string AvatarUrl;

@@ -102,12 +102,17 @@
     <Compile Include="Common\Models\Objects\FileDistributionWrapper.cs" />
     <Compile Include="Common\Models\Objects\ImportFile.cs" />
     <Compile Include="Common\Models\Objects\InstanceDistribution.cs" />
+    <Compile Include="Common\Models\Objects\NWUserWrapper.cs" />
     <Compile Include="Common\StyleSelectors\NotLastItemStyleSelector.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\AdServersListTabViewModel.cs" />
+    <Compile Include="Common\ViewModels\MainMenu\Multiplayer\Friends\FindFriendsTabViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
     <Compile Include="Common\ViewModels\ModalVMs\InstanceTransfer\ImportBase.cs" />
     <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\AdServersListTabView.xaml.cs">
       <DependentUpon>AdServersListTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\Friends\FindFriendsTabView.xaml.cs">
+      <DependentUpon>FindFriendsTabView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ChangelogItem\ChangelogItem.cs" />
     <Compile Include="Controls\Curtains\Curtains.cs" />
@@ -195,7 +200,7 @@
     <Compile Include="Common\ViewModels\MainMenu\LibraryViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\MainMenuViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\ChannelTabViewModel.cs" />
-    <Compile Include="Common\ViewModels\MainMenu\Multiplayer\FriendsTabViewModel.cs" />
+    <Compile Include="Common\ViewModels\MainMenu\Multiplayer\Friends\FriendsTabViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Settings\LanguageSettingsViewModel.cs" />
     <Compile Include="Common\ViewModels\MainViewModel.cs" />
     <Compile Include="Common\ViewModels\CustomTabsMenuViewModel.cs" />
@@ -271,7 +276,7 @@
     <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\ChannelsView.xaml.cs">
       <DependentUpon>ChannelsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\FriendsTabView.xaml.cs">
+    <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\Friends\FriendsTabView.xaml.cs">
       <DependentUpon>FriendsTabView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\GeneralMultiplayerView.xaml.cs">
@@ -353,6 +358,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\Views\Pages\MainMenu\Multiplayer\AdServersListTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\Views\Pages\MainMenu\Multiplayer\Friends\FindFriendsTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -520,7 +529,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Common\Views\Pages\MainMenu\Multiplayer\FriendsTabView.xaml">
+    <Page Include="Common\Views\Pages\MainMenu\Multiplayer\Friends\FriendsTabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

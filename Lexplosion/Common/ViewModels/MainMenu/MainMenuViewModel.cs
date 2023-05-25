@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Common.Commands;
 using Lexplosion.Common.ViewModels.MainMenu.Multiplayer;
+using Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends;
 using Lexplosion.Common.ViewModels.MainMenu.Settings;
 using Lexplosion.Common.ViewModels.ShowCaseMenu;
 using Lexplosion.Global;
@@ -18,7 +19,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
         /* multiplayer fields */
         private readonly List<Tab<VMBase>> _multiplayerTabs;
         private GeneralMultiplayerViewModel _generalMultiplayerViewModel = new GeneralMultiplayerViewModel(MainViewModel.ShowToastMessage);
-        private FriendsTabViewModel _friendsTabViewModel = new FriendsTabViewModel();
+        private FriendsTabViewModel _friendsTabViewModel = new FriendsTabViewModel(MainViewModel.ShowToastMessage);
         private ChannelTabViewModel _channelTabViewModel = new ChannelTabViewModel();
         private AboutUsViewModel _aboutUsViewModel = new AboutUsViewModel();
         /* multiplayer fields */
@@ -192,11 +193,16 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                     Header = ResourceGetter.GetString("general"),
                     Content =  GlobalData.User.AccountType == AccountType.NightWorld ? _generalMultiplayerViewModel : curtains
                 },
-                //new Tab<VMBase>
-                //{
-                //    Header = ResourceGetter.GetString("friends"),
-                //    Content = GlobalData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
-                //},
+                new Tab<VMBase>
+                {
+                    Header = ResourceGetter.GetString("friends"),
+                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
+                },
+                new Tab<VMBase>
+                {
+                    Header = "Find Friends",
+                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? new FindFriendsTabViewModel() : curtains
+                }
                 //new Tab<VMBase>
                 //{
                 //    Header = ResourceGetter.GetString("channels"),
