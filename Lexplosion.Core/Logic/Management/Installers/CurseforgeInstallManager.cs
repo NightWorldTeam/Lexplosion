@@ -21,7 +21,7 @@ namespace Lexplosion.Logic.Management.Installers
 
         protected override bool LocalInfoIsValid(InstancePlatformData data)
         {
-            return data?.id != null || !Int32.TryParse(data.id, out _);
+            return data?.id != null && Int32.TryParse(data.id, out _);
         }
 
         protected override CurseforgeFileInfo GetProjectDefaultInfo(string projectId, string actualInstanceVersion)

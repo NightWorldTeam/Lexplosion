@@ -20,6 +20,6 @@ namespace Lexplosion.Logic.Management.Sources
             return null;
         }
 
-        public InstanceSource SourceType { get => InstanceSource.Modrinth; }
+        public InstanceSource SourceType { get => InstanceSource.Local; }
     }
 }
