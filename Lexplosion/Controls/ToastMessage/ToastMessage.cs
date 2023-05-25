@@ -117,7 +117,7 @@ namespace Lexplosion.Controls
 
         public ToastMessage()
         {
-            // here we call timer.
+            // here we call _timer.
             // TODO: Сделать анимацию.
         }
 

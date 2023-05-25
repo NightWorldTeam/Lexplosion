@@ -144,6 +144,8 @@
 
                     <Button
                         Grid.Column="2"
+                        Command="{Binding DataContext.SendFriendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        CommandParameter="{Binding}"
                         Style="{StaticResource IconicButton}"
                         Visibility="{Binding IsSendFriendRequests, Converter={StaticResource NegativeConvertBoolToVisibility}}">
                         <Button.Content>
@@ -185,6 +187,8 @@
 
                     <Button
                         Grid.Column="2"
+                        Command="{Binding DataContext.CancelFriendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        CommandParameter="{Binding}"
                         Style="{StaticResource IconicButton}"
                         Visibility="{Binding IsSendFriendRequests, Converter={StaticResource ConvertBoolToVisibility}}">
                         <Button.Content>

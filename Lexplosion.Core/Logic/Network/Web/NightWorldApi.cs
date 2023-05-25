@@ -347,7 +347,7 @@ namespace Lexplosion.Logic.Network
         /// <param name="login">Логин потльзователя, которому нужно отправить заявку в друзья или принять её.</param>
         public static void AddFriend(string UUID, string sessionToken, string login)
         {
-            ToServer.HttpPost(LaunсherSettings.URL.UserApi + "addFriend?user_login=" + UUID, new Dictionary<string, string>
+            ToServer.HttpPost(LaunсherSettings.URL.UserApi + "addFriend?user_login=" + login, new Dictionary<string, string>
             {
                 ["UUID"] = UUID,
                 ["sessionToken"] = sessionToken
@@ -364,7 +364,8 @@ namespace Lexplosion.Logic.Network
         /// <param name="login">Логин пользователя.</param>
         public static void RemoveFriend(string UUID, string sessionToken, string login)
         {
-            ToServer.HttpPost(LaunсherSettings.URL.UserApi + "removeFriend?user_login=" + UUID, new Dictionary<string, string>
+
+            ToServer.HttpPost(LaunсherSettings.URL.UserApi + "removeFriend?user_login=" + login, new Dictionary<string, string>
             {
                 ["UUID"] = UUID,
                 ["sessionToken"] = sessionToken

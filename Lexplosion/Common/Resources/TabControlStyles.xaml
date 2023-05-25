@@ -42,6 +42,7 @@
 
     <Style x:Key="SwitcherTabItem" TargetType="{x:Type TabItem}">
         <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="IsSelected" Value="{Binding IsSelected}" />
         <Setter Property="TextElement.Foreground" Value="LightGray" />
         <Setter Property="TextElement.FontSize" Value="16" />
         <Setter Property="TextElement.FontWeight" Value="Medium" />
@@ -131,6 +132,7 @@
     </Style>
 
     <Style x:Key="LeftMenuItem" TargetType="{x:Type TabItem}">
+        <Setter Property="IsSelected" Value="{Binding IsSelected}" />
         <Setter Property="Width" Value="246" />
         <Setter Property="Height" Value="60" />
         <Setter Property="TextElement.Foreground" Value="#E1E1E3" />

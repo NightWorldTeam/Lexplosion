@@ -19,7 +19,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu
         /* multiplayer fields */
         private readonly List<Tab<VMBase>> _multiplayerTabs;
         private GeneralMultiplayerViewModel _generalMultiplayerViewModel = new GeneralMultiplayerViewModel(MainViewModel.ShowToastMessage);
+        /* friends vms */
         private FriendsTabViewModel _friendsTabViewModel = new FriendsTabViewModel(MainViewModel.ShowToastMessage);
+        private VMBase _findFriendsTabViewModel = new FindFriendsTabViewModel(MainViewModel.ShowToastMessage);
         private ChannelTabViewModel _channelTabViewModel = new ChannelTabViewModel();
         private AboutUsViewModel _aboutUsViewModel = new AboutUsViewModel();
         /* multiplayer fields */
@@ -174,12 +176,19 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
         private List<Tab<VMBase>> InitializeMultiplayerTabs()
         {
-
             VMBase curtains = new DevСurtainViewModel(
                 ResourceGetter.GetString("registerNightWorldAccount"),
                 () => Process.Start(@"https://night-world.org/authentication"
             ))
             { Message = ResourceGetter.GetString("warningAboutMultiplayer") };
+
+            var friendsVMTab = new Tab<VMBase>
+            {
+                Header = ResourceGetter.GetString("friends"),
+                Content = GlobalData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
+            };
+
+            friendsVMTab.IsSelectedChangedEvent += (bool isSelected) => OnSelectedChanged(isSelected, false);
 
             return new List<Tab<VMBase>>()
             {
@@ -193,16 +202,14 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                     Header = ResourceGetter.GetString("general"),
                     Content =  GlobalData.User.AccountType == AccountType.NightWorld ? _generalMultiplayerViewModel : curtains
                 },
+                friendsVMTab,
                 new Tab<VMBase>
-                {
-                    Header = ResourceGetter.GetString("friends"),
-                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? _friendsTabViewModel : curtains
-                },
-                new Tab<VMBase>
-                {
-                    Header = "Find Friends",
-                    Content = GlobalData.User.AccountType == AccountType.NightWorld ? new FindFriendsTabViewModel() : curtains
-                }
+            {
+                Header = "Find Friends",
+                Content = GlobalData.User.AccountType == AccountType.NightWorld ? _findFriendsTabViewModel : curtains
+            }
+
+            
                 //new Tab<VMBase>
                 //{
                 //    Header = ResourceGetter.GetString("channels"),
@@ -245,6 +252,14 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
         private ObservableCollection<Tab<VMBase>> InitializeMainMenuTabs()
         {
+            var multiplayerTab = new Tab<VMBase>
+            {
+                Header = ResourceGetter.GetString("multiplayer"),
+                Content = _multiplayerTabMenu
+            };
+
+            multiplayerTab.IsSelectedChangedEvent += (bool isSelected) => OnSelectedChanged(isSelected, true);
+
             return new ObservableCollection<Tab<VMBase>>
             {
                 new Tab<VMBase>
@@ -257,11 +272,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                     Header = ResourceGetter.GetString("library"),
                     Content = _libraryVM
                 },
-                new Tab<VMBase>
-                {
-                    Header = ResourceGetter.GetString("multiplayer"),
-                    Content = _multiplayerTabMenu
-                },
+                multiplayerTab,
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("settings"),
@@ -269,6 +280,20 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                 },
             };
         }
+
+
+        private void OnSelectedChanged(bool isSelected, bool isMultiplayerPage = false)
+        {
+            if (isSelected && !isMultiplayerPage)
+            {
+                _friendsTabViewModel.Model.StartDataUpdate();
+            }
+            else
+            {
+                _friendsTabViewModel.Model.StopDataUpdate();
+            }
+        }
+
 
         #endregion Private Methods
     }

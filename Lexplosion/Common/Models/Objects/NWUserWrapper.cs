@@ -17,7 +17,15 @@ namespace Lexplosion.Common.Models.Objects
         public uint ManualFriendsCount => 0;
         public string CurrentRunningInstanceName => string.IsNullOrEmpty(_user.GameClientName) ? ResourceGetter.GetString("minecraftIsNotRunning") : _user.GameClientName;
 
-        public bool IsSendFriendRequests { get; set; }
+        private bool _isSendFriendRequests;
+        public bool IsSendFriendRequests 
+        {
+            get => _isSendFriendRequests; set 
+            {
+                _isSendFriendRequests = value;
+                OnPropertyChanged();
+            }
+        }
 
         public NWUserWrapper(NwUser user)
         {

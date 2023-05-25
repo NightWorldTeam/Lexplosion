@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Controls;
 using Lexplosion.Global;
@@ -14,46 +17,107 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 {
     public class FriendsTabModel : VMBase
     {
+        private readonly DispatcherTimer _timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 3) };
+
         public ObservableCollection<NWUserWrapper> Friends { get; } = new ObservableCollection<NWUserWrapper>();
         public ObservableCollection<NWUserWrapper> FriendRequestsOutgoing { get; } = new ObservableCollection<NWUserWrapper>();
         public ObservableCollection<NWUserWrapper> FriendRequestsIncoming { get; } = new ObservableCollection<NWUserWrapper>();
 
-
         public FriendsTabModel()
         {
-            //var nicks = new List<string> { "_Hel2x_", "VagOne", "Andrysha", "Sklaip", "Petya", "Eblan Kakoyta" };
-
-            var random = new Random();
-
-            foreach (var friend in NightWorldApi.GetFriends(GlobalData.User.UUID, GlobalData.User.SessionToken, GlobalData.User.Login))
+            Lexplosion.Runtime.TaskRun(() =>
             {
-                Friends.Add(new NWUserWrapper(friend));
-            }
+                var friendRequests = NightWorldApi.GetFriendRequests(GlobalData.User.UUID, GlobalData.User.SessionToken);
+                var friends = NightWorldApi.GetFriends(GlobalData.User.UUID, GlobalData.User.SessionToken, GlobalData.User.Login);
 
-            UpdateFriendRequestsOutcoming();
-            UpdateFriendRequestsIncoming();
+                App.Current.Dispatcher?.Invoke(() => {
+                    UpdateFriendRequestsOutcoming(friendRequests.Outgoing);
+                    UpdateFriendRequestsIncoming(friendRequests.Incoming);
+                    UpdateFriends(friends);
+                });
+            });
+            _timer.Tick += timer_Tick;
+        }
+
+        public void StartDataUpdate() 
+        {
+            _timer.Start();
+        }
+
+        public void StopDataUpdate() 
+        {
+            _timer.Stop();
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            Lexplosion.Runtime.TaskRun(() =>
+            {
+                var friendRequests = NightWorldApi.GetFriendRequests(GlobalData.User.UUID, GlobalData.User.SessionToken);
+                var friends = NightWorldApi.GetFriends(GlobalData.User.UUID, GlobalData.User.SessionToken, GlobalData.User.Login);
+
+                App.Current.Dispatcher?.Invoke(() => { 
+                    UpdateFriendRequestsOutcoming(friendRequests.Outgoing);
+                    UpdateFriendRequestsIncoming(friendRequests.Incoming);
+                    UpdateFriends(friends);
+                });
+            });
         }
 
 
         #region Public Methods
 
 
-        public void UpdateFriendRequestsOutcoming() 
+        private void UpdateFriends(IEnumerable<NwUser> friends) 
+        {
+            Friends.Clear();
+            foreach (var friend in friends)
+            {
+                Friends.Add(new NWUserWrapper(friend));
+            }
+        }
+
+        private void UpdateFriendRequestsOutcoming(IEnumerable<NwUser> outgoingRequests) 
         {
             FriendRequestsOutgoing.Clear();
-            foreach (var friendRequest in NightWorldApi.GetFriendRequests(GlobalData.User.UUID, GlobalData.User.SessionToken).Outgoing)
+            foreach (var friendRequest in outgoingRequests)
             {
                 FriendRequestsOutgoing.Add(new NWUserWrapper(friendRequest));
             }
         }
 
-        public void UpdateFriendRequestsIncoming() 
+        private void UpdateFriendRequestsIncoming(IEnumerable<NwUser> incomingRequests) 
         {
             FriendRequestsIncoming.Clear();
-            foreach (var friendRequest in NightWorldApi.GetFriendRequests(GlobalData.User.UUID, GlobalData.User.SessionToken).Incoming)
+            foreach (var friendRequest in incomingRequests)
             {
                 FriendRequestsIncoming.Add(new NWUserWrapper(friendRequest));
             }
+        }
+
+        public void RemoveFriendRequest(NWUserWrapper user)
+        {
+            if (FriendRequestsOutgoing.Contains(user))
+            {
+                FriendRequestsOutgoing.Remove(user);
+            }
+            else if (FriendRequestsIncoming.Contains(user))
+            {
+                FriendRequestsIncoming.Remove(user);
+            }
+        }
+
+        public void RemoveFriend(NWUserWrapper user)
+        {
+            if (Friends.Contains(user))
+            {
+                Friends.Remove(user);
+            }
+        }
+
+        public void AddFriend(NWUserWrapper user) 
+        {
+            Friends.Add(user);
         }
 
 
@@ -85,6 +149,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             {
                 var friend = (NWUserWrapper)obj;
                 NightWorldApi.RemoveFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, friend.Login);
+                Model.RemoveFriend(friend);
                 // TODO: Friends Translate
                 DoNotification("Friends Changed", friend.Login + " is not your friend now(", 5, 0);
             }));
@@ -97,6 +162,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             {
                 var friend = (NWUserWrapper)obj;
                 NightWorldApi.RemoveFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, friend.Login);
+                Model.RemoveFriendRequest(friend);
                 // TODO: Friends Translate
                 DoNotification("Friends Changed", friend.Login + " friends requests was cancel(", 5, 0);
             }));
@@ -112,6 +178,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             {
                 var user = (NWUserWrapper)obj;
                 NightWorldApi.AddFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, user.Login);
+                Model.AddFriend(user);
                 // TODO: Friends Translate
                 DoNotification("Friends Changed", user.Login + " is your friend now(", 5, 0);
             }));
@@ -123,7 +190,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 
         public FriendsTabViewModel(DoNotificationCallback doNotification)
         {
-            DoNotification = doNotification ?? DoNotification;
+            DoNotification = _doNotification;
             Model = new FriendsTabModel();
         }
     }

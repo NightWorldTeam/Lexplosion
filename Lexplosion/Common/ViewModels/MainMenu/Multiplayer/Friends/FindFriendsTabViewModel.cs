@@ -1,15 +1,10 @@
-﻿using DiscordRPC.Events;
-using Lexplosion.Common.Models.Objects;
+﻿using Lexplosion.Common.Models.Objects;
 using Lexplosion.Controls;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
@@ -81,7 +76,6 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
                 Users.Add(new NWUserWrapper(user));
             }
             NextUsersCatalogPageIndex++;
-            Console.WriteLine(filterString + " " + UsersCatalogPage.NextPage);
         }
 
         public void MovePrevUserCatalogPage(string filterString = "")
@@ -101,6 +95,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
 
     public class FindFriendsTabViewModel : VMBase, INotifiable
     {
+        public event Action<NWUserWrapper> FriendRequestSended;
+
+
         private DoNotificationCallback _doNotification;
         public DoNotificationCallback DoNotification
         {
@@ -145,14 +142,15 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
                 NightWorldApi.AddFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, user.Login);
                 user.IsSendFriendRequests = true;
                 user.ExecuteOnPropertiesChanged();
+                DoNotification("Friends Changed", user.Login + " requests was send(", 5, 0);
             }));
         }
 
 
-        private RelayCommand _cancelFriendRequestsCommand;
-        public ICommand CancelFriendRequestsCommand 
+        private RelayCommand _cancelFriendRequestCommand;
+        public ICommand CancelFriendRequestCommand 
         {
-            get => _cancelFriendRequestsCommand ?? (_cancelFriendRequestsCommand = new RelayCommand(obj =>
+            get => _cancelFriendRequestCommand ?? (_cancelFriendRequestCommand = new RelayCommand(obj =>
             {
                 var user = (NWUserWrapper)obj;
                 NightWorldApi.RemoveFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, user.Login);
@@ -165,8 +163,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         #endregion Commands
 
 
-        public FindFriendsTabViewModel()
+        public FindFriendsTabViewModel(DoNotificationCallback doNotification)
         {
+            DoNotification = doNotification ?? DoNotification;
             Model = new FindFrinedsTabModel();
         }
     }

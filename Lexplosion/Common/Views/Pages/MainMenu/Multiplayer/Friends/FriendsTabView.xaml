@@ -114,7 +114,11 @@
                     </StackPanel>
 
 
-                    <Button Grid.Column="2" Style="{StaticResource IconicButton}">
+                    <Button
+                        Grid.Column="2"
+                        Command="{Binding DataContext.RemoveFriendCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        CommandParameter="{Binding}"
+                        Style="{StaticResource IconicButton}">
                         <Border
                             x:Name="Border"
                             Padding="5"
@@ -237,7 +241,8 @@
 
                     <Button
                         Grid.Column="2"
-                        Command="{Binding CancelFriendRequestCommand}"
+                        Command="{Binding DataContext.CancelFriendRequestCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                        CommandParameter="{Binding}"
                         Style="{StaticResource IconicButton}">
                         <Border
                             x:Name="Border"
@@ -492,33 +497,73 @@
                             </Style>
                         </TabControl.Resources>
                         <TabItem Header="Incoming" Style="{StaticResource TextTabItem}">
-                            <ItemsControl
-                                Width="604"
-                                HorizontalAlignment="Center"
-                                ItemContainerStyleSelector="{StaticResource EvenItemStyleSelector}"
-                                ItemTemplate="{StaticResource FriendRequestIncoming}"
-                                ItemsSource="{Binding Model.FriendRequestsIncoming}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel IsItemsHost="True" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
+                            <Grid>
+                                <TextBlock
+                                    Margin="0,16,0,0"
+                                    HorizontalAlignment="Center"
+                                    FontSize="18"
+                                    Foreground="White"
+                                    Text="Входящие заявки отсутсвуют.">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Model.FriendRequestsIncoming.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <ItemsControl
+                                    Width="604"
+                                    HorizontalAlignment="Center"
+                                    ItemContainerStyleSelector="{StaticResource EvenItemStyleSelector}"
+                                    ItemTemplate="{StaticResource FriendRequestIncoming}"
+                                    ItemsSource="{Binding Model.FriendRequestsIncoming}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel IsItemsHost="True" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </Grid>
                         </TabItem>
 
                         <TabItem Header="Outgoing" Style="{StaticResource TextTabItem}">
-                            <ItemsControl
-                                Width="604"
-                                HorizontalAlignment="Center"
-                                ItemContainerStyleSelector="{StaticResource EvenItemStyleSelector}"
-                                ItemTemplate="{StaticResource FriendRequestOutgoing}"
-                                ItemsSource="{Binding Model.FriendRequestsOutgoing}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel IsItemsHost="True" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
+                            <Grid>
+                                <TextBlock
+                                    Margin="0,16,0,0"
+                                    HorizontalAlignment="Center"
+                                    FontSize="18"
+                                    Foreground="White"
+                                    Text="Входящие заявки отсутсвуют.">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Model.FriendRequestsOutgoing.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <ItemsControl
+                                    Width="604"
+                                    HorizontalAlignment="Center"
+                                    ItemContainerStyleSelector="{StaticResource EvenItemStyleSelector}"
+                                    ItemTemplate="{StaticResource FriendRequestOutgoing}"
+                                    ItemsSource="{Binding Model.FriendRequestsOutgoing}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel IsItemsHost="True" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </Grid>
                         </TabItem>
                     </TabControl>
                 </Grid>
