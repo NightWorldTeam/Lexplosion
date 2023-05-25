@@ -366,4 +366,15 @@
     <s:String x:Key="offline">Offline</s:String>
     <s:String x:Key="playingIn">Playing in {0}</s:String>
     <s:String x:Key="playing">Playing</s:String>
+
+    <s:String x:Key="findSomeone">Who are we looking for?</s:String>
+    <s:String x:Key="rejectFriendRequest">Reject friend request</s:String>
+    <s:String x:Key="cancelFriendRequest">Cancel friend request</s:String>
+    <s:String x:Key="weCannotFindUserWithThisName">We could not find a player with this nickname</s:String>
+    <s:String x:Key="findFriends">Find Friends</s:String>
+    <s:String x:Key="requests">Requests</s:String>
+    <s:String x:Key="incoming">Incoming</s:String>
+    <s:String x:Key="outgoing">Outgoing</s:String>
+    <s:String x:Key="noOutgoingRequests">There are no outgoing requests.</s:String>
+    <s:String x:Key="noIncomingRequests">There are no incoming requests.</s:String>
 </ResourceDictionary>

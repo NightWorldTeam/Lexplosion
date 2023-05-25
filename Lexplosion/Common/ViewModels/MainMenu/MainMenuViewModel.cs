@@ -205,7 +205,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                 friendsVMTab,
                 new Tab<VMBase>
             {
-                Header = "Find Friends",
+                Header = ResourceGetter.GetString("findFriends"),
                 Content = GlobalData.User.AccountType == AccountType.NightWorld ? _findFriendsTabViewModel : curtains
             }
 

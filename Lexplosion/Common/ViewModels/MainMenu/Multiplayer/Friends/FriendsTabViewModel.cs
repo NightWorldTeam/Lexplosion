@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Controls;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
-using Lexplosion.Tools;
 
 namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 {

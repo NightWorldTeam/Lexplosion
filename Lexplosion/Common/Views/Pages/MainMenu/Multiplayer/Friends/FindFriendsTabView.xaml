@@ -223,7 +223,7 @@
                                     FontSize="12"
                                     FontWeight="Bold"
                                     Foreground="White"
-                                    Text="{DynamicResource sendFriendRequest}" />
+                                    Text="{DynamicResource cancelFriendRequest}" />
                             </ToolTip>
                         </Button.ToolTip>
                     </Button>
@@ -240,6 +240,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="32" />
             </Grid.RowDefinitions>
+
             <controls:SearchBox
                 Width="256"
                 Height="36"
@@ -247,7 +248,7 @@
                 CaretBrush="{DynamicResource BrandSolidColorBrush}"
                 FontSize="14"
                 Foreground="LightGray"
-                Placeholder="Кого ищим?"
+                Placeholder="{DynamicResource findSomeone}"
                 SearchAction="{Binding Model.SetNewFilterValueAction}" />
 
             <ItemsControl
@@ -272,7 +273,7 @@
                 FontSize="16"
                 FontWeight="Medium"
                 Foreground="LightGray"
-                Text="Мы не смогли найти человек с этим ником">
+                Text="weCannotFindUserWithThisName">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed" />

@@ -413,4 +413,15 @@
     <s:String x:Key="offline">Не сети</s:String>
     <s:String x:Key="playingIn">Играет в {0}</s:String>
     <s:String x:Key="playing">Играет</s:String>
+
+    <s:String x:Key="findSomeone">Кого ищем?</s:String>
+    <s:String x:Key="rejectFriendRequest">Отклонить заявку в друзья</s:String>
+    <s:String x:Key="cancelFriendRequest">Отменить заявку в друзья</s:String>
+    <s:String x:Key="weCannotFindUserWithThisName">Мы не смогли найти игрока с этим ником</s:String>
+    <s:String x:Key="findFriends">Поиск друзей</s:String>
+    <s:String x:Key="requests">Заявки</s:String>
+    <s:String x:Key="incoming">Входящие</s:String>
+    <s:String x:Key="outgoing">Исходящие</s:String>
+    <s:String x:Key="noOutgoingRequests">Исходящие заявки отсутствуют.</s:String>
+    <s:String x:Key="noIncomingRequests">Входящие заявки отсутствуют.</s:String>
 </ResourceDictionary>

@@ -275,7 +275,7 @@
                                     FontSize="12"
                                     FontWeight="Bold"
                                     Foreground="White"
-                                    Text="{DynamicResource unfriend}" />
+                                    Text="{DynamicResource cancelFriendRequest}" />
                             </ToolTip>
                         </Button.ToolTip>
                     </Button>
@@ -461,7 +461,7 @@
                 </Style>
             </TabControl.Resources>
 
-            <TabItem Header="Friends" Style="{StaticResource FormlessTabItem}">
+            <TabItem Header="{DynamicResource friends}" Style="{StaticResource FormlessTabItem}">
                 <ItemsControl
                     Width="604"
                     HorizontalAlignment="Center"
@@ -477,9 +477,10 @@
             </TabItem>
 
             <!--  Requests  -->
-            <TabItem Header="Requests" Style="{StaticResource FormlessTabItem}">
+            <TabItem Header="{DynamicResource requests}" Style="{StaticResource FormlessTabItem}">
                 <Grid>
                     <TextBlock
+                        Width="5"
                         Margin="32,2"
                         HorizontalAlignment="Center"
                         FontSize="14"
@@ -496,14 +497,17 @@
                                 <Setter Property="HorizontalAlignment" Value="Center" />
                             </Style>
                         </TabControl.Resources>
-                        <TabItem Header="Incoming" Style="{StaticResource TextTabItem}">
+                        <TabItem
+                            Margin="0,0,4,0"
+                            Header="{DynamicResource incoming}"
+                            Style="{StaticResource TextTabItem}">
                             <Grid>
                                 <TextBlock
                                     Margin="0,16,0,0"
                                     HorizontalAlignment="Center"
                                     FontSize="18"
                                     Foreground="White"
-                                    Text="Входящие заявки отсутсвуют.">
+                                    Text="{DynamicResource noIncomingRequests}">
                                     <TextBlock.Style>
                                         <Style TargetType="{x:Type TextBlock}">
                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -531,14 +535,17 @@
                             </Grid>
                         </TabItem>
 
-                        <TabItem Header="Outgoing" Style="{StaticResource TextTabItem}">
+                        <TabItem
+                            Margin="4,0,0,0"
+                            Header="{DynamicResource outgoing}"
+                            Style="{StaticResource TextTabItem}">
                             <Grid>
                                 <TextBlock
                                     Margin="0,16,0,0"
                                     HorizontalAlignment="Center"
                                     FontSize="18"
                                     Foreground="White"
-                                    Text="Входящие заявки отсутсвуют.">
+                                    Text="{DynamicResource noOutgoingRequests}">
                                     <TextBlock.Style>
                                         <Style TargetType="{x:Type TextBlock}">
                                             <Setter Property="Visibility" Value="Collapsed" />
