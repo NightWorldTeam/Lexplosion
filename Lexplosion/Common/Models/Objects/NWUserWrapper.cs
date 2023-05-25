@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Security.Policy;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 
 namespace Lexplosion.Common.Models.Objects
 {
@@ -15,12 +16,12 @@ namespace Lexplosion.Common.Models.Objects
         public BitmapImage Avatar { get; }
         public ActivityStatus Status => _user.ActivityStatus;
         public uint ManualFriendsCount => 0;
-        public string CurrentRunningInstanceName => string.IsNullOrEmpty(_user.GameClientName) ? ResourceGetter.GetString("minecraftIsNotRunning") : _user.GameClientName;
+        public string CurrentRunningInstanceName => ActivityStatusToString(Status);
 
         private bool _isSendFriendRequests;
-        public bool IsSendFriendRequests 
+        public bool IsSendFriendRequests
         {
-            get => _isSendFriendRequests; set 
+            get => _isSendFriendRequests; set
             {
                 _isSendFriendRequests = value;
                 OnPropertyChanged();
@@ -38,12 +39,30 @@ namespace Lexplosion.Common.Models.Objects
         }
 
 
-        public void ExecuteOnPropertiesChanged() 
+        public void ExecuteOnPropertiesChanged()
         {
-            foreach (var prop in this.GetType().GetProperties()) 
+            foreach (var prop in this.GetType().GetProperties())
             {
                 OnPropertyChanged(prop.Name);
             }
+        }
+
+        private string ActivityStatusToString(ActivityStatus status)
+        {
+            switch (status)
+            {
+                case ActivityStatus.Offline: return ResourceGetter.GetString("offline");
+                case ActivityStatus.Online: return ResourceGetter.GetString("online");
+                case ActivityStatus.InGame:
+                    var s = String.Format(ResourceGetter.GetString("playingIn"), _user.GameClientName);
+                    if (string.IsNullOrEmpty(_user.GameClientName)) 
+                    {
+                        s = ResourceGetter.GetString("playing");
+                    }
+                    return s;
+                case ActivityStatus.NotDisturb: return ResourceGetter.GetString("doNotDisturb");
+            }
+            return "";
         }
     }
 }
