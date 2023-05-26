@@ -294,8 +294,15 @@
                 <Button
                     Width="64"
                     Height="32"
-                    Command="{Binding MovePrevPageCommand}"
-                    Content="&lt;">
+                    Command="{Binding MovePrevPageCommand}">
+                    <Button.Content>
+                        <Viewbox Width="12" Height="12">
+                            <Path
+                                extension:PathExtension.StringData="{StaticResource LeftFilledArrow}"
+                                Fill="White"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Button.Content>
                     <Button.Style>
                         <Style BasedOn="{StaticResource Button}" TargetType="{x:Type Button}">
                             <Style.Triggers>
@@ -314,8 +321,15 @@
                     Width="64"
                     Height="32"
                     Margin="4,0,0,0"
-                    Command="{Binding MoveNextPageCommand}"
-                    Content="&gt;">
+                    Command="{Binding MoveNextPageCommand}">
+                    <Button.Content>
+                        <Viewbox Width="12" Height="12">
+                            <Path
+                                extension:PathExtension.StringData="{StaticResource RightFilledArrow}"
+                                Fill="White"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Button.Content>
                     <Button.Style>
                         <Style BasedOn="{StaticResource Button}" TargetType="{x:Type Button}">
                             <Style.Triggers>

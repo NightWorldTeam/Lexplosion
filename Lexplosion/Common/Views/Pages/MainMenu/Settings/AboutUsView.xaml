@@ -17,24 +17,45 @@
 
     <Grid>
         <Border Padding="45,32,42,0">
-            <Border
-                VerticalAlignment="Top"
-                BorderBrush="#ededed"
-                BorderThickness="0,0,0,0">
+            <Border VerticalAlignment="Top">
                 <StackPanel>
-                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                        <Image
-                            Width="30"
-                            Height="30"
-                            Source="pack://application:,,,/Assets/images/icons/logo.ico" />
+                    <Grid ShowGridLines="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Image
+                                Width="30"
+                                Height="30"
+                                Source="pack://application:,,,/Assets/images/icons/logo.ico" />
 
-                        <TextBlock
+                            <TextBlock
+                                Margin="16,0,0,0"
+                                FontSize="20"
+                                FontWeight="Medium"
+                                Foreground="#ededed"
+                                Text="Lexplosion" />
+                        </StackPanel>
+
+
+                        <StackPanel
+                            Grid.Column="2"
                             Margin="16,3,0,0"
-                            FontSize="20"
-                            FontWeight="Medium"
-                            Foreground="#ededed"
-                            Text="Lexplosion" />
-                    </StackPanel>
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                            <TextBlock FontSize="16" Text="Version" />
+                            <TextBlock
+                                x:Name="VersionTextBlock"
+                                Margin="8,2,0,0"
+                                FontSize="14"
+                                FontWeight="Medium" />
+                        </StackPanel>
+                    </Grid>
+
+
+                    <!--  Authors  -->
                     <Border
                         Margin="0,16,0,0"
                         Padding="0,16,0,0"
@@ -42,123 +63,102 @@
                         BorderThickness="0,1,0,0">
                         <StackPanel>
                             <TextBlock
+                                Margin="0,0,0,16"
                                 FontSize="16"
                                 FontWeight="Medium"
-                                Text="Version" />
-                            <TextBlock
-                                x:Name="VersionTextBlock"
-                                Margin="0,8,0,0"
-                                FontSize="14"
-                                FontWeight="Bold" />
+                                Text="Authors" />
+
+                            <StackPanel Orientation="Horizontal">
+                                <Border
+                                    Width="250"
+                                    Padding="16,8"
+                                    HorizontalAlignment="Center"
+                                    Background="{DynamicResource SepSolidColorBrush}"
+                                    CornerRadius="5">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border
+                                            x:Name="Hel2xHead"
+                                            Width="32"
+                                            Height="32"
+                                            Background="{DynamicResource BrandSolidColorBrush}"
+                                            CornerRadius="5" />
+
+                                        <StackPanel Margin="16,0,0,0">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="#167ffc"
+                                                Text="Igor Shaposhnikov" />
+
+
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Opacity="0.7"
+                                                Text="Client / GUI / Disign" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border
+                                    Width="250"
+                                    Margin="16,0,0,0"
+                                    Padding="16,8"
+                                    HorizontalAlignment="Center"
+                                    Background="{DynamicResource SepSolidColorBrush}"
+                                    CornerRadius="5">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border
+                                            x:Name="SklaipHead"
+                                            Width="32"
+                                            Height="32"
+                                            Background="{DynamicResource BrandSolidColorBrush}"
+                                            CornerRadius="5" />
+
+                                        <StackPanel Margin="16,0,0,0">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Foreground="#167FFC"
+                                                Text="Svyatoslav Shmelkov" />
+
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                FontWeight="Medium"
+                                                Opacity="0.7"
+                                                Text="Client / Server Backend" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 
+
+                    <!--  CopyRights  -->
                     <Border
                         Margin="0,16,0,0"
                         Padding="0,16,0,0"
                         BorderBrush="{DynamicResource SepSolidColorBrush}"
                         BorderThickness="0,1,0,0">
-                        <StackPanel>
+                        <StackPanel Margin="0,80,0,0">
                             <TextBlock
-                                Margin="0,0,0,8"
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="Authors" />
-
-                            <Border
-                                Padding="16"
-                                Background="{DynamicResource CallToActionBackgroundButton}"
-                                BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                                BorderThickness="2"
-                                CornerRadius="5">
-                                <StackPanel>
-                                    <TextBlock
-                                        Margin="0,8,0,0"
-                                        HorizontalAlignment="Center"
-                                        FontFamily="{DynamicResource Arkhip}"
-                                        FontSize="18"
-                                        FontWeight="Bold"
-                                        Foreground="#167FFC"
-                                        Text="NightWorldTeam Developers" />
-                                    <StackPanel Margin="0,16,0,0">
-                                        <Border
-                                            Width="350"
-                                            Margin="0,8,0,0"
-                                            Padding="16"
-                                            HorizontalAlignment="Center"
-                                            Background="{DynamicResource SepSolidColorBrush}"
-                                            CornerRadius="5">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    FontSize="14"
-                                                    FontWeight="Medium"
-                                                    Text="Igor Shaposhnikov">
-                                                    <TextBlock.Foreground>
-                                                        <LinearGradientBrush>
-                                                            <GradientStop Offset="0" Color="Aquamarine" />
-                                                            <GradientStop Offset="0.2" Color="#167ffc" />
-                                                            <GradientStop Offset="0.4" Color="#40A710" />
-                                                            <GradientStop Offset="0.6" Color="Red" />
-                                                            <GradientStop Offset="0.8" Color="Purple" />
-                                                            <GradientStop Offset="1" Color="Aqua" />
-                                                        </LinearGradientBrush>
-                                                    </TextBlock.Foreground>
-                                                </TextBlock>
-
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    FontSize="14"
-                                                    FontWeight="ExtraBlack"
-                                                    Opacity="0.7"
-                                                    Text=" - WPF Part" />
-                                            </StackPanel>
-                                        </Border>
-
-                                        <Border
-                                            Width="350"
-                                            Margin="0,8,0,0"
-                                            Padding="16"
-                                            HorizontalAlignment="Center"
-                                            Background="{DynamicResource SepSolidColorBrush}"
-                                            CornerRadius="5">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    FontSize="14"
-                                                    FontWeight="Medium"
-                                                    Foreground="#167FFC"
-                                                    Text="Svyatoslav Shmelkov" />
-
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    FontSize="14"
-                                                    FontWeight="ExtraBlack"
-                                                    Opacity="0.7"
-                                                    Text=" - Client/Server Backend" />
-
-                                                <!--<Border
-                                                        Width="35"
-                                                        Height="35"
-                                                        Margin="20,0,0,0"
-                                                        Background="#0077ff"
-                                                        CornerRadius="5">
-                                                        <Viewbox Width="25" Height="25">
-                                                            <Path
-                                                                Width="40"
-                                                                Height="24.98"
-                                                                Data="M 15.96 21.61 c -6.84 0 -10.74 -4.68 -10.9 -12.48 H 8.5 c 0.11 5.72 2.63 8.14 4.63 8.64 V 9.13 h 3.23 v 4.93 c 1.97 -0.21 4.05 -2.46 4.75 -4.94 h 3.22 a 9.53 9.53 0 0 1 -4.38 6.23 a 9.87 9.87 0 0 1 5.13 6.26 h -3.55 c -0.76 -2.37 -2.66 -4.21 -5.17 -4.46 v 4.46 h -0.39 Z"
-                                                                Fill="#ededed"
-                                                                Stretch="Fill" />
-                                                        </Viewbox>
-                                                    </Border>-->
-                                            </StackPanel>
-                                        </Border>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
-
+                                x:Name="CopyrightTextBlock"
+                                FontSize="13"
+                                Foreground="LightGray"
+                                Text="© NightWorld, 2022г. Все права защищены." />
+                            <TextBlock
+                                x:Name="ProtectionTextBlock"
+                                Margin="0,8,0,0"
+                                FontSize="13"
+                                Foreground="LightGray"
+                                Text="Данная программа защищена законами об авторских правах и международными соглашениями. Незаконное воспроизведение или распространение данной программы или любой ее части влечет гражданскую и уголовкную ответственность."
+                                TextWrapping="WrapWithOverflow" />
                         </StackPanel>
-
                     </Border>
                 </StackPanel>
             </Border>
