@@ -273,7 +273,7 @@
                 FontSize="16"
                 FontWeight="Medium"
                 Foreground="LightGray"
-                Text="weCannotFindUserWithThisName">
+                Text="{DynamicResource weCannotFindUserWithThisName}">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed" />
@@ -333,7 +333,7 @@
                     <Button.Style>
                         <Style BasedOn="{StaticResource Button}" TargetType="{x:Type Button}">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Model.UsersCatalogPage.NextPage}" Value="False">
+                                <DataTrigger Binding="{Binding Model.CurrentUsersCatalogPage.NextPage}" Value="False">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Model.Users.Count}" Value="0">

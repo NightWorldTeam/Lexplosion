@@ -290,6 +290,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             IsPrepare = false;
                             _complitedError.Invoke();
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.CurseforgeIdError:
@@ -297,6 +298,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Curseforge Id Error", ResourceGetter.GetString("externalIdIncorrect"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.NightworldIdError:
@@ -304,6 +306,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Nightworld Id Error", ResourceGetter.GetString("externalIdIncorrect"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.ServerError:
@@ -311,6 +314,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification(ResourceGetter.GetString("serverError"), ResourceGetter.GetString("failedGetDataFromServer"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.GuardError:
@@ -318,6 +322,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Guard Error", ResourceGetter.GetString("fileVerificationFailed"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.VersionError:
@@ -325,6 +330,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Version Error", ResourceGetter.GetString("versionVerificationFailed"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.ForgeVersionError:
@@ -332,6 +338,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Forge Version Error", ResourceGetter.GetString("modloaderVerificationFailed"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.GamePathError:
@@ -339,6 +346,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Game Path Error", ResourceGetter.GetString("invalidGameDirectory"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.ManifestError:
@@ -346,6 +354,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Manifest Error", ResourceGetter.GetString("failedLoadInstanceManifest"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.JavaDownloadError:
@@ -353,6 +362,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Java Download Error", ResourceGetter.GetString("trySetCustomJavaPath"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                     case InstanceInit.IsCancelled:
@@ -360,6 +370,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification(ResourceGetter.GetString("instanceDownloadWasCanceledSuccessfully"), ResourceGetter.GetString("instanceTitle") + ": " + _instanceFormModel.InstanceClient.Name, 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                             break;
                         }
                     default:
@@ -367,12 +378,16 @@ namespace Lexplosion.Common.Models.InstanceForm
                             IsDownloadInProgress = false;
                             _instanceFormModel.UpperButton.ChangeFuncDownload();
                             _doNotification("Unknown Error", ResourceGetter.GetString("unknownErrorTryRestartLauncher"), 0, 1);
+                            MainModel.Instance.IsInstanceRunning = false;
                         }
                         break;
                 }
 
                     if (isError || !IsPrepareOnly)
                     {
+                        IsDownloadInProgress = false;
+                        IsPrepare = false;
+                        IsPrepareOnly = false;
                         _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
                         _instanceFormModel.UpdateLowerButton();
                     }

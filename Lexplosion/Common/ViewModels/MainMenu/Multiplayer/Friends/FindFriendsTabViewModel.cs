@@ -14,8 +14,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         public ObservableCollection<NWUserWrapper> Users { get; } = new ObservableCollection<NWUserWrapper>();
         
         private UsersCatalogPage _usersCatalogPage;
-        public UsersCatalogPage UsersCatalogPage 
-        { 
+        public UsersCatalogPage CurrentUsersCatalogPage 
+        {
             get => _usersCatalogPage; private set 
             {
                 _usersCatalogPage = value;
@@ -70,8 +70,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         public void MoveNextUserCatalogPage(string filterString = "")
         {
             Users.Clear();
-            UsersCatalogPage = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, NextUsersCatalogPageIndex, filterString);
-            foreach (var user in UsersCatalogPage.Data)
+            CurrentUsersCatalogPage = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, NextUsersCatalogPageIndex, filterString);
+            foreach (var user in CurrentUsersCatalogPage.Data)
             {
                 Users.Add(new NWUserWrapper(user));
             }
@@ -82,8 +82,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         {
             Users.Clear();
             NextUsersCatalogPageIndex--;
-            UsersCatalogPage = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, NextUsersCatalogPageIndex - 1, filterString);
-            foreach (var user in UsersCatalogPage.Data)
+            CurrentUsersCatalogPage = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, NextUsersCatalogPageIndex - 1, filterString);
+            foreach (var user in CurrentUsersCatalogPage.Data)
             {
                 Users.Add(new NWUserWrapper(user));
             }
