@@ -74,17 +74,20 @@ namespace Lexplosion.Logic.Management.Instances
             }
 
             ClientType clientType = ClientType.Vanilla;
-            if (data.Loaders.Contains("fabric"))
+            if (data.Loaders != null)
             {
-                clientType = ClientType.Fabric;
-            }
-            else if (data.Loaders.Contains("forge"))
-            {
-                clientType = ClientType.Forge;
-            }
-            else if (data.Loaders.Contains("quilt"))
-            {
-                clientType = ClientType.Quilt;
+                if (data.Loaders.Contains("fabric"))
+                {
+                    clientType = ClientType.Fabric;
+                }
+                else if (data.Loaders.Contains("forge"))
+                {
+                    clientType = ClientType.Forge;
+                }
+                else if (data.Loaders.Contains("quilt"))
+                {
+                    clientType = ClientType.Quilt;
+                }
             }
 
             var categories = ParseCategories(data.Categories);
