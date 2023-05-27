@@ -324,14 +324,14 @@ namespace Lexplosion.Logic.FileSystem
 
                 //пробуем скачать 4 раза
                 int i = 0;
-                while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4)
+                while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
                 {
                     Thread.Sleep(1500);
                     i++;
                 }
 
                 // все попытки неувенчались успехом
-                if (i > 3)
+                if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
                 {
                     return false;
                 }
@@ -378,14 +378,14 @@ namespace Lexplosion.Logic.FileSystem
 
                 //пробуем скачать 4 раза
                 int i = 0;
-                while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4)
+                while (!DownloadFile(url + ".zip", zipFile, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
                 {
                     Thread.Sleep(1500);
                     i++;
                 }
 
                 // все попытки неувенчались успехом
-                if (i > 3)
+                if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
                 {
                     return false;
                 }
@@ -448,14 +448,14 @@ namespace Lexplosion.Logic.FileSystem
 
                 //пробуем скачать 4 раза
                 int i = 0;
-                while (!DownloadFile(url, file, temp, taskArgs) && i < 4)
+                while (!DownloadFile(url, file, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
                 {
                     Thread.Sleep(1500);
                     i++;
                 }
 
                 // все попытки неувенчались успехом
-                if (i > 3)
+                if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
                 {
                     return false;
                 }
@@ -494,7 +494,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 //пробуем скачать 4 раза
                 int i = 0;
-                while (!DownloadFile(url, file, temp, taskArgs) && i < 4)
+                while (!DownloadFile(url, file, temp, taskArgs) && i < 4 && !taskArgs.CancelToken.IsCancellationRequested)
                 {
                     Thread.Sleep(1500);
                     i++;
