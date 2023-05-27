@@ -378,4 +378,9 @@
     <s:String x:Key="outgoing">Outgoing</s:String>
     <s:String x:Key="noOutgoingRequests">There are no outgoing requests.</s:String>
     <s:String x:Key="noIncomingRequests">There are no incoming requests.</s:String>
+
+    <!--  Instance Form View Model  -->
+    <s:String x:Key="deleteInstance">Delete Instance</s:String>
+    <s:String x:Key="wantDeleteInstance">Do you really want to delete "{0}"?</s:String>
+    <s:String x:Key="wantDeleteInstanceFromLibrary">Do you really want to delete "{0}" for library?</s:String>
 </ResourceDictionary>
