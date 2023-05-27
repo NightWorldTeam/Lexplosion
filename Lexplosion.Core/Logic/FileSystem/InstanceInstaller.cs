@@ -501,7 +501,7 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 // все попытки неувенчались успехом
-                if (i > 3)
+                if (i > 3 || taskArgs.CancelToken.IsCancellationRequested)
                 {
                     return false;
                 }
