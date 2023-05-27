@@ -341,10 +341,10 @@
                         Width="200"
                         Height="32"
                         Command="{Binding ResetPaginatorCommand}"
-                        Content="Вернуться на главную"
+                        Content="{DynamicResource backToFirst}"
                         FontSize="14"
                         Style="{StaticResource DefaultBrandColorButton}"
-                        Visibility="{Binding DataContext.IsPaginatorVisible, Converter={StaticResource NegativeConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                        Visibility="{Binding DataContext.IsPageIsEmptyAndNotFirst, Converter={StaticResource ConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
 
                     <customcontrols:Paginator
                         Margin="0,0,0,15"

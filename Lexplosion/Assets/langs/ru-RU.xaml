@@ -139,6 +139,7 @@
     <s:String x:Key="modrinthDataLoading">Идёт загрузка данных с modrinth.com...</s:String>
     <s:String x:Key="nightworldDataLoading">Идёт загрузка данных с night-world.org...</s:String>
     <s:String x:Key="nothingHere">Мы ничего не нашли по вашему запросу.</s:String>
+    <s:String x:Key="backToFirst">Вернуться на главную</s:String>
 
     <!--  instance form  -->
     <s:String x:Key="more">Больше</s:String>

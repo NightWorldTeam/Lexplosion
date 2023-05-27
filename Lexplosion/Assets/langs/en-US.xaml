@@ -136,6 +136,7 @@
     <s:String x:Key="curseforgeDataLoading">Loading data from curseforge.com...</s:String>
     <s:String x:Key="modrinthDataLoading">Loading data from modrinth.com...</s:String>
     <s:String x:Key="nightworldDataLoading">Loading data from night-world.org...</s:String>
+    <s:String x:Key="backToFirst">Back to First</s:String>
 
     <s:String x:Key="nothingHere">We did not find anything for your request.</s:String>
 

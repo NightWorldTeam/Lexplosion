@@ -316,31 +316,37 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             IsLoaded = false;
             Lexplosion.Runtime.TaskRun((System.Threading.ThreadStart)(() =>
             {
-                lock (_locker)
-                {
-                    var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
+            lock (_locker)
+            {
+                var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
 
-                    Runtime.DebugWrite(SelectedInstanceSource);
-                    Console.WriteLine(PaginatorVM.PageIndex);
-                    var instances = InstanceClient.GetOutsideInstances(
-                        SelectedInstanceSource,
-                        _pageSize,
-                        PaginatorVM.PageIndex - 1,
-                        SelectedCategory,
-                        searchText == null ? _previousSearch : searchText,
-                        SelectedCfSortBy,
-                        (string)gameVersion
-                        );
+                Runtime.DebugWrite(SelectedInstanceSource);
+                Console.WriteLine(PaginatorVM.PageIndex);
+                var instances = InstanceClient.GetOutsideInstances(
+                    SelectedInstanceSource,
+                    _pageSize,
+                    PaginatorVM.PageIndex - 1,
+                    SelectedCategory,
+                    searchText == null ? _previousSearch : searchText,
+                    SelectedCfSortBy,
+                    (string)gameVersion
+                    );
 
 
-                    _previousSearch = searchText == null ? _previousSearch : searchText;
+                _previousSearch = searchText == null ? _previousSearch : searchText;
 
                     if (instances.Count == _pageSize) IsPaginatorVisible = true;
-                    else 
+                    else if (instances.Count == 0)
                     {
                         IsPageIsEmptyAndNotFirst = true;
                         IsPaginatorVisible = false;
                     }
+                    else 
+                    {
+                        IsPageIsEmptyAndNotFirst = false;
+                        IsPaginatorVisible = false;
+                    }
+
 
                     if (instances.Count == 0)
                     {
