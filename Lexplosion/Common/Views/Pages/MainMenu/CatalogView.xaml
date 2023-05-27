@@ -336,12 +336,21 @@
                     IsTabStop="False"
                     ItemsSource="{Binding InstanceList}" />
 
-                <customcontrols:Paginator
-                    Grid.Row="2"
-                    Margin="0,0,0,15"
-                    DataContext="{Binding PaginatorVM}"
-                    Visibility="{Binding DataContext.IsPaginatorVisible, Converter={StaticResource ConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                <Grid Grid.Row="2" Margin="0,0,0,15">
+                    <Button
+                        Width="200"
+                        Height="32"
+                        Command="{Binding ResetPaginatorCommand}"
+                        Content="Вернуться на главную"
+                        FontSize="14"
+                        Style="{StaticResource DefaultBrandColorButton}"
+                        Visibility="{Binding DataContext.IsPaginatorVisible, Converter={StaticResource NegativeConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
 
+                    <customcontrols:Paginator
+                        Margin="0,0,0,15"
+                        DataContext="{Binding PaginatorVM}"
+                        Visibility="{Binding DataContext.IsPaginatorVisible, Converter={StaticResource ConvertBoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                </Grid>
             </StackPanel>
         </ScrollViewer>
 

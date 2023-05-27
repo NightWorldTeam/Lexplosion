@@ -70,7 +70,15 @@ namespace Lexplosion.Common.ViewModels
         {
             get => _pageIndex; set
             {
-                _pageIndex = value;
+                if (_pageIndex < 0)
+                {
+                    _pageIndex = 1;
+                }
+                else 
+                {
+                    _pageIndex = value;
+                }
+                
                 PageChanged?.Invoke(null, true);
                 OnPropertyChanged();
             }

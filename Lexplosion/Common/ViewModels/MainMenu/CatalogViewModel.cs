@@ -1,4 +1,5 @@
-﻿using Lexplosion.Common.Models;
+﻿using DiscordRPC.Events;
+using Lexplosion.Common.Models;
 using Lexplosion.Logic.Management;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Objects;
@@ -185,6 +186,16 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             }
         }
 
+        private bool _isPageIsEmptyAndNotFirst = false;
+        public bool IsPageIsEmptyAndNotFirst
+        {
+            get => _isPageIsEmptyAndNotFirst; set 
+            {
+                _isPageIsEmptyAndNotFirst = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #endregion Properties
 
@@ -202,6 +213,18 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                 {
                     instance.IsDropdownMenuOpen = false;
                 }
+            }));
+        }
+
+
+        private RelayCommand _resetPaginatorCommand;
+        public RelayCommand ResetPaginatorCommand 
+        {
+            get => _resetPaginatorCommand ?? (_resetPaginatorCommand = new RelayCommand(obj => 
+            {
+                PaginatorVM.PageNum = 1;
+                IsPaginatorVisible = true;
+                IsPageIsEmptyAndNotFirst = false;
             }));
         }
 
@@ -235,6 +258,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
 
         #region Private Methods
+
 
         private IList<IProjectCategory> PrepareCategories(InstanceSource instanceSource)
         {
@@ -297,7 +321,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                     var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
 
                     Runtime.DebugWrite(SelectedInstanceSource);
-
+                    Console.WriteLine(PaginatorVM.PageIndex);
                     var instances = InstanceClient.GetOutsideInstances(
                         SelectedInstanceSource,
                         _pageSize,
@@ -312,7 +336,11 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                     _previousSearch = searchText == null ? _previousSearch : searchText;
 
                     if (instances.Count == _pageSize) IsPaginatorVisible = true;
-                    else IsPaginatorVisible = false;
+                    else 
+                    {
+                        IsPageIsEmptyAndNotFirst = true;
+                        IsPaginatorVisible = false;
+                    }
 
                     if (instances.Count == 0)
                     {
@@ -349,6 +377,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                 }
             }));
         }
+
 
         #endregion Private Methods
     }
