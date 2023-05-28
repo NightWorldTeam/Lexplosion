@@ -286,7 +286,7 @@
                             Placeholder="{DynamicResource defaultJavaPath}"
                             PlaceholderFontSize="20"
                             PlaceholderOpacity="0.7"
-                            Text="{Binding Model.JavaPath, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding Model.JavaPath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                         <Button
                             Grid.Column="1"
@@ -347,13 +347,13 @@
                             Placeholder="{DynamicResource defaultJavaPath}"
                             PlaceholderFontSize="20"
                             PlaceholderOpacity="0.7"
-                            Text="{Binding Model.Java17Path, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding Model.Java17Path, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
                         <Button
                             Grid.Column="1"
                             Width="70"
                             Height="38"
-                            Command="{Binding OpenJavaFolderBrowser}"
+                            Command="{Binding OpenJava17FolderBrowser}"
                             Content="{DynamicResource review}"
                             FontWeight="Medium"
                             Style="{StaticResource FolderBrowerButton}" />

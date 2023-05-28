@@ -66,6 +66,21 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Settings
             });
         }
 
+        public RelayCommand OpenJava17FolderBrowser
+        {
+            get => new RelayCommand(obj =>
+            {
+                using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+                {
+                    dialog.SelectedPath = Model.Java17Path.Replace('/', '\\');
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        Model.Java17Path = dialog.SelectedPath;
+                    }
+                }
+            });
+        }
+
         private RelayCommand _resetJavaPath;
         public RelayCommand ResetJavaPath
         {
