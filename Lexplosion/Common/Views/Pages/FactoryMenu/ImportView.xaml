@@ -64,14 +64,51 @@
                             </Button>
 
                             <!--  IsImportFinished - True  -->
-                            <Grid
-                                Margin="0,0,10,0"
-                                HorizontalAlignment="Right"
-                                Visibility="{Binding IsImportFinished, Converter={StaticResource ConvertBoolToVisibility}}">
+                            <Grid Margin="0,0,10,0" HorizontalAlignment="Right">
                                 <Viewbox Width="18" Height="18">
+                                    <Viewbox.Style>
+                                        <Style TargetType="{x:Type Viewbox}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding DataContext.IsImportFinished, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" Value="True" />
+                                                        <Condition Binding="{Binding DataContext.IsImportSuccessful, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" Value="True" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Viewbox.Style>
                                     <Path
                                         Data="M21.05 33.1 35.2 18.95l-2.3-2.25-11.85 11.85-6-6-2.25 2.25ZM24 44q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z"
                                         Fill="#00C2FF"
+                                        SnapsToDevicePixels="False"
+                                        Stretch="Fill" />
+                                </Viewbox>
+
+                                <Viewbox Width="18" Height="18">
+                                    <Viewbox.Style>
+                                        <Style TargetType="{x:Type Viewbox}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding DataContext.IsImportFinished, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" Value="True" />
+                                                        <Condition Binding="{Binding DataContext.IsImportSuccessful, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Viewbox.Style>
+                                    <Path
+                                        Data="M479.982-280q14.018 0 23.518-9.482 9.5-9.483 9.5-23.5 0-14.018-9.482-23.518-9.483-9.5-23.5-9.5-14.018 0-23.518 9.482-9.5 9.483-9.5 23.5 0 14.018 9.482 23.518 9.483 9.5 23.5 9.5ZM453-433h60v-253h-60v253Zm27.266 353q-82.734 0-155.5-31.5t-127.266-86q-54.5-54.5-86-127.341Q80-397.681 80-480.5q0-82.819 31.5-155.659Q143-709 197.5-763t127.341-85.5Q397.681-880 480.5-880q82.819 0 155.659 31.5Q709-817 763-763t85.5 127Q880-563 880-480.266q0 82.734-31.5 155.5T763-197.684q-54 54.316-127 86Q563-80 480.266-80Zm.234-60Q622-140 721-239.5t99-241Q820-622 721.188-721 622.375-820 480-820q-141 0-240.5 98.812Q140-622.375 140-480q0 141 99.5 240.5t241 99.5Zm-.5-340Z"
+                                        Fill="#FF7575"
                                         SnapsToDevicePixels="False"
                                         Stretch="Fill" />
                                 </Viewbox>
@@ -94,9 +131,33 @@
                             FontWeight="Medium"
                             Foreground="White"
                             Opacity="0.8"
-                            Text="{DynamicResource instanceImportFinished}"
-                            TextWrapping="WrapWithOverflow"
-                            Visibility="{Binding IsImportFinished, Converter={StaticResource ConvertBoolToVisibility}}" />
+                            TextWrapping="WrapWithOverflow">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.IsImportFinished, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.IsImportSuccessful, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Text" Value="{DynamicResource instanceImportSuccessfulFinished}" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.IsImportFinished, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.IsImportSuccessful, RelativeSource={RelativeSource AncestorType={x:Type Border}}}" Value="False" />
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="Text" Value="{DynamicResource instanceImportErrorFinished}" />
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </StackPanel>
                 </Grid>
             </Border>

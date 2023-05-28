@@ -1,20 +1,19 @@
-﻿using Lexplosion.Common.ModalWindow;
-using Lexplosion.Common.Models;
+﻿using Lexplosion.Common.Models;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels.FactoryMenu;
 using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
 using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
-using Lexplosion.Tools;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs
 {
     public sealed class ImportViewModel : ImportBase
     {
         private readonly MainViewModel _mainViewModel;
+
+        private InstanceClient _instanceClient;
 
         #region Properties
 
@@ -122,13 +121,18 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             // Добавляем импортируемый файл в ObservableColletion для вывода загрузки.
             UploadedFilesChanged(importFile);
 
-            var instanceClient = InstanceClient.Import(path, (result) => 
+            _instanceClient = InstanceClient.Import(path, (_result) => 
                 {
                     importFile.IsImportFinished = true;
-                    DownloadResultHandler(result);
+                    DownloadResultHandler(_result);
+                    if (_result != ImportResult.Successful && _instanceClient != null) 
+                    {
+                        importFile.IsImportSuccessful = false;
+                        MainModel.Instance.LibraryController.RemoveByInstanceClient(_instanceClient);
+                    }
                 }
             );
-            MainModel.Instance.AddInstanceForm(instanceClient);
+            MainModel.Instance.AddInstanceForm(_instanceClient);
         }
 
 

@@ -17,6 +17,8 @@ namespace Lexplosion.Common.Models.InstanceForm
         private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
         private readonly Action _complitedError;
 
+        public event Action DonwloadFinishedEvent;
+
 
         #region Properties
 
@@ -398,6 +400,8 @@ namespace Lexplosion.Common.Models.InstanceForm
                         _instanceFormModel.UpdateLowerButton();
                         _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
                     }
+
+                DonwloadFinishedEvent?.Invoke();
             });
         }
 
@@ -436,9 +440,13 @@ namespace Lexplosion.Common.Models.InstanceForm
 
         private void ComplitedDownloadAction(InstanceInit result, List<string> downloadErrors, bool launchGame)
         {
+            object locker = new();
             foreach (var action in ComplitedDownloadActions)
             {
-                action(result, downloadErrors, launchGame);
+                lock(locker) 
+                { 
+                    action(result, downloadErrors, launchGame);
+                }
             }
         }
 

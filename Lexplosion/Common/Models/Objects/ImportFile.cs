@@ -18,6 +18,16 @@ namespace Lexplosion.Common.Models.Objects
             }
         }
 
+        private bool _isImportSuccessful = true;
+        public bool IsImportSuccessful 
+        {
+            get => _isImportSuccessful; set 
+            {
+                _isImportSuccessful = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ImportFile(string path)
         {
             Name = System.IO.Path.GetFileName(path);

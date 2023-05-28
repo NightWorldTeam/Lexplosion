@@ -69,7 +69,8 @@
     <s:String x:Key="uploadYourInstance">Загрузите свою сборку</s:String>
     <s:String x:Key="onlyZipAllowed">разрешенны только .zip</s:String>
     <s:String x:Key="dragToStartUpload">Перетащите архив со сборкой, чтобы начать загрузку.</s:String>
-    <s:String x:Key="instanceImportFinished">Сборка успешно импортирована.</s:String>
+    <s:String x:Key="instanceImportSuccessfulFinished">Сборка успешно импортирована.</s:String>
+    <s:String x:Key="instanceImportErrorFinished">Архив поврежден</s:String>
     <s:String x:Key="youNotUploadedAnythink">Вы ещё ничего не загрузили.</s:String>
 
     <!--  Overview  -->
