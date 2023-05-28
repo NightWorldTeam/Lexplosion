@@ -195,6 +195,7 @@ namespace Lexplosion.Logic.Management
             command += jvmArgs;
             command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
             command += " -Dhttp.agent=\"Mozilla/5.0\"";
+            command += " -Djava.net.preferIPv4Stack=true";
             command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
             command += mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.gameVersion;
             command += " --gameDir \"" + _settings.GamePath + "/instances/" + _instanceId + "\"";

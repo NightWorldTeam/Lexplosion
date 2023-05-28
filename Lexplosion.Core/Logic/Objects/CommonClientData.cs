@@ -47,6 +47,44 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public bool ShouldSerializelibraries() => false;
     }
 
+    public class MinecraftArgument
+    {
+        public bool IsSting { get => _stringValue != null; }
+        private string _stringValue;
+
+        public MinecraftArgument(string value)
+        {
+            _stringValue = value;
+        }
+    }
+
+    //public class DefaultMinecraftArguments
+    //{
+    //    public List<MinecraftArgument> Game;
+    //    public List<object> game
+    //    {
+    //        get => Game;
+
+    //        set
+    //        {
+    //            var args = new List<MinecraftArgument>();
+
+    //            if (value != null)
+    //            {
+    //                foreach (var obj in value)
+    //                {
+    //                    if (obj != null && obj is string)
+    //                    {
+    //                        args.Add(new MinecraftArgument((string)obj));
+    //                    }
+    //                }
+    //            }
+
+    //            Game = args;
+    //        }
+    //    }
+    //}
+
     /// <summary>
     /// Основная часть манифеста клиента
     /// </summary>
@@ -55,7 +93,13 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public FileInfo minecraftJar;
         public bool isStatic;
         public long releaseIndex;
+        /// <summary>
+        /// Аргументы игры
+        /// </summary>
         public string arguments;
+        /// <summary>
+        /// Аргументы для java
+        /// </summary>
         public string jvmArguments;
         public string gameVersion;
         public string assetsVersion;
