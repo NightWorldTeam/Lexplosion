@@ -223,6 +223,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             get => _resetPaginatorCommand ?? (_resetPaginatorCommand = new RelayCommand(obj => 
             {
                 PaginatorVM.PageNum = 1;
+                PaginatorVM.ToGeneralPage();
                 IsPaginatorVisible = true;
                 IsPageIsEmptyAndNotFirst = false;
             }));

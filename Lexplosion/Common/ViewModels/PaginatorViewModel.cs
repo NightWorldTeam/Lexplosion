@@ -132,6 +132,10 @@ namespace Lexplosion.Common.ViewModels
             }
         }
 
+        public void ToGeneralPage() 
+        {
+            PageChanged?.Invoke("", false);
+        }
 
         #endregion Properties
     }
