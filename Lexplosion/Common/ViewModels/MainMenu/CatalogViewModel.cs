@@ -114,7 +114,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
         private string _selectedCfSortByString = CfSortToString[(int)CfSortField.Popularity - 1];
         public string SelectedCfSortByString
         {
-            get => _selectedCfSortByString; set 
+            get => _selectedCfSortByString; set
             {
                 _selectedCfSortByString = value;
                 OnPropertyChanged();
@@ -189,7 +189,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
         private bool _isPageIsEmptyAndNotFirst = false;
         public bool IsPageIsEmptyAndNotFirst
         {
-            get => _isPageIsEmptyAndNotFirst; set 
+            get => _isPageIsEmptyAndNotFirst; set
             {
                 _isPageIsEmptyAndNotFirst = value;
                 OnPropertyChanged();
@@ -218,9 +218,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu
 
 
         private RelayCommand _resetPaginatorCommand;
-        public RelayCommand ResetPaginatorCommand 
+        public RelayCommand ResetPaginatorCommand
         {
-            get => _resetPaginatorCommand ?? (_resetPaginatorCommand = new RelayCommand(obj => 
+            get => _resetPaginatorCommand ?? (_resetPaginatorCommand = new RelayCommand(obj =>
             {
                 PaginatorVM.PageNum = 1;
                 PaginatorVM.ToGeneralPage();
@@ -300,7 +300,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                 SelectedInstanceSource = InstanceSource.Modrinth;
             }
         }
-        
+
         private void InstancesPageLoading(string searchText = "", bool isPaginatorInvoke = false)
         {
             if (!isPaginatorInvoke && searchText == _previousSearch)
@@ -317,24 +317,23 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             IsLoaded = false;
             Lexplosion.Runtime.TaskRun((System.Threading.ThreadStart)(() =>
             {
-            lock (_locker)
-            {
-                var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
+                lock (_locker)
+                {
+                    var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
 
-                Runtime.DebugWrite(SelectedInstanceSource);
-                Console.WriteLine(PaginatorVM.PageIndex);
-                var instances = InstanceClient.GetOutsideInstances(
-                    SelectedInstanceSource,
-                    _pageSize,
-                    PaginatorVM.PageIndex - 1,
-                    SelectedCategory,
-                    searchText == null ? _previousSearch : searchText,
-                    SelectedCfSortBy,
-                    (string)gameVersion
-                    );
+                    Runtime.DebugWrite(SelectedInstanceSource);
+                    var instances = InstanceClient.GetOutsideInstances(
+                        SelectedInstanceSource,
+                        _pageSize,
+                        PaginatorVM.PageIndex - 1,
+                        SelectedCategory,
+                        searchText == null ? _previousSearch : searchText,
+                        SelectedCfSortBy,
+                        (string)gameVersion
+                        );
 
 
-                _previousSearch = searchText == null ? _previousSearch : searchText;
+                    _previousSearch = searchText == null ? _previousSearch : searchText;
 
                     if (instances.Count == _pageSize) IsPaginatorVisible = true;
                     else if (instances.Count == 0)
@@ -342,7 +341,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                         IsPageIsEmptyAndNotFirst = true;
                         IsPaginatorVisible = false;
                     }
-                    else 
+                    else
                     {
                         IsPageIsEmptyAndNotFirst = false;
                         IsPaginatorVisible = false;

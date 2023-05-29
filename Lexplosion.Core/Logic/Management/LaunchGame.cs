@@ -219,7 +219,8 @@ namespace Lexplosion.Logic.Management
 
         private string CreateCommand(InitData data)
         {
-            string gamePath = _settings.GamePath.Replace('\\', '/');
+            string gamePath = _settings.GamePath.Replace('\\', '/') + "/";
+            gamePath = gamePath.Replace("//", "/");
             string versionPath = gamePath + "instances/" + _instanceId + "/version/" + data.VersionFile.minecraftJar.name;
 
             if (_settings.GameArgs.Length > 0 && _settings.GameArgs[_settings.GameArgs.Length - 1] != ' ')
