@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace Lexplosion.Logic.Objects.CommonClientData
@@ -47,43 +48,195 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         public bool ShouldSerializelibraries() => false;
     }
 
+    public class MinecraftArgumentObject
+    {
+        public class Rule
+        {
+            public enum Access
+            {
+                NotAllow,
+                [JsonProperty("allow")]
+                Allow
+            }
+
+            public class OS
+            {
+                public enum SysArch
+                {
+                    Unknown,
+                    x64,
+                    x86,
+                    x32
+                }
+
+                [JsonProperty("name")]
+                public string Name;
+                [JsonProperty("version")]
+                public string Version;
+                [JsonProperty("arch")]
+                public SysArch Arch;
+            }
+
+            [JsonProperty("action")]
+            public Access Action;
+            [JsonProperty("os")]
+            public OS Os;
+        }
+
+        [JsonIgnore]
+        public string[] Value;
+
+        [JsonProperty("rules")]
+        public List<Rule> Rules;
+
+        public object value
+        {
+            get => Value; set
+            {
+                if (value is JArray)
+                {
+                    JArray jarray = (JArray)value;
+                    string[] result = new string[jarray.Count];
+
+                    int i = 0;
+                    foreach (JToken item in jarray)
+                    {
+                        result[i] = item.ToString();
+                        i++;
+                    }
+
+                    Value = result;
+                }
+                else if (value is string)
+                {
+                    Value = new string[1] { (string)value };
+                }
+            }
+        }
+    }
+
     public class MinecraftArgument
     {
-        public bool IsSting { get => _stringValue != null; }
+        [JsonIgnore]
+        public string GetSting { get => _stringValue; }
+
+        [JsonIgnore]
+        public MinecraftArgumentObject GetObject { get => _objectValue; }
+
         private string _stringValue;
+        private MinecraftArgumentObject _objectValue;
 
         public MinecraftArgument(string value)
         {
             _stringValue = value;
         }
+
+        public MinecraftArgument(JObject obj)
+        {
+            _objectValue = obj.ToObject<MinecraftArgumentObject>();
+        }
     }
 
-    //public class DefaultMinecraftArguments
-    //{
-    //    public List<MinecraftArgument> Game;
-    //    public List<object> game
-    //    {
-    //        get => Game;
+    public class DefaultMinecraftArguments
+    {
+        [JsonIgnore]
+        public IEnumerable<MinecraftArgument> Game;
+        public List<object> game
+        {
+            get
+            {
+                List<object> reult = null;
+                if (Game != null)
+                {
+                    reult = new List<object>();
+                    foreach (MinecraftArgument item in Game)
+                    {
+                        string str = item.GetSting;
+                        if (str != null)
+                        {
+                            reult.Add(str);
+                        }
+                        else
+                        {
+                            reult.Add(item.GetObject);
+                        }
+                    }
+                }
 
-    //        set
-    //        {
-    //            var args = new List<MinecraftArgument>();
+                return reult;
+            }
+            set
+            {
+                var args = new List<MinecraftArgument>();
 
-    //            if (value != null)
-    //            {
-    //                foreach (var obj in value)
-    //                {
-    //                    if (obj != null && obj is string)
-    //                    {
-    //                        args.Add(new MinecraftArgument((string)obj));
-    //                    }
-    //                }
-    //            }
+                if (value != null)
+                {
+                    foreach (var obj in value)
+                    {
+                        if (obj != null && obj is string)
+                        {
+                            args.Add(new MinecraftArgument((string)obj));
+                        }
+                    }
+                }
 
-    //            Game = args;
-    //        }
-    //    }
-    //}
+                Game = args;
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<MinecraftArgument> Jvm;
+
+        public List<object> jvm
+        {
+            get
+            {
+                List<object> reult = null;
+                if (Jvm != null)
+                {
+                    reult = new List<object>();
+                    foreach (MinecraftArgument item in Jvm)
+                    {
+                        string str = item.GetSting;
+                        if (str != null)
+                        {
+                            reult.Add(str);
+                        }
+                        else
+                        {
+                            reult.Add(item.GetObject);
+                        }
+                    }
+                }
+
+                return reult;
+            }
+            set
+            {
+                var args = new List<MinecraftArgument>();
+
+                if (value != null)
+                {
+                    foreach (var obj in value)
+                    {
+                        if (obj != null)
+                        {
+                            if (obj is string)
+                            {
+                                args.Add(new MinecraftArgument((string)obj));
+                            }
+                            else if (obj is JObject)
+                            {
+                                args.Add(new MinecraftArgument((JObject)obj));
+                            }
+                        }
+                    }
+                }
+
+                Jvm = args;
+            }
+        }
+    }
 
     /// <summary>
     /// Основная часть манифеста клиента
@@ -101,6 +254,7 @@ namespace Lexplosion.Logic.Objects.CommonClientData
         /// Аргументы для java
         /// </summary>
         public string jvmArguments;
+        public DefaultMinecraftArguments defaultArguments;
         public string gameVersion;
         public string assetsVersion;
         public string assetsIndexes;

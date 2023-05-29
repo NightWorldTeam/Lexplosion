@@ -143,27 +143,100 @@ namespace Lexplosion.Logic.Management
             return isExists;
         }
 
+        private string ParseCommandArgument(MinecraftArgument argument)
+        {
+            if (argument == null) return "";
+
+            string strValue = argument.GetSting;
+            if (strValue != null) return strValue;
+
+            MinecraftArgumentObject obj = argument.GetObject;
+            if (obj?.Value == null || obj.Value.Length < 1) return "";
+            if (obj.Rules == null || obj.Rules.Count < 1) return string.Join(" ", obj.Value);
+
+            bool isAllowed = false;
+            foreach (MinecraftArgumentObject.Rule rule in obj.Rules)
+            {
+                if (rule == null) continue;
+                if (rule.Action != MinecraftArgumentObject.Rule.Access.Allow) continue;
+
+                // если есть правило OS и она windows, то проверяем еще Arch и Version
+                if (rule.Os?.Name == "windows")
+                {
+                    bool isX64System = Environment.Is64BitOperatingSystem;
+
+                    //если есть правило битности системы
+                    if (rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x64 || rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x32 || rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x86)
+                    {
+                        if ((isX64System && rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x64) || (!isX64System && rule.Os.Arch != MinecraftArgumentObject.Rule.OS.SysArch.x64))
+                        {
+                            //бидность ситемы подходит
+                            isAllowed = true;
+                            break;
+                        }
+                        else
+                        {
+                            // не подоходит
+                            continue;
+                        }
+                    }
+
+                    // если есть правило версии системы
+                    if (rule.Os.Version != null)
+                    {
+                        // TODO: когда-нибудь реализовать проверку версии os
+                        continue;
+                    }
+
+                    //если дошли до сюда, то значит правила Arch и Version нету, а OS у нас подходит
+                    isAllowed = true;
+                    break;
+                }
+
+                //если есть правило битности системы
+                if (rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x64 || rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x32 || rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x86)
+                {
+                    bool isX64System = Environment.Is64BitOperatingSystem;
+
+                    if ((isX64System && rule.Os.Arch == MinecraftArgumentObject.Rule.OS.SysArch.x64) || (!isX64System && rule.Os.Arch != MinecraftArgumentObject.Rule.OS.SysArch.x64))
+                    {
+                        //бидность ситемы подходит
+                        isAllowed = true;
+                        break;
+                    }
+                    else
+                    {
+                        // не подоходит
+                        continue;
+                    }
+                }
+            }
+
+            if (isAllowed) return string.Join(" ", obj.Value);
+
+            return "";
+        }
+
         private string CreateCommand(InitData data)
         {
-            string command;
-            string versionPath = _settings.GamePath + "/instances/" + _instanceId + "/version/" + data.VersionFile.minecraftJar.name;
+            string gamePath = _settings.GamePath.Replace('\\', '/');
+            string versionPath = gamePath + "instances/" + _instanceId + "/version/" + data.VersionFile.minecraftJar.name;
 
             if (_settings.GameArgs.Length > 0 && _settings.GameArgs[_settings.GameArgs.Length - 1] != ' ')
                 _settings.GameArgs += " ";
 
-            command = " -Djava.library.path=\"" + _settings.GamePath + "/natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.gameVersion) + "\" -cp ";
-
             string accountType = GlobalData.User.AccountType.ToString();
+            string libs = "";
             foreach (string lib in data.Libraries.Keys)
             {
                 var activation = data.Libraries[lib].activationConditions;
                 if ((activation?.accountTypes == null || activation.accountTypes.Contains(accountType)) && !data.Libraries[lib].notLaunch)
                 {
-                    command += "\"" + _settings.GamePath + "/libraries/" + lib + "\";";
+                    libs += "\"" + gamePath + "libraries/" + lib + "\";";
                 }
             }
 
-            command += "\"" + versionPath + "\" ";
+            libs += "\"" + versionPath + "\" ";
 
             string mainClass = data.VersionFile.mainClass;
 
@@ -186,29 +259,101 @@ namespace Lexplosion.Logic.Management
                 mainClass = installer.mainClass;
             }
 
-            command += additionalInstallerArgumentsBefore;
-
             string jvmArgs = data.VersionFile.jvmArguments ?? "";
             jvmArgs = jvmArgs.Replace("${version_file}", data.VersionFile.minecraftJar.name);
-            jvmArgs = jvmArgs.Replace("${library_directory}", "\"" + _settings.GamePath + "/libraries\"");
+            jvmArgs = jvmArgs.Replace("${library_directory}", gamePath + "libraries");
 
-            command += jvmArgs;
-            command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
-            command += " -Dhttp.agent=\"Mozilla/5.0\"";
-            command += " -Djava.net.preferIPv4Stack=true";
-            command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
-            command += mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.gameVersion;
-            command += " --gameDir \"" + _settings.GamePath + "/instances/" + _instanceId + "\"";
-            command += " --assetsDir \"" + _settings.GamePath + "/assets" + "\"";
-            command += " --assetIndex " + data.VersionFile.assetsVersion;
-            command += " --uuid " + GlobalData.User.UUID + " --accessToken " + GlobalData.User.AccessToken + " --userProperties [] --userType legacy ";
-            command += data.VersionFile.arguments;
-            command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
-            command += additionalInstallerArgumentsAfter;
+            string command;
+
+            if (data.VersionFile.defaultArguments != null)
+            {
+                command = "";
+                foreach (MinecraftArgument arg in data.VersionFile.defaultArguments.Jvm)
+                {
+                    string param = ParseCommandArgument(arg);
+                    if (!string.IsNullOrEmpty(param))
+                    {
+                        command += " " + param;
+                    }
+                }
+
+                command += additionalInstallerArgumentsBefore;
+                command += jvmArgs;
+                command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
+                command += " -Dhttp.agent=\"Mozilla/5.0\"";
+                command += " -Djava.net.preferIPv4Stack=true";
+                command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
+                command += mainClass + " ";
+
+                foreach (MinecraftArgument arg in data.VersionFile.defaultArguments.Game)
+                {
+                    string param = ParseCommandArgument(arg);
+                    if (!string.IsNullOrEmpty(param))
+                    {
+                        command += " " + param;
+                    }
+                }
+
+                //string[] nesseseryKeys = new string[]
+                //{
+                //    "${auth_player_name}",
+                //    "${version_name}",
+                //    "${game_directory}",
+                //    "${assets_root}",
+                //    "${assets_index_name}",
+                //    "${auth_uuid}",
+                //    "${auth_access_token}",
+                //    "${user_type}",
+                //    "${version_type}",
+                //    "${natives_directory}",
+                //    "${launcher_name}",
+                //    "${launcher_version}",
+                //    "${classpath}"
+                //};
+
+
+                command += " " + data.VersionFile.arguments;
+                command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
+                command += additionalInstallerArgumentsAfter;
+
+                command = command.Replace("${auth_player_name}", GlobalData.User.Login);
+                command = command.Replace("${version_name}", data.VersionFile.gameVersion);
+                command = command.Replace("${game_directory}", "\"" + gamePath + "instances/" + _instanceId + "\"");
+                command = command.Replace("${assets_root}", "\"" + gamePath + "assets" + "\"");
+                command = command.Replace("${assets_index_name}", data.VersionFile.assetsVersion);
+                command = command.Replace("${auth_uuid}", GlobalData.User.UUID);
+                command = command.Replace("${auth_access_token}", GlobalData.User.AccessToken);
+                command = command.Replace("${user_type}", "legacy");
+                command = command.Replace("${version_type}", "release");
+                command = command.Replace("${natives_directory}", "\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.gameVersion) + "\"");
+                command = command.Replace("${launcher_name}", "nw-lexplosion");
+                command = command.Replace("${launcher_version}", "0.7.9");
+                command = command.Replace("${classpath}", " " + libs);
+            }
+            else
+            {
+                command = " -Djava.library.path=\"" + gamePath + "natives/" + (data.VersionFile.CustomVersionName ?? data.VersionFile.gameVersion) + "\" -cp ";
+                command += libs;
+                command += additionalInstallerArgumentsBefore;
+
+                command += jvmArgs;
+                command += @" -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -XX:TargetSurvivorRatio=90";
+                command += " -Dhttp.agent=\"Mozilla/5.0\"";
+                command += " -Djava.net.preferIPv4Stack=true";
+                command += " -Xmx" + _settings.Xmx + "M -Xms" + _settings.Xms + "M " + _settings.GameArgs;
+                command += mainClass + " --username " + GlobalData.User.Login + " --version " + data.VersionFile.gameVersion;
+                command += " --gameDir \"" + gamePath + "instances/" + _instanceId + "\"";
+                command += " --assetsDir \"" + gamePath + "assets" + "\"";
+                command += " --assetIndex " + data.VersionFile.assetsVersion;
+                command += " --uuid " + GlobalData.User.UUID + " --accessToken " + GlobalData.User.AccessToken + " --userProperties [] --userType legacy ";
+                command += data.VersionFile.arguments;
+                command += " --width " + _settings.WindowWidth + " --height " + _settings.WindowHeight;
+                command += additionalInstallerArgumentsAfter;
+            }
 
             //TODO: сделать функционал для автоматического коннекта - command += "--server 192.168.1.114 --port 55538";
 
-            return command.Replace('\\', '/');
+            return command;
         }
 
         public bool Run(InitData data, LaunchComplitedCallback ComplitedLaunch, GameExitedCallback GameExited, string gameClientName, bool onlineGame)

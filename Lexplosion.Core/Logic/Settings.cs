@@ -74,7 +74,7 @@ namespace Lexplosion.Logic
             else
             {
                 if (!string.IsNullOrEmpty(settings.JavaPath)) JavaPath = settings.JavaPath;
-                if (string.IsNullOrEmpty(settings.Java17Path)) Java17Path = settings.Java17Path;
+                if (!string.IsNullOrEmpty(settings.Java17Path)) Java17Path = settings.Java17Path;
                 if (settings.IsCustomJava != null) IsCustomJava = settings.IsCustomJava;
                 if (settings.IsCustomJava17 != null) IsCustomJava17 = settings.IsCustomJava17;
                 if (settings.GamePath != null) GamePath = settings.GamePath;
@@ -107,6 +107,9 @@ namespace Lexplosion.Logic
         public static Settings GetDefault()
         {
             uint xmx = Environment.Is64BitOperatingSystem ? (uint)(NativeMethods.GetRamCount() / 2) : (uint)1024;
+            if (xmx > 8192) xmx = 8192;
+            if (xmx < 1024) xmx = 1024;
+
             return new Settings
             {
                 JavaPath = "",
