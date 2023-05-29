@@ -12,6 +12,7 @@ namespace Lexplosion.Common.Models.InstanceForm
 
         public readonly List<Action<StageType, ProgressHandlerArguments>> DownloadActions = new List<Action<StageType, ProgressHandlerArguments>>();
         public readonly List<Action<InstanceInit, List<string>, bool>> ComplitedDownloadActions = new List<Action<InstanceInit, List<string>, bool>>();
+        public readonly object СomplitedDownloadActionsLocker = new object();
 
 
         private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
@@ -160,7 +161,8 @@ namespace Lexplosion.Common.Models.InstanceForm
             _instanceFormModel = instanceFormModel;
 
             DownloadActions.Add(Download);
-            ComplitedDownloadActions.Add(InstanceDownloadCompleted);
+            lock (СomplitedDownloadActionsLocker)
+                ComplitedDownloadActions.Add(InstanceDownloadCompleted);
 
             instanceFormModel.InstanceClient.ProgressHandler += DownloadProcess;
             instanceFormModel.InstanceClient.DownloadComplited += ComplitedDownloadAction;
@@ -174,7 +176,8 @@ namespace Lexplosion.Common.Models.InstanceForm
             _instanceFormModel = instanceFormModel;
 
             DownloadActions.Add(Download);
-            ComplitedDownloadActions.Add(InstanceDownloadCompleted);
+            lock (СomplitedDownloadActionsLocker)
+                ComplitedDownloadActions.Add(InstanceDownloadCompleted);
 
             instanceFormModel.InstanceClient.ProgressHandler += DownloadProcess;
             instanceFormModel.InstanceClient.DownloadComplited += ComplitedDownloadAction;
@@ -287,7 +290,7 @@ namespace Lexplosion.Common.Models.InstanceForm
                             {
                                 files += de + "\n";
                             }
-                            files += "\n" + ResourceGetter.GetString("tryDownloadAgain")  + "\n";
+                            files += "\n" + ResourceGetter.GetString("tryDownloadAgain") + "\n";
                             _doNotification(ResourceGetter.GetString("failedToDownloadSomeFiles"), files, 0, 1);
                             IsDownloadInProgress = false;
                             IsPrepare = false;
@@ -385,21 +388,21 @@ namespace Lexplosion.Common.Models.InstanceForm
                         break;
                 }
 
-                    if (isError || !IsPrepareOnly)
-                    {
-                        IsDownloadInProgress = false;
-                        IsPrepare = false;
-                        IsPrepareOnly = false;
-                        _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
-                        _instanceFormModel.UpdateLowerButton();
-                    }
-                    else
-                    {
-                        //IsDownloadInProgress = false;
-                        IsPrepare = false;
-                        _instanceFormModel.UpdateLowerButton();
-                        _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
-                    }
+                if (isError || !IsPrepareOnly)
+                {
+                    IsDownloadInProgress = false;
+                    IsPrepare = false;
+                    IsPrepareOnly = false;
+                    _instanceFormModel.OverviewField = _instanceFormModel.InstanceClient.Summary;
+                    _instanceFormModel.UpdateLowerButton();
+                }
+                else
+                {
+                    //IsDownloadInProgress = false;
+                    IsPrepare = false;
+                    _instanceFormModel.UpdateLowerButton();
+                    _instanceFormModel.OverviewField = ResourceGetter.GetString("gameRunning");
+                }
 
                 DonwloadFinishedEvent?.Invoke();
             });
@@ -440,14 +443,14 @@ namespace Lexplosion.Common.Models.InstanceForm
 
         private void ComplitedDownloadAction(InstanceInit result, List<string> downloadErrors, bool launchGame)
         {
-            object locker = new();
-            foreach (var action in ComplitedDownloadActions)
+            lock (СomplitedDownloadActionsLocker)
             {
-                lock(locker) 
-                { 
+                foreach (var action in ComplitedDownloadActions)
+                {
                     action(result, downloadErrors, launchGame);
                 }
             }
+
         }
 
 

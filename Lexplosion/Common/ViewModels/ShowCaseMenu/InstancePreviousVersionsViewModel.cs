@@ -78,7 +78,8 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
             if (ViewModel.Model.InstanceClient.IsInstalled || ViewModel.Model.InstanceClient.InLibrary)
                 ChangeButtonState();
             IsLoadingFinished = true;
-            ViewModel.Model.DownloadModel.ComplitedDownloadActions.Add(ComplitedInstalled);
+            lock (ViewModel.Model.DownloadModel.СomplitedDownloadActionsLocker)
+                ViewModel.Model.DownloadModel.ComplitedDownloadActions.Add(ComplitedInstalled);
         }
 
         private void ChangeButtonState(bool isDisable = false)

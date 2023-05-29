@@ -77,9 +77,9 @@ namespace Lexplosion.Common.ViewModels
 
 
         private RelayCommand _stopDownloadShareInstanceCommand;
-        public RelayCommand StopDownloadShareInstanceCommand 
+        public RelayCommand StopDownloadShareInstanceCommand
         {
-            get => _stopDownloadShareInstanceCommand ?? (_stopDownloadShareInstanceCommand = new RelayCommand(obj => 
+            get => _stopDownloadShareInstanceCommand ?? (_stopDownloadShareInstanceCommand = new RelayCommand(obj =>
             {
                 Model.StopDownloadShareInstance();
             }));
@@ -140,8 +140,8 @@ namespace Lexplosion.Common.ViewModels
                     Model.DownloadModel.HasProcents = false;
                     Model.DownloadModel.IsDownloadInProgress = false;
 
-                    if (result == InstanceInit.Successful) 
-                    { 
+                    if (result == InstanceInit.Successful)
+                    {
                         Model.IsLaunch = true;
                         Model.OverviewField = ResourceGetter.GetString("gameRunning");
                     }
@@ -179,7 +179,12 @@ namespace Lexplosion.Common.ViewModels
                 Model.DownloadModel.DownloadActions.Add(progressHandler);
 
             if (complitedDownload != null)
-                Model.DownloadModel.ComplitedDownloadActions.Add(complitedDownload);
+            {
+                lock (Model.DownloadModel.СomplitedDownloadActionsLocker)
+                {
+                    Model.DownloadModel.ComplitedDownloadActions.Add(complitedDownload);
+                }
+            }
 
             if (!Model.DownloadModel.IsDownloadInProgress)
             {
