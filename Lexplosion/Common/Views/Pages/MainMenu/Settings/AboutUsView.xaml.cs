@@ -17,7 +17,7 @@ namespace Lexplosion.Common.Views.Pages.MainMenu.Settings
             InitializeComponent();
 
             CopyrightTextBlock.Text = GlobalData.GeneralSettings.LanguageId == "ru-RU" ? "© NightWorld, 2022г. Все права защищены." : "Copyright © 2022 NightWorld. All rights reserved.";
-            ProtectionTextBlock.Text = GlobalData.GeneralSettings.LanguageId == "ru-RU" ? "Данная программа защищена законами об авторских правах и международными соглашениями. Незаконное воспроизведение или распространение данной программы или любой ее части влечет гражданскую и уголовкную ответственность." : "This program is protected by copyright laws and international treaties. Illegal reproduction or distribution of this software or any part of it is subject to civil and criminal liability.";
+            ProtectionTextBlock.Text = GlobalData.GeneralSettings.LanguageId == "ru-RU" ? "Данная программа защищена законами об авторских правах и международными соглашениями. Незаконное воспроизведение или распространение данной программы или любой ее части влечет гражданскую и уголовную ответственность." : "This program is protected by copyright laws and international treaties. Illegal reproduction or distribution of this software or any part of it is subject to civil and criminal liability.";
 
             VersionTextBlock.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             var hel2xBitmap = new BitmapImage();

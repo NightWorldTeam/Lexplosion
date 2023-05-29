@@ -134,13 +134,14 @@ namespace Lexplosion.Common.Models
             {
                 GlobalData.GeneralSettings.Java17Path = value;
                 OnPropertyChanged();
+
                 if (value.Length == 0)
                 {
-                    GlobalData.GeneralSettings.IsCustomJava17 = true;
+                    GlobalData.GeneralSettings.IsCustomJava17 = false;
                 }
                 else 
                 {
-                    GlobalData.GeneralSettings.IsCustomJava17 = false;
+                    GlobalData.GeneralSettings.IsCustomJava17 = true;
                 }
 
                 DataFilesManager.SaveSettings(GlobalData.GeneralSettings);

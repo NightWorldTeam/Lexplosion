@@ -12,6 +12,7 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         #region Properties
 
+
         public string GameVersion { get; }
         public GameExtension GameExtension { get; set; }
 

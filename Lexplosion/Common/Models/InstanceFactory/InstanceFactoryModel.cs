@@ -168,6 +168,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
         #endregion
 
+
         #region Constructors
 
         public InstanceFactoryModel(MainViewModel mainViewModel)
@@ -181,6 +182,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
         }
 
         #endregion Constructors
+
 
         #region Private Methods
 
