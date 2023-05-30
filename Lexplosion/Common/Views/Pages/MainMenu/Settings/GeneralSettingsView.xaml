@@ -117,7 +117,7 @@
                         <TextBlock
                             Width="87"
                             Height="30"
-                            Margin="10,0,0,0"
+                            Margin="20,0,0,0"
                             HorizontalAlignment="Left"
                             FontSize="16"
                             FontWeight="Medium"
@@ -144,7 +144,7 @@
                         <TextBlock
                             Width="87"
                             Height="30"
-                            Margin="10,0,0,0"
+                            Margin="20,0,0,0"
                             HorizontalAlignment="Left"
                             FontSize="16"
                             FontWeight="Medium"

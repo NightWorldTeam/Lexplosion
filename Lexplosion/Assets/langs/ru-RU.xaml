@@ -171,8 +171,8 @@
     <s:String x:Key="openFolder">Открыть папку</s:String>
 
 
-    <s:String x:Key="devCurtainMessage">/* Данный раздел находиться в разработке. */</s:String>
-    <s:String x:Key="devCurtainsMessage1">/* Раздел {0} находиться в разработке. */</s:String>
+    <s:String x:Key="devCurtainMessage">/* Данный раздел находится в разработке. */</s:String>
+    <s:String x:Key="devCurtainsMessage1">/* Раздел {0} находится в разработке. */</s:String>
     <s:String x:Key="updateAvailable">Доступно обновление</s:String>
     <s:String x:Key="rebootSettings">Сбросить настройки</s:String>
 

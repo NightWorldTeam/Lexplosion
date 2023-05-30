@@ -200,7 +200,7 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="80" />
+                    <RowDefinition Height="70" />
                 </Grid.RowDefinitions>
 
                 <StackPanel>

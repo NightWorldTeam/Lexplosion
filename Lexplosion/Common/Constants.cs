@@ -10,7 +10,7 @@ namespace Lexplosion.Common
         public const string BoostyUrl = "";
         public const string NightWorldOfficalWebsiteUrl = "https://night-world.org/";
 
-        public static string[] ScreenResolutions { get; } = new string[20]
+        public static string[] ScreenResolutions { get; set; } = new string[20]
         {
             "1920x1080", "1768x992", "1680x1050",  "1600x1024", "1600x900", "1440x900", "1280x1024",
             "1280x960", "1366x768", "1360x768", "1280x800", "1280x768", "1152x864", "1280x720", "1176x768",

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
@@ -20,7 +21,17 @@ namespace Lexplosion.Common.Views.Windows
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Runtime.Exit();
-        }   
+        }
+
+
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            int nWidth = (int)System.Windows.SystemParameters.PrimaryScreenWidth;
+            int nHeight = (int)System.Windows.SystemParameters.PrimaryScreenHeight;
+
+            this.SnapsToDevicePixels = true;
+        }
 
         private void ChangeStatusButtonClick(object sender, RoutedEventArgs e)
         {
