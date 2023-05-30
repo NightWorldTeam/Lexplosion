@@ -247,12 +247,12 @@ namespace Lexplosion.Logic.Management
             var installer = data.VersionFile.additionalInstaller;
             if (installer != null)
             {
-                if (!string.IsNullOrEmpty(installer.jvmArguments))
+                if (!string.IsNullOrWhiteSpace(installer.jvmArguments))
                 {
                     additionalInstallerArgumentsBefore += installer.jvmArguments + " ";
                 }
 
-                if (!string.IsNullOrEmpty(installer.arguments))
+                if (!string.IsNullOrWhiteSpace(installer.arguments))
                 {
                     additionalInstallerArgumentsAfter += installer.arguments + " ";
                 }
@@ -272,7 +272,7 @@ namespace Lexplosion.Logic.Management
                 foreach (MinecraftArgument arg in data.VersionFile.defaultArguments.Jvm)
                 {
                     string param = ParseCommandArgument(arg);
-                    if (!string.IsNullOrEmpty(param))
+                    if (!string.IsNullOrWhiteSpace(param))
                     {
                         command += " " + param;
                     }
@@ -289,7 +289,7 @@ namespace Lexplosion.Logic.Management
                 foreach (MinecraftArgument arg in data.VersionFile.defaultArguments.Game)
                 {
                     string param = ParseCommandArgument(arg);
-                    if (!string.IsNullOrEmpty(param))
+                    if (!string.IsNullOrWhiteSpace(param))
                     {
                         command += " " + param;
                     }
@@ -533,7 +533,7 @@ namespace Lexplosion.Logic.Management
             bool javaIsNotDefined = true;
             if (_settings.IsCustomJava == true || _settings.IsCustomJava17 == true)
             {
-                if (!string.IsNullOrEmpty(_customJavaPath))
+                if (!string.IsNullOrWhiteSpace(_customJavaPath))
                 {
                     // _customJavaPath хранит путь до джавы конкретно для этой сборки. По этому если джава кастомная, то юзаем этот путь.
                     // Если не использовать _customJavaPath, то для новых версий мы можем выбрать Java17Path, даже если в настройках
@@ -544,7 +544,7 @@ namespace Lexplosion.Logic.Management
                 else
                 {
                     string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, releaseIndex);
-                    if (!string.IsNullOrEmpty(javaPath))
+                    if (!string.IsNullOrWhiteSpace(javaPath))
                     {
                         _javaPath = javaPath;
                         javaIsNotDefined = false;
@@ -653,7 +653,7 @@ namespace Lexplosion.Logic.Management
                         bool javaIsNotDefined = true;
                         if (_settings.IsCustomJava == true || _settings.IsCustomJava17 == true)
                         {
-                            if (!string.IsNullOrEmpty(_customJavaPath))
+                            if (!string.IsNullOrWhiteSpace(_customJavaPath))
                             {
                                 _javaPath = _customJavaPath;
                                 javaIsNotDefined = false;
@@ -661,7 +661,7 @@ namespace Lexplosion.Logic.Management
                             else
                             {
                                 string javaPath = JavaChecker.DefinePath(_settings.JavaPath, _settings.Java17Path, files.version.releaseIndex);
-                                if (!string.IsNullOrEmpty(javaPath))
+                                if (!string.IsNullOrWhiteSpace(javaPath))
                                 {
                                     _javaPath = javaPath;
                                     javaIsNotDefined = false;

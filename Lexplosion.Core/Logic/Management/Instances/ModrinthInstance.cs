@@ -155,6 +155,7 @@ namespace Lexplosion.Logic.Management.Instances
             foreach (var instance in curseforgeInstances)
             {
                 var categories = ParseCategories(instance.Categories);
+                string gameVer = (instance.GameVersions !=null) ? instance.GameVersions[instance.GameVersions.Count - 1] : "";
 
                 result.Add(new Info()
                 {
@@ -163,7 +164,7 @@ namespace Lexplosion.Logic.Management.Instances
                     Categories = categories,
                     Summary = instance.Summary,
                     Description = instance.Summary,
-                    GameVersion = instance.GameVersions[instance.GameVersions.Count - 1],
+                    GameVersion = gameVer,
                     WebsiteUrl = "https://modrinth.com/modpack/" + instance.Slug,
                     LogoUrl = instance.LogoUrl,
                     ExternalId = instance.ProjectId
