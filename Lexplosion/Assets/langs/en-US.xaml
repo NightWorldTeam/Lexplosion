@@ -69,7 +69,7 @@
     <s:String x:Key="onlyZipAllowed">only .zip allowed</s:String>
     <s:String x:Key="dragToStartUpload">Drag and drop .zip file with instance to start upload.</s:String>
     <s:String x:Key="instanceImportSuccessfulFinished">Instance successfully imported.</s:String>
-    <s:String x:Key="instanceImportErrorFinished">Archive damaged.</s:String>
+    <s:String x:Key="instanceImportErrorFinished">Import error.</s:String>
     <s:String x:Key="youNotUploadedAnythink">You haven't uploaded anything yet.</s:String>
 
     <!--  Overview  -->

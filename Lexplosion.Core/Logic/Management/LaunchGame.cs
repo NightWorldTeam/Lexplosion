@@ -212,7 +212,7 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            if (isAllowed) return string.Join(" ", obj.Value);
+            if (isAllowed) return string.Join(" ", obj. Value);
 
             return "";
         }
@@ -365,6 +365,7 @@ namespace Lexplosion.Logic.Management
             string command = CreateCommand(data);
 
             _process = new Process();
+
             if (onlineGame)
             {
                 lock (loocker)
@@ -415,8 +416,9 @@ namespace Lexplosion.Logic.Management
                 _process.StartInfo.WorkingDirectory = _settings.GamePath + "/instances/" + _instanceId;
                 _process.StartInfo.Arguments = command;
                 _process.StartInfo.RedirectStandardOutput = true;
-                _process.StartInfo.UseShellExecute = false;
                 _process.EnableRaisingEvents = true;
+                _process.StartInfo.EnvironmentVariables["_JAVA_OPTIONS"] = "";
+                _process.StartInfo.UseShellExecute = false;
 
                 _process.Exited += (sender, ea) =>
                 {

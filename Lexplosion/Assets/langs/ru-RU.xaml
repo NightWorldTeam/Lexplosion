@@ -70,7 +70,7 @@
     <s:String x:Key="onlyZipAllowed">разрешенны только .zip</s:String>
     <s:String x:Key="dragToStartUpload">Перетащите архив со сборкой, чтобы начать загрузку.</s:String>
     <s:String x:Key="instanceImportSuccessfulFinished">Сборка успешно импортирована.</s:String>
-    <s:String x:Key="instanceImportErrorFinished">Архив поврежден</s:String>
+    <s:String x:Key="instanceImportErrorFinished">Ошибка импорта.</s:String>
     <s:String x:Key="youNotUploadedAnythink">Вы ещё ничего не загрузили.</s:String>
 
     <!--  Overview  -->
@@ -361,7 +361,7 @@
 
 
     <!--  Library  -->
-    <s:String x:Key="newInstance">Новая сборка</s:String>
+    <s:String x:Key="newInstance">Новый клиент</s:String>
 
     <s:String x:Key="share">Раздача</s:String>
     <s:String x:Key="exportProperties">Свойства экспорта</s:String>
