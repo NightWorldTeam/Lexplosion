@@ -109,7 +109,7 @@ namespace Lexplosion.Logic.Management.Installers
                 return InstanceInit.VersionError;
             }
 
-            if (!string.IsNullOrEmpty(Manifest.version.modloaderVersion) && Manifest.version.modloaderType != ClientType.Vanilla)
+            if (!string.IsNullOrWhiteSpace(Manifest.version.modloaderVersion) && Manifest.version.modloaderType != ClientType.Vanilla)
             {
                 BaseFilesIsCheckd = true;
 

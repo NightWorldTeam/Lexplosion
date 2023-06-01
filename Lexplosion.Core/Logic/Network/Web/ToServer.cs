@@ -199,7 +199,7 @@ namespace Lexplosion.Logic.Network
             try
             {
                 string modloaderUrl = "";
-                if (!string.IsNullOrEmpty(modloaderVersion))
+                if (!string.IsNullOrWhiteSpace(modloaderVersion))
                 {
                     if (clientType != ClientType.Vanilla)
                     {

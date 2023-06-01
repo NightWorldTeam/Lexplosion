@@ -24,7 +24,7 @@ namespace Lexplosion.Logic.Management.Sources
             {
                 foreach (string category in data)
                 {
-                    if (!string.IsNullOrEmpty(category))
+                    if (!string.IsNullOrWhiteSpace(category))
                     {
                         categories.Add(new ModrinthCategory
                         {

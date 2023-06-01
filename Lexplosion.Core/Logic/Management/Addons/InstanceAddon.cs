@@ -169,7 +169,7 @@ namespace Lexplosion.Logic.Management.Instances
 
         public bool IsUrlExist
         {
-            get => !string.IsNullOrEmpty(_websiteUrl);
+            get => !string.IsNullOrWhiteSpace(_websiteUrl);
         }
 
         public ProjectSource Source
@@ -866,7 +866,7 @@ namespace Lexplosion.Logic.Management.Instances
                             obj.FileName = filename;
                             obj._isEnable = isAddonExtension;
                             //obj.Version = version;
-                            //if (string.IsNullOrEmpty(obj.Author)) obj.Author = authors;
+                            //if (string.IsNullOrWhiteSpace(obj.Author)) obj.Author = authors;
                         }
                     }
                 }

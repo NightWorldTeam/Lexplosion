@@ -144,12 +144,12 @@ namespace Lexplosion.Logic.Network.Web
         {
             string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:modpack%22]]&offset=" + (index * pageSize) + "&limit" + pageSize;
 
-            if (!string.IsNullOrEmpty(sortField))
+            if (!string.IsNullOrWhiteSpace(sortField))
             {
                 url += "&index=" + sortField;
             }
 
-            if (!string.IsNullOrEmpty(searchFilter))
+            if (!string.IsNullOrWhiteSpace(searchFilter))
             {
                 url += "&query=" + WebUtility.UrlEncode(searchFilter);
             }

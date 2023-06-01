@@ -57,8 +57,8 @@ namespace Lexplosion.Logic
         {
             if (priority)
             {
-                if (string.IsNullOrEmpty(JavaPath)) JavaPath = settings.JavaPath;
-                if (string.IsNullOrEmpty(Java17Path)) Java17Path = settings.Java17Path;
+                if (string.IsNullOrWhiteSpace(JavaPath)) JavaPath = settings.JavaPath;
+                if (string.IsNullOrWhiteSpace(Java17Path)) Java17Path = settings.Java17Path;
                 if (IsCustomJava == null) IsCustomJava = settings.IsCustomJava;
                 if (IsCustomJava17 == null) IsCustomJava17 = settings.IsCustomJava17;
                 if (GamePath == null) GamePath = settings.GamePath;
@@ -73,8 +73,8 @@ namespace Lexplosion.Logic
             }
             else
             {
-                if (!string.IsNullOrEmpty(settings.JavaPath)) JavaPath = settings.JavaPath;
-                if (!string.IsNullOrEmpty(settings.Java17Path)) Java17Path = settings.Java17Path;
+                if (!string.IsNullOrWhiteSpace(settings.JavaPath)) JavaPath = settings.JavaPath;
+                if (!string.IsNullOrWhiteSpace(settings.Java17Path)) Java17Path = settings.Java17Path;
                 if (settings.IsCustomJava != null) IsCustomJava = settings.IsCustomJava;
                 if (settings.IsCustomJava17 != null) IsCustomJava17 = settings.IsCustomJava17;
                 if (settings.GamePath != null) GamePath = settings.GamePath;

@@ -93,7 +93,7 @@ namespace Lexplosion.Logic.Network.Web
 
             string url = "https://api.curseforge.com/v1/mods/search?";
 
-            if (!string.IsNullOrEmpty(searchFilter))
+            if (!string.IsNullOrWhiteSpace(searchFilter))
             {
                 url += "searchFilter=" + WebUtility.UrlEncode(searchFilter) + "&";
             }

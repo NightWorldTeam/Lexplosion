@@ -45,7 +45,7 @@ namespace Lexplosion.Logic.Management.Authentication
             {
                 var data = JsonConvert.DeserializeObject<AccessDataFormat>(accessData);
 
-                if (data != null && !string.IsNullOrEmpty(data.AccessToken) && !string.IsNullOrEmpty(data.ClientToken))
+                if (data != null && !string.IsNullOrWhiteSpace(data.AccessToken) && !string.IsNullOrWhiteSpace(data.ClientToken))
                 {
                     Runtime.DebugWrite(accessData);
                     MojangAuthResult response = MojangApi.Refresh(login, data.AccessToken, data.ClientToken);

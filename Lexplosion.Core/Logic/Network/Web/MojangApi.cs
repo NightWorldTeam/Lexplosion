@@ -70,8 +70,8 @@ namespace Lexplosion.Logic.Network.Web
                 var data = JsonConvert.DeserializeObject<AuthAnswer>(answer);
                 Runtime.DebugWrite("Mojang Auth " + data.accessToken);
 
-                if (data != null && !string.IsNullOrEmpty(data.accessToken) && data.selectedProfile != null
-                    && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
+                if (data != null && !string.IsNullOrWhiteSpace(data.accessToken) && data.selectedProfile != null
+                    && !string.IsNullOrWhiteSpace(data.selectedProfile.id) && !string.IsNullOrWhiteSpace(data.selectedProfile.name))
                 {
                     return new MojangAuthResult
                     {
@@ -133,8 +133,8 @@ namespace Lexplosion.Logic.Network.Web
                 var data = JsonConvert.DeserializeObject<AuthAnswer>(answer);
                 Runtime.DebugWrite("Mojang Refresh " + data.accessToken);
 
-                if (data != null && !string.IsNullOrEmpty(data.accessToken) && !string.IsNullOrEmpty(data.clientToken)
-                    && data.selectedProfile != null && !string.IsNullOrEmpty(data.selectedProfile.id) && !string.IsNullOrEmpty(data.selectedProfile.name))
+                if (data != null && !string.IsNullOrWhiteSpace(data.accessToken) && !string.IsNullOrWhiteSpace(data.clientToken)
+                    && data.selectedProfile != null && !string.IsNullOrWhiteSpace(data.selectedProfile.id) && !string.IsNullOrWhiteSpace(data.selectedProfile.name))
                 {
                     return new MojangAuthResult
                     {

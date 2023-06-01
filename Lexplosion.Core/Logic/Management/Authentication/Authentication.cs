@@ -34,7 +34,7 @@ namespace Lexplosion.Logic.Management.Authentication
                 {
                     AcccountsFormat.Profile profile = _accounts.Profiles[selectedAccount];
 
-                    if (!string.IsNullOrEmpty(profile.Login) && !string.IsNullOrEmpty(profile.AccessData))
+                    if (!string.IsNullOrWhiteSpace(profile.Login) && !string.IsNullOrWhiteSpace(profile.AccessData))
                     {
                         login = profile.Login;
                     }

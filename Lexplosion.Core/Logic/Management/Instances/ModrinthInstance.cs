@@ -26,7 +26,7 @@ namespace Lexplosion.Logic.Management.Instances
             {
                 foreach (string category in data)
                 {
-                    if (!string.IsNullOrEmpty(category))
+                    if (!string.IsNullOrWhiteSpace(category))
                     {
                         categories.Add(new ModrinthCategory
                         {
@@ -54,18 +54,17 @@ namespace Lexplosion.Logic.Management.Instances
                 var perfomer = new TasksPerfomer(3, data.Images.Count);
                 foreach (var item in data.Images)
                 {
+                    if (item == null || !item.ContainsKey("url")) continue;
+
                     perfomer.ExecuteTask(delegate ()
                     {
                         using (var webClient = new WebClient())
                         {
-                            if (item.ContainsKey("url"))
+                            try
                             {
-                                try
-                                {
-                                    images.Add(webClient.DownloadData(item["url"]));
-                                }
-                                catch { }
+                                images.Add(webClient.DownloadData(item["url"]));
                             }
+                            catch { }
                         }
                     });
                 }
@@ -102,6 +101,8 @@ namespace Lexplosion.Logic.Management.Instances
                 date = "";
             }
 
+            var gameVer = (data.GameVersions != null && data.GameVersions.Count > 0) ? data.GameVersions[data.GameVersions.Count - 1] : "";
+
             return new InstanceData
             {
                 Source = InstanceSource.Modrinth,
@@ -109,7 +110,7 @@ namespace Lexplosion.Logic.Management.Instances
                 Description = data.Summary,
                 Summary = data.Summary,
                 TotalDownloads = data.Downloads,
-                GameVersion = data.GameVersions[data.GameVersions.Count - 1],
+                GameVersion = gameVer,
                 LastUpdate = date,
                 Modloader = clientType,
                 Images = images,
@@ -124,6 +125,8 @@ namespace Lexplosion.Logic.Management.Instances
             var data = new List<InstanceVersion>();
             foreach (ModrinthProjectFile file in versions)
             {
+                if (file == null) continue;
+
                 string date;
                 try
                 {
@@ -154,8 +157,10 @@ namespace Lexplosion.Logic.Management.Instances
 
             foreach (var instance in curseforgeInstances)
             {
+                if (instance == null) continue;
+
                 var categories = ParseCategories(instance.Categories);
-                string gameVer = (instance.GameVersions !=null) ? instance.GameVersions[instance.GameVersions.Count - 1] : "";
+                string gameVer = (instance.GameVersions != null && instance.GameVersions.Count > 0) ? instance.GameVersions[instance.GameVersions.Count - 1] : "";
 
                 result.Add(new Info()
                 {

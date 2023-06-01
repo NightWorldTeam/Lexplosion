@@ -35,7 +35,7 @@ namespace Lexplosion.Logic.Management.Addons
                     {
                         foreach (var file in projectFile.Files)
                         {
-                            bool isHash = !string.IsNullOrEmpty(file.Hashes?.Sha512) && !string.IsNullOrEmpty(file.Hashes.Sha1);
+                            bool isHash = !string.IsNullOrEmpty(file?.Hashes?.Sha512) && !string.IsNullOrEmpty(file.Hashes.Sha1);
                             if (isHash && file.Hashes.Sha512 == sha512 && file.Hashes.Sha1 == sha1 && file.Size == fileLenght)
                             {
                                 return new ModrinthAddon(indtanceData, projectFile);
@@ -64,11 +64,11 @@ namespace Lexplosion.Logic.Management.Addons
 
                         foreach (var hash in projectFile.hashes)
                         {
-                            if (hash.algo == CurseforgeFileInfo.Hashes.Algorithm.Sha1 && !string.IsNullOrEmpty(hash.value))
+                            if (hash?.algo == CurseforgeFileInfo.Hashes.Algorithm.Sha1 && !string.IsNullOrEmpty(hash.value))
                             {
                                 fileSha1 = hash.value;
                             }
-                            else if (hash.algo == CurseforgeFileInfo.Hashes.Algorithm.Md5 && !string.IsNullOrEmpty(hash.value))
+                            else if (hash?.algo == CurseforgeFileInfo.Hashes.Algorithm.Md5 && !string.IsNullOrEmpty(hash.value))
                             {
                                 fileMd5 = hash.value;
                             }
