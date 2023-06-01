@@ -54,7 +54,7 @@
                             Content="{DynamicResource newInstance}"
                             IsTabStop="False"
                             KeyboardNavigation.IsTabStop="False"
-                            Opacity="0.2"
+                            Opacity="0.7"
                             Style="{StaticResource LibraryAddBtn}" />
 
                     </CompositeCollection>

@@ -1,6 +1,7 @@
 ﻿using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Tools;
 using System;
+using System.CodeDom;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,6 +44,12 @@ namespace Lexplosion.Common.Models.Objects
             _user = user;
             _cancellationToken = cancellationToken;
             Task.Run(async () => await DownloadFile());
+        }
+
+        public NWUserWrapper(NwUser user, byte[] logo)
+        {
+            _user = user;
+            Logo = logo;
         }
 
         public async Task DownloadFile()
@@ -90,6 +97,19 @@ namespace Lexplosion.Common.Models.Objects
                 case ActivityStatus.NotDisturb: return ResourceGetter.GetString("doNotDisturb");
             }
             return "";
+        }
+
+        public bool IsEqualsNWUser(NwUser user) 
+        {
+            return Login == user.Login;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj is not NWUserWrapper)
+                return false;
+
+            return ((NWUserWrapper)obj).Login == Login;
         }
     }
 }

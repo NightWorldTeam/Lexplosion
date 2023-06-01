@@ -306,19 +306,19 @@ namespace Lexplosion.Common.Models
                     }
                 case AuthCode.DataError:
                     {
-                        _doNotification(ResourceGetter.GetString("authorisationError"), ResourceGetter.GetString("wrongLoginOrPassword"), 8, 0);
+                        _doNotification(ResourceGetter.GetString("authError"), ResourceGetter.GetString("wrongLoginOrPassword"), 8, 0);
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.NoConnect:
                     {
-                        _doNotification(ResourceGetter.GetString("authorisationError"), ResourceGetter.GetString("noConnetionsToTheServer"), 8, 0);
+                        _doNotification(ResourceGetter.GetString("authError"), ResourceGetter.GetString("noConnectionsToTheServer"), 8, 0);
                         IsAuthFinished = true;
                         break;
                     }
                 case AuthCode.TokenError:
                     {
-                        _doNotification(ResourceGetter.GetString("authorisationError"), ResourceGetter.GetString("tokenError"), 8, 0);
+                        _doNotification(ResourceGetter.GetString("authError"), ResourceGetter.GetString("tokenError"), 8, 0);
                         FollowToMicrosoft();
                         IsAuthFinished = true;
                         break;

@@ -56,7 +56,7 @@
                         Height="38"
                         CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Avatar}" />
+                            <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
                         </Border.Background>
                     </Border>
 
@@ -181,7 +181,7 @@
                         Height="38"
                         CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Avatar}" />
+                            <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}, IsAsync=True}" />
                         </Border.Background>
                     </Border>
 
@@ -306,7 +306,7 @@
                         Height="38"
                         CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Avatar}" />
+                            <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}, IsAsync=True}" />
                         </Border.Background>
                     </Border>
 
@@ -329,16 +329,19 @@
                                     <Style TargetType="{x:Type Border}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.Online}">
-                                                <Setter Property="Background" Value="#009834" />
+                                                <Setter Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
                                             </DataTrigger>
+
                                             <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.Offline}">
                                                 <Setter Property="Background" Value="Gray" />
                                             </DataTrigger>
+
                                             <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.NotDisturb}">
                                                 <Setter Property="Background" Value="Orange" />
                                             </DataTrigger>
+
                                             <DataTrigger Binding="{Binding Status}" Value="{x:Static lexplosion:ActivityStatus.InGame}">
-                                                <Setter Property="Background" Value="{DynamicResource BrandSolidColorBrush}" />
+                                                <Setter Property="Background" Value="#009834" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

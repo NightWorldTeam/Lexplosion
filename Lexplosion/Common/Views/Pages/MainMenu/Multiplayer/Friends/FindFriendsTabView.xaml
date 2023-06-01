@@ -48,7 +48,7 @@
                             </MultiTrigger>
 
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="Red" />
+                                <Setter TargetName="border" Property="Opacity" Value="0.7" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -334,7 +334,7 @@
                     Width="64"
                     Height="32"
                     Command="{Binding MovePrevPageCommand}"
-                    IsEnabled="{Binding IsPrevPageExist}"
+                    IsEnabled="{Binding Model.IsPrevPageExist}"
                     Style="{StaticResource Button}">
                     <Button.Content>
                         <Viewbox Width="12" Height="12">
@@ -351,7 +351,7 @@
                     Height="32"
                     Margin="4,0,0,0"
                     Command="{Binding MoveNextPageCommand, Delay=250}"
-                    IsEnabled="{Binding CurrentUsersCatalogPage.NextPage}"
+                    IsEnabled="{Binding Model.CurrentUsersCatalogPage.NextPage}"
                     Style="{StaticResource Button}">
                     <Button.Content>
                         <Viewbox Width="12" Height="12">

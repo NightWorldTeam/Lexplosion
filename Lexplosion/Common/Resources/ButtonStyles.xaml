@@ -46,13 +46,14 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="FontFamily" Value="pack://application:,,,/assets/fonts/#Casper Bold" />
+        <Setter Property="FontFamily" Value="{StaticResource SFProDisplay}" />
         <Setter Property="Foreground" Value="#eee" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
+                        x:Name="MainBorder"
                         Background="Transparent"
                         BorderBrush="Gray"
                         BorderThickness="1"
@@ -69,6 +70,7 @@
                                     BorderBrush="Gray"
                                     BorderThickness="0,0,1,0">
                                     <TextBlock
+                                        x:Name="PlusTextBlock"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         FontSize="50"
@@ -84,6 +86,22 @@
                             </Grid>
                         </Grid>
                     </Border>
+
+                    <!--<ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard TargetName="MainBorder">
+                                        <ColorAnimation
+                                            Storyboard.TargetName="MainBorder"
+                                            Storyboard.TargetProperty="(Border.BorderBrush)"
+                                            To="#167FFC"
+                                            Duration="0:0:0.02" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

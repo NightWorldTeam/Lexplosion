@@ -194,7 +194,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
                 gameVersions = MainViewModel.AllGameVersions;
             }
             else gameVersions = MainViewModel.ReleaseGameVersions;
-            Version = gameVersions[0];
+            Version = gameVersions != null && gameVersions.Length != 0 ? gameVersions[0] : "1.19.2";
             GameVersions = gameVersions;
             Version = gameVersions[0];
         }

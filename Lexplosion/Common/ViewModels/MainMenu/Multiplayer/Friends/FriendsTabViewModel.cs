@@ -33,8 +33,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
         public ObservableCollection<NWUserWrapper> FriendRequestsIncoming { get; } = new ObservableCollection<NWUserWrapper>();
 
 
-        public FriendsTabModel()
+        public FriendsTabModel(DoNotificationCallback doNotification)
         {
+            DoNotification = doNotification;
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var friendRequests = NightWorldApi.GetFriendRequests(GlobalData.User.UUID, GlobalData.User.SessionToken);
@@ -69,7 +70,6 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 App.Current.Dispatcher?.Invoke(() => { 
                     UpdateFriendRequestsOutcoming(friendRequests.Outgoing);
                     UpdateFriendRequestsIncoming(friendRequests.Incoming);
-                    UpdateFriends(friends);
                 });
             });
         }
@@ -164,7 +164,6 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 NightWorldApi.RemoveFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, friend.Login);
                 Model.RemoveFriend(friend);
                 // TODO: Friends Translate
-                DoNotification("Friends Changed", friend.Login + " is not your friend now(", 5, 0);
             }));
         }
 
@@ -177,7 +176,6 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
                 NightWorldApi.RemoveFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, friend.Login);
                 Model.RemoveFriendRequest(friend);
                 // TODO: Friends Translate
-                DoNotification("Friends Changed", friend.Login + " friends requests was cancel(", 5, 0);
             }));
         }
 
@@ -203,8 +201,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 
         public FriendsTabViewModel(DoNotificationCallback doNotification)
         {
-            DoNotification = _doNotification;
-            Model = new FriendsTabModel();
+            DoNotification = doNotification;
+            Model = new FriendsTabModel(doNotification);
         }
     }
 }
