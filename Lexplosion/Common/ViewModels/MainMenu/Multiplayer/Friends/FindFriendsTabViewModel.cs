@@ -19,11 +19,11 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         public bool IsLoading { get; private set; }
 
         public ObservableCollection<NWUserWrapper> Users { get; } = new ObservableCollection<NWUserWrapper>();
-        
+
         private UsersCatalogPage _usersCatalogPage;
-        public UsersCatalogPage CurrentUsersCatalogPage 
+        public UsersCatalogPage CurrentUsersCatalogPage
         {
-            get => _usersCatalogPage; private set 
+            get => _usersCatalogPage; private set
             {
                 _usersCatalogPage = value;
                 OnPropertyChanged();
@@ -45,7 +45,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
             }
         }
 
-        public Action<string, bool> SetNewFilterValueAction => ExecuteSearchFilterValue; 
+        public Action<string, bool> SetNewFilterValueAction => ExecuteSearchFilterValue;
 
         public string CurrentFilterString { get; private set; } = string.Empty;
         private string _lastFilterString = string.Empty;
@@ -58,15 +58,23 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         {
             _cancellationToken = new CancellationTokenSource();
             Users.Clear();
-            CurrentUsersCatalogPage = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, (uint)CurrentUserCatalogPageIndex, "");
 
-            UpdateIsPageExistsProperties();
-
-            foreach (var user in CurrentUsersCatalogPage.Data)
+            ThreadPool.QueueUserWorkItem(delegate (object o)
             {
-                Users.Add(new NWUserWrapper(user, _cancellationToken.Token));
-            }
-            //MoveNextUserCatalogPage();
+                var users = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, (uint)CurrentUserCatalogPageIndex, "");
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    CurrentUsersCatalogPage = users;
+                    UpdateIsPageExistsProperties();
+
+                    foreach (var user in CurrentUsersCatalogPage.Data)
+                    {
+                        Users.Add(new NWUserWrapper(user, _cancellationToken.Token));
+                    }
+                    //MoveNextUserCatalogPage();
+                });
+            });
         }
 
 
@@ -76,9 +84,10 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         #region Public & Protected Methods
 
 
-        public void ExecuteSearchFilterValue(string newValue, bool _ = false) 
+        public void ExecuteSearchFilterValue(string newValue, bool _ = false)
         {
-            if (_lastFilterString != newValue) {
+            if (_lastFilterString != newValue)
+            {
                 _lastFilterString = newValue;
                 CurrentUserCatalogPageIndex = 0;
                 CurrentFilterString = newValue;
@@ -95,15 +104,25 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
             _cancellationToken = new CancellationTokenSource();
             Users.Clear();
             CurrentUserCatalogPageIndex++;
-            CurrentUsersCatalogPage = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, (uint)CurrentUserCatalogPageIndex, filterString);
 
-            UpdateIsPageExistsProperties();
-
-            foreach (var user in CurrentUsersCatalogPage.Data)
+            ThreadPool.QueueUserWorkItem(delegate (object o)
             {
-                Users.Add(new NWUserWrapper(user, _cancellationToken.Token));
-            }
-            IsLoading = false;
+                var users = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, (uint)CurrentUserCatalogPageIndex, filterString);
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    CurrentUsersCatalogPage = users;
+                    UpdateIsPageExistsProperties();
+
+                    foreach (var user in CurrentUsersCatalogPage.Data)
+                    {
+                        Users.Add(new NWUserWrapper(user, _cancellationToken.Token));
+                    }
+                    IsLoading = false;
+                });
+            });
+
+
         }
 
         public void MovePrevUserCatalogPage(string filterString = "")
@@ -115,11 +134,13 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
             Users.Clear();
             CurrentUserCatalogPageIndex--;
 
-            Runtime.TaskRun(() => { 
+            ThreadPool.QueueUserWorkItem(delegate (object o)
+            {
                 var users = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, (uint)CurrentUserCatalogPageIndex, filterString);
 
-                App.Current.Dispatcher.Invoke(() => 
+                App.Current.Dispatcher.Invoke(() =>
                 {
+                    CurrentUsersCatalogPage = users;
                     UpdateIsPageExistsProperties();
 
                     foreach (var user in CurrentUsersCatalogPage.Data)
@@ -138,7 +159,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         #region Private Methods
 
 
-        private void UpdateIsPageExistsProperties() 
+        private void UpdateIsPageExistsProperties()
         {
             IsNextPageExist = CurrentUsersCatalogPage.NextPage;
             OnPropertyChanged(nameof(IsNextPageExist));
@@ -191,7 +212,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         {
             get => _moveNextPageCommand ?? (_moveNextPageCommand = new RelayCommand(obj =>
             {
-                if (Model.IsNextPageExist && !Model.IsLoading) 
+                if (Model.IsNextPageExist && !Model.IsLoading)
                 {
                     Model.MoveNextUserCatalogPage(Model.CurrentFilterString);
                 }
@@ -199,9 +220,9 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         }
 
         private RelayCommand _sendFriendRequestCommand;
-        public ICommand SendFriendRequestCommand 
+        public ICommand SendFriendRequestCommand
         {
-            get => _sendFriendRequestCommand ?? (_sendFriendRequestCommand = new RelayCommand(obj => 
+            get => _sendFriendRequestCommand ?? (_sendFriendRequestCommand = new RelayCommand(obj =>
             {
                 var user = (NWUserWrapper)obj;
                 NightWorldApi.AddFriend(GlobalData.User.UUID, GlobalData.User.SessionToken, user.Login);
@@ -213,7 +234,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
 
 
         private RelayCommand _cancelFriendRequestCommand;
-        public ICommand CancelFriendRequestCommand 
+        public ICommand CancelFriendRequestCommand
         {
             get => _cancelFriendRequestCommand ?? (_cancelFriendRequestCommand = new RelayCommand(obj =>
             {

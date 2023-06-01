@@ -56,7 +56,6 @@ namespace Lexplosion.Common.Models.Objects
                     using (_cancellationToken.Register(web.CancelAsync))
                     {
                         Logo = await web.DownloadDataTaskAsync(new Uri(_user.AvatarUrl));
-                        Console.WriteLine(_user.Login);
                     }
                 }
             }
