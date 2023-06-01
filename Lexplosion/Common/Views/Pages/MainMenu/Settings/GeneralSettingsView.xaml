@@ -12,7 +12,6 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <gui:Constants x:Key="Const" />
         <Style TargetType="{x:Type Grid}">
             <Setter Property="Focusable" Value="False" />
         </Style>

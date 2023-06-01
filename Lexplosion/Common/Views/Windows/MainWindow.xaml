@@ -109,7 +109,12 @@
                             FontWeight="Medium"
                             Foreground="Gray">
                             <Run Text="Партнеры" />
-                            <Run Foreground="{DynamicResource BrandSolidColorBrush}" Text="Minecraft RU" />
+                            <Hyperlink
+                                Command="{Binding OpenMinecraftRu, Source={StaticResource MainVM}}"
+                                Foreground="{DynamicResource BrandSolidColorBrush}"
+                                NavigateUri="{Binding Source={StaticResource Const}, Path=MCRUDiscordUrl}">
+                                Minecraft RU
+                            </Hyperlink>
                         </TextBlock>
                     </StackPanel>
 

@@ -5,7 +5,6 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Tools;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Input;
@@ -16,7 +15,15 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
     {
         private CancellationTokenSource _cancellationToken;
 
-        public bool IsLoading { get; private set; }
+        private bool _isLoading;
+        public bool IsLoading 
+        {
+            get => _isLoading; private set 
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ObservableCollection<NWUserWrapper> Users { get; } = new ObservableCollection<NWUserWrapper>();
 
@@ -58,7 +65,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
         {
             _cancellationToken = new CancellationTokenSource();
             Users.Clear();
-
+            IsLoading = true;
             ThreadPool.QueueUserWorkItem(delegate (object o)
             {
                 var users = NightWorldApi.FindUsers(GlobalData.User.UUID, GlobalData.User.SessionToken, (uint)CurrentUserCatalogPageIndex, "");
@@ -73,6 +80,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
                         Users.Add(new NWUserWrapper(user, _cancellationToken.Token));
                     }
                     //MoveNextUserCatalogPage();
+                    IsLoading = false;
                 });
             });
         }

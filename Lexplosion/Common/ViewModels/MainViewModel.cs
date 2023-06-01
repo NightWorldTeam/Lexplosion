@@ -168,6 +168,16 @@ namespace Lexplosion.Common.ViewModels
             }));
         }
 
+        private RelayCommand _openMinecraftRu;
+        public ICommand OpenMinecraftRu 
+        {
+            get => _openMinecraftRu ?? (_openMinecraftRu = new RelayCommand(obj =>
+            {
+                Process.Start(Constants.MCRUDiscordUrl);
+            }));
+        }
+
+
         #endregion Command
 
 

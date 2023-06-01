@@ -283,11 +283,23 @@
                                 <MultiDataTrigger.Conditions>
                                     <Condition Binding="{Binding Model.Users.Count}" Value="0" />
                                     <Condition Binding="{Binding Model.SetNewFilterValueAction}" Value="" />
+                                    <Condition Binding="{Binding Model.IsLoading}" Value="False" />
                                 </MultiDataTrigger.Conditions>
 
                                 <MultiDataTrigger.Setters>
                                     <Setter Property="Visibility" Value="Visible" />
                                     <Setter Property="Text" Value="{DynamicResource weCannotFindUserWithThisName}" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Model.Users.Count}" Value="0" />
+                                    <Condition Binding="{Binding Model.IsLoading}" Value="True" />
+                                </MultiDataTrigger.Conditions>
+
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Setter Property="Text" Value="Идёт загрузка страницы..." />
                                 </MultiDataTrigger.Setters>
                             </MultiDataTrigger>
                         </Style.Triggers>
@@ -300,6 +312,24 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Model.Users.Count}" Value="0" />
+                                    <Condition Binding="{Binding Model.SetNewFilterValueAction}" Value="" />
+                                    <Condition Binding="{Binding Model.IsLoading}" Value="False" />
+                                </MultiDataTrigger.Conditions>
+
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
                 <Button
                     Width="64"
                     Height="32"
