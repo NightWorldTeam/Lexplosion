@@ -379,6 +379,11 @@
     <s:String x:Key="outgoing">Outgoing</s:String>
     <s:String x:Key="noOutgoingRequests">There are no outgoing requests.</s:String>
     <s:String x:Key="noIncomingRequests">There are no incoming requests.</s:String>
+    <s:String x:Key="friendsChanged">Friends Changed</s:String>
+    <s:String x:Key="requestsWasSend">requests was send</s:String>
+    <s:String x:Key="requestsWasCancel">Request has been canceled</s:String>
+    <s:String x:Key="friendRemoved">has been removed</s:String>
+    <s:String x:Key="youAndFriendsNow">and you are friends now! :)</s:String>
 
     <!--  Instance Form View Model  -->
     <s:String x:Key="deleteInstance">Delete Instance</s:String>

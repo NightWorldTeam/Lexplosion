@@ -25,9 +25,11 @@
                             Grid.Row="1"
                             IsDirectionReversed="True"
                             Orientation="Vertical">
+
                             <Track.Thumb>
                                 <Thumb Style="{DynamicResource ThumbStyle}" />
                             </Track.Thumb>
+
                             <Track.DecreaseRepeatButton>
                                 <RepeatButton
                                     x:Name="DecreaseRepeatButton"
@@ -35,6 +37,7 @@
                                     Command="ScrollBar.PageUpCommand"
                                     Style="{DynamicResource RepeatButtonPageStyle}" />
                             </Track.DecreaseRepeatButton>
+
                             <Track.IncreaseRepeatButton>
                                 <RepeatButton
                                     x:Name="IncreaseRepeatButton"
@@ -76,25 +79,30 @@
     <!--  Thumb style  -->
     <Style x:Key="ThumbStyle" TargetType="{x:Type Thumb}">
         <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Focusable" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
                     <Border
                         x:Name="Border"
-                        MaxWidth="3"
-                        Background="#404040"
+                        Width="8"
+                        Background="Transparent"
                         CornerRadius="2">
                         <Rectangle
                             x:Name="ThumbRect"
+                            MaxWidth="4"
                             Fill="#404040"
                             RadiusX="4"
                             RadiusY="4" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="ThumbRect" Property="Fill" Value="#838383" />
-                            <Setter TargetName="Border" Property="Background" Value="#838383" />
+                            <!--<Setter TargetName="" /></Setter>-->
+                            <Setter TargetName="ThumbRect" Property="Fill" Value="#454545" />
+                            <Setter TargetName="ThumbRect" Property="Width" Value="8" />
+                            <Setter TargetName="Border" Property="Width" Value="8" />
+                            <Setter TargetName="Border" Property="Background" Value="#454545" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="ThumbRect" Property="Opacity" Value="0.72" />

@@ -426,4 +426,10 @@
     <s:String x:Key="outgoing">Исходящие</s:String>
     <s:String x:Key="noOutgoingRequests">Исходящие заявки отсутствуют.</s:String>
     <s:String x:Key="noIncomingRequests">Входящие заявки отсутствуют.</s:String>
+    <s:String x:Key="friendsChanged">Изменения в друзьях</s:String>
+    <s:String x:Key="requestsWasSend">запрос отправлен</s:String>
+    <s:String x:Key="requestsWasCancel">запрос был отменён</s:String>
+    <s:String x:Key="friendRemoved">и вы больше не друзья :(</s:String>
+    <s:String x:Key="youAndFriendsNow">и вы теперь друзья! :)</s:String>
+
 </ResourceDictionary>

@@ -232,11 +232,11 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                     Header = ResourceGetter.GetString("appearance"),
                     Content = new ApperanceSettingsViewModel()
                 },
-                new Tab<VMBase>
-                {
-                    Header = ResourceGetter.GetString("account"),
-                    Content = new DevСurtainViewModel()
-                },
+                //new Tab<VMBase>
+                //{
+                //    Header = ResourceGetter.GetString("account"),
+                //    Content = new DevСurtainViewModel()
+                //},
                 new Tab<VMBase>
                 {
                     Header = ResourceGetter.GetString("language"),

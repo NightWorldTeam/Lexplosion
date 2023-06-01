@@ -8,16 +8,27 @@ using Lexplosion.Controls;
 using Lexplosion.Global;
 using Lexplosion.Logic.Network;
 using Lexplosion.Logic.Objects.Nightworld;
+using Lexplosion.Tools;
 
 namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
 {
-    public class FriendsTabModel : VMBase
+    public class FriendsTabModel : VMBase, INotifiable
     {
         private readonly DispatcherTimer _timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 3) };
+
+        private DoNotificationCallback _doNotification;
+        public DoNotificationCallback DoNotification
+        {
+            get => _doNotification; protected set
+            {
+                _doNotification = value ?? ((header, message, time, type) => { });
+            }
+        }
 
         public ObservableCollection<NWUserWrapper> Friends { get; } = new ObservableCollection<NWUserWrapper>();
         public ObservableCollection<NWUserWrapper> FriendRequestsOutgoing { get; } = new ObservableCollection<NWUserWrapper>();
         public ObservableCollection<NWUserWrapper> FriendRequestsIncoming { get; } = new ObservableCollection<NWUserWrapper>();
+
 
         public FriendsTabModel()
         {
@@ -108,12 +119,15 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             if (Friends.Contains(user))
             {
                 Friends.Remove(user);
+                DoNotification(ResourceGetter.GetString("friendsChanged"), user.Login + " " + ResourceGetter.GetString("friendRemoved"), 5, 1);
             }
         }
 
         public void AddFriend(NWUserWrapper user) 
         {
+            RemoveFriendRequest(user);
             Friends.Add(user);
+            DoNotification(ResourceGetter.GetString("friendsChanged"), user.Login + " " + ResourceGetter.GetString("youAndFriendsNow"), 5, 1);
         }
 
 

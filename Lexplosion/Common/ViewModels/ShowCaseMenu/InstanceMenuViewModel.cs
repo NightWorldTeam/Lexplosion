@@ -117,7 +117,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
             _showCaseTabMenu.Clear();
 
             _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("general"), Content = new OverviewViewModel(_instanceForm.Client, this) });
-            _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
+            //_showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
             _showCaseTabMenu.Add(new Tab<VMBase>() { Header = ResourceGetter.GetString("version"), Content = new InstancePreviousVersionsViewModel(_instanceForm) });
         }
 
@@ -156,7 +156,7 @@ namespace Lexplosion.Common.ViewModels.ShowCaseMenu
                     return;
 
                 _settingsTabs.Add(new Tab<VMBase> { Id = 1, Header = ResourceGetter.GetString("aboutInstance"), Content = new InstanceProfileViewModel(_instanceForm.Client) });
-                _settingsTabs.Add(new Tab<VMBase> { Id = 4, Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
+                //_settingsTabs.Add(new Tab<VMBase> { Id = 4, Header = ResourceGetter.GetString("changelog"), Content = new DevСurtainViewModel() });
             }
 
             _settingsTabs.Add(new Tab<VMBase> { Id = 0, Header = ResourceGetter.GetString("settings"), Content = new InstanceSettingsViewModel(_instanceForm.Client) });

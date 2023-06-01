@@ -449,7 +449,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border Width="694" Padding="32,16">
+    <Border Width="694" Padding="32,16,0,0">
         <TabControl
             Padding="0,16,0,0"
             Background="Transparent"
@@ -462,18 +462,22 @@
             </TabControl.Resources>
 
             <TabItem Header="{DynamicResource friends}" Style="{StaticResource FormlessTabItem}">
-                <ItemsControl
-                    Width="604"
-                    HorizontalAlignment="Center"
-                    ItemContainerStyleSelector="{StaticResource EvenItemStyleSelector}"
-                    ItemTemplate="{StaticResource Friend}"
-                    ItemsSource="{Binding Model.Friends}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel IsItemsHost="True" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                <ScrollViewer>
+                    <ItemsControl
+                        Width="604"
+                        HorizontalAlignment="Center"
+                        IsTabStop="False"
+                        ItemContainerStyleSelector="{StaticResource EvenItemStyleSelector}"
+                        ItemTemplate="{StaticResource Friend}"
+                        ItemsSource="{Binding Model.Friends}"
+                        ScrollViewer.CanContentScroll="True">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
             </TabItem>
 
             <!--  Requests  -->

@@ -88,7 +88,7 @@ namespace Lexplosion.Logic.Objects.Nightworld
         /// true - если существует следующая страница, false - если нет
         /// </summary>
         [JsonProperty("nextPage")]
-        public bool NextPage;
+        public bool NextPage { get; set; }
     }
 
     public struct FriendRequests

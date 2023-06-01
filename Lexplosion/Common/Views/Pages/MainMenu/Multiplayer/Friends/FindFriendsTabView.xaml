@@ -17,6 +17,8 @@
 
     <UserControl.Resources>
         <Style x:Key="Button" TargetType="{x:Type Button}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="Foreground" Value="#ffffff" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Template">
@@ -34,23 +36,19 @@
                                 VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
-                            </Trigger>
-
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsMouseOver" Value="True" />
-                                    <Condition Property="IsEnabled" Value="False" />
+                                    <Condition Property="IsEnabled" Value="True" />
                                 </MultiTrigger.Conditions>
 
                                 <MultiTrigger.Setters>
-                                    <Setter TargetName="border" Property="BorderBrush" Value="#202020" />
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource BrandSolidColorBrush}" />
                                 </MultiTrigger.Setters>
                             </MultiTrigger>
 
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="content" Property="TextBlock.Foreground" Value="Gray" />
+                                <Setter TargetName="border" Property="Background" Value="Red" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -84,7 +82,7 @@
                         Height="38"
                         CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Avatar}" />
+                            <ImageBrush ImageSource="{Binding Avatar, IsAsync=True}" />
                         </Border.Background>
                     </Border>
 
@@ -272,15 +270,26 @@
                 VerticalAlignment="Top"
                 FontSize="16"
                 FontWeight="Medium"
-                Foreground="LightGray"
-                Text="{DynamicResource weCannotFindUserWithThisName}">
+                Foreground="LightGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Model.Users.Count}" Value="0">
                                 <Setter Property="Visibility" Value="Visible" />
+                                <Setter Property="Text" Value="Игроки отсутствуют" />
                             </DataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Model.Users.Count}" Value="0" />
+                                    <Condition Binding="{Binding Model.SetNewFilterValueAction}" Value="" />
+                                </MultiDataTrigger.Conditions>
+
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Setter Property="Text" Value="{DynamicResource weCannotFindUserWithThisName}" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
                         </Style.Triggers>
                     </Style>
                 </TextBlock.Style>
@@ -294,7 +303,9 @@
                 <Button
                     Width="64"
                     Height="32"
-                    Command="{Binding MovePrevPageCommand}">
+                    Command="{Binding MovePrevPageCommand}"
+                    IsEnabled="{Binding IsPrevPageExist}"
+                    Style="{StaticResource Button}">
                     <Button.Content>
                         <Viewbox Width="12" Height="12">
                             <Path
@@ -303,25 +314,15 @@
                                 Stretch="Fill" />
                         </Viewbox>
                     </Button.Content>
-                    <Button.Style>
-                        <Style BasedOn="{StaticResource Button}" TargetType="{x:Type Button}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Model.NextUsersCatalogPageIndex}" Value="1">
-                                    <Setter Property="IsEnabled" Value="False" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Model.Users.Count}" Value="0">
-                                    <Setter Property="IsEnabled" Value="False" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
                 </Button>
 
                 <Button
                     Width="64"
                     Height="32"
                     Margin="4,0,0,0"
-                    Command="{Binding MoveNextPageCommand}">
+                    Command="{Binding MoveNextPageCommand, Delay=250}"
+                    IsEnabled="{Binding CurrentUsersCatalogPage.NextPage}"
+                    Style="{StaticResource Button}">
                     <Button.Content>
                         <Viewbox Width="12" Height="12">
                             <Path
@@ -330,18 +331,6 @@
                                 Stretch="Fill" />
                         </Viewbox>
                     </Button.Content>
-                    <Button.Style>
-                        <Style BasedOn="{StaticResource Button}" TargetType="{x:Type Button}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Model.CurrentUsersCatalogPage.NextPage}" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Model.Users.Count}" Value="0">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
                 </Button>
             </StackPanel>
         </Grid>

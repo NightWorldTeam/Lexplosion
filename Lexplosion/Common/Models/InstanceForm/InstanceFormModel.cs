@@ -64,6 +64,7 @@ namespace Lexplosion.Common.Models.InstanceForm
 
             instanceClient.BuildFinished += UpdateFromInstanceClient;
             instanceClient.StateChanged += UpdateLowerButton;
+            instanceClient.DownloadStarted += InstanceClient_DownloadStarted;
             LoadingCategories(InstanceClient.Categories);
 
             UpperButtonSetup();
@@ -78,6 +79,11 @@ namespace Lexplosion.Common.Models.InstanceForm
 
 
             UpdateButtons();
+        }
+
+        private void InstanceClient_DownloadStarted()
+        {
+            UpdateLowerButton();
         }
 
         #endregion Constructors

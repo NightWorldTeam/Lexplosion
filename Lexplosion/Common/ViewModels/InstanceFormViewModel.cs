@@ -311,25 +311,21 @@ namespace Lexplosion.Common.ViewModels
                         Client.AddToLibrary();
                         break;
                     }
-
                 case LowerButtonFunc.DeleteFromLibrary:
                     {
                         RemoveInstance(true);
                         break;
                     }
-
                 case LowerButtonFunc.OpenFolder:
                     {
                         Model.OpenInstanceFolder();
                         break;
                     }
-
                 case LowerButtonFunc.CancelDownload:
                     {
                         Model.DownloadModel.CancelDownload();
                         break;
                     }
-
                 case LowerButtonFunc.Update:
                     {
                         if (!Model.DownloadModel.IsDownloadInProgress)
@@ -339,7 +335,6 @@ namespace Lexplosion.Common.ViewModels
                         }
                         break;
                     }
-
                 case LowerButtonFunc.OpenWebsite:
                     {
                         OpenWebsite();
@@ -351,13 +346,11 @@ namespace Lexplosion.Common.ViewModels
                         RemoveInstance(false);
                         break;
                     }
-
                 case LowerButtonFunc.OpenDLCPage:
                     {
                         MainVM.MainMenuVM.OpenModpackPage(this, true);
                         break;
                     }
-
                 case LowerButtonFunc.Export:
                     {
                         StartExportAndOpenModal();

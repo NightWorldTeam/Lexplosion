@@ -174,8 +174,36 @@
 
     <Grid>
         <ScrollViewer>
-            <ItemsControl Margin="25,25,25,0" ItemsSource="{Binding PreviousVersions}" />
+            <ItemsControl Margin="25,25,25,0" ItemsSource="{Binding PreviousVersions}">
+                <ItemsControl.Style>
+                    <Style TargetType="{x:Type ItemsControl}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PreviousVersions.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ItemsControl.Style>
+            </ItemsControl>
         </ScrollViewer>
+
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="20"
+            FontWeight="Medium"
+            Foreground="LightGray"
+            Text="Отсутсвуют другие версии сборки">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PreviousVersions.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
 
         <controls:LoadingBoard IsLoadingFinished="{Binding IsLoadingFinished}" />
     </Grid>
