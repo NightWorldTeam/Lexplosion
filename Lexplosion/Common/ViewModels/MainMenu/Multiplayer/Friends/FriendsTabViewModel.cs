@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Lexplosion.Common.Models.Objects;
@@ -15,6 +16,8 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
     public class FriendsTabModel : VMBase, INotifiable
     {
         private readonly DispatcherTimer _timer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 3) };
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
 
         private DoNotificationCallback _doNotification;
         public DoNotificationCallback DoNotification
@@ -75,12 +78,12 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
         #region Public Methods
 
 
-        private void UpdateFriends(IEnumerable<NwUser> friends) 
+        private void UpdateFriends(IEnumerable<NwUser> friends)
         {
             Friends.Clear();
             foreach (var friend in friends)
             {
-                Friends.Add(new NWUserWrapper(friend));
+                Friends.Add(new NWUserWrapper(friend, _cancellationTokenSource.Token));
             }
         }
 
@@ -89,7 +92,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             FriendRequestsOutgoing.Clear();
             foreach (var friendRequest in outgoingRequests)
             {
-                FriendRequestsOutgoing.Add(new NWUserWrapper(friendRequest));
+                FriendRequestsOutgoing.Add(new NWUserWrapper(friendRequest, _cancellationTokenSource.Token));
             }
         }
 
@@ -98,7 +101,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer
             FriendRequestsIncoming.Clear();
             foreach (var friendRequest in incomingRequests)
             {
-                FriendRequestsIncoming.Add(new NWUserWrapper(friendRequest));
+                FriendRequestsIncoming.Add(new NWUserWrapper(friendRequest, _cancellationTokenSource.Token));
             }
         }
 

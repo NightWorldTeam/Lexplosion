@@ -1,19 +1,29 @@
 ﻿using Lexplosion.Logic.Objects.Nightworld;
 using Lexplosion.Tools;
 using System;
-using System.Diagnostics;
-using System.Security.Policy;
-using System.Windows.Media.Imaging;
-using System.Xml.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lexplosion.Common.Models.Objects
 {
     public sealed class NWUserWrapper : VMBase
     {
         private readonly NwUser _user;
+        private readonly CancellationToken _cancellationToken;
 
         public string Login => _user.Login;
-        public BitmapImage Avatar { get; }
+
+        private byte[] _logo;
+        public byte[] Logo 
+        { 
+            get => _logo; private set 
+            {
+                _logo = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ActivityStatus Status => _user.ActivityStatus;
         public uint ManualFriendsCount => 0;
         public string CurrentRunningInstanceName => ActivityStatusToString(Status);
@@ -28,14 +38,32 @@ namespace Lexplosion.Common.Models.Objects
             }
         }
 
-        public NWUserWrapper(NwUser user)
+        public NWUserWrapper(NwUser user, CancellationToken cancellationToken)
         {
-            Debug.WriteLine(_user);
             _user = user;
-            Avatar = new BitmapImage();
-            Avatar.BeginInit();
-            Avatar.UriSource = new Uri(user.AvatarUrl, UriKind.Absolute);
-            Avatar.EndInit();
+            _cancellationToken = cancellationToken;
+            Task.Run(async () => await DownloadFile());
+        }
+
+        public async Task DownloadFile()
+        {
+            // регистрируем вызов CancelAsync() как реакцию на отмену токена,
+            // using нужен для отмены регистрации после завершения скачивания
+            try
+            {
+                using (var web = new WebClient())
+                { 
+                    using (_cancellationToken.Register(web.CancelAsync))
+                    {
+                        Logo = await web.DownloadDataTaskAsync(new Uri(_user.AvatarUrl));
+                        Console.WriteLine(_user.Login);
+                    }
+                }
+            }
+            catch 
+            {
+                Logo = new byte[0] { };
+            }
         }
 
 

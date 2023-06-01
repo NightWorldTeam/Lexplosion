@@ -82,7 +82,7 @@
                         Height="38"
                         CornerRadius="5">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Avatar, IsAsync=True}" />
+                            <ImageBrush ImageSource="{Binding Logo, Converter={StaticResource BytesToBitmapImageConverter}}" />
                         </Border.Background>
                     </Border>
 
