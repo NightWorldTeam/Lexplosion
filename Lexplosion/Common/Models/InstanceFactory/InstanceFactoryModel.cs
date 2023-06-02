@@ -300,7 +300,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
                     logoPath: model.LogoPath,
                     (ClientType)model.ModloaderModel.GameExtension,
                     modloaderVersion: model.ModloaderModel.Version,
-                    model.IsSoduim
+                    isSodium: model.IsSodium
                     );
             }
         }
