@@ -161,8 +161,12 @@ namespace Lexplosion.Logic.Management.Addons
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DefaineLatesVersion_()
         {
-            _fileId = _addonInfo.Versions[_addonInfo.Versions.Count() - 1];
-            _versionInfo = ModrinthApi.GetProjectFile(_fileId);
+            var files = ModrinthApi.GetProjectFiles(_projectId, _instanceData.Modloader, _instanceData.GameVersion);
+            if (files.Count > 0)
+            {
+                _versionInfo = files[files.Count - 1];
+                _fileId = _versionInfo.FileId;
+            }
         }
 
         public void DefineDefaultVersion()
@@ -199,7 +203,7 @@ namespace Lexplosion.Logic.Management.Addons
 
         public SetValues<InstalledAddonInfo, DownloadAddonRes> Install(TaskArgs taskArgs)
         {
-            if (_versionInfo == null)
+            if (_addonInfo == null || _versionInfo == null)
             {
                 return new SetValues<InstalledAddonInfo, DownloadAddonRes>
                 {

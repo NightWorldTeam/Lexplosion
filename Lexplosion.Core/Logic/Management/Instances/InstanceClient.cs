@@ -320,7 +320,6 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="sodium">Устанавливать ли sodium</param>
         public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ClientType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
         {
-            sodium = true;
             if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
             var client = new InstanceClient(name, CreateSourceFactory(type), gameVersion)

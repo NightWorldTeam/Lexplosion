@@ -151,6 +151,19 @@ namespace Lexplosion.Logic.Objects.Curseforge
         {
             public int? modLoader;
             public string filename;
+
+            [JsonIgnore]
+            public ClientType ModloaderType
+            {
+                get
+                {
+                    return (ClientType)((int)(modLoader ?? 1));
+                }
+                set
+                {
+                    modLoader = (int)value;
+                }
+            }
         }
 
         public List<CurseforgeFileInfo> latestFiles;
