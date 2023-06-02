@@ -91,6 +91,7 @@ namespace Lexplosion.Common.ViewModels
             Header = header;
             Tabs = new ObservableCollection<Tab<VMBase>>(tabs);
             if (tabs.Count > 0)
+                Console.WriteLine(selectedTabIndex);
                 SelectedTab = Tabs[selectedTabIndex];
         }
     }

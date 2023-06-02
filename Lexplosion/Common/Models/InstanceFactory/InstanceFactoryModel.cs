@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Common.Models.GameExtensions;
 using Lexplosion.Common.ViewModels;
+using Lexplosion.Common.Views.Windows;
 using Lexplosion.Logic.Management.Instances;
 
 namespace Lexplosion.Common.Models.InstanceFactory
@@ -152,7 +153,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
         private bool _isSodium;
         public bool IsSodium
         {
-            get => _isSodium && ModloaderModel.GameExtension == GameExtension.Fabric; set
+            get => _isSodium && (ModloaderModel.GameExtension == GameExtension.Fabric || ModloaderModel.GameExtension == GameExtension.Quilt); set
             {
                 _isSodium = value;
                 OnPropertyChanged();
@@ -302,6 +303,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
                     modloaderVersion: model.ModloaderModel.Version,
                     isSodium: model.IsSodium
                     );
+                Runtime.DebugWrite(model.IsSodium);
             }
         }
 
