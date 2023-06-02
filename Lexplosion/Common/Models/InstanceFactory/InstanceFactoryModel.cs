@@ -258,7 +258,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
 
 
         public static void CreateLocalInstance(MainViewModel mainViewModel, string name, string version, string logoPath,
-            ClientType modloaderType, string modloaderVersion = null, string optifineVersion = null
+            ClientType modloaderType, string modloaderVersion = null, string optifineVersion = null, bool isSodium = false
             )
         {
             var instance = InstanceClient.CreateClient(
@@ -268,7 +268,8 @@ namespace Lexplosion.Common.Models.InstanceFactory
                 modloaderType,
                 logoPath,
                 modloaderVersion,
-                optifineVersion
+                optifineVersion,
+                isSodium
                 );
 
             MainModel.Instance.LibraryController.AddInstance(new InstanceFormViewModel(mainViewModel, instance));
