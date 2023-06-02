@@ -9,7 +9,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
         private readonly MainViewModel _mainViewModel;
 
 
-        #region Property
+        #region Properties
 
         /// <summary>
         /// Название сборки.
@@ -149,6 +149,16 @@ namespace Lexplosion.Common.Models.InstanceFactory
             }
         }
 
+        private bool _isSodium;
+        public bool IsSodium
+        {
+            get => _isSodium && ModloaderModel.GameExtension == GameExtension.Fabric; set
+            {
+                _isSodium = value;
+                OnPropertyChanged();
+            }
+        }
+
         /*** Outside Data ***/
 
 
@@ -166,7 +176,7 @@ namespace Lexplosion.Common.Models.InstanceFactory
         }
 
 
-        #endregion
+        #endregion Properties
 
 
         #region Constructors
@@ -288,7 +298,8 @@ namespace Lexplosion.Common.Models.InstanceFactory
                     version: instanceVersion,
                     logoPath: model.LogoPath,
                     (ClientType)model.ModloaderModel.GameExtension,
-                    modloaderVersion: model.ModloaderModel.Version
+                    modloaderVersion: model.ModloaderModel.Version,
+                    model.IsSoduim
                     );
             }
         }

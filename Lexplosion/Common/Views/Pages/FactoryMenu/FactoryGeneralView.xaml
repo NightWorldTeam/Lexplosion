@@ -286,6 +286,34 @@
                                 SelectedItem="{Binding Model.OptifineModel.Version}"
                                 Visibility="{Binding Model.OptifineModel.IsEnable, Converter={StaticResource ConvertBoolToVisibility}}" />
                         </StackPanel>
+
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="{x:Type Grid}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.IsFabric, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DataContext.IsQuilt, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                FontWeight="Medium"
+                                Foreground="White"
+                                Opacity="0.8"
+                                Text="Sodium" />
+
+                            <ToggleButton
+                                HorizontalAlignment="Right"
+                                IsChecked="{Binding Model.IsSodium}"
+                                Style="{StaticResource ToggleSwitch}" />
+                        </Grid>
                     </StackPanel>
                 </Border>
 
