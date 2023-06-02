@@ -12,6 +12,7 @@ using Lexplosion.Tools;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Management.Sources;
+using Lexplosion.Logic.Network.Web;
 
 namespace Lexplosion.Logic.Management.Instances
 {
@@ -315,8 +316,11 @@ namespace Lexplosion.Logic.Management.Instances
         /// <param name="modloader">Тип модлоадера</param>
         /// <param name="logoPath">Путь до логотипа. Если устанавливать не надо, то null.</param>
         /// <param name="modloaderVersion">Версия модлоадера. Это поле необходимо только если есть модлоадер</param>
-        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ClientType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null)
+        /// <param name="optifineVersion">Версия оптифайна. Если оптифайн не нужен - то null.</param>
+        /// <param name="sodium">Устанавливать ли sodium</param>
+        public static InstanceClient CreateClient(string name, InstanceSource type, string gameVersion, ClientType modloader, string logoPath, string modloaderVersion = null, string optifineVersion = null, bool sodium = false)
         {
+            sodium = true;
             if (modloaderVersion == null) modloader = ClientType.Vanilla;
 
             var client = new InstanceClient(name, CreateSourceFactory(type), gameVersion)
@@ -349,6 +353,17 @@ namespace Lexplosion.Logic.Management.Instances
 
             _installedInstances[client._localId] = client;
             SaveInstalledInstancesList();
+
+            if (sodium && (modloader == ClientType.Fabric || modloader == ClientType.Quilt))
+            {
+                ThreadPool.QueueUserWorkItem(delegate (object o)
+                {
+                    var sodium = ModrinthApi.GetProject("AANobbMI");
+                    var addon = InstanceAddon.CreateModrinthAddon(client.GetBaseData, sodium);
+                    var stateData = new DynamicStateHandler<SetValues<InstanceAddon, DownloadAddonRes>, InstanceAddon.InstallAddonState>(delegate (SetValues<InstanceAddon, DownloadAddonRes> a, InstanceAddon.InstallAddonState b) { });
+                    addon.InstallLatestVersion(stateData, downloadDependencies: true);
+                });
+            }
 
             Created?.Invoke();
 

@@ -137,11 +137,12 @@ namespace Lexplosion.Logic.Management.Addons
                 _addonInfo = CurseforgeApi.GetAddonInfo(_projectId);
             }
 
-            _versionInfo = GetLastFile(_instanceData.GameVersion, _addonInfo?.latestFiles, _addonInfo?.latestFilesIndexes, (AddonType)_addonInfo?.classId);
-            if (_versionInfo == null)
-            {
-                _versionInfo = GetLastFile(_instanceData.GameVersion, CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion, _instanceData.Modloader), null, (AddonType)_addonInfo?.classId);
-            }
+            //_versionInfo = GetLastFile(_instanceData.GameVersion, _addonInfo?.latestFiles, _addonInfo?.latestFilesIndexes, (AddonType)_addonInfo?.classId);
+            //if (_versionInfo == null)
+            //{
+            //    _versionInfo = GetLastFile(_instanceData.GameVersion, CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion, _instanceData.Modloader), null, (AddonType)_addonInfo?.classId);
+            //}
+            _versionInfo = GetLastFile(_instanceData.GameVersion, CurseforgeApi.GetProjectFiles(_addonInfo.id, _instanceData.GameVersion, _instanceData.Modloader), null, (AddonType)_addonInfo?.classId);
         }
 
         public void DefineDefaultVersion()

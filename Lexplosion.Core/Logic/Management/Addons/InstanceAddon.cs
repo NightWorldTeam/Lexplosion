@@ -261,6 +261,13 @@ namespace Lexplosion.Logic.Management.Instances
             _chacheSemaphore.Release();
         }
 
+        public static InstanceAddon CreateModrinthAddon(BaseInstanceData modpackInfo, ModrinthProjectInfo projectInfo)
+        {
+            IPrototypeAddon addonPrototype = new ModrinthAddon(modpackInfo, projectInfo);
+            addonPrototype.DefineLatestVersion();
+            return new InstanceAddon(addonPrototype, modpackInfo);
+        }
+
         /// <summary>
         /// Возвращает список аддонов с курсфорджа.
         /// </summary>
