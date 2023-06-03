@@ -163,7 +163,7 @@ namespace Lexplosion.Logic.FileSystem
                             }
                             catch { }
 
-                            if (fileNameIsValid && file.downloads != null && file.downloads.Count() > 0)
+                            if (fileNameIsValid && file.downloads != null && file.downloads.Count > 0)
                             {
                                 unknownProjects.Add(file);
                             }

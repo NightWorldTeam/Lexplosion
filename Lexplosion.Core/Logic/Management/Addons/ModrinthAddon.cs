@@ -217,7 +217,7 @@ namespace Lexplosion.Logic.Management.Addons
 
         public bool CompareVersions(string addonFileId)
         {
-            return _addonInfo.Versions[_addonInfo.Versions.Count() - 1] != addonFileId;
+            return _addonInfo.Versions[_addonInfo.Versions.Count - 1] != addonFileId;
         }
 
         public event Action OnInfoUpdated;
