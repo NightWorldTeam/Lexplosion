@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Lexplosion.Core.Tools;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
@@ -25,11 +26,10 @@ namespace Lexplosion.Logic.Management.Installers
             ModrinthProjectInfo instanceInfo = ModrinthApi.GetProject(projectId); //получем информацию об этом модпаке
 
             //проверяем полученные данные на валидность и определяем последнюю версию клиента (она будет последняя в спике)
-            bool isValid = instanceInfo.Versions != null && instanceInfo.Versions.Count > 0;
-            if (isValid && instanceInfo.Versions[instanceInfo.Versions.Count - 1] != actualInstanceVersion)
+            string lastVersion = instanceInfo.Versions.GetLastElement();
+            if (lastVersion != null && lastVersion != actualInstanceVersion)
             {
-                string clientVersion = instanceInfo.Versions[instanceInfo.Versions.Count - 1];
-                return ModrinthApi.GetProjectFile(clientVersion);
+                return ModrinthApi.GetProjectFile(lastVersion);
             }
 
             return null;

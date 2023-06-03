@@ -227,10 +227,10 @@ namespace Lexplosion.Logic.Management.Addons
             return CurseforgeApi.DownloadAddon(_versionInfo, (AddonType)(_addonInfo.classId ?? 0), "instances/" + _instanceData.LocalId + "/", taskArgs);
         }
 
-        public bool CompareVersions(string addonFileId)
+        public void CompareVersions(string addonFileId, Action actionIfTrue)
         {
             int currenId = addonFileId.ToInt32();
-            if (_addonInfo?.latestFilesIndexes == null) return false;
+            if (_addonInfo?.latestFilesIndexes == null) return;
 
             foreach (var file in _addonInfo.latestFilesIndexes)
             {
@@ -240,11 +240,10 @@ namespace Lexplosion.Logic.Management.Addons
                 bool md = (_addonInfo.classId != 6 || _instanceData.Modloader == ClientType.Vanilla || file.ModloaderType == _instanceData.Modloader);
                 if (file.gameVersion == _instanceData.GameVersion && md && file.fileId > currenId)
                 {
-                    return true;
+                    actionIfTrue();
+                    return;
                 }
             }
-
-            return false;
         }
 
         public event Action OnInfoUpdated;

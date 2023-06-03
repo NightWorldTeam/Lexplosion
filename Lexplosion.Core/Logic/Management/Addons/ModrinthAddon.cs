@@ -8,6 +8,7 @@ using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 using System;
 using System.Threading;
+using Lexplosion.Core.Tools;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -161,10 +162,13 @@ namespace Lexplosion.Logic.Management.Addons
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DefaineLatesVersion_()
         {
-            var files = ModrinthApi.GetProjectFiles(_projectId, _instanceData.Modloader, _instanceData.GameVersion);
-            if (files.Count > 0)
+            ClientType modloader = (_addonInfo.Type == "mod") ? _instanceData.Modloader : ClientType.Vanilla; // если это мод, то передаем модлоадер. Иначе ставим Vanilla
+            var files = ModrinthApi.GetProjectFiles(_projectId, modloader, _instanceData.GameVersion);
+            var lastFile = files.GetLastElement();
+
+            if (lastFile != null)
             {
-                _versionInfo = files[files.Count - 1];
+                _versionInfo = lastFile;
                 _fileId = _versionInfo.FileId;
             }
         }
@@ -215,9 +219,31 @@ namespace Lexplosion.Logic.Management.Addons
             return ModrinthApi.DownloadAddon(_addonInfo, _versionInfo.FileId, "instances/" + _instanceData.LocalId + "/", taskArgs);
         }
 
-        public bool CompareVersions(string addonFileId)
+        public void CompareVersions(string addonFileId, Action actionIfTrue)
         {
-            return _addonInfo.Versions[_addonInfo.Versions.Count - 1] != addonFileId;
+            if (_addonInfo.Versions.GetLastElement() != addonFileId)
+            {
+                if (_addonInfo.GameVersions.Count > 1 || _addonInfo.Loaders.Count > 1)
+                {
+                    //неизвестно для каокго модлоадера и для какой версии игры предназначена последняя версия аддона, поэтому делаем дополнительный запрос
+                    ThreadPool.QueueUserWorkItem((object o) =>
+                    {
+                        ClientType modloader = (_addonInfo.Type == "mod") ? _instanceData.Modloader : ClientType.Vanilla;
+                        var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData.GameVersion);
+                        var lastFiles = files.GetLastElement();
+
+                        if (lastFiles.FileId != addonFileId)
+                        {
+                            actionIfTrue();
+                        }
+                    });
+                }
+                else
+                {
+                    // у аддона есть только 1 версия игры и 1 модлоадер (или их вовсе  нет), значит последняя версия там точно подходит
+                    actionIfTrue();
+                }
+            }
         }
 
         public event Action OnInfoUpdated;

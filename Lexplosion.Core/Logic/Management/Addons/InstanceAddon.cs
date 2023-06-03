@@ -309,10 +309,17 @@ namespace Lexplosion.Logic.Management.Instances
                             instanceAddon = new InstanceAddon(prototypeAddon, modpackInfo)
                             {
                                 IsInstalled = isInstalled,
-                                UpdateAvailable = (installedAddons.ContainsKey(addonId) && prototypeAddon.CompareVersions(installedAddons[addonId].FileID)), // если установленная версия аддона меньше последней - значит доступно обновление
                                 DownloadCount = (int)addon.downloadCount,
                                 LastUpdated = DateTime.Parse(addon.dateModified).ToString("dd MMM yyyy")
                             };
+
+                            if (installedAddons.ContainsKey(addonId))
+                            {
+                                prototypeAddon.CompareVersions(installedAddons[addonId].FileID, () =>
+                                {
+                                    instanceAddon.UpdateAvailable = true;
+                                });
+                            }
 
                             _installingAddons[addonKey].Point = instanceAddon;
                             instanceAddon.IsInstalling = true;
@@ -329,10 +336,17 @@ namespace Lexplosion.Logic.Management.Instances
                         instanceAddon = new InstanceAddon(new CurseforgeAddon(modpackInfo, addon), modpackInfo)
                         {
                             IsInstalled = isInstalled,
-                            UpdateAvailable = (installedAddons.ContainsKey(addonId) && prototypeAddon.CompareVersions(installedAddons[addonId].FileID)), // если установленная версия аддона меньше последней - значит доступно обновление
                             DownloadCount = (int)addon.downloadCount,
                             LastUpdated = DateTime.Parse(addon.dateModified).ToString("dd MMM yyyy")
                         };
+
+                        if (installedAddons.ContainsKey(addonId))
+                        {
+                            prototypeAddon.CompareVersions(installedAddons[addonId].FileID, () =>
+                            {
+                                instanceAddon.UpdateAvailable = true;
+                            });
+                        }
                     }
                     _installingSemaphore.Release(addonKey);
 
@@ -622,10 +636,10 @@ namespace Lexplosion.Logic.Management.Instances
             // проверяем наличие обновлений для мода
             if (modpackInfo.Type == InstanceSource.Local)
             {
-                if (prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID))
+                prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID, () =>
                 {
                     obj.UpdateAvailable = true;
-                }
+                });
             }
 
             existsAddons[info.ActualPath] = new SetValues<InstanceAddon, string, ProjectSource> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
@@ -1066,10 +1080,10 @@ namespace Lexplosion.Logic.Management.Instances
                                 // проверяем наличие обновлений для мода
                                 if (modpackInfo.Type == InstanceSource.Local)
                                 {
-                                    if (prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID))
+                                    prototypeAddon.CompareVersions(actualAddonsList[projectId].FileID, () =>
                                     {
                                         obj.UpdateAvailable = true;
-                                    }
+                                    });
                                 }
 
                                 existsAddons[info.ActualPath] = new SetValues<InstanceAddon, string> // пихаем аддон в этот список именно в этом месте на всякий случай. вдруг долбаебы с курсфорджа вернут мне не весь список, который я запросил
