@@ -389,4 +389,8 @@
     <s:String x:Key="deleteInstance">Delete Instance</s:String>
     <s:String x:Key="wantDeleteInstance">Do you really want to delete "{0}"?</s:String>
     <s:String x:Key="wantDeleteInstanceFromLibrary">Do you really want to delete "{0}" for library?</s:String>
+
+    <!--  About Us  -->
+    <s:String x:Key="contacts">Contacts</s:String>
+    <s:String x:Key="ourGroupVK">Our Group VKontakte</s:String>
 </ResourceDictionary>

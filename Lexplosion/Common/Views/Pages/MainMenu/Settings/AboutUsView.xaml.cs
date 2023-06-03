@@ -1,5 +1,6 @@
 ﻿using Lexplosion.Global;
 using Lexplosion.Logic.Network;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -31,6 +32,21 @@ namespace Lexplosion.Common.Views.Pages.MainMenu.Settings
             sklaipBitmap.UriSource = new System.Uri("https://night-world.org/requestProcessing/getUserImage.php?user_login=Sklaip");
             sklaipBitmap.EndInit();
             SklaipHead.Background = new ImageBrush(sklaipBitmap);
+        }
+
+        private void IgorVK_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Process.Start(Constants.VKDefaultUrl + "idhel2x");
+        }
+
+        private void SvyatVK_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Process.Start(Constants.VKDefaultUrl + "lord_of_anecdotes");
+        }
+
+        private void GroupVK_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Process.Start(Constants.VKDefaultUrl + "nightworld_offical");
         }
     }
 }

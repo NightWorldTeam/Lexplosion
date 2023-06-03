@@ -432,4 +432,8 @@
     <s:String x:Key="friendRemoved">и вы больше не друзья :(</s:String>
     <s:String x:Key="youAndFriendsNow">и вы теперь друзья! :)</s:String>
 
+
+    <!--  About Us  -->
+    <s:String x:Key="contacts">Контакты</s:String>
+    <s:String x:Key="ourGroupVK">Наша группа ВКонтакте</s:String>
 </ResourceDictionary>
