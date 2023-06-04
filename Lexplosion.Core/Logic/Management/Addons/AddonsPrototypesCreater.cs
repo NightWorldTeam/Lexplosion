@@ -89,7 +89,7 @@ namespace Lexplosion.Logic.Management.Addons
         {
             var result = new Dictionary<string, IPrototypeAddon>();
 
-            var filesData = new Dictionary<string, SetValues<string, string, long, string>>(); // ключ - путь до файла, знаечния - sha512, sha1, разхмер файла, md5
+            var filesData = new Dictionary<string, SetValues<string, string, long, string>>(); // ключ - путь до файла, знаечния - sha512, sha1, размер файла, md5
             var falesSha512 = new Dictionary<string, string>(); // ключ - sha512, значение - путь до файла
             var hashesToModrinth = new List<string>(); // все sha512
 
@@ -188,6 +188,8 @@ namespace Lexplosion.Logic.Management.Addons
                 }
             }
 
+            modrinthData = null;
+            falesSha512 = null;
             GC.Collect();
 
             List<ModrinthProjectInfo> mdProjects = ModrinthApi.GetProjects(knownProjectFiles.Keys.ToArray());

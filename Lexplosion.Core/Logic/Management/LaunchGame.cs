@@ -212,7 +212,7 @@ namespace Lexplosion.Logic.Management
                 }
             }
 
-            if (isAllowed) return string.Join(" ", obj. Value);
+            if (isAllowed) return string.Join(" ", obj.Value);
 
             return "";
         }
