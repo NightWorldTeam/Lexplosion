@@ -9,7 +9,7 @@ namespace Lexplosion.Common
         public const string VKGroupToChatUrl = VKDefaultUrl + "im?media=&sel=-155979422";
 
         public const string DiscordDefaultUrl = @"https://dicord.com/";
-        public const string MCRUDiscordUrl = DiscordDefaultUrl + "invite/mcru";
+        public const string MCRUDiscordUrl = "https://discord.gg/eW24EnkDB7";
         //public const string DiscordServerInviteUrl = "https://discord.gg/FfSWhMWxsj";
 
         public const string BoostyUrl = "";
