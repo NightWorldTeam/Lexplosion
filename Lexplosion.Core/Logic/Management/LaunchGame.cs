@@ -233,7 +233,8 @@ namespace Lexplosion.Logic.Management
                 var activation = data.Libraries[lib].activationConditions;
                 if ((activation?.accountTypes == null || activation.accountTypes.Contains(accountType)) && !data.Libraries[lib].notLaunch)
                 {
-                    libs += "\"" + gamePath + "libraries/" + lib + "\";";
+                    if (!(lib.Contains("-client.jar") && lib.Contains("net/minecraftforge/forge")))
+                        libs += "\"" + gamePath + "libraries/" + lib + "\";";
                 }
             }
 
