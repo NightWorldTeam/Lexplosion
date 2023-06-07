@@ -229,6 +229,8 @@ namespace Lexplosion.Logic.Management.Addons
 
         public void CompareVersions(string addonFileId, Action actionIfTrue)
         {
+            if (_addonInfo == null) return;
+
             //int currenId = addonFileId.ToInt32();
             //if (_addonInfo?.latestFilesIndexes == null) return;
 

@@ -23,6 +23,12 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("project_type")]
         public string Type; //mod, modpack, resourcepack, shader
+
+        [JsonProperty("updated")]
+        public string Updated;
+
+        [JsonProperty("icon_url")]
+        public string LogoUrl;
     }
 
     public class ModrinthCtalogUnit : ModrinthProject
@@ -39,9 +45,6 @@ namespace Lexplosion.Logic.Objects.Modrinth
         [JsonProperty("categories")]
         public List<string> Categories;
 
-        [JsonProperty("updated")]
-        public string Updated;
-
         [JsonProperty("versions")]
         public List<string> GameVersions;
 
@@ -50,9 +53,6 @@ namespace Lexplosion.Logic.Objects.Modrinth
 
         [JsonProperty("downloads")]
         public int Downloads;
-
-        [JsonProperty("icon_url")]
-        public string LogoUrl;
     }
 
     public class ModrinthProjectInfo : ModrinthProject
@@ -78,21 +78,37 @@ namespace Lexplosion.Logic.Objects.Modrinth
         [JsonProperty("versions")]
         public List<string> Versions;
 
-        [JsonProperty("icon_url")]
-        public string LogoUrl;
-
-        [JsonProperty("updated")]
-        public string Updated;
-
         [JsonProperty("gallery")]
         public List<Dictionary<string, string>> Images;
 
         [JsonProperty("team")]
         public string Team;
 
+        [JsonIgnore]
+        public string Author = null;
+
         public string WebsiteUrl
         {
             get => "https://modrinth.com/modpack/" + Slug;
+        }
+
+        public ModrinthProjectInfo() { }
+        public ModrinthProjectInfo(ModrinthCtalogUnit catalogUnit)
+        {
+            ProjectId = catalogUnit.ProjectId;
+            Summary = catalogUnit.Summary;
+            Downloads = catalogUnit.Downloads;
+            GameVersions = catalogUnit.GameVersions;
+            Slug = catalogUnit.Slug;
+            Versions = null;
+            LogoUrl = catalogUnit.LogoUrl;
+            Updated = catalogUnit.Updated;
+            Author = catalogUnit.Author;
+            Team = null;
+            Images = null;
+            Title = catalogUnit.Title;
+            Loaders = catalogUnit.Loaders;
+            Type = catalogUnit.Type;
         }
     }
 

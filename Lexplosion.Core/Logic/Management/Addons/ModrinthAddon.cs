@@ -2,12 +2,12 @@
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
+using Lexplosion.Core.Tools;
 using System.Collections.Generic;
 using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;
 using System;
 using System.Threading;
-using Lexplosion.Core.Tools;
 
 namespace Lexplosion.Logic.Management.Addons
 {
@@ -147,15 +147,26 @@ namespace Lexplosion.Logic.Management.Addons
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetAuthor()
         {
-            ThreadPool.QueueUserWorkItem(delegate (object state)
+            if (!string.IsNullOrWhiteSpace(_addonInfo.Author))
             {
-                List<ModrinthTeam> teamsData = ModrinthApi.GetTeam(_addonInfo.Team);
-                if (teamsData.Count > 0)
+                AuthorName = _addonInfo.Author;
+            }
+            else if (_addonInfo.Team != null)
+            {
+                ThreadPool.QueueUserWorkItem(delegate (object state)
                 {
-                    AuthorName = teamsData[0]?.User?.Username;
-                    OnInfoUpdated?.Invoke();
-                }
-            });
+                    List<ModrinthTeam> teamsData = ModrinthApi.GetTeam(_addonInfo.Team);
+                    if (teamsData.Count > 0)
+                    {
+                        AuthorName = teamsData[0]?.User?.Username;
+                        OnInfoUpdated?.Invoke();
+                    }
+                });
+            }
+            else
+            {
+                AuthorName = "Unknown author";
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -220,9 +231,12 @@ namespace Lexplosion.Logic.Management.Addons
 
         public void CompareVersions(string addonFileId, Action actionIfTrue)
         {
-            if (_addonInfo.Versions.GetLastElement() != addonFileId)
+            if (_addonInfo == null) return;
+
+            var lastEelem = _addonInfo.Versions.GetLastElement();
+            if (lastEelem != addonFileId)
             {
-                if (_addonInfo.GameVersions.Count > 1 || _addonInfo.Loaders.Count > 1)
+                if (lastEelem == null || _addonInfo.GameVersions.Count > 1 || _addonInfo.Loaders.Count > 1)
                 {
                     //неизвестно для каокго модлоадера и для какой версии игры предназначена последняя версия аддона, поэтому делаем дополнительный запрос
                     ThreadPool.QueueUserWorkItem((object o) =>

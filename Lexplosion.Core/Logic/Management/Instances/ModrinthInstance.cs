@@ -1,4 +1,5 @@
-﻿using Lexplosion.Logic.Network.Web;
+﻿using Lexplosion.Core.Tools;
+using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;
@@ -15,8 +16,8 @@ namespace Lexplosion.Logic.Management.Instances
         {
             ModrinthProjectInfo info = ModrinthApi.GetProject(infoData.id);
 
-            if (info.Versions == null || info.Versions.Count == 0) return false;
-            return info.Versions[info.Versions.Count - 1] != infoData.instanceVersion;
+            var lastElem = info.Versions.GetLastElement();
+            return lastElem != null && lastElem != infoData.instanceVersion;
         }
 
         private static List<ModrinthCategory> ParseCategories(List<string> data)

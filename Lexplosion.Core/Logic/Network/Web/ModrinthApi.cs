@@ -173,6 +173,56 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();
         }
 
+        public static List<ModrinthProjectInfo> GetAddonsList(int pageSize, int index, AddonType type, string category, ClientType modloader, string searchFilter = "", string gameVersion = "")
+        {
+            string typ = "";
+            switch (type)
+            {
+                case AddonType.Mods:
+                    typ = "mod";
+                    break;
+                case AddonType.Resourcepacks:
+                    typ = "resourcepack";
+                    break;
+                default:
+                    typ = "mod";
+                    break;
+            }
+
+            string gameVers = "";
+            if (!string.IsNullOrWhiteSpace(gameVersion))
+            {
+                gameVers = ",[%22versions: " + gameVersion + "%22]";
+            }
+
+            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:" + typ + "%22]"+ gameVers + "]&offset=" + (index * pageSize) + "&limit" + pageSize;
+
+            if (modloader != ClientType.Vanilla)
+            {
+                url += "&filters=categories=" + modloader.ToString().ToLower();
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchFilter))
+            {
+                url += "&query=" + WebUtility.UrlEncode(searchFilter);
+            }
+
+
+            CtalogContainer catalogList = GetApiData<CtalogContainer>(url);
+            var result = new List<ModrinthProjectInfo>();
+
+            if (catalogList.hits != null)
+            {
+                foreach (var hit in catalogList.hits)
+                {
+                    if (hit == null) continue;
+                    result.Add(new ModrinthProjectInfo(hit));
+                }
+            }
+
+            return result;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static SetValues<InstalledAddonInfo, DownloadAddonRes> DownloadAddon(string fileUrl, string fileName, ModrinthProjectType addonType, string path, string projectID, string fileID, TaskArgs taskArgs)
         {
