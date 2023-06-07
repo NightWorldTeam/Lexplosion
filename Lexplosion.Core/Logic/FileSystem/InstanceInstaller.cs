@@ -937,7 +937,7 @@ namespace Lexplosion.Logic.FileSystem
                             if (!File.Exists(DirectoryPath + "/assets/objects/" + assetPath + "/" + assetHash))
                             {
                                 bool flag = false;
-                                for (int i = 0; i < 3; i++) // 3 попытки делаем
+                                for (int i = 0; i < 4; i++) // 4 попытки делаем
                                 {
                                     if (InstallFile("https://resources.download.minecraft.net" + assetPath + "/" + assetHash, assetHash, "/assets/objects/" + assetPath, taskArgs))
                                     {
