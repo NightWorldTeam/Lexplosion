@@ -229,21 +229,21 @@ namespace Lexplosion.Logic.Management.Addons
 
         public void CompareVersions(string addonFileId, Action actionIfTrue)
         {
-            int currenId = addonFileId.ToInt32();
-            if (_addonInfo?.latestFilesIndexes == null) return;
+            //int currenId = addonFileId.ToInt32();
+            //if (_addonInfo?.latestFilesIndexes == null) return;
 
-            foreach (var file in _addonInfo.latestFilesIndexes)
-            {
-                if (file == null) continue;
+            //foreach (var file in _addonInfo.latestFilesIndexes)
+            //{
+            //    if (file == null) continue;
 
-                //md будет true, если тип аддона НЕ мод, если клиент без модлоадера или же тип модлоадера клиента совпадает с типом модлоадера мода.
-                bool md = (_addonInfo.classId != 6 || _instanceData.Modloader == ClientType.Vanilla || file.ModloaderType == _instanceData.Modloader);
-                if (file.gameVersion == _instanceData.GameVersion && md && file.fileId > currenId)
-                {
-                    actionIfTrue();
-                    return;
-                }
-            }
+            //    //md будет true, если тип аддона НЕ мод, если клиент без модлоадера или же тип модлоадера клиента совпадает с типом модлоадера мода.
+            //    bool md = (_addonInfo.classId != 6 || _instanceData.Modloader == ClientType.Vanilla || file.ModloaderType == _instanceData.Modloader);
+            //    if (file.gameVersion == _instanceData.GameVersion && md && file.fileId > currenId)
+            //    {
+            //        actionIfTrue();
+            //        return;
+            //    }
+            //}
         }
 
         public event Action OnInfoUpdated;
