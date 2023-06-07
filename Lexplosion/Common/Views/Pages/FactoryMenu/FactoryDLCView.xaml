@@ -136,7 +136,7 @@
                                     Margin="0,0,0,0"
                                     Command="{Binding Content.OpenMarket}"
                                     CommandParameter="{Binding Content.CurrentAddonModel}"
-                                    IsEnabled="False"
+                                    IsEnabled="True"
                                     Style="{StaticResource IconicButton}">
 
                                     <Viewbox Width="18" Height="18">
