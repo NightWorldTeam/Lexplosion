@@ -39,7 +39,21 @@ namespace Lexplosion.Logic.Management.Sources
 
         public List<InstanceInfo> GetCatalog(InstanceSource type, int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, CfSortField sortField, string gameVersion)
         {
-            List<ModrinthCtalogUnit> curseforgeInstances = ModrinthApi.GetInstances(pageSize, pageIndex, categoriy, ModrinthApi.SearchFilters.Relevance, searchFilter, gameVersion);
+            string sortFiled;
+            switch (sortField)
+            {
+                case CfSortField.TotalDownloads:
+                    sortFiled = ModrinthApi.SearchFilters.Downloads;
+                    break;
+                case CfSortField.LastUpdated:
+                    sortFiled = ModrinthApi.SearchFilters.Updated;
+                    break;
+                default:
+                    sortFiled = ModrinthApi.SearchFilters.Relevance;
+                    break;
+            }
+
+            List<ModrinthCtalogUnit> curseforgeInstances = ModrinthApi.GetInstances(pageSize, pageIndex, categoriy, sortFiled, searchFilter, gameVersion);
             var result = new List<InstanceInfo>();
 
             foreach (var instance in curseforgeInstances)

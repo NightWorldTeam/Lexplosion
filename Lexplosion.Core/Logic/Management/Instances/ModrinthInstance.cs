@@ -1,5 +1,4 @@
-﻿using Lexplosion.Core.Tools;
-using Lexplosion.Logic.Network.Web;
+﻿using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects;
 using Lexplosion.Logic.Objects.CommonClientData;
 using Lexplosion.Logic.Objects.Modrinth;

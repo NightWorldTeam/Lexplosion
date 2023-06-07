@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Lexplosion.Core.Tools
+namespace Lexplosion.Tools
 {
     public static class IListExtensions
     {

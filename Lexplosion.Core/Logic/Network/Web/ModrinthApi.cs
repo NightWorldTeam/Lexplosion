@@ -17,6 +17,10 @@ namespace Lexplosion.Logic.Network.Web
         public struct SearchFilters
         {
             public const string Relevance = "relevance";
+            public const string Downloads = "downloads";
+            public const string Newest = "newest";
+            public const string Updated = "updated";
+            public const string Follows = "follows";
         }
 
         private class CtalogContainer

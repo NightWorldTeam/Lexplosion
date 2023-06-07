@@ -2,7 +2,6 @@
 using Lexplosion.Logic.Objects.Modrinth;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Tools;
-using Lexplosion.Core.Tools;
 using System.Collections.Generic;
 using Lexplosion.Logic.Management.Instances;
 using System.Runtime.CompilerServices;

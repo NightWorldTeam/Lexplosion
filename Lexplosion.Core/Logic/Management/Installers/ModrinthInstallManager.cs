@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using Lexplosion.Core.Tools;
+using Lexplosion.Tools;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Network.Web;
 using Lexplosion.Logic.Objects.CommonClientData;
