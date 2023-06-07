@@ -7,6 +7,7 @@ using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Lexplosion.Common.ViewModels.MainMenu
 {
@@ -52,7 +53,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             ResourceGetter.GetString("gameVersionSortBy"),
         };
 
-        private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
+        private InstanceSource _selectedInstanceSource = InstanceSource.Modrinth;
         /// <summary>
         /// Ресурс откуда получаем данные.
         /// Curseforge, NightWorld, Modrinth
@@ -248,7 +249,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             // выбираем первый вариант из списка версий [Все версии]
             Lexplosion.Runtime.TaskRun(() =>
             {
-                Categories = PrepareCategories(InstanceSource.Curseforge);
+                Categories = PrepareCategories(InstanceSource.Modrinth);
                 InstancesPageLoading();
                 _isInit = false;
             });
@@ -320,8 +321,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
                 lock (_locker)
                 {
                     var gameVersion = SelectedVersionIndex == 0 ? "" : MainViewModel.ReleaseGameVersions[SelectedVersionIndex + 1];
-
-                    Runtime.DebugWrite(SelectedInstanceSource);
+                    Debug.WriteLine(SelectedInstanceSource);
                     var instances = InstanceClient.GetOutsideInstances(
                         SelectedInstanceSource,
                         _pageSize,
