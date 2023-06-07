@@ -39,5 +39,60 @@ namespace Lexplosion.Logic.Management
                     return null;
             }
         }
+
+        public static IEnumerable<CategoryBase> GetAddonsCategories(ProjectSource source, AddonType addonType)
+        {
+            switch (source)
+            {
+                case ProjectSource.Curseforge:
+                    {
+                        CfProjectType projectType = CfProjectType.Resourcepacks;
+                        if (addonType == AddonType.Maps)
+                        {
+                            projectType = CfProjectType.Maps;
+                        }
+                        else if (addonType == AddonType.Mods)
+                        {
+                            projectType = CfProjectType.Mods;
+                        }
+
+                        return CurseforgeApi.GetCategories(projectType);
+                    }
+                case ProjectSource.Modrinth:
+                    {
+                        string projectType = "resourcepack";
+                        if (addonType == AddonType.Mods)
+                        {
+                            projectType = "mod";
+                        }
+                        else if (addonType == AddonType.Shaders)
+                        {
+                            projectType = "shader";
+                        }
+
+                        var result = new List<CategoryBase>();
+                        List<ModrinthCategory> categories = ModrinthApi.GetCategories();
+                        result.Add(new SimpleCategory
+                        {
+                            Id = "-1",
+                            Name = "All",
+                            ClassId = "",
+                            ParentCategoryId = ""
+                        });
+
+                        foreach (ModrinthCategory category in categories)
+                        {
+                            if (category.ClassId == projectType)
+                            {
+                                result.Add(category);
+                            }
+                        }
+
+                        return result;
+                    }
+                default:
+                    return null;
+            }
+        }
     }
 }

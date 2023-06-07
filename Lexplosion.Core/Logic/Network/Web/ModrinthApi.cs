@@ -151,7 +151,7 @@ namespace Lexplosion.Logic.Network.Web
             return files;
         }
 
-        public static List<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IProjectCategory categoriy, string sortField, string searchFilter, string gameVersion)
+        public static List<ModrinthCtalogUnit> GetInstances(int pageSize, int index, IProjectCategory category, string sortField, string searchFilter, string gameVersion)
         {
             string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:modpack%22]]&offset=" + (index * pageSize) + "&limit" + pageSize;
 
@@ -165,15 +165,15 @@ namespace Lexplosion.Logic.Network.Web
                 url += "&query=" + WebUtility.UrlEncode(searchFilter);
             }
 
-            if (categoriy.Id != "-1")
+            if (category.Id != "-1")
             {
-                url += "&filters=categories=\"" + categoriy.Id + "\"";
+                url += "&filters=categories=\"" + category.Id + "\"";
             }
 
             return GetApiData<CtalogContainer>(url)?.hits ?? new List<ModrinthCtalogUnit>();
         }
 
-        public static List<ModrinthProjectInfo> GetAddonsList(int pageSize, int index, AddonType type, string category, ClientType modloader, string searchFilter = "", string gameVersion = "")
+        public static List<ModrinthProjectInfo> GetAddonsList(int pageSize, int index, AddonType type, CategoryBase category, ClientType modloader, string searchFilter = "", string gameVersion = "")
         {
             string typ = "";
             switch (type)
@@ -185,28 +185,45 @@ namespace Lexplosion.Logic.Network.Web
                     typ = "resourcepack";
                     break;
                 default:
-                    typ = "mod";
+                    typ = "resourcepack";
                     break;
             }
 
             string gameVers = "";
             if (!string.IsNullOrWhiteSpace(gameVersion))
             {
-                gameVers = ",[%22versions: " + gameVersion + "%22]";
+                gameVers = ",[\"versions: " + gameVersion + "\"]";
             }
 
-            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:" + typ + "%22]"+ gameVers + "]&offset=" + (index * pageSize) + "&limit" + pageSize;
+            string url = "https://api.modrinth.com/v2/search?facets=[[%22project_type:" + typ + "%22]" + gameVers + "]&offset=" + (index * pageSize) + "&limit" + pageSize;
 
-            if (modloader != ClientType.Vanilla)
+            bool filtersIsExists = false;
+            if (modloader != ClientType.Vanilla && type == AddonType.Mods)
             {
-                url += "&filters=categories=" + modloader.ToString().ToLower();
+                url += "&filters=(categories=" + modloader.ToString().ToLower();
+                filtersIsExists = true;
+            }
+
+            if (category.Id != "-1")
+            {
+                if (filtersIsExists)
+                {
+                    url += " AND categories=\"" + category.Id + "\")";
+                }
+                else
+                {
+                    url += "&filters=(categories=\"" + category.Id + "\")";
+                }
+            }
+            else
+            {
+                url += ")";
             }
 
             if (!string.IsNullOrWhiteSpace(searchFilter))
             {
                 url += "&query=" + WebUtility.UrlEncode(searchFilter);
             }
-
 
             CtalogContainer catalogList = GetApiData<CtalogContainer>(url);
             var result = new List<ModrinthProjectInfo>();

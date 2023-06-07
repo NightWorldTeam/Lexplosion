@@ -367,7 +367,7 @@ namespace Lexplosion.Logic.Management.Instances
         //    return addons;
         //}
 
-        public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, string category = "-1", string searchFilter = "")
+        public static List<InstanceAddon> GetAddonsCatalog(BaseInstanceData modpackInfo, int pageSize, int index, AddonType type, CategoryBase category, string searchFilter = "")
         {
             _addonsCatalogChache = new Dictionary<string, InstanceAddon>();
 

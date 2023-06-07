@@ -149,35 +149,5 @@ namespace Lexplosion.Logic.Management.Instances
 
             return data;
         }
-
-        public static List<Info> GetCatalog(int pageSize, int pageIndex, IProjectCategory categoriy, string searchFilter, string sortField, string gameVersion)
-        {
-            sortField = ModrinthApi.SearchFilters.Relevance;
-            List<ModrinthCtalogUnit> curseforgeInstances = ModrinthApi.GetInstances(pageSize, pageIndex, categoriy, sortField, searchFilter, gameVersion);
-            var result = new List<Info>();
-
-            foreach (var instance in curseforgeInstances)
-            {
-                if (instance == null) continue;
-
-                var categories = ParseCategories(instance.Categories);
-                string gameVer = (instance.GameVersions != null && instance.GameVersions.Count > 0) ? instance.GameVersions[instance.GameVersions.Count - 1] : "";
-
-                result.Add(new Info()
-                {
-                    Name = instance.Title,
-                    Author = instance.Author,
-                    Categories = categories,
-                    Summary = instance.Summary,
-                    Description = instance.Summary,
-                    GameVersion = gameVer,
-                    WebsiteUrl = "https://modrinth.com/modpack/" + instance.Slug,
-                    LogoUrl = instance.LogoUrl,
-                    ExternalId = instance.ProjectId
-                });
-            }
-
-            return result;
-        }
     }
 }

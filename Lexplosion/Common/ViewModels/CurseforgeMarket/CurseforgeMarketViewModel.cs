@@ -4,6 +4,7 @@ using Lexplosion.Common.ViewModels.FactoryMenu;
 using Lexplosion.Controls;
 using Lexplosion.Logic.Management.Instances;
 using Lexplosion.Logic.Network.Web;
+using Lexplosion.Logic.Objects;
 using Lexplosion.Tools;
 using System;
 using System.Collections.Generic;
@@ -385,12 +386,17 @@ namespace Lexplosion.Common.ViewModels.CurseforgeMarket
 
             Lexplosion.Runtime.TaskRun(() =>
             {
+                var test = new SimpleCategory()
+                {
+                    Id = SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id
+                };
+
                 var instances = InstanceAddon.GetAddonsCatalog(
                     _baseInstanceData,
                     _pageSize,
                     PaginatorVM.PageIndex - 1,
                     (AddonType)(int)_projectType,
-                    SubCategorySelected == null ? SelectedCategory.Id : SubCategorySelected.Id,
+                    test,
                     searchText == null ? _previousSearch : searchText
                     );
 
