@@ -283,7 +283,7 @@
                                     Text="NightWorld" />
                             </StackPanel>
                         </ComboBoxItem>
-                        <ComboBoxItem>
+                        <!--<ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <Viewbox Width="20" Height="20">
                                     <Path
@@ -296,7 +296,7 @@
                                     VerticalAlignment="Center"
                                     Text="Curseforge" />
                             </StackPanel>
-                        </ComboBoxItem>
+                        </ComboBoxItem>-->
                         <ComboBoxItem>
                             <StackPanel Orientation="Horizontal">
                                 <Viewbox Width="20" Height="20">
