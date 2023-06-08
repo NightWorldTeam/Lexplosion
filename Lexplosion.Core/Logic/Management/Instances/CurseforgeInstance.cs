@@ -14,8 +14,6 @@ namespace Lexplosion.Logic.Management.Instances
     {
         public override bool CheckUpdates(InstancePlatformData infoData, string localId)
         {
-            return false;
-
             var content = DataFilesManager.GetFile<InstanceContentFile>(WithDirectory.DirectoryPath + "/instances/" + localId + "/instanceContent.json");
             if (content != null && !content.FullClient)
             {

@@ -112,7 +112,7 @@ namespace Lexplosion.Logic.Network.Web
             return GetApiData<List<CurseforgeInstanceInfo>>(url);
         }
 
-        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, string category, ClientType modloader, string searchFilter = "", string gameVersion = "")
+        public static List<CurseforgeAddonInfo> GetAddonsList(int pageSize, int index, AddonType type, CategoryBase category, ClientType modloader, string searchFilter = "", string gameVersion = "")
         {
             if (gameVersion != "")
             {
@@ -120,9 +120,9 @@ namespace Lexplosion.Logic.Network.Web
             }
 
             string categoryStr = "";
-            if (category != "-1")
+            if (category.Id != "-1")
             {
-                categoryStr = "&categoryId=" + category;
+                categoryStr = "&categoryId=" + category.Id;
             }
 
             string _modloader = "";
