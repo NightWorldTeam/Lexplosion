@@ -53,7 +53,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             ResourceGetter.GetString("gameVersionSortBy"),
         };
 
-        private InstanceSource _selectedInstanceSource = InstanceSource.Modrinth;
+        private InstanceSource _selectedInstanceSource = InstanceSource.Curseforge;
         /// <summary>
         /// Ресурс откуда получаем данные.
         /// Curseforge, NightWorld, Modrinth
@@ -249,7 +249,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             // выбираем первый вариант из списка версий [Все версии]
             Lexplosion.Runtime.TaskRun(() =>
             {
-                Categories = PrepareCategories(InstanceSource.Modrinth);
+                Categories = PrepareCategories(InstanceSource.Curseforge);
                 InstancesPageLoading();
                 _isInit = false;
             });

@@ -99,8 +99,6 @@ namespace Lexplosion.Common.Models.InstanceForm
 
         public void UpdateButtons()
         {
-            UpdateLowerButton();
-
             if (InstanceClient.IsInstalled && !MainModel.Instance.IsInstanceRunning)
             {
                 UpperButton.ChangeFuncPlay();
@@ -113,6 +111,8 @@ namespace Lexplosion.Common.Models.InstanceForm
             {
                 UpperButton.ChangeFuncClose();
             }
+
+            UpdateLowerButton();
         }
 
         public void UpdateLowerButton()
@@ -128,7 +128,6 @@ namespace Lexplosion.Common.Models.InstanceForm
                         new LowerButton(ResourceGetter.GetString("update"), ResourceGetter.GetIcon("UpdateInstance"), LowerButtonFunc.Update)
                     );
                 }
-
                 if (InstanceClient.WebsiteUrl != null)
                 {
                     switch (InstanceClient.Type)

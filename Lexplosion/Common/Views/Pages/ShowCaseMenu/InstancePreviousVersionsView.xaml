@@ -196,6 +196,7 @@
             Text="Отсутсвуют другие версии сборки">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding PreviousVersions.Count}" Value="0">
                             <Setter Property="Visibility" Value="Visible" />
