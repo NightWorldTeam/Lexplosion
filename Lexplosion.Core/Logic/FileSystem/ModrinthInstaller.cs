@@ -180,7 +180,7 @@ namespace Lexplosion.Logic.FileSystem
                 var downloadList = new List<SetValues<ModrinthProjectFile, AddonInstallingInfo>>();
                 if (installedAddons != null)
                 {
-                    var tempList = new List<string>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
+                    var existsAddons = new HashSet<string>(); // этот список содержит айдишники аддонов, что действительно установлены и есть в списке с курсфорджа
                     foreach (var file in notableProjects) // проходимся по списку адднов, полученному с курсфорджа
                     {
                         SetValues<ModrinthProjectFile, AddonInstallingInfo> addonData = file.Value;
@@ -193,23 +193,27 @@ namespace Lexplosion.Logic.FileSystem
                         }
                         else
                         {
-                            tempList.Add(projectId); // Аддон есть в списке установленых. Добавляем его айдишник в список
-
                             InstalledAddonInfo addonInfo = installedAddons[projectId];
                             if (addonInfo.FileID != addonData.Value1.FileId || !addonInfo.IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
                             {
+                                // версия не сходится или нет файла. Тоже кидаем на обновление
                                 downloadList.Add(addonData);
+                            }
+                            else
+                            {
+                                existsAddons.Add(projectId); // Аддон есть в списке установленых. Добавляем его айдишник в список
                             }
                         }
                     }
 
                     foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
                     {
-                        if (!tempList.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа. Поэтому удаляем
+                        if (!existsAddons.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа (ну или нам не подходит его версия, или же файла нету). Поэтому удаляем
                         {
                             if (installedAddons[addonId].ActualPath != null)
                             {
-                                DelFile(DirectoryPath + "/instances/" + instanceId + installedAddons[addonId].ActualPath);
+                                Runtime.DebugWrite("Delete file: " + DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                DelFile(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
                             }
                         }
                         else
@@ -270,7 +274,6 @@ namespace Lexplosion.Logic.FileSystem
                                 lock (fileBlock)
                                 {
                                     compliteDownload.InstalledAddons[projectFile.ProjectId] = result.Value1;
-                                    Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
                                     SaveInstanceContent(compliteDownload);
                                 }
                             }
@@ -362,8 +365,6 @@ namespace Lexplosion.Logic.FileSystem
                         if (!existsFiles.Contains(filePath))
                         {
                             compliteDownload.Files.Add(filePath);
-
-                            Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
                             SaveInstanceContent(compliteDownload);
                         }
                     }

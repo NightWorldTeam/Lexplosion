@@ -65,7 +65,7 @@
     <Compile Include="Global.cs" />
     <Compile Include="Logic\FileSystem\StandartInstanceInstaller.cs" />
     <Compile Include="Logic\FileSystem\IArchivedInstanceInstaller.cs" />
-    <Compile Include="Logic\FileSystem\CurseForgeInstaller.cs" />
+    <Compile Include="Logic\FileSystem\CurseforgeInstaller.cs" />
     <Compile Include="Logic\FileSystem\DataFilesManager.cs" />
     <Compile Include="Logic\FileSystem\FileDistributor.cs" />
     <Compile Include="Logic\FileSystem\FileReceiver.cs" />

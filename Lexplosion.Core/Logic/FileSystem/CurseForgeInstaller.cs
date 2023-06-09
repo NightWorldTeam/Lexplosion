@@ -69,7 +69,7 @@ namespace Lexplosion.Logic.FileSystem
 
                 if (installedAddons != null)
                 {
-                    var tempList = new List<string>(); // этот список содержит айдишники аддонов, что есть в списке уже установленных и в списке с курсфорджа
+                    var existsAddons = new HashSet<string>(); // этот список содержит айдишники аддонов, что установлены действительно и есть в списке с курсфорджа
                     foreach (InstanceManifest.FileData file in data.files) // проходимся по списку адднов, полученному с курсфорджа
                     {
                         if (!installedAddons.ContainsKey(file.projectID)) // если этого аддона нету в списке уже установленных, то тогда кидаем на обновление
@@ -78,22 +78,25 @@ namespace Lexplosion.Logic.FileSystem
                         }
                         else
                         {
-                            tempList.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
-
                             if (installedAddons[file.projectID].FileID != file.fileID || !installedAddons[file.projectID].IsExists(DirectoryPath + "/instances/" + instanceId + "/"))
                             {
                                 downloadList.Add(file);
+                            }
+                            else
+                            {
+                                existsAddons.Add(file.projectID); // Аддон есть в списке установленых. Добавляем его айдишник в список
                             }
                         }
                     }
 
                     foreach (string addonId in installedAddons.Keys) // проходимя по списку установленных аддонов
                     {
-                        if (!tempList.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа. Поэтому удаляем
+                        if (!existsAddons.Contains(addonId)) // если аддона нету в этом списке, значит его нету в списке, полученном с курсфорджа (ну или нам не подходит его версия, или же файла нету). Поэтому удаляем
                         {
                             if (installedAddons[addonId].ActualPath != null)
                             {
-                                DelFile(DirectoryPath + "/instances/" + instanceId + installedAddons[addonId].ActualPath);
+                                Runtime.DebugWrite("Delete file: " + DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
+                                DelFile(DirectoryPath + "/instances/" + instanceId + "/" + installedAddons[addonId].ActualPath);
                             }
                         }
                         else
@@ -186,7 +189,6 @@ namespace Lexplosion.Logic.FileSystem
                                 lock (fileBlock)
                                 {
                                     compliteDownload.InstalledAddons[file.projectID] = result.Value1;
-                                    Runtime.DebugWrite("GGHT " + compliteDownload.InstalledAddons.Count);
                                     SaveInstanceContent(compliteDownload);
                                 }
                             }
