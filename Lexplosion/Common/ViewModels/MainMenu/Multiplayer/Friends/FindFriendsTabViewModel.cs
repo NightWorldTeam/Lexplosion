@@ -97,7 +97,7 @@ namespace Lexplosion.Common.ViewModels.MainMenu.Multiplayer.Friends
             if (_lastFilterString != newValue)
             {
                 _lastFilterString = newValue;
-                CurrentUserCatalogPageIndex = 0;
+                CurrentUserCatalogPageIndex = -1;
                 CurrentFilterString = newValue;
                 MoveNextUserCatalogPage(CurrentFilterString);
             }
