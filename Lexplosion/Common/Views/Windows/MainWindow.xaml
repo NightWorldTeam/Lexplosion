@@ -99,26 +99,6 @@
                     </StackPanel>
 
                     <StackPanel
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            FontSize="14"
-                            FontWeight="Medium"
-                            Foreground="Gray">
-                            <Run Text="Партнеры" />
-                            <Hyperlink
-                                Command="{Binding OpenMinecraftRu, Source={StaticResource MainVM}}"
-                                Foreground="{DynamicResource BrandSolidColorBrush}"
-                                NavigateUri="{Binding Source={StaticResource Const}, Path=MCRUDiscordUrl}">
-                                Minecraft RU
-                            </Hyperlink>
-                        </TextBlock>
-                    </StackPanel>
-
-                    <StackPanel
                         Grid.Column="2"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
