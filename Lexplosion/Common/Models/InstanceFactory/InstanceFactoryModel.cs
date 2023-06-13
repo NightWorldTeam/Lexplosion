@@ -188,6 +188,8 @@ namespace Lexplosion.Common.Models.InstanceFactory
             UpdateVersions();
             OptifineModel = new OptifineModel(GameExtension.Optifine, Version);
             ModloaderModel = new ModloaderModel(GameExtension.Forge, Version);
+            new ModloaderModel(GameExtension.Fabric, Version);
+            new ModloaderModel(GameExtension.Quilt, Version);
             ModloaderModel.IsEnable = false;
             OptifineModel.IsEnable = false;
         }

@@ -10,7 +10,7 @@ namespace Lexplosion.Common.Models.GameExtensions
 {
     public abstract class ExtensionModel : VMBase, IExtensionModel
     {
-        private static readonly IDictionary<GameExtension, (bool, ConcurrentDictionary<string, IEnumerable<string>>)> _extensionVersions;
+        private static readonly IDictionary<GameExtension, ConcurrentDictionary<string, (bool, IEnumerable<string>)>> _extensionVersions;
 
         #region Properties
 
@@ -71,6 +71,23 @@ namespace Lexplosion.Common.Models.GameExtensions
         }
 
 
+        public bool IsForgeAvaliable
+        {
+            get => _extensionVersions[GameExtension.Forge].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Forge][GameVersion].Item1 : false;
+        }
+
+
+        public bool IsFabricAvaliable
+        {
+            get => _extensionVersions[GameExtension.Fabric].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Fabric][GameVersion].Item1 : false;
+        }
+
+        public bool IsQuiltAvaliable
+        {
+            get => _extensionVersions[GameExtension.Quilt].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Quilt][GameVersion].Item1 : false;
+        }
+
+
         #endregion Properties
 
 
@@ -79,12 +96,12 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         static ExtensionModel()
         {
-            _extensionVersions = new Dictionary<GameExtension, (bool, ConcurrentDictionary<string, IEnumerable<string>>)>()
+            _extensionVersions = new Dictionary<GameExtension, ConcurrentDictionary<string, (bool, IEnumerable<string>)>>()
             {
-                { GameExtension.Optifine, (false, new ConcurrentDictionary<string, IEnumerable<string>>()) },
-                { GameExtension.Forge, (false, new ConcurrentDictionary<string, IEnumerable<string>>()) },
-                { GameExtension.Fabric, (false, new ConcurrentDictionary<string, IEnumerable<string>>()) },
-                { GameExtension.Quilt, (false, new ConcurrentDictionary <string, IEnumerable <string>>()) },
+                { GameExtension.Optifine, new ConcurrentDictionary<string, (bool,  IEnumerable<string>)>() },
+                { GameExtension.Forge, new ConcurrentDictionary <string, (bool, IEnumerable< string>)>() },
+                { GameExtension.Fabric, new ConcurrentDictionary <string, (bool, IEnumerable<string>)>() },
+                { GameExtension.Quilt, new ConcurrentDictionary <string, (bool, IEnumerable<string>)>() },
             };
         }
 
@@ -103,12 +120,20 @@ namespace Lexplosion.Common.Models.GameExtensions
                 {
                     Version = versionList[0];
                     IsAvaliable = true;
+                    App.Current.Dispatcher.Invoke(() => {
+                        OnPropertiesChanged();
+                    });
                 }
                 else
                 {
                     IsAvaliable = false;
+                    App.Current.Dispatcher.Invoke(() => {
+                        OnPropertiesChanged();
+                    });
                 }
             });
+
+            OnPropertiesChanged();
         }
 
 
@@ -160,25 +185,41 @@ namespace Lexplosion.Common.Models.GameExtensions
         {
             return Task.Run(() =>
             {
-                if (!_extensionVersions[extension].Item2.ContainsKey(gameVersion) && !_extensionVersions[extension].Item1)
+                if (!_extensionVersions[extension].ContainsKey(gameVersion))
                 {
-                    _extensionVersions[extension] = (false, _extensionVersions[extension].Item2);
                     if (GameExtension.Optifine == extension)
                     {
-                        _extensionVersions[extension].Item2.TryAdd(gameVersion, ToServer.GetOptifineVersions(gameVersion));
+                        var list = ToServer.GetOptifineVersions(gameVersion);
+                        _extensionVersions[extension].TryAdd(gameVersion, (list.Count > 0, list));
                     }
                     else
                     {
-                        _extensionVersions[extension].Item2.TryAdd(gameVersion, ToServer.GetModloadersList(gameVersion, (ClientType)extension));
+                        var list = ToServer.GetModloadersList(gameVersion, (ClientType)extension);
+
+                        _extensionVersions[extension].TryAdd(gameVersion, (list.Count > 0, list));
                     }
-                    return _extensionVersions[extension].Item2[gameVersion];
+                    return _extensionVersions[extension][gameVersion].Item2;
                 }
 
-                return _extensionVersions[extension].Item2[gameVersion];
+                return _extensionVersions[extension][gameVersion].Item2;
             });
         }
 
 
         #endregion Public & Protected Methods
+
+
+        #region Private Methods
+
+
+        private void OnPropertiesChanged() 
+        {
+            OnPropertyChanged(nameof(IsForgeAvaliable));
+            OnPropertyChanged(nameof(IsFabricAvaliable));
+            OnPropertyChanged(nameof(IsQuiltAvaliable));
+        }
+
+
+        #endregion Private Methods
     }
 }
