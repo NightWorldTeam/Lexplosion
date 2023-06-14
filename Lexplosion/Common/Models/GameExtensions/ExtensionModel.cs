@@ -207,7 +207,6 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         private void OnPropertiesChanged() 
         {
-            Runtime.DebugWrite("OnPropertiesChanged");
             OnPropertyChanged(nameof(IsForgeAvaliable));
             OnPropertyChanged(nameof(IsFabricAvaliable));
             OnPropertyChanged(nameof(IsQuiltAvaliable));
