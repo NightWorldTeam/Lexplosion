@@ -84,11 +84,7 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         public bool IsQuiltAvaliable
         {
-            get
-            {
-                Runtime.DebugWrite("IsQuiltAvaliable");
-                return _extensionVersions[GameExtension.Quilt].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Quilt][GameVersion].Item1 : false;
-            }
+            get => _extensionVersions[GameExtension.Quilt].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Quilt][GameVersion].Item1 : false;
         }
 
 
@@ -124,16 +120,12 @@ namespace Lexplosion.Common.Models.GameExtensions
                 {
                     Version = versionList[0];
                     IsAvaliable = true;
-                    App.Current.Dispatcher.Invoke(() => {
-                        OnPropertiesChanged();
-                    });
+                    OnPropertiesChanged();
                 }
                 else
                 {
                     IsAvaliable = false;
-                    App.Current.Dispatcher.Invoke(() => {
-                        OnPropertiesChanged();
-                    });
+                    OnPropertiesChanged();
                 }
             });
 

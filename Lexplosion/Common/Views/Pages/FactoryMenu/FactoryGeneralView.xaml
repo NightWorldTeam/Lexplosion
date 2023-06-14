@@ -190,7 +190,7 @@
                                     Content="Forge"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsForge}"
-                                    IsEnabled="{Binding Model.ModloaderModel.IsForgeAvaliable, Mode=OneWay}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsForgeAvaliable, UpdateSourceTrigger=PropertyChanged}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
@@ -199,7 +199,7 @@
                                     Content="Fabric"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsFabric}"
-                                    IsEnabled="{Binding Model.ModloaderModel.IsFabricAvalialbe, Mode=OneWay}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsFabricAvalialbe, UpdateSourceTrigger=PropertyChanged}"
                                     Style="{StaticResource HighlightRadioButton}" />
                                 <RadioButton
                                     Margin="3,0,0,0"
@@ -208,7 +208,7 @@
                                     Content="Quilt"
                                     GroupName="ClientType"
                                     IsChecked="{Binding IsQuilt}"
-                                    IsEnabled="{Binding Model.ModloaderModel.IsQuiltAvaliable}"
+                                    IsEnabled="{Binding Model.ModloaderModel.IsQuiltAvaliable, UpdateSourceTrigger=PropertyChanged}"
                                     Style="{StaticResource HighlightRadioButton}" />
                             </StackPanel>
                         </Grid>
