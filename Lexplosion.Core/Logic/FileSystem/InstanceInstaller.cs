@@ -798,12 +798,20 @@ namespace Lexplosion.Logic.FileSystem
                                             }
 
                                             string command = obtainingMethod[i][2];
-                                            command = command.Replace("{DIR}", "\"" + DirectoryPath + "\"");
-                                            command = command.Replace("{TEMP_DIR}", "\"" + tempDir + "\"");
-                                            command = command.Replace("{MINECRAFT_JAR}", "\"" + DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name + "\"");
 
                                             Runtime.DebugWrite();
-                                            Runtime.DebugWrite(command);
+                                            Runtime.DebugWrite("Command pattern: " + command);
+                                            Runtime.DebugWrite("{DIR}: " + DirectoryPath);
+                                            Runtime.DebugWrite("{TEMP_DIR}: " + tempDir);
+                                            Runtime.DebugWrite("{MINECRAFT_JAR}: " + DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name);
+
+                                            command = command.Replace("{DIR}", DirectoryPath);
+                                            command = command.Replace("{TEMP_DIR}",  tempDir);
+                                            string minecraftJar = "\"" + DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name + "\"";
+                                            command = command.Replace("\"{MINECRAFT_JAR}\"", minecraftJar);
+                                            command = command.Replace("{MINECRAFT_JAR}", minecraftJar);
+
+                                            Runtime.DebugWrite(executord + " " + command);
 
                                             if (!Utils.StartProcess(command, executord, javaPath))
                                             {

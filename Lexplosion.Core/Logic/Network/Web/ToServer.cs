@@ -96,6 +96,7 @@ namespace Lexplosion.Logic.Network
                 if (answer != null)
                 {
                     List<string> data = JsonConvert.DeserializeObject<List<string>>(answer);
+                    Runtime.DebugWrite("Return " + modloaderType + ", Count: " + data.Count);
                     return data ?? new List<string>();
                 }
                 else

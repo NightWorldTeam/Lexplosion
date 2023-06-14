@@ -84,7 +84,11 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         public bool IsQuiltAvaliable
         {
-            get => _extensionVersions[GameExtension.Quilt].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Quilt][GameVersion].Item1 : false;
+            get
+            {
+                Runtime.DebugWrite("IsQuiltAvaliable");
+                return _extensionVersions[GameExtension.Quilt].ContainsKey(GameVersion) ? _extensionVersions[GameExtension.Quilt][GameVersion].Item1 : false;
+            }
         }
 
 
@@ -114,7 +118,7 @@ namespace Lexplosion.Common.Models.GameExtensions
 
             Lexplosion.Runtime.TaskRun(() =>
             {
-                Versions = LoadExtensionVersions(extension, GameVersion).Result;
+                Versions = LoadExtensionVersions(extension, GameVersion);
                 var versionList = Versions.ToList();
                 if (versionList.Count > 0)
                 {
@@ -181,28 +185,25 @@ namespace Lexplosion.Common.Models.GameExtensions
         /// <param name="GameExtension"></param>
         /// <param name="gameVersion"></param>
         /// <returns></returns>
-        public static Task<IEnumerable<string>> LoadExtensionVersions(GameExtension extension, string gameVersion)
+        public static IEnumerable<string> LoadExtensionVersions(GameExtension extension, string gameVersion)
         {
-            return Task.Run(() =>
+            if (!_extensionVersions[extension].ContainsKey(gameVersion))
             {
-                if (!_extensionVersions[extension].ContainsKey(gameVersion))
+                if (GameExtension.Optifine == extension)
                 {
-                    if (GameExtension.Optifine == extension)
-                    {
-                        var list = ToServer.GetOptifineVersions(gameVersion);
-                        _extensionVersions[extension].TryAdd(gameVersion, (list.Count > 0, list));
-                    }
-                    else
-                    {
-                        var list = ToServer.GetModloadersList(gameVersion, (ClientType)extension);
-
-                        _extensionVersions[extension].TryAdd(gameVersion, (list.Count > 0, list));
-                    }
-                    return _extensionVersions[extension][gameVersion].Item2;
+                    var list = ToServer.GetOptifineVersions(gameVersion);
+                    _extensionVersions[extension].TryAdd(gameVersion, (list.Count > 0, list));
                 }
+                else
+                {
+                    var list = ToServer.GetModloadersList(gameVersion, (ClientType)extension);
 
+                    _extensionVersions[extension].TryAdd(gameVersion, (list.Count > 0, list));
+                }
                 return _extensionVersions[extension][gameVersion].Item2;
-            });
+            }
+
+            return _extensionVersions[extension][gameVersion].Item2;
         }
 
 
@@ -214,6 +215,7 @@ namespace Lexplosion.Common.Models.GameExtensions
 
         private void OnPropertiesChanged() 
         {
+            Runtime.DebugWrite("OnPropertiesChanged");
             OnPropertyChanged(nameof(IsForgeAvaliable));
             OnPropertyChanged(nameof(IsFabricAvaliable));
             OnPropertyChanged(nameof(IsQuiltAvaliable));

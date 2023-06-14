@@ -228,11 +228,13 @@ namespace Lexplosion.Logic.Management
                 process.StartInfo.Arguments = command;
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.WorkingDirectory = GlobalData.GeneralSettings.GamePath;
+                process.StartInfo.UseShellExecute = false;
                 process.Start();
                 return process.WaitForExit(300000); // ждём 5 минут
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite(ex);
                 return false;
             }
         }
