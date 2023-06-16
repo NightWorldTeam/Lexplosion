@@ -436,4 +436,7 @@
     <!--  About Us  -->
     <s:String x:Key="contacts">Контакты</s:String>
     <s:String x:Key="ourGroupVK">Наша группа ВКонтакте</s:String>
+
+    <!--  Groups  -->
+    <s:String x:Key="groupsManager">Менеджер групп</s:String>
 </ResourceDictionary>

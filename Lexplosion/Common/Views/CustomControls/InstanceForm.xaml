@@ -89,8 +89,7 @@
 
     <Grid>
         <Border
-            Width="620"
-            Height="120"
+            MaxWidth="620"
             Background="{DynamicResource HeaderSolidColorBrush}"
             CornerRadius="10">
 
@@ -103,21 +102,18 @@
             </Border.Effect>
         </Border>
 
-        <Grid>
+        <Grid ShowGridLines="False">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120" />
-                <ColumnDefinition Width="440" />
+                <ColumnDefinition Width="0.73*" />
                 <ColumnDefinition Width="60" />
             </Grid.ColumnDefinitions>
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="120" />
-            </Grid.RowDefinitions>
 
             <Grid
                 x:Name="InstanceLogo"
                 Grid.Column="0"
+                Height="120"
                 IsEnabled="{Binding Model.InstanceClient.IsComplete}"
                 MouseEnter="InstanceLogo_MouseEnter"
                 MouseLeave="InstanceLogo_MouseLeave">
@@ -193,19 +189,25 @@
                 </Border.InputBindings>
             </Border>
 
-
+            <!--  Content  -->
             <Grid
                 Grid.Column="1"
                 Margin="10,0,0,0"
                 ShowGridLines="False">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Loaded="Grid_Loaded">
 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.8*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Name  -->
                     <TextBlock
                         MaxWidth="340"
                         Margin="0,4,0,0"
@@ -214,7 +216,7 @@
                         FontSize="20"
                         Foreground="#ffffff"
                         Text="{Binding Model.InstanceClient.Name}"
-                        TextTrimming="WordEllipsis">
+                        TextWrapping="WrapWithOverflow">
                         <TextBlock.ToolTip>
                             <ToolTip
                                 Background="Black"
@@ -232,11 +234,10 @@
                         </TextBlock.ToolTip>
                     </TextBlock>
 
+                    <!--  Author  -->
                     <TextBlock
                         x:Name="Author"
                         Grid.Column="1"
-                        Margin="0,0,2,0"
-                        HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         FlowDirection="LeftToRight"
                         FontSize="12"
@@ -251,15 +252,14 @@
                     ShowGridLines="False">
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="27" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
 
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="0"
-                        Width="440"
                         HorizontalAlignment="Left"
                         FontFamily="{DynamicResource SFProDisplay}"
                         FontSize="16"
@@ -277,6 +277,7 @@
                         Foreground="#d5d5d5"
                         Text="{Binding Model.InstanceDistribution.Percentages, StringFormat='{}{0}% complited'}"
                         TextTrimming="WordEllipsis"
+                        TextWrapping="WrapWithOverflow"
                         Visibility="{Binding Model.InstanceClient.IsComplete, Converter={StaticResource NegativeConvertBoolToVisibility}}" />
 
                     <TextBlock
@@ -306,7 +307,7 @@
 
                     <ItemsControl
                         Grid.Row="1"
-                        Margin="0,-1,1,1"
+                        Margin="0,4,1,8"
                         ItemsSource="{Binding Model.Categories}">
                         <ItemsControl.Style>
                             <Style TargetType="{x:Type ItemsControl}">
@@ -337,6 +338,7 @@
                 </Grid>
             </Grid>
 
+            <!--  Buttons  -->
             <Grid x:Name="MultiButtonsGrid" Grid.Column="2">
 
                 <Grid.RowDefinitions>
