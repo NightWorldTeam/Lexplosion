@@ -393,4 +393,7 @@
     <!--  About Us  -->
     <s:String x:Key="contacts">Contacts</s:String>
     <s:String x:Key="ourGroupVK">Our Group VKontakte</s:String>
+
+    <!--  Groups  -->
+    <s:String x:Key="groupsManager">Groups Manager</s:String>
 </ResourceDictionary>

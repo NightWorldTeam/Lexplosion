@@ -52,40 +52,41 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border
-                        x:Name="MainBorder"
-                        Background="Transparent"
-                        BorderBrush="Gray"
-                        BorderThickness="1"
-                        CornerRadius="10">
-                        <Grid ShowGridLines="False">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="500" />
-                            </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0">
-                                <Border
-                                    x:Name="Border"
-                                    BorderBrush="Gray"
-                                    BorderThickness="0,0,1,0">
-                                    <TextBlock
-                                        x:Name="PlusTextBlock"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        FontSize="50"
-                                        Text="+" />
-                                </Border>
-                            </Grid>
-                            <Grid Grid.Column="1">
-                                <ContentPresenter
-                                    Margin="2"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    RecognizesAccessKey="True" />
-                            </Grid>
-                        </Grid>
-                    </Border>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.4*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border
+                            x:Name="Border"
+                            Grid.Column="0"
+                            Padding="29"
+                            Background="Red"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            CornerRadius="10,0,0,10">
+                            <TextBlock
+                                x:Name="PlusTextBlock"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="50"
+                                Text="+" />
+                        </Border>
+
+                        <Border
+                            Grid.Column="1"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            CornerRadius="0,10,10,0">
+                            <ContentPresenter
+                                Margin="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="True" />
+                        </Border>
+                    </Grid>
 
                     <!--<ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

@@ -46,23 +46,23 @@ namespace Lexplosion.Common.Views.CustomControls
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            var grid = (Grid)sender;
+            //var grid = (Grid)sender;
 
-            var authorTextBoxFinalWidth = (Author.ActualWidth + 16.65);
+            //var authorTextBoxFinalWidth = (Author.ActualWidth + 16.65);
 
-            var columnDefin = new ColumnDefinition()
-            {
-                Width = new GridLength(440 - authorTextBoxFinalWidth)
-            };
+            //var columnDefin = new ColumnDefinition()
+            //{
+            //    Width = new GridLength(440 - authorTextBoxFinalWidth)
+            //};
 
-            var columnDefin1 = new ColumnDefinition()
-            {
-                MaxWidth = authorTextBoxFinalWidth,
-                Width = new GridLength(1, GridUnitType.Star)
-            };
+            //var columnDefin1 = new ColumnDefinition()
+            //{
+            //    MaxWidth = authorTextBoxFinalWidth,
+            //    Width = new GridLength(1, GridUnitType.Star)
+            //};
 
-            grid.ColumnDefinitions.Add(columnDefin);
-            grid.ColumnDefinitions.Add(columnDefin1);
+            //grid.ColumnDefinitions.Add(columnDefin);
+            //grid.ColumnDefinitions.Add(columnDefin1);
         }
 
         private void UpperButtonBorder_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)

@@ -28,7 +28,13 @@
             <SolidColorBrush Opacity="0.84" Color="{DynamicResource PrimaryColor}" />
         </Grid.Background>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
         <!--  ListBox - ScrollViewer.CanContentScroll="False" создаёт плавный скролл.  -->
+
         <ScrollViewer
             x:Name="ContainerPage_ScrollViewer"
             Margin="0,0,0,00"
@@ -36,6 +42,12 @@
             IsTabStop="False"
             ScrollChanged="LibraryItemsControl_ScrollChanged">
             <ItemsControl x:Name="LibraryItemsControl" ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                <!--<ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>-->
 
                 <ItemsControl.Resources>
                     <CollectionViewSource x:Key="InstanceCollection" Source="{Binding Model.Instances}" />
@@ -47,8 +59,6 @@
 
                         <!--  Library Instance Added  -->
                         <Button
-                            Width="620"
-                            Height="120"
                             Margin="30,15,30,30"
                             Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                             Content="{DynamicResource newInstance}"
@@ -62,77 +72,230 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <StackPanel
+        <Grid
             Margin="0,0,20,20"
             HorizontalAlignment="Right"
-            VerticalAlignment="Bottom">
-            <Button
-                x:Name="AddButton"
-                Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                Style="{StaticResource IconicButton}">
-                <Border
-                    Width="40"
-                    Height="40"
-                    Background="#131313"
-                    BorderThickness="0"
-                    CornerRadius="50">
-                    <Border.Effect>
-                        <DropShadowEffect
-                            BlurRadius="10"
-                            ShadowDepth="0"
-                            Color="{DynamicResource ActivityColor}" />
-                    </Border.Effect>
-                    <Viewbox
-                        Width="20"
-                        Height="20"
-                        Stretch="Fill">
-                        <Path
-                            Data="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"
-                            Fill="{DynamicResource BrandSolidColorBrush}"
-                            Stretch="Fill" />
-                    </Viewbox>
-                </Border>
-                <Button.ToolTip>
-                    <ToolTip
-                        Background="Black"
-                        BorderThickness="0"
-                        FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
-                        HorizontalOffset="-90"
-                        Placement="Relative"
-                        VerticalOffset="-10">
-                        <TextBlock
-                            MaxWidth="400"
-                            Foreground="White"
-                            Text="{DynamicResource addInstance}"
-                            TextWrapping="WrapWithOverflow" />
-                    </ToolTip>
-                </Button.ToolTip>
-            </Button>
+            VerticalAlignment="Bottom"
+            Background="Transparent">
 
-            <Button
-                x:Name="UpButton"
-                Margin="0,10,0,0"
-                Click="UpButton_Click"
-                Style="{StaticResource IconicButton}"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+
+            <StackPanel
+                x:Name="FloatingMultiButtonContent"
+                Margin="0,0,0,16"
+                Background="Transparent"
+                Opacity="0"
                 Visibility="Collapsed">
-                <Border
-                    Width="40"
-                    Height="40"
-                    Background="{DynamicResource BrandSolidColorBrush}"
-                    BorderBrush="{DynamicResource BrandSolidColorBrush}"
-                    BorderThickness="0"
-                    CornerRadius="50">
-                    <Viewbox
-                        Width="20"
-                        Height="20"
-                        Stretch="Fill">
+                <!--  Button 1 #21ad7c  -->
+
+
+                <!--  Button 2  -->
+                <Button
+                    x:Name="Button2"
+                    Margin="0,12,0,0"
+                    Command="{Binding DataContext.OpenInstanceFactoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                    Style="{StaticResource IconicButton}">
+                    <Border
+                        Width="36"
+                        Height="36"
+                        Background="#3a5ff9"
+                        BorderThickness="0"
+                        CornerRadius="50">
+                        <Viewbox Height="16">
+                            <Path
+                                extension:PathExtension.StringData="{StaticResource AddInstance}"
+                                Fill="White"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+                    <Button.ToolTip>
+                        <ToolTip
+                            Background="Black"
+                            BorderThickness="0"
+                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                            HorizontalOffset="-110"
+                            Placement="Relative"
+                            VerticalOffset="0">
+                            <TextBlock
+                                MaxWidth="400"
+                                Foreground="White"
+                                Text="{DynamicResource addInstance}"
+                                TextWrapping="WrapWithOverflow" />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+
+                <!--  Button 3  -->
+                <Button
+                    x:Name="Button3"
+                    Margin="0,12,0,0"
+                    Click="GroupsManagerOpen_Click"
+                    Style="{StaticResource IconicButton}">
+                    <Border
+                        Width="36"
+                        Height="36"
+                        Background="#5d36b1"
+                        BorderThickness="0"
+                        CornerRadius="50">
+                        <Viewbox Height="16">
+                            <Path
+                                extension:PathExtension.StringData="{StaticResource GroupManager}"
+                                Fill="White"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+                    <Button.ToolTip>
+                        <ToolTip
+                            Background="Black"
+                            BorderThickness="0"
+                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                            HorizontalOffset="-110"
+                            Placement="Relative">
+                            <TextBlock
+                                MaxWidth="400"
+                                Foreground="White"
+                                Text="{DynamicResource groupsManager}"
+                                TextWrapping="WrapWithOverflow" />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1">
+                <Button
+                    x:Name="FloatingMultiButton"
+                    Grid.Row="1"
+                    Click="FloatingMultiButton_Click"
+                    RenderTransformOrigin="0.5, 0.5"
+                    Style="{StaticResource IconicButton}">
+
+                    <Button.RenderTransform>
+                        <RotateTransform x:Name="rtAngel" Angle="0" />
+                    </Button.RenderTransform>
+
+                    <Border
+                        Width="40"
+                        Height="40"
+                        Background="#131313"
+                        BorderThickness="0"
+                        CornerRadius="50">
+                        <Border.Effect>
+                            <DropShadowEffect
+                                BlurRadius="10"
+                                ShadowDepth="0"
+                                Color="{DynamicResource ActivityColor}" />
+                        </Border.Effect>
+                        <Viewbox
+                            Width="20"
+                            Height="20"
+                            Stretch="Fill">
+                            <Path
+                                Data="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"
+                                Fill="{DynamicResource BrandSolidColorBrush}"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+                    <Button.ToolTip>
+                        <ToolTip
+                            Background="Black"
+                            BorderThickness="0"
+                            FontFamily="pack://application:,,,/assets/fonts/#Casper Bold"
+                            HorizontalOffset="-90"
+                            Placement="Relative"
+                            VerticalOffset="-10">
+                            <TextBlock
+                                MaxWidth="400"
+                                Foreground="White"
+                                Text="{DynamicResource addInstance}"
+                                TextWrapping="WrapWithOverflow" />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+
+                <Button
+                    x:Name="UpButton"
+                    Margin="0,10,0,0"
+                    Click="UpButton_Click"
+                    Style="{StaticResource IconicButton}"
+                    Visibility="Collapsed">
+
+                    <Border
+                        Width="40"
+                        Height="40"
+                        Background="{DynamicResource BrandSolidColorBrush}"
+                        BorderBrush="{DynamicResource BrandSolidColorBrush}"
+                        BorderThickness="0"
+                        CornerRadius="50">
+                        <Viewbox
+                            Width="20"
+                            Height="20"
+                            Stretch="Fill">
+                            <Path
+                                Data="M22.5 40V13.7L10.1 26.1 8 24 24 8l16 16-2.1 2.1-12.4-12.4V40Z"
+                                Fill="White"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Border>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+
+        <!--  Groups Menu  -->
+        <Border
+            x:Name="GroupsMenu"
+            Grid.Column="1"
+            Width="200"
+            Padding="16"
+            HorizontalAlignment="Right"
+            Background="#131313"
+            Visibility="Collapsed">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="Medium"
+                        Foreground="White"
+                        Text="Groups" />
+
+                    <Button
+                        HorizontalAlignment="Right"
+                        Click="CloseGroupMenu_Click"
+                        Style="{StaticResource IconicButton}">
+                        <Viewbox Height="16">
+                            <Path
+                                extension:PathExtension.StringData="{StaticResource Close}"
+                                Fill="White"
+                                Stretch="Fill" />
+                        </Viewbox>
+                    </Button>
+                </Grid>
+
+                <WrapPanel Grid.Row="1" Margin="0,16,0,0">
+                    <Viewbox Height="20">
                         <Path
-                            Data="M22.5 40V13.7L10.1 26.1 8 24 24 8l16 16-2.1 2.1-12.4-12.4V40Z"
+                            extension:PathExtension.StringData="{StaticResource OpenFolder}"
                             Fill="White"
                             Stretch="Fill" />
                     </Viewbox>
-                </Border>
-            </Button>
-        </StackPanel>
+
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        FontSize="14"
+                        Foreground="White"
+                        Text="Group 1" />
+                </WrapPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
