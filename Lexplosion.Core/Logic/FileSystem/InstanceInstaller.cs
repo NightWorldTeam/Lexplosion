@@ -806,7 +806,7 @@ namespace Lexplosion.Logic.FileSystem
                                             Runtime.DebugWrite("{MINECRAFT_JAR}: " + DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name);
 
                                             command = command.Replace("{DIR}", DirectoryPath);
-                                            command = command.Replace("{TEMP_DIR}",  tempDir);
+                                            command = command.Replace("{TEMP_DIR}", tempDir);
                                             string minecraftJar = "\"" + DirectoryPath + "/instances/" + instanceId + "/version/" + manifest.version.minecraftJar.name + "\"";
                                             command = command.Replace("\"{MINECRAFT_JAR}\"", minecraftJar);
                                             command = command.Replace("{MINECRAFT_JAR}", minecraftJar);

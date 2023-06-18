@@ -173,11 +173,10 @@ namespace Lexplosion.Logic.Management.Addons
         {
             ClientType modloader = (_addonInfo.Type == "mod") ? _instanceData.Modloader : ClientType.Vanilla; // если это мод, то передаем модлоадер. Иначе ставим Vanilla
             var files = ModrinthApi.GetProjectFiles(_projectId, modloader, _instanceData.GameVersion);
-            var lastFile = files.GetLastElement();
 
-            if (lastFile != null)
+            if (files.Count > 0 && files[0] != null)
             {
-                _versionInfo = lastFile;
+                _versionInfo = files[0];
                 _fileId = _versionInfo.FileId;
             }
         }
@@ -242,9 +241,8 @@ namespace Lexplosion.Logic.Management.Addons
                     {
                         ClientType modloader = (_addonInfo.Type == "mod") ? _instanceData.Modloader : ClientType.Vanilla;
                         var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData.GameVersion);
-                        var lastFiles = files.GetLastElement();
 
-                        if (lastFiles.FileId != addonFileId)
+                        if (files.Count > 0 && files[0] != null && files[0].FileId != addonFileId)
                         {
                             actionIfTrue();
                         }
