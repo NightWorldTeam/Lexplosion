@@ -265,24 +265,6 @@ namespace Lexplosion.Logic.Management
             jvmArgs = jvmArgs.Replace("${library_directory}", gamePath + "libraries");
 
             string command;
-
-            //string[] nesseseryKeys = new string[]
-            //{
-            //    "${auth_player_name}",
-            //    "${version_name}",
-            //    "${game_directory}",
-            //    "${assets_root}",
-            //    "${assets_index_name}",
-            //    "${auth_uuid}",
-            //    "${auth_access_token}",
-            //    "${user_type}",
-            //    "${version_type}",
-            //    "${natives_directory}",
-            //    "${launcher_name}",
-            //    "${launcher_version}",
-            //    "${classpath}"
-            //};
-
             if (data.VersionFile.defaultArguments != null)
             {
                 command = "";
