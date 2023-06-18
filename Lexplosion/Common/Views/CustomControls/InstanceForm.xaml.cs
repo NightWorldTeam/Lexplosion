@@ -81,5 +81,10 @@ namespace Lexplosion.Common.Views.CustomControls
                 );
             }
         }
+
+        private void Grid_DragEnter(object sender, DragEventArgs e)
+        {
+
+        }
     }
 }
