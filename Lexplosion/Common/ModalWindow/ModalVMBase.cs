@@ -5,6 +5,8 @@
         protected const double DefaultWidth = 360;
         protected const double DefaultHeight = 420;
 
+        public virtual ModalVMBase Subpage { get; set; }
+
         public virtual RelayCommand CloseModalWindowCommand { get; }
         public virtual RelayCommand ActionCommand { get; }
         public virtual RelayCommand HideModalWindowCommand { get; }

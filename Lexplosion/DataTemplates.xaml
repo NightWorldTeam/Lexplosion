@@ -74,6 +74,7 @@
     <DataTemplate DataType="{x:Type vmmainmenu:LibraryViewModel}">
         <pagemm:LibraryView />
     </DataTemplate>
+
     <!--  MainMenu Settings DataTemplate  -->
     <DataTemplate DataType="{x:Type vmsettings:GeneralSettingsViewModel}">
         <pagesettings:GeneralSettingsView />
@@ -160,6 +161,10 @@
 
     <DataTemplate DataType="{x:Type modalvms:DialogViewModel}">
         <modalviews:DialogView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type modalvms:InstanceGroupsManagerViewModel}">
+        <modalviews:InstanceGroupsManagerView />
     </DataTemplate>
 
     <!--  Multiplayer  -->

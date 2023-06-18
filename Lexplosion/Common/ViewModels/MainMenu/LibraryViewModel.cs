@@ -1,4 +1,5 @@
 ﻿using Lexplosion.Common.Models.MainMenu;
+using Lexplosion.Common.ViewModels.ModalVMs;
 
 namespace Lexplosion.Common.ViewModels.MainMenu
 {
@@ -28,6 +29,14 @@ namespace Lexplosion.Common.ViewModels.MainMenu
             }));
         }
 
+        private RelayCommand _openGroupsManagerCommand;
+        public RelayCommand OpenGroupsManagerCommand
+        {
+            get => _openGroupsManagerCommand ?? (_openGroupsManagerCommand = new RelayCommand(obj => 
+            {
+                ModalWindowViewModelSingleton.Instance.Open(new InstanceGroupsManagerViewModel());
+            }));
+        }
 
         #endregion Commands
 

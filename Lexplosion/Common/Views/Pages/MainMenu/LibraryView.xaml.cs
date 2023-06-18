@@ -134,24 +134,24 @@ namespace Lexplosion.Common.Views.Pages.MainMenu
 
         private void CloseGroupMenu_Click(object sender, RoutedEventArgs e)
         {
-            GroupsMenu.Visibility = Visibility.Visible;
-            DoubleAnimation doubleAnimation = new DoubleAnimation()
-            {
-                From = GroupsMenu.Width,
-                To = 0.0,
-                Duration = TimeSpan.FromSeconds(0.4)
-            };
-            DoubleAnimation doubleAnimation1 = new DoubleAnimation()
-            {
-                From = GroupsMenu.Opacity,
-                To = 0.0,
-                Duration = TimeSpan.FromSeconds(0.4)
-            };
-            GroupsMenu.BeginAnimation(FrameworkElement.WidthProperty, doubleAnimation);
-            GroupsMenu.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation1);
-            doubleAnimation1.Completed += (object sender, EventArgs e) => {
-                GroupsMenu.Visibility = Visibility.Collapsed;
-            };
+            //GroupsMenu.Visibility = Visibility.Visible;
+            //DoubleAnimation doubleAnimation = new DoubleAnimation()
+            //{
+            //    From = GroupsMenu.Width,
+            //    To = 0.0,
+            //    Duration = TimeSpan.FromSeconds(0.4)
+            //};
+            //DoubleAnimation doubleAnimation1 = new DoubleAnimation()
+            //{
+            //    From = GroupsMenu.Opacity,
+            //    To = 0.0,
+            //    Duration = TimeSpan.FromSeconds(0.4)
+            //};
+            //GroupsMenu.BeginAnimation(FrameworkElement.WidthProperty, doubleAnimation);
+            //GroupsMenu.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation1);
+            //doubleAnimation1.Completed += (object sender, EventArgs e) => {
+            //    GroupsMenu.Visibility = Visibility.Collapsed;
+            //};
         }
 
         private void FloatingMultiButton_Click(object sender, RoutedEventArgs e)
@@ -184,7 +184,7 @@ namespace Lexplosion.Common.Views.Pages.MainMenu
                 sb.Children.Add(rotateAnimation);
                 sb.Begin(FloatingMultiButton);
             }
-            else 
+            else
             {
                 FloatingMultiButtonContent.Visibility = Visibility.Visible;
 
@@ -216,29 +216,29 @@ namespace Lexplosion.Common.Views.Pages.MainMenu
 
         private void GroupsManagerOpen_Click(object sender, RoutedEventArgs e)
         {
-            if (GroupsMenu.Width == 0)
-            {
-                GroupsMenu.Visibility = Visibility.Visible;
-                GroupsMenu.Opacity = 0;
-                DoubleAnimation doubleAnimation = new DoubleAnimation()
-                {
-                    From = GroupsMenu.Width,
-                    To = 200,
-                    Duration = TimeSpan.FromSeconds(0.4)
-                };
-                DoubleAnimation doubleAnimation1 = new DoubleAnimation()
-                {
-                    From = GroupsMenu.Opacity,
-                    To = 1,
-                    Duration = TimeSpan.FromSeconds(0.4)
-                };
-                GroupsMenu.BeginAnimation(FrameworkElement.WidthProperty, doubleAnimation);
-                GroupsMenu.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation1);
-            }
-            else 
-            {
-                CloseGroupMenu_Click(sender, e);
-            }
+            //if (GroupsMenu.Width == 0)
+            //{
+            //    GroupsMenu.Visibility = Visibility.Visible;
+            //    GroupsMenu.Opacity = 0;
+            //    DoubleAnimation doubleAnimation = new DoubleAnimation()
+            //    {
+            //        From = GroupsMenu.Width,
+            //        To = 200,
+            //        Duration = TimeSpan.FromSeconds(0.4)
+            //    };
+            //    DoubleAnimation doubleAnimation1 = new DoubleAnimation()
+            //    {
+            //        From = GroupsMenu.Opacity,
+            //        To = 1,
+            //        Duration = TimeSpan.FromSeconds(0.4)
+            //    };
+            //    GroupsMenu.BeginAnimation(FrameworkElement.WidthProperty, doubleAnimation);
+            //    GroupsMenu.BeginAnimation(FrameworkElement.OpacityProperty, doubleAnimation1);
+            //}
+            //else 
+            //{
+            //    CloseGroupMenu_Click(sender, e);
+            //}
         }
     }
 }

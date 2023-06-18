@@ -53,17 +53,18 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
 
-                    <Grid>
+                    <Grid Height="120" MaxWidth="640">
+
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.4*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="500" />
                         </Grid.ColumnDefinitions>
 
                         <Border
                             x:Name="Border"
                             Grid.Column="0"
                             Padding="29"
-                            Background="Red"
+                            Background="Transparent"
                             BorderBrush="Gray"
                             BorderThickness="1"
                             CornerRadius="10,0,0,10">

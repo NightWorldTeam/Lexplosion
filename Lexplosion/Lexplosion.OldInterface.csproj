@@ -107,12 +107,16 @@
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\AdServersListTabViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\Friends\FindFriendsTabViewModel.cs" />
     <Compile Include="Common\ViewModels\MainMenu\Multiplayer\GeneralMultiplayerViewModel.cs" />
+    <Compile Include="Common\ViewModels\ModalVMs\InstanceGroupsManagerViewModel.cs" />
     <Compile Include="Common\ViewModels\ModalVMs\InstanceTransfer\ImportBase.cs" />
     <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\AdServersListTabView.xaml.cs">
       <DependentUpon>AdServersListTabView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Views\Pages\MainMenu\Multiplayer\Friends\FindFriendsTabView.xaml.cs">
       <DependentUpon>FindFriendsTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Views\Pages\ModalViews\InstanceGroupsManagerView.xaml.cs">
+      <DependentUpon>InstanceGroupsManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ChangelogItem\ChangelogItem.cs" />
     <Compile Include="Controls\Curtains\Curtains.cs" />
@@ -362,6 +366,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\Views\Pages\MainMenu\Multiplayer\Friends\FindFriendsTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\Views\Pages\ModalViews\InstanceGroupsManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

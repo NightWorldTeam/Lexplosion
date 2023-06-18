@@ -134,6 +134,7 @@
                     x:Name="Button3"
                     Margin="0,12,0,0"
                     Click="GroupsManagerOpen_Click"
+                    Command="{Binding DataContext.OpenGroupsManagerCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                     Style="{StaticResource IconicButton}">
                     <Border
                         Width="36"
