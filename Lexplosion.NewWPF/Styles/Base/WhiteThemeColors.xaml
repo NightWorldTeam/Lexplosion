@@ -1,0 +1,64 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  Activity Colors  -->
+    <Color x:Key="ActivityColor" x:Shared="True">#167FFC</Color>
+    <Color x:Key="Color1">#8500fa</Color>
+
+    <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
+    <SolidColorBrush
+        x:Key="ActivitySolidColorBrush"
+        x:Shared="True"
+        Opacity="{DynamicResource ActivityColorOpacity}"
+        Color="{DynamicResource Color1}" />
+
+    <!--  Primary Color  -->
+    <Color x:Key="PrimaryColor">
+        #0A0F1B
+    </Color>
+
+    <sys:Double x:Key="PrimaryColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="PrimarySolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource PrimaryColorOpacity}"
+        Color="{DynamicResource PrimaryColor}" />
+
+
+    <!--  Secondary Color  -->
+    <Color x:Key="SecondaryColor">
+        #0E1422
+    </Color>
+
+    <sys:Double x:Key="SecondaryColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="SecondarySolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SecondaryColorOpacity}"
+        Color="{DynamicResource SecondaryColor}" />
+
+
+    <!--  Separate Color  -->
+    <Color x:Key="SeparateColor">
+        #141A27
+    </Color>
+
+    <sys:Double x:Key="SeparateColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="SeparateSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SeparateColorOpacity}"
+        Color="{DynamicResource SeparateColor}" />
+
+</ResourceDictionary>
