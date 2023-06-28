@@ -4,19 +4,19 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--  Activity Colors  -->
-    <Color x:Key="ActivityColor" x:Shared="True">#167FFC</Color>
+    <Color x:Key="ActivityColor">#167ffc</Color>
     <Color x:Key="Color1">#8500fa</Color>
 
     <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
     <SolidColorBrush
         x:Key="ActivitySolidColorBrush"
-        x:Shared="True"
+        x:Shared="False"
         Opacity="{DynamicResource ActivityColorOpacity}"
-        Color="{DynamicResource Color1}" />
+        Color="{DynamicResource ActivityColor}" />
 
     <!--  Primary Color  -->
     <Color x:Key="PrimaryColor">
-        #0A0F1B
+        #ffffff
     </Color>
 
     <sys:Double x:Key="PrimaryColorOpacity">
@@ -32,7 +32,7 @@
 
     <!--  Secondary Color  -->
     <Color x:Key="SecondaryColor">
-        #0E1422
+        #F6F9FD
     </Color>
 
     <sys:Double x:Key="SecondaryColorOpacity">
@@ -48,7 +48,7 @@
 
     <!--  Separate Color  -->
     <Color x:Key="SeparateColor">
-        #141A27
+        #E6EDF4
     </Color>
 
     <sys:Double x:Key="SeparateColorOpacity">
@@ -61,4 +61,34 @@
         Opacity="{DynamicResource SeparateColorOpacity}"
         Color="{DynamicResource SeparateColor}" />
 
+    <!--  Foreground  -->
+    <Color x:Key="PrimaryForegroundColor">
+        #202020
+    </Color>
+
+    <sys:Double x:Key="PrimaryForegroundColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="PrimaryForegroundSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource PrimaryForegroundColorOpacity}"
+        Color="{DynamicResource PrimaryForegroundColor}" />
+
+    <!--  Control Colors  -->
+    <!--  Control Colors  -->
+    <Color x:Key="CheckBoxMarkColor">
+        #ededed
+    </Color>
+
+    <sys:Double x:Key="CheckBoxMarkColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="CheckBoxMarkSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource CheckBoxMarkColorOpacity}"
+        Color="{DynamicResource CheckBoxMarkColor}" />
 </ResourceDictionary>

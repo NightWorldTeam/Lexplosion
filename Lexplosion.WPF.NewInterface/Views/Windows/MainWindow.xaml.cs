@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Lexplosion.WPF.NewInterface.Tools;
+using Lexplosion.WPF.NewInterface.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,8 +16,6 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static int i = 0;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -32,28 +34,80 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Runtime.TaskRun(() => { 
-                while (i == 0)
-                {
-                    Console.WriteLine(i);
-                }
-            });
-
-            var newColor = (Color)System.Windows.Media.ColorConverter.ConvertFromString("#8500fa");
-
-            ColorAnimation colorAnimation = new ColorAnimation();
-            colorAnimation.From = (Color)Application.Current.Resources["ActivityColor"];
-            colorAnimation.To = Colors.Red;
-            colorAnimation.Duration = new Duration(TimeSpan.FromSeconds(1));
-            colorAnimation.Completed += ColorAnimation_Completed;
-            ChangeColorButton.Background.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
-            
+            MainViewModel.ChangeColor(ColorTools.GetColorByHex("#167FFC"));
         }
 
-        private void ColorAnimation_Completed(object sender, EventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            i = 1;
-            Console.WriteLine(1);
+            App.Current.MainWindow.Close();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            //App.Current.Resources.MergedDictionaries.Clear();
+
+            App.Current.Resources.MergedDictionaries.Clear();
+
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Resources/Fonts.xaml")
+            });
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Resources/Icons.xaml")
+            });
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Resources/Styles/TextBlock.xaml")
+            });
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Resources/Styles/Buttons.xaml")
+            });
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Resources/Styles/TextBox.xaml")
+            });
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/Resources/Styles/CheckBox.xaml")
+            });
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var resourceDictionaries = new List<ResourceDictionary>();
+
+            var currentThemeName = "";
+
+            foreach (var s in App.Current.Resources.MergedDictionaries)
+            {
+                if (s.Source.ToString().Contains("ColorTheme"))
+                {
+                    currentThemeName = s.Source.ToString();
+                    resourceDictionaries.Add(s);
+                }
+            }
+
+            foreach (var s in resourceDictionaries)
+            {
+                App.Current.Resources.MergedDictionaries.Remove(s);
+            }
+
+            if (currentThemeName.Contains("Light"))
+            {
+                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri("pack://application:,,,/Resources/Themes/DarkColorTheme.xaml")
+                });
+            }
+            else 
+            {
+                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri("pack://application:,,,/Resources/Themes/LightColorTheme.xaml")
+                });
+            }
         }
     }
 }

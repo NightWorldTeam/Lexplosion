@@ -76,6 +76,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\NavigationCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
+    <Compile Include="Extensions\Path.cs" />
+    <Compile Include="Stores\INavigationStore.cs" />
+    <Compile Include="Stores\ModalNavigationStore.cs" />
+    <Compile Include="Stores\NavigationStore.cs" />
+    <Compile Include="Tools\ColorTools.cs" />
+    <Compile Include="ViewModels\Authorization\NightWorldAuthFormViewModel.cs" />
+    <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
+    <Compile Include="Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
+      <DependentUpon>AuthorizationMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Authorization\NightWorldAuthFormView.xaml.cs">
+      <DependentUpon>NightWorldAuthFormView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VMBase.cs" />
     <Page Include="Assets\langs\en-US.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -84,15 +102,59 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Styles\Base\Buttons.xaml">
+    <Page Include="Controls\Controls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\Base\Fonts.xaml">
+    <Page Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\Base\WhiteThemeColors.xaml">
+    <Page Include="DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Buttons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Fonts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\CheckBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\PasswordBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\TextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\TextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Themes\DarkColorTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Themes\LightColorTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Authorization\AuthorizationMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Authorization\NightWorldAuthFormView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -105,6 +167,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Extensions\Animations\SolidColorBrushAnimation.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -140,10 +203,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="ViewModels\" />
     <Folder Include="Views\Modal\" />
-    <Folder Include="Views\Pages\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\images\background\authBG.png" />

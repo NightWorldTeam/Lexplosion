@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using Lexplosion.WPF.NewInterface.Tools;
+using Lexplosion.WPF.NewInterface.Views.Windows;
+using System;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface
 {
@@ -7,6 +11,5 @@ namespace Lexplosion.WPF.NewInterface
     /// </summary>
     public partial class App : Application
     {
-
     }
 }

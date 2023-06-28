@@ -1,0 +1,241 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions.Animations"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Style x:Key="ButtonBasedStyle" TargetType="{x:Type Button}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+    </Style>
+
+    <Style
+        x:Key="{x:Type Button}"
+        BasedOn="{StaticResource ButtonBasedStyle}"
+        TargetType="{x:Type Button}">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Border
+                            x:Name="BorderHover"
+                            Background="Black"
+                            CornerRadius="5" />
+
+                        <!--  Content  -->
+                        <Border
+                            x:Name="Border"
+                            Background="{DynamicResource ActivitySolidColorBrush}"
+                            CornerRadius="5" />
+
+                        <Border Padding="12,8">
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                TextBlock.Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                    </Grid>
+
+                    <!--  Triggers  -->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="Border"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="0.9"
+                                            Duration="0:0:0.35" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="Border"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="1"
+                                            Duration="0:0:0.35" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="ColoredWindowsButton"
+        BasedOn="{StaticResource ButtonBasedStyle}"
+        TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="#17181c" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+
+                    <Grid>
+                        <Ellipse
+                            x:Name="Hover"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            Fill="Black"
+                            SnapsToDevicePixels="True"
+                            Stroke="Transparent"
+                            StrokeThickness="2" />
+
+                        <Ellipse
+                            x:Name="Ellipse"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            Fill="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True"
+                            StrokeThickness="1">
+                            <Ellipse.Stroke>
+                                <SolidColorBrush Opacity="0.1" Color="{TemplateBinding Background}" />
+                            </Ellipse.Stroke>
+                        </Ellipse>
+                    </Grid>
+
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="MouseOverAnimation">
+                            <DoubleAnimation
+                                Storyboard.TargetName="Ellipse"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.8"
+                                Duration="0:0:0.35" />
+                        </Storyboard>
+
+                        <Storyboard x:Key="MouseOutAnimation">
+                            <DoubleAnimation
+                                Storyboard.TargetName="Ellipse"
+                                Storyboard.TargetProperty="Opacity"
+                                To="1"
+                                Duration="0:0:0.35" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource MouseOverAnimation}" />
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard Storyboard="{StaticResource MouseOutAnimation}" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- TODO FIX IT -->
+    
+    <Style
+        x:Key="AuthorizationTypeButton"
+        BasedOn="{StaticResource ButtonBasedStyle}"
+        TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Border
+                            Width="250"
+                            Height="50"
+                            Background="{DynamicResource SecondarySolidColorBrush}"
+                            BorderBrush="{DynamicResource SeparateSolidColorBrush}"
+                            BorderThickness="1.5"
+                            CornerRadius="5" />
+
+                        <Border
+                            x:Name="BorderHovered"
+                            Width="250"
+                            Height="50"
+                            Background="{DynamicResource SecondarySolidColorBrush}"
+                            BorderBrush="{DynamicResource ActivitySolidColorBrush}"
+                            BorderThickness="1.5"
+                            CornerRadius="5"
+                            Opacity="0" />
+
+                        <Border
+                            x:Name="Border"
+                            Width="250"
+                            Height="50"
+                            Background="{DynamicResource SecondarySolidColorBrush}"
+                            BorderBrush="Transparent"
+                            BorderThickness="1.5"
+                            CornerRadius="5">
+
+                            <!--  BorderBrush="{DynamicResource ActivitySolidColorBrush}"  -->
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Background="{DynamicResource SeparateSolidColorBrush}" CornerRadius="5">
+                                    <Border Width="28" Height="28">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/Assets/images/icons/logo.ico" />
+                                        </Border.Background>
+                                    </Border>
+                                </Border>
+
+                                <TextBlock
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontFamily="{StaticResource SFProDisplay}"
+                                    FontSize="17"
+                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Text="Через NightWorld" />
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="BorderHovered"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="1"
+                                            Duration="0:0:0.35" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="BorderHovered"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="0"
+                                            Duration="0:0:0.35" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

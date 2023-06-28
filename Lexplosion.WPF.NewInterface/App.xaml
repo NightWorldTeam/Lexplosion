@@ -7,9 +7,19 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/Base/WhiteThemeColors.xaml" />
-                <ResourceDictionary Source="Styles/Base/Fonts.xaml" />
-                <ResourceDictionary Source="Styles/Base/Buttons.xaml" />
+                <ResourceDictionary Source="Resources/Fonts.xaml" />
+                <ResourceDictionary Source="Resources/Icons.xaml" />
+                <ResourceDictionary Source="Resources/Themes/LightColorTheme.xaml" />
+
+                <ResourceDictionary Source="Controls/Controls.xaml" />
+
+                <ResourceDictionary Source="Resources/Styles/TextBlock.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Buttons.xaml" />
+                <ResourceDictionary Source="Resources/Styles/TextBox.xaml" />
+                <ResourceDictionary Source="Resources/Styles/CheckBox.xaml" />
+                <ResourceDictionary Source="Resources/Styles/PasswordBox.xaml" />
+
+                <ResourceDictionary Source="DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

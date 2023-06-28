@@ -3,7 +3,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace Lexplosion.WPF.NewInterface.Extensions.Animations
+namespace Lexplosion.WPF.NewInterface.Extensions
 {
     public class SolidColorBrushAnimation : ColorAnimation
     {
