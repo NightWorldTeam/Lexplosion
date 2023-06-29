@@ -1,4 +1,5 @@
 ﻿using Lexplosion.WPF.NewInterface.Commands;
+using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
@@ -42,6 +43,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 
     public sealed class NightWorldAuthFormViewModel : VMBase
     {
+        private readonly INavigationStore<VMBase> _navigationStore;
+
         public AuthorizationFormModel Model { get; private set; }
 
 
@@ -70,15 +73,25 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         }
 
 
+        private RelayCommand _passwordResetCommand;
+        public ICommand PasswordResetCommand
+        {
+            get => _passwordResetCommand ?? (_passwordResetCommand = new RelayCommand(obj =>
+            {
+                _navigationStore.Open(new PasswordResetViewModel(_navigationStore));
+            }));
+        }
+
+
         #endregion Commands
 
 
         #region Constructors
 
 
-        public NightWorldAuthFormViewModel()
+        public NightWorldAuthFormViewModel(INavigationStore<VMBase> navigationStore)
         {
-
+            _navigationStore = navigationStore;
         }
 
 

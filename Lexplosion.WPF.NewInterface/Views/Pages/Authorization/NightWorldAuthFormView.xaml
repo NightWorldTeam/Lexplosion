@@ -59,8 +59,11 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            Text="Forgot password?"
-                            TextDecorations="Underline" />
+                            TextDecorations="Underline">
+                            <Hyperlink Command="{Binding PasswordResetCommand}">
+                                Forgot password?
+                            </Hyperlink>
+                        </TextBlock>
                     </Grid>
 
                     <Grid Grid.Row="1" Margin="0,16,0,0">
@@ -99,7 +102,7 @@
                                 HorizontalAlignment="Center">
                                 <TextBlock
                                     FontSize="13"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                     Text="Don’t have any account?" />
                                 <TextBlock Margin="4,0,0,0" FontSize="14">
                                     <Hyperlink>

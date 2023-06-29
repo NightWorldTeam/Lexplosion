@@ -79,19 +79,28 @@
     <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="Commands\NavigationCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\DigitCodeBox\DigitCodeBox.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
     <Compile Include="Extensions\Path.cs" />
     <Compile Include="Stores\INavigationStore.cs" />
     <Compile Include="Stores\ModalNavigationStore.cs" />
     <Compile Include="Stores\NavigationStore.cs" />
     <Compile Include="Tools\ColorTools.cs" />
+    <Compile Include="ViewModels\Authorization\DigitCodeConfirmationVIewModel.cs" />
     <Compile Include="ViewModels\Authorization\NightWorldAuthFormViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
+    <Compile Include="ViewModels\Authorization\PasswordResetViewModel.cs" />
     <Compile Include="Views\Pages\Authorization\AuthorizationMenuView.xaml.cs">
       <DependentUpon>AuthorizationMenuView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\Authorization\DigitCodeConfirmationVIew.xaml.cs">
+      <DependentUpon>DigitCodeConfirmationVIew.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\Authorization\NightWorldAuthFormView.xaml.cs">
       <DependentUpon>NightWorldAuthFormView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Authorization\PasswordResetView.xaml.cs">
+      <DependentUpon>PasswordResetView.xaml</DependentUpon>
     </Compile>
     <Compile Include="VMBase.cs" />
     <Page Include="Assets\langs\en-US.xaml">
@@ -103,6 +112,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DigitCodeBox\DigitCodeBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -154,7 +167,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Pages\Authorization\DigitCodeConfirmationVIew.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Pages\Authorization\NightWorldAuthFormView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\Authorization\PasswordResetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

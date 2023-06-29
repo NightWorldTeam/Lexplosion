@@ -5,7 +5,7 @@
     <Style TargetType="{x:Type local:UpperPlaceholderTextBox}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="IsTabStop" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
