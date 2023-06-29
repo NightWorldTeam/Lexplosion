@@ -24,15 +24,19 @@
 
     <Window.Resources />
 
-    <Grid MouseEnter="Grid_MouseEnter" ShowGridLines="False">
+    <Grid
+        KeyboardNavigation.IsTabStop="False"
+        MouseEnter="Grid_MouseEnter"
+        ShowGridLines="False">
 
         <Border
             Background="{DynamicResource PrimarySolidColorBrush}"
             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
             BorderThickness="1"
-            CornerRadius="5" />
+            CornerRadius="5"
+            KeyboardNavigation.IsTabStop="False" />
 
-        <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" />
+        <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
 
         <!--  Window State Control Buttons  -->
         <StackPanel
@@ -40,6 +44,7 @@
             Margin="16,12"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
+            KeyboardNavigation.IsTabStop="False"
             Orientation="Horizontal">
 
             <!--  Close Button  -->

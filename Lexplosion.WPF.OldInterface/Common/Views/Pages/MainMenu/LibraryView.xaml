@@ -130,7 +130,7 @@
                 </Button>
 
                 <!--  Button 3  -->
-                <Button
+                <!--<Button
                     x:Name="Button3"
                     Margin="0,12,0,0"
                     Click="GroupsManagerOpen_Click"
@@ -163,7 +163,7 @@
                                 TextWrapping="WrapWithOverflow" />
                         </ToolTip>
                     </Button.ToolTip>
-                </Button>
+                </Button>-->
             </StackPanel>
 
             <StackPanel Grid.Row="1">

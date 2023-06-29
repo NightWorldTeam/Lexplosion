@@ -14,6 +14,15 @@
         Opacity="{DynamicResource ActivityColorOpacity}"
         Color="{DynamicResource ActivityColor}" />
 
+    <!--  Error Color  -->
+    <Color x:Key="ErrorColor" x:Shared="False">DE5151</Color>
+    <sys:Double x:Key="ErrorColorOpacity">1</sys:Double>
+    <SolidColorBrush
+        x:Key="ErrorSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource ErrorColorOpacity}"
+        Color="{DynamicResource ErrorColor}" />
+
     <!--  Primary Color  -->
     <Color x:Key="PrimaryColor">
         #ffffff
@@ -62,6 +71,7 @@
         Color="{DynamicResource SeparateColor}" />
 
     <!--  Foreground  -->
+    <!--  Primary Foreground  -->
     <Color x:Key="PrimaryForegroundColor">
         #202020
     </Color>
@@ -76,7 +86,40 @@
         Opacity="{DynamicResource PrimaryForegroundColorOpacity}"
         Color="{DynamicResource PrimaryForegroundColor}" />
 
-    <!--  Control Colors  -->
+    <!--  Secondary Foreground  -->
+
+    <Color x:Key="SecondaryForegroundColor">
+        #666666
+    </Color>
+
+    <sys:Double x:Key="SecondaryForegroundColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="SecondaryForegroundSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource SecondaryForegroundColorOpacity}"
+        Color="{DynamicResource SecondaryForegroundColor}" />
+
+
+    <!--  Latest Foreground  -->
+
+    <Color x:Key="LatestForegroundColor">
+        #B3B3B3
+    </Color>
+
+    <sys:Double x:Key="LatestForegroundColorOpacity">
+        1
+    </sys:Double>
+
+    <SolidColorBrush
+        x:Key="LatestForegroundSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource LatestForegroundColorOpacity}"
+        Color="{DynamicResource LatestForegroundColor}" />
+
+
     <!--  Control Colors  -->
     <Color x:Key="CheckBoxMarkColor">
         #ededed

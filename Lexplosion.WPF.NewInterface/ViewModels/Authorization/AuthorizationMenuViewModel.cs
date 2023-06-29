@@ -23,7 +23,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         {
             get => _openAccountAuthFormCommand ?? (_openAccountAuthFormCommand = new RelayCommand(obj => 
             {
-                _navigationStore.Open(new NightWorldAuthFormViewModel());
+                _navigationStore.Open(new NightWorldAuthFormViewModel(_navigationStore));
             }));
         }
 
