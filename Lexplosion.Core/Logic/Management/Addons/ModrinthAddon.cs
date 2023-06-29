@@ -229,17 +229,18 @@ namespace Lexplosion.Logic.Management.Addons
 
         public void CompareVersions(string addonFileId, Action actionIfTrue)
         {
-            if (_addonInfo == null) return;
+            var addonInfo = _addonInfo;
+            if (addonInfo == null) return;
 
-            var lastEelem = _addonInfo.Versions.GetLastElement();
+            var lastEelem = addonInfo.Versions.GetLastElement();
             if (lastEelem != addonFileId)
             {
-                if (lastEelem == null || _addonInfo.GameVersions.Count > 1 || _addonInfo.Loaders.Count > 1)
+                if (lastEelem == null || addonInfo.GameVersions?.Count > 1 || addonInfo.Loaders?.Count > 1)
                 {
                     //неизвестно для каокго модлоадера и для какой версии игры предназначена последняя версия аддона, поэтому делаем дополнительный запрос
                     ThreadPool.QueueUserWorkItem((object o) =>
                     {
-                        ClientType modloader = (_addonInfo.Type == "mod") ? _instanceData.Modloader : ClientType.Vanilla;
+                        ClientType modloader = ((addonInfo.Type == "mod") ? _instanceData?.Modloader : ClientType.Vanilla) ?? ClientType.Vanilla;
                         var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData.GameVersion);
 
                         if (files.Count > 0 && files[0] != null && files[0].FileId != addonFileId)
