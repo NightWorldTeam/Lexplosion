@@ -241,7 +241,7 @@ namespace Lexplosion.Logic.Management.Addons
                     ThreadPool.QueueUserWorkItem((object o) =>
                     {
                         ClientType modloader = ((addonInfo.Type == "mod") ? _instanceData?.Modloader : ClientType.Vanilla) ?? ClientType.Vanilla;
-                        var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData.GameVersion);
+                        var files = ModrinthApi.GetProjectFiles(ProjectId, modloader, _instanceData?.GameVersion ?? "");
 
                         if (files.Count > 0 && files[0] != null && files[0].FileId != addonFileId)
                         {
