@@ -81,11 +81,15 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Controls\DigitCodeBox\DigitCodeBox.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
+    <Compile Include="Core\INotifiable.cs" />
     <Compile Include="Extensions\Path.cs" />
+    <Compile Include="Models\Authorization\AuthorizationModelBase.cs" />
+    <Compile Include="Models\Authorization\IAuthorizationModel.cs" />
     <Compile Include="Stores\INavigationStore.cs" />
     <Compile Include="Stores\ModalNavigationStore.cs" />
     <Compile Include="Stores\NavigationStore.cs" />
     <Compile Include="Tools\ColorTools.cs" />
+    <Compile Include="ViewModels\Authorization\AuthorizationViewModelBase.cs" />
     <Compile Include="ViewModels\Authorization\DigitCodeConfirmationVIewModel.cs" />
     <Compile Include="ViewModels\Authorization\NightWorldAuthFormViewModel.cs" />
     <Compile Include="ViewModels\Authorization\AuthorizationMenuViewModel.cs" />
@@ -102,7 +106,7 @@
     <Compile Include="Views\Pages\Authorization\PasswordResetView.xaml.cs">
       <DependentUpon>PasswordResetView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VMBase.cs" />
+    <Compile Include="Core\VMBase.cs" />
     <Page Include="Assets\langs\en-US.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

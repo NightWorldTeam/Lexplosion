@@ -4,7 +4,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--  Activity Colors  -->
-    <Color x:Key="ActivityColor" x:Shared="False">#8500aa</Color>
+    <Color x:Key="ActivityColor">#8500aa</Color>
     <Color x:Key="Color1">#167FFC</Color>
 
     <sys:Double x:Key="ActivityColorOpacity">1</sys:Double>
@@ -16,13 +16,21 @@
 
 
     <!--  Error Color  -->
-    <Color x:Key="ErrorColor" x:Shared="False">DE5151</Color>
+    <Color x:Key="ErrorColor" x:Shared="False">#DE5151</Color>
     <sys:Double x:Key="ErrorColorOpacity">1</sys:Double>
     <SolidColorBrush
         x:Key="ErrorSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource ErrorColorOpacity}"
         Color="{DynamicResource ErrorColor}" />
+
+    <!--  KeyboardNavigation Color  -->
+    <sys:Double x:Key="KeyboardNavigationColorOpacity">0.4</sys:Double>
+    <SolidColorBrush
+        x:Key="KeyboardNavigationSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource KeyboardNavigationColorOpacity}"
+        Color="{DynamicResource ActivityColor}" />
 
     <!--  Primary Color  -->
     <Color x:Key="PrimaryColor">

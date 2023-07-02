@@ -5,17 +5,18 @@
     <Style TargetType="{x:Type local:UpperPlaceholderTextBox}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="IsTabStop" Value="False" />
-        <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
         <Setter Property="CaretBrush" Value="{DynamicResource ActivitySolidColorBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:UpperPlaceholderTextBox}">
 
-                    <Grid Margin="0,8,0,8">
+                    <Grid Margin="0,0,0,0">
                         <Border
                             x:Name="Border"
                             Height="46"
@@ -25,6 +26,17 @@
                             BorderBrush="{DynamicResource SeparateSolidColorBrush}"
                             BorderThickness="2"
                             CornerRadius="5" />
+
+                        <Border
+                            x:Name="BorderError"
+                            Height="46"
+                            MaxHeight="46"
+                            Padding="12,4,12,4"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource ErrorSolidColorBrush}"
+                            BorderThickness="2"
+                            CornerRadius="5"
+                            Opacity="0" />
 
                         <Border
                             x:Name="BorderFocused"
@@ -38,6 +50,7 @@
                             Opacity="0" />
 
                         <Border
+                            x:Name="BorderMain"
                             Height="46"
                             MaxHeight="46"
                             Padding="12,4,12,4"
@@ -55,73 +68,19 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     FontSize="12"
-                                    Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                                    Opacity="0.8"
+                                    Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
                                     Text="{TemplateBinding Placeholder}" />
 
                                 <ScrollViewer
                                     x:Name="PART_ContentHost"
                                     Margin="0"
                                     VerticalAlignment="Bottom"
-                                    KeyboardNavigation.IsTabStop="False"
                                     VerticalScrollBarVisibility="Auto" />
                             </Grid>
                         </Border>
                     </Grid>
 
                     <ControlTemplate.Triggers>
-                        <!--  When is it empty and focused  -->
-                        <!--<MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsFocused" Value="True" />
-                                <Condition Property="IsEmpty" Value="True" />
-                            </MultiTrigger.Conditions>
-
-                            <MultiTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ThicknessAnimation
-                                            Storyboard.TargetName="PlaceholderTB"
-                                            Storyboard.TargetProperty="Margin"
-                                            To="0,-22,0,0"
-                                            Duration="0:0:0.35" />
-
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="PlaceholderTB"
-                                            Storyboard.TargetProperty="FontSize"
-                                            To="12"
-                                            Duration="0:0:0.35" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </MultiTrigger.EnterActions>
-                        </MultiTrigger>-->
-
-                        <!--  When is it empty and not focused  -->
-                        <!--<MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsEmpty" Value="True" />
-                                <Condition Property="IsFocused" Value="False" />
-                            </MultiTrigger.Conditions>
-
-                            <MultiTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ThicknessAnimation
-                                            Storyboard.TargetName="PlaceholderTB"
-                                            Storyboard.TargetProperty="Margin"
-                                            To="0,0,0,0"
-                                            Duration="0:0:0.35" />
-
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="PlaceholderTB"
-                                            Storyboard.TargetProperty="FontSize"
-                                            To="14"
-                                            Duration="0:0:0.35" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </MultiTrigger.EnterActions>
-                        </MultiTrigger>-->
-
                         <!--  When is it focused  -->
                         <Trigger Property="IsFocused" Value="True">
                             <Trigger.EnterActions>
@@ -146,6 +105,39 @@
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
+                        </Trigger>
+
+                        <Trigger Property="IsError" Value="True">
+
+                            <Setter TargetName="BorderFocused" Property="Visibility" Value="Collapsed" />
+
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="BorderError"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="1"
+                                            Duration="0:0:0.35" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="BorderError"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="0"
+                                            Duration="0:0:0.35" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+
+                        <Trigger Property="IsError" Value="False">
+                            <Setter TargetName="BorderFocused" Property="Visibility" Value="Visible" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

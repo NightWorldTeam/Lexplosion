@@ -15,13 +15,21 @@
         Color="{DynamicResource ActivityColor}" />
 
     <!--  Error Color  -->
-    <Color x:Key="ErrorColor" x:Shared="False">DE5151</Color>
+    <Color x:Key="ErrorColor" x:Shared="False">#DE5151</Color>
     <sys:Double x:Key="ErrorColorOpacity">1</sys:Double>
     <SolidColorBrush
         x:Key="ErrorSolidColorBrush"
         x:Shared="False"
         Opacity="{DynamicResource ErrorColorOpacity}"
         Color="{DynamicResource ErrorColor}" />
+
+    <!--  KeyboardNavigation Color  -->
+    <sys:Double x:Key="KeyboardNavigationColorOpacity">0.4</sys:Double>
+    <SolidColorBrush
+        x:Key="KeyboardNavigationSolidColorBrush"
+        x:Shared="False"
+        Opacity="{DynamicResource KeyboardNavigationColorOpacity}"
+        Color="{DynamicResource ActivityColor}" />
 
     <!--  Primary Color  -->
     <Color x:Key="PrimaryColor">

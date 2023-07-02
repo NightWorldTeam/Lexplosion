@@ -43,9 +43,15 @@
                         UseLayoutRounding="True" />
 
                     <!--  Login Field  -->
-                    <controls:UpperPlaceholderTextBox Placeholder="Login" />
+                    <controls:UpperPlaceholderTextBox Margin="0,16,0,0" Placeholder="Login" />
                     <!--  Password Field  -->
                     <PasswordBox CaretBrush="{DynamicResource ActivitySolidColorBrush}" FontSize="14" />
+
+                    <!--<TextBlock
+                        Margin="0,4,0,4"
+                        HorizontalAlignment="Center" FontWeight="Medium"
+                        Foreground="{DynamicResource ErrorSolidColorBrush}"
+                        Text="Please enter a valid email address" />-->
 
                     <Grid Margin="0,8,0,0" ShowGridLines="False">
                         <Grid.ColumnDefinitions>
@@ -58,8 +64,7 @@
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
-                            TextDecorations="Underline">
+                            Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}">
                             <Hyperlink Command="{Binding PasswordResetCommand}">
                                 Forgot password?
                             </Hyperlink>

@@ -1,10 +1,11 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.WPF.NewInterface.Core;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
-    public sealed class AuthorizationFormModel 
+    public sealed class AuthorizationFormModel : VMBase
     {
         #region Properties
 

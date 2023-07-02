@@ -20,6 +20,4 @@
     <DataTemplate DataType="{x:Type authviewmodels:DigitCodeConfirmationVIewModel}">
         <authviews:DigitCodeConfirmationVIew />
     </DataTemplate>
-
-
 </ResourceDictionary>

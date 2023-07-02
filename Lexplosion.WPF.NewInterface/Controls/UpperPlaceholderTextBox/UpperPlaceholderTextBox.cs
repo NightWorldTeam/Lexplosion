@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
@@ -15,6 +17,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.RegisterReadOnly("IsEmpty", typeof(bool), typeof(UpperPlaceholderTextBox), new FrameworkPropertyMetadata(true));
 
         public static readonly DependencyProperty IsEmptyProperty = IsEmptyPropertyKey.DependencyProperty;
+
+        public static readonly DependencyProperty IsErrorProperty
+            = DependencyProperty.Register("IsError", typeof(bool), typeof(UpperPlaceholderTextBox), new FrameworkPropertyMetadata(false));
 
         public string Placeholder
         {
@@ -31,6 +36,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
             private set => SetValue(IsEmptyPropertyKey, value);
         }
 
+        public bool IsError 
+        {
+            get => (bool)GetValue(IsErrorProperty);
+            set => SetValue(IsErrorProperty, value);
+        }
+
         static UpperPlaceholderTextBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(UpperPlaceholderTextBox), new FrameworkPropertyMetadata(typeof(UpperPlaceholderTextBox)));
@@ -40,6 +51,9 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             UpdateIsEmpty();
             base.OnInitialized(e);
+
+            //var thisAdornerLayer = AdornerLayer.GetAdornerLayer(this);
+            //thisAdornerLayer.Add(new SimpleCircleAdorner(this));
         }
 
         protected override void OnTextChanged(TextChangedEventArgs e)

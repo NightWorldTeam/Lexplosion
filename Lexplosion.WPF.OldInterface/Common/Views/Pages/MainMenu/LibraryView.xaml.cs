@@ -156,62 +156,64 @@ namespace Lexplosion.Common.Views.Pages.MainMenu
 
         private void FloatingMultiButton_Click(object sender, RoutedEventArgs e)
         {
-            if (FloatingMultiButtonContent.Visibility == Visibility.Visible)
-            {
-                var opacityAnimation = new DoubleAnimation()
-                {
-                    From = FloatingMultiButtonContent.Opacity,
-                    To = 0.0,
-                    Duration = TimeSpan.FromSeconds(0.4)
-                };
-                opacityAnimation.Completed += (object sender, EventArgs e) =>
-                {
-                    FloatingMultiButtonContent.Visibility = Visibility.Collapsed;
-                };
-                FloatingMultiButtonContent.BeginAnimation(FrameworkElement.OpacityProperty, opacityAnimation);
-
-                var rotateAnimation = new DoubleAnimation()
-                {
-                    From = -45,
-                    To = 0,
-                    Duration = TimeSpan.FromSeconds(0.2)
-                };
-
-                Storyboard sb = new Storyboard();
-                Storyboard.SetTargetName(rotateAnimation, "rtAngel");
-                Storyboard.SetTargetProperty(rotateAnimation, new PropertyPath(RotateTransform.AngleProperty));
-
-                sb.Children.Add(rotateAnimation);
-                sb.Begin(FloatingMultiButton);
-            }
-            else
-            {
-                FloatingMultiButtonContent.Visibility = Visibility.Visible;
-
-                var rotateAnimation = new DoubleAnimation()
-                {
-                    From = 0,
-                    To = -45,
-                    Duration = TimeSpan.FromSeconds(0.2)
-                };
-
-                Storyboard sb = new Storyboard();
-                Storyboard.SetTargetName(rotateAnimation, "rtAngel");
-                Storyboard.SetTargetProperty(rotateAnimation, new PropertyPath(RotateTransform.AngleProperty));
-
-                sb.Children.Add(rotateAnimation);
-                sb.Begin(FloatingMultiButton);
 
 
-                var opacityAnimation = new DoubleAnimation()
-                {
-                    From = FloatingMultiButtonContent.Opacity,
-                    To = 1,
-                    Duration = TimeSpan.FromSeconds(0.4)
-                };
+            //if (FloatingMultiButtonContent.Visibility == Visibility.Visible)
+            //{
+            //    var opacityAnimation = new DoubleAnimation()
+            //    {
+            //        From = FloatingMultiButtonContent.Opacity,
+            //        To = 0.0,
+            //        Duration = TimeSpan.FromSeconds(0.4)
+            //    };
+            //    opacityAnimation.Completed += (object sender, EventArgs e) =>
+            //    {
+            //        FloatingMultiButtonContent.Visibility = Visibility.Collapsed;
+            //    };
+            //    FloatingMultiButtonContent.BeginAnimation(FrameworkElement.OpacityProperty, opacityAnimation);
 
-                FloatingMultiButtonContent.BeginAnimation(FrameworkElement.OpacityProperty, opacityAnimation);
-            }
+            //    var rotateAnimation = new DoubleAnimation()
+            //    {
+            //        From = -45,
+            //        To = 0,
+            //        Duration = TimeSpan.FromSeconds(0.2)
+            //    };
+
+            //    Storyboard sb = new Storyboard();
+            //    Storyboard.SetTargetName(rotateAnimation, "rtAngel");
+            //    Storyboard.SetTargetProperty(rotateAnimation, new PropertyPath(RotateTransform.AngleProperty));
+
+            //    sb.Children.Add(rotateAnimation);
+            //    sb.Begin(FloatingMultiButton);
+            //}
+            //else
+            //{
+            //    FloatingMultiButtonContent.Visibility = Visibility.Visible;
+
+            //    var rotateAnimation = new DoubleAnimation()
+            //    {
+            //        From = 0,
+            //        To = -45,
+            //        Duration = TimeSpan.FromSeconds(0.2)
+            //    };
+
+            //    Storyboard sb = new Storyboard();
+            //    Storyboard.SetTargetName(rotateAnimation, "rtAngel");
+            //    Storyboard.SetTargetProperty(rotateAnimation, new PropertyPath(RotateTransform.AngleProperty));
+
+            //    sb.Children.Add(rotateAnimation);
+            //    sb.Begin(FloatingMultiButton);
+
+
+            //    var opacityAnimation = new DoubleAnimation()
+            //    {
+            //        From = FloatingMultiButtonContent.Opacity,
+            //        To = 1,
+            //        Duration = TimeSpan.FromSeconds(0.4)
+            //    };
+
+            //    FloatingMultiButtonContent.BeginAnimation(FrameworkElement.OpacityProperty, opacityAnimation);
+            //}
         }
 
         private void GroupsManagerOpen_Click(object sender, RoutedEventArgs e)

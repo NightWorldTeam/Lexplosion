@@ -1,17 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions.Animations">
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions">
+
     <Style x:Key="{x:Type CheckBox}" TargetType="{x:Type CheckBox}">
-        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="TextBlock.Foreground" Value="{DynamicResource PrimaryForegroundSolidColorBrush}" />
-
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
@@ -19,6 +16,7 @@
                         <BulletDecorator.Bullet>
                             <Grid>
                                 <Border
+                                    x:Name="BorderUnchecked"
                                     Width="16"
                                     Height="16"
                                     Background="{DynamicResource SecondarySolidColorBrush}"
@@ -35,8 +33,6 @@
                                     BorderThickness="1.5"
                                     CornerRadius="3"
                                     Opacity="0" />
-
-
 
                                 <Border
                                     Width="16"
@@ -67,8 +63,12 @@
                             RecognizesAccessKey="True" />
                     </BulletDecorator>
 
-
                     <ControlTemplate.Triggers>
+                        <!--  Tab navigation  -->
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="BorderUnchecked" Property="BorderBrush" Value="{DynamicResource KeyboardNavigationSolidColorBrush}" />
+                        </Trigger>
+
                         <Trigger Property="IsChecked" Value="True">
                             <Trigger.EnterActions>
                                 <BeginStoryboard>

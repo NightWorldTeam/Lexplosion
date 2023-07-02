@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Lexplosion.WPF.NewInterface
+namespace Lexplosion.WPF.NewInterface.Core
 {
     public class VMBase : INotifyPropertyChanged
     {

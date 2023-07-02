@@ -4,13 +4,24 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions.Animations"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <Style x:Key="ButtonFocusVisualStyle">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle
+                        Fill="Black"
+                        Opacity="0.1"
+                        SnapsToDevicePixels="true" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="ButtonBasedStyle" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
-        <Setter Property="IsTabStop" Value="False" />
-        <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource ButtonFocusVisualStyle}" />
     </Style>
 
     <Style
@@ -140,8 +151,8 @@
         </Setter>
     </Style>
 
-    <!-- TODO FIX IT -->
-    
+    <!--  TODO FIX IT  -->
+
     <Style
         x:Key="AuthorizationTypeButton"
         BasedOn="{StaticResource ButtonBasedStyle}"
