@@ -53,7 +53,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
 
-                    <Grid Height="120" MaxWidth="640">
+                    <Grid
+                        Height="120"
+                        MaxWidth="640"
+                        Background="Transparent">
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="120" />
