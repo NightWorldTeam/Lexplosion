@@ -22,7 +22,18 @@
         Height="470"
     -->
 
-    <Window.Resources />
+    <Window.Resources>
+        <Storyboard x:Key="SizeAnimationSB">
+            <DoubleAnimation
+                Storyboard.TargetProperty="Width"
+                To="944"
+                Duration="0:0:0:0.35" />
+            <DoubleAnimation
+                Storyboard.TargetProperty="Height"
+                To="528"
+                Duration="0:0:0:0.35" />
+        </Storyboard>
+    </Window.Resources>
 
     <Grid
         KeyboardNavigation.IsTabStop="False"
@@ -63,6 +74,7 @@
                 Margin="0,0,10,0"
                 Background="#009DFF"
                 Style="{StaticResource ColoredWindowsButton}" />
+
 
             <Border
                 Width="20"

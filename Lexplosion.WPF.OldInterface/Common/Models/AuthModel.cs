@@ -11,7 +11,6 @@ namespace Lexplosion.Common.Models
     {
         private AccountType _accountType;
         private bool _isSavedAccountOAuth2 = false;
-        private readonly Authentication _authentication;
 
         private readonly Action<string, bool, bool> _successfulAuthorization;
         private readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
@@ -27,7 +26,6 @@ namespace Lexplosion.Common.Models
             _successfulAuthorization = successfulAuthorization;
 
             // получаем последний выбранный аккаунт
-            _authentication = new Authentication();
             _accountTypeSelectedIndex = (int)LoadSavedAccount(null);
 
             CommandReceiver.MicrosoftAuthPassed += PreformAuthMicrosoft;
@@ -196,7 +194,7 @@ namespace Lexplosion.Common.Models
         /// <param name="accountType">Тип аккаунта, если null, то возвращает последний использованный сохранённый аккаунт.</param>
         public AccountType LoadSavedAccount(AccountType? accountType)
         {
-            AccountType type = _authentication.GetAccount(accountType, out _savedLogin);
+            AccountType type = Authentication.Instance.GetAccount(accountType, out _savedLogin);
 
             if (!string.IsNullOrEmpty(_savedLogin))
             {
@@ -246,7 +244,7 @@ namespace Lexplosion.Common.Models
 
         public void MicrosoftManualInput()
         {
-            var authCode = _authentication.Auth(_accountType, "", ManualInputedMicrosoftData, true);
+            var authCode = Authentication.Instance.Auth(_accountType, "", ManualInputedMicrosoftData, true);
             PerformAuthCode(authCode);
             NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
         }
@@ -268,7 +266,7 @@ namespace Lexplosion.Common.Models
                 _accountType = (AccountType)AccountTypeSelectedIndex;
 
                 // получаем ответ от проверки данных.
-                AuthCode authCode = _authentication.Auth(_accountType, (Login == _savedLogin) ? null : Login, Password?.Length == 0 ? null : Password, IsSaveMe);
+                AuthCode authCode = Authentication.Instance.Auth(_accountType, (Login == _savedLogin) ? null : Login, Password?.Length == 0 ? null : Password, IsSaveMe);
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
@@ -285,7 +283,7 @@ namespace Lexplosion.Common.Models
             // на случае нештатной ситуации.
             if (_accountType != AccountType.Microsoft)
                 return;
-            var authCode = _authentication.Auth(_accountType, "", microsoftData, true);
+            var authCode = Authentication.Instance.Auth(_accountType, "", microsoftData, true);
             PerformAuthCode(authCode);
             NativeMethods.ShowProcessWindows(Runtime.CurrentProcess.MainWindowHandle);
         }

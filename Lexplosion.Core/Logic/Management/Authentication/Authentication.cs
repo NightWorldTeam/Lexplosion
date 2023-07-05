@@ -8,9 +8,13 @@ namespace Lexplosion.Logic.Management.Authentication
 {
     public class Authentication
     {
+        public static Authentication Instance { get; } = new Authentication();
+
+
         private AcccountsFormat _accounts;
 
-        public Authentication()
+
+        private Authentication()
         {
             _accounts = DataFilesManager.GetFile<AcccountsFormat>(LaunсherSettings.LauncherDataPath + "/account.json");
         }

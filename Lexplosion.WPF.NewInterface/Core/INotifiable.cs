@@ -2,7 +2,14 @@
 
 namespace Lexplosion.WPF.NewInterface.Core
 {
-    public delegate void DoNotificationCallback(string title, string message, uint time, byte type);
+    public enum NotificationType 
+    {
+        Error = 0,
+        Successful = 1,
+        Warning = 2,
+    }
+
+    public delegate void DoNotificationCallback(string title, string message, uint time, NotificationType type);
 
     public interface INotifiable
     {

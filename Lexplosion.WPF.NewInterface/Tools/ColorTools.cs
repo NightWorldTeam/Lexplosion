@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 using System.Text;
+using System.Diagnostics;
 
 namespace Lexplosion.WPF.NewInterface.Tools
 {
@@ -26,7 +27,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
 
         public static Color GetDarkerColor(Color color, float persentages)
         {
-            Console.WriteLine(color.R + " " + color.G + " " + color.B);
+            Runtime.DebugWrite(color.R + " " + color.G + " " + color.B);
 
             var newR = color.R - Math.Round(color.R * persentages / 100);
             var newG = color.G - Math.Round(color.G * persentages / 100);
@@ -42,7 +43,7 @@ namespace Lexplosion.WPF.NewInterface.Tools
             //var newG = color.G - Math.Round(color.G * persentages / 100);
             //var newB = color.B - Math.Round(color.B * persentages / 100);
 
-            //Console.WriteLine(newR + " " + newG + " " + newB);
+            //Runtime.DebugWrite(newR + " " + newG + " " + newB);
 
             //return new Color()
             //{

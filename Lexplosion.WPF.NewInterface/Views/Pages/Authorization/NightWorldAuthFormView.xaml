@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="350"
@@ -20,6 +21,7 @@
                 </Grid.RowDefinitions>
 
                 <!--  Logo  -->
+
                 <Border
                     Width="70"
                     Height="70"
@@ -34,6 +36,7 @@
                 <!--  Content  -->
                 <StackPanel Grid.Row="1" Margin="0,16,0,0">
                     <TextBlock
+                        Margin="0,0,0,8"
                         HorizontalAlignment="Center"
                         FontSize="17"
                         FontWeight="Medium"
@@ -43,9 +46,18 @@
                         UseLayoutRounding="True" />
 
                     <!--  Login Field  -->
-                    <controls:UpperPlaceholderTextBox Margin="0,16,0,0" Placeholder="Login" />
+                    <controls:UpperPlaceholderTextBox
+                        Margin="0,8,0,0"
+                        IsError="True"
+                        Placeholder="Login" />
                     <!--  Password Field  -->
                     <PasswordBox CaretBrush="{DynamicResource ActivitySolidColorBrush}" FontSize="14" />
+
+                    <TextBlock
+                        Foreground="#e86084"
+                        Text="Error message that spans across two lines goes like this and just keeps going"
+                        TextWrapping="WrapWithOverflow" />
+
 
                     <!--<TextBlock
                         Margin="0,4,0,4"

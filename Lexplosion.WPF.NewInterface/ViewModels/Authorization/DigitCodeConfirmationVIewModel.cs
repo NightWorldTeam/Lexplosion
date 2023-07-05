@@ -10,7 +10,6 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
             protected get => _isFullCode; set 
             {
                 _isFullCode = value;
-                Console.WriteLine(value);
                 OnPropertyChanged();
             }
         }
@@ -21,7 +20,6 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
             get => _code; set 
             {
                 _code = value;
-                Console.WriteLine(value);
                 OnPropertyChanged();
             }
         }

@@ -2,51 +2,16 @@
 using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
+using Lexplosion.WPF.NewInterface.Models.Authorization;
+using Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
-    public sealed class AuthorizationFormModel : VMBase
-    {
-        #region Properties
-
-
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public bool IsSavePassword { get; set; }
-
-
-        #endregion Properties
-
-
-        #region Constructors
-
-
-        public AuthorizationFormModel(AccountTypeMenuItem accountType) 
-        {
-            
-        }
-
-
-        #endregion Constructors
-
-
-        #region Public Methods
-
-
-        public void Auth() 
-        {
-
-        }
-
-
-        #endregion Public Methods
-    }
-
     public sealed class NightWorldAuthFormViewModel : VMBase
     {
         private readonly INavigationStore<VMBase> _navigationStore;
 
-        public AuthorizationFormModel Model { get; private set; }
+        public IBasicAuthModel Model { get; }
 
 
         #region Commands
@@ -57,8 +22,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         {
             get => authorizationCommand ?? (authorizationCommand = new RelayCommand(obj => 
             {
-                var newObj = obj as AuthorizationFormModel;
-                newObj.Auth();
+                Model.LogIn();
             }));
         }
 
@@ -68,8 +32,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         {
             get => _changeAuthorizationFormCommand ?? (_changeAuthorizationFormCommand = new RelayCommand(obj => 
             {
-                var accountType = obj as AccountTypeMenuItem;
-                Model = new AuthorizationFormModel(accountType);
+
             }));
         }
 
@@ -92,6 +55,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 
         public NightWorldAuthFormViewModel(INavigationStore<VMBase> navigationStore)
         {
+            Model = new NightWorldAuthorizationModel(null);
             _navigationStore = navigationStore;
         }
 

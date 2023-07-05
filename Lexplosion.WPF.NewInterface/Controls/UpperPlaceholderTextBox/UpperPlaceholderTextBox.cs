@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
 
 namespace Lexplosion.WPF.NewInterface.Controls
 {
@@ -64,7 +62,7 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         protected override void OnGotFocus(RoutedEventArgs e)
         {
-            Console.WriteLine("Got focus");
+            Runtime.DebugWrite("Got focus");
             UpdateIsEmpty();
             base.OnGotFocus(e);
         }

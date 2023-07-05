@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace Lexplosion.WPF.NewInterface.Views.Pages.Authorization
@@ -15,7 +16,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Pages.Authorization
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Console.WriteLine("ckiclalsld");
+            Runtime.DebugWrite("ckiclalsld");
         }
     }
 }
