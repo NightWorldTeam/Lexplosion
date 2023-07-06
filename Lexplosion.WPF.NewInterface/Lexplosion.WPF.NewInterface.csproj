@@ -2,6 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+	<LangVersion>latest</LangVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C7328845-AB10-4FAC-99D8-F52FE705B628}</ProjectGuid>
@@ -82,9 +83,14 @@
     <Compile Include="Controls\DigitCodeBox\DigitCodeBox.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
     <Compile Include="Core\INotifiable.cs" />
+    <Compile Include="Core\ResourceGetter.cs" />
     <Compile Include="Extensions\Path.cs" />
-    <Compile Include="Models\Authorization\AuthorizationModelBase.cs" />
-    <Compile Include="Models\Authorization\IAuthorizationModel.cs" />
+    <Compile Include="Models\Authorization\AuthModelBase.cs" />
+    <Compile Include="Models\Authorization\BasicAuthorization\NightWorldAuthorizationModel.cs" />
+    <Compile Include="Models\Authorization\IAuthModel.cs" />
+    <Compile Include="Models\Authorization\BasicAuthorization\IBasicAuthModel.cs" />
+    <Compile Include="Models\Authorization\OAuth2\IOAuth2Model.cs" />
+    <Compile Include="Models\Authorization\OAuth2\MicrosoftAuthorizationModel.cs" />
     <Compile Include="Stores\INavigationStore.cs" />
     <Compile Include="Stores\ModalNavigationStore.cs" />
     <Compile Include="Stores\NavigationStore.cs" />

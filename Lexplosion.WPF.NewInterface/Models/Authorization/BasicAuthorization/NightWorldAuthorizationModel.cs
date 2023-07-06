@@ -1,23 +1,20 @@
-﻿using Lexplosion.WPF.NewInterface.Core;
+﻿using Lexplosion.Logic.Management.Authentication;
+using Lexplosion.WPF.NewInterface.Core;
 using System;
 
-namespace Lexplosion.WPF.NewInterface.Models.Authorization
+namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
 {
-    public abstract class AuthorizationModelBase : VMBase, IAuthorizationModel
+    public class NightWorldAuthorizationModel : AuthModelBase, IBasicAuthModel
     {
-        protected readonly Action<string, bool, bool> _successfulAuthorization;
-        protected readonly DoNotificationCallback _doNotification = (header, message, time, type) => { };
-
-
         #region Properties
 
 
         private string _login = string.Empty;
-        public string Login 
+        public string Login
         {
-            get => _login; set 
+            get => _login; set
             {
-                _login = value;
+                _login= value;
                 OnPropertyChanged();
             }
         }
@@ -32,10 +29,10 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization
             }
         }
 
-        private bool _isRememberMe;
-        public bool IsRememberMe 
+        private bool _isRememberMe = false;
+        public bool IsRememberMe
         {
-            get => _isRememberMe; set 
+            get => _isRememberMe; set
             {
                 _isRememberMe = value;
                 OnPropertyChanged();
@@ -48,12 +45,10 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization
 
         #region Constuctors
 
-
-        public AuthorizationModelBase(Action<string, bool, bool> successfulAuthorization)
+        public NightWorldAuthorizationModel(DoNotificationCallback doNotification) : base(doNotification)
         {
-            _successfulAuthorization = successfulAuthorization;
+            var test = LoadSavedAccount(AccountType.NightWorld);
         }
-
 
         #endregion Constructors
 
@@ -63,7 +58,9 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization
 
         public void LogIn()
         {
-            
+            AuthCode authCode = Authentication.Instance.Auth(
+                AccountType.NightWorld, (Login == "") ? null : Login, Password?.Length == 0 ? null : Password, IsRememberMe
+                );
         }
 
 
@@ -73,10 +70,7 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization
         #region Private Methods
 
 
-        private void AuthCodeHandler(AuthCode code)
-        {
-            
-        }
+
 
 
         #endregion Private Methods

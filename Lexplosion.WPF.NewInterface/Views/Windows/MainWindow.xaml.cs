@@ -2,11 +2,10 @@
 using Lexplosion.WPF.NewInterface.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace Lexplosion.WPF.NewInterface.Views.Windows
@@ -28,7 +27,7 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
 
             for (int i = 0; i < grid.ColumnDefinitions.Count; i++) 
             {
-                Console.WriteLine(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
+                Runtime.DebugWrite(i.ToString() + " " + grid.ColumnDefinitions[i].ActualWidth.ToString());
             }
         }
 
@@ -108,6 +107,12 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
                     Source = new Uri("pack://application:,,,/Resources/Themes/LightColorTheme.xaml")
                 });
             }
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            var sb = (Storyboard)this.Resources["SizeAnimationSB"];
+            sb.Begin(this);
         }
     }
 }
