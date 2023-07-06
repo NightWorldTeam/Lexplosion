@@ -14,6 +14,9 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
+using System.Data.SqlTypes;
+using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace Lexplosion.Logic.FileSystem
 {
@@ -175,7 +178,8 @@ namespace Lexplosion.Logic.FileSystem
                 }
 
                 //проверяем папку libraries
-                if (!Directory.Exists(DirectoryPath + "/libraries"))
+                string librariesDir = DirectoryPath + "/libraries/";
+                if (!Directory.Exists(librariesDir))
                 {
                     foreach (string lib in manifest.libraries.Keys)
                     {
@@ -510,14 +514,18 @@ namespace Lexplosion.Logic.FileSystem
 
                 using (FileStream fstream = new FileStream(temp + file, FileMode.Open, FileAccess.Read))
                 {
-                    byte[] fileBytes = new byte[fstream.Length];
-                    fstream.Read(fileBytes, 0, fileBytes.Length);
-                    fstream.Close();
-
-                    using (SHA1 sha = new SHA1Managed())
+                    using (SHA1CryptoServiceProvider mySha = new SHA1CryptoServiceProvider())
                     {
-                        if (fileBytes.Length == size) // TODO: Convert.ToBase64String(sha.ComputeHash(fileBytes)) == sha1 &&
+                        StringBuilder Sb = new StringBuilder();
+                        byte[] result = mySha.ComputeHash(fstream);
+
+                        foreach (byte b in result)
+                            Sb.Append(b.ToString("x2"));
+
+                        bool hashIsValid = Sb.ToString() == sha1 || Convert.ToBase64String(result) == sha1;
+                        if (hashIsValid && fstream.Length == size)
                         {
+                            fstream.Close();
                             DelFile(to + file);
                             File.Move(temp + file, to + file);
 
@@ -525,6 +533,7 @@ namespace Lexplosion.Logic.FileSystem
                         }
                         else
                         {
+                            fstream.Close();
                             File.Delete(temp + file);
                             return false;
                         }
