@@ -5,9 +5,10 @@
     xmlns:authViewModels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Authorization"
     xmlns:controls="clr-namespace:Lexplosion.WPF.NewInterface.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DataContext="{d:DesignInstance Type=authViewModels:MainViewModel}"
+    d:DataContext="{d:DesignInstance Type=authViewModels:DigitCodeConfirmationViewModel}"
     mc:Ignorable="d">
 
     <UserControl.Resources />
@@ -20,15 +21,17 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock
+                Grid.Row="1"
                 FontSize="20"
                 FontWeight="Medium"
                 Foreground="{DynamicResource PrimaryForegroundSolidColorBrush}"
                 Text="6-digit code" />
             <TextBlock
-                Grid.Row="1"
+                Grid.Row="2"
                 Margin="0,8,0,0"
                 FontSize="14"
                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
@@ -36,14 +39,14 @@
                 TextWrapping="WrapWithOverflow" />
 
             <StackPanel
-                Grid.Row="2"
+                Grid.Row="3"
                 Margin="0,32,0,0"
                 Orientation="Horizontal">
-                <controls:DigitCodeBox Code="{Binding Code, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" IsFullCode="{Binding IsFullCode, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" />
+                <controls:DigitCodeBox Code="{Binding Model.Code, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" IsFullCode="{Binding Model.IsFullCode, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" />
             </StackPanel>
 
             <TextBlock
-                Grid.Row="3"
+                Grid.Row="4"
                 Margin="0,16,0,0"
                 FontSize="14"
                 Foreground="{DynamicResource SecondaryForegroundSolidColorBrush}"
@@ -51,7 +54,7 @@
                 TextWrapping="WrapWithOverflow" />
 
             <Button
-                Grid.Row="4"
+                Grid.Row="5"
                 Width="270"
                 Margin="0,32,0,0"
                 HorizontalContentAlignment="CENTER"
@@ -60,7 +63,7 @@
                 FontSize="16"
                 FontWeight="Medium"
                 Foreground="White"
-                IsEnabled="{Binding IsFullCode, Mode=OneWay}" />
+                IsEnabled="{Binding Model.IsFullCode, Mode=OneWay}" />
         </Grid>
     </Border>
 </UserControl>

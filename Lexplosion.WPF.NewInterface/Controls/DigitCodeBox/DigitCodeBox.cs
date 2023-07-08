@@ -27,7 +27,8 @@ namespace Lexplosion.WPF.NewInterface.Controls
             = DependencyProperty.Register("IsFullCode", typeof(bool), typeof(DigitCodeBox), new FrameworkPropertyMetadata(false));
 
         public static readonly DependencyProperty CodeProperty
-            = DependencyProperty.Register("Code", typeof(string), typeof(DigitCodeBox), new FrameworkPropertyMetadata(string.Empty));
+            = DependencyProperty.Register("Code", typeof(string), typeof(DigitCodeBox), 
+                new FrameworkPropertyMetadata(string.Empty));
 
         public static readonly DependencyProperty IsNumericOnlyProperty
             = DependencyProperty.Register("IsNumericOnly", typeof(bool), typeof(DigitCodeBox), new FrameworkPropertyMetadata(true));

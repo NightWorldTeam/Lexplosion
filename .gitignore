@@ -403,3 +403,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /NewWPFInterface
+/Lexplosion.WPF.NewInterface/ViewModels/MainContent/MainMenu/MainMenuViewModel.cs

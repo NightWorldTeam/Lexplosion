@@ -7,8 +7,10 @@
     xmlns:extensions="clr-namespace:Lexplosion.WPF.NewInterface.Extensions"
     xmlns:local="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Authorization"
     Width="350"
     Height="470"
+    d:DataContext="{d:DesignInstance vm:}"
     mc:Ignorable="d">
     <Grid>
         <Border Padding="50,32">
@@ -49,14 +51,17 @@
                     <controls:UpperPlaceholderTextBox
                         Margin="0,8,0,0"
                         IsError="True"
-                        Placeholder="Login" />
+                        Placeholder="Login"
+                        Text="{Binding Model.Login, UpdateSourceTrigger=PropertyChanged}" />
+
                     <!--  Password Field  -->
-                    <PasswordBox CaretBrush="{DynamicResource ActivitySolidColorBrush}" FontSize="14" />
+                    <controls:BindablePasswordBox FontSize="14" Password="{Binding Model.Password, UpdateSourceTrigger=PropertyChanged}" />
 
                     <TextBlock
                         Foreground="#e86084"
-                        Text="Error message that spans across two lines goes like this and just keeps going"
-                        TextWrapping="WrapWithOverflow" />
+                        Text="Алло а кто будет данные заполнять?"
+                        TextWrapping="WrapWithOverflow"
+                        Visibility="Collapsed" />
 
 
                     <!--<TextBlock
@@ -71,7 +76,12 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <CheckBox VerticalAlignment="Center" Content="Remember me" />
+                        <!--  Is Remember Me  -->
+                        <CheckBox
+                            VerticalAlignment="Center"
+                            Content="Remember me"
+                            IsChecked="{Binding IsRememberMe, UpdateSourceTrigger=PropertyChanged}" />
+                        <!--  Forgot Password Hyperlink  -->
                         <TextBlock
                             Grid.Column="1"
                             HorizontalAlignment="Right"
@@ -87,6 +97,7 @@
                         <StackPanel>
                             <Button
                                 HorizontalContentAlignment="Center"
+                                Command="{Binding AuthorizationCommand}"
                                 Content="Log In Now"
                                 Foreground="White" />
 

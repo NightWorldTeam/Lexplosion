@@ -1,4 +1,6 @@
-﻿namespace Lexplosion.WPF.NewInterface.Models.Authorization
+﻿using System.Security;
+
+namespace Lexplosion.WPF.NewInterface.Models.Authorization
 {
     public interface IBasicAuthModel : IAuthModel
     {
