@@ -7,7 +7,7 @@ using Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
-    public sealed class NightWorldAuthFormViewModel : VMBase
+    public sealed class NightWorldAuthorizationViewModel : VMBase
     {
         private readonly INavigationStore<VMBase> _navigationStore;
 
@@ -53,9 +53,9 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         #region Constructors
 
 
-        public NightWorldAuthFormViewModel(INavigationStore<VMBase> navigationStore)
+        public NightWorldAuthorizationViewModel(INavigationStore<VMBase> navigationStore, string loadedLogin = "")
         {
-            Model = new NightWorldAuthorizationModel(null);
+            Model = new NightWorldAuthorizationModel(null, loadedLogin);
             _navigationStore = navigationStore;
         }
 

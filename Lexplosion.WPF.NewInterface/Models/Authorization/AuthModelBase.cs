@@ -16,17 +16,6 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization
         }
 
         /// <summary>
-        /// Возвращает тип аккаунта, логин, и ответ на вопрос существует ли не пустой логин.
-        /// </summary>
-        /// <param name="accountType"></param>
-        /// <returns>AccountType, string, bool</returns>
-        protected Tuple<AccountType, string, bool> LoadSavedAccount(AccountType? accountType) 
-        {
-            AccountType type = Authentication.Instance.GetAccount(accountType, out string _loadedLogin);
-            return new Tuple<AccountType, string, bool>(type, _loadedLogin, string.IsNullOrEmpty(_loadedLogin));
-        }
-
-        /// <summary>
         /// Обрабатывает результат авторизации
         /// </summary>
         /// <param name="accountType">Тип аккаунта авторизации</param>

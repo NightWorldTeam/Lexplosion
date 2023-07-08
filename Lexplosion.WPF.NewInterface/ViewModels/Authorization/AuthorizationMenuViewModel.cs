@@ -1,5 +1,8 @@
-﻿using Lexplosion.WPF.NewInterface.Commands;
+﻿using Lexplosion.Logic.Management.Authentication;
+using Lexplosion.WPF.NewInterface.Commands;
 using Lexplosion.WPF.NewInterface.Stores;
+using System;
+using System.Collections.Generic;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
@@ -8,7 +11,40 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         public string Name { get; set; }
         public byte[] Logo { get; set; }
     }
-     
+
+
+    public sealed class AuthorizationMenuModel 
+    {
+        #region Constructors
+
+
+        public AuthorizationMenuModel()
+        {
+            var loadedNWAccount = LoadSavedAccount(AccountType.NightWorld);
+            var loadedMSAccount = LoadSavedAccount(AccountType.Microsoft);
+        }
+
+
+        #endregion Constructors
+
+
+        #region Public & Protected Methods
+
+
+        /// <summary>
+        /// Возвращает тип аккаунта, логин, и ответ на вопрос существует ли не пустой логин.
+        /// </summary>
+        /// <param name="accountType"></param>
+        /// <returns>AccountType, string, bool</returns>
+        protected Tuple<AccountType, string, bool> LoadSavedAccount(AccountType? accountType)
+        {
+            AccountType type = Authentication.Instance.GetAccount(accountType, out string _loadedLogin);
+            return new Tuple<AccountType, string, bool>(type, _loadedLogin, string.IsNullOrEmpty(_loadedLogin));
+        }
+
+
+        #endregion Public & Protected Methods
+    }
 
     public sealed class AuthorizationMenuViewModel : VMBase
     {
@@ -23,7 +59,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
         {
             get => _openAccountAuthFormCommand ?? (_openAccountAuthFormCommand = new RelayCommand(obj => 
             {
-                _navigationStore.Open(new NightWorldAuthFormViewModel(_navigationStore));
+                _navigationStore.Open(new NightWorldAuthorizationViewModel(_navigationStore));
             }));
         }
 

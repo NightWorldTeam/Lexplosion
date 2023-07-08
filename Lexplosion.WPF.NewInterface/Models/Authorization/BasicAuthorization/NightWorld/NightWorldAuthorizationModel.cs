@@ -1,6 +1,8 @@
 ﻿using Lexplosion.Logic.Management.Authentication;
 using Lexplosion.WPF.NewInterface.Core;
 using System;
+using System.Runtime.InteropServices;
+using System.Security;
 
 namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
 {
@@ -19,7 +21,7 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
             }
         }
 
-        private string _password = string.Empty;
+        private string _password = null;
         public string Password
         {
             get => _password; set
@@ -45,9 +47,9 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
 
         #region Constuctors
 
-        public NightWorldAuthorizationModel(DoNotificationCallback doNotification) : base(doNotification)
+        public NightWorldAuthorizationModel(DoNotificationCallback doNotification, string loadedLogin = "") : base(doNotification)
         {
-            var test = LoadSavedAccount(AccountType.NightWorld);
+            Login = loadedLogin;
         }
 
         #endregion Constructors
@@ -59,7 +61,10 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
         public void LogIn()
         {
             AuthCode authCode = Authentication.Instance.Auth(
-                AccountType.NightWorld, (Login == "") ? null : Login, Password?.Length == 0 ? null : Password, IsRememberMe
+                AccountType.NightWorld,
+                Login?.Length == 0 ? null : Login,
+                Password?.Length == 0 ? null : Password, 
+                IsRememberMe
                 );
         }
 
@@ -68,8 +73,6 @@ namespace Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization
 
 
         #region Private Methods
-
-
 
 
 

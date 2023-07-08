@@ -15,6 +15,8 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string currentLang = "ru";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -71,6 +73,21 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
             {
                 Source = new Uri("pack://application:,,,/Resources/Styles/CheckBox.xaml")
             });
+
+            if (currentLang == "ru")
+            {
+                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri("pack://application:,,,/Assets/langs/ru-RU.xaml")
+                });
+            }
+            else 
+            {
+                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri("pack://application:,,,/Assets/langs/en-US.xaml")
+                });
+            }
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -113,6 +130,26 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
         {
             var sb = (Storyboard)this.Resources["SizeAnimationSB"];
             sb.Begin(this);
+        }
+
+        private void Border_MouseDown_1(object sender, MouseButtonEventArgs e)
+        {
+            if (currentLang == "ru")
+            {
+                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri("pack://application:,,,/Assets/langs/en-US.xaml")
+                });
+                currentLang = "en";
+            }
+            else 
+            {
+                App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri("pack://application:,,,/Assets/langs/ru-RU.xaml")
+                });
+                currentLang = "ru";
+            }
         }
     }
 }

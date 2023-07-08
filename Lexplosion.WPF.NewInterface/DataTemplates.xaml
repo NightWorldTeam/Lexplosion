@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:authviewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.Authorization"
     xmlns:authviews="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.Authorization"
+    xmlns:mainmenuview="clr-namespace:Lexplosion.WPF.NewInterface.Views.Pages.MainContent.MainMenu"
+    xmlns:mainmenuvm="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu"
     xmlns:viewmodels="clr-namespace:Lexplosion.WPF.NewInterface.ViewModels">
 
     <viewmodels:MainViewModel x:Key="MainViewModel" />
@@ -11,13 +13,32 @@
     <DataTemplate DataType="{x:Type authviewmodels:AuthorizationMenuViewModel}">
         <authviews:AuthorizationMenuView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type authviewmodels:NightWorldAuthFormViewModel}">
+    <DataTemplate DataType="{x:Type authviewmodels:NightWorldAuthorizationViewModel}">
         <authviews:NightWorldAuthFormView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type authviewmodels:PasswordResetViewModel}">
         <authviews:PasswordResetView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type authviewmodels:DigitCodeConfirmationVIewModel}">
+    <DataTemplate DataType="{x:Type authviewmodels:DigitCodeConfirmationViewModel}">
         <authviews:DigitCodeConfirmationVIew />
     </DataTemplate>
+
+
+    <!--  MainContent  -->
+
+    <!--  Main Menu  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:MainMenuLayoutViewModel}">
+        <mainmenuview:MainMenuLayoutView />
+    </DataTemplate>
+
+    <!--  Left Panel  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:LeftPanelViewModel}">
+        <mainmenuview:LeftPanelView />
+    </DataTemplate>
+
+    <!--  Contents  -->
+    <DataTemplate DataType="{x:Type mainmenuvm:CatalogViewModel}">
+        <mainmenuview:CatalogView />
+    </DataTemplate>
+
 </ResourceDictionary>
