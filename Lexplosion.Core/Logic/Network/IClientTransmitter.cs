@@ -1,5 +1,9 @@
-﻿namespace Lexplosion.Logic.Network
+﻿using System.Net;
+
+namespace Lexplosion.Logic.Network
 {
+    public delegate void PointHandle(IPEndPoint point);
+
     interface IClientTransmitter
     {
         void Send(byte[] inputData);

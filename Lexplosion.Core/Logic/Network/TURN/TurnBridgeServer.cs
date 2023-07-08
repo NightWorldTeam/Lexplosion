@@ -16,18 +16,18 @@ namespace Lexplosion.Logic.Network.TURN
             public Socket Sock;
             public int BufferSize = 0;
             public ConcurrentQueue<byte[]> Buffer = new ConcurrentQueue<byte[]>();
-            public IPEndPoint Point;
+            public ClientDesc Point;
             public Thread SendThread;
         }
 
         private const int MAX_BUFFER_SIZE = 10 * 1024 * 1024;
 
-        private ConcurrentDictionary<IPEndPoint, Socket> _pointsSockets = new ConcurrentDictionary<IPEndPoint, Socket>();
         private List<Socket> _sockets = new List<Socket>();
 
         private object _waitDeletingLoocker = new object();
         private ManualResetEvent _waitConnections = new ManualResetEvent(false); // блокировка метода Receive, если нет клиентов
-        private ConcurrentDictionary<IPEndPoint, ClientData> _clients = new ConcurrentDictionary<IPEndPoint, ClientData>();
+        private ConcurrentDictionary<ClientDesc, ClientData> _clients = new();
+        private ConcurrentDictionary<Socket, ClientDesc> _clientsPoints = new();
 
         private bool IsWork = true;
 
@@ -51,9 +51,9 @@ namespace Lexplosion.Logic.Network.TURN
         /// Выполняет соединение с хостом.
         /// </summary>
         /// <param name="hostUUID">UUID хоста. не должен быть больше 32-х символов.</param>
-        /// <param name="point">Поинт, присвоенный этому клиенту. С помощью этого поинта можно взаимодействоать с склиентом.</param>
+        /// <param name="clientDesc">Поинт, присвоенный этому клиенту. С помощью этого поинта можно взаимодействоать с склиентом.</param>
         /// <returns></returns>
-        public bool Connect(string hostUUID, out IPEndPoint point)
+        public bool Connect(string hostUUID, out ClientDesc clientDesc)
         {
             try
             {
@@ -67,18 +67,17 @@ namespace Lexplosion.Logic.Network.TURN
                 sock.Connect(_serverPoint);
                 sock.Send(data);
 
-                point = (IPEndPoint)sock.LocalEndPoint;
+                clientDesc = new ClientDesc(hostUUID, (IPEndPoint)sock.LocalEndPoint);
 
                 lock (_waitDeletingLoocker)
                 {
-                    _pointsSockets[point] = sock;
                     _sockets.Add(sock);
                 }
 
                 var clientData = new ClientData()
                 {
                     Sock = sock,
-                    Point = point
+                    Point = clientDesc
                 };
 
                 var sendThread = new Thread(delegate ()
@@ -87,7 +86,8 @@ namespace Lexplosion.Logic.Network.TURN
                 });
 
                 clientData.SendThread = sendThread;
-                _clients[point] = clientData;
+                _clients[clientDesc] = clientData;
+                _clientsPoints[sock] = clientDesc;
                 sendThread.Start();
 
                 _waitConnections.Set();
@@ -96,7 +96,7 @@ namespace Lexplosion.Logic.Network.TURN
             }
             catch
             {
-                point = null;
+                clientDesc = ClientDesc.Empty;
                 return false;
             }
 
@@ -108,7 +108,7 @@ namespace Lexplosion.Logic.Network.TURN
             AutoResetEvent sendDataEvent = data.SendDataEvent;
             Socket sock = data.Sock;
             ConcurrentQueue<byte[]> buffer = data.Buffer;
-            IPEndPoint point = data.Point;
+            ClientDesc point = data.Point;
 
             while (IsWork)
             {
@@ -140,7 +140,7 @@ namespace Lexplosion.Logic.Network.TURN
             Runtime.DebugWrite("ServiceSend end");
         }
 
-        public IPEndPoint Receive(out byte[] data)
+        public ClientDesc Receive(out byte[] data)
         {
             while (IsWork)
             {
@@ -151,13 +151,18 @@ namespace Lexplosion.Logic.Network.TURN
                     sockets_ = new List<Socket>(_sockets);
 
                 Socket.Select(sockets_, null, null, -1);
+                if (sockets_.Count < 1)
+                {
+                    continue;
+                }
+
                 Socket sock = sockets_[0];
 
-                IPEndPoint point;
-                // Полученный из select сокет может быть отключенным и тогда RemoteEndPoint выкинет исключение. В этом случае мы продалжаем цикл и снова пытаемся считать данные
+                ClientDesc point;
+                // При получении ClientDesc может быть исключение. В этом случае мы продалжаем цикл и снова пытаемся считать данные
                 try
                 {
-                    point = (IPEndPoint)sock.LocalEndPoint;
+                    point = _clientsPoints[sock];
                 }
                 catch (Exception e)
                 {
@@ -181,12 +186,12 @@ namespace Lexplosion.Logic.Network.TURN
 
             Runtime.DebugWrite("Turn Receive stop");
             data = new byte[0];
-            return null;
+            return ClientDesc.Empty;
         }
 
-        public void Send(byte[] inputData, IPEndPoint ip)
+        public void Send(byte[] inputData, ClientDesc clientDesc)
         {
-            ClientData clientData = _clients[ip];
+            ClientData clientData = _clients[clientDesc];
             int dataLenght = inputData.Length;
 
             if (clientData.BufferSize + dataLenght <= MAX_BUFFER_SIZE)
@@ -199,8 +204,8 @@ namespace Lexplosion.Logic.Network.TURN
             {
                 ThreadPool.QueueUserWorkItem(delegate (object state)
                 {
-                    Close(ip);
-                    ClientClosing?.Invoke(ip);
+                    Close(clientDesc);
+                    ClientClosing?.Invoke(clientDesc);
                 });
             }
         }
@@ -226,18 +231,17 @@ namespace Lexplosion.Logic.Network.TURN
             }
         }
 
-        public bool Close(IPEndPoint point)
+        public bool Close(ClientDesc clientDesc)
         {
             Runtime.DebugWrite("TURN CLOSE ");
             lock (_waitDeletingLoocker)
             {
                 // может произойти хуйня, что этот метод будет вызван 2 раза для одного хоста, поэтому проверим не удалили ли мы его уже
-                if (IsWork && _pointsSockets.ContainsKey(point))
+                if (IsWork && _clients.ContainsKey(clientDesc))
                 {
                     Runtime.DebugWrite("TRUN CLOSE GSFSDGF");
-                    _pointsSockets.TryRemove(point, out Socket sock);
-                    _clients.TryRemove(point, out ClientData clientData);
-                    _sockets.Remove(sock);
+                    _clients.TryRemove(clientDesc, out ClientData clientData);
+                    _sockets.Remove(clientData.Sock);
 
                     if (_sockets.Count == 0) // если не осталось клиентов, то стопаем метод Receive
                     {
@@ -250,7 +254,7 @@ namespace Lexplosion.Logic.Network.TURN
                     }
                     catch { }
 
-                    sock.Close();
+                    clientData.Sock.Close();
                 }
             }
             Runtime.DebugWrite("TURN END CLOSE ");
@@ -258,6 +262,6 @@ namespace Lexplosion.Logic.Network.TURN
             return true;
         }
 
-        public event PointHandle ClientClosing;
+        public event ClientPointHandle ClientClosing;
     }
 }

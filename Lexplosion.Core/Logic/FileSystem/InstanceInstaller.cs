@@ -312,7 +312,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="file">Имя файла</param>
         /// <param name="to">Путь куда скачать (без имени файла), должен заканчиваться на слеш.</param>
         /// <param name="temp">Временная директория (без имени файла), должена заканчиваться на слеш.</param>
-        /// <param name="taskArgs">Аргументы задачи</param>
+        /// <param name="taskArgs">Аргументы задачи</param> 
         /// <returns></returns>
         protected bool UnsafeDownloadZip(string url, string to, string file, string temp, TaskArgs taskArgs)
         {
@@ -367,7 +367,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="temp">Временная директория (без имени файла), должна заканчиваться на слеш.</param>
         /// <param name="sha1">Хэш</param>
         /// <param name="size">Размер</param>
-        /// <param name="percentHandler">Обработчик процентов</param>
+        /// <param name="taskArgs">аргументы задачи</param>
         /// <returns></returns>
         protected bool SaveDownloadZip(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs)
         {
@@ -439,7 +439,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="to">Директория куда скачать (без имени файла). Должно заканчиваться слешем.</param>
         /// <param name="file">Имя файла</param>
         /// <param name="temp">Временная директория (тоже без имени файла). Должно заканчиваться слешем.</param>
-        /// /// <param name="percentHandler">Обработчик процентов.</param>
+        /// <param name="taskArgs">аргументы задачи</param>
         /// <returns>Охуенно или пиздец</returns>
         protected bool UnsafeDownloadJar(string url, string to, string file, string temp, TaskArgs taskArgs)
         {
@@ -485,7 +485,7 @@ namespace Lexplosion.Logic.FileSystem
         /// <param name="temp">Временная директория (без имени файла). Должно заканчиваться слешем</param>
         /// <param name="sha1">Хэш файла</param>
         /// <param name="size">Размер файла</param>
-        /// <param name="percentHandler">Обработчик процентов скачивнаия</param>
+        /// <param name="taskArgs">аргументы задачи</param>
         /// <returns></returns>
         protected bool SaveDownloadJar(string url, string file, string to, string temp, string sha1, long size, TaskArgs taskArgs)
         {

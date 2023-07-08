@@ -21,10 +21,10 @@ namespace Lexplosion.Logic.Network
         protected Dictionary<string, FileData> SFilesList = new(); // список всех FileStream и размеров файлов
 
         // первое значение - отправляемый файл, второе - офсет в отправляемом файле, третье - ключ ширования, четвертое - вектор инициализации
-        protected ConcurrentDictionary<IPEndPoint, ReferenceTuple<string, int, byte[], byte[]>> ClientsData = new();
+        protected ConcurrentDictionary<ClientDesc, ReferenceTuple<string, int, byte[], byte[]>> ClientsData = new();
 
-        protected List<IPEndPoint> AuthorizedClients = new();
-        protected List<IPEndPoint> AvailableConnections = new();
+        protected List<ClientDesc> AuthorizedClients = new();
+        protected List<ClientDesc> AvailableConnections = new();
 
         protected AutoResetEvent WaitClient = new AutoResetEvent(false);
         protected Semaphore SendingBlock = new Semaphore(1, 1); //блокировка во время работы метода Sending
@@ -46,17 +46,17 @@ namespace Lexplosion.Logic.Network
             StartThreads();
         }
 
-        protected override bool AfterConnect(IPEndPoint point)
+        protected override bool AfterConnect(ClientDesc clientDesc)
         {
-            AvailableConnections.Add(point);
-            base.AfterConnect(point);
+            AvailableConnections.Add(clientDesc);
+            base.AfterConnect(clientDesc);
 
             return true;
         }
 
         protected override void Sending()
         {
-            List<IPEndPoint> toDisconect = new List<IPEndPoint>();
+            var toDisconect = new List<ClientDesc>();
             WaitClient.WaitOne(); //ждём первого авторизированного клиента
 
             while (IsWork)
@@ -66,14 +66,14 @@ namespace Lexplosion.Logic.Network
                     WaitClient.WaitOne(); //ждём первого авторизированного клиента
                 }
 
-                IPEndPoint[] authorizedClients;
+                ClientDesc[] authorizedClients;
                 lock (_authorizeLocker)
                 {
                     authorizedClients = AuthorizedClients.ToArray();
                 }
 
                 SendingBlock.WaitOne();
-                foreach (IPEndPoint clientPoint in authorizedClients)
+                foreach (ClientDesc clientPoint in authorizedClients)
                 {
                     try
                     {
@@ -127,13 +127,13 @@ namespace Lexplosion.Logic.Network
 
                 if (toDisconect.Count > 0)
                 {
-                    foreach (IPEndPoint point in toDisconect)
+                    foreach (ClientDesc point in toDisconect)
                     {
                         Server.Close(point);
                         ClientAbort(point);
                     }
 
-                    toDisconect = new List<IPEndPoint>();
+                    toDisconect = new List<ClientDesc>();
                 }
             }
         }
@@ -141,22 +141,22 @@ namespace Lexplosion.Logic.Network
         protected override void Reading()
         {
             //первое значение - стадия подключения, второе - aes ключ, третье - aes вектор инициализации
-            var connectionStages = new Dictionary<IPEndPoint, ReferenceTuple<int, byte[], byte[]>>();
+            var connectionStages = new Dictionary<ClientDesc, ReferenceTuple<int, byte[], byte[]>>();
 
             while (IsWork)
             {
                 try
                 {
-                    IPEndPoint point = Server.Receive(out byte[] data);
+                    ClientDesc point = Server.Receive(out byte[] data);
 
-                    if (point == null)
+                    if (point.IsEmpty)
                     {
                         // возможно метод AfterConnect еще не начал работать. если метод подключения в процессе работы, то мы тут остановимся
                         ConnectionWait.WaitOne();
                     }
 
                     AcceptingBlock.WaitOne();
-                    if (point != null && AvailableConnections.Contains(point))
+                    if (AvailableConnections.Contains(point))
                     {
                         try
                         {
@@ -261,21 +261,21 @@ namespace Lexplosion.Logic.Network
             }
         }
 
-        protected override void ClientAbort(IPEndPoint point)
+        protected override void ClientAbort(ClientDesc clientData)
         {
             lock (_abortLoocker)
             {
-                if (point != null && ClientsData.ContainsKey(point))
+                if (ClientsData.ContainsKey(clientData))
                 {
                     AcceptingBlock.WaitOne();
                     SendingBlock.WaitOne();
                     Runtime.DebugWrite("ClientAbort");
 
-                    AvailableConnections.Remove(point);
-                    AuthorizedClients.Remove(point);
-                    ClientsData.TryRemove(point, out _);
+                    AvailableConnections.Remove(clientData);
+                    AuthorizedClients.Remove(clientData);
+                    ClientsData.TryRemove(clientData, out _);
 
-                    base.ClientAbort(point);
+                    base.ClientAbort(clientData);
 
                     AcceptingBlock.Release();
                     SendingBlock.Release();

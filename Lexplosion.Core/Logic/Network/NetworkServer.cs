@@ -240,13 +240,14 @@ namespace Lexplosion.Logic.Network
 
                         var localPoint = (IPEndPoint)udpSocket.LocalEndPoint;
                         udpSocket.Close();
-                        isConected = ((SmpServer)Server).Connect(localPoint, point, connectionCode);
+                        isConected = ((SmpServer)Server).Connect(localPoint, new ClientDesc(clientUUID, point), connectionCode);
                     }
                 }
                 else
                 {
                     Runtime.DebugWrite("Tcp Proxy");
-                    isConected = ((TurnBridgeServer)Server).Connect(clientUUID, out point);
+                    isConected = ((TurnBridgeServer)Server).Connect(clientUUID, out ClientDesc clientDesc);
+                    point = clientDesc.Point;
                 }
             }
             catch (Exception ex)
@@ -260,7 +261,7 @@ namespace Lexplosion.Logic.Network
             if (isConected)
             {
                 Runtime.DebugWrite("КОННЕКТ!!!");
-                if (AfterConnect(point))
+                if (AfterConnect(new ClientDesc(clientUUID, point)))
                 {
                     _uuidPointPair[clientUUID] = point;
                     _pointUuidPair[point] = clientUUID;
@@ -346,7 +347,7 @@ namespace Lexplosion.Logic.Network
                                 _uuidPointPair.TryGetValue(clientUUID, out IPEndPoint point);
                                 if (point != null)
                                 {
-                                    ClientAbort(point);
+                                    ClientAbort(new ClientDesc(clientUUID, point));
                                 }
                             }
 
@@ -458,7 +459,7 @@ namespace Lexplosion.Logic.Network
                     }
 
                     IPEndPoint point = _uuidPointPair[uuid];
-                    ClientAbort(point);
+                    ClientAbort(new ClientDesc(uuid, point));
                 }
             }
             catch { }
@@ -492,11 +493,11 @@ namespace Lexplosion.Logic.Network
             catch { }
         }
 
-        protected virtual void ClientAbort(IPEndPoint point) // мeтод который вызывается при обрыве соединения
+        protected virtual void ClientAbort(ClientDesc clientData) // мeтод который вызывается при обрыве соединения
         {
             try
             {
-                _pointUuidPair.TryRemove(point, out string clientUuid);
+                _pointUuidPair.TryRemove(clientData.Point, out string clientUuid);
                 if (clientUuid != null) _uuidPointPair.TryRemove(clientUuid, out _);
 
                 if (clientUuid != null)
@@ -513,7 +514,7 @@ namespace Lexplosion.Logic.Network
         /// <summary>
         /// это метод который запускается после установления соединения
         /// </summary>
-        protected virtual bool AfterConnect(IPEndPoint point)
+        protected virtual bool AfterConnect(ClientDesc clientData)
         {
             AcceptingBlock.Release();
             return true;

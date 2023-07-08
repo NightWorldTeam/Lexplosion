@@ -12,13 +12,13 @@ namespace Lexplosion.Logic.Network.SMP
     {
         public bool IsWork { get; private set; } = true;
 
-        private readonly ConcurrentDictionary<IPEndPoint, SmpClient> clients = new ConcurrentDictionary<IPEndPoint, SmpClient>();
-        private readonly ConcurrentQueue<IPEndPoint> receivingQueue = new ConcurrentQueue<IPEndPoint>();
+        private readonly ConcurrentDictionary<ClientDesc, SmpClient> clients = new();
+        private readonly ConcurrentQueue<ClientDesc> receivingQueue = new();
 
         private readonly AutoResetEvent receiveWait = new AutoResetEvent(false);
         private readonly Semaphore cloaseBlock = new Semaphore(1, 1);
 
-        public bool Connect(IPEndPoint localPoint, IPEndPoint remotePoint, byte[] connectionCode)
+        public bool Connect(IPEndPoint localPoint, ClientDesc clientData, byte[] connectionCode)
         {
             var connectedEvent = new ManualResetEvent(false);
             var client = new SmpClient(localPoint);
@@ -31,7 +31,7 @@ namespace Lexplosion.Logic.Network.SMP
                 ThreadPool.QueueUserWorkItem(delegate (object state)
                 {
                     connectedEvent.WaitOne();
-                    receivingQueue.Enqueue(remotePoint);
+                    receivingQueue.Enqueue(clientData);
                     receiveWait.Set();
                 });
 
@@ -40,38 +40,22 @@ namespace Lexplosion.Logic.Network.SMP
                     client.MessageReceived -= messageReceived;
                     client.MessageReceived += delegate ()
                     {
-                        receivingQueue.Enqueue(remotePoint);
+                        receivingQueue.Enqueue(clientData);
                         receiveWait.Set();
                     };
                 }
-
-                //if (connected)
-                //{
-                //    receivingQueue.Enqueue(remotePoint);
-                //    receiveWait.Set();
-                //}
-                //else
-                //{
-                //    ThreadPool.QueueUserWorkItem(delegate (object state)
-                //    {
-                //        connectedEvent.WaitOne();
-                //        receivingQueue.Enqueue(remotePoint);
-                //        receiveWait.Set();
-                //    });
-                //}
             };
 
             client.MessageReceived += messageReceived;
 
-            client.ClientClosing += delegate (IPEndPoint ip)
+            client.ClientClosing += delegate (IPEndPoint point)
             {
-                ClientClosing?.Invoke(ip);
+                ClientClosing?.Invoke(clientData);
             };
 
-            if (client.Connect(remotePoint, connectionCode))
+            if (client.Connect(clientData.Point, connectionCode))
             {
-                Thread.Sleep(300);
-                clients[remotePoint] = client;
+                clients[clientData] = client;
                 connected = true;
                 connectedEvent.Set();
 
@@ -81,30 +65,30 @@ namespace Lexplosion.Logic.Network.SMP
             return false;
         }
 
-        public IPEndPoint Receive(out byte[] data)
+        public ClientDesc Receive(out byte[] data)
         {
             if (receivingQueue.Count > 0)
             {
-                receivingQueue.TryDequeue(out IPEndPoint point);
+                receivingQueue.TryDequeue(out ClientDesc clientDesc);
 
                 SmpClient client;
-                if (clients.ContainsKey(point))
+                if (clients.ContainsKey(clientDesc))
                 {
-                    client = clients[point];
+                    client = clients[clientDesc];
                 }
                 else
                 {
                     data = new byte[0];
-                    return null;
+                    return ClientDesc.Empty;
                 }
 
                 if (client.Receive(out data))
                 {
-                    return point;
+                    return clientDesc;
                 }
                 else
                 {
-                    return null;
+                    return ClientDesc.Empty;
                 }
             }
             else //буфер пуст
@@ -115,18 +99,18 @@ namespace Lexplosion.Logic.Network.SMP
 
                     if (receivingQueue.Count > 0) //если clientQueue.Count == 0 значит что прошлый пакет был принят блоком кода выше. Поэтому threadReset сохранило свое состояние, а пакет был извелчен
                     {
-                        receivingQueue.TryDequeue(out IPEndPoint point);
+                        receivingQueue.TryDequeue(out ClientDesc clientDesc);
 
-                        if (clients.ContainsKey(point))
+                        if (clients.ContainsKey(clientDesc))
                         {
-                            SmpClient client = clients[point];
+                            SmpClient client = clients[clientDesc];
                             if (client.Receive(out data))
                             {
-                                return point;
+                                return clientDesc;
                             }
                             else
                             {
-                                return null;
+                                return ClientDesc.Empty;
                             }
                         }
                     }
@@ -135,12 +119,12 @@ namespace Lexplosion.Logic.Network.SMP
 
             Runtime.DebugWrite("SMP SERVER STOP WORK");
             data = new byte[0];
-            return null;
+            return ClientDesc.Empty;
         }
 
-        public void Send(byte[] inputData, IPEndPoint ip)
+        public void Send(byte[] inputData, ClientDesc clientDesc)
         {
-            SmpClient client = clients[ip];
+            SmpClient client = clients[clientDesc];
             client.Send(inputData);
         }
 
@@ -148,11 +132,12 @@ namespace Lexplosion.Logic.Network.SMP
         {
         }
 
-        public bool Close(IPEndPoint point)
+        public bool Close(ClientDesc point)
         {
             cloaseBlock.WaitOne();
-            if (point != null && clients.ContainsKey(point))
+            if (clients.ContainsKey(point))
             {
+                Runtime.DebugWrite("SmpServer close " + point + " " + new System.Diagnostics.StackTrace());
                 clients.TryRemove(point, out SmpClient client);
                 client.Close();
             }
@@ -161,6 +146,6 @@ namespace Lexplosion.Logic.Network.SMP
             return true;
         }
 
-        public event PointHandle ClientClosing;
+        public event ClientPointHandle ClientClosing;
     }
 }
