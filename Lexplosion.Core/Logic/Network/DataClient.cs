@@ -188,6 +188,7 @@ namespace Lexplosion.Logic.Network
                         {
                             string fileSha256 = Cryptography.Sha256(fstream);
                             _successfulTransfer = (fstream.Length == _fileSize) && (_fileId == fileSha256);
+                            Runtime.DebugWrite("fstream.Length " + fstream.Length + ", _fileSize " + _fileSize + ", _fileId " + _fileId + ", fileSha256 " + fileSha256);
                         }
                     }
                     catch

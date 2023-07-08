@@ -106,7 +106,7 @@ namespace Lexplosion.Logic.Network
                         //файл передан, закрываем соединение
                         if (clientData.Value2 >= fileSize)
                         {
-                            Runtime.DebugWrite("END SEND");
+                            Runtime.DebugWrite("END SEND. Bytes count " + clientData.Value2);
                             toDisconect.Add(clientPoint);
                         }
                     }
