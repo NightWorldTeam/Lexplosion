@@ -4,6 +4,7 @@ using Lexplosion.WPF.NewInterface.Stores;
 using System.Windows.Input;
 using Lexplosion.WPF.NewInterface.Models.Authorization;
 using Lexplosion.WPF.NewInterface.Models.Authorization.BasicAuthorization;
+using Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu;
 
 namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
 {
@@ -23,6 +24,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.Authorization
             get => authorizationCommand ?? (authorizationCommand = new RelayCommand(obj => 
             {
                 Model.LogIn();
+                _navigationStore.Open(new MainMenuLayoutViewModel());
             }));
         }
 

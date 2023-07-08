@@ -37,6 +37,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
             LeftPanel.AddTabItem("multiplayer", "Catalog", new CatalogViewModel());
             LeftPanel.AddTabItem("friends", "Catalog", new CatalogViewModel());
             LeftPanel.AddTabItem("settings", "Catalog", new CatalogViewModel());
+            LeftPanel.SelectFirst();
         }
 
 
