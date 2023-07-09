@@ -333,7 +333,7 @@ namespace Lexplosion.Logic.Network.SMP
                 IsConnected = true;
                 _point = remoteIp;
 
-                thread.Abort();
+                SafeThreadAbort(thread);
                 _serviceSend = new Thread(ServiceSend);
                 _serviceReceive = new Thread(ServiceReceive);
                 _connectionControl = new Thread(ConnectionControl);
@@ -520,9 +520,12 @@ namespace Lexplosion.Logic.Network.SMP
                 {
                     if (CalculateRTT() == -1) //проверяем ответил ли хост
                     {
-                        Runtime.DebugWrite("ConnectionControl");
-                        StopWork();
-                        ClientClosing?.Invoke(_point);
+                        Runtime.DebugWrite("Connection is dead");
+                        ThreadPool.QueueUserWorkItem(delegate (object state)
+                        {
+                            StopWork();
+                            ClientClosing?.Invoke(_point);
+                        });
                     }
                 }
 
@@ -1275,11 +1278,27 @@ namespace Lexplosion.Logic.Network.SMP
         {
             Runtime.DebugWrite("StopWork() SMP CLIENT");
             IsConnected = false;
-            _connectionControl.Abort();
+            SafeThreadAbort(_connectionControl);
             //serviceReceive.Abort();
-            _serviceSend.Abort();
-            _socket.Close();
+            SafeThreadAbort(_serviceSend);
+            try
+            {
+                _socket.Close();
+            }
+            catch { }
             _receiveWait.Set();
+        }
+
+        private void SafeThreadAbort(Thread thread)
+        {
+            try
+            {
+                thread.Abort();
+            }
+            catch (Exception ex)
+            {
+                Runtime.DebugWrite("Exception " + ex);
+            }
         }
 
         public void Close()
@@ -1298,6 +1317,8 @@ namespace Lexplosion.Logic.Network.SMP
                     {
                         _sendingCycleDetector.WaitOne();
                     }
+
+                    Runtime.DebugWrite("_sendingBuffer.Count " + _sendingBuffer.Count);
 
                     try
                     {

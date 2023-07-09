@@ -99,26 +99,22 @@ namespace Lexplosion.Logic.Network
                             buffer_ = buffer;
                         }
 
-                        // TODO: тут трай надо
+                        // TODO: тут трай надо        -- 09.07.2023 А нахуя тут трай?
                         byte[] payload = Cryptography.AesEncode(buffer_, clientData.Value3, clientData.Value4);
                         Server.Send(payload, clientPoint); //отправляем
 
-                        //файл передан, закрываем соединение
+                        //файл передан, удаляем клиента
                         if (clientData.Value2 >= fileSize)
                         {
                             Runtime.DebugWrite("END SEND. Bytes count " + clientData.Value2);
                             toDisconect.Add(clientPoint);
                         }
                     }
-                    catch (KeyNotFoundException)
-                    {
-                        Runtime.DebugWrite("KeyNotFoundException");
-                        continue;
-                    }
                     catch (Exception ex)
                     {
                         Runtime.DebugWrite("Sending exception " + ex);
-                        break;
+                        toDisconect.Add(clientPoint);
+                        continue;
                         // TODO: че-то мутить
                     }
                 }
@@ -129,7 +125,8 @@ namespace Lexplosion.Logic.Network
                 {
                     foreach (ClientDesc point in toDisconect)
                     {
-                        Server.Close(point);
+                        //удаляем клиента, но не вызываем закрытия соединения что бы последние пакеты не потерялись.
+                        //Позже клиент сам оборвет сединение. Или же оно закроется само через некоторое время
                         ClientAbort(point);
                     }
 
@@ -269,7 +266,7 @@ namespace Lexplosion.Logic.Network
                 {
                     AcceptingBlock.WaitOne();
                     SendingBlock.WaitOne();
-                    Runtime.DebugWrite("ClientAbort");
+                    Runtime.DebugWrite("ClientAbort. StackTrace: " + new System.Diagnostics.StackTrace());
 
                     AvailableConnections.Remove(clientData);
                     AuthorizedClients.Remove(clientData);

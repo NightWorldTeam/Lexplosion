@@ -22,14 +22,14 @@ namespace Lexplosion.Common.Models.Controllers
 
 
         private ObservableCollection<InstanceDistribution> _fileReceivers = new ObservableCollection<InstanceDistribution>();
-        private Dictionary<string, InstanceDistribution> _receiverIdByInstanceDistribution = new Dictionary<string, InstanceDistribution>(); 
+        private Dictionary<string, InstanceDistribution> _receiverIdByInstanceDistribution = new Dictionary<string, InstanceDistribution>();
         public IEnumerable<InstanceDistribution> FileReceivers => _fileReceivers;
 
 
         private int _receiversCount;
-        public int ReceiversCount 
+        public int ReceiversCount
         {
-            get => _receiversCount; set 
+            get => _receiversCount; set
             {
                 _receiversCount = value;
                 OnPropertyChanged();
@@ -50,59 +50,75 @@ namespace Lexplosion.Common.Models.Controllers
         #region Constructors
 
 
-        private ShareController() 
+        private ShareController()
         {
-            
+
         }
 
 
         #endregion Constructors
 
-        
+
         // TODO: придумать более быстрый способ хранения и обратки данных.
 
-        public void AddActiveShareProcess(FileDistributionWrapper fileDistributionWrapper) 
+        public void AddActiveShareProcess(FileDistributionWrapper fileDistributionWrapper)
         {
-            _activeShareProcess.Add(fileDistributionWrapper);
-            ActiveShareProcessCount = _activeShareProcess.Count;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _activeShareProcess.Add(fileDistributionWrapper);
+                ActiveShareProcessCount = _activeShareProcess.Count;
+                ActiveShareProcessCount = _activeShareProcess.Count;
+            });
         }
 
-        public void RemoveActiveShareProcess(FileDistributionWrapper fileDistributionWrapper) 
+        public void RemoveActiveShareProcess(FileDistributionWrapper fileDistributionWrapper)
         {
-            fileDistributionWrapper.StopTimer();
-            _activeShareProcess.Remove(fileDistributionWrapper);
-            ActiveShareProcessCount = _activeShareProcess.Count;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                fileDistributionWrapper.StopTimer();
+                _activeShareProcess.Remove(fileDistributionWrapper);
+                ActiveShareProcessCount = _activeShareProcess.Count;
+            });
         }
 
-        public void AddFileReceiver(InstanceDistribution fileReceiver) 
+        public void AddFileReceiver(InstanceDistribution fileReceiver)
         {
-            _receiverIdByInstanceDistribution.Add(fileReceiver.Id, fileReceiver);
-            _fileReceivers.Add(fileReceiver);
-            ReceiversCount = _fileReceivers.Count;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _receiverIdByInstanceDistribution.Add(fileReceiver.Id, fileReceiver);
+                _fileReceivers.Add(fileReceiver);
+                ReceiversCount = _fileReceivers.Count;
+            });
 
         }
 
         public void RemoveFileReceiver(InstanceDistribution fileReceiver)
         {
-            _receiverIdByInstanceDistribution.Remove(fileReceiver.Id);
-            _fileReceivers.Remove(fileReceiver);
-            ReceiversCount = _fileReceivers.Count;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                _receiverIdByInstanceDistribution.Remove(fileReceiver.Id);
+                _fileReceivers.Remove(fileReceiver);
+                ReceiversCount = _fileReceivers.Count;
+            });
         }
 
         public void RemoveFileReceiver(string id)
         {
-            var fileReceiver = _receiverIdByInstanceDistribution[id];
-            _receiverIdByInstanceDistribution.Remove(id);
-            _fileReceivers.Remove(fileReceiver);
-            ReceiversCount = _fileReceivers.Count;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                var fileReceiver = _receiverIdByInstanceDistribution[id];
+                _receiverIdByInstanceDistribution.Remove(id);
+                _fileReceivers.Remove(fileReceiver);
+                ReceiversCount = _fileReceivers.Count;
+            });
         }
 
-        public bool IsReceiverContains(string id) 
+        public bool IsReceiverContains(string id)
         {
             return _receiverIdByInstanceDistribution.ContainsKey(id);
         }
 
-        public void RemoveAllActiveShareProcess() 
+        public void RemoveAllActiveShareProcess()
         {
             _activeShareProcess.Clear();
             ActiveShareProcessCount = 0;

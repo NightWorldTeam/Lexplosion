@@ -110,8 +110,7 @@ namespace Lexplosion.Logic.Network
                 _calculateThread.Start();
 
                 long offset = 0;
-                _isWorking = Bridge.Receive(out data);
-                while (_isWorking && data.Length > 0 && offset < _fileSize)
+                while (offset < _fileSize && (_isWorking = Bridge.Receive(out data)) && data.Length > 0)
                 {
                     data = Cryptography.AesDecode(data, _aesKey, _aesIV);
 
@@ -125,12 +124,13 @@ namespace Lexplosion.Logic.Network
 
                     _fstream.Write(data, 0, data.Length);
                     _fstream.Seek(offset, SeekOrigin.Begin);
-
-                    _isWorking = Bridge.Receive(out data);
                 }
+
+                Runtime.DebugWrite("End reading cycle");
             }
-            catch
+            catch (Exception ex)
             {
+                Runtime.DebugWrite("Exception " + ex);
                 _isWorking = false;
             }
 
@@ -141,6 +141,7 @@ namespace Lexplosion.Logic.Network
             Close(null);
 
             _calculateThread?.Abort();
+            Runtime.DebugWrite("EndPoint");
         }
 
         private void SpeedClaculate()
@@ -179,6 +180,7 @@ namespace Lexplosion.Logic.Network
             {
                 if (!_isClosed)
                 {
+                    Runtime.DebugWrite("Close start. StackTrace: " + new System.Diagnostics.StackTrace());
                     _isClosed = true;
 
                     try
@@ -191,13 +193,16 @@ namespace Lexplosion.Logic.Network
                             Runtime.DebugWrite("fstream.Length " + fstream.Length + ", _fileSize " + _fileSize + ", _fileId " + _fileId + ", fileSha256 " + fileSha256);
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Runtime.DebugWrite("Exception " + ex);
                         _successfulTransfer = false;
                     }
 
                     _fstream.Close();
                     _workWait.Set();
+
+                    Runtime.DebugWrite("Close end");
                 }
             }
         }
