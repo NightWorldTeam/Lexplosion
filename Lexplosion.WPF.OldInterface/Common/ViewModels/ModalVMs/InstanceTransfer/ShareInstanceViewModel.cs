@@ -4,7 +4,6 @@ using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
 using Lexplosion.Controls;
 using Lexplosion.Logic.FileSystem;
 using Lexplosion.Logic.Management.Instances;
-using System;
 using System.Collections.Generic;
 
 namespace Lexplosion.Common.ViewModels.ModalVMs
@@ -41,7 +40,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             get => _stopInstanceSharingCommand ?? (_stopInstanceSharingCommand = new RelayCommand(obj =>
             {
                 var wrapper = (FileDistributionWrapper)obj;
-                wrapper.FileDistribution.Stop();
+                wrapper.FileDistribution?.Stop();
                 ShareController.Instance.RemoveActiveShareProcess(wrapper);
                 OnPropertyChanged(nameof(IsAlreadySharing));
             }));
@@ -71,6 +70,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             Lexplosion.Runtime.TaskRun(() =>
             {
                 var result = _instanceClient.Share(UnitsList, out FileDistributor fileDistribution);
+
                 ExportResultHandler(result);
 
                 App.Current.Dispatcher.Invoke(() => {

@@ -18,6 +18,7 @@ namespace Lexplosion.Common.Models.Objects
         private readonly FileReceiver _receiver;
         private readonly Action<ImportResult> _resultHandler;
         private InstanceClient _instanceClient;
+        private readonly Action<InstanceDistribution> _removeFileReceiver;
 
 
         #region Properties
@@ -64,10 +65,11 @@ namespace Lexplosion.Common.Models.Objects
         #region Constructors
 
 
-        public InstanceDistribution(FileReceiver fileReceiver, Action<ImportResult> resultHandler)
+        public InstanceDistribution(FileReceiver fileReceiver, Action<ImportResult> resultHandler, Action<InstanceDistribution> removeFileReceiver)
         {
             _receiver = fileReceiver;
             _resultHandler = resultHandler;
+            _removeFileReceiver = removeFileReceiver;
             Name = fileReceiver.Name;
             Author = fileReceiver.OwnerLogin;
             fileReceiver.ProcentUpdate += FileReceiver_ProcentUpdate;
@@ -86,9 +88,13 @@ namespace Lexplosion.Common.Models.Objects
             InstanceState = InstanceDistributionStates.Downloading;
             _instanceClient = InstanceClient.Import(_receiver, (result) => 
                 {
-                    if (result == ImportResult.Successful) 
+                    if (result == ImportResult.Successful)
                     {
                         InstanceState = InstanceDistributionStates.DownloadComplitedSuccessful;
+                    }
+                    else 
+                    {
+                        _removeFileReceiver(this);
                     }
                     DownloadResultHandler(result);
                 }

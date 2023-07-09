@@ -1,10 +1,8 @@
-﻿using Lexplosion.Common.ModalWindow;
-using Lexplosion.Common.Models.Controllers;
+﻿using Lexplosion.Common.Models.Controllers;
 using Lexplosion.Common.Models.Objects;
 using Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer;
 using Lexplosion.Controls;
 using Lexplosion.Logic.FileSystem;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -65,6 +63,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             ModalWindowViewModelSingleton.Instance.Close();
         });
 
+
         #endregion Commands
 
 
@@ -90,7 +89,9 @@ namespace Lexplosion.Common.ViewModels.ModalVMs
             foreach (var receiver in receivers)
             {
                 if (!ShareController.Instance.IsReceiverContains(receiver.Id)) { 
-                    ShareController.Instance.AddFileReceiver(new InstanceDistribution(receiver, DownloadResultHandler));
+                    ShareController.Instance.AddFileReceiver(
+                        new InstanceDistribution(receiver, DownloadResultHandler, ShareController.Instance.RemoveFileReceiver)
+                        );
                 }
             }
         }

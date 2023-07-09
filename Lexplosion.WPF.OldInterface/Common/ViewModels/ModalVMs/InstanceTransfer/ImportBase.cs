@@ -26,6 +26,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
             var message = GetImportResultMessages(importResult);
             switch (importResult)
             {
+                // todo: translate
                 case ImportResult.Successful:
                     {
                         DoNotification("Все прекрасно)", message, 5, 0);
@@ -33,7 +34,7 @@ namespace Lexplosion.Common.ViewModels.ModalVMs.InstanceTransfer
                     break;
                 default:
                     {
-                        DoNotification("Мы не знаем, как так получилось, но", message, 5, 0);
+                        DoNotification("Мы не знаем, как так получилось, но", message, 5, 1);
                     }
                     break;
             }
