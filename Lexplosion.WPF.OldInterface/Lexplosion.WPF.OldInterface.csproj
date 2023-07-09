@@ -215,7 +215,6 @@
     <Compile Include="Common\ViewModels\DevСurtainViewModel.cs" />
     <Compile Include="Common\ViewModels\ModalVMs\InstanceDownloadProcess.cs" />
     <Compile Include="Common\Models\Objects\InstanceFile.cs" />
-    <Compile Include="Common\ViewModels\ModalVMs\InstanceTransfer\InstanceTransferViewModel.cs" />
     <Compile Include="Common\ViewModels\ModalVMs\InstanceTransfer\ShareInstanceViewModel.cs" />
     <Compile Include="Common\ViewModels\ModalVMs\ModalWindowViewModel.cs" />
     <Compile Include="Common\ViewModels\PaginatorViewModel.cs" />
