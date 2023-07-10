@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -13,7 +12,7 @@ namespace Lexplosion.Logic.Network
         protected ConcurrentDictionary<Socket, ClientDesc> ClientsPoints = new(); //этот список нужен для отправляющего потока
         protected List<Socket> Sockets = new(); //этот список нужен для отправляющего потока
         protected Semaphore ConnectSemaphore = new(1, 1); //блокировка для метода BeforeConnect
-        protected Semaphore SendingBlock = new Semaphore(1, 1); //блокировка во время работы метода Sending
+        protected Semaphore SendingBlock = new(1, 1); //блокировка во время работы метода Sending
 
         protected AutoResetEvent SendingWait = new(false);
         protected AutoResetEvent ReadingWait = new(false);

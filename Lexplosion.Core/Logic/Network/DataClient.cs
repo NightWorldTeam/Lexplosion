@@ -116,7 +116,7 @@ namespace Lexplosion.Logic.Network
 
                     offset += data.Length;
                     _dataCount += data.Length;
-                    try // чисто перестраховка на случай если в оффсет как-то 0 попадёт
+                    try // чисто перестраховка на случай если в _fileSize как-то 0 попадёт
                     {
                         ProcentUpdate?.Invoke((offset / (double)_fileSize) * 100);
                     }

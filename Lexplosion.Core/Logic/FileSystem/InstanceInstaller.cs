@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -14,9 +15,6 @@ using Lexplosion.Logic.Network;
 using Lexplosion.Tools;
 using static Lexplosion.Logic.FileSystem.WithDirectory;
 using static Lexplosion.Logic.FileSystem.DataFilesManager;
-using System.Data.SqlTypes;
-using Newtonsoft.Json.Linq;
-using System.Text;
 
 namespace Lexplosion.Logic.FileSystem
 {
