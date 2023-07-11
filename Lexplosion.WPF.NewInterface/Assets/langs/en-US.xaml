@@ -142,7 +142,7 @@
     <s:String x:Key="nothingHere">We did not find anything for your request.</s:String>
 
     <!--  instance form  -->
-    <s:String x:Key="more">Больше</s:String>
+    <s:String x:Key="more">More</s:String>
     <s:String x:Key="javaInstalling">Java is downloading...</s:String>
     <s:String x:Key="checkLocalFiles">Checking the integrity of local files...</s:String>
     <s:String x:Key="instanceLoading">Instance is downloading... Stage</s:String>

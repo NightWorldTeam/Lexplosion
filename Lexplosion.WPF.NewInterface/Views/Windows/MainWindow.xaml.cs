@@ -151,5 +151,22 @@ namespace Lexplosion.WPF.NewInterface.Views.Windows
                 currentLang = "ru";
             }
         }
+
+        private void Border_MouseDown_2(object sender, MouseButtonEventArgs e)
+        {
+            if (WindowStateControlButtonsGrid.HorizontalAlignment == HorizontalAlignment.Left)
+            {
+                WindowStateControlButtonsGrid.HorizontalAlignment = HorizontalAlignment.Right;
+
+                Grid.SetColumn(DebugPanel, 0);
+                Grid.SetColumn(WindowStateControlButtons, 1);
+            }
+            else 
+            {
+                WindowStateControlButtonsGrid.HorizontalAlignment = HorizontalAlignment.Left;
+                Grid.SetColumn(DebugPanel, 1);
+                Grid.SetColumn(WindowStateControlButtons, 0);
+            }
+        }
     }
 }

@@ -37,7 +37,7 @@
                                 Visibility="Collapsed" />
 
                             <!--  Icon  -->
-                            <Viewbox Height="20">
+                            <Viewbox Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}">
                                 <Path
                                     x:Name="Icon"
                                     extensions:Path.StringKeyData="{TemplateBinding IconKey}"

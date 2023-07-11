@@ -11,6 +11,12 @@ namespace Lexplosion.WPF.NewInterface.Controls
         public static readonly DependencyProperty TextKeyProperty
             = DependencyProperty.Register("TextKey", typeof(string), typeof(DefaultMainMenuTabItem), new FrameworkPropertyMetadata(string.Empty));
 
+        public static readonly DependencyProperty IconWidthProperty
+            = DependencyProperty.Register("IconWidth", typeof(double), typeof(DefaultMainMenuTabItem), new FrameworkPropertyMetadata(20.0));
+
+        public static readonly DependencyProperty IconHeightProperty
+            = DependencyProperty.Register("IconHeight", typeof(double), typeof(DefaultMainMenuTabItem), new FrameworkPropertyMetadata(20.0));
+
         public string IconKey
         {
             get => (string)GetValue(IconKeyProperty);
@@ -21,6 +27,18 @@ namespace Lexplosion.WPF.NewInterface.Controls
         {
             get => (string)GetValue(IconKeyProperty);
             set => SetValue(TextKeyProperty, value);
+        }
+
+        public double IconWidth 
+        {
+            get => (double)GetValue(IconWidthProperty);
+            set => SetValue(IconWidthProperty, value);
+        }
+
+        public double IconHeight 
+        {
+            get => (double)GetValue(IconHeightProperty);    
+            set => SetValue(IconHeightProperty, value);
         }
 
         static DefaultMainMenuTabItem()

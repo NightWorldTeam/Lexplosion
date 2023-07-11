@@ -50,60 +50,89 @@
         <ContentControl Content="{Binding CurrentViewModel, Source={StaticResource MainViewModel}}" KeyboardNavigation.IsTabStop="False" />
 
         <!--  Window State Control Buttons  -->
-        <StackPanel
-            x:Name="WindowStateControlButtons"
+        <Grid
+            x:Name="WindowStateControlButtonsGrid"
             Margin="16,12"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             KeyboardNavigation.IsTabStop="False"
-            Orientation="Horizontal">
+            ShowGridLines="False">
 
-            <!--  Close Button  -->
-            <Button
-                Width="15"
-                Height="15"
-                Margin="0,0,10,0"
-                Background="#FF0B00"
-                Click="Button_Click_1"
-                Style="{StaticResource ColoredWindowsButton}" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <!--  Minimaze Button  -->
-            <Button
-                Width="15"
-                Height="15"
-                Margin="0,0,10,0"
-                Background="#009DFF"
-                Style="{StaticResource ColoredWindowsButton}" />
+            <StackPanel x:Name="WindowStateControlButtons" Orientation="Horizontal">
+                <!--  Close Button  -->
+                <Button
+                    Width="15"
+                    Height="15"
+                    Margin="0,0,10,0"
+                    Background="#FF0B00"
+                    Click="Button_Click_1"
+                    Style="{StaticResource ColoredWindowsButton}" />
 
+                <!--  Minimaze Button  -->
+                <Button
+                    Width="15"
+                    Height="15"
+                    Margin="0,0,10,0"
+                    Background="#009DFF"
+                    Style="{StaticResource ColoredWindowsButton}" />
+            </StackPanel>
 
-            <Border
-                Width="20"
-                Height="20"
-                Background="{DynamicResource SeparateSolidColorBrush}"
-                CornerRadius="2"
-                MouseDown="Border_MouseDown">
-                <Viewbox Height="14">
-                    <Path
-                        extensions:Path.StringKeyData="Palette"
-                        Fill="{DynamicResource ActivitySolidColorBrush}"
-                        Stretch="Fill" />
-                </Viewbox>
-            </Border>
+            <!--  Debug Tools  -->
+            <StackPanel
+                x:Name="DebugPanel"
+                Grid.Column="1"
+                Margin="0,0,8,0"
+                Orientation="Horizontal">
+                <Border
+                    Width="20"
+                    Height="20"
+                    Background="{DynamicResource SeparateSolidColorBrush}"
+                    CornerRadius="2"
+                    MouseDown="Border_MouseDown">
+                    <Viewbox Height="14">
+                        <Path
+                            extensions:Path.StringKeyData="Palette"
+                            Fill="{DynamicResource ActivitySolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
 
-            <Border
-                Width="20"
-                Height="20"
-                Margin="8,0,0,0"
-                Background="{DynamicResource SeparateSolidColorBrush}"
-                CornerRadius="2"
-                MouseDown="Border_MouseDown_1">
-                <Viewbox Height="14">
-                    <Path
-                        extensions:Path.StringKeyData="Translate"
-                        Fill="{DynamicResource ActivitySolidColorBrush}"
-                        Stretch="Fill" />
-                </Viewbox>
-            </Border>
-        </StackPanel>
+                <Border
+                    Width="20"
+                    Height="20"
+                    Margin="8,0,0,0"
+                    Background="{DynamicResource SeparateSolidColorBrush}"
+                    CornerRadius="2"
+                    MouseDown="Border_MouseDown_1">
+                    <Viewbox Height="14">
+                        <Path
+                            extensions:Path.StringKeyData="Translate"
+                            Fill="{DynamicResource ActivitySolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
+
+                <Border
+                    Width="20"
+                    Height="20"
+                    Margin="8,0,0,0"
+                    Padding="2"
+                    Background="{DynamicResource SeparateSolidColorBrush}"
+                    CornerRadius="2"
+                    MouseDown="Border_MouseDown_2">
+                    <Viewbox Height="14">
+                        <Path
+                            extensions:Path.StringKeyData="IndentDecrease"
+                            Fill="{DynamicResource ActivitySolidColorBrush}"
+                            Stretch="Fill" />
+                    </Viewbox>
+                </Border>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

@@ -62,7 +62,6 @@ namespace Lexplosion.WPF.NewInterface.Controls
 
         protected override void OnGotFocus(RoutedEventArgs e)
         {
-            Runtime.DebugWrite("Got focus");
             UpdateIsEmpty();
             base.OnGotFocus(e);
         }

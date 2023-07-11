@@ -11,6 +11,10 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         public uint Id { get; set; }
         public string TextKey { get; set; }
         public string Icon { get; set; }
+
+        public double IconWidth { get; set; }
+        public double IconHeight { get; set; }
+
         public VMBase Content { get; set; }
 
         private bool _isSelected;
@@ -64,7 +68,7 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
         #region Public Methods
 
 
-        public void AddTabItem(string name, string icon, VMBase content, int id = -1)
+        public void AddTabItem(string name, string icon, VMBase content, int id = -1, double iconWidth = 20, double iconHeight = 20)
         {
             if (id == -1 || id < 0) 
             {
@@ -77,6 +81,8 @@ namespace Lexplosion.WPF.NewInterface.ViewModels.MainContent.MainMenu
                 TextKey = name,
                 Icon = icon,
                 Content = content,
+                IconWidth = iconWidth,
+                IconHeight = iconHeight
             };
 
             newTabItem.SelectedEvent += OnSelectedTabItemChanged;

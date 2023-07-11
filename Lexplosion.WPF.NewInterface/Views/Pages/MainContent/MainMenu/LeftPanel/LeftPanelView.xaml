@@ -16,7 +16,9 @@
         <DataTemplate DataType="{x:Type localVM:LeftPanelMenuItem}">
             <controls:DefaultMainMenuTabItem
                 GroupName="LeftPanelMainMenuItem"
+                IconHeight="{Binding IconHeight}"
                 IconKey="{Binding Icon}"
+                IconWidth="{Binding IconWidth}"
                 IsChecked="{Binding IsSelected}"
                 TextKey="{Binding TextKey}" />
         </DataTemplate>

@@ -85,6 +85,10 @@
     </Compile>
     <Compile Include="Controls\DefaultMainMenuTabItem\DefaultMainMenuTabItem.cs" />
     <Compile Include="Controls\DigitCodeBox\DigitCodeBox.cs" />
+    <Compile Include="Controls\InstanceForm\InstanceForm.cs" />
+    <Compile Include="Controls\Paginator\IPaginable.cs" />
+    <Compile Include="Controls\Paginator\Paginator.cs" />
+    <Compile Include="Controls\SearchBox\SearchBox.cs" />
     <Compile Include="Controls\UpperPlaceholderTextBox\UpperPlaceholderTextBox.cs" />
     <Compile Include="Core\INotifiable.cs" />
     <Compile Include="Core\ResourceGetter.cs" />
@@ -99,6 +103,7 @@
     <Compile Include="Models\Authorization\BasicAuthorization\IBasicAuthModel.cs" />
     <Compile Include="Models\Authorization\OAuth2\IOAuth2Model.cs" />
     <Compile Include="Models\Authorization\OAuth2\MicrosoftAuthorizationModel.cs" />
+    <Compile Include="Models\MainContent\Content\CatalogModel.cs" />
     <Compile Include="Stores\INavigationStore.cs" />
     <Compile Include="Stores\ModalNavigationStore.cs" />
     <Compile Include="Stores\NavigationStore.cs" />
@@ -145,6 +150,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DigitCodeBox\DigitCodeBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\InstanceForm\InstanceForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SearchBox\SearchBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -274,6 +287,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\MainContent\LeftPanel\" />
     <Folder Include="ViewModels\Authorization\OAuth2\" />
     <Folder Include="Views\Modal\" />
   </ItemGroup>

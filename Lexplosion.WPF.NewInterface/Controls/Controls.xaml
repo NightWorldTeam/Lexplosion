@@ -4,7 +4,10 @@
         <ResourceDictionary Source="UpperPlaceholderTextBox/UpperPlaceholderTextBox.xaml" />
         <ResourceDictionary Source="DigitCodeBox/DigitCodeBox.xaml" />
         <ResourceDictionary Source="DefaultMainMenuTabItem/DefaultMainMenuTabItem.xaml" />
-        <!--<ResourceDictionary Source="BindablePasswordBox/BindablePasswordBox.xaml" />-->
+        <ResourceDictionary Source="SearchBox/SearchBox.xaml" />
+
+
+        <ResourceDictionary Source="InstanceForm/InstanceForm.xaml" />
 
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
